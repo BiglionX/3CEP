@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-02-14T07:14:01.386Z",
+  "vercelConfig": "✅ 配置正常",
+  "routes": {
+    "src/app/api/cron/daily-task/route.ts": "✅ 存在",
+    "src/app/api/cron/hourly-task/route.ts": "✅ 存在"
+  },
+  "tests": {
+    "daily-task": {
+      "moduleLoaded": false,
+      "error": "Cannot find module '../src/app/api/cron/daily-task/route'\nRequire stack:\n- D:\\BigLionX\\3cep\\scripts\\monitor-cron-jobs.js"
+    },
+    "hourly-task": {
+      "moduleLoaded": false,
+      "error": "Cannot find module '../src/app/api/cron/hourly-task/route'\nRequire stack:\n- D:\\BigLionX\\3cep\\scripts\\monitor-cron-jobs.js"
+    }
+  },
+  "logFile": "D:\\BigLionX\\3cep\\logs\\cron-execution-2026-02-14.log"
+}

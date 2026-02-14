@@ -1,0 +1,17 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/daily-task",
+      "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/hourly-task",
+      "schedule": "0 * * * *"
+    }
+  ],
+  "functions": {
+    "src/app/api/cron/**/*": {
+      "maxDuration": 300
+    }
+  }
+}

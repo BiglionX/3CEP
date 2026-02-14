@@ -1,0 +1,571 @@
+openapi: 3.0.3
+info:
+  title: FixCycle API 规范
+  description: |
+    FixCycle 3C电子产品维修服务平台API接口文档
+    
+    ## 系统架构说明
+    - **公开API**：面向第三方开发者和合作伙伴开放
+    - **内部API**：仅供FixCycle前端内部调用，需服务端认证
+    - **管理API**：后台管理系统专用接口
+    
+    ## 认证机制
+    - 公开API：API Key认证
+    - 内部API：JWT Token + 服务端验证
+    - 管理API：RBAC权限控制
+    
+    ## 响应格式规范
+    所有接口统一返回格式：
+    ```json
+    {
+      "code": 200,
+      "data": {},
+      "message": "success"
+    }
+    ```
+  version: 1.0.0
+  contact:
+    name: FixCycle开发团队
+    email: dev@fixcycle.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.fixcycle.com/v1
+    description: 生产环境
+  - url: https://staging-api.fixcycle.com/v1
+    description: 预发布环境
+  - url: http://localhost:3001/api
+    description: 本地开发环境
+
+tags:
+  - name: public
+    description: 公开API接口
+  - name: internal
+    description: 内部API接口（需服务端认证）
+  - name: admin
+    description: 管理后台API接口
+  - name: devices
+    description: 设备相关接口
+  - name: parts
+    description: 配件相关接口
+  - name: suppliers
+    description: 供应商相关接口
+
+paths:
+  # ==================== 内部API接口 ====================
+  
+  /internal/devices:
+    get:
+      tags: [internal, devices]
+      summary: 获取设备列表
+      description: |
+        从lionfix数据库获取设备信息列表，支持分页和搜索功能。
+        仅供FixCycle前端内部调用，需服务端认证。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: 页码（从1开始）
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          description: 搜索关键词（设备名称、型号等）
+          required: false
+          schema:
+            type: string
+        - name: brand
+          in: query
+          description: 品牌筛选
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: 分类筛选
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 设备状态筛选
+          required: false
+          schema:
+            type: string
+            enum: [active, inactive, discontinued]
+      responses:
+        '200':
+          description: 成功获取设备列表
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 成功响应示例
+                  value:
+                    code: 200
+                    data:
+                      items:
+                        - id: "1"
+                          name: "iPhone 15 Pro"
+                          model: "A2842"
+                          brand: "Apple"
+                          category: "智能手机"
+                          release_date: "2023-09-22"
+                          status: "active"
+                          image_url: "https://example.com/iphone15pro.jpg"
+                          specifications:
+                            screen_size: "6.1英寸"
+                            storage: "128GB"
+                            ram: "6GB"
+                        - id: "2"
+                          name: "Samsung Galaxy S24"
+                          model: "SM-S9210"
+                          brand: "Samsung"
+                          category: "智能手机"
+                          release_date: "2024-01-17"
+                          status: "active"
+                          image_url: "https://example.com/s24.jpg"
+                          specifications:
+                            screen_size: "6.2英寸"
+                            storage: "256GB"
+                            ram: "8GB"
+                      pagination:
+                        page: 1
+                        limit: 20
+                        total: 156
+                        total_pages: 8
+                    message: "success"
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权访问
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /internal/parts/search:
+    get:
+      tags: [internal, parts]
+      summary: 配件搜索
+      description: |
+        根据关键词和筛选条件搜索配件信息。
+        直接查询lionfix数据库获取最新配件数据。
+        仅供FixCycle前端内部调用。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: keyword
+          in: query
+          description: 搜索关键词（配件名称、型号等）
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: device_id
+          in: query
+          description: 关联设备ID筛选
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: 配件分类筛选
+          required: false
+          schema:
+            type: string
+        - name: brand
+          in: query
+          description: 品牌筛选
+          required: false
+          schema:
+            type: string
+        - name: min_price
+          in: query
+          description: 最低价格筛选
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: max_price
+          in: query
+          description: 最高价格筛选
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+      responses:
+        '200':
+          description: 搜索成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 搜索结果示例
+                  value:
+                    code: 200
+                    data:
+                      items:
+                        - id: "P001"
+                          name: "iPhone 15 Pro 屏幕总成"
+                          model: "A2842-屏幕"
+                          device_id: "1"
+                          device_name: "iPhone 15 Pro"
+                          category: "屏幕"
+                          brand: "Apple"
+                          compatible_models: ["A2842", "A2843"]
+                          price_range:
+                            min: 899.00
+                            max: 1299.00
+                            avg: 1099.00
+                          suppliers_count: 12
+                          image_url: "https://example.com/screen.jpg"
+                        - id: "P002"
+                          name: "iPhone 15 Pro 电池"
+                          model: "A2842-电池"
+                          device_id: "1"
+                          device_name: "iPhone 15 Pro"
+                          category: "电池"
+                          brand: "Apple/OEM"
+                          compatible_models: ["A2842"]
+                          price_range:
+                            min: 299.00
+                            max: 499.00
+                            avg: 399.00
+                          suppliers_count: 8
+                          image_url: "https://example.com/battery.jpg"
+                      pagination:
+                        page: 1
+                        limit: 20
+                        total: 45
+                        total_pages: 3
+                      search_metadata:
+                        keyword: "iPhone 15"
+                        filters_applied: ["device_id"]
+                        search_time_ms: 45
+                    message: "success"
+        '400':
+          description: 搜索参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /internal/parts/{id}/price:
+    get:
+      tags: [internal, parts]
+      summary: 获取配件最新报价
+      description: |
+        获取指定配件的最新市场价格信息。
+        包含多个供应商的报价和历史价格趋势。
+        仅供FixCycle前端内部调用。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 配件ID
+          required: true
+          schema:
+            type: string
+        - name: supplier_limit
+          in: query
+          description: 返回供应商报价数量限制
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 5
+      responses:
+        '200':
+          description: 成功获取价格信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 配件价格信息示例
+                  value:
+                    code: 200
+                    data:
+                      part_info:
+                        id: "P001"
+                        name: "iPhone 15 Pro 屏幕总成"
+                        model: "A2842-屏幕"
+                        brand: "Apple"
+                        category: "屏幕"
+                      current_price:
+                        min: 899.00
+                        max: 1299.00
+                        average: 1099.00
+                        median: 1050.00
+                      suppliers:
+                        - supplier_id: "S001"
+                          supplier_name: "原厂配件供应商"
+                          price: 1299.00
+                          stock: "充足"
+                          delivery_time: "1-3个工作日"
+                          warranty: "12个月"
+                        - supplier_id: "S002"
+                          supplier_name: "优质副厂供应商"
+                          price: 999.00
+                          stock: "现货"
+                          delivery_time: "24小时内"
+                          warranty: "6个月"
+                        - supplier_id: "S003"
+                          supplier_name: "性价比优选"
+                          price: 899.00
+                          stock: "少量现货"
+                          delivery_time: "2-5个工作日"
+                          warranty: "3个月"
+                      price_history:
+                        - date: "2026-02-14"
+                          price: 1099.00
+                        - date: "2026-02-07"
+                          price: 1129.00
+                        - date: "2026-01-31"
+                          price: 1089.00
+                      price_trend: "stable"
+                      updated_at: "2026-02-14T10:30:00Z"
+                    message: "success"
+        '404':
+          description: 配件不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  value:
+                    code: 404
+                    data: null
+                    message: "配件不存在"
+
+  /internal/suppliers:
+    get:
+      tags: [internal, suppliers]
+      summary: 获取供应商列表
+      description: |
+        获取可用的供应商信息列表。
+        可用于配件比价时的供应商筛选。
+        仅供FixCycle前端内部调用。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: category
+          in: query
+          description: 供应商品类筛选
+          required: false
+          schema:
+            type: string
+        - name: region
+          in: query
+          description: 地区筛选
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功获取供应商列表
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 供应商列表示例
+                  value:
+                    code: 200
+                    data:
+                      items:
+                        - id: "S001"
+                          name: "原厂配件供应商"
+                          company: "苹果官方授权经销商"
+                          categories: ["屏幕", "电池", "摄像头"]
+                          regions: ["北京", "上海", "广州"]
+                          rating: 4.8
+                          review_count: 1247
+                          warranty_period: "12个月"
+                          delivery_time: "1-3个工作日"
+                          certifications: ["ISO9001", "苹果授权"]
+                        - id: "S002"
+                          name: "优质副厂供应商"
+                          company: "深圳华强电子科技"
+                          categories: ["屏幕", "电池", "外壳"]
+                          regions: ["深圳", "广州", "东莞"]
+                          rating: 4.5
+                          review_count: 892
+                          warranty_period: "6个月"
+                          delivery_time: "24小时内"
+                          certifications: ["CE", "FCC"]
+                      pagination:
+                        page: 1
+                        limit: 50
+                        total: 127
+                        total_pages: 3
+                    message: "success"
+
+# ==================== 组件定义 ====================
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 公开API访问密钥
+    
+    InternalAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 内部API认证Token
+    
+    AdminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 管理后台认证Token
+
+  schemas:
+    ApiResponse:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: integer
+          description: 响应状态码
+          example: 200
+        data:
+          type: object
+          description: 响应数据
+          nullable: true
+        message:
+          type: string
+          description: 响应消息
+          example: "success"
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: integer
+          description: 错误状态码
+          example: 400
+        data:
+          type: object
+          description: 错误详情
+          nullable: true
+        message:
+          type: string
+          description: 错误消息
+          example: "请求参数错误"
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: 当前页码
+        limit:
+          type: integer
+          description: 每页数量
+        total:
+          type: integer
+          description: 总记录数
+        total_pages:
+          type: integer
+          description: 总页数
+
+# ==================== 外部文档 ====================
+
+externalDocs:
+  description: 更多技术文档请参考
+  url: https://docs.fixcycle.com
+
+# ==================== 服务器变量 ====================
+
+# 服务器变量可用于动态配置不同环境
+# servers:
+#   - url: https://{environment}.fixcycle.com/{version}
+#     variables:
+#       environment:
+#         default: api
+#         enum:
+#           - api
+#           - staging-api
+#           - dev-api
+#       version:
+#         default: v1
