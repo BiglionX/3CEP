@@ -1,0 +1,394 @@
+{
+  "monitoring": {
+    "enabled": true,
+    "check_interval_ms": 30000,
+    "startup_delay_ms": 5000,
+    "max_concurrent_checks": 5,
+    "timeout_ms": 30000,
+    "alert_cooldown_minutes": 5,
+    "health_check_timeout": 10000,
+    "enable_profiling": false,
+    "collect_detailed_metrics": true,
+    "sampling_rate": 1.0,
+    "max_metrics_per_hour": 120
+  },
+  "thresholds": {
+    "system": {
+      "cpu_usage_percent": {
+        "warning": 70,
+        "critical": 85,
+        "emergency": 95
+      },
+      "memory_usage_percent": {
+        "warning": 75,
+        "critical": 85,
+        "emergency": 95
+      },
+      "disk_usage_percent": {
+        "warning": 80,
+        "critical": 90,
+        "emergency": 95
+      },
+      "network_latency_ms": {
+        "warning": 100,
+        "critical": 500,
+        "emergency": 1000
+      }
+    },
+    "application": {
+      "api_response_time_ms": {
+        "warning": 1000,
+        "critical": 3000,
+        "emergency": 5000
+      },
+      "error_rate_percent": {
+        "warning": 2,
+        "critical": 5,
+        "emergency": 10
+      },
+      "request_rate_rps": {
+        "warning": 1000,
+        "critical": 2000,
+        "emergency": 5000
+      },
+      "queue_length": {
+        "warning": 100,
+        "critical": 500,
+        "emergency": 1000
+      }
+    },
+    "database": {
+      "connection_count": {
+        "warning": 50,
+        "critical": 80,
+        "emergency": 100
+      },
+      "slow_query_count": {
+        "warning": 5,
+        "critical": 20,
+        "emergency": 50
+      },
+      "replication_lag_seconds": {
+        "warning": 10,
+        "critical": 30,
+        "emergency": 60
+      },
+      "deadlock_count": {
+        "warning": 1,
+        "critical": 5,
+        "emergency": 10
+      }
+    },
+    "n8n": {
+      "workflow_failure_rate": {
+        "warning": 5,
+        "critical": 15,
+        "emergency": 30
+      },
+      "execution_queue_length": {
+        "warning": 50,
+        "critical": 200,
+        "emergency": 500
+      },
+      "average_execution_time": {
+        "warning": 30000,
+        "critical": 60000,
+        "emergency": 120000
+      },
+      "node_connection_rate": {
+        "warning": 90,
+        "critical": 80,
+        "emergency": 70
+      }
+    }
+  },
+  "integrations": {
+    "prometheus": {
+      "enabled": true,
+      "endpoint": "/metrics",
+      "port": 9090,
+      "scrape_interval": "15s",
+      "timeout": "10s"
+    },
+    "grafana": {
+      "enabled": true,
+      "dashboard_url": "http://localhost:3000",
+      "api_key": "YOUR_GRAFANA_API_KEY",
+      "datasource_uid": "prometheus-ds"
+    },
+    "alertmanager": {
+      "enabled": true,
+      "url": "http://localhost:9093",
+      "timeout": "30s"
+    },
+    "elasticsearch": {
+      "enabled": false,
+      "hosts": ["localhost:9200"],
+      "username": "",
+      "password": "",
+      "index_prefix": "fixcycle-logs"
+    }
+  },
+  "alert_routing": {
+    "default_channels": ["console", "email"],
+    "severity_routing": {
+      "info": ["console"],
+      "warning": ["console", "email", "slack"],
+      "error": ["console", "email", "slack", "wechat"],
+      "critical": ["console", "email", "slack", "wechat", "sms"],
+      "emergency": ["console", "email", "slack", "wechat", "sms", "phone"]
+    },
+    "source_routing": {
+      "database": ["console", "email", "slack", "sms"],
+      "n8n": ["console", "email", "slack", "wechat"],
+      "api": ["console", "email", "slack"],
+      "frontend": ["console", "email", "slack"]
+    },
+    "time_based_routing": {
+      "business_hours": {
+        "start": "09:00",
+        "end": "18:00",
+        "timezone": "Asia/Shanghai",
+        "channels": ["console", "email", "slack", "wechat"]
+      },
+      "off_hours": {
+        "channels": ["console", "email", "sms"]
+      }
+    }
+  },
+  "notification_channels": {
+    "console": {
+      "enabled": true,
+      "level": "info"
+    },
+    "email": {
+      "enabled": true,
+      "smtp_config": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "secure": false,
+        "auth": {
+          "user": "monitoring@yourcompany.com",
+          "pass": "your-app-password"
+        }
+      },
+      "defaults": {
+        "from": "FixCycle监控系统 <monitoring@yourcompany.com>",
+        "to": ["admin@yourcompany.com", "ops-team@yourcompany.com"]
+      },
+      "rate_limit": {
+        "max_emails_per_hour": 50,
+        "burst_limit": 10
+      }
+    },
+    "slack": {
+      "enabled": true,
+      "webhook_urls": {
+        "general": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+        "alerts": "https://hooks.slack.com/services/YOUR/ALERT/WEBHOOK"
+      },
+      "username": "FixCycle监控机器人",
+      "icon_emoji": ":robot_face:",
+      "channel_mapping": {
+        "warning": "#warnings",
+        "error": "#errors",
+        "critical": "#critical-alerts",
+        "emergency": "#emergency"
+      }
+    },
+    "wechat": {
+      "enabled": true,
+      "webhook_urls": {
+        "general": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY"
+      },
+      "rate_limit": {
+        "messages_per_minute": 20
+      }
+    },
+    "sms": {
+      "enabled": false,
+      "provider": "twilio",
+      "account_sid": "YOUR_TWILIO_SID",
+      "auth_token": "YOUR_TWILIO_TOKEN",
+      "from_number": "+1234567890",
+      "recipients": ["+8613800138000"],
+      "rate_limit": {
+        "messages_per_minute": 10
+      }
+    },
+    "phone": {
+      "enabled": false,
+      "provider": "twilio",
+      "account_sid": "YOUR_TWILIO_SID",
+      "auth_token": "YOUR_TWILIO_TOKEN",
+      "from_number": "+1234567890",
+      "recipients": ["+8613800138000"],
+      "voice_template": "紧急告警：{{title}}。请立即处理。"
+    }
+  },
+  "escalation_policies": {
+    "default": {
+      "initial_delay_minutes": 5,
+      "repeat_interval_minutes": 30,
+      "max_notifications": 3,
+      "escalate_to": ["team_lead", "manager"]
+    },
+    "critical": {
+      "initial_delay_minutes": 2,
+      "repeat_interval_minutes": 15,
+      "max_notifications": 5,
+      "escalate_to": ["team_lead", "manager", "oncall_engineer"]
+    },
+    "emergency": {
+      "initial_delay_minutes": 1,
+      "repeat_interval_minutes": 5,
+      "max_notifications": 10,
+      "escalate_to": ["team_lead", "manager", "oncall_engineer", "cto"]
+    }
+  },
+  "suppression_rules": {
+    "maintenance_windows": {
+      "enabled": true,
+      "windows": [
+        {
+          "name": "夜间维护",
+          "start": "02:00",
+          "end": "04:00",
+          "timezone": "Asia/Shanghai",
+          "suppress_severities": ["warning", "error"],
+          "description": "每日凌晨系统维护时间"
+        },
+        {
+          "name": "周末维护",
+          "days": ["saturday", "sunday"],
+          "start": "00:00",
+          "end": "06:00",
+          "suppress_severities": ["info", "warning"],
+          "description": "周末系统维护窗口"
+        }
+      ]
+    },
+    "known_issues": {
+      "enabled": true,
+      "patterns": [
+        {
+          "pattern": "timeout|connection refused|network unreachable",
+          "duration_minutes": 30,
+          "description": "网络连接问题临时抑制"
+        },
+        {
+          "pattern": "disk space|no space left|inode",
+          "duration_minutes": 60,
+          "description": "磁盘空间问题抑制"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "metrics_retention_days": 7,
+    "alerts_retention_days": 30,
+    "logs_retention_days": 90,
+    "compress_old_data": true,
+    "backup_enabled": true,
+    "backup_interval_hours": 24,
+    "backup_storage_path": "./backups/monitoring"
+  },
+  "performance": {
+    "enable_profiling": false,
+    "profile_sampling_rate": 0.1,
+    "collect_gc_stats": true,
+    "memory_profiling": false,
+    "cpu_profiling": false,
+    "max_profile_size_mb": 100
+  },
+  "security": {
+    "enable_authentication": true,
+    "api_key_required": true,
+    "allowed_ips": ["127.0.0.1", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
+    "rate_limit_requests_per_minute": 60,
+    "enable_ssl": false,
+    "ssl_cert_path": "",
+    "ssl_key_path": "",
+    "jwt_secret": "your-jwt-secret-key-here"
+  },
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "output": "file",
+    "file_path": "./logs/monitoring.log",
+    "max_file_size_mb": 50,
+    "max_files": 10,
+    "enable_stdout": true,
+    "enable_stderr": true
+  },
+  "dashboard": {
+    "enabled": true,
+    "port": 3001,
+    "bind_address": "0.0.0.0",
+    "enable_auth": true,
+    "auth_method": "basic",
+    "users": {
+      "admin": {
+        "password": "admin123",
+        "roles": ["admin"]
+      },
+      "viewer": {
+        "password": "viewer123",
+        "roles": ["viewer"]
+      }
+    },
+    "refresh_interval_seconds": 30,
+    "enable_export": true,
+    "export_formats": ["pdf", "csv", "json"]
+  },
+  "health_checks": {
+    "enabled_endpoints": [
+      "/health",
+      "/healthz",
+      "/api/health",
+      "/status"
+    ],
+    "custom_checks": [
+      {
+        "name": "database_connectivity",
+        "endpoint": "/api/health/database",
+        "expected_status": 200,
+        "timeout_ms": 5000
+      },
+      {
+        "name": "redis_connectivity",
+        "endpoint": "/api/health/redis",
+        "expected_status": 200,
+        "timeout_ms": 2000
+      },
+      {
+        "name": "n8n_status",
+        "endpoint": "http://localhost:5678/healthz",
+        "expected_status": 200,
+        "timeout_ms": 3000
+      }
+    ]
+  },
+  "scheduled_reports": {
+    "daily_summary": {
+      "enabled": true,
+      "time": "09:00",
+      "recipients": ["admin@yourcompany.com"],
+      "format": "html"
+    },
+    "weekly_report": {
+      "enabled": true,
+      "day": "monday",
+      "time": "09:00",
+      "recipients": ["management@yourcompany.com"],
+      "format": "pdf"
+    },
+    "monthly_analytics": {
+      "enabled": true,
+      "day": 1,
+      "time": "10:00",
+      "recipients": ["cto@yourcompany.com"],
+      "format": "pdf"
+    }
+  }
+}

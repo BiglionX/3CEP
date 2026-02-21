@@ -1,0 +1,92 @@
+# V-OPS-02: Prometheus告警规则
+
+groups:
+- name: valuation-service-alerts
+  rules:
+  # API可用性告警
+  - alert: ValuationAPIHighErrorRate
+    expr: rate(http_requests_total{job="nextjs-app", status=~"5.."}[5m]) / rate(http_requests_total{job="nextjs-app"}[5m]) > 0.05
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "估值API错误率过高 ({{ $value }})"
+      description: "过去5分钟内估值API的错误率超过5%，当前为 {{ $value | humanizePercentage }}"
+
+  - alert: ValuationAPILatencyHigh
+    expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="nextjs-app", endpoint="/api/valuation/estimate"}[5m])) > 2
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "估值API响应延迟过高 ({{ $value }}s)"
+      description: "估值API 95%分位数响应时间超过2秒，当前为 {{ $value }} 秒"
+
+  # 成功率监控
+  - alert: ValuationSuccessRateLow
+    expr: rate(valuation_success_total[10m]) / rate(valuation_requests_total[10m]) < 0.95
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "估值成功率低于阈值 ({{ $value | humanizePercentage }})"
+      description: "过去10分钟估值成功率低于95%，当前为 {{ $value | humanizePercentage }}"
+
+  # 置信度监控
+  - alert: LowConfidenceRateHigh
+    expr: rate(valuation_low_confidence_total[15m]) / rate(valuation_requests_total[15m]) > 0.3
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "低置信度估值比例过高 ({{ $value | humanizePercentage }})"
+      description: "过去15分钟低置信度估值占比超过30%，当前为 {{ $value | humanizePercentage }}"
+
+  # 数据库监控
+  - alert: DatabaseConnectionHigh
+    expr: pg_connections_active > 80
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "数据库连接数过高 ({{ $value }})"
+      description: "活跃数据库连接数超过80，当前为 {{ $value }}"
+
+  - alert: DatabaseSlowQueries
+    expr: rate(pg_slow_queries_total[5m]) > 5
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "慢查询过多 ({{ $value }} queries/min)"
+      description: "每分钟慢查询数量超过5次，当前为 {{ $value }}"
+
+# 系统资源监控
+- name: system-resources
+  rules:
+  - alert: HighCPUUsage
+    expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "CPU使用率过高 ({{ $value }}%)"
+      description: "系统CPU使用率持续超过80%，当前为 {{ $value }}%"
+
+  - alert: HighMemoryUsage
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "内存使用率过高 ({{ $value }}%)"
+      description: "系统内存使用率超过85%，当前为 {{ $value }}%"
+
+  - alert: DiskSpaceLow
+    expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 90
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "磁盘空间不足 ({{ $value }}%)"
+      description: "磁盘使用率超过90%，当前为 {{ $value }}%"

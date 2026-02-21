@@ -1,0 +1,35 @@
+# V-OPS-02: 监控告警系统配置
+
+## Prometheus配置文件
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alert-rules.yml"
+
+scrape_configs:
+  # 监控Next.js应用
+  - job_name: 'nextjs-app'
+    static_configs:
+      - targets: ['localhost:3001']
+    metrics_path: '/api/monitoring/metrics'
+    
+  # 监控Supabase数据库连接池
+  - job_name: 'supabase-postgres'
+    static_configs:
+      - targets: ['db.supabase.co:5432']
+    metrics_path: '/metrics'
+
+  # 监控Redis缓存
+  - job_name: 'redis-cache'
+    static_configs:
+      - targets: ['localhost:6379']
+    metrics_path: '/metrics'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093

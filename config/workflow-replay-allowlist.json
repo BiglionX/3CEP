@@ -1,0 +1,149 @@
+{
+  "version": "1.0.0",
+  "description": "工作流回放参数白名单配置",
+  "last_updated": "2026-02-21T00:00:00Z",
+  "allowlist": {
+    "common": {
+      "description": "通用安全参数",
+      "parameters": [
+        "workflowId",
+        "executionId",
+        "trigger_node",
+        "input_data",
+        "output_data",
+        "start_time",
+        "end_time",
+        "status",
+        "error_message",
+        "retry_count",
+        "max_retries"
+      ]
+    },
+    "user_context": {
+      "description": "用户上下文参数",
+      "parameters": [
+        "userId",
+        "userRole",
+        "tenantId",
+        "sessionId",
+        "requestId",
+        "client_ip",
+        "user_agent"
+      ],
+      "sensitive": false
+    },
+    "business_data": {
+      "description": "业务数据参数",
+      "parameters": [
+        "order_id",
+        "product_id",
+        "customer_id",
+        "amount",
+        "currency",
+        "quantity",
+        "category",
+        "region"
+      ],
+      "sensitive": false
+    },
+    "system_config": {
+      "description": "系统配置参数",
+      "parameters": [
+        "timeout",
+        "max_concurrent",
+        "queue_size",
+        "retry_delay",
+        "circuit_breaker_enabled"
+      ],
+      "sensitive": false
+    },
+    "logging": {
+      "description": "日志相关参数",
+      "parameters": [
+        "log_level",
+        "trace_id",
+        "span_id",
+        "correlation_id"
+      ],
+      "sensitive": false
+    }
+  },
+  "denylist": {
+    "credentials": {
+      "description": "凭证相关敏感参数",
+      "parameters": [
+        "api_key",
+        "secret_key",
+        "password",
+        "access_token",
+        "refresh_token",
+        "private_key",
+        "client_secret"
+      ]
+    },
+    "personal_data": {
+      "description": "个人敏感数据",
+      "parameters": [
+        "phone_number",
+        "email_address",
+        "id_card",
+        "social_security",
+        "bank_account",
+        "credit_card"
+      ]
+    },
+    "internal_config": {
+      "description": "内部配置信息",
+      "parameters": [
+        "database_url",
+        "connection_string",
+        "admin_password",
+        "master_key",
+        "encryption_key"
+      ]
+    }
+  },
+  "role_based_rules": {
+    "admin": {
+      "allow_all_parameters": true,
+      "exceptions": [],
+      "audit_required": true
+    },
+    "ops": {
+      "allowed_categories": ["common", "user_context", "business_data", "system_config", "logging"],
+      "denied_categories": ["credentials", "personal_data", "internal_config"],
+      "audit_required": true
+    },
+    "partner": {
+      "allowed_categories": ["common", "business_data"],
+      "denied_categories": ["credentials", "personal_data", "internal_config", "user_context", "system_config"],
+      "audit_required": true
+    },
+    "user": {
+      "allowed_categories": ["common"],
+      "denied_categories": ["credentials", "personal_data", "internal_config", "user_context", "system_config", "business_data"],
+      "audit_required": false
+    }
+  },
+  "validation_rules": {
+    "parameter_length": {
+      "max_length": 1000,
+      "truncate_if_exceeds": true
+    },
+    "nested_depth": {
+      "max_depth": 5,
+      "flatten_if_exceeds": false
+    },
+    "data_types": {
+      "allowed_types": ["string", "number", "boolean", "array", "object"],
+      "restricted_types": ["function", "undefined"]
+    }
+  },
+  "audit_settings": {
+    "enabled": true,
+    "log_filtered_parameters": true,
+    "log_user_actions": true,
+    "retention_days": 90,
+    "alert_threshold": 10
+  }
+}

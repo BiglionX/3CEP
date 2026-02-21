@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "n8n 权限同步配置",
+  "description": "n8n 工作流权限同步配置文件",
+  "version": "1.0.0",
+  "last_updated": "2026-02-21",
+  
+  "n8n_connection": {
+    "api_url": "http://localhost:5678",
+    "api_token": "your-n8n-api-token-here",
+    "webhook_secret": "your-webhook-secret-here",
+    "timeout": 30000,
+    "retry_attempts": 3,
+    "retry_delay": 5000
+  },
+
+  "sync_settings": {
+    "enable_periodic_sync": true,
+    "sync_interval_minutes": 5,
+    "enable_event_driven_sync": true,
+    "queue_max_size": 1000,
+    "process_batch_size": 10
+  },
+
+  "role_mapping": {
+    "admin": {
+      "n8n_role": "owner",
+      "permissions": ["*"]
+    },
+    "manager": {
+      "n8n_role": "member",
+      "permissions": ["workflow:read", "workflow:execute", "workflow:update"]
+    },
+    "agent_operator": {
+      "n8n_role": "member",
+      "permissions": ["workflow:read", "workflow:execute"]
+    },
+    "content_manager": {
+      "n8n_role": "member",
+      "permissions": ["workflow:read"]
+    },
+    "viewer": {
+      "n8n_role": "member",
+      "permissions": ["workflow:read"]
+    }
+  },
+
+  "workflow_permissions": {
+    "default_permissions": {
+      "read_roles": ["admin", "manager", "agent_operator", "content_manager", "viewer"],
+      "execute_roles": ["admin", "manager", "agent_operator"],
+      "manage_roles": ["admin", "manager"]
+    },
+    
+    "workflow_specific": {
+      "b2b-procurement-advanced-workflow": {
+        "read_roles": ["admin", "manager", "procurement_specialist"],
+        "execute_roles": ["admin", "manager", "procurement_specialist"],
+        "manage_roles": ["admin", "manager"]
+      },
+      "payment-success": {
+        "read_roles": ["admin", "manager", "finance_manager"],
+        "execute_roles": ["admin", "manager", "finance_manager"],
+        "manage_roles": ["admin", "manager"]
+      },
+      "ai-escalation": {
+        "read_roles": ["admin", "manager", "agent_operator"],
+        "execute_roles": ["admin", "manager", "agent_operator"],
+        "manage_roles": ["admin", "manager"]
+      }
+    }
+  },
+
+  "event_triggers": {
+    "user_role_changed": {
+      "enabled": true,
+      "sync_immediately": true,
+      "debounce_time_ms": 1000
+    },
+    "workflow_created": {
+      "enabled": true,
+      "apply_default_permissions": true,
+      "notify_creator": true
+    },
+    "workflow_updated": {
+      "enabled": true,
+      "sync_immediately": true
+    },
+    "permission_policy_updated": {
+      "enabled": true,
+      "trigger_full_sync": true
+    }
+  },
+
+  "audit_logging": {
+    "enabled": true,
+    "log_level": "info",
+    "retention_days": 90,
+    "sensitive_operations": [
+      "user_role_change",
+      "workflow_permission_update",
+      "workflow_execution"
+    ]
+  },
+
+  "notification_settings": {
+    "enable_notifications": true,
+    "notification_channels": ["email", "system"],
+    "notify_on_failure": true,
+    "notify_on_permission_change": false
+  },
+
+  "health_check": {
+    "enabled": true,
+    "interval_minutes": 1,
+    "failure_threshold": 3,
+    "alert_recipients": ["admin@example.com"]
+  },
+
+  "backup_settings": {
+    "enable_backup": true,
+    "backup_interval_hours": 24,
+    "retention_count": 30,
+    "storage_path": "./backups/n8n-permissions"
+  }
+}

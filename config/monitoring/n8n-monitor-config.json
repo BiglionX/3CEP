@@ -1,0 +1,74 @@
+{
+  "monitoring": {
+    "enabled": true,
+    "check_interval_ms": 60000,
+    "startup_delay_ms": 5000,
+    "max_concurrent_checks": 3
+  },
+  "thresholds": {
+    "failure_rate_percent": 10,
+    "response_time_ms": 5000,
+    "uptime_percent": 99.9,
+    "consecutive_failures": 3,
+    "node_connection_rate": 95
+  },
+  "notifications": {
+    "enabled": true,
+    "channels": {
+      "slack": {
+        "enabled": false,
+        "webhook_url": "",
+        "username": "n8n-monitor",
+        "icon_emoji": ":robot_face:"
+      },
+      "email": {
+        "enabled": false,
+        "smtp_config": {
+          "host": "",
+          "port": 587,
+          "secure": false,
+          "auth": {
+            "user": "",
+            "pass": ""
+          }
+        },
+        "recipients": []
+      },
+      "webhook": {
+        "enabled": true,
+        "url": "https://monitoring.yourdomain.com/webhook/n8n-alerts",
+        "retry_count": 3,
+        "retry_delay_ms": 5000
+      }
+    },
+    "alert_levels": {
+      "warning": {
+        "threshold": 70,
+        "notify_channels": ["webhook"]
+      },
+      "critical": {
+        "threshold": 50,
+        "notify_channels": ["slack", "webhook", "email"]
+      }
+    }
+  },
+  "storage": {
+    "metrics_retention_days": 7,
+    "alerts_retention_days": 30,
+    "compress_old_data": true,
+    "backup_enabled": true,
+    "backup_interval_hours": 24
+  },
+  "performance": {
+    "enable_profiling": false,
+    "collect_detailed_metrics": true,
+    "sampling_rate": 1.0,
+    "max_metrics_per_hour": 120
+  },
+  "security": {
+    "enable_authentication": true,
+    "api_key_required": true,
+    "allowed_ips": [],
+    "rate_limit_requests_per_minute": 60
+  }
+}

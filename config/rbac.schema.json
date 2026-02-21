@@ -1,0 +1,147 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RBAC 配置验证 Schema",
+  "description": "用于验证 RBAC 配置文件结构的 JSON Schema",
+  "type": "object",
+  "required": ["roles", "permissions", "role_permissions"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema 引用"
+    },
+    "title": {
+      "type": "string",
+      "description": "配置标题"
+    },
+    "description": {
+      "type": "string",
+      "description": "配置描述"
+    },
+    "version": {
+      "type": "string",
+      "description": "配置版本号"
+    },
+    "last_updated": {
+      "type": "string",
+      "description": "最后更新时间"
+    },
+    "roles": {
+      "type": "object",
+      "description": "系统角色定义",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "角色显示名称"
+          },
+          "description": {
+            "type": "string",
+            "description": "角色描述"
+          },
+          "level": {
+            "type": "integer",
+            "description": "角色权限级别 (0-100)",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "is_system": {
+            "type": "boolean",
+            "description": "是否为系统内置角色"
+          }
+        },
+        "required": ["name", "description", "level", "is_system"],
+        "additionalProperties": false
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "description": "权限点定义",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "权限显示名称"
+          },
+          "description": {
+            "type": "string",
+            "description": "权限描述"
+          },
+          "category": {
+            "type": "string",
+            "description": "权限分类"
+          },
+          "resource": {
+            "type": "string",
+            "description": "资源标识"
+          },
+          "action": {
+            "type": "string",
+            "description": "操作类型",
+            "enum": ["read", "create", "update", "delete", "approve", "execute", "monitor", "manage", "export", "refund", "invoke", "debug", "replay", "rollback", "alerts"]
+          }
+        },
+        "required": ["name", "description", "category", "resource", "action"],
+        "additionalProperties": false
+      }
+    },
+    "role_permissions": {
+      "type": "object",
+      "description": "角色权限映射",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "description": "权限标识符"
+        }
+      }
+    },
+    "tenant_isolation": {
+      "type": "object",
+      "description": "租户隔离配置",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["strict", "relaxed"]
+        },
+        "default_tenant_field": {
+          "type": "string"
+        },
+        "resources_with_tenant": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["enabled", "mode", "default_tenant_field", "resources_with_tenant"],
+      "additionalProperties": false
+    },
+    "audit_settings": {
+      "type": "object",
+      "description": "审计设置",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "sensitive_operations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "log_retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3650
+        }
+      },
+      "required": ["enabled", "sensitive_operations", "log_retention_days"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,498 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RBAC 权限配置",
+  "description": "角色基础访问控制配置文件，定义系统中的角色、权限和映射关系",
+  "version": "1.0.0",
+  "last_updated": "2026-02-21",
+  
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["roles", "permissions", "role_permissions"],
+  
+  "roles": {
+    "admin": {
+      "name": "超级管理员",
+      "description": "系统最高权限角色，拥有所有功能访问权限",
+      "level": 100,
+      "is_system": true
+    },
+    "manager": {
+      "name": "管理员",
+      "description": "业务管理员，可管理用户、内容和基础配置",
+      "level": 80,
+      "is_system": true
+    },
+    "content_manager": {
+      "name": "内容管理员",
+      "description": "负责内容审核、发布和管理",
+      "level": 70,
+      "is_system": true
+    },
+    "shop_manager": {
+      "name": "店铺管理员",
+      "description": "负责维修店铺管理和审核",
+      "level": 70,
+      "is_system": true
+    },
+    "finance_manager": {
+      "name": "财务管理员",
+      "description": "负责财务管理、支付审核和报表查看",
+      "level": 75,
+      "is_system": true
+    },
+    "procurement_specialist": {
+      "name": "采购专员",
+      "description": "负责采购流程管理和供应商对接",
+      "level": 60,
+      "is_system": true
+    },
+    "warehouse_operator": {
+      "name": "仓库操作员",
+      "description": "负责库存管理和出入库操作",
+      "level": 50,
+      "is_system": true
+    },
+    "agent_operator": {
+      "name": "智能体操作员",
+      "description": "负责智能体工作流执行和监控",
+      "level": 55,
+      "is_system": true
+    },
+    "viewer": {
+      "name": "只读查看员",
+      "description": "仅能查看基础数据和报表",
+      "level": 30,
+      "is_system": true
+    },
+    "external_partner": {
+      "name": "外部合作伙伴",
+      "description": "第三方合作伙伴，有限的数据访问权限",
+      "level": 20,
+      "is_system": false
+    }
+  },
+
+  "permissions": {
+    "dashboard_read": {
+      "name": "仪表板查看",
+      "description": "查看系统仪表板和统计数据",
+      "category": "dashboard",
+      "resource": "dashboard",
+      "action": "read"
+    },
+    "users_read": {
+      "name": "用户查看",
+      "description": "查看用户列表和基本信息",
+      "category": "user_management",
+      "resource": "users",
+      "action": "read"
+    },
+    "users_create": {
+      "name": "用户创建",
+      "description": "创建新用户账户",
+      "category": "user_management",
+      "resource": "users",
+      "action": "create"
+    },
+    "users_update": {
+      "name": "用户编辑",
+      "description": "编辑用户信息和权限",
+      "category": "user_management",
+      "resource": "users",
+      "action": "update"
+    },
+    "users_delete": {
+      "name": "用户删除",
+      "description": "删除用户账户",
+      "category": "user_management",
+      "resource": "users",
+      "action": "delete"
+    },
+    "content_read": {
+      "name": "内容查看",
+      "description": "查看内容列表和详情",
+      "category": "content_management",
+      "resource": "content",
+      "action": "read"
+    },
+    "content_create": {
+      "name": "内容创建",
+      "description": "创建新的内容条目",
+      "category": "content_management",
+      "resource": "content",
+      "action": "create"
+    },
+    "content_update": {
+      "name": "内容编辑",
+      "description": "编辑现有内容",
+      "category": "content_management",
+      "resource": "content",
+      "action": "update"
+    },
+    "content_delete": {
+      "name": "内容删除",
+      "description": "删除内容条目",
+      "category": "content_management",
+      "resource": "content",
+      "action": "delete"
+    },
+    "content_approve": {
+      "name": "内容审批",
+      "description": "审批待审核内容",
+      "category": "content_management",
+      "resource": "content",
+      "action": "approve"
+    },
+    "shops_read": {
+      "name": "店铺查看",
+      "description": "查看维修店铺信息",
+      "category": "shop_management",
+      "resource": "shops",
+      "action": "read"
+    },
+    "shops_create": {
+      "name": "店铺创建",
+      "description": "创建新的维修店铺",
+      "category": "shop_management",
+      "resource": "shops",
+      "action": "create"
+    },
+    "shops_update": {
+      "name": "店铺编辑",
+      "description": "编辑店铺信息",
+      "category": "shop_management",
+      "resource": "shops",
+      "action": "update"
+    },
+    "shops_approve": {
+      "name": "店铺审批",
+      "description": "审批店铺入驻申请",
+      "category": "shop_management",
+      "resource": "shops",
+      "action": "approve"
+    },
+    "payments_read": {
+      "name": "支付查看",
+      "description": "查看支付记录和财务数据",
+      "category": "finance",
+      "resource": "payments",
+      "action": "read"
+    },
+    "payments_refund": {
+      "name": "支付退款",
+      "description": "处理退款申请",
+      "category": "finance",
+      "resource": "payments",
+      "action": "refund"
+    },
+    "reports_read": {
+      "name": "报表查看",
+      "description": "查看各类业务报表",
+      "category": "reports",
+      "resource": "reports",
+      "action": "read"
+    },
+    "reports_export": {
+      "name": "报表导出",
+      "description": "导出报表数据",
+      "category": "reports",
+      "resource": "reports",
+      "action": "export"
+    },
+    "settings_read": {
+      "name": "设置查看",
+      "description": "查看系统配置",
+      "category": "system",
+      "resource": "settings",
+      "action": "read"
+    },
+    "settings_update": {
+      "name": "设置修改",
+      "description": "修改系统配置",
+      "category": "system",
+      "resource": "settings",
+      "action": "update"
+    },
+    "procurement_read": {
+      "name": "采购查看",
+      "description": "查看采购订单和流程",
+      "category": "procurement",
+      "resource": "procurement",
+      "action": "read"
+    },
+    "procurement_create": {
+      "name": "采购创建",
+      "description": "创建采购订单",
+      "category": "procurement",
+      "resource": "procurement",
+      "action": "create"
+    },
+    "procurement_approve": {
+      "name": "采购审批",
+      "description": "审批采购申请",
+      "category": "procurement",
+      "resource": "procurement",
+      "action": "approve"
+    },
+    "inventory_read": {
+      "name": "库存查看",
+      "description": "查看库存状态和流水",
+      "category": "warehouse",
+      "resource": "inventory",
+      "action": "read"
+    },
+    "inventory_update": {
+      "name": "库存调整",
+      "description": "调整库存数量",
+      "category": "warehouse",
+      "resource": "inventory",
+      "action": "update"
+    },
+    "agents_execute": {
+      "name": "智能体执行",
+      "description": "执行智能体工作流",
+      "category": "agents",
+      "resource": "agents",
+      "action": "execute"
+    },
+    "agents_monitor": {
+      "name": "智能体监控",
+      "description": "监控智能体运行状态",
+      "category": "agents",
+      "resource": "agents",
+      "action": "monitor"
+    },
+    "n8n_workflows_read": {
+      "name": "工作流查看",
+      "description": "查看n8n工作流配置",
+      "category": "integration",
+      "resource": "n8n_workflows",
+      "action": "read"
+    },
+    "n8n_workflows_manage": {
+      "name": "工作流管理",
+      "description": "管理n8n工作流部署和配置",
+      "category": "integration",
+      "resource": "n8n_workflows",
+      "action": "manage"
+    },
+    "n8n_workflows_replay": {
+      "name": "工作流回放",
+      "description": "执行n8n工作流历史执行回放",
+      "category": "integration",
+      "resource": "n8n_workflows",
+      "action": "replay"
+    },
+    "n8n_workflows_rollback": {
+      "name": "工作流回滚",
+      "description": "回滚n8n工作流到指定版本",
+      "category": "integration",
+      "resource": "n8n_workflows",
+      "action": "rollback"
+    },
+    "agents_invoke": {
+      "name": "智能体调用",
+      "description": "直接调用智能体执行特定任务",
+      "category": "agents",
+      "resource": "agents",
+      "action": "invoke"
+    },
+    "agents_debug": {
+      "name": "智能体调试",
+      "description": "调试智能体执行过程和参数",
+      "category": "agents",
+      "resource": "agents",
+      "action": "debug"
+    },
+    "tools_execute": {
+      "name": "工具执行",
+      "description": "执行系统管理工具和脚本",
+      "category": "tools",
+      "resource": "tools",
+      "action": "execute"
+    },
+    "tools_manage": {
+      "name": "工具管理",
+      "description": "管理系统工具和脚本",
+      "category": "tools",
+      "resource": "tools",
+      "action": "manage"
+    },
+    "audit_read": {
+      "name": "审计查看",
+      "description": "查看系统审计日志和操作记录",
+      "category": "audit",
+      "resource": "audit",
+      "action": "read"
+    },
+    "audit_export": {
+      "name": "审计导出",
+      "description": "导出审计日志数据",
+      "category": "audit",
+      "resource": "audit",
+      "action": "export"
+    },
+    "monitoring_read": {
+      "name": "监控查看",
+      "description": "查看系统监控指标和健康状态",
+      "category": "monitoring",
+      "resource": "monitoring",
+      "action": "read"
+    },
+    "monitoring_alerts": {
+      "name": "监控告警",
+      "description": "配置和管理监控告警规则",
+      "category": "monitoring",
+      "resource": "monitoring",
+      "action": "alerts"
+    }
+  },
+
+  "role_permissions": {
+    "admin": [
+      "dashboard_read",
+      "users_read",
+      "users_create",
+      "users_update",
+      "users_delete",
+      "content_read",
+      "content_create",
+      "content_update",
+      "content_delete",
+      "content_approve",
+      "shops_read",
+      "shops_create",
+      "shops_update",
+      "shops_approve",
+      "payments_read",
+      "payments_refund",
+      "reports_read",
+      "reports_export",
+      "settings_read",
+      "settings_update",
+      "procurement_read",
+      "procurement_create",
+      "procurement_approve",
+      "inventory_read",
+      "inventory_update",
+      "agents_execute",
+      "agents_monitor",
+      "agents_invoke",
+      "agents_debug",
+      "n8n_workflows_read",
+      "n8n_workflows_manage",
+      "n8n_workflows_replay",
+      "n8n_workflows_rollback",
+      "tools_execute",
+      "tools_manage",
+      "audit_read",
+      "audit_export",
+      "monitoring_read",
+      "monitoring_alerts"
+    ],
+    "manager": [
+      "dashboard_read",
+      "users_read",
+      "users_create",
+      "users_update",
+      "content_read",
+      "content_create",
+      "content_update",
+      "content_approve",
+      "shops_read",
+      "shops_create",
+      "shops_update",
+      "shops_approve",
+      "payments_read",
+      "reports_read",
+      "reports_export",
+      "settings_read",
+      "procurement_read",
+      "procurement_create",
+      "procurement_approve",
+      "n8n_workflows_read",
+      "n8n_workflows_replay",
+      "audit_read",
+      "monitoring_read"
+    ],
+    "content_manager": [
+      "dashboard_read",
+      "content_read",
+      "content_create",
+      "content_update",
+      "content_approve",
+      "reports_read"
+    ],
+    "shop_manager": [
+      "dashboard_read",
+      "shops_read",
+      "shops_create",
+      "shops_update",
+      "shops_approve",
+      "reports_read"
+    ],
+    "finance_manager": [
+      "dashboard_read",
+      "payments_read",
+      "payments_refund",
+      "reports_read",
+      "reports_export"
+    ],
+    "procurement_specialist": [
+      "dashboard_read",
+      "procurement_read",
+      "procurement_create",
+      "procurement_approve",
+      "reports_read"
+    ],
+    "warehouse_operator": [
+      "dashboard_read",
+      "inventory_read",
+      "inventory_update",
+      "reports_read"
+    ],
+    "agent_operator": [
+      "dashboard_read",
+      "agents_execute",
+      "agents_monitor",
+      "agents_invoke",
+      "agents_debug",
+      "reports_read"
+    ],
+    "viewer": [
+      "dashboard_read",
+      "reports_read"
+    ],
+    "external_partner": [
+      "dashboard_read"
+    ]
+  },
+
+  "tenant_isolation": {
+    "enabled": true,
+    "mode": "strict",
+    "default_tenant_field": "tenant_id",
+    "resources_with_tenant": [
+      "users",
+      "content",
+      "shops",
+      "payments",
+      "procurement",
+      "inventory"
+    ]
+  },
+
+  "audit_settings": {
+    "enabled": true,
+    "sensitive_operations": [
+      "users_create",
+      "users_update",
+      "users_delete",
+      "content_delete",
+      "shops_approve",
+      "payments_refund",
+      "settings_update"
+    ],
+    "log_retention_days": 90
+  }
+}
