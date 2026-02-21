@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # Trino查询引擎 coordinator节点
+  trino-coordinator:
+    image: trinodb/trino:428
+    container_name: trino-coordinator
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src/data-center/engine/trino-config:/etc/trino
+      - ./logs/trino:/data/trino/logs
+    environment:
+      - TRINO_NODE_ID=coordinator-1
+    networks:
+      - data-center-network
+    depends_on:
+      - redis-cache
+
+  # Trino worker节点
+  trino-worker-1:
+    image: trinodb/trino:428
+    container_name: trino-worker-1
+    volumes:
+      - ./src/data-center/engine/trino-config:/etc/trino
+      - ./logs/trino:/data/trino/logs
+    environment:
+      - TRINO_NODE_ID=worker-1
+    networks:
+      - data-center-network
+    depends_on:
+      - trino-coordinator
+
+  # Redis缓存服务
+  redis-cache:
+    image: redis:7-alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - data-center-network
+
+  # 监控面板 (开发用)
+  data-center-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.datacenter
+    container_name: data-center-ui
+    ports:
+      - "3002:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - DATA_CENTER_ENGINE_URL=http://trino-coordinator:8080
+    networks:
+      - data-center-network
+    depends_on:
+      - trino-coordinator
+      - redis-cache
+
+networks:
+  data-center-network:
+    driver: bridge
+
+volumes:
+  redis-data:

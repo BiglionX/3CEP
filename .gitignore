@@ -1,0 +1,122 @@
+# Dependencies
+node_modules/
+.npm
+.pnpm-store
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Environment variables
+.env.local
+.env*.local
+.env
+.env.test
+.env.development
+.env.production
+.env.dev
+.env.stage
+.env.prod
+.env.secrets
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Editor directories and files
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Database
+*.sqlite
+*.db
+
+# Cache
+.cache/
+.tmp/
+
+# Vercel
+.vercel/
+
+# TypeScript
+*.tsbuildinfo
+.vercel
+
+# Test and build artifacts
+*.test.js
+*.spec.js
+.DS_Store?
+
+# IDE and editor files
+.vscode/tasks.json
+.vscode/launch.json
+.idea/modules.xml
+.idea/workspace.xml
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Reports and logs
+*.report.json
+*.ndjson
+playwright-report/
+test-results/
+
+# Backup and temporary
+*.bak
+*.backup
+*.old
+.DS_Store
+
+# Local development
+.env.local
+.env.*.local
+*.local
+
+# Cache and temp directories
+.cache/
+tmp/
+temp/
+logs/
+*.log
+
+# OS specific
+*.lnk
+*.url
+desktop.ini
+
+# Compressed files
+*.zip
+*.tar.gz
+*.rar

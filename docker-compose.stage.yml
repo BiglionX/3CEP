@@ -1,0 +1,222 @@
+# 预发布环境 Docker Compose 配置
+# 接近生产环境的配置，包含监控和备份组件
+
+version: '3.8'
+
+services:
+  # 预发布PostgreSQL
+  stage-postgres:
+    image: postgres:15-alpine
+    container_name: fixcycle-stage-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixcycle_stage
+      POSTGRES_USER: stage_user
+      POSTGRES_PASSWORD: ${STAGE_DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - stage-postgres-data:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d:ro
+      - ./backups/stage:/backups
+    ports:
+      - "5433:5432"
+    networks:
+      - stage-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stage_user"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 预发布Redis
+  stage-redis:
+    image: redis:7-alpine
+    container_name: fixcycle-stage-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - stage-redis-data:/data
+    networks:
+      - stage-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 预发布n8n
+  stage-n8n:
+    image: n8nio/n8n:latest
+    container_name: fixcycle-stage-n8n
+    restart: unless-stopped
+    ports:
+      - "5679:5678"
+    environment:
+      # 基础配置
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_HOST=${STAGE_N8N_HOST}
+      
+      # 加密配置
+      - N8N_ENCRYPTION_KEY=${STAGE_N8N_ENCRYPTION_KEY}
+      
+      # 数据库配置
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=fixcycle_stage
+      - DB_POSTGRESDB_HOST=stage-postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_USER=stage_user
+      - DB_POSTGRESDB_PASSWORD=${STAGE_DB_PASSWORD}
+      
+      # 安全配置
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${STAGE_N8N_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${STAGE_N8N_AUTH_PASSWORD}
+      
+      # 执行配置
+      - EXECUTIONS_PROCESS=main
+      - EXECUTIONS_MODE=queue
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=all
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_PRUNE_TIMEOUT=168
+      
+      # 日志和监控
+      - N8N_LOG_LEVEL=info
+      - N8N_LOG_OUTPUT=console,file
+      - N8N_LOG_FILE_LOCATION=/home/node/.n8n/logs/n8n.log
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_VERSION_NOTIFICATIONS_ENABLED=false
+      - GENERIC_TIMEZONE=Asia/Shanghai
+      
+    volumes:
+      - stage-n8n-storage:/home/node/.n8n
+      - ./n8n-workflows:/home/node/.n8n/custom
+      - ./logs/n8n:/home/node/.n8n/logs
+    networks:
+      - stage-network
+    depends_on:
+      stage-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5678/healthz"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  # 预发布应用服务
+  stage-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.stage
+    container_name: fixcycle-stage-app
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+      - APP_ENV=staging
+      - NEXT_PUBLIC_SITE_URL=https://${STAGE_DOMAIN}
+      - NEXT_PUBLIC_SUPABASE_URL=${STAGE_SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${STAGE_SUPABASE_SERVICE_KEY}
+      - DATABASE_URL=postgresql://stage_user:${STAGE_DB_PASSWORD}@stage-postgres:5432/fixcycle_stage
+      - REDIS_URL=redis://stage-redis:6379
+      - N8N_API_URL=https://${STAGE_N8N_HOST}
+      - LOG_LEVEL=info
+      - MONITORING_ENABLED=true
+      - RATE_LIMITING_ENABLED=true
+      - AUTO_BACKUP_ENABLED=true
+    env_file:
+      - .env.stage
+    volumes:
+      - stage-logs:/app/logs
+      - stage-uploads:/app/public/uploads
+      - ./backups/stage:/app/backups
+    networks:
+      - stage-network
+    depends_on:
+      - stage-postgres
+      - stage-redis
+      - stage-n8n
+    command: npm start
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # 预发布监控Prometheus
+  stage-prometheus:
+    image: prom/prometheus:latest
+    container_name: fixcycle-stage-prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus/stage/prometheus.yml:/etc/prometheus/prometheus.yml
+      - stage-prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - stage-network
+    restart: unless-stopped
+
+  # 预发布监控Grafana
+  stage-grafana:
+    image: grafana/grafana:latest
+    container_name: fixcycle-stage-grafana
+    ports:
+      - "3004:3000"
+    volumes:
+      - stage-grafana-data:/var/lib/grafana
+      - ./grafana/stage/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/stage/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${STAGE_GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - stage-network
+    restart: unless-stopped
+    depends_on:
+      - stage-prometheus
+
+  # 预发布备份服务
+  stage-backup:
+    image: restic/restic:latest
+    container_name: fixcycle-stage-backup
+    volumes:
+      - stage-backups:/backups
+      - ./scripts:/scripts
+      - ./logs:/host-logs
+    environment:
+      - RESTIC_REPOSITORY=${STAGE_BACKUP_REPOSITORY}
+      - RESTIC_PASSWORD=${STAGE_BACKUP_PASSWORD}
+    networks:
+      - stage-network
+    command: ["--help"]
+    restart: on-failure
+
+networks:
+  stage-network:
+    driver: bridge
+
+volumes:
+  stage-postgres-data:
+    driver: local
+  stage-redis-data:
+    driver: local
+  stage-n8n-storage:
+    driver: local
+  stage-logs:
+    driver: local
+  stage-uploads:
+    driver: local
+  stage-backups:
+    driver: local
+  stage-prometheus-data:
+    driver: local
+  stage-grafana-data:
+    driver: local

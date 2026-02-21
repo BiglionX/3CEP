@@ -1,0 +1,85 @@
+# Docker Compose 基础配置
+# 包含所有环境共用的服务配置
+
+version: '3.8'
+
+# 公共网络定义
+networks:
+  app-network:
+    driver: bridge
+  database-network:
+    driver: bridge
+  cache-network:
+    driver: bridge
+
+# 公共卷定义
+volumes:
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  logs:
+    driver: local
+  static-assets:
+    driver: local
+
+# 公共服务模板
+x-common-services:
+  # Redis缓存服务模板
+  redis-template: &redis-template
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL数据库模板
+  postgres-template: &postgres-template
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app_db}
+      POSTGRES_USER: ${POSTGRES_USER:-app_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app_user}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 应用服务通用配置
+  app-template: &app-template
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+      - database-network
+      - cache-network
+    volumes:
+      - logs:/app/logs
+      - static-assets:/app/public/uploads
+
+  # 监控服务模板
+  monitoring-template: &monitoring-template
+    restart: unless-stopped
+    networks:
+      - app-network
+    volumes:
+      - logs:/var/log/app
+
+# 服务定义占位符
+services:
+  # 基础服务会在各环境配置中扩展
+  redis: *redis-template
+  postgres: *postgres-template

@@ -1,0 +1,192 @@
+# 生产环境 Docker Compose 配置
+# 继承基础配置，添加生产环境安全和监控配置
+
+version: '3.8'
+
+# 继承基础配置
+include:
+  - docker-compose.base.yml
+
+services:
+  # 生产应用服务
+  app-prod:
+    <<: *app-template
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: fixcycle-app-prod
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - APP_ENV=production
+      - NEXT_PUBLIC_SITE_URL=https://fixcycle.com
+      - LOG_LEVEL=warn
+      - MONITORING_ENABLED=true
+      - RATE_LIMITING_ENABLED=true
+      - SECURITY_HEADERS=true
+      - HTTPS_ONLY=true
+      - CONTENT_SECURITY_POLICY=true
+      - AUTO_BACKUP_ENABLED=true
+    env_file:
+      - .env.prod
+      - .env.prod.local
+    volumes:
+      - logs:/app/logs
+      - static-assets:/app/public/uploads
+      - backups:/app/backups
+    command: npm start
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # 生产Nginx反向代理
+  nginx-prod:
+    image: nginx:alpine
+    container_name: fixcycle-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/prod/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/prod/conf.d:/etc/nginx/conf.d
+      - ./ssl/prod:/etc/nginx/ssl
+      - static-assets:/var/www/static
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - app-prod
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  # 生产监控告警服务
+  prometheus-prod:
+    image: prom/prometheus:latest
+    container_name: fixcycle-prometheus-prod
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prod/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  grafana-prod:
+    image: grafana/grafana:latest
+    container_name: fixcycle-grafana-prod
+    ports:
+      - "3003:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/prod/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/prod/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus-prod
+
+  # 生产日志收集和分析
+  fluentd-prod:
+    image: fluent/fluentd:v1.14-1
+    container_name: fixcycle-fluentd-prod
+    volumes:
+      - ./fluentd/prod/conf:/fluentd/etc
+      - logs:/var/log/app
+      - fluentd-logs:/fluentd/log
+    ports:
+      - "24224:24224"
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  elasticsearch-prod:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: fixcycle-elasticsearch-prod
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  kibana-prod:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: fixcycle-kibana-prod
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch-prod:9200
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch-prod
+
+  # 生产备份服务
+  backup-prod:
+    image: restic/restic:latest
+    container_name: fixcycle-backup-prod
+    volumes:
+      - backups:/backups
+      - ./scripts:/scripts
+    environment:
+      - RESTIC_REPOSITORY=${BACKUP_REPOSITORY}
+      - RESTIC_PASSWORD=${BACKUP_PASSWORD}
+    networks:
+      - app-network
+    command: ["--help"]
+    restart: on-failure
+
+networks:
+  app-network:
+    external: false
+  database-network:
+    external: false
+  cache-network:
+    external: false
+
+volumes:
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  logs:
+    driver: local
+  static-assets:
+    driver: local
+  backups:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  nginx-logs:
+    driver: local
+  fluentd-logs:
+    driver: local
+  elasticsearch-data:
+    driver: local

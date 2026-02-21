@@ -1,0 +1,129 @@
+# 开发环境 Docker Compose 配置
+# 轻量化配置，专注于快速验证和开发
+
+version: '3.8'
+
+services:
+  # 开发用PostgreSQL (轻量版)
+  dev-postgres:
+    image: postgres:15-alpine
+    container_name: fixcycle-dev-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixcycle_dev
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: dev_password_123
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - dev-postgres-data:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U developer"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 开发用Redis (轻量版)
+  dev-redis:
+    image: redis:7-alpine
+    container_name: fixcycle-dev-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - dev-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 开发用n8n (最小化配置)
+  dev-n8n:
+    image: n8nio/n8n:latest
+    container_name: fixcycle-dev-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      # 基础配置
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_HOST=localhost
+      
+      # 加密配置
+      - N8N_ENCRYPTION_KEY=dev_encryption_key_12345
+      
+      # 数据库配置
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=fixcycle_dev
+      - DB_POSTGRESDB_HOST=dev-postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_USER=developer
+      - DB_POSTGRESDB_PASSWORD=dev_password_123
+      
+      # 开发配置
+      - EXECUTIONS_PROCESS=main
+      - EXECUTIONS_MODE=regular
+      - N8N_LOG_LEVEL=debug
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_VERSION_NOTIFICATIONS_ENABLED=false
+      - GENERIC_TIMEZONE=Asia/Shanghai
+      
+    volumes:
+      - dev-n8n-storage:/home/node/.n8n
+      - ./n8n-workflows:/home/node/.n8n/custom
+    networks:
+      - dev-network
+    depends_on:
+      dev-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5678/healthz"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  # 开发用应用服务
+  dev-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fixcycle-dev-app
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3001
+      - NEXT_PUBLIC_SUPABASE_URL=http://localhost:5432
+      - SUPABASE_SERVICE_ROLE_KEY=dev_service_key
+      - DATABASE_URL=postgresql://developer:dev_password_123@dev-postgres:5432/fixcycle_dev
+      - REDIS_URL=redis://dev-redis:6379
+      - N8N_API_URL=http://dev-n8n:5678
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - dev-logs:/app/logs
+    networks:
+      - dev-network
+    depends_on:
+      - dev-postgres
+      - dev-redis
+      - dev-n8n
+    command: npm run dev
+
+networks:
+  dev-network:
+    driver: bridge
+
+volumes:
+  dev-postgres-data:
+    driver: local
+  dev-n8n-storage:
+    driver: local
+  dev-logs:
+    driver: local

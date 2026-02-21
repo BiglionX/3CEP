@@ -1,0 +1,104 @@
+{
+  "version": 2,
+  "public": false,
+  "github": {
+    "enabled": false
+  },
+  
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  
+  "crons": [
+    {
+      "path": "/api/cron/daily-task",
+      "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/hourly-task",
+      "schedule": "0 * * * *"
+    }
+  ],
+  
+  "functions": {
+    "src/app/api/cron/**/*": {
+      "maxDuration": 300
+    },
+    "src/app/api/edge/**/*": {
+      "runtime": "edge"
+    },
+    "src/app/api/serverless/**/*": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  
+  "regions": ["iad1", "sfo1", "sin1"],
+  
+  "env": {
+    "NEXT_PUBLIC_SITE_URL": "${NEXT_PUBLIC_SITE_URL}",
+    "NEXT_PUBLIC_APP_NAME": "${NEXT_PUBLIC_APP_NAME}",
+    "NEXT_PUBLIC_SUPABASE_URL": "${NEXT_PUBLIC_SUPABASE_URL}",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "${NEXT_PUBLIC_SUPABASE_ANON_KEY}",
+    "NEXT_PUBLIC_N8N_URL": "${NEXT_PUBLIC_N8N_URL}"
+  },
+  
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SITE_URL": "${NEXT_PUBLIC_SITE_URL}",
+      "NEXT_PUBLIC_APP_NAME": "${NEXT_PUBLIC_APP_NAME}",
+      "NEXT_PUBLIC_SUPABASE_URL": "${NEXT_PUBLIC_SUPABASE_URL}",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "${NEXT_PUBLIC_SUPABASE_ANON_KEY}",
+      "NEXT_PUBLIC_N8N_URL": "${NEXT_PUBLIC_N8N_URL}"
+    }
+  },
+  
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "${NEXT_PUBLIC_SITE_URL}"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ],
+  
+  "redirects": [
+    {
+      "source": "/old-path/:path*",
+      "destination": "/new-path/:path*",
+      "permanent": true
+    }
+  ],
+  
+  "rewrites": [
+    {
+      "source": "/api/proxy/:path*",
+      "destination": "${NEXT_PUBLIC_N8N_URL}/:path*"
+    }
+  ]
+}
