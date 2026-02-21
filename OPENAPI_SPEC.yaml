@@ -1,0 +1,1351 @@
+openapi: 3.0.3
+info:
+  title: FixCycle API 规范
+  description: |
+    FixCycle 3C电子产品维修服务平台API接口文档
+
+    ## 系统架构说明
+    - **公开API**：面向第三方开发者和合作伙伴开放 ⏳ 规划中
+    - **内部API**：仅供FixCycle前端内部调用，需服务端认证 ✅ 已实现
+    - **管理API**：后台管理系统专用接口 ✅ 已实现
+
+    ## 认证机制
+    - 公开API：API Key认证 ⏳ 规划中
+    - 内部API：JWT Token + 服务端验证 ✅ 已实现
+    - 管理API：RBAC权限控制 ✅ 已实现
+
+    ## 响应格式规范
+    所有接口统一返回格式：
+    ```json
+    {
+      "code": 200,
+      "data": {},
+      "message": "success"
+    }
+    ```
+  version: 1.1.0
+  contact:
+    name: FixCycle开发团队
+    email: dev@fixcycle.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.fixcycle.com/v1
+    description: 生产环境 ✅ 已部署
+  - url: https://staging-api.fixcycle.com/v1
+    description: 预发布环境 ⏳ 待配置
+  - url: http://localhost:3001/api
+    description: 本地开发环境 ✅ 可用
+
+tags:
+  - name: public
+    description: 公开API接口 ⏳ 规划中
+  - name: internal
+    description: 内部API接口（需服务端认证）✅ 已实现
+  - name: admin
+    description: 管理后台API接口 ✅ 已实现
+  - name: devices
+    description: 设备相关接口 ✅ 已实现
+  - name: parts
+    description: 配件相关接口 ✅ 已实现
+  - name: suppliers
+    description: 供应商相关接口 ✅ 已实现
+  - name: reviews
+    description: 文档审核接口 ✅ 已实现
+  - name: tokens
+    description: Token经济系统接口 ✅ 已实现
+  - name: diagnosis
+    description: AI诊断接口 ✅ 已实现
+
+paths:
+  # ==================== 设备生命周期管理API ====================
+
+  /api/devices/{qrcodeId}/profile:
+    post:
+      tags: [devices, lifecycle]
+      summary: 获取或创建设备档案
+      description: |
+        根据二维码ID获取设备档案信息，如果不存在则创建新的设备档案。
+        支持传入设备详细信息进行档案初始化或更新。
+      parameters:
+        - name: qrcodeId
+          in: path
+          description: 设备二维码ID
+          required: true
+          schema:
+            type: string
+            example: 'test_device_001'
+      requestBody:
+        description: 设备档案信息（可选）
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productModel:
+                  type: string
+                  description: 产品型号
+                  example: 'iPhone 15 Pro'
+                productCategory:
+                  type: string
+                  description: 产品类别
+                  example: '智能手机'
+                brandName:
+                  type: string
+                  description: 品牌名称
+                  example: 'Apple'
+                serialNumber:
+                  type: string
+                  description: 序列号
+                  example: 'SN_IP15P_001'
+                manufacturingDate:
+                  type: string
+                  format: date
+                  description: 生产日期
+                  example: '2026-01-15'
+                warrantyPeriod:
+                  type: integer
+                  description: 保修期（月）
+                  example: 12
+                currentStatus:
+                  type: string
+                  description: 当前状态
+                  enum:
+                    [
+                      manufactured,
+                      activated,
+                      in_use,
+                      maintained,
+                      transferred,
+                      recycled,
+                      scrapped,
+                    ]
+                  example: 'activated'
+                currentLocation:
+                  type: string
+                  description: 当前位置
+                  example: '北京市朝阳区'
+                ownerInfo:
+                  type: object
+                  description: 所有者信息
+                  properties:
+                    name:
+                      type: string
+                      example: '张三'
+                    department:
+                      type: string
+                      example: 'IT部门'
+                specifications:
+                  type: object
+                  description: 技术规格
+                  example: { 'storage': '256GB', 'color': '钛金属原色' }
+      responses:
+        '200':
+          description: 成功获取或创建设备档案
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: '设备档案获取成功'
+                  data:
+                    $ref: '#/components/schemas/DeviceProfile'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: '无效的二维码ID'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: '服务器内部错误'
+
+  /api/devices/{qrcodeId}/lifecycle:
+    get:
+      tags: [devices, lifecycle]
+      summary: 获取设备生命周期事件
+      description: |
+        根据二维码ID获取设备的完整生命周期事件历史，
+        按时间倒序排列，包含所有重要的设备状态变更事件。
+      parameters:
+        - name: qrcodeId
+          in: path
+          description: 设备二维码ID
+          required: true
+          schema:
+            type: string
+            example: 'test_device_001'
+      responses:
+        '200':
+          description: 成功获取生命周期事件
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LifecycleEvent'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: '无效的二维码ID'
+        '404':
+          description: 设备未找到
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: '设备档案不存在'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: '服务器内部错误'
+
+  # ==================== 原有API接口 ====================
+
+  /internal/devices:
+    get:
+      tags: [internal, devices]
+      summary: 获取设备列表
+      description: |
+        从lionfix数据库获取设备信息列表，支持分页和搜索功能。
+        仅供FixCycle前端内部调用，需服务端认证。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: 页码（从1开始）
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          description: 搜索关键词（设备名称、型号等）
+          required: false
+          schema:
+            type: string
+        - name: brand
+          in: query
+          description: 品牌筛选
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: 分类筛选
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 设备状态筛选
+          required: false
+          schema:
+            type: string
+            enum: [active, inactive, discontinued]
+      responses:
+        '200':
+          description: 成功获取设备列表
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 成功响应示例
+                  value:
+                    code: 200
+                    data:
+                      items:
+                        - id: '1'
+                          name: 'iPhone 15 Pro'
+                          model: 'A2842'
+                          brand: 'Apple'
+                          category: '智能手机'
+                          release_date: '2023-09-22'
+                          status: 'active'
+                          image_url: 'https://example.com/iphone15pro.jpg'
+                          specifications:
+                            screen_size: '6.1英寸'
+                            storage: '128GB'
+                            ram: '6GB'
+                        - id: '2'
+                          name: 'Samsung Galaxy S24'
+                          model: 'SM-S9210'
+                          brand: 'Samsung'
+                          category: '智能手机'
+                          release_date: '2024-01-17'
+                          status: 'active'
+                          image_url: 'https://example.com/s24.jpg'
+                          specifications:
+                            screen_size: '6.2英寸'
+                            storage: '256GB'
+                            ram: '8GB'
+                      pagination:
+                        page: 1
+                        limit: 20
+                        total: 156
+                        total_pages: 8
+                    message: 'success'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权访问
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /internal/parts/search:
+    get:
+      tags: [internal, parts]
+      summary: 配件搜索
+      description: |
+        根据关键词和筛选条件搜索配件信息。
+        直接查询lionfix数据库获取最新配件数据。
+        仅供FixCycle前端内部调用。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: keyword
+          in: query
+          description: 搜索关键词（配件名称、型号等）
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: device_id
+          in: query
+          description: 关联设备ID筛选
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: 配件分类筛选
+          required: false
+          schema:
+            type: string
+        - name: brand
+          in: query
+          description: 品牌筛选
+          required: false
+          schema:
+            type: string
+        - name: min_price
+          in: query
+          description: 最低价格筛选
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: max_price
+          in: query
+          description: 最高价格筛选
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+      responses:
+        '200':
+          description: 搜索成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 搜索结果示例
+                  value:
+                    code: 200
+                    data:
+                      items:
+                        - id: 'P001'
+                          name: 'iPhone 15 Pro 屏幕总成'
+                          model: 'A2842-屏幕'
+                          device_id: '1'
+                          device_name: 'iPhone 15 Pro'
+                          category: '屏幕'
+                          brand: 'Apple'
+                          compatible_models: ['A2842', 'A2843']
+                          price_range:
+                            min: 899.00
+                            max: 1299.00
+                            avg: 1099.00
+                          suppliers_count: 12
+                          image_url: 'https://example.com/screen.jpg'
+                        - id: 'P002'
+                          name: 'iPhone 15 Pro 电池'
+                          model: 'A2842-电池'
+                          device_id: '1'
+                          device_name: 'iPhone 15 Pro'
+                          category: '电池'
+                          brand: 'Apple/OEM'
+                          compatible_models: ['A2842']
+                          price_range:
+                            min: 299.00
+                            max: 499.00
+                            avg: 399.00
+                          suppliers_count: 8
+                          image_url: 'https://example.com/battery.jpg'
+                      pagination:
+                        page: 1
+                        limit: 20
+                        total: 45
+                        total_pages: 3
+                      search_metadata:
+                        keyword: 'iPhone 15'
+                        filters_applied: ['device_id']
+                        search_time_ms: 45
+                    message: 'success'
+        '400':
+          description: 搜索参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /internal/parts/{id}/price:
+    get:
+      tags: [internal, parts]
+      summary: 获取配件最新报价
+      description: |
+        获取指定配件的最新市场价格信息。
+        包含多个供应商的报价和历史价格趋势。
+        仅供FixCycle前端内部调用。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 配件ID
+          required: true
+          schema:
+            type: string
+        - name: supplier_limit
+          in: query
+          description: 返回供应商报价数量限制
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 5
+      responses:
+        '200':
+          description: 成功获取价格信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 配件价格信息示例
+                  value:
+                    code: 200
+                    data:
+                      part_info:
+                        id: 'P001'
+                        name: 'iPhone 15 Pro 屏幕总成'
+                        model: 'A2842-屏幕'
+                        brand: 'Apple'
+                        category: '屏幕'
+                      current_price:
+                        min: 899.00
+                        max: 1299.00
+                        average: 1099.00
+                        median: 1050.00
+                      suppliers:
+                        - supplier_id: 'S001'
+                          supplier_name: '原厂配件供应商'
+                          price: 1299.00
+                          stock: '充足'
+                          delivery_time: '1-3个工作日'
+                          warranty: '12个月'
+                        - supplier_id: 'S002'
+                          supplier_name: '优质副厂供应商'
+                          price: 999.00
+                          stock: '现货'
+                          delivery_time: '24小时内'
+                          warranty: '6个月'
+                        - supplier_id: 'S003'
+                          supplier_name: '性价比优选'
+                          price: 899.00
+                          stock: '少量现货'
+                          delivery_time: '2-5个工作日'
+                          warranty: '3个月'
+                      price_history:
+                        - date: '2026-02-14'
+                          price: 1099.00
+                        - date: '2026-02-07'
+                          price: 1129.00
+                        - date: '2026-01-31'
+                          price: 1089.00
+                      price_trend: 'stable'
+                      updated_at: '2026-02-14T10:30:00Z'
+                    message: 'success'
+        '404':
+          description: 配件不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  value:
+                    code: 404
+                    data: null
+                    message: '配件不存在'
+
+  /internal/suppliers:
+    get:
+      tags: [internal, suppliers]
+      summary: 获取供应商列表
+      description: |
+        获取可用的供应商信息列表。
+        可用于配件比价时的供应商筛选。
+        仅供FixCycle前端内部调用。
+      security:
+        - InternalAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: category
+          in: query
+          description: 供应商品类筛选
+          required: false
+          schema:
+            type: string
+        - name: region
+          in: query
+          description: 地区筛选
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功获取供应商列表
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 供应商列表示例
+                  value:
+                    code: 200
+                    data:
+                      items:
+                        - id: 'S001'
+                          name: '原厂配件供应商'
+                          company: '苹果官方授权经销商'
+                          categories: ['屏幕', '电池', '摄像头']
+                          regions: ['北京', '上海', '广州']
+                          rating: 4.8
+                          review_count: 1247
+                          warranty_period: '12个月'
+                          delivery_time: '1-3个工作日'
+                          certifications: ['ISO9001', '苹果授权']
+                        - id: 'S002'
+                          name: '优质副厂供应商'
+                          company: '深圳华强电子科技'
+                          categories: ['屏幕', '电池', '外壳']
+                          regions: ['深圳', '广州', '东莞']
+                          rating: 4.5
+                          review_count: 892
+                          warranty_period: '6个月'
+                          delivery_time: '24小时内'
+                          certifications: ['CE', 'FCC']
+                      pagination:
+                        page: 1
+                        limit: 50
+                        total: 127
+                        total_pages: 3
+                    message: 'success'
+
+  # ==================== 新增API接口 ====================
+
+  /reviews/pending:
+    get:
+      tags: [reviews]
+      summary: 获取待审核文档列表
+      description: |
+        获取等待审核的文档列表，支持分页和筛选。
+        仅供管理后台使用。
+      security:
+        - AdminAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: status
+          in: query
+          description: 审核状态筛选
+          required: false
+          schema:
+            type: string
+            enum: [pending, approved, rejected]
+      responses:
+        '200':
+          description: 成功获取待审核文档
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 待审核文档列表示例
+                  value:
+                    code: 200
+                    data:
+                      items:
+                        - id: 'DOC001'
+                          title: 'iPhone 15 Pro 维修指南'
+                          author: '技术文档组'
+                          submit_time: '2026-02-19T10:30:00Z'
+                          status: 'pending'
+                          reviewer: null
+                          review_deadline: '2026-02-21T10:30:00Z'
+                        - id: 'DOC002'
+                          title: 'Samsung Galaxy S24 电池更换教程'
+                          author: '维修专家'
+                          submit_time: '2026-02-18T15:45:00Z'
+                          status: 'pending'
+                          reviewer: null
+                          review_deadline: '2026-02-20T15:45:00Z'
+                      pagination:
+                        page: 1
+                        limit: 20
+                        total: 15
+                        total_pages: 1
+                    message: 'success'
+
+  /tokens/packages:
+    get:
+      tags: [tokens]
+      summary: 获取Token套餐列表
+      description: |
+        获取可用的Token购买套餐信息。
+        供用户购买Token时使用。
+      security:
+        - InternalAuth: []
+      responses:
+        '200':
+          description: 成功获取套餐列表
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: Token套餐列表示例
+                  value:
+                    code: 200
+                    data:
+                      packages:
+                        - id: 'PKG001'
+                          name: '基础套餐'
+                          tokens: 1000
+                          price: 9.99
+                          description: '适合个人用户的基础套餐'
+                          discount: 0
+                        - id: 'PKG002'
+                          name: '专业套餐'
+                          tokens: 5000
+                          price: 44.99
+                          description: '适合专业维修店的套餐'
+                          discount: 10
+                        - id: 'PKG003'
+                          name: '企业套餐'
+                          tokens: 20000
+                          price: 159.99
+                          description: '适合大型维修企业的套餐'
+                          discount: 20
+                    message: 'success'
+
+  /agents/invoke:
+    post:
+      tags: [internal]
+      summary: 统一智能体调用接口
+      description: |
+        通用智能体调用接口，支持调用各种类型的智能体（n8n工作流、服务型智能体等）。
+        通过agent_name参数指定要调用的具体智能体。
+      security:
+        - InternalAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentInvokeRequest'
+            examples:
+              diagnosis_agent:
+                summary: 调用AI故障诊断智能体
+                value:
+                  idempotency_key: 'diag_20260220_001'
+                  trace_id: 'trace_123456789'
+                  timeout: 30
+                  agent_name: 'AI故障诊断服务'
+                  payload:
+                    device_id: 'DEV001'
+                    symptoms: '设备无法开机'
+                    conversation_history: []
+              recommendation_agent:
+                summary: 调用推荐引擎智能体
+                value:
+                  idempotency_key: 'rec_20260220_001'
+                  trace_id: 'trace_987654321'
+                  timeout: 15
+                  agent_name: 'FCX智能推荐引擎'
+                  payload:
+                    user_id: 'user_123'
+                    context:
+                      location: { 'lat': 39.9042, 'lng': 116.4074 }
+                      device_type: 'smartphone'
+      responses:
+        '200':
+          description: 智能体调用成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentInvokeResponse'
+              examples:
+                success:
+                  summary: 调用成功响应示例
+                  value:
+                    code: 200
+                    data:
+                      status: 'completed'
+                      result:
+                        diagnosis: '设备电池电量耗尽'
+                        suggested_solutions:
+                          - '请给设备充电30分钟后再试'
+                          - '如仍无法开机，建议联系专业维修'
+                        confidence: 0.92
+                        estimated_time: '15-30分钟'
+                      metrics:
+                        execution_time_ms: 1250
+                        tokens_consumed: 850
+                        model_used: 'deepseek-chat'
+                    message: 'success'
+                processing:
+                  summary: 异步处理中响应示例
+                  value:
+                    code: 202
+                    data:
+                      status: 'processing'
+                      result: null
+                      metrics:
+                        queue_position: 3
+                        estimated_wait_time: 15
+                    message: '请求已接收，正在处理中'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_agent:
+                  value:
+                    code: 400
+                    data:
+                      field: 'agent_name'
+                      error: '指定的智能体不存在或不可用'
+                    message: '请求参数错误'
+        '408':
+          description: 请求超时
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                timeout:
+                  value:
+                    code: 408
+                    data:
+                      timeout_seconds: 30
+                      agent_name: 'AI故障诊断服务'
+                    message: '智能体调用超时'
+        '429':
+          description: 请求过于频繁
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rate_limit:
+                  value:
+                    code: 429
+                    data:
+                      retry_after: 60
+                      requests_per_minute: 10
+                    message: '请求频率超出限制，请稍后再试'
+        '500':
+          description: 智能体内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internal_error:
+                  value:
+                    code: 500
+                    data:
+                      agent_name: 'AI故障诊断服务'
+                      error_details: '模型推理服务暂时不可用'
+                    message: '智能体执行失败'
+
+  /diagnosis/chat:
+    post:
+      tags: [diagnosis]
+      summary: AI故障诊断对话
+      description: |
+        与AI诊断系统进行故障诊断对话。
+        支持多轮对话和上下文保持。
+      security:
+        - InternalAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+                - sessionId
+              properties:
+                message:
+                  type: string
+                  description: 用户输入的问题
+                  example: '我的iPhone无法开机怎么办？'
+                sessionId:
+                  type: string
+                  description: 会话ID，用于保持对话上下文
+                  example: 'sess_123456789'
+                deviceId:
+                  type: string
+                  description: 设备ID（可选）
+                  example: 'DEV001'
+      responses:
+        '200':
+          description: 成功获取诊断结果
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  summary: 诊断结果示例
+                  value:
+                    code: 200
+                    data:
+                      response: '根据您的描述，iPhone无法开机可能是以下原因：1. 电池电量耗尽，请充电30分钟后再试；2. 系统卡死，可以尝试强制重启...'
+                      suggestions:
+                        - '先给设备充电30分钟'
+                        - '尝试强制重启操作'
+                        - '如果问题持续，建议联系专业维修'
+                      confidence: 0.85
+                      estimated_time: '15-30分钟'
+                      sessionId: 'sess_123456789'
+                    message: 'success'
+
+# ==================== 组件定义 ====================
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 公开API访问密钥
+
+    InternalAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 内部API认证Token
+
+    AdminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 管理后台认证Token
+
+  schemas:
+    ApiResponse:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: integer
+          description: 响应状态码
+          example: 200
+        data:
+          type: object
+          description: 响应数据
+          nullable: true
+        message:
+          type: string
+          description: 响应消息
+          example: 'success'
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - data
+        - message
+      properties:
+        code:
+          type: integer
+          description: 错误状态码
+          example: 400
+        data:
+          type: object
+          description: 错误详情
+          nullable: true
+        message:
+          type: string
+          description: 错误消息
+          example: '请求参数错误'
+
+    # ==================== 设备生命周期数据模型 ====================
+
+    DeviceProfile:
+      type: object
+      description: 设备档案信息
+      required:
+        - id
+        - qrcodeId
+        - productModel
+        - productCategory
+        - brandName
+        - currentStatus
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          description: 档案ID
+          example: 'profile_12345'
+        qrcodeId:
+          type: string
+          description: 设备二维码ID
+          example: 'test_device_001'
+        productModel:
+          type: string
+          description: 产品型号
+          example: 'iPhone 15 Pro'
+        productCategory:
+          type: string
+          description: 产品类别
+          example: '智能手机'
+        brandName:
+          type: string
+          description: 品牌名称
+          example: 'Apple'
+        serialNumber:
+          type: string
+          description: 序列号
+          example: 'SN_IP15P_001'
+        manufacturingDate:
+          type: string
+          format: date
+          description: 生产日期
+          example: '2026-01-15'
+        firstActivatedAt:
+          type: string
+          format: date-time
+          description: 首次激活时间
+          example: '2026-02-05T10:30:00Z'
+        warrantyStartDate:
+          type: string
+          format: date
+          description: 保修开始日期
+          example: '2026-02-05'
+        warrantyExpiry:
+          type: string
+          format: date
+          description: 保修到期日期
+          example: '2027-02-05'
+        warrantyPeriod:
+          type: integer
+          description: 保修期（月）
+          example: 12
+        currentStatus:
+          type: string
+          description: 当前状态
+          enum:
+            [
+              manufactured,
+              activated,
+              in_use,
+              maintained,
+              transferred,
+              recycled,
+              scrapped,
+            ]
+          example: 'activated'
+        lastEventAt:
+          type: string
+          format: date-time
+          description: 最后事件时间
+          example: '2026-02-19T14:20:00Z'
+        lastEventType:
+          type: string
+          description: 最后事件类型
+          example: 'maintained'
+        totalRepairCount:
+          type: integer
+          description: 总维修次数
+          example: 1
+        totalPartReplacementCount:
+          type: integer
+          description: 总配件更换次数
+          example: 1
+        totalTransferCount:
+          type: integer
+          description: 总转移次数
+          example: 0
+        currentLocation:
+          type: string
+          description: 当前位置
+          example: '北京市朝阳区'
+        ownerInfo:
+          type: object
+          description: 所有者信息
+          properties:
+            name:
+              type: string
+              example: '张三'
+            department:
+              type: string
+              example: 'IT部门'
+        specifications:
+          type: object
+          description: 技术规格
+          example: { 'storage': '256GB', 'color': '钛金属原色' }
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: '2026-02-05T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: '2026-02-19T14:20:00Z'
+
+    LifecycleEvent:
+      type: object
+      description: 生命周期事件
+      required:
+        - id
+        - eventType
+        - eventTimestamp
+        - location
+      properties:
+        id:
+          type: string
+          description: 事件ID
+          example: 'event_12345'
+        eventType:
+          type: string
+          description: 事件类型
+          enum:
+            [
+              manufactured,
+              activated,
+              in_use,
+              maintained,
+              transferred,
+              recycled,
+              scrapped,
+            ]
+          example: 'maintained'
+        eventDescription:
+          type: string
+          description: 事件描述
+          example: '设备完成首次维修保养'
+        eventTimestamp:
+          type: string
+          format: date-time
+          description: 事件发生时间
+          example: '2026-02-19T14:20:00Z'
+        location:
+          type: string
+          description: 事件发生地点
+          example: '北京维修中心'
+        operator:
+          type: string
+          description: 操作人员
+          example: '维修技师王师傅'
+        notes:
+          type: string
+          description: 备注信息
+          example: '更换电池组件，设备运行正常'
+        metadata:
+          type: object
+          description: 附加元数据
+          example: { 'repair_score': 85, 'parts_replaced': ['battery'] }
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: 当前页码
+        limit:
+          type: integer
+          description: 每页数量
+        total:
+          type: integer
+          description: 总记录数
+        total_pages:
+          type: integer
+          description: 总页数
+
+    AgentInvokeRequest:
+      type: object
+      required:
+        - idempotency_key
+        - trace_id
+        - timeout
+        - agent_name
+        - payload
+      properties:
+        idempotency_key:
+          type: string
+          description: 幂等性键，用于防止重复请求
+          example: 'req_20260220_12345'
+          maxLength: 128
+        trace_id:
+          type: string
+          description: 调用链追踪ID，用于日志追踪
+          example: 'trace_a1b2c3d4e5f6'
+          maxLength: 64
+        timeout:
+          type: integer
+          description: 超时时间（秒）
+          example: 30
+          minimum: 1
+          maximum: 300
+        agent_name:
+          type: string
+          description: 要调用的智能体名称
+          example: 'AI故障诊断服务'
+          maxLength: 100
+        payload:
+          type: object
+          description: 传递给智能体的具体参数
+          example:
+            device_id: 'DEV001'
+            symptoms: '设备无法开机'
+            user_id: 'user_123'
+
+    AgentInvokeResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: 调用状态
+          enum: [completed, processing, failed, timeout]
+          example: 'completed'
+        result:
+          type: object
+          description: 智能体执行结果
+          nullable: true
+          example:
+            diagnosis: '设备电池电量耗尽'
+            confidence: 0.92
+            suggested_actions:
+              - '请充电30分钟后再试'
+        error:
+          type: object
+          description: 错误信息（仅在失败时返回）
+          nullable: true
+          properties:
+            code:
+              type: string
+              description: 错误代码
+              example: 'AGENT_UNAVAILABLE'
+            message:
+              type: string
+              description: 错误描述
+              example: '智能体暂时不可用'
+            details:
+              type: object
+              description: 详细错误信息
+              nullable: true
+        metrics:
+          type: object
+          description: 执行指标
+          properties:
+            execution_time_ms:
+              type: integer
+              description: 执行时间（毫秒）
+              example: 1250
+            tokens_consumed:
+              type: integer
+              description: 消耗的token数量
+              example: 850
+            model_used:
+              type: string
+              description: 使用的模型名称
+              example: 'deepseek-chat'
+            queue_position:
+              type: integer
+              description: 队列中的位置（异步处理时）
+              example: 3
+            estimated_wait_time:
+              type: integer
+              description: 预估等待时间（秒）
+              example: 15
+
+# ==================== 外部文档 ====================
+
+externalDocs:
+  description: 更多技术文档请参考
+  url: https://docs.fixcycle.com
+# ==================== 服务器变量 ====================
+
+# 服务器变量可用于动态配置不同环境
+# servers:
+#   - url: https://{environment}.fixcycle.com/{version}
+#     variables:
+#       environment:
+#         default: api
+#         enum:
+#           - api
+#           - staging-api
+#           - dev-api
+#       version:
+#         default: v1

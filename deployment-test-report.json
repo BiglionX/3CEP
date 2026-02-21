@@ -1,0 +1,97 @@
+{
+  "timestamp": "2026-02-15T05:17:50.697Z",
+  "summary": {
+    "total": 17,
+    "passed": 11,
+    "failed": 6,
+    "passRate": 65
+  },
+  "details": [
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_URL",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "SUPABASE_SERVICE_ROLE_KEY",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "NODE_ENV",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "package.json 格式",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "依赖 next",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "依赖 @supabase/supabase-js",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "依赖 react",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "清理构建目录",
+      "status": "FAIL",
+      "message": "Command failed: rimraf .next\n'rimraf' �����ڲ����ⲿ���Ҳ���ǿ����еĳ���\r\n���������ļ���\r\n"
+    },
+    {
+      "name": "生产构建",
+      "status": "FAIL",
+      "message": "Command failed: npm run build\n⚠ `images.domains` is deprecated in favor of `images.remotePatterns`. "
+    },
+    {
+      "name": "TypeScript 编译检查",
+      "status": "FAIL",
+      "message": "Command failed: npx tsc --noEmit"
+    },
+    {
+      "name": "ESLint 检查",
+      "status": "SKIP",
+      "message": "未配置 ESLint"
+    },
+    {
+      "name": ".env 敏感信息",
+      "status": "FAIL",
+      "message": ""
+    },
+    {
+      "name": ".env.local 敏感信息",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "next.config.js 敏感信息",
+      "status": "PASS",
+      "message": ""
+    },
+    {
+      "name": "安全头配置",
+      "status": "WARN",
+      "message": ""
+    },
+    {
+      "name": "基础性能测试",
+      "status": "PASS",
+      "message": "耗时: 0ms"
+    }
+  ],
+  "canDeploy": false
+}

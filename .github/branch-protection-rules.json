@@ -1,0 +1,63 @@
+{
+  "branchProtectionRules": [
+    {
+      "pattern": "main",
+      "requiresStatusChecks": true,
+      "requiredStatusCheckContexts": [
+        "test-suite (18.x, postgresql)",
+        "test-suite (20.x, postgresql)",
+        "quality-gate",
+        "CI/CD Pipeline / test",
+        "Enhanced CI/CD Pipeline / comprehensive-tests"
+      ],
+      "requiresStrictStatusChecks": true,
+      "requiresCodeOwnerReviews": true,
+      "requiredApprovingReviewCount": 1,
+      "dismissesStaleReviews": true,
+      "requiresConversationResolution": true,
+      "restrictsPushes": true,
+      "pushActorIds": [],
+      "allowsForcePushes": false,
+      "allowsDeletions": false,
+      "isAdminEnforced": true,
+      "requiredLinearHistory": true
+    },
+    {
+      "pattern": "develop",
+      "requiresStatusChecks": true,
+      "requiredStatusCheckContexts": [
+        "test-suite (18.x, postgresql)",
+        "test-suite (20.x, postgresql)",
+        "quality-gate"
+      ],
+      "requiresStrictStatusChecks": false,
+      "requiresCodeOwnerReviews": false,
+      "requiredApprovingReviewCount": 1,
+      "dismissesStaleReviews": false,
+      "requiresConversationResolution": false,
+      "restrictsPushes": false,
+      "allowsForcePushes": false,
+      "allowsDeletions": false,
+      "isAdminEnforced": false
+    }
+  ],
+  "enforceAdmins": {
+    "enabled": true
+  },
+  "requiredPullRequestReviews": {
+    "dismissStaleReviewsOnPush": true,
+    "requireCodeOwnerReview": true,
+    "requireLastPushApproval": true,
+    "requiredApprovingReviewCount": 1
+  },
+  "requiredStatusChecks": {
+    "strict": true,
+    "contexts": [
+      "test-suite (18.x, postgresql)",
+      "test-suite (20.x, postgresql)",
+      "quality-gate",
+      "CI/CD Pipeline / test",
+      "Enhanced CI/CD Pipeline / comprehensive-tests"
+    ]
+  }
+}

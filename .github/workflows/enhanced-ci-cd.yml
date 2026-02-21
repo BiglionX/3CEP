@@ -1,0 +1,337 @@
+name: Enhanced CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop, stage]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'README*'
+  pull_request:
+    branches: [main, develop]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'README*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '部署环境'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+
+permissions:
+  contents: read
+  packages: write
+  deployments: write
+
+jobs:
+  # 代码质量检查
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint:check
+
+      - name: Run Prettier check
+        run: npm run format:check
+
+      - name: TypeScript type checking
+        run: npx tsc --noEmit
+
+  # 数据库迁移校验
+  db-migration-check:
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Create env file for migration check
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://dummy.supabase.co" >> .env.test
+          echo "SUPABASE_SERVICE_ROLE_KEY=dummy-key" >> .env.test
+          echo "NODE_ENV=test" >> .env.test
+
+      - name: Run migration dry-run
+        run: |
+          npm run db:migrate --dry-run
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://dummy.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: dummy-key
+          NODE_ENV: test
+
+  # 完整测试套件
+  comprehensive-tests:
+    runs-on: ubuntu-latest
+    needs: [code-quality, db-migration-check]
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run all tests
+        run: npm run test:all --ci
+        env:
+          CI: true
+          PLAYWRIGHT_HTML_REPORT: playwright-report
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.node-version }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 30
+
+  # n8n 工作流冒烟测试
+  n8n-smoke-test:
+    runs-on: ubuntu-latest
+    needs: code-quality
+    services:
+      n8n:
+        image: n8nio/n8n:latest
+        ports:
+          - 5678:5678
+        env:
+          N8N_ENCRYPTION_KEY: test-key-${{ github.sha }}
+          DB_TYPE: sqlite
+          N8N_LOG_LEVEL: error
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Wait for n8n to start
+        run: |
+          timeout 120 bash -c 'until curl -s http://localhost:5678/healthz; do sleep 5; done'
+          echo "n8n service is ready"
+
+      - name: Import critical workflows
+        run: |
+          cd n8n-workflows
+          # 导入关键业务流程进行冒烟测试
+          for workflow in procurement/v1.0.0/*.json payment/v1.0.0/*.json; do
+            if [ -f "$workflow" ]; then
+              echo "Importing $workflow"
+              curl -s -X POST http://localhost:5678/workflows \
+                -H "Content-Type: application/json" \
+                -d "@${workflow}" > /dev/null
+            fi
+          done
+
+      - name: Run smoke tests
+        run: |
+          cd n8n-workflows
+          export N8N_BASE_URL="http://localhost:5678"
+          node test-n8n-workflows.js --smoke
+
+      - name: Generate n8n test report
+        if: always()
+        run: |
+          mkdir -p test-results/n8n-smoke-test
+          cd n8n-workflows
+          export N8N_BASE_URL="http://localhost:5678"
+          node test-n8n-workflows.js > ../test-results/n8n-smoke-test/report.txt 2>&1 || true
+
+      - name: Upload n8n results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: n8n-smoke-test-results
+          path: test-results/n8n-smoke-test/
+          retention-days: 14
+
+  # 构建和打包
+  build-and-package:
+    runs-on: ubuntu-latest
+    needs: [comprehensive-tests, n8n-smoke-test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Package artifacts
+        run: |
+          tar -czf build-artifacts.tar.gz .next/ public/ package.json package-lock.json
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build-artifacts.tar.gz
+          retention-days: 7
+
+  # 开发环境部署
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: build-and-package
+    if: github.ref == 'refs/heads/develop' || github.event.inputs.environment == 'dev'
+    environment: development
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Extract artifacts
+        run: tar -xzf build-artifacts.tar.gz
+
+      - name: Deploy to dev environment
+        run: |
+          echo "🚀 Deploying to development environment..."
+          # 使用轻量级配置
+          docker-compose -f docker-compose.n8n-minimal.yml up -d
+          echo "✅ Development deployment completed"
+
+  # 预发布环境部署
+  deploy-stage:
+    runs-on: ubuntu-latest
+    needs: build-and-package
+    if: github.ref == 'refs/heads/stage' || github.event.inputs.environment == 'stage'
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Extract artifacts
+        run: tar -xzf build-artifacts.tar.gz
+
+      - name: Deploy to staging environment
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          # 使用生产相似配置
+          docker-compose -f docker-compose.stage.yml up -d
+          echo "✅ Staging deployment completed"
+
+  # 生产环境部署（需要审批）
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build-and-package
+    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'prod'
+    environment: production
+    concurrency: production-deployment
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Extract artifacts
+        run: tar -xzf build-artifacts.tar.gz
+
+      - name: Pre-deployment validation
+        run: |
+          echo "🔍 Running pre-deployment validation..."
+          # 执行预演检查
+          npm run db:migrate --dry-run
+
+      - name: Manual approval required
+        uses: trstringer/manual-approval@v1.6.0
+        with:
+          secret: ${{ secrets.APPROVAL_SECRET }}
+          approvers: ${{ secrets.PROD_APPROVERS }}
+          minimum-approvals: 1
+          issue-title: 'Production Deployment Approval Required'
+          issue-body: |
+            A production deployment is pending approval.
+
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref }}
+            Commit: ${{ github.sha }}
+
+            Please review the changes and approve if ready for production deployment.
+
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to production environment..."
+          # 禁止手动SQL，使用流水线部署
+          docker-compose -f docker-compose.prod.yml up -d
+          echo "✅ Production deployment completed"
+
+  # 通知和报告
+  notification:
+    runs-on: ubuntu-latest
+    needs: [deploy-dev, deploy-stage, deploy-prod]
+    if: always()
+
+    steps:
+      - name: Send deployment notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "CI/CD Pipeline Status",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*CI/CD Pipeline Completed*\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nStatus: ${{ job.status }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,0 +1,299 @@
+name: Security Gate CI Pipeline
+
+on:
+  push:
+    branches: [main, develop, stage]
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'tests/e2e/**'
+      - 'config/rbac.json'
+      - 'src/middleware/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  # 权限控制测试
+  permission-controls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run role-based navigation tests
+        id: roles-test
+        run: |
+          npm run test:roles
+        env:
+          CI: true
+          TEST_BASE_URL: http://localhost:3000
+          PLAYWRIGHT_HTML_REPORT: playwright-report
+
+      - name: Check roles test results
+        if: failure()
+        run: |
+          echo "::error::❌ 权限控制测试失败，阻止合并"
+          exit 1
+
+      - name: Upload roles test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roles-test-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+
+  # 审计日志测试
+  audit-logging:
+    runs-on: ubuntu-latest
+    needs: permission-controls
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run audit-related tests
+        id: audit-test
+        run: |
+          npm run test:audit
+        env:
+          CI: true
+          TEST_BASE_URL: http://localhost:3000
+          AUDIT_LOG_PATH: ./logs
+
+      - name: Check audit test results
+        if: failure()
+        run: |
+          echo "::error::❌ 审计日志测试失败，阻止合并"
+          exit 1
+
+      - name: Validate audit log generation
+        run: |
+          # 检查审计日志是否正确生成
+          if [ ! -d "./logs" ] || [ -z "$(ls -A ./logs)" ]; then
+            echo "::error::❌ 审计日志未生成"
+            exit 1
+          fi
+          
+          # 检查日志格式
+          log_files=$(find ./logs -name "*.ndjson" -o -name "*.json" | head -5)
+          for log_file in $log_files; do
+            if [ -f "$log_file" ]; then
+              echo "Checking log file: $log_file"
+              # 验证 JSON 格式
+              if ! jq empty "$log_file" 2>/dev/null; then
+                echo "::error::❌ 审计日志格式错误: $log_file"
+                exit 1
+              fi
+            fi
+          done
+          
+          echo "✅ 审计日志验证通过"
+
+      - name: Upload audit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-test-results
+          path: |
+            test-results/
+            logs/
+            playwright-report/
+          retention-days: 14
+
+  # 安全扫描
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: [permission-controls, audit-logging]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Check for vulnerable dependencies
+        run: |
+          vulnerabilities=$(npm audit --json | jq '.metadata.vulnerabilities.total')
+          if [ "$vulnerabilities" -gt 0 ]; then
+            echo "::warning::发现 $vulnerabilities 个安全漏洞，请及时修复"
+          else
+            echo "✅ 无安全漏洞"
+          fi
+
+      - name: Secret scanning
+        run: |
+          # 检查代码中是否包含硬编码密钥
+          secret_patterns=(
+            "sk-[a-zA-Z0-9]{32}"
+            "pk-[a-zA-Z0-9]{32}"
+            "[a-zA-Z0-9]{32}[ \t]*=[ \t]*['\"][a-zA-Z0-9]{32,}['\"]"
+            "secret.*[a-zA-Z0-9]{16,}"
+          )
+          
+          for pattern in "${secret_patterns[@]}"; do
+            if grep -r -E "$pattern" --exclude-dir=node_modules --exclude-dir=.git .; then
+              echo "::error::❌ 发现潜在的硬编码密钥"
+              exit 1
+            fi
+          done
+          
+          echo "✅ 密钥扫描通过"
+
+  # 权限配置验证
+  rbac-validation:
+    runs-on: ubuntu-latest
+    needs: [permission-controls, audit-logging]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Validate RBAC configuration
+        run: |
+          # 检查 RBAC 配置文件是否存在
+          if [ ! -f "config/rbac.json" ]; then
+            echo "::error::❌ RBAC 配置文件缺失"
+            exit 1
+          fi
+          
+          # 验证 JSON 格式
+          if ! jq empty config/rbac.json 2>/dev/null; then
+            echo "::error::❌ RBAC 配置文件格式错误"
+            exit 1
+          fi
+          
+          # 检查必需的角色定义
+          required_roles=("admin" "ops" "engineer" "consumer" "shop_owner")
+          for role in "${required_roles[@]}"; do
+            if ! jq -e ".roles.$role" config/rbac.json >/dev/null 2>&1; then
+              echo "::error::❌ 缺少必需角色: $role"
+              exit 1
+            fi
+          done
+          
+          echo "✅ RBAC 配置验证通过"
+
+  # 质量门禁检查
+  quality-gate:
+    runs-on: ubuntu-latest
+    needs: [permission-controls, audit-logging, security-scan, rbac-validation]
+    if: always()
+    steps:
+      - name: Evaluate test results
+        run: |
+          # 检查所有前置任务的状态
+          failed_jobs=0
+          
+          # 权限控制测试
+          if [[ "${{ needs.permission-controls.result }}" != "success" ]]; then
+            echo "::error::❌ 权限控制测试未通过"
+            ((failed_jobs++))
+          fi
+          
+          # 审计日志测试
+          if [[ "${{ needs.audit-logging.result }}" != "success" ]]; then
+            echo "::error::❌ 审计日志测试未通过"
+            ((failed_jobs++))
+          fi
+          
+          # 安全扫描
+          if [[ "${{ needs.security-scan.result }}" != "success" ]]; then
+            echo "::warning::⚠️ 安全扫描发现问题"
+          fi
+          
+          # RBAC 验证
+          if [[ "${{ needs.rbac-validation.result }}" != "success" ]]; then
+            echo "::error::❌ RBAC 配置验证未通过"
+            ((failed_jobs++))
+          fi
+          
+          # 如果有任何关键测试失败，阻止合并
+          if [ $failed_jobs -gt 0 ]; then
+            echo "::error::❌ 质量门禁未通过，共 $failed_jobs 项测试失败"
+            echo "详细信息请查看相关作业的日志"
+            exit 1
+          else
+            echo "✅ 所有质量门禁检查通过"
+          fi
+
+      - name: Generate security report
+        if: always()
+        run: |
+          mkdir -p security-report
+          echo "# 安全门禁报告" > security-report/summary.md
+          echo "生成时间: $(date)" >> security-report/summary.md
+          echo "" >> security-report/summary.md
+          echo "## 测试结果" >> security-report/summary.md
+          echo "- 权限控制测试: ${{ needs.permission-controls.result }}" >> security-report/summary.md
+          echo "- 审计日志测试: ${{ needs.audit-logging.result }}" >> security-report/summary.md
+          echo "- 安全扫描: ${{ needs.security-scan.result }}" >> security-report/summary.md
+          echo "- RBAC 验证: ${{ needs.rbac-validation.result }}" >> security-report/summary.md
+
+      - name: Upload security report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-gate-report
+          path: security-report/
+          retention-days: 30
+
+  # PR 状态检查
+  pr-status-check:
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Set PR status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pull } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const status = '${{ needs.quality-gate.result }}' === 'success' ? 'success' : 'failure';
+            const description = status === 'success' 
+              ? '✅ 安全门禁检查通过' 
+              : '❌ 安全门禁检查未通过，请查看详细日志';
+            
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: pull.head.sha,
+              state: status,
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: description,
+              context: 'security-gate'
+            });

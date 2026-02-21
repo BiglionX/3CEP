@@ -1,0 +1,23 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run ESLint check
+echo "Running ESLint..."
+npm run lint:check
+if [ $? -ne 0 ]; then
+  echo "❌ ESLint check failed. Please fix the issues before committing."
+  exit 1
+fi
+
+# Run quick tests
+echo "Running quick tests..."
+npm run test:all:quick
+if [ $? -ne 0 ]; then
+  echo "❌ Tests failed. Please fix the issues before committing."
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"
+exit 0
