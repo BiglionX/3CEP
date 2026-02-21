@@ -1,0 +1,85 @@
+{
+  "reportId": "agents-metrics-20260220-1771567861029",
+  "generatedAt": "2026-02-20T06:11:01.029Z",
+  "period": {
+    "start": "2026-02-20T06:11:00.947Z",
+    "end": "2026-02-20T06:11:01.029Z"
+  },
+  "environment": "development",
+  "target": {
+    "host": "localhost",
+    "port": "3001"
+  },
+  "metrics": {
+    "summary": {
+      "totalRequests": 20,
+      "successfulRequests": 0,
+      "failedRequests": 20,
+      "successRate": 0,
+      "errorRate": 100
+    },
+    "latency": {
+      "p95": 3,
+      "average": 1.4,
+      "min": 1,
+      "max": 3
+    },
+    "errorCodes": {},
+    "agentPerformance": {
+      "AI故障诊断服务": {
+        "totalRequests": 4,
+        "successRate": 0,
+        "p95Latency": 3,
+        "avgLatency": 1.5,
+        "errorDistribution": {
+          "totalErrors": 4,
+          "errorRate": 100
+        }
+      },
+      "FCX智能推荐引擎": {
+        "totalRequests": 4,
+        "successRate": 0,
+        "p95Latency": 2,
+        "avgLatency": 1.5,
+        "errorDistribution": {
+          "totalErrors": 4,
+          "errorRate": 100
+        }
+      },
+      "智能采购代理": {
+        "totalRequests": 4,
+        "successRate": 0,
+        "p95Latency": 2,
+        "avgLatency": 2,
+        "errorDistribution": {
+          "totalErrors": 4,
+          "errorRate": 100
+        }
+      },
+      "售后服务助手": {
+        "totalRequests": 4,
+        "successRate": 0,
+        "p95Latency": 1,
+        "avgLatency": 1,
+        "errorDistribution": {
+          "totalErrors": 4,
+          "errorRate": 100
+        }
+      },
+      "数据分析引擎": {
+        "totalRequests": 4,
+        "successRate": 0,
+        "p95Latency": 1,
+        "avgLatency": 1,
+        "errorDistribution": {
+          "totalErrors": 4,
+          "errorRate": 100
+        }
+      }
+    }
+  },
+  "metadata": {
+    "sampleSize": 20,
+    "timeout": 5000
+  }
+}
