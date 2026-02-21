@@ -1,0 +1,225 @@
+{
+  "name": "设备激活欢迎消息工作流",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "table": "device_profiles",
+        "columns": "*",
+        "condition": {
+          "column": "current_status",
+          "operation": "equals",
+          "value": "activated"
+        },
+        "options": {
+          "filter": "last_activated_at > NOW() - INTERVAL '5 minutes'"
+        }
+      },
+      "id": "SupabaseTrigger",
+      "name": "监听设备激活事件",
+      "type": "n8n-nodes-base.supabaseTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.first_activated_at }}",
+              "operation": "notEmpty"
+            }
+          ]
+        }
+      },
+      "id": "FilterFirstActivation",
+      "name": "过滤首次激活",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "userId",
+              "value": "={{ $json.user_id }}"
+            },
+            {
+              "name": "deviceModel",
+              "value": "={{ $json.product_model }}"
+            },
+            {
+              "name": "brandName",
+              "value": "={{ $json.brand_name }}"
+            },
+            {
+              "name": "activationTime",
+              "value": "={{ $json.first_activated_at }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "SetWelcomeData",
+      "name": "准备欢迎消息数据",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        650,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $parameter[\"wechatWebhookUrl\"] }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersJson": "={\n  \"msgtype\": \"text\",\n  \"text\": {\n    \"content\": \"🎉 欢迎使用 {{ $json.deviceModel }}！\\n\\n感谢您选择 {{ $json.brandName }} 产品。\\n\\n设备已于 {{ $json.activationTime }} 成功激活。\\n\\n💡 温馨提示：\\n• 建议定期备份重要数据\\n• 了解保修政策和服务网点\\n• 关注官方更新和安全补丁\\n\\n如有任何问题，请随时联系我们！\"\n  }\n}"
+      },
+      "id": "SendWechatMessage",
+      "name": "发送企业微信欢迎消息",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        250
+      ],
+      "credentials": {
+        "wechatWebhookApi": "wechatWebhookCredentials"
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $parameter[\"emailApiUrl\"] }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersJson": "={\n  \"to\": \"{{ $json.user_email }}\",\n  \"subject\": \"🎉 {{ $json.deviceModel }} 激活成功！\",\n  \"html\": \"<h2>欢迎使用 {{ $json.deviceModel }}</h2><p>感谢您选择 {{ $json.brandName }} 产品。</p><p>设备已于 {{ $json.activationTime }} 成功激活。</p><h3>💡 使用建议：</h3><ul><li>定期备份重要数据</li><li>了解保修政策和服务网点</li><li>关注官方更新和安全补丁</li></ul><p>如有任何问题，请随时联系我们！</p>\"\n}"
+      },
+      "id": "SendEmail",
+      "name": "发送欢迎邮件",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "tableName": "notification_logs",
+        "columns": "device_qrcode_id, notification_type, status, created_at",
+        "row": {
+          "device_qrcode_id": "={{ $json.qrcode_id }}",
+          "notification_type": "welcome_message",
+          "status": "sent",
+          "created_at": "={{ new Date().toISOString() }}"
+        }
+      },
+      "id": "LogNotification",
+      "name": "记录通知日志",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "监听设备激活事件": {
+      "main": [
+        [
+          {
+            "node": "过滤首次激活",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "过滤首次激活": {
+      "main": [
+        [
+          {
+            "node": "准备欢迎消息数据",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "准备欢迎消息数据": {
+      "main": [
+        [
+          {
+            "node": "发送企业微信欢迎消息",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "发送欢迎邮件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "发送企业微信欢迎消息": {
+      "main": [
+        [
+          {
+            "node": "记录通知日志",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "发送欢迎邮件": {
+      "main": [
+        [
+          {
+            "node": "记录通知日志",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "wechatWebhookUrl": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_WEBHOOK_KEY",
+    "emailApiUrl": "https://api.emailservice.com/send"
+  },
+  "meta": {
+    "instanceId": "N8N-206",
+    "description": "监听设备激活事件并发送个性化欢迎消息",
+    "version": "1.0.0",
+    "author": "FixCycle Team",
+    "tags": ["设备激活", "欢迎消息", "自动化通知"]
+  }
+}

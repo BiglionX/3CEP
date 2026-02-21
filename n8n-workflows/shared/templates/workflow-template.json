@@ -1,0 +1,296 @@
+{
+  "meta": {
+    "version": "{{VERSION}}",
+    "created_at": "{{TIMESTAMP}}",
+    "author": "{{AUTHOR}}",
+    "description": "{{DESCRIPTION}}",
+    "tags": ["{{TAGS}}"],
+    "rollback_to": "{{ROLLBACK_VERSION}}",
+    "rollback_notes": "{{ROLLBACK_NOTES}}"
+  },
+  "name": "{{WORKFLOW_NAME}}",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "{{WEBHOOK_PATH}}",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger-{{UNIQUE_ID}}",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "requestId",
+              "value": "={{ 'req_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9) }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-metadata-{{UNIQUE_ID}}",
+      "name": "Set Request Metadata",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{API_URL}}",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Request-ID",
+              "value": "={{ $json['requestId'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "data",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "http-request-{{UNIQUE_ID}}",
+      "name": "Call External API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json['success'] }}",
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-success-{{UNIQUE_ID}}",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "success",
+              "value": "={{ $json['success'] }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json['message'] || '操作成功' }}"
+            },
+            {
+              "name": "requestId",
+              "value": "={{ $json['requestId'] }}"
+            },
+            {
+              "name": "result",
+              "value": "={{ $json['data'] || {} }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "transform-success-response-{{UNIQUE_ID}}",
+      "name": "Transform Success Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "success",
+              "value": false
+            },
+            {
+              "name": "message",
+              "value": "={{ $json['error'] || '操作失败' }}"
+            },
+            {
+              "name": "requestId",
+              "value": "={{ $json['requestId'] }}"
+            },
+            {
+              "name": "errorCode",
+              "value": "={{ $json['errorCode'] || 'UNKNOWN_ERROR' }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "transform-error-response-{{UNIQUE_ID}}",
+      "name": "Transform Error Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        1250,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": "={{ $json['success'] ? 200 : 400 }}"
+        }
+      },
+      "id": "http-response-final-{{UNIQUE_ID}}",
+      "name": "Return Final Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1500,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Request Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Request Metadata": {
+      "main": [
+        [
+          {
+            "node": "Call External API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call External API": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Transform Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transform Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Success Response": {
+      "main": [
+        [
+          {
+            "node": "Return Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Error Response": {
+      "main": [
+        [
+          {
+            "node": "Return Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "versionId": "{{VERSION_ID}}",
+  "id": "{{WORKFLOW_ID}}",
+  "tags": [
+    {
+      "id": "tag-{{BUSINESS_DOMAIN}}",
+      "name": "{{BUSINESS_DOMAIN_DISPLAY}}"
+    }
+  ]
+}

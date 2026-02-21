@@ -1,0 +1,333 @@
+{
+  "name": "B2B Procurement Agent Advanced Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "b2b-procurement-advanced",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger-advanced",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "requestId",
+              "value": "={{ 'req_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9) }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-metadata",
+      "name": "Set Request Metadata",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $parameter['baseUrl'] }}/api/b2b-procurement/parse-demand",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Request-ID",
+              "value": "={{ $json['requestId'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "description",
+              "value": "={{ $json['description'] }}"
+            },
+            {
+              "name": "companyId",
+              "value": "={{ $json['companyId'] || 'default-company' }}"
+            },
+            {
+              "name": "requesterId",
+              "value": "={{ $json['requesterId'] || 'default-requester' }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          }
+        }
+      },
+      "id": "http-request-parser-advanced",
+      "name": "Call B2B Parser API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json['success'] }}",
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-success",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "success",
+              "value": "={{ $json['success'] }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json['message'] || '解析完成' }}"
+            },
+            {
+              "name": "requestId",
+              "value": "={{ $json['requestId'] }}"
+            },
+            {
+              "name": "itemsCount",
+              "value": "={{ $json['data'] && $json['data']['parsedRequest'] ? $json['data']['parsedRequest']['items'].length : 0 }}"
+            },
+            {
+              "name": "confidence",
+              "value": "={{ $json['data'] && $json['data']['parsedRequest'] ? $json['data']['parsedRequest']['aiConfidence'] : 0 }}"
+            },
+            {
+              "name": "processingTime",
+              "value": "={{ $json['data'] && $json['data']['parsedRequest'] ? $json['data']['parsedRequest']['processingTimeMs'] : 0 }}ms"
+            },
+            {
+              "name": "parsedItems",
+              "value": "={{ $json['data'] && $json['data']['parsedRequest'] ? $json['data']['parsedRequest']['items'] : [] }}"
+            },
+            {
+              "name": "rawRequest",
+              "value": "={{ $json['data'] && $json['data']['rawRequest'] ? $json['data']['rawRequest'] : {} }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "transform-success-response",
+      "name": "Transform Success Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "success",
+              "value": false
+            },
+            {
+              "name": "message",
+              "value": "={{ $json['error'] || '解析失败' }}"
+            },
+            {
+              "name": "requestId",
+              "value": "={{ $json['requestId'] }}"
+            },
+            {
+              "name": "errorCode",
+              "value": "={{ $json['details'] || 'UNKNOWN_ERROR' }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "transform-error-response",
+      "name": "Transform Error Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        1250,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": "={{ $json['success'] ? 200 : 400 }}"
+        }
+      },
+      "id": "http-response-final",
+      "name": "Return Final Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1500,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Request Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Request Metadata": {
+      "main": [
+        [
+          {
+            "node": "Call B2B Parser API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call B2B Parser API": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Transform Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transform Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Success Response": {
+      "main": [
+        [
+          {
+            "node": "Return Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Error Response": {
+      "main": [
+        [
+          {
+            "node": "Return Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "versionId": "b2b_procurement_advanced_v1",
+  "meta": {
+    "instanceId": "b2b-procurement-agent-advanced",
+    "templateCredsSetupCompleted": true,
+    "version": "v1.0.0",
+    "created_at": "2026-02-20T00:00:00Z",
+    "author": "AI Assistant",
+    "description": "B2B采购高级集成工作流，包含完整的错误处理和元数据记录",
+    "tags": ["procurement", "b2b", "advanced", "error-handling"],
+    "rollback_to": "v1.0.0",
+    "rollback_notes": "初始稳定版本"
+  },
+  "id": "b2b_procurement_agent_advanced",
+  "tags": [
+    {
+      "id": "tag_b2b",
+      "name": "B2B Procurement"
+    },
+    {
+      "id": "tag_advanced",
+      "name": "Advanced Integration"
+    },
+    {
+      "id": "tag_error_handling",
+      "name": "Error Handling"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "procurement": {
+    "current": "v1.0.0",
+    "versions": {
+      "v1.0.0": {
+        "files": ["b2b-procurement-basic.json", "b2b-procurement-advanced.json"],
+        "release_date": "2026-02-20",
+        "compatibility": ">=n8n-0.200.0",
+        "changelog": "初始版本发布，包含基础采购需求解析和高级错误处理功能"
+      }
+    }
+  },
+  "payment": {
+    "current": "v1.0.0",
+    "versions": {
+      "v1.0.0": {
+        "files": ["payment-success.json"],
+        "release_date": "2026-02-20",
+        "compatibility": ">=n8n-0.200.0",
+        "changelog": "支付成功处理工作流初始版本"
+      }
+    }
+  },
+  "integration": {
+    "current": "v1.0.0",
+    "versions": {
+      "v1.0.0": {
+        "files": ["ai-escalation.json", "scan-flow.json", "tutorial-flow.json"],
+        "release_date": "2026-02-20",
+        "compatibility": ">=n8n-0.200.0",
+        "changelog": "集成类工作流初始版本，包含AI升级、扫描和教程流程"
+      }
+    }
+  }
+}

@@ -1,0 +1,493 @@
+{
+  "name": "AI诊断转人工工作流",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "ai-escalation",
+        "options": {},
+        "responseMode": "lastNode"
+      },
+      "id": "AIEscalationWebhook",
+      "name": "AI诊断结果接收",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 置信度评估和阈值检查\nconst diagnosisData = $json;\nconst confidenceScore = diagnosisData.confidenceScore || 0;\nconst threshold = parseInt(process.env.CONFIDENCE_THRESHOLD || '70');\n\n// 多维度置信度计算\nconst baseConfidence = confidenceScore;\nconst historicalAccuracy = diagnosisData.historicalAccuracy || 85;\nconst userSatisfaction = diagnosisData.userSatisfaction || 4.2;\n\n// 综合置信度计算\nconst compositeConfidence = \n  (baseConfidence * 0.6) + \n  (historicalAccuracy * 0.3) + \n  (userSatisfaction * 10 * 0.1); // 满意度转换为0-100分\n\nconst shouldEscalate = compositeConfidence < threshold;\n\n// 问题紧急程度评估\nconst urgencyMap = {\n  'critical': 3,\n  'high': 2,\n  'medium': 1,\n  'low': 0\n};\n\nconst urgencyLevel = urgencyMap[diagnosisData.urgency] || 1;\n\nreturn [{\n  json: {\n    ...diagnosisData,\n    compositeConfidence: Math.round(compositeConfidence),\n    shouldEscalate: shouldEscalate,\n    urgencyLevel: urgencyLevel,\n    escalationReason: shouldEscalate ? 'low_confidence' : 'none',\n    evaluatedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "ConfidenceEvaluator",
+      "name": "置信度评估器",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 条件分支：只有在需要转人工时才继续\nconst evaluation = $json;\n\nif (evaluation.shouldEscalate) {\n  return [{\n    json: evaluation\n  }];\n} else {\n  // 不需要转人工，直接返回结果\n  return [{\n    json: {\n      success: true,\n      message: 'AI诊断置信度足够，无需转人工',\n      diagnosisId: evaluation.diagnosisId,\n      confidence: evaluation.compositeConfidence\n    }\n  }];\n}"
+      },
+      "id": "EscalationCondition",
+      "name": "转人工条件判断",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "ticketId",
+              "value": "={{ 'TK-' + new Date().getFullYear() + ('0' + (new Date().getMonth() + 1)).slice(-2) + ('0' + new Date().getDate()).slice(-2) + '-' + Math.random().toString(36).substr(2, 6).toUpperCase() }}"
+            },
+            {
+              "name": "ticketType",
+              "value": "ai_escalation"
+            },
+            {
+              "name": "status",
+              "value": "new"
+            },
+            {
+              "name": "createdAt",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ],
+          "object": [
+            {
+              "name": "customerInfo",
+              "value": {
+                "userId": "={{ $json.userId }}",
+                "name": "={{ $json.userName || '未知用户' }}",
+                "contact": "={{ $json.userContact || '' }}",
+                "vipLevel": "={{ $json.vipLevel || 'normal' }}"
+              }
+            },
+            {
+              "name": "deviceInfo",
+              "value": {
+                "deviceId": "={{ $json.deviceId }}",
+                "model": "={{ $json.deviceModel }}",
+                "brand": "={{ $json.deviceBrand }}",
+                "issue": "={{ $json.issueDescription }}"
+              }
+            },
+            {
+              "name": "aiDiagnosis",
+              "value": {
+                "diagnosisId": "={{ $json.diagnosisId }}",
+                "confidence": "={{ $json.compositeConfidence }}",
+                "issues": "={{ $json.detectedIssues || [] }}",
+                "recommendations": "={{ $json.aiRecommendations || [] }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "TicketCreator",
+      "name": "工单信息构造",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.TICKET_SYSTEM_API_URL || 'http://localhost:3000/api/tickets' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "ticketType",
+              "value": "={{ $node['TicketCreator'].json['ticketType'] }}"
+            },
+            {
+              "name": "priority",
+              "value": "={{ $json.urgencyLevel >= 2 ? 'high' : 'medium' }}"
+            },
+            {
+              "name": "categoryId",
+              "value": "technical_support"
+            },
+            {
+              "name": "customerInfo",
+              "value": "={{ $node['TicketCreator'].json['customerInfo'] }}"
+            },
+            {
+              "name": "deviceInfo",
+              "value": "={{ $node['TicketCreator'].json['deviceInfo'] }}"
+            },
+            {
+              "name": "aiDiagnosis",
+              "value": "={{ $node['TicketCreator'].json['aiDiagnosis'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "CreateTicket",
+      "name": "创建客服工单",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 智能工程师分配算法\nconst ticketData = $node['TicketCreator'].json;\nconst urgency = $json.urgencyLevel;\n\n// 简化的工程师分配逻辑\nconst engineers = [\n  { id: 'ENG001', name: '张工程师', skills: ['hardware', 'mobile'], load: 2 },\n  { id: 'ENG002', name: '李工程师', skills: ['software', 'mobile'], load: 1 },\n  { id: 'ENG003', name: '王工程师', skills: ['hardware', 'computer'], load: 3 }\n];\n\n// 根据问题类型和工程师技能匹配\nconst issueType = ticketData.deviceInfo.issue.includes('battery') ? 'hardware' : 'software';\n\n// 找到最适合的工程师\nlet assignedEngineer = engineers[0];\nlet minLoad = Infinity;\n\nengineers.forEach(engineer => {\n  const hasSkill = engineer.skills.includes(issueType);\n  const isAvailable = engineer.load < 3;\n  \n  if (hasSkill && isAvailable && engineer.load < minLoad) {\n    minLoad = engineer.load;\n    assignedEngineer = engineer;\n  }\n});\n\n// 紧急情况下的快速分配\nif (urgency >= 2) {\n  assignedEngineer = engineers.find(e => e.load <= 2) || assignedEngineer;\n}\n\nreturn [{\n  json: {\n    ticketId: ticketData.ticketId,\n    assignedEngineer: {\n      id: assignedEngineer.id,\n      name: assignedEngineer.name\n    },\n    assignmentReason: `技能匹配(${issueType}) + 负载均衡`,\n    estimatedResponseTime: urgency >= 2 ? '15分钟' : '30分钟'\n  }\n}];"
+      },
+      "id": "EngineerAssigner",
+      "name": "工程师智能分配",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.NOTIFICATION_API_URL || 'http://localhost:3000/api/notifications' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "channel",
+              "value": "wechat_work"
+            },
+            {
+              "name": "target",
+              "value": "@all"
+            },
+            {
+              "name": "message",
+              "value": "={{ '[紧急工单] 新客户问题需要人工协助\\n工单号：' + $node['TicketCreator'].json['ticketId'] + '\\n问题类型：' + $node['TicketCreator'].json['deviceInfo']['issue'] + '\\n置信度：' + $node['TicketCreator'].json['aiDiagnosis']['confidence'] + '%（低于阈值）\\n客户：' + $node['TicketCreator'].json['customerInfo']['name'] + '（VIP等级：' + $node['TicketCreator'].json['customerInfo']['vipLevel'] + '）' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "WechatNotification",
+      "name": "企业微信通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.NOTIFICATION_API_URL || 'http://localhost:3000/api/notifications' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "channel",
+              "value": "dingtalk"
+            },
+            {
+              "name": "target",
+              "value": "technical_support_group"
+            },
+            {
+              "name": "message",
+              "value": "={{ '[紧急] AI诊断转人工工单\\n工单编号：' + $node['TicketCreator'].json['ticketId'] + '\\n分配工程师：' + $json.assignedEngineer.name + '\\n预计响应：' + $json.estimatedResponseTime + '\\n详情请查看工单系统' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "DingtalkNotification",
+      "name": "钉钉通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.USER_NOTIFICATION_API_URL || 'http://localhost:3000/api/user-notifications' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "userId",
+              "value": "={{ $node['TicketCreator'].json['customerInfo']['userId'] }}"
+            },
+            {
+              "name": "type",
+              "value": "escalation_notification"
+            },
+            {
+              "name": "title",
+              "value": "您的问题已升级为人工服务"
+            },
+            {
+              "name": "content",
+              "value": "={{ '您好！我们的AI助手正在为您寻求更专业的帮助，已为您创建专属客服工单。\\n工单编号：' + $node['TicketCreator'].json['ticketId'] + '\\n预计响应时间：' + $json.estimatedResponseTime + '\\n工程师将尽快联系您。' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "UserNotification",
+      "name": "用户状态通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "escalationId",
+              "value": "={{ 'ESC-' + Date.now() }}"
+            },
+            {
+              "name": "status",
+              "value": "completed"
+            },
+            {
+              "name": "processedAt",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ],
+          "object": [
+            {
+              "name": "results",
+              "value": {
+                "ticketCreated": "={{ $node['CreateTicket'].json && $node['CreateTicket'].json.success }}",
+                "engineerAssigned": "={{ $json.assignedEngineer }}",
+                "notificationsSent": {
+                  "wechat": "={{ $node['WechatNotification'].json && $node['WechatNotification'].json.success }}",
+                  "dingtalk": "={{ $node['DingtalkNotification'].json && $node['DingtalkNotification'].json.success }}",
+                  "user": "={{ $node['UserNotification'].json && $node['UserNotification'].json.success }}"
+                },
+                "ticketInfo": "={{ $node['TicketCreator'].json }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ResultAggregator",
+      "name": "处理结果聚合",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 错误处理和补偿机制\nconst inputData = $node['AIEscalationWebhook'].json;\nconst evaluation = $node['ConfidenceEvaluator'].json;\nconst ticketCreation = $node['CreateTicket'].json;\nconst notifications = {\n  wechat: $node['WechatNotification'].json,\n  dingtalk: $node['DingtalkNotification'].json,\n  user: $node['UserNotification'].json\n};\n\n// 检查各步骤执行情况\nconst stepStatus = {\n  confidenceEvaluated: evaluation.shouldEscalate !== undefined,\n  ticketCreated: ticketCreation && ticketCreation.success,\n  engineerAssigned: $json.assignedEngineer !== undefined,\n  notificationsSent: Object.values(notifications).every(n => n && n.success)\n};\n\nconst hasFailures = Object.values(stepStatus).some(status => status === false);\n\nif (hasFailures) {\n  const failedSteps = Object.entries(stepStatus)\n    .filter(([step, status]) => status === false)\n    .map(([step]) => step);\n  \n  console.error('AI escalation process failed steps:', failedSteps);\n  \n  // 记录失败信息用于后续处理\n  return [{\n    json: {\n      success: false,\n      escalationId: $node['ResultAggregator'].json.escalationId,\n      diagnosisId: inputData.diagnosisId,\n      failedSteps: failedSteps,\n      requiresManualIntervention: failedSteps.includes('ticketCreated'),\n      fallbackAction: 'manual_ticket_creation_required'\n    }\n  }];\n}\n\n// 所有步骤成功完成\nreturn [{\n  json: {\n    success: true,\n    escalationId: $node['ResultAggregator'].json.escalationId,\n    ticketId: $node['TicketCreator'].json.ticketId,\n    assignedEngineer: $json.assignedEngineer,\n    notifications: stepStatus.notificationsSent\n  }\n}];"
+      },
+      "id": "ErrorHandler",
+      "name": "错误处理器",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "AI诊断结果接收": {
+      "main": [
+        [
+          {
+            "node": "置信度评估器",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "置信度评估器": {
+      "main": [
+        [
+          {
+            "node": "转人工条件判断",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "转人工条件判断": {
+      "main": [
+        [
+          {
+            "node": "工单信息构造",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "工单信息构造": {
+      "main": [
+        [
+          {
+            "node": "创建客服工单",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "工程师智能分配",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "创建客服工单": {
+      "main": [
+        [
+          {
+            "node": "企业微信通知",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "工程师智能分配": {
+      "main": [
+        [
+          {
+            "node": "企业微信通知",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "钉钉通知",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "用户状态通知",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "企业微信通知": {
+      "main": [
+        [
+          {
+            "node": "处理结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "钉钉通知": {
+      "main": [
+        [
+          {
+            "node": "处理结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "用户状态通知": {
+      "main": [
+        [
+          {
+            "node": "处理结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "处理结果聚合": {
+      "main": [
+        [
+          {
+            "node": "错误处理器",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ai_escalation_v1_0_0",
+  "meta": {
+    "instanceId": "ai-escalation-workflow",
+    "version": "v1.0.0",
+    "created_at": "2026-02-20T00:00:00Z",
+    "author": "AI Assistant",
+    "description": "AI诊断转人工工作流，包含置信度评估和智能升级决策",
+    "tags": ["ai", "escalation", "customer-service", "confidence"],
+    "rollback_to": "v1.0.0",
+    "rollback_notes": "初始稳定版本"
+  },
+  "id": "ai-escalation-workflow",
+  "tags": [
+    {
+      "id": "tag-ai",
+      "name": "AI诊断"
+    },
+    {
+      "id": "tag-customer-service",
+      "name": "客服系统"
+    },
+    {
+      "id": "tag-escalation",
+      "name": "转人工"
+    }
+  ]
+}

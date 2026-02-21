@@ -1,0 +1,122 @@
+{
+  "procurement": {
+    "b2b-procurement-advanced": {
+      "current_version": "v1.0.0",
+      "rollback_versions": {
+        "v1.0.0": {
+          "reason": "初始稳定版本，经过完整测试验证",
+          "rollback_notes": "回退到基础稳定版本，移除可能存在问题的新功能",
+          "backup_required": true,
+          "estimated_rollback_time": "2分钟"
+        }
+      },
+      "emergency_rollback": {
+        "trigger_conditions": [
+          "工作流执行失败率超过10%",
+          "API调用超时率超过15%",
+          "用户投诉激增超过正常水平200%"
+        ],
+        "procedure": [
+          "立即停止新请求接入",
+          "执行快速回滚脚本",
+          "验证回滚后功能正常",
+          "通知相关团队"
+        ]
+      }
+    },
+    "b2b-procurement-basic": {
+      "current_version": "v1.0.0",
+      "rollback_versions": {
+        "v1.0.0": {
+          "reason": "最简稳定版本，仅包含核心功能",
+          "rollback_notes": "紧急情况下的兜底版本",
+          "backup_required": true,
+          "estimated_rollback_time": "1分钟"
+        }
+      }
+    }
+  },
+  "payment": {
+    "payment-success": {
+      "current_version": "v1.0.0",
+      "rollback_versions": {
+        "v1.0.0": {
+          "reason": "支付处理的核心稳定版本",
+          "rollback_notes": "包含完整的支付回调验证和处理逻辑",
+          "backup_required": true,
+          "estimated_rollback_time": "3分钟"
+        }
+      },
+      "emergency_rollback": {
+        "trigger_conditions": [
+          "支付成功率下降超过5%",
+          "订单状态同步异常",
+          "财务对账出现差异"
+        ],
+        "procedure": [
+          "立即暂停支付接口",
+          "启动紧急回滚流程",
+          "联系财务团队确认影响范围",
+          "执行数据修复脚本"
+        ]
+      }
+    }
+  },
+  "integration": {
+    "ai-escalation": {
+      "current_version": "v1.0.0",
+      "rollback_versions": {
+        "v1.0.0": {
+          "reason": "AI升级的基础稳定版本",
+          "rollback_notes": "包含置信度评估和升级决策核心逻辑",
+          "backup_required": true,
+          "estimated_rollback_time": "2分钟"
+        }
+      }
+    },
+    "scan-flow": {
+      "current_version": "v1.0.0",
+      "rollback_versions": {
+        "v1.0.0": {
+          "reason": "扫描处理的稳定版本",
+          "rollback_notes": "基础OCR和内容识别功能",
+          "backup_required": true,
+          "estimated_rollback_time": "2分钟"
+        }
+      }
+    }
+  },
+  "rollback_policies": {
+    "general_guidelines": [
+      "所有生产环境变更必须有对应的回滚方案",
+      "回滚操作应在5分钟内完成",
+      "回滚后必须进行功能验证",
+      "重大变更需要双人确认机制"
+    ],
+    "backup_requirements": {
+      "mandatory": [
+        "工作流配置备份",
+        "环境变量备份",
+        "执行历史数据快照"
+      ],
+      "optional": [
+        "数据库状态备份",
+        "日志文件归档"
+      ]
+    },
+    "notification_matrix": {
+      "immediate": [
+        "运维团队",
+        "技术负责人"
+      ],
+      "delayed": [
+        "产品经理",
+        "客户服务团队"
+      ],
+      "post_incident": [
+        "所有相关团队",
+        "管理层汇报"
+      ]
+    }
+  }
+}

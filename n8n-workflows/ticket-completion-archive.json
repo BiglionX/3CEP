@@ -1,0 +1,275 @@
+{
+  "name": "工单完成自动记录档案工作流",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "table": "tickets",
+        "columns": "*",
+        "condition": {
+          "column": "status",
+          "operation": "equals",
+          "value": "completed"
+        },
+        "options": {
+          "filter": "updated_at > NOW() - INTERVAL '10 minutes'"
+        }
+      },
+      "id": "SupabaseTicketTrigger",
+      "name": "监听工单完成事件",
+      "type": "n8n-nodes-base.supabaseTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "ticketId",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "deviceId",
+              "value": "={{ $json.device_id }}"
+            },
+            {
+              "name": "qrcodeId",
+              "value": "={{ $json.qrcode_id }}"
+            },
+            {
+              "name": "faultType",
+              "value": "={{ $json.fault_type }}"
+            },
+            {
+              "name": "repairParts",
+              "value": "={{ $json.parts_replaced || [] }}"
+            },
+            {
+              "name": "technician",
+              "value": "={{ $json.assigned_technician }}"
+            },
+            {
+              "name": "completionTime",
+              "value": "={{ $json.completed_at }}"
+            },
+            {
+              "name": "repairCost",
+              "value": "={{ $json.total_cost }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ExtractTicketData",
+      "name": "提取工单数据",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $parameter[\"lifecycleApiUrl\"] }}/events",
+        "authentication": "headerAuth",
+        "headers": {
+          "Authorization": "Bearer {{ $parameter[\"lifecycleApiKey\"] }}",
+          "Content-Type": "application/json"
+        },
+        "bodyParametersJson": "={\n  \"qrcodeId\": \"{{ $json.qrcodeId }}\",\n  \"eventType\": \"repaired\",\n  \"eventSubtype\": \"{{ $json.faultType }}\",\n  \"location\": \"维修中心\",\n  \"technician\": \"{{ $json.technician }}\",\n  \"cost\": {{ $json.repairCost }},\n  \"notes\": \"工单 {{ $json.ticketId }} 完成维修\",\n  \"attachments\": [],\n  \"metadata\": {\n    \"ticketId\": \"{{ $json.ticketId }}\",\n    \"partsReplaced\": {{ JSON.stringify($json.repairParts) }},\n    \"completionTime\": \"{{ $json.completionTime }}\"\n  }\n}"
+      },
+      "id": "RecordLifecycleEvent",
+      "name": "记录生命周期事件",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        650,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.success }}",
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "CheckRecordSuccess",
+      "name": "检查记录是否成功",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        850,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $parameter[\"wechatWebhookUrl\"] }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersJson": "={\n  \"msgtype\": \"text\",\n  \"text\": {\n    \"content\": \"🔧 维修完成通知\\n\\n设备：{{ $json.deviceId }}\\n工单号：{{ $json.ticketId }}\\n\\n维修项目：{{ $json.faultType }}\\n维修技师：{{ $json.technician }}\\n完成时间：{{ $json.completionTime }}\\n\\n维修记录已自动存档。\"\n  }\n}"
+      },
+      "id": "SendCompletionNotification",
+      "name": "发送完成通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "tableName": "ticket_completion_logs",
+        "columns": "ticket_id, qrcode_id, lifecycle_recorded, notification_sent, created_at",
+        "row": {
+          "ticket_id": "={{ $json.ticketId }}",
+          "qrcode_id": "={{ $json.qrcodeId }}",
+          "lifecycle_recorded": true,
+          "notification_sent": true,
+          "created_at": "={{ new Date().toISOString() }}"
+        }
+      },
+      "id": "LogCompletion",
+      "name": "记录完成日志",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $parameter[\"errorWebhookUrl\"] }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersJson": "={\n  \"msgtype\": \"text\",\n  \"text\": {\n    \"content\": \"❌ 工单档案记录失败\\n\\n工单号：{{ $json.ticketId }}\\n设备：{{ $json.qrcodeId }}\\n\\n请人工检查并处理。\"\n  }\n}"
+      },
+      "id": "SendErrorNotification",
+      "name": "发送错误通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "监听工单完成事件": {
+      "main": [
+        [
+          {
+            "node": "提取工单数据",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "提取工单数据": {
+      "main": [
+        [
+          {
+            "node": "记录生命周期事件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "记录生命周期事件": {
+      "main": [
+        [
+          {
+            "node": "检查记录是否成功",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "检查记录是否成功": {
+      "main": [
+        [
+          {
+            "node": "发送完成通知",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "发送错误通知",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "发送完成通知": {
+      "main": [
+        [
+          {
+            "node": "记录完成日志",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "发送错误通知": {
+      "main": [
+        [
+          {
+            "node": "记录完成日志",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "lifecycleApiUrl": "http://localhost:3001/api/lifecycle",
+    "lifecycleApiKey": "your_lifecycle_api_key",
+    "wechatWebhookUrl": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_WEBHOOK_KEY",
+    "errorWebhookUrl": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=ERROR_WEBHOOK_KEY"
+  },
+  "meta": {
+    "instanceId": "N8N-205",
+    "description": "监听工单完成事件，自动记录设备档案并发送通知",
+    "version": "1.0.0",
+    "author": "FixCycle Team",
+    "tags": ["工单完成", "档案记录", "自动化通知"]
+  }
+}

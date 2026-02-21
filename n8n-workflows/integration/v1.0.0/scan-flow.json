@@ -1,0 +1,296 @@
+{
+  "name": "扫码智能服务工作流",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "scan-service",
+        "options": {}
+      },
+      "id": "ScanWebhook",
+      "name": "扫码服务入口",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "deviceId",
+              "value": "={{ $json.deviceId || $json.qrCode || $json.barcode }}"
+            },
+            {
+              "name": "deviceInfo.brand",
+              "value": "={{ $json.brand || 'Unknown' }}"
+            },
+            {
+              "name": "deviceInfo.model",
+              "value": "={{ $json.model || 'Unknown' }}"
+            },
+            {
+              "name": "deviceInfo.serialNumber",
+              "value": "={{ $json.serialNumber || '' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "DeviceParser",
+      "name": "设备信息解析",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.AI_DIAGNOSIS_API_URL || 'http://localhost:3000/api/ai/diagnose' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "deviceId",
+              "value": "={{ $node['DeviceParser'].json['deviceId'] }}"
+            },
+            {
+              "name": "deviceInfo",
+              "value": "={{ $node['DeviceParser'].json['deviceInfo'] }}"
+            },
+            {
+              "name": "diagnosticType",
+              "value": "full"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "AIDiagnosis",
+      "name": "调用AI诊断服务",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        650,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "GET",
+        "url": "={{ $env.TUTORIAL_API_URL || 'http://localhost:3000/api/tutorials/recommend' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "qs": {
+          "deviceId": "={{ $node['DeviceParser'].json['deviceId'] }}",
+          "diagnosisResult": "={{ $node['AIDiagnosis'].json['result'] }}",
+          "limit": "3"
+        },
+        "options": {}
+      },
+      "id": "TutorialRecommendation",
+      "name": "教程推荐服务",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "GET",
+        "url": "={{ $env.NEW_DEVICE_API_URL || 'http://localhost:3000/api/devices/recommend' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "qs": {
+          "currentDevice": "={{ $node['DeviceParser'].json['deviceInfo']['model'] }}",
+          "budgetRange": "={{ $json.budget || '0-5000' }}",
+          "limit": "2"
+        },
+        "options": {}
+      },
+      "id": "NewDeviceRecommendation",
+      "name": "新机推荐服务",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "success",
+              "value": "true"
+            },
+            {
+              "name": "deviceId",
+              "value": "={{ $node['DeviceParser'].json['deviceId'] }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ],
+          "object": [
+            {
+              "name": "diagnosis",
+              "value": "={{ $node['AIDiagnosis'].json }}"
+            },
+            {
+              "name": "tutorials",
+              "value": "={{ $node['TutorialRecommendation'].json.tutorials || [] }}"
+            },
+            {
+              "name": "newDevices",
+              "value": "={{ $node['NewDeviceRecommendation'].json.devices || [] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ResultAggregator",
+      "name": "结果聚合器",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 错误处理函数\nif ($node['AIDiagnosis'].json.success === false) {\n  return [\n    {\n      json: {\n        success: false,\n        error: \"AI诊断服务暂时不可用\",\n        deviceId: $node['DeviceParser'].json['deviceId'],\n        fallbackRecommendation: {\n          tutorials: [],\n          devices: []\n        }\n      }\n    }\n  ];\n}\n\n// 正常返回\nreturn [\n  {\n    json: $node['ResultAggregator'].json\n  }\n];"
+      },
+      "id": "ErrorHandler",
+      "name": "错误处理器",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "扫码服务入口": {
+      "main": [
+        [
+          {
+            "node": "设备信息解析",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "设备信息解析": {
+      "main": [
+        [
+          {
+            "node": "调用AI诊断服务",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "调用AI诊断服务": {
+      "main": [
+        [
+          {
+            "node": "教程推荐服务",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "新机推荐服务",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "教程推荐服务": {
+      "main": [
+        [
+          {
+            "node": "结果聚合器",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "新机推荐服务": {
+      "main": [
+        [
+          {
+            "node": "结果聚合器",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "结果聚合器": {
+      "main": [
+        [
+          {
+            "node": "错误处理器",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "scan_flow_v1_0_0",
+  "meta": {
+    "instanceId": "scan-intelligent-service-workflow",
+    "version": "v1.0.0",
+    "created_at": "2026-02-20T00:00:00Z",
+    "author": "AI Assistant",
+    "description": "扫描处理工作流，处理各种扫描任务和图像识别",
+    "tags": ["scan", "image-processing", "ocr", "document"],
+    "rollback_to": "v1.0.0",
+    "rollback_notes": "初始稳定版本"
+  },
+  "id": "scan-flow-workflow",
+  "tags": [
+    {
+      "id": "tag-scan-service",
+      "name": "扫码服务"
+    },
+    {
+      "id": "tag-ai-diagnosis",
+      "name": "AI诊断"
+    },
+    {
+      "id": "tag-recommendation",
+      "name": "推荐系统"
+    }
+  ]
+}

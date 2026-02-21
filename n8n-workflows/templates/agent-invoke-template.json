@@ -1,0 +1,535 @@
+{
+  "name": "Agent Invoke Template",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "agentName",
+              "name": "agentName",
+              "value": "={{ $json.agent || 'default-agent' }}",
+              "type": "string"
+            },
+            {
+              "id": "inputData",
+              "name": "inputData",
+              "value": "={{ $json.input || {} }}",
+              "type": "object"
+            },
+            {
+              "id": "timeout",
+              "name": "timeout",
+              "value": "={{ $json.timeout || 30000 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+      "name": "Set Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.AGENTS_ENDPOINT }}/agents/{{ $json.agentName }}/invoke",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.AGENTS_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "raw",
+        "rawContentType": "application/json",
+        "payload": "={{ JSON.stringify({\n  input: $json.inputData,\n  timeout: $json.timeout\n}) }}",
+        "options": {
+          "timeout": "={{ $json.timeout }}"
+        }
+      },
+      "id": "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        650,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "={{ $env.AGENTS_CREDENTIAL_ID }}",
+          "name": "Agents API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "ok"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "negate": false
+        }
+      },
+      "id": "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
+      "name": "IF Status Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "result",
+              "value": "={{ $json }}"
+            },
+            {
+              "name": "status",
+              "value": "success"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
+      "name": "Success Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1050,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "retryCount",
+              "name": "retryCount",
+              "value": "={{ $json.retryCount || 0 }}",
+              "type": "number"
+            },
+            {
+              "id": "maxRetries",
+              "name": "maxRetries",
+              "value": "={{ $env.AGENTS_MAX_RETRIES || 3 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
+      "name": "Retry Counter",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1050,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "operator": {
+                "type": "number",
+                "operation": "smaller"
+              },
+              "rightValue": "={{ $json.maxRetries }}"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "negate": false
+        }
+      },
+      "id": "7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v",
+      "name": "IF Can Retry",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "retryCount",
+              "name": "retryCount",
+              "value": "={{ $json.retryCount + 1 }}",
+              "type": "number"
+            },
+            {
+              "id": "delayMs",
+              "name": "delayMs",
+              "value": "={{ Math.pow(2, $json.retryCount) * 1000 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w",
+      "name": "Prepare Retry",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1450,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "delay": "={{ $json.delayMs }}",
+        "options": {}
+      },
+      "id": "9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x",
+      "name": "Delay Before Retry",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1650,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.AGENTS_ENDPOINT }}/agents/{{ $json.agentName }}/invoke",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.AGENTS_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "raw",
+        "rawContentType": "application/json",
+        "payload": "={{ JSON.stringify({\n  input: $json.inputData,\n  timeout: $json.timeout\n}) }}",
+        "options": {
+          "timeout": "={{ $json.timeout }}"
+        }
+      },
+      "id": "0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y",
+      "name": "HTTP Request Retry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1850,
+        350
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "={{ $env.AGENTS_CREDENTIAL_ID }}",
+          "name": "Agents API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "errorMessage",
+              "value": "={{ $json.message || 'Agent invocation failed' }}"
+            },
+            {
+              "name": "errorDetails",
+              "value": "={{ $json }}"
+            },
+            {
+              "name": "status",
+              "value": "failed"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "retryAttempts",
+              "value": "={{ $json.retryCount }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1k2l3m4n-5o6p-7q8r-9s0t-1u2v3w4x5y6z",
+      "name": "Error Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1250,
+        550
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.NOTIFICATION_ENDPOINT || 'http://localhost:3000/api/notifications' }}",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "raw",
+        "rawContentType": "application/json",
+        "payload": "={{ JSON.stringify({\n  type: 'agent_failure',\n  agent: $json.agentName,\n  error: $json.errorMessage,\n  details: $json.errorDetails,\n  timestamp: $json.timestamp\n}) }}",
+        "options": {}
+      },
+      "id": "2l3m4n5o-6p7q-8r9s-0t1u-2v3w4x5y6z7a",
+      "name": "Send Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1450,
+        550
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Input": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "IF Status Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Status Check": {
+      "main": [
+        [
+          {
+            "node": "Success Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Retry Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry Counter": {
+      "main": [
+        [
+          {
+            "node": "IF Can Retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Can Retry": {
+      "main": [
+        [
+          {
+            "node": "Prepare Retry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Retry": {
+      "main": [
+        [
+          {
+            "node": "Delay Before Retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delay Before Retry": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request Retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request Retry": {
+      "main": [
+        [
+          {
+            "node": "IF Status Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Output": {
+      "main": [
+        [
+          {
+            "node": "Send Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "template-v1.0.0",
+  "meta": {
+    "template": true,
+    "category": "agent-invocation",
+    "description": "标准化的 Agent 调用模板，包含重试机制和错误通知",
+    "variables": [
+      {
+        "name": "AGENTS_ENDPOINT",
+        "description": "Agent 服务的基础 URL",
+        "required": true
+      },
+      {
+        "name": "AGENTS_API_KEY",
+        "description": "Agent API 访问密钥",
+        "required": true
+      },
+      {
+        "name": "AGENTS_CREDENTIAL_ID",
+        "description": "n8n 凭证 ID",
+        "required": true
+      },
+      {
+        "name": "AGENTS_MAX_RETRIES",
+        "description": "最大重试次数，默认 3 次",
+        "required": false,
+        "default": 3
+      },
+      {
+        "name": "NOTIFICATION_ENDPOINT",
+        "description": "通知服务端点",
+        "required": false,
+        "default": "http://localhost:3000/api/notifications"
+      }
+    ]
+  }
+}

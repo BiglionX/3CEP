@@ -1,0 +1,402 @@
+{
+  "name": "教程浏览引导工作流",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "tutorial-guide",
+        "options": {}
+      },
+      "id": "TutorialWebhook",
+      "name": "教程浏览监控入口",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "userId",
+              "value": "={{ $json.userId || 'anonymous' }}"
+            },
+            {
+              "name": "tutorialId",
+              "value": "={{ $json.tutorialId }}"
+            },
+            {
+              "name": "deviceType",
+              "value": "={{ $json.deviceType || 'unknown' }}"
+            },
+            {
+              "name": "eventType",
+              "value": "={{ $json.eventType || 'page_view' }}"
+            }
+          ],
+          "number": [
+            {
+              "name": "duration",
+              "value": "={{ $json.duration || 0 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "BehaviorParser",
+      "name": "行为数据分析",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.USER_PROFILE_API_URL || 'http://localhost:3000/api/users/profile' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "userId",
+              "value": "={{ $node['BehaviorParser'].json['userId'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "UserProfileLookup",
+      "name": "用户画像查询",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        650,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "GET",
+        "url": "={{ $env.ACCESSORY_RECOMMEND_API_URL || 'http://localhost:3000/api/accessories/recommend' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "qs": {
+          "deviceType": "={{ $node['BehaviorParser'].json['deviceType'] }}",
+          "tutorialCategory": "={{ $json.category || 'general' }}",
+          "userId": "={{ $node['BehaviorParser'].json['userId'] }}",
+          "limit": "3"
+        },
+        "options": {}
+      },
+      "id": "AccessoryRecommendation",
+      "name": "配件推荐服务",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "GET",
+        "url": "={{ $env.SHOP_NEARBY_API_URL || 'http://localhost:3000/api/shops/nearby' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "qs": {
+          "latitude": "={{ $json.latitude || '39.9042' }}",
+          "longitude": "={{ $json.longitude || '116.4074' }}",
+          "deviceType": "={{ $node['BehaviorParser'].json['deviceType'] }}",
+          "limit": "2"
+        },
+        "options": {}
+      },
+      "id": "NearbyShops",
+      "name": "附近店铺查询",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "GET",
+        "url": "={{ $env.PROMOTION_API_URL || 'http://localhost:3000/api/promotions/current' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "qs": {
+          "deviceType": "={{ $node['BehaviorParser'].json['deviceType'] }}",
+          "userId": "={{ $node['BehaviorParser'].json['userId'] }}"
+        },
+        "options": {}
+      },
+      "id": "PromotionQuery",
+      "name": "促销活动查询",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "userId",
+              "value": "={{ $node['BehaviorParser'].json['userId'] }}"
+            },
+            {
+              "name": "tutorialId",
+              "value": "={{ $node['BehaviorParser'].json['tutorialId'] }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ],
+          "object": [
+            {
+              "name": "recommendations",
+              "value": {
+                "accessories": "={{ $node['AccessoryRecommendation'].json.accessories || [] }}",
+                "shops": "={{ $node['NearbyShops'].json.shops || [] }}",
+                "promotions": "={{ $node['PromotionQuery'].json.promotions || [] }}"
+              }
+            },
+            {
+              "name": "userProfile",
+              "value": "={{ $node['UserProfileLookup'].json.profile || {} }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "RecommendationAggregator",
+      "name": "推荐结果聚合",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 智能触发条件判断\nconst behaviorData = $node['BehaviorParser'].json;\nconst userProfile = $node['UserProfileLookup'].json.profile || {};\nconst recommendations = $node['RecommendationAggregator'].json.recommendations;\n\n// 触发条件：\n// 1. 浏览时长超过阈值\n// 2. 用户有购买意向历史\n// 3. 有相关推荐内容\nconst shouldTrigger = \n  behaviorData.duration > 60 &&  // 超过60秒\n  (userProfile.purchaseIntent || 0) > 0.5 &&  // 购买意向大于0.5\n  (recommendations.accessories.length > 0 || recommendations.shops.length > 0);\n\nif (shouldTrigger) {\n  return [\n    {\n      json: {\n        ...$node['RecommendationAggregator'].json,\n        triggerReason: 'qualified_user_behavior',\n        confidence: 0.85\n      }\n    }\n  ];\n} else {\n  // 不触发推送\n  return [];\n}"
+      },
+      "id": "TriggerLogic",
+      "name": "智能触发逻辑",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.PUSH_SERVICE_API_URL || 'http://localhost:3000/api/push/send' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "userId",
+              "value": "={{ $json.userId }}"
+            },
+            {
+              "name": "messageType",
+              "value": "tutorial_recommendation"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.recommendations }}"
+            },
+            {
+              "name": "priority",
+              "value": "normal"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "PushNotification",
+      "name": "推送通知服务",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 错误处理和日志记录\nconst inputData = $node['TutorialWebhook'].json;\nconst result = $node['PushNotification'].json;\n\n// 记录推送结果\nconst logEntry = {\n  timestamp: new Date().toISOString(),\n  userId: inputData.userId,\n  tutorialId: inputData.tutorialId,\n  eventType: inputData.eventType,\n  duration: inputData.duration,\n  pushSuccess: result && result.success,\n  errorMessage: result && result.error ? result.error : null\n};\n\n// 可以发送到日志服务\nconsole.log('Tutorial recommendation log:', JSON.stringify(logEntry));\n\nreturn [\n  {\n    json: {\n      success: true,\n      logId: 'log-' + Date.now(),\n      data: logEntry\n    }\n  }\n];"
+      },
+      "id": "LoggingService",
+      "name": "日志记录服务",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "教程浏览监控入口": {
+      "main": [
+        [
+          {
+            "node": "行为数据分析",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "行为数据分析": {
+      "main": [
+        [
+          {
+            "node": "用户画像查询",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "用户画像查询": {
+      "main": [
+        [
+          {
+            "node": "配件推荐服务",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "附近店铺查询",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "促销活动查询",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "配件推荐服务": {
+      "main": [
+        [
+          {
+            "node": "推荐结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "附近店铺查询": {
+      "main": [
+        [
+          {
+            "node": "推荐结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "促销活动查询": {
+      "main": [
+        [
+          {
+            "node": "推荐结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "推荐结果聚合": {
+      "main": [
+        [
+          {
+            "node": "智能触发逻辑",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "智能触发逻辑": {
+      "main": [
+        [
+          {
+            "node": "推送通知服务",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "推送通知服务": {
+      "main": [
+        [
+          {
+            "node": "日志记录服务",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "tutorial_guide_v1_0_0",
+  "meta": {
+    "instanceId": "tutorial-guidance-workflow"
+  },
+  "id": "tutorial-flow-workflow",
+  "tags": [
+    {
+      "id": "tag-tutorial",
+      "name": "教程引导"
+    },
+    {
+      "id": "tag-recommendation",
+      "name": "智能推荐"
+    },
+    {
+      "id": "tag-realtime",
+      "name": "实时推送"
+    }
+  ]
+}

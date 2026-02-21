@@ -1,0 +1,421 @@
+{
+  "name": "支付成功后续处理工作流",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "payment-success",
+        "options": {},
+        "responseMode": "lastNode"
+      },
+      "id": "PaymentWebhook",
+      "name": "支付成功回调入口",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 验证支付回调签名\nconst crypto = require('crypto');\nconst secret = process.env.PAYMENT_WEBHOOK_SECRET || 'default_secret';\nconst payload = JSON.stringify($json);\nconst signature = $json.signature;\n\n// 简化的签名验证（实际应用中需要更复杂的算法）\nconst expectedSignature = crypto\n  .createHmac('sha256', secret)\n  .update(payload)\n  .digest('hex');\n\nif (signature !== expectedSignature) {\n  throw new Error('Invalid signature');\n}\n\n// 验证必需字段\nif (!$json.order_id || !$json.payment_id || !$json.amount) {\n  throw new Error('Missing required fields');\n}\n\nreturn [{\n  json: {\n    ...$json,\n    verified: true,\n    validation_time: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "SignatureValidator",
+      "name": "签名验证器",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "GET",
+        "url": "={{ $env.ORDER_SERVICE_API_URL || 'http://localhost:3000/api/orders' }}/{{ $json.order_id }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "options": {}
+      },
+      "id": "OrderVerification",
+      "name": "订单信息验证",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        650,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.NOTIFICATION_API_URL || 'http://localhost:3000/api/notifications/send' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "userId",
+              "value": "={{ $node['OrderVerification'].json.userId }}"
+            },
+            {
+              "name": "type",
+              "value": "order_confirmation"
+            },
+            {
+              "name": "title",
+              "value": "订单支付成功确认"
+            },
+            {
+              "name": "content",
+              "value": "={{ '您的订单 ' + $json.order_id + ' 已支付成功，金额 ¥' + $json.amount }}"
+            },
+            {
+              "name": "channels",
+              "value": "[\"in_app\", \"email\"]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "SendConfirmation",
+      "name": "发送确认通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 计算积分奖励\nconst orderAmount = $json.amount;\nconst baseRate = parseFloat(process.env.POINTS_CALCULATION_RATE || '0.1');\nconst vipLevel = $node['OrderVerification'].json.userVipLevel || 0;\nconst isFirstOrder = $node['OrderVerification'].json.isFirstOrder || false;\n\n// 基础积分\nlet points = Math.floor(orderAmount * baseRate);\n\n// VIP加成\nconst vipMultiplier = 1 + (vipLevel * 0.1);\npoints = Math.floor(points * vipMultiplier);\n\n// 首单奖励\nif (isFirstOrder) {\n  points += 100;\n}\n\n// 活动期间额外奖励\nconst currentDate = new Date();\nconst isPromotionPeriod = currentDate.getMonth() === 1; // 2月份\nif (isPromotionPeriod) {\n  points = Math.floor(points * 1.5);\n}\n\nreturn [{\n  json: {\n    userId: $node['OrderVerification'].json.userId,\n    orderId: $json.order_id,\n    pointsToAdd: points,\n    calculationDetails: {\n      basePoints: Math.floor(orderAmount * baseRate),\n      vipBonus: points - Math.floor(orderAmount * baseRate * vipMultiplier) + Math.floor(orderAmount * baseRate),\n      firstOrderBonus: isFirstOrder ? 100 : 0,\n      promotionBonus: isPromotionPeriod ? Math.floor(points / 3) : 0\n    }\n  }\n}];"
+      },
+      "id": "PointsCalculator",
+      "name": "积分计算器",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.POINTS_API_URL || 'http://localhost:3000/api/user-points/update' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "userId",
+              "value": "={{ $json.userId }}"
+            },
+            {
+              "name": "operation",
+              "value": "add"
+            },
+            {
+              "name": "points",
+              "value": "={{ $json.pointsToAdd }}"
+            },
+            {
+              "name": "reason",
+              "value": "purchase_reward"
+            },
+            {
+              "name": "referenceId",
+              "value": "={{ $json.orderId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "UpdatePoints",
+      "name": "更新用户积分",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.LOGISTICS_API_URL || 'http://localhost:3000/api/logistics/create' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "orderId",
+              "value": "={{ $json.order_id }}"
+            },
+            {
+              "name": "recipient",
+              "value": "={{ $node['OrderVerification'].json.shippingAddress }}"
+            },
+            {
+              "name": "items",
+              "value": "={{ $node['OrderVerification'].json.items }}"
+            },
+            {
+              "name": "serviceLevel",
+              "value": "standard"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "StartLogistics",
+      "name": "启动物流跟踪",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $env.AFTER_SALES_API_URL || 'http://localhost:3000/api/aftersales/send-info' }}",
+        "authentication": "none",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "userId",
+              "value": "={{ $node['OrderVerification'].json.userId }}"
+            },
+            {
+              "name": "orderId",
+              "value": "={{ $json.order_id }}"
+            },
+            {
+              "name": "productType",
+              "value": "={{ $node['OrderVerification'].json.productCategory }}"
+            },
+            {
+              "name": "channels",
+              "value": "[\"email\", \"sms\"]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "SendAfterSales",
+      "name": "发送售后信息",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "processId",
+              "value": "={{ 'PS-' + Date.now() }}"
+            },
+            {
+              "name": "orderId",
+              "value": "={{ $json.order_id }}"
+            },
+            {
+              "name": "status",
+              "value": "completed"
+            },
+            {
+              "name": "processedAt",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ],
+          "object": [
+            {
+              "name": "results",
+              "value": {
+                "notificationSent": "={{ $node['SendConfirmation'].json.success }}",
+                "pointsUpdated": "={{ $node['UpdatePoints'].json.success }}",
+                "logisticsStarted": "={{ $node['StartLogistics'].json.trackingNumber }}",
+                "afterSalesSent": "={{ $node['SendAfterSales'].json.sent }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ProcessAggregator",
+      "name": "处理结果聚合",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 错误处理和补偿机制\nconst originalData = $node['PaymentWebhook'].json;\nconst verificationResult = $node['SignatureValidator'].json;\nconst orderData = $node['OrderVerification'].json;\n\n// 检查各个步骤的执行结果\nconst stepResults = {\n  signatureValid: verificationResult.verified === true,\n  orderVerified: orderData && orderData.status === 'paid',\n  notificationSent: $node['SendConfirmation'].json && $node['SendConfirmation'].json.success,\n  pointsUpdated: $node['UpdatePoints'].json && $node['UpdatePoints'].json.success,\n  logisticsStarted: $node['StartLogistics'].json && $node['StartLogistics'].json.success,\n  afterSalesSent: $node['SendAfterSales'].json && $node['SendAfterSales'].json.success\n};\n\n// 如果有任何步骤失败，记录错误并尝试补偿\nif (Object.values(stepResults).some(result => result === false)) {\n  const failedSteps = Object.entries(stepResults)\n    .filter(([step, result]) => result === false)\n    .map(([step]) => step);\n  \n  console.error('Payment processing failed steps:', failedSteps);\n  \n  // 可以在这里添加补偿逻辑\n  // 例如：回滚积分更新、重新发送通知等\n  \n  return [{\n    json: {\n      success: false,\n      orderId: originalData.order_id,\n      failedSteps: failedSteps,\n      requiresManualIntervention: failedSteps.includes('orderVerified') || failedSteps.includes('signatureValid')\n    }\n  }];\n}\n\n// 所有步骤都成功\nreturn [{\n  json: {\n    success: true,\n    orderId: originalData.order_id,\n    processId: $node['ProcessAggregator'].json.processId,\n    results: stepResults\n  }\n}];"
+      },
+      "id": "ErrorHandler",
+      "name": "错误处理器",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "支付成功回调入口": {
+      "main": [
+        [
+          {
+            "node": "签名验证器",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "签名验证器": {
+      "main": [
+        [
+          {
+            "node": "订单信息验证",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "订单信息验证": {
+      "main": [
+        [
+          {
+            "node": "发送确认通知",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "积分计算器",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "启动物流跟踪",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "发送确认通知": {
+      "main": [
+        [
+          {
+            "node": "处理结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "积分计算器": {
+      "main": [
+        [
+          {
+            "node": "更新用户积分",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "更新用户积分": {
+      "main": [
+        [
+          {
+            "node": "处理结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "启动物流跟踪": {
+      "main": [
+        [
+          {
+            "node": "发送售后信息",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "发送售后信息": {
+      "main": [
+        [
+          {
+            "node": "处理结果聚合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "处理结果聚合": {
+      "main": [
+        [
+          {
+            "node": "错误处理器",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "payment_success_v1_0_0",
+  "meta": {
+    "instanceId": "payment-success-workflow"
+  },
+  "id": "payment-success-workflow",
+  "tags": [
+    {
+      "id": "tag-payment",
+      "name": "支付处理"
+    },
+    {
+      "id": "tag-order",
+      "name": "订单管理"
+    },
+    {
+      "id": "tag-notification",
+      "name": "通知服务"
+    }
+  ]
+}
