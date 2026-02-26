@@ -1,0 +1,168 @@
+{
+  "timestamp": "2026-02-25T06:15:53.224Z",
+  "summary": {
+    "totalChecks": 28,
+    "passedChecks": 28,
+    "failedChecks": 0,
+    "successRate": "100.00%"
+  },
+  "details": [
+    {
+      "page": "src\\app\\admin\\login\\page.tsx",
+      "checks": [
+        {
+          "name": "文件存在性",
+          "passed": true
+        },
+        {
+          "name": "导入语句",
+          "passed": true
+        },
+        {
+          "name": "组件使用",
+          "passed": true
+        },
+        {
+          "name": "客户端组件声明",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "page": "src\\app\\brand\\login\\page.tsx",
+      "checks": [
+        {
+          "name": "文件存在性",
+          "passed": true
+        },
+        {
+          "name": "导入语句",
+          "passed": true
+        },
+        {
+          "name": "组件使用",
+          "passed": true
+        },
+        {
+          "name": "客户端组件声明",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "page": "src\\app\\repair-shop\\login\\page.tsx",
+      "checks": [
+        {
+          "name": "文件存在性",
+          "passed": true
+        },
+        {
+          "name": "导入语句",
+          "passed": true
+        },
+        {
+          "name": "组件使用",
+          "passed": true
+        },
+        {
+          "name": "客户端组件声明",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "page": "src\\app\\importer\\login\\page.tsx",
+      "checks": [
+        {
+          "name": "文件存在性",
+          "passed": true
+        },
+        {
+          "name": "导入语句",
+          "passed": true
+        },
+        {
+          "name": "组件使用",
+          "passed": true
+        },
+        {
+          "name": "客户端组件声明",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "page": "src\\app\\exporter\\login\\page.tsx",
+      "checks": [
+        {
+          "name": "文件存在性",
+          "passed": true
+        },
+        {
+          "name": "导入语句",
+          "passed": true
+        },
+        {
+          "name": "组件使用",
+          "passed": true
+        },
+        {
+          "name": "客户端组件声明",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "page": "src\\modules\\admin-panel\\app\\login\\page.tsx",
+      "checks": [
+        {
+          "name": "文件存在性",
+          "passed": true
+        },
+        {
+          "name": "导入语句",
+          "passed": true
+        },
+        {
+          "name": "组件使用",
+          "passed": true
+        },
+        {
+          "name": "客户端组件声明",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "page": "src\\modules\\auth\\app\\page.tsx",
+      "checks": [
+        {
+          "name": "文件存在性",
+          "passed": true
+        },
+        {
+          "name": "导入语句",
+          "passed": true
+        },
+        {
+          "name": "组件使用",
+          "passed": true
+        },
+        {
+          "name": "客户端组件声明",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "success",
+      "message": "所有迁移页面验证通过，可以进行功能测试"
+    },
+    {
+      "type": "next",
+      "message": "建议运行开发服务器并手动测试各登录页面的功能"
+    }
+  ]
+}

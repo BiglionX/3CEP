@@ -362,7 +362,7 @@ export class SmartNegotiationEngine {
             session_id: sessionId,
             round_number: 0,
             negotiation_status: "cancelled",
-            remarks: `议价取消: ${reason}`,
+            remarks: `议价取消: ${reason} as any`,
             created_at: new Date(),
           });
         }
@@ -438,7 +438,7 @@ export class SmartNegotiationEngine {
         created_by: dto.createdBy,
         created_at: now,
         updated_at: now,
-      })
+      } as any)
       .select()
       .single();
 
@@ -473,7 +473,7 @@ export class SmartNegotiationEngine {
       remarks: round.remarks,
       created_at: new Date(),
       updated_at: new Date(),
-    });
+    } as any);
 
     if (error) throw new Error(`记录议价回合失败: ${error.message}`);
   }
@@ -508,7 +508,7 @@ export class SmartNegotiationEngine {
           ? ((session.initialQuote - finalPrice) / session.initialQuote) * 100
           : null,
         updated_at: new Date(),
-      })
+      } as any)
       .eq("session_id", sessionId);
 
     if (sessionError)
@@ -523,7 +523,7 @@ export class SmartNegotiationEngine {
           negotiation_status: status,
           final_price: finalPrice,
           updated_at: new Date(),
-        })
+        } as any)
         .eq("id", lastHistory.id);
 
       if (historyError)
@@ -562,7 +562,7 @@ export class SmartNegotiationEngine {
         status,
         current_round: supabase.rpc("current_round + 1"),
         updated_at: new Date(),
-      })
+      } as any)
       .eq("session_id", sessionId);
 
     if (error) throw new Error(`更新会话状态失败: ${error.message}`);

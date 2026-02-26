@@ -1,0 +1,108 @@
+{
+  "depreciation": {
+    "annualRate": 0.1,
+    "maxYears": 10,
+    "description": "基础年折旧率，设备每年贬值10%"
+  },
+  "componentWeights": {
+    "cpu": 0.5,
+    "storage": 0.2,
+    "memory": 0.3,
+    "description": "各部件对整体价值的权重分配"
+  },
+  "conditionMultipliers": {
+    "screen": {
+      "perfect": 1.0,
+      "minor_scratches": 0.9,
+      "visible_scratches": 0.8,
+      "heavy_scratches": 0.6,
+      "cracked": 0.3
+    },
+    "battery": {
+      "excellent": 1.0,
+      "good": 0.9,
+      "average": 0.7,
+      "poor": 0.5,
+      "bad": 0.3
+    },
+    "body": {
+      "mint": 1.0,
+      "light_wear": 0.9,
+      "moderate_wear": 0.8,
+      "heavy_wear": 0.6,
+      "damaged": 0.4
+    },
+    "functionality": {
+      "perfect": 1.0,
+      "minor_issues": 0.9,
+      "some_issues": 0.7,
+      "major_issues": 0.4,
+      "non_functional": 0.1
+    }
+  },
+  "brandMultipliers": {
+    "Apple": 0.9,
+    "Samsung": 0.85,
+    "Huawei": 0.8,
+    "Xiaomi": 0.75,
+    "OPPO": 0.7,
+    "Vivo": 0.7,
+    "OnePlus": 0.75,
+    "Google": 0.85,
+    "Microsoft": 0.8,
+    "Dell": 0.7,
+    "HP": 0.7,
+    "Lenovo": 0.65,
+    "Asus": 0.65,
+    "Acer": 0.6
+  },
+  "categoryMultipliers": {
+    "smartphone": 1.0,
+    "tablet": 0.8,
+    "laptop": 1.2,
+    "desktop": 1.1,
+    "smartwatch": 0.6,
+    "headphones": 0.4
+  },
+  "marketFactors": {
+    "supply_demand_ratio": {
+      "high_supply": 0.8,
+      "balanced": 1.0,
+      "low_supply": 1.2
+    },
+    "seasonal_adjustment": {
+      "peak_season": 1.1,
+      "normal_season": 1.0,
+      "off_season": 0.9
+    }
+  },
+  "repairHistoryImpact": {
+    "no_repairs": 1.0,
+    "1_repair": 0.9,
+    "2_repairs": 0.8,
+    "3_plus_repairs": 0.7,
+    "major_repair": 0.6
+  },
+  "ageBrackets": {
+    "new": {
+      "max_months": 12,
+      "multiplier": 0.95
+    },
+    "recent": {
+      "max_months": 24,
+      "multiplier": 0.85
+    },
+    "moderate": {
+      "max_months": 36,
+      "multiplier": 0.7
+    },
+    "older": {
+      "max_months": 48,
+      "multiplier": 0.5
+    },
+    "vintage": {
+      "max_months": 60,
+      "multiplier": 0.3
+    }
+  }
+}

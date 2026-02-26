@@ -84,7 +84,7 @@ export class InventoryReservationService {
           reservation_type: request.reservationType || 'fcx_exchange',
           expires_at: expiresAt,
           status: 'active'
-        });
+        } as any);
 
       if (reservationError) {
         return {
@@ -100,7 +100,7 @@ export class InventoryReservationService {
           available_quantity: inventory.available_quantity - request.quantity,
           reserved_quantity: inventory.reserved_quantity + request.quantity,
           updated_at: new Date()
-        })
+        } as any)
         .eq('product_id', request.partId)
         .eq('warehouse_id', request.warehouseId);
 
@@ -201,7 +201,7 @@ export class InventoryReservationService {
         .update({
           status: 'used',
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', reservationId);
 
       if (updateReservationError) {
@@ -222,7 +222,7 @@ export class InventoryReservationService {
         // 回滚预留记录状态
         await supabase
           .from('inventory_reservations')
-          .update({ status: 'active' })
+          .update({ status: 'active' } as any)
           .eq('id', reservationId);
         return false;
       }
@@ -233,7 +233,7 @@ export class InventoryReservationService {
           total_quantity: inventory.total_quantity - reservation.quantity,
           reserved_quantity: inventory.reserved_quantity - reservation.quantity,
           updated_at: new Date()
-        })
+        } as any)
         .eq('product_id', reservation.part_id)
         .eq('warehouse_id', reservation.warehouse_id);
 
@@ -242,7 +242,7 @@ export class InventoryReservationService {
         // 回滚操作
         await supabase
           .from('inventory_reservations')
-          .update({ status: 'active' })
+          .update({ status: 'active' } as any)
           .eq('id', reservationId);
         return false;
       }
@@ -287,7 +287,7 @@ export class InventoryReservationService {
         .update({
           status: 'cancelled',
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', reservationId);
 
       if (updateReservationError) {
@@ -314,7 +314,7 @@ export class InventoryReservationService {
           available_quantity: inventory.available_quantity + reservation.quantity,
           reserved_quantity: inventory.reserved_quantity - reservation.quantity,
           updated_at: new Date()
-        })
+        } as any)
         .eq('product_id', reservation.part_id)
         .eq('warehouse_id', reservation.warehouse_id);
 
@@ -374,7 +374,7 @@ export class InventoryReservationService {
           .update({
             status: 'expired',
             updated_at: new Date()
-          })
+          } as any)
           .eq('id', reservation.id);
 
         if (updateError) {
@@ -395,7 +395,7 @@ export class InventoryReservationService {
               reservation.warehouse_id
             )) - reservation.quantity,
             updated_at: new Date()
-          })
+          } as any)
           .eq('product_id', reservation.part_id)
           .eq('warehouse_id', reservation.warehouse_id);
 
@@ -436,7 +436,7 @@ export class InventoryReservationService {
           reason: update.reason,
           reference_number: update.referenceId,
           created_at: new Date()
-        });
+        } as any);
     } catch (error) {
       console.error('记录库存变动历史错误:', error);
     }

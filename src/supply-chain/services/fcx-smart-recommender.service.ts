@@ -216,7 +216,7 @@ export class FcxSmartWarehouseRecommender {
       }
       
       const inStockCount = data.filter(item => item.available_quantity > 0).length;
-      const availabilityRate = data.length > 0 ? inStockCount / data.length : 0;
+      const availabilityRate = (data as any)?.data.length > 0 ? inStockCount / (data as any)?.data.length : 0;
       
       const overallStatus = availabilityRate >= 0.8 ? 'in_stock' :
                            availabilityRate >= 0.3 ? 'low_stock' : 'out_of_stock';

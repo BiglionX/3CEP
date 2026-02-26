@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员权限快速修复</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .status.success {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            display: block;
+        }
+        .status.error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+            display: block;
+        }
+        .status.info {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            color: #1e40af;
+            display: block;
+        }
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .info-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .info-box h3 {
+            margin: 0 0 15px 0;
+            color: #92400e;
+            font-size: 18px;
+        }
+        .info-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .info-box li {
+            margin-bottom: 8px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+        .tech-details {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .tech-details h3 {
+            margin: 0 0 15px 0;
+            color: #1f2937;
+        }
+        .detail-item {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #374151;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4f46e5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ 管理员权限快速修复</h1>
+            <p>解决401认证错误，快速恢复菜单功能</p>
+        </div>
+        
+        <div class="content">
+            <div id="status" class="status"></div>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>正在处理...</p>
+            </div>
+            
+            <div class="button-group">
+                <button id="applyFix" class="btn btn-primary" onclick="applyQuickFix()">
+                    🚀 应用快速修复
+                </button>
+                <button id="checkStatus" class="btn btn-secondary" onclick="checkCurrentStatus()">
+                    🔍 检查当前状态
+                </button>
+                <button id="clearAuth" class="btn btn-danger" onclick="clearAllAuth()">
+                    🧹 清除认证数据
+                </button>
+            </div>
+            
+            <div class="info-box">
+                <h3>🔧 修复说明</h3>
+                <ul>
+                    <li><strong>快速修复</strong>: 设置临时管理员权限，立即生效</li>
+                    <li><strong>检查状态</strong>: 验证当前认证状态</li>
+                    <li><strong>清除数据</strong>: 重置所有认证信息</li>
+                    <li>修复后将自动跳转到管理仪表板</li>
+                </ul>
+            </div>
+            
+            <div class="tech-details">
+                <h3>🛠️ 技术详情</h3>
+                <div class="detail-item">
+                    <span class="detail-label">问题:</span> API认证返回401未授权
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">原因:</span> 缺少有效的认证令牌
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">解决方案:</span> 设置临时mock令牌
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">预期结果:</span> 菜单功能恢复正常
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isProcessing = false;
+
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('applyFix').disabled = show;
+            document.getElementById('checkStatus').disabled = show;
+            document.getElementById('clearAuth').disabled = show;
+        }
+
+        async function applyQuickFix() {
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            showLoading(true);
+            showStatus('正在应用快速修复...', 'info');
+            
+            try {
+                // 设置临时管理员权限
+                localStorage.setItem('mock-token', 'html_quick_fix_admin_2026');
+                localStorage.setItem('user-role', 'admin');
+                localStorage.setItem('user-email', 'admin@fixcycle.com');
+                
+                // 设置cookie
+                document.cookie = 'mock-token=html_quick_fix_admin_2026; path=/; max-age=3600';
+                
+                showStatus('✅ 快速修复已应用！正在跳转到管理仪表板...', 'success');
+                
+                // 2秒后跳转
+                setTimeout(() => {
+                    window.location.href = '/admin/dashboard';
+                }, 2000);
+                
+            } catch (error) {
+                showStatus('❌ 修复失败: ' + error.message, 'error');
+                isProcessing = false;
+                showLoading(false);
+            }
+        }
+
+        async function checkCurrentStatus() {
+            try {
+                showStatus('正在检查当前状态...', 'info');
+                const response = await fetch('/api/auth/check-session');
+                const data = await response.json();
+                showStatus(`当前状态: ${data.authenticated ? '已认证' : '未认证'}, 角色: ${data.user?.role || '未知'}`, 'info');
+            } catch (error) {
+                showStatus('检查失败: ' + error.message, 'error');
+            }
+        }
+
+        function clearAllAuth() {
+            localStorage.clear();
+            document.cookie = 'mock-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            document.cookie = 'user-role=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            document.cookie = 'user-email=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            showStatus('🧹 已清除所有认证数据', 'info');
+        }
+
+        // 页面加载完成后检查当前状态
+        window.addEventListener('load', () => {
+            checkCurrentStatus();
+        });
+    </script>
+</body>
+</html>

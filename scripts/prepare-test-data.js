@@ -1,326 +1,232 @@
-#!/usr/bin/env node
-
-/**
- * FixCycle E2E测试数据准备脚本
- * 用于创建测试所需的用户账号、字典数据、热点链接等基础数据
- */
-
-// 手动加载环境变量
-require('fs').readFileSync('.env', 'utf8').split('\n').forEach(line => {
-  if (line.trim() && !line.startsWith('#')) {
-    const [key, value] = line.split('=');
-    if (key && value) {
-      process.env[key.trim()] = value.trim();
-    }
-  }
-});
-
+// 测试数据准备脚本
 const { createClient } = require('@supabase/supabase-js');
 
-// 配置Supabase客户端
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-  console.error('❌ 缺少必要的环境变量:');
-  console.error('   NEXT_PUBLIC_SUPABASE_URL:', SUPABASE_URL ? '✓' : '✗');
-  console.error('   SUPABASE_SERVICE_ROLE_KEY:', SERVICE_ROLE_KEY ? '✓' : '✗');
-  process.exit(1);
-}
-
-const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
-
-// 测试数据配置
-const TEST_DATA = {
-  users: [
-    {
-      email: 'engineer@test.com',
-      password: 'Test123!@#',
-      user_metadata: {
-        name: '测试工程师',
-        role: 'engineer',
-        phone: '13800138001'
-      }
-    },
-    {
-      email: 'consumer@test.com',
-      password: 'Test123!@#',
-      user_metadata: {
-        name: '测试消费者',
-        role: 'consumer',
-        phone: '13800138002'
-      }
-    },
-    {
-      email: 'shopowner@test.com',
-      password: 'Test123!@#',
-      user_metadata: {
-        name: '测试店主',
-        role: 'engineer',
-        sub_role: 'shop_owner',
-        phone: '13800138003'
-      }
-    }
-  ],
-  
-  devices: [
-    { brand: 'Apple', model: 'iPhone 12', series: 'iPhone', release_year: 2020, category: 'smartphone', os_type: 'iOS', status: 'active' },
-    { brand: 'Apple', model: 'iPhone 13', series: 'iPhone', release_year: 2021, category: 'smartphone', os_type: 'iOS', status: 'active' },
-    { brand: 'Apple', model: 'iPhone 14', series: 'iPhone', release_year: 2022, category: 'smartphone', os_type: 'iOS', status: 'active' },
-    { brand: 'Apple', model: 'iPhone 15', series: 'iPhone', release_year: 2023, category: 'smartphone', os_type: 'iOS', status: 'active' },
-    { brand: 'Huawei', model: 'P50', series: 'P系列', release_year: 2021, category: 'smartphone', os_type: 'Android', status: 'active' },
-    { brand: 'Huawei', model: 'Mate 40', series: 'Mate系列', release_year: 2020, category: 'smartphone', os_type: 'Android', status: 'active' },
-    { brand: 'Xiaomi', model: '13', series: '数字系列', release_year: 2022, category: 'smartphone', os_type: 'Android', status: 'active' },
-    { brand: 'Xiaomi', model: '14', series: '数字系列', release_year: 2023, category: 'smartphone', os_type: 'Android', status: 'active' },
-    { brand: 'Samsung', model: 'Galaxy S23', series: 'Galaxy S', release_year: 2023, category: 'smartphone', os_type: 'Android', status: 'active' },
-    { brand: 'OPPO', model: 'Reno 8', series: 'Reno系列', release_year: 2022, category: 'smartphone', os_type: 'Android', status: 'active' }
-  ],
-  
-  fault_types: [
-    { 
-      name: '屏幕损坏', 
-      description: '屏幕碎裂或显示异常',
-      difficulty_level: 'medium',
-      estimated_time: 60
-    },
-    { 
-      name: '电池问题', 
-      description: '电池不耐用或无法充电',
-      difficulty_level: 'easy',
-      estimated_time: 30
-    },
-    { 
-      name: '进水故障', 
-      description: '设备进水导致功能异常',
-      difficulty_level: 'hard',
-      estimated_time: 120
-    },
-    { 
-      name: '无法开机', 
-      description: '设备无法正常启动',
-      difficulty_level: 'medium',
-      estimated_time: 45
-    },
-    { 
-      name: '声音问题', 
-      description: '听筒、扬声器无声或杂音',
-      difficulty_level: 'easy',
-      estimated_time: 25
-    }
-  ],
-  
-  hot_links: [
-    {
-      url: 'https://example.com/iphone12-screen-repair',
-      title: 'iPhone 12 屏幕更换详细教程',
-      description: '详细的iPhone 12屏幕更换步骤，包含所需工具和注意事项',
-      source: 'tech-blog',
-      views: 156,
-      likes: 2,
-      scraped_at: new Date().toISOString()
-    },
-    {
-      url: 'https://example.com/battery-fix-guide',
-      title: '手机电池续航优化指南',
-      description: '提升手机电池使用寿命的实用技巧和维修方法',
-      source: 'repair-wiki',
-      views: 89,
-      likes: 1,
-      scraped_at: new Date().toISOString()
-    },
-    {
-      url: 'https://example.com/water-damage-solution',
-      title: '手机进水应急处理方案',
-      description: '手机意外进水后的紧急处理步骤和专业维修建议',
-      source: 'professional-repair',
-      views: 234,
-      likes: 0,
-      scraped_at: new Date().toISOString()
-    }
-  ],
-  
-  parts: [
-    {
-      name: 'iPhone 12 原装屏幕总成',
-      category: '屏幕组件',
-      brand: 'Apple',
-      model: 'iPhone 12',
-      description: '适用于iPhone 12的原装屏幕总成，包含触摸层和显示层',
-      image_url: 'https://example.com/images/iphone12-screen.jpg'
-    },
-    {
-      name: 'iPhone 13 电池',
-      category: '电池组件',
-      brand: 'Apple',
-      model: 'iPhone 13',
-      description: 'iPhone 13原装电池，容量3240mAh，续航表现优秀',
-      image_url: 'https://example.com/images/iphone13-battery.jpg'
-    },
-    {
-      name: '华为 P50 充电IC',
-      category: '芯片组件',
-      brand: 'Huawei',
-      model: 'P50',
-      description: '华为P50专用充电管理芯片，支持快充协议',
-      image_url: 'https://example.com/images/p50-charging-ic.jpg'
-    }
-  ]
-};
+// 初始化Supabase客户端
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hrjqzbhqueleszkvnsen.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_5e-tqlrRNyKW3fAmWJipIQ_1-fjS711'
+);
 
 async function prepareTestData() {
-  console.log('🚀 开始准备E2E测试数据...\n');
+  console.log('🧪 开始准备测试数据...\n');
   
   try {
-    // 1. 创建测试用户
-    console.log('📋 1. 创建测试用户...');
-    const createdUsers = [];
-    
-    for (const userData of TEST_DATA.users) {
-      try {
-        // 检查用户是否已存在
-        const { data: existingUser } = await supabase
-          .from('users')
-          .select('id')
-          .eq('email', userData.email)
-          .single();
-        
-        if (existingUser) {
-          console.log(`   ⚠️  用户 ${userData.email} 已存在`);
-          createdUsers.push(existingUser);
-          continue;
-        }
-        
-        // 创建新用户
-        const { data, error } = await supabase.auth.admin.createUser({
-          email: userData.email,
-          password: userData.password,
-          email_confirm: true,
-          user_metadata: userData.user_metadata
-        });
-        
-        if (error) {
-          console.error(`   ❌ 创建用户 ${userData.email} 失败:`, error.message);
-        } else {
-          console.log(`   ✅ 成功创建用户 ${userData.email}`);
-          createdUsers.push(data.user);
-          
-          // 更新用户档案扩展信息
-          await supabase.from('user_profiles_ext').insert({
-            user_id: data.user.id,
-            role: userData.user_metadata.role,
-            sub_role: userData.user_metadata.sub_role || null,
-            phone: userData.user_metadata.phone,
-            status: 'active'
-          });
-        }
-      } catch (error) {
-        console.error(`   ❌ 处理用户 ${userData.email} 时出错:`, error.message);
+    // 1. 插入测试热点链接
+    console.log('1️⃣ 插入测试热点链接...');
+    const hotLinks = [
+      {
+        url: 'https://example.com/iphone15-repair-guide',
+        title: 'iPhone 15 Pro 维修完整指南',
+        description: '详细的iPhone 15 Pro屏幕更换和电池更换教程',
+        source: '维修技术博客',
+        category: '手机维修',
+        sub_category: '屏幕更换',
+        likes: 45,
+        views: 1200,
+        status: 'promoted'
+      },
+      {
+        url: 'https://example.com/android-troubleshooting',
+        title: 'Android手机常见故障排查方法',
+        description: 'Android系统卡顿、发热、耗电快等问题解决方案',
+        source: '技术分享站',
+        category: '手机维修',
+        sub_category: '系统优化',
+        likes: 32,
+        views: 850,
+        status: 'promoted'
+      },
+      {
+        url: 'https://example.com/battery-replacement',
+        title: '手机电池更换注意事项',
+        description: '各类手机电池更换的安全操作规范和工具推荐',
+        source: '专业维修论坛',
+        category: '手机维修',
+        sub_category: '电池更换',
+        likes: 28,
+        views: 650,
+        status: 'promoted'
       }
+    ];
+    
+    const { data: insertedLinks, error: linkError } = await supabase
+      .from('hot_link_pool')
+      .insert(hotLinks)
+      .select();
+    
+    if (linkError) {
+      console.log('❌ 插入热点链接失败:', linkError.message);
+    } else {
+      console.log(`✅ 成功插入 ${insertedLinks.length} 条热点链接`);
+      insertedLinks.forEach((link, index) => {
+        console.log(`   ${index + 1}. ${link.title}`);
+      });
     }
     
-    // 2. 创建设备型号字典
-    console.log('\n📱 2. 创建设备型号字典...');
-    for (const device of TEST_DATA.devices) {
-      try {
-        const { data, error } = await supabase
-          .from('devices')
-          .upsert(device, { onConflict: 'name' });
-        
-        if (error) {
-          console.error(`   ❌ 创建设备 ${device.name} 失败:`, error.message);
-        } else {
-          console.log(`   ✅ 设备 ${device.name} 准备就绪`);
-        }
-      } catch (error) {
-        console.error(`   ❌ 处理设备 ${device.name} 时出错:`, error.message);
+    // 2. 插入测试文章
+    console.log('\n2️⃣ 插入测试文章...');
+    const articles = [
+      {
+        title: 'iPhone 14 Pro 屏幕更换详细教程',
+        content: '# iPhone 14 Pro 屏幕更换指南\n\n## 准备工作\n1. 准备专业工具\n2. 确保工作环境清洁\n3. 备份重要数据\n\n## 操作步骤\n详细的操作步骤...',
+        summary: '完整的iPhone 14 Pro屏幕更换教程，包含所需工具和详细步骤',
+        cover_image_url: 'https://example.com/iphone14-screen.jpg',
+        status: 'published',
+        like_count: 156,
+        view_count: 2450
+      },
+      {
+        title: '华为手机电池续航优化技巧',
+        content: '# 华为手机电池优化\n\n## 系统设置优化\n1. 调整屏幕亮度\n2. 关闭不必要的后台应用\n3. 启用省电模式\n\n## 使用习惯改善...',
+        summary: '华为手机电池续航优化的实用技巧和设置建议',
+        cover_image_url: 'https://example.com/huawei-battery.jpg',
+        status: 'published',
+        like_count: 89,
+        view_count: 1800
       }
+    ];
+    
+    const { data: insertedArticles, error: articleError } = await supabase
+      .from('articles')
+      .insert(articles)
+      .select();
+    
+    if (articleError) {
+      console.log('❌ 插入文章失败:', articleError.message);
+    } else {
+      console.log(`✅ 成功插入 ${insertedArticles.length} 篇文章`);
+      insertedArticles.forEach((article, index) => {
+        console.log(`   ${index + 1}. ${article.title}`);
+      });
     }
     
-    // 3. 创建故障类型字典
-    console.log('\n🔧 3. 创建故障类型字典...');
-    for (const faultType of TEST_DATA.fault_types) {
-      try {
-        const { data, error } = await supabase
-          .from('fault_types')
-          .upsert(faultType, { onConflict: 'code' });
-        
-        if (error) {
-          console.error(`   ❌ 创建故障类型 ${faultType.name} 失败:`, error.message);
-        } else {
-          console.log(`   ✅ 故障类型 ${faultType.name} 准备就绪`);
-        }
-      } catch (error) {
-        console.error(`   ❌ 处理故障类型 ${faultType.name} 时出错:`, error.message);
+    // 3. 插入测试配件
+    console.log('\n3️⃣ 插入测试配件...');
+    const parts = [
+      {
+        name: 'iPhone 15 Pro 原装屏幕',
+        part_number: 'A2843',
+        brand: 'Apple',
+        category: '屏幕总成',
+        description: '适用于iPhone 15 Pro的原装屏幕总成',
+        status: 'active'
+      },
+      {
+        name: '华为Mate60 电池',
+        part_number: 'HW-M60-BAT',
+        brand: '华为',
+        category: '电池',
+        description: '华为Mate60原装电池，容量4800mAh',
+        status: 'active'
+      },
+      {
+        name: '小米13 充电器',
+        part_number: 'XM-13-CHG',
+        brand: '小米',
+        category: '充电器',
+        description: '小米13原装67W快充充电器',
+        status: 'active'
       }
+    ];
+    
+    const { data: insertedParts, error: partError } = await supabase
+      .from('parts')
+      .insert(parts)
+      .select();
+    
+    if (partError) {
+      console.log('❌ 插入配件失败:', partError.message);
+    } else {
+      console.log(`✅ 成功插入 ${insertedParts.length} 个配件`);
+      insertedParts.forEach((part, index) => {
+        console.log(`   ${index + 1}. ${part.brand} ${part.name}`);
+      });
     }
     
-    // 4. 创建热点链接数据
-    console.log('\n🔗 4. 创建热点链接数据...');
-    for (const hotLink of TEST_DATA.hot_links) {
-      try {
-        const { data, error } = await supabase
-          .from('hot_link_pool')
-          .upsert(hotLink, { onConflict: 'url' });
-        
-        if (error) {
-          console.error(`   ❌ 创建热点链接 ${hotLink.title} 失败:`, error.message);
-        } else {
-          console.log(`   ✅ 热点链接 ${hotLink.title} 准备就绪`);
-        }
-      } catch (error) {
-        console.error(`   ❌ 处理热点链接 ${hotLink.title} 时出错:`, error.message);
+    // 4. 插入测试维修店铺
+    console.log('\n4️⃣ 插入测试维修店铺...');
+    const shops = [
+      {
+        name: '苹果官方授权维修中心',
+        contact_person: '张经理',
+        phone: '400-666-8800',
+        address: '北京市朝阳区建国路88号SOHO现代城A座101室',
+        city: '北京',
+        province: '北京市',
+        rating: 4.8,
+        review_count: 1256,
+        status: 'approved'
+      },
+      {
+        name: '华为授权服务中心',
+        contact_person: '李主任',
+        phone: '400-830-8300',
+        address: '上海市浦东新区陆家嘴环路1000号恒生大厦2楼',
+        city: '上海',
+        province: '上海市',
+        rating: 4.6,
+        review_count: 892,
+        status: 'approved'
       }
+    ];
+    
+    const { data: insertedShops, error: shopError } = await supabase
+      .from('repair_shops')
+      .insert(shops)
+      .select();
+    
+    if (shopError) {
+      console.log('❌ 插入维修店铺失败:', shopError.message);
+    } else {
+      console.log(`✅ 成功插入 ${insertedShops.length} 家维修店铺`);
+      insertedShops.forEach((shop, index) => {
+        console.log(`   ${index + 1}. ${shop.name} (${shop.city})`);
+      });
     }
     
-    // 5. 创建配件数据
-    console.log('\n⚙️  5. 创建配件数据...');
-    for (const part of TEST_DATA.parts) {
-      try {
-        const { data, error } = await supabase
-          .from('parts')
-          .upsert(part, { onConflict: 'name' });
-        
-        if (error) {
-          console.error(`   ❌ 创建配件 ${part.name} 失败:`, error.message);
-        } else {
-          console.log(`   ✅ 配件 ${part.name} 准备就绪`);
-        }
-      } catch (error) {
-        console.error(`   ❌ 处理配件 ${part.name} 时出错:`, error.message);
+    // 5. 验证数据插入结果
+    console.log('\n5️⃣ 验证数据插入结果...');
+    
+    const validations = [
+      { table: 'hot_link_pool', condition: { status: 'promoted' } },
+      { table: 'articles', condition: { status: 'published' } },
+      { table: 'parts', condition: { status: 'active' } },
+      { table: 'repair_shops', condition: { status: 'approved' } }
+    ];
+    
+    for (const validation of validations) {
+      const { count, error } = await supabase
+        .from(validation.table)
+        .select('*', { count: 'exact', head: true })
+        .match(validation.condition);
+      
+      if (error) {
+        console.log(`❌ 验证 ${validation.table} 失败: ${error.message}`);
+      } else {
+        console.log(`✅ ${validation.table}: ${count} 条记录`);
       }
     }
     
     console.log('\n🎉 测试数据准备完成！');
-    console.log('\n📊 数据统计:');
-    console.log(`   • 测试用户: ${createdUsers.length} 个`);
-    console.log(`   • 设备型号: ${TEST_DATA.devices.length} 种`);
-    console.log(`   • 故障类型: ${TEST_DATA.fault_types.length} 种`);
-    console.log(`   • 热点链接: ${TEST_DATA.hot_links.length} 条`);
-    console.log(`   • 配件数据: ${TEST_DATA.parts.length} 个`);
-    
-    console.log('\n📝 测试账号信息:');
-    console.log('   工程师账号: engineer@test.com / Test123!@#');
-    console.log('   消费者账号: consumer@test.com / Test123!@#');
-    console.log('   店主账号: shopowner@test.com / Test123!@#');
-    
-    return true;
+    console.log('\n📋 下一步建议:');
+    console.log('1. 运行API功能测试验证数据');
+    console.log('2. 开始性能优化配置');
+    console.log('3. 启动第三阶段功能开发');
     
   } catch (error) {
-    console.error('❌ 测试数据准备过程中发生错误:', error.message);
-    return false;
+    console.error('❌ 数据准备过程中出错:', error);
   }
 }
 
-// 执行数据准备
+// 如果直接运行此脚本
 if (require.main === module) {
-  prepareTestData()
-    .then(success => {
-      process.exit(success ? 0 : 1);
-    })
-    .catch(error => {
-      console.error('❌ 脚本执行失败:', error);
-      process.exit(1);
-    });
+  prepareTestData().then(() => {
+    console.log('\n数据准备脚本执行完毕！');
+    process.exit(0);
+  }).catch(error => {
+    console.error('数据准备失败:', error);
+    process.exit(1);
+  });
 }
 
-module.exports = { prepareTestData, TEST_DATA };
+module.exports = { prepareTestData };

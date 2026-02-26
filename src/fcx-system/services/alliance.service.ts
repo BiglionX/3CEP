@@ -93,7 +93,7 @@ export class AllianceService implements IAllianceService {
           join_date: joinDate,
           is_alliance_member: true,
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', shopId)
         .select()
         .single();
@@ -159,7 +159,7 @@ export class AllianceService implements IAllianceService {
           join_date: null,
           is_alliance_member: false,
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', shopId)
         .select()
         .single();
@@ -199,7 +199,7 @@ export class AllianceService implements IAllianceService {
           .update({
             alliance_level: newLevel,
             updated_at: new Date()
-          })
+          } as any)
           .eq('id', shopId);
 
         if (error) {

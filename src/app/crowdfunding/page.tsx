@@ -1,386 +1,296 @@
-"use client";
+'use client'
 
-import { useCrowdfundingAuth } from "@/hooks/use-auth";
-import { CrowdfundingProjectService } from "@/services/crowdfunding/project-service";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { 
+  Star,
+  Users,
+  TrendingUp,
+  Calendar,
+  MapPin,
+  DollarSign,
+  Clock,
+  CheckCircle,
+  ArrowRight
+} from 'lucide-react'
 
 interface Project {
-  id: string;
-  title: string;
-  description: string;
-  product_model: string;
-  old_models: string[];
-  target_amount: number;
-  current_amount: number;
-  progress_percentage: number;
-  cover_image_url: string;
-  category: string;
-  created_at: string;
-  end_date: string;
+  id: string
+  title: string
+  description: string
+  goalAmount: number
+  currentAmount: number
+  backers: number
+  daysLeft: number
+  creator: string
+  category: string
+  image: string
+  progress: number
+  featured?: boolean
 }
 
 export default function CrowdfundingPage() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('featured')
 
-  const { isAuthenticated } = useCrowdfundingAuth();
-
-  // 获取项目数据
-  const fetchProjects = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      let result;
-      if (searchQuery) {
-        result = await CrowdfundingProjectService.searchProjects(
-          searchQuery,
-          page,
-          12
-        );
-      } else if (selectedCategory) {
-        result = await CrowdfundingProjectService.getProjectsByCategory(
-          selectedCategory,
-          page,
-          12
-        );
-      } else {
-        result = await CrowdfundingProjectService.getActiveProjects(page, 12);
-      }
-
-      setProjects(result.projects);
-      setTotalPages(result.totalPages);
-    } catch (err: any) {
-      setError(err.message || "获取项目列表失败");
-      console.error("获取项目失败:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // 模拟数据
   useEffect(() => {
-    fetchProjects();
-  }, [page, searchQuery, selectedCategory]);
+    setTimeout(() => {
+      setProjects([
+        {
+          id: '1',
+          title: '智能家居维修机器人',
+          description: '一款能够自动诊断和修复常见家电故障的智能机器人，让维修变得更简单高效。',
+          goalAmount: 500000,
+          currentAmount: 325000,
+          backers: 1247,
+          daysLeft: 45,
+          creator: '智能科技有限公司',
+          category: '科技产品',
+          image: '/images/projects/smart-repair-bot.jpg',
+          progress: 65,
+          featured: true
+        },
+        {
+          id: '2',
+          title: '环保手机维修材料',
+          description: '研发可生物降解的手机维修材料，减少电子垃圾对环境的影响。',
+          goalAmount: 200000,
+          currentAmount: 180000,
+          backers: 892,
+          daysLeft: 12,
+          creator: '绿色环保创新团队',
+          category: '环保科技',
+          image: '/images/projects/eco-materials.jpg',
+          progress: 90,
+          featured: true
+        },
+        {
+          id: '3',
+          title: '便携式手机维修工具包',
+          description: '专为手机维修师设计的一站式便携工具包，集成了所有必需的精密工具。',
+          goalAmount: 150000,
+          currentAmount: 98000,
+          backers: 2156,
+          daysLeft: 78,
+          creator: '专业工具制造商',
+          category: '工具设备',
+          image: '/images/projects/tool-kit.jpg',
+          progress: 65
+        },
+        {
+          id: '4',
+          title: 'AI手机故障诊断系统',
+          description: '基于人工智能的手机故障快速诊断系统，提高维修准确率和效率。',
+          goalAmount: 300000,
+          currentAmount: 75000,
+          backers: 432,
+          daysLeft: 120,
+          creator: 'AI技术研究院',
+          category: '软件服务',
+          image: '/images/projects/ai-diagnosis.jpg',
+          progress: 25
+        }
+      ])
+      setLoading(false)
+    }, 500)
+  }, [])
 
-  // 处理搜索
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPage(1);
-    fetchProjects();
-  };
+  const featuredProjects = projects.filter(p => p.featured)
+  const allProjects = projects
+  const popularProjects = [...projects].sort((a, b) => b.backers - a.backers)
+  const endingSoonProjects = [...projects].sort((a, b) => a.daysLeft - b.daysLeft)
 
-  // 重置筛选
-  const resetFilters = () => {
-    setSearchQuery("");
-    setSelectedCategory("");
-    setPage(1);
-  };
+  const getCurrentProjects = () => {
+    switch (activeTab) {
+      case 'featured': return featuredProjects
+      case 'popular': return popularProjects
+      case 'ending': return endingSoonProjects
+      default: return allProjects
+    }
+  }
 
-  // 格式化货币显示
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("zh-CN", {
-      style: "currency",
-      currency: "CNY",
+    return new Intl.NumberFormat('zh-CN', {
+      style: 'currency',
+      currency: 'CNY',
       minimumFractionDigits: 0,
-    }).format(amount);
-  };
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
 
-  // 计算剩余天数
-  const getDaysRemaining = (endDate: string) => {
-    const end = new Date(endDate);
-    const now = new Date();
-    const diffTime = end.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
-  };
-
-  if (loading && projects.length === 0) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载中...</p>
-        </div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
-    );
+    )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* 顶部导航 */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">众筹项目</h1>
-              <p className="mt-2 text-gray-600">发现创新产品，支持创意梦想</p>
-            </div>
-
-            {isAuthenticated && (
-              <Link
-                href="/crowdfunding/create"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-              >
-                发起众筹
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 搜索和筛选区域 */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <form
-            onSubmit={handleSearch}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="搜索项目名称、产品型号..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setPage(1);
-              }}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">全部分类</option>
-              <option value="手机配件">手机配件</option>
-              <option value="电脑硬件">电脑硬件</option>
-              <option value="智能家居">智能家居</option>
-              <option value="数码产品">数码产品</option>
-              <option value="其他">其他</option>
-            </select>
-
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-            >
-              搜索
-            </button>
-
-            {(searchQuery || selectedCategory) && (
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
-              >
-                重置
-              </button>
-            )}
-          </form>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 页面标题 */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">创新众筹平台</h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            发现和支持改变手机维修行业的创新项目，共同推动行业发展
+          </p>
         </div>
 
-        {/* 错误提示 */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">加载失败</h3>
-                <div className="mt-2 text-sm text-red-700">
-                  <p>{error}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* 统计数据 */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Users className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+              <p className="text-3xl font-bold text-gray-900">2,847</p>
+              <p className="text-gray-600">支持者</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-3" />
+              <p className="text-3xl font-bold text-gray-900">¥1.2M+</p>
+              <p className="text-gray-600">筹集资金</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Star className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
+              <p className="text-3xl font-bold text-gray-900">42</p>
+              <p className="text-gray-600">成功项目</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Clock className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+              <p className="text-3xl font-bold text-gray-900">98%</p>
+              <p className="text-gray-600">成功率</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 项目分类导航 */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {[
+            { id: 'featured', name: '精选推荐', icon: Star },
+            { id: 'all', name: '全部项目', icon: Users },
+            { id: 'popular', name: '热门项目', icon: TrendingUp },
+            { id: 'ending', name: '即将结束', icon: Clock }
+          ].map((tab) => {
+            const Icon = tab.icon
+            return (
+              <Button
+                key={tab.id}
+                variant={activeTab === tab.id ? 'default' : 'outline'}
+                onClick={() => setActiveTab(tab.id)}
+                className="flex items-center"
+              >
+                <Icon className="w-4 h-4 mr-2" />
+                {tab.name}
+              </Button>
+            )
+          })}
+        </div>
 
         {/* 项目列表 */}
-        {projects.length === 0 && !loading ? (
-          <div className="text-center py-12">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">暂无项目</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              {searchQuery || selectedCategory
-                ? "没有找到符合条件的项目"
-                : "目前还没有众筹项目"}
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
-              <Link
-                key={project.id}
-                href={`/crowdfunding/${project.id}`}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-              >
-                <div className="aspect-video bg-gray-200 relative overflow-hidden">
-                  {project.cover_image_url ? (
-                    <img
-                      src={project.cover_image_url}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500">暂无图片</span>
-                    </div>
-                  )}
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {project.category}
-                    </span>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {getCurrentProjects().map((project) => (
+            <Card key={project.id} className="overflow-hidden hover:shadow-xl transition-shadow">
+              <div className="relative">
+                <div className="bg-gray-200 aspect-video flex items-center justify-center">
+                  <Star className="w-12 h-12 text-gray-400" />
                 </div>
-
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+                
+                {project.featured && (
+                  <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    精选
+                  </div>
+                )}
+                
+                <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full p-2">
+                  <HeartIcon />
+                </div>
+              </div>
+              
+              <CardContent className="p-6">
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-blue-600 font-medium">{project.category}</span>
+                    <span className="text-sm text-gray-500">{project.daysLeft}天剩余</span>
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
                     {project.title}
                   </h3>
-
+                  
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                     {project.description}
                   </p>
-
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>已筹金额</span>
-                      <span>目标金额</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="font-semibold text-green-600">
-                        {formatCurrency(project.current_amount)}
-                      </span>
-                      <span className="text-gray-500">
-                        {formatCurrency(project.target_amount)}
-                      </span>
-                    </div>
-
-                    {/* 进度条 */}
-                    <div className="mt-2">
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${Math.min(
-                              project.progress_percentage,
-                              100
-                            )}%`,
-                          }}
-                        ></div>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>{project.progress_percentage}% 达成</span>
-                        <span>
-                          剩余 {getDaysRemaining(project.end_date)} 天
-                        </span>
-                      </div>
-                    </div>
+                </div>
+                
+                {/* 进度条 */}
+                <div className="mb-4">
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="font-medium">{formatCurrency(project.currentAmount)}</span>
+                    <span className="text-gray-600">目标 {formatCurrency(project.goalAmount)}</span>
                   </div>
-
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>产品型号: {project.product_model}</span>
-                    <span>
-                      {new Date(project.created_at).toLocaleDateString("zh-CN")}
-                    </span>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${project.progress}%` }}
+                    ></div>
                   </div>
                 </div>
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* 分页 */}
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
-            <nav className="flex items-center space-x-2">
-              <button
-                onClick={() => setPage(Math.max(1, page - 1))}
-                disabled={page === 1}
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  page === 1
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
-                }`}
-              >
-                上一页
-              </button>
-
-              {[...Array(totalPages)].map((_, i) => {
-                const pageNum = i + 1;
-                if (
-                  pageNum === 1 ||
-                  pageNum === totalPages ||
-                  (pageNum >= page - 2 && pageNum <= page + 2)
-                ) {
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => setPage(pageNum)}
-                      className={`px-3 py-2 rounded-md text-sm font-medium ${
-                        page === pageNum
-                          ? "bg-blue-600 text-white"
-                          : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                } else if (pageNum === page - 3 || pageNum === page + 3) {
-                  return (
-                    <span key={pageNum} className="px-2 py-2 text-gray-400">
-                      ...
-                    </span>
-                  );
-                }
-                return null;
-              })}
-
-              <button
-                onClick={() => setPage(Math.min(totalPages, page + 1))}
-                disabled={page === totalPages}
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  page === totalPages
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
-                }`}
-              >
-                下一页
-              </button>
-            </nav>
+                
+                {/* 统计信息 */}
+                <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 mr-1" />
+                    {project.backers} 支持者
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="w-4 h-4 mr-1 text-green-500" />
+                    {Math.round(project.progress)}% 达成
+                  </div>
+                </div>
+                
+                {/* 操作按钮 */}
+                <div className="flex gap-2">
+                  <Button className="flex-1">
+                    支持项目
+                  </Button>
+                  <Button variant="outline">
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        {getCurrentProjects().length === 0 && (
+          <div className="text-center py-16">
+            <Star className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-medium text-gray-900 mb-2">暂无项目</h3>
+            <p className="text-gray-600">当前分类下还没有项目，敬请期待更多创新项目</p>
           </div>
         )}
       </div>
     </div>
-  );
+  )
+}
+
+// 简单的心形图标组件
+function HeartIcon() {
+  return (
+    <svg className="w-5 h-5 text-gray-600 hover:text-red-500 cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    </svg>
+  )
 }

@@ -1,0 +1,143 @@
+{
+  "timestamp": "2026-02-25T06:13:58.275Z",
+  "config": {
+    "pagesToMigrate": [
+      {
+        "path": "src/app/admin/login/page.tsx",
+        "type": "admin",
+        "priority": "high",
+        "backup": true
+      },
+      {
+        "path": "src/app/brand/login/page.tsx",
+        "type": "brand",
+        "priority": "medium",
+        "backup": true
+      },
+      {
+        "path": "src/app/repair-shop/login/page.tsx",
+        "type": "repair",
+        "priority": "medium",
+        "backup": true
+      },
+      {
+        "path": "src/app/importer/login/page.tsx",
+        "type": "trade",
+        "priority": "medium",
+        "backup": true
+      },
+      {
+        "path": "src/app/exporter/login/page.tsx",
+        "type": "trade",
+        "priority": "medium",
+        "backup": true
+      },
+      {
+        "path": "src/modules/auth/app/page.tsx",
+        "type": "default",
+        "priority": "low",
+        "backup": false
+      },
+      {
+        "path": "src/modules/admin-panel/app/login/page.tsx",
+        "type": "admin",
+        "priority": "medium",
+        "backup": true
+      }
+    ],
+    "themeMapping": {
+      "admin": {
+        "theme": "admin",
+        "title": "管理后台登录",
+        "subtitle": "请输入您的管理员凭证",
+        "primaryColor": "#3b82f6",
+        "backgroundColor": "from-blue-50 to-indigo-100"
+      },
+      "brand": {
+        "theme": "brand",
+        "title": "品牌商平台",
+        "subtitle": "专业的电子产品回收解决方案",
+        "primaryColor": "#0ea5e9",
+        "backgroundColor": "from-cyan-50 to-sky-100"
+      },
+      "repair": {
+        "theme": "repair",
+        "title": "维修师平台",
+        "subtitle": "一站式设备维修服务管理",
+        "primaryColor": "#10b981",
+        "backgroundColor": "from-emerald-50 to-green-100"
+      },
+      "trade": {
+        "theme": "trade",
+        "title": "贸易平台",
+        "subtitle": "高效的进出口业务管理系统",
+        "primaryColor": "#8b5cf6",
+        "backgroundColor": "from-purple-50 to-violet-100"
+      },
+      "default": {
+        "theme": "default",
+        "title": "欢迎登录",
+        "subtitle": "请输入您的账户信息",
+        "primaryColor": "#6366f1",
+        "backgroundColor": "from-indigo-50 to-purple-100"
+      }
+    }
+  },
+  "results": {
+    "total": 7,
+    "success": 7,
+    "failed": 0,
+    "skipped": 0,
+    "details": [
+      {
+        "page": "src\\app\\admin\\login\\page.tsx",
+        "status": "success",
+        "backup": "D:\\BigLionX\\3cep\\src\\app\\admin\\login\\page.tsx.backup.1772000038237",
+        "theme": "admin"
+      },
+      {
+        "page": "src\\app\\brand\\login\\page.tsx",
+        "status": "success",
+        "backup": "D:\\BigLionX\\3cep\\src\\app\\brand\\login\\page.tsx.backup.1772000038244",
+        "theme": "brand"
+      },
+      {
+        "page": "src\\app\\repair-shop\\login\\page.tsx",
+        "status": "success",
+        "backup": "D:\\BigLionX\\3cep\\src\\app\\repair-shop\\login\\page.tsx.backup.1772000038250",
+        "theme": "repair"
+      },
+      {
+        "page": "src\\app\\importer\\login\\page.tsx",
+        "status": "success",
+        "backup": "D:\\BigLionX\\3cep\\src\\app\\importer\\login\\page.tsx.backup.1772000038253",
+        "theme": "trade"
+      },
+      {
+        "page": "src\\app\\exporter\\login\\page.tsx",
+        "status": "success",
+        "backup": "D:\\BigLionX\\3cep\\src\\app\\exporter\\login\\page.tsx.backup.1772000038257",
+        "theme": "trade"
+      },
+      {
+        "page": "src\\modules\\admin-panel\\app\\login\\page.tsx",
+        "status": "success",
+        "backup": "D:\\BigLionX\\3cep\\src\\modules\\admin-panel\\app\\login\\page.tsx.backup.1772000038261",
+        "theme": "admin"
+      },
+      {
+        "page": "src\\modules\\auth\\app\\page.tsx",
+        "status": "success",
+        "backup": null,
+        "theme": "default"
+      }
+    ]
+  },
+  "summary": {
+    "total": 7,
+    "success": 7,
+    "failed": 0,
+    "skipped": 0,
+    "successRate": "100.00%"
+  }
+}

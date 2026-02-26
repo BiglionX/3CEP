@@ -36,7 +36,7 @@ export class FcxTransactionService implements IFcxTransactionService {
           memo: dto.memo || null,
           status: FcxTransactionStatus.COMPLETED,
           created_at: now
-        })
+        } as any)
         .select()
         .single();
 

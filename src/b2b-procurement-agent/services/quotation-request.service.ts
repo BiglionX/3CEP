@@ -323,7 +323,7 @@ export class QuotationRequestService {
         .update({
           status: "cancelled",
           updated_at: new Date(),
-        })
+        } as any)
         .eq("id", id)
         .eq("created_by", userId);
 
@@ -353,7 +353,7 @@ export class QuotationRequestService {
       if (error) throw new Error(`获取询价统计失败: ${error.message}`);
 
       const stats = {
-        total: data.length,
+        total: (data as any)?.data.length,
         draft: 0,
         sent: 0,
         completed: 0,

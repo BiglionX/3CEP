@@ -74,7 +74,7 @@ export async function POST(request: Request) {
         utm_medium: utmMedium || null,
         utm_campaign: utmCampaign || null,
         status: 'new'
-      })
+      } as any)
       .select();
 
     if (error) {
@@ -190,7 +190,7 @@ async function trackMarketingEvent(
         source: properties.source,
         utm_source: properties.utm_source,
         created_at: new Date().toISOString()
-      });
+      } as any);
 
     if (error) {
       console.error('记录营销事件失败:', error);

@@ -74,7 +74,7 @@ export class VirtualViewExecutor {
         viewName,
         data: result.data,
         columns: result.columns,
-        rowCount: result.data.length,
+        rowCount: (result.data as any)?.data.length,
         executionTimeMs: Date.now() - startTime,
         cacheHit: false,
         sourceCatalogs: view.sourceCatalogs,
@@ -82,7 +82,7 @@ export class VirtualViewExecutor {
       };
 
       // 缓存结果（如果启用）
-      if (view.cacheEnabled && result.data.length > 0) {
+      if (view.cacheEnabled && (result.data as any)?.data.length > 0) {
         await this.cacheResult(cacheKey, executionResult, view.refreshInterval);
       }
 

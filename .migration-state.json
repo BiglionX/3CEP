@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-02-25T06:14:09.025Z",
+  "status": "running",
+  "details": {
+    "currentStage": "迁移验证",
+    "completedStages": 4,
+    "totalStages": 6,
+    "results": {
+      "stages": [
+        {
+          "name": "环境检查",
+          "script": "environment-check.js",
+          "success": false,
+          "duration": "0.00s",
+          "timestamp": "2026-02-25T06:13:58.121Z",
+          "error": "Script not found"
+        },
+        {
+          "name": "备份创建",
+          "script": "create-backups.js",
+          "success": false,
+          "duration": "0.00s",
+          "timestamp": "2026-02-25T06:13:58.126Z",
+          "error": "Script not found"
+        },
+        {
+          "name": "自动化迁移",
+          "script": "automated-auth-migration.js",
+          "success": true,
+          "duration": "10.89s",
+          "timestamp": "2026-02-25T06:14:09.022Z"
+        },
+        {
+          "name": "迁移验证",
+          "script": "validate-migration.js",
+          "success": false,
+          "duration": "0.00s",
+          "timestamp": "2026-02-25T06:14:09.025Z",
+          "error": "Script not found"
+        }
+      ],
+      "startTime": 1772000038118,
+      "errors": [
+        {
+          "name": "环境检查",
+          "script": "environment-check.js",
+          "success": false,
+          "duration": "0.00s",
+          "timestamp": "2026-02-25T06:13:58.121Z",
+          "error": "Script not found"
+        },
+        {
+          "name": "备份创建",
+          "script": "create-backups.js",
+          "success": false,
+          "duration": "0.00s",
+          "timestamp": "2026-02-25T06:13:58.126Z",
+          "error": "Script not found"
+        },
+        {
+          "name": "迁移验证",
+          "script": "validate-migration.js",
+          "success": false,
+          "duration": "0.00s",
+          "timestamp": "2026-02-25T06:14:09.025Z",
+          "error": "Script not found"
+        }
+      ]
+    }
+  },
+  "pid": 13868
+}

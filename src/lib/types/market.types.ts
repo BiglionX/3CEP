@@ -61,7 +61,7 @@ export interface AggregatedMarketData {
   deviceModel: string;
   xianyuData?: PriceStatistics;
   zhuanTurnData?: PriceStatistics;
-  aggregateData?: PriceStatistics;
+  aggregateData?: PriceStatistics | null;
   bestSource: 'xianyu' | 'zhuan_turn' | 'aggregate';
   confidenceScore: number;
 }

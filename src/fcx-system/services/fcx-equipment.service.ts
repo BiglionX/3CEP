@@ -290,7 +290,7 @@ export class FcxEquipmentService {
           type: 'exchange_equipment',
           description: description,
           created_at: new Date()
-        });
+        } as any);
 
       if (transactionError) {
         console.error('记录FCX交易失败:', transactionError);
@@ -302,7 +302,7 @@ export class FcxEquipmentService {
         .from('profiles')
         .update({
           fcx_balance: (await this.getUserFcxBalance(userId)) - amount
-        })
+        } as any)
         .eq('id', userId);
 
       if (updateError) {
@@ -353,7 +353,7 @@ export class FcxEquipmentService {
             reservation_type: 'fcx_exchange',
             expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24小时后过期
             status: 'active'
-          });
+          } as any);
   
         if (reservationError) {
           failedItems.push(item.productId);
@@ -366,7 +366,7 @@ export class FcxEquipmentService {
             .update({
               reserved_quantity: inventory.reserved_quantity + item.quantity,
               available_quantity: inventory.available_quantity - item.quantity
-            })
+            } as any)
             .eq('product_id', item.productId)
             .eq('warehouse_id', warehouseId);
         }
@@ -397,7 +397,7 @@ export class FcxEquipmentService {
         // 更新预留状态为已取消
         await supabase
           .from('inventory_reservations')
-          .update({ status: 'cancelled' })
+          .update({ status: 'cancelled' } as any)
           .eq('id', reservationId);
   
         // 恢复库存数量
@@ -421,7 +421,7 @@ export class FcxEquipmentService {
               .update({
                 reserved_quantity: inventory.reserved_quantity - reservation.quantity,
                 available_quantity: inventory.available_quantity + reservation.quantity
-              })
+              } as any)
               .eq('product_id', reservation.part_id)
               .eq('warehouse_id', reservation.warehouse_id);
           }
@@ -450,7 +450,7 @@ export class FcxEquipmentService {
           user_id: userId,
           amount: amount, // 正数表示退回
           type: 'refund',
-          description: `FCX兑换退款: ${originalTransactionId}`,
+          description: `FCX兑换退款: ${originalTransactionId} as any`,
           reference_id: originalTransactionId,
           created_at: new Date()
         });
@@ -465,7 +465,7 @@ export class FcxEquipmentService {
         .from('profiles')
         .update({
           fcx_balance: (await this.getUserFcxBalance(userId)) + amount
-        })
+        } as any)
         .eq('id', userId);
   
       return !updateError;
@@ -505,7 +505,7 @@ export class FcxEquipmentService {
           status: 'pending',
           estimated_delivery_time: estimatedDeliveryTime,
           shipping_address: request.shippingAddress ? JSON.stringify(request.shippingAddress) : null
-        });
+        } as any);
   
       if (orderError) {
         return { success: false, error: `创建订单失败: ${orderError.message}` };
@@ -524,7 +524,7 @@ export class FcxEquipmentService {
             fcx_unit_price: item.fcxPrice,
             subtotal_fcx: item.quantity * item.fcxPrice,
             status: 'pending'
-          });
+          } as any);
   
         if (itemError) {
           return { success: false, error: `创建订单详情失败: ${itemError.message}` };
@@ -538,7 +538,7 @@ export class FcxEquipmentService {
           transaction_id: transactionId,
           order_id: orderId,
           exchange_type: 'equipment'
-        });
+        } as any);
   
       if (exchangeTxError) {
         console.warn('关联FCX交易记录失败:', exchangeTxError);

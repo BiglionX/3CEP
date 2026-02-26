@@ -71,7 +71,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
         metadata: behaviorWithDefaults.metadata
           ? JSON.stringify(behaviorWithDefaults.metadata)
           : null,
-      });
+      } as any);
 
       if (error) {
         console.error("保存用户行为失败:", error);
@@ -234,7 +234,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
         throw new Error(`清理过期行为数据失败: ${error.message}`);
       }
 
-      const deletedCount = data?.length || 0;
+      const deletedCount = (data as any)?.data?.length || 0;
       console.log(`✅ 清理过期行为数据完成: 删除 ${deletedCount} 条记录`);
 
       return deletedCount;

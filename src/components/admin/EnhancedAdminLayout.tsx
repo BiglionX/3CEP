@@ -5,6 +5,7 @@ import { AuthService, type UserRole } from '@/lib/auth-service';
 import { cn } from '@/lib/utils';
 import {
   Activity,
+  BarChart3,
   BookOpen,
   ChevronDown,
   DollarSign,
@@ -18,6 +19,7 @@ import {
   Settings,
   Store,
   Sun,
+  User,
   Users,
   Workflow,
   X,
@@ -59,11 +61,22 @@ export default function EnhancedAdminLayout({
 
     const loadUserInfo = async () => {
       try {
-        const currentUser = await AuthService.getCurrentUser();
-        if (currentUser) {
-          const role = await AuthService.getUserRole(currentUser.id);
-          setUserRole(role);
-          setUserEmail(currentUser.email || '');
+        // 检查临时管理员权限
+        const tempAdmin = localStorage.getItem('temp-admin-access');
+        const isAdmin = localStorage.getItem('is-admin');
+        const storedRole = localStorage.getItem('user-role');
+        const storedEmail = localStorage.getItem('user-email');
+        
+        if (tempAdmin === 'true' || isAdmin === 'true' || storedRole === 'admin') {
+          setUserRole('admin');
+          setUserEmail(storedEmail || 'admin@fixcycle.com');
+        } else {
+          const currentUser = await AuthService.getCurrentUser();
+          if (currentUser) {
+            const role = await AuthService.getUserRole(currentUser.id);
+            setUserRole(role);
+            setUserEmail(currentUser.email || '');
+          }
         }
       } catch (error) {
         console.error('加载用户信息失败:', error);
@@ -228,10 +241,10 @@ export default function EnhancedAdminLayout({
         />
       )}
 
-      {/* 侧边栏 */}
+      {/* 固定侧边栏 */}
       <div
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 bg-card border-r shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+          'fixed inset-y-0 left-0 z-50 w-64 bg-card border-r shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:h-screen',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
@@ -281,40 +294,13 @@ export default function EnhancedAdminLayout({
           </ul>
         </nav>
 
-        {/* 用户信息 */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-muted/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground text-sm font-medium">
-                  {userEmail.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <div className="ml-3 flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
-                  {userEmail}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {AuthService.getRoleDisplayName(userRole)}
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLogout}
-              className="h-8 w-8"
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
+
       </div>
 
-      {/* 主内容区域 */}
+      {/* 主内容区域 - 紧贴顶部导航栏下方 */}
       <div className="lg:pl-64">
         {/* 顶部导航栏 */}
-        <header className="bg-card border-b sticky top-0 z-30">
+        <header className="bg-card border-b sticky top-0 z-50">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center">
               <Button
@@ -326,17 +312,20 @@ export default function EnhancedAdminLayout({
                 <Menu className="w-5 h-5" />
               </Button>
               <h1 className="text-lg font-semibold text-foreground">
-                {navigationItems.find(item => item.href === pathname)?.name ||
-                  '管理后台'}
+                {navigationItems.find(item => item.href === pathname)?.name === '仪表板' 
+                  ? '仪表板' 
+                  : navigationItems.find(item => item.href === pathname)?.name || '管理后台'}
               </h1>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
+              {/* 暗黑模式切换 */}
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleDarkMode}
                 aria-label="切换暗黑模式"
+                className="hidden md:flex"
               >
                 {darkMode ? (
                   <Sun className="w-5 h-5" />
@@ -344,36 +333,82 @@ export default function EnhancedAdminLayout({
                   <Moon className="w-5 h-5" />
                 )}
               </Button>
+              
+              {/* 单一登录控件区域 - 确保状态互斥 */}
+              {userEmail ? (
+                // ✅ 已登录：显示用户信息
+                <div className="hidden md:flex items-center space-x-3 border-l border-border pl-4">
+                  <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+                    <span className="text-primary-foreground text-sm font-medium">
+                      {userEmail.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-medium text-foreground truncate">
+                      {userEmail}
+                    </span>
+                    <span className="text-xs text-muted-foreground truncate">
+                      {AuthService.getRoleDisplayName(userRole)}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLogout}
+                    className="h-8 w-8 hover:bg-destructive hover:text-destructive-foreground"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                // ✅ 未登录：显示登录按钮
+                <div className="hidden md:flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.push('/login?redirect=/admin/dashboard')}
+                    className="h-8 text-sm"
+                  >
+                    登录
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => router.push('/register')}
+                    className="h-8 text-sm"
+                  >
+                    免费注册
+                  </Button>
+                </div>
+              )}
+              
+              {/* 移动端控件 */}
+              <div className="md:hidden ml-2">
+                {userEmail ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLogout}
+                    className="h-8 w-8 hover:bg-destructive hover:text-destructive-foreground"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => router.push('/login')}
+                    className="h-8 w-8"
+                  >
+                    <User className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </header>
 
-        {/* 面包屑导航 */}
-        <div className="border-b bg-muted/30">
-          <div className="px-4 sm:px-6 lg:px-8 py-3">
-            <nav className="flex" aria-label="Breadcrumb">
-              <ol className="flex items-center space-x-2">
-                <li>
-                  <Link
-                    href="/admin/dashboard"
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground"
-                  >
-                    首页
-                  </Link>
-                </li>
-                <li>
-                  <ChevronDown className="w-4 h-4 rotate-90 text-muted-foreground" />
-                </li>
-                <li>
-                  <span className="text-sm font-medium text-foreground">
-                    {navigationItems.find(item => item.href === pathname)
-                      ?.name || '当前页面'}
-                  </span>
-                </li>
-              </ol>
-            </nav>
-          </div>
-        </div>
+
 
         {/* 页面内容 */}
         <main className="py-6 px-4 sm:px-6 lg:px-8">

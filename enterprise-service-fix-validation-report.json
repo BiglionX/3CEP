@@ -1,0 +1,127 @@
+{
+  "timestamp": "2026-02-25T11:50:12.173Z",
+  "config": {
+    "baseUrl": "http://localhost:3003",
+    "timeout": 15000,
+    "userAgent": "Enterprise-Service-Fix-Validator/1.0"
+  },
+  "apiTests": [
+    {
+      "name": "智能体列表接口",
+      "path": "/api/enterprise/agents",
+      "method": "GET",
+      "status": "error",
+      "error": "请求超时",
+      "responseTime": 15036
+    },
+    {
+      "name": "创建智能体接口",
+      "path": "/api/enterprise/agents",
+      "method": "POST",
+      "status": "error",
+      "error": "请求超时",
+      "responseTime": 15009
+    },
+    {
+      "name": "采购订单列表接口",
+      "path": "/api/enterprise/procurement/orders",
+      "method": "GET",
+      "status": "error",
+      "error": "请求超时",
+      "responseTime": 15014
+    },
+    {
+      "name": "创建采购订单接口",
+      "path": "/api/enterprise/procurement/orders",
+      "method": "POST",
+      "status": "error",
+      "error": "请求超时",
+      "responseTime": 15006
+    }
+  ],
+  "validationTests": [
+    {
+      "field": "budget",
+      "input": "",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "field": "budget",
+      "input": "¥10,000",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "field": "budget",
+      "input": "10000",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "field": "budget",
+      "input": "¥100.50",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "field": "budget",
+      "input": "invalid",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "field": "budget",
+      "input": "¥-100",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "field": "quantity",
+      "input": "100",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "field": "quantity",
+      "input": "100件",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "field": "quantity",
+      "input": "10.5套",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "field": "quantity",
+      "input": "0",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "field": "quantity",
+      "input": "abc",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "passed": 11,
+    "failed": 4,
+    "passRate": "73.33"
+  }
+}

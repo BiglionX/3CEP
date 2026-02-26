@@ -189,7 +189,7 @@ async function recordClickTracking(
         utm_medium: utmMedium,
         utm_campaign: utmCampaign,
         campaign_id: utmCampaign
-      });
+      } as any);
 
   } catch (error) {
     console.error('记录点击追踪失败:', error);

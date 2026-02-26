@@ -1,10 +1,15 @@
-# FixCycle 项目文档中心
+# Procyc 项目文档中心
 
 ## 🚀 快速入口
 
 ### 🎯 用户入口
 - [快速入门指南](./user-guides/getting-started.md) - 5分钟上手平台使用
 - [网站地图](./SITE_MAP.md) - 完整功能导航
+
+### 👨‍💼 企业用户入口
+- [企业服务指南](./user-guides/enterprise-guide.md) - 企业客户使用手册
+- [产品服务官文档](./technical-docs/product-service-officer.md) - 售后服务管理说明
+- [企业管理后台](./technical-docs/enterprise-admin.md) - 企业管理系统文档
 
 ### 👨‍💻 开发者入口
 - [项目说明书](./project-overview/project-specification.md) - 完整项目概览
@@ -14,6 +19,7 @@
 ### 🛠️ 运维入口
 - [部署操作手册](./technical-docs/deployment-guide.md) - 生产环境部署
 - [版本更新日志](./release-notes/changelog.md) - 版本变更记录
+- [安全管理指南](./technical-docs/security-guide.md) - 系统安全配置
 
 ## 🚀 一键启动指南
 
@@ -52,6 +58,16 @@ npm run dev
 - [`development-roadmap.md`](./project-overview/development-roadmap.md) - 发展路线图
 - [`business-model.md`](./project-overview/business-model.md) - 商业模式
 - [`technical-architecture.md`](./project-overview/technical-architecture.md) - 技术架构
+
+### 🔧 核心模块文档
+
+包含各功能模块的详细技术规范
+
+- [`modules-overview.md`](./modules/modules-overview.md) - 模块概览文档
+- [`维修联盟模块`](./modules/repair-service/detailed-documentation.md) - 维修联盟(FixCycle 1.0)核心模块 ⭐ 升级
+- [`b2b-procurement-spec.md`](./modules/b2b-procurement/specification.md) - B2B采购模块规范
+- [`data-center-spec.md`](./modules/data-center/specification.md) - 数据中心模块规范
+- [`fcx-alliance-spec.md`](./modules/fcx-alliance/specification.md) - FCX联盟模块规范
 
 ### 👥 用户指南 (User Guides)
 
@@ -210,4 +226,4 @@ npm run dev
 
 ---
 
-_最后更新：2026 年 2 月 20 日_
+_最后更新：2026 年 2 月 23 日_

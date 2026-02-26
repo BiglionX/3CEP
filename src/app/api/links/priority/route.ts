@@ -1,0 +1,375 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
+
+// 初始化Supabase客户端
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+/**
+ * @swagger
+ * /api/links/priority:
+ *   get:
+ *     summary: 获取链接优先级列表
+ *     description: 返回所有链接的优先级信息，支持筛选和排序
+ *     parameters:
+ *       - name: status
+ *         in: query
+ *         description: 链接状态筛选
+ *         schema:
+ *           type: string
+ *           enum: [active, inactive, pending_review, rejected]
+ *       - name: category
+ *         in: query
+ *         description: 分类筛选
+ *         schema:
+ *           type: string
+ *       - name: sortBy
+ *         in: query
+ *         description: 排序字段
+ *         schema:
+ *           type: string
+ *           enum: [priority, created_at, views, likes]
+ *           default: priority
+ *       - name: sortOrder
+ *         in: query
+ *         description: 排序方向
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: desc
+ *     responses:
+ *       200:
+ *         description: 成功返回优先级列表
+ *       401:
+ *         description: 未授权访问
+ */
+export async function GET(request: NextRequest) {
+  try {
+    // 验证用户权限
+    const cookieStore = await cookies();
+    const session = cookieStore.get('supabase-auth-token');
+    
+    if (!session) {
+      return NextResponse.json(
+        { error: '未授权访问' },
+        { status: 401 }
+      );
+    }
+    
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status') || '';
+    const category = searchParams.get('category') || '';
+    const sortBy = searchParams.get('sortBy') || 'priority';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    
+    // 构建查询
+    let query = supabase
+      .from('unified_link_library')
+      .select(`
+        id,
+        url,
+        title,
+        source,
+        category,
+        sub_category,
+        priority,
+        views,
+        likes,
+        share_count,
+        status,
+        review_status,
+        ai_quality_score,
+        created_at,
+        updated_at
+      `);
+    
+    // 添加筛选条件
+    if (status) {
+      query = query.eq('status', status);
+    }
+    
+    if (category) {
+      query = query.eq('category', category);
+    }
+    
+    // 添加排序
+    const ascending = sortOrder === 'asc';
+    query = query.order(sortBy, { ascending });
+    
+    const { data, error } = await query;
+    
+    if (error) {
+      console.error('获取优先级列表失败:', error);
+      return NextResponse.json(
+        { error: '获取数据失败' },
+        { status: 500 }
+      );
+    }
+    
+    return NextResponse.json({
+      links: data || [],
+      total: (data as any)?.data?.length || 0,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('优先级API错误:', error);
+    return NextResponse.json(
+      { error: '服务器内部错误' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * @swagger
+ * /api/links/priority:
+ *   put:
+ *     summary: 批量更新链接优先级
+ *     description: 批量更新多个链接的优先级值
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               updates:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: 链接ID
+ *                     priority:
+ *                       type: integer
+ *                       description: 新的优先级值
+ *     responses:
+ *       200:
+ *         description: 更新成功
+ *       400:
+ *         description: 请求参数错误
+ *       401:
+ *         description: 未授权访问
+ */
+export async function PUT(request: NextRequest) {
+  try {
+    // 验证用户权限
+    const cookieStore = await cookies();
+    const session = cookieStore.get('supabase-auth-token');
+    
+    if (!session) {
+      return NextResponse.json(
+        { error: '未授权访问' },
+        { status: 401 }
+      );
+    }
+    
+    const { updates } = await request.json();
+    
+    if (!updates || !Array.isArray(updates)) {
+      return NextResponse.json(
+        { error: '无效的更新数据格式' },
+        { status: 400 }
+      );
+    }
+    
+    // 批量更新
+    const updatePromises = updates.map(async (update) => {
+      const { id, priority } = update;
+      
+      if (!id || typeof priority !== 'number') {
+        throw new Error('无效的更新项');
+      }
+      
+      return supabase
+        .from('unified_link_library')
+        .update({ 
+          priority,
+          updated_at: new Date().toISOString()
+        } as any)
+        .eq('id', id);
+    });
+    
+    const results = await Promise.all(updatePromises);
+    
+    // 检查是否有错误
+    const errors = results.filter(result => result.error);
+    if (errors.length > 0) {
+      console.error('批量更新失败:', errors);
+      return NextResponse.json(
+        { 
+          error: '部分更新失败',
+          details: errors.map(e => e.error?.message)
+        },
+        { status: 500 }
+      );
+    }
+    
+    return NextResponse.json({
+      success: true,
+      updated: updates.length,
+      message: `成功更新 ${updates.length} 条链接的优先级`
+    });
+    
+  } catch (error) {
+    console.error('优先级更新错误:', error);
+    return NextResponse.json(
+      { error: '服务器内部错误' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * @swagger
+ * /api/links/priority/auto-adjust:
+ *   post:
+ *     summary: 自动调整链接优先级
+ *     description: 根据AI质量评分、互动数据等因素自动调整链接优先级
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               strategy:
+ *                 type: string
+ *                 description: 调整策略
+ *                 enum: [quality_based, engagement_based, mixed]
+ *                 default: mixed
+ *     responses:
+ *       200:
+ *         description: 自动调整成功
+ *       401:
+ *         description: 未授权访问
+ */
+export async function POST(request: NextRequest) {
+  try {
+    // 验证用户权限
+    const cookieStore = await cookies();
+    const session = cookieStore.get('supabase-auth-token');
+    
+    if (!session) {
+      return NextResponse.json(
+        { error: '未授权访问' },
+        { status: 401 }
+      );
+    }
+    
+    const { strategy = 'mixed' } = await request.json();
+    
+    // 获取所有活跃链接
+    const { data: links, error: fetchError } = await supabase
+      .from('unified_link_library')
+      .select('id, priority, ai_quality_score, views, likes, source')
+      .eq('status', 'active');
+    
+    if (fetchError) {
+      console.error('获取链接数据失败:', fetchError);
+      return NextResponse.json(
+        { error: '获取数据失败' },
+        { status: 500 }
+      );
+    }
+    
+    if (!links || links.length === 0) {
+      return NextResponse.json({
+        success: true,
+        message: '没有需要调整的链接',
+        adjusted: 0
+      });
+    }
+    
+    // 计算新的优先级
+    const updates = links.map(link => {
+      let newPriority = link.priority || 0;
+      
+      switch (strategy) {
+        case 'quality_based':
+          // 基于AI质量评分调整
+          if (link.ai_quality_score) {
+            newPriority = Math.round(link.ai_quality_score * 100);
+          }
+          break;
+          
+        case 'engagement_based':
+          // 基于互动数据调整
+          const engagementScore = Math.min(
+            (link.views || 0) / 100 + (link.likes || 0) / 10,
+            100
+          );
+          newPriority = Math.round(engagementScore);
+          break;
+          
+        case 'mixed':
+        default:
+          // 混合策略
+          let qualityComponent = 0;
+          let engagementComponent = 0;
+          let sourceBonus = 0;
+          
+          // AI质量评分组件 (40%权重)
+          if (link.ai_quality_score) {
+            qualityComponent = link.ai_quality_score * 40;
+          }
+          
+          // 互动数据组件 (30%权重)
+          engagementComponent = Math.min(
+            ((link.views || 0) / 100 + (link.likes || 0) / 10) * 0.3,
+            30
+          );
+          
+          // 来源加分 (30%权重)
+          if (link.source === 'iFixit') sourceBonus = 30;
+          else if (link.source === '官方') sourceBonus = 25;
+          else if (link.source?.includes('知乎')) sourceBonus = 20;
+          else if (link.source?.includes('bilibili')) sourceBonus = 15;
+          
+          newPriority = Math.round(qualityComponent + engagementComponent + sourceBonus);
+          break;
+      }
+      
+      // 确保优先级在合理范围内
+      newPriority = Math.max(0, Math.min(100, newPriority));
+      
+      return {
+        id: link.id,
+        priority: newPriority
+      };
+    });
+    
+    // 批量更新优先级
+    const updatePromises = updates.map(update =>
+      supabase
+        .from('unified_link_library')
+        .update({ 
+          priority: update.priority,
+          updated_at: new Date().toISOString()
+        } as any)
+        .eq('id', update.id)
+    );
+    
+    const updateResults = await Promise.all(updatePromises);
+    const successfulUpdates = updateResults.filter(result => !result.error).length;
+    
+    return NextResponse.json({
+      success: true,
+      adjusted: successfulUpdates,
+      total: links.length,
+      strategy,
+      message: `成功自动调整 ${successfulUpdates}/${links.length} 条链接的优先级`
+    });
+    
+  } catch (error) {
+    console.error('自动调整优先级错误:', error);
+    return NextResponse.json(
+      { error: '服务器内部错误' },
+      { status: 500 }
+    );
+  }
+}

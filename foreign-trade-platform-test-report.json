@@ -1,0 +1,29 @@
+{
+  "summary": {
+    "总测试数": 2,
+    "通过": 0,
+    "失败": 2,
+    "部分通过": 0,
+    "通过率": "0.0%"
+  },
+  "timestamp": "2026-02-26T08:08:03.484Z",
+  "results": [
+    {
+      "test": "访问外贸公司管理平台",
+      "status": "❌ 失败",
+      "details": {
+        "页面标题": "",
+        "平台头部显示": false,
+        "统计卡片显示": false,
+        "公司列表显示": false
+      }
+    },
+    {
+      "test": "整体测试",
+      "status": "❌ 错误",
+      "details": {
+        "错误信息": "locator.textContent: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"role-toggle\"]')\u001b[22m\n"
+      }
+    }
+  ]
+}

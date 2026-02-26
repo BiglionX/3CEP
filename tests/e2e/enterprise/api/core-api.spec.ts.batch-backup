@@ -1,0 +1,481 @@
+/**
+ * 企业用户端API接口测试
+ * 验证核心业务接口的功能性和稳定性
+ */
+
+import { test, expect } from '@playwright/test';
+import { 
+  ENTERPRISE_ROUTES, 
+  TEST_DATA, 
+  TEST_ENTERPRISE_USERS 
+} from '../enterprise.config';
+
+test.describe('认证相关API测试', () => {
+  test('企业用户注册API', async ({ request }) => {
+    // 准备测试数据
+    const timestamp = Date.now();
+    const testData = {
+      companyName: `API测试公司_${timestamp}`,
+      businessLicense: `91310000MA${Math.random().toString().substr(2, 8)}`,
+      contactPerson: `API联系人_${timestamp}`,
+      phone: `138${Math.floor(Math.random() * 100000000).toString().padStart(8, '0')}`,
+      email: `api_test_${timestamp}@enterprise.com`,
+      password: 'Test123456'
+    };
+
+    // 发送注册请求
+    const response = await request.post(ENTERPRISE_ROUTES.api.register, {
+      data: testData
+    });
+
+    // 验证响应状态
+    expect(response.status()).toBe(200);
+    
+    // 验证响应数据结构
+    const result = await response.json();
+    expect(result).toHaveProperty('success', true);
+    expect(result).toHaveProperty('data');
+    expect(result.data).toHaveProperty('id');
+    expect(result.data).toHaveProperty('companyName', testData.companyName);
+    expect(result.data).toHaveProperty('email', testData.email);
+    
+    // 验证不返回敏感信息
+    expect(result.data).not.toHaveProperty('password');
+  });
+
+  test('企业用户登录API', async ({ request }) => {
+    // 使用预设的测试用户
+    const testUser = TEST_ENTERPRISE_USERS.regularUser;
+    
+    // 发送登录请求
+    const response = await request.post(ENTERPRISE_ROUTES.api.login, {
+      data: {
+        email: testUser.email,
+        password: testUser.password
+      }
+    });
+
+    // 验证响应
+    expect(response.status()).toBe(200);
+    
+    const result = await response.json();
+    expect(result).toHaveProperty('success', true);
+    expect(result).toHaveProperty('data');
+    expect(result.data).toHaveProperty('token');
+    expect(result.data).toHaveProperty('user');
+    expect(result.data.user).toHaveProperty('companyName', testUser.companyName);
+    
+    // 验证token格式
+    expect(typeof result.data.token).toBe('string');
+    expect(result.data.token.length).toBeGreaterThan(20);
+  });
+
+  test('登录失败场景测试', async ({ request }) => {
+    const testCases = [
+      {
+        name: '错误密码',
+        data: { email: TEST_ENTERPRISE_USERS.regularUser.email, password: 'WrongPassword123' },
+        expectedStatus: 401
+      },
+      {
+        name: '不存在的用户',
+        data: { email: 'nonexistent@enterprise.com', password: 'Test123456' },
+        expectedStatus: 401
+      },
+      {
+        name: '无效邮箱格式',
+        data: { email: 'invalid-email', password: 'Test123456' },
+        expectedStatus: 400
+      },
+      {
+        name: '缺少必要字段',
+        data: { email: TEST_ENTERPRISE_USERS.regularUser.email }, // 缺少密码
+        expectedStatus: 400
+      }
+    ];
+
+    for (const testCase of testCases) {
+      const response = await request.post(ENTERPRISE_ROUTES.api.login, {
+        data: testCase.data
+      });
+      
+      expect(response.status()).toBe(testCase.expectedStatus);
+      
+      const result = await response.json();
+      expect(result).toHaveProperty('success', false);
+      expect(result).toHaveProperty('error');
+    }
+  });
+
+  test('登出API测试', async ({ request }) => {
+    // 先登录获取token
+    const loginResponse = await request.post(ENTERPRISE_ROUTES.api.login, {
+      data: {
+        email: TEST_ENTERPRISE_USERS.regularUser.email,
+        password: TEST_ENTERPRISE_USERS.regularUser.password
+      }
+    });
+    
+    const loginResult = await loginResponse.json();
+    const token = loginResult.data.token;
+    
+    // 执行登出
+    const logoutResponse = await request.post(ENTERPRISE_ROUTES.api.logout, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    expect(logoutResponse.status()).toBe(200);
+    
+    const logoutResult = await logoutResponse.json();
+    expect(logoutResult).toHaveProperty('success', true);
+    expect(logoutResult).toHaveProperty('message');
+  });
+});
+
+test.describe('业务功能API测试', () => {
+  let authToken: string;
+  
+  // 测试前获取认证token
+  test.beforeEach(async ({ request }) => {
+    const response = await request.post(ENTERPRISE_ROUTES.api.login, {
+      data: {
+        email: TEST_ENTERPRISE_USERS.regularUser.email,
+        password: TEST_ENTERPRISE_USERS.regularUser.password
+      }
+    });
+    const result = await response.json();
+    authToken = result.data.token;
+  });
+
+  test('获取企业仪表板数据API', async ({ request }) => {
+    const response = await request.get(ENTERPRISE_ROUTES.api.dashboard, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+
+    expect(response.status()).toBe(200);
+    
+    const result = await response.json();
+    expect(result).toHaveProperty('success', true);
+    expect(result).toHaveProperty('data');
+    
+    // 验证仪表板数据结构
+    const dashboardData = result.data;
+    expect(dashboardData).toHaveProperty('metrics');
+    expect(dashboardData).toHaveProperty('recentActivities');
+    expect(dashboardData).toHaveProperty('notifications');
+    
+    // 验证数值类型数据
+    expect(typeof dashboardData.metrics.totalUsers).toBe('number');
+    expect(typeof dashboardData.metrics.activeSessions).toBe('number');
+  });
+
+  test('智能体管理API', async ({ request }) => {
+    // 创建智能体
+    const createResponse = await request.post(ENTERPRISE_ROUTES.api.agents, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      data: {
+        name: 'API测试智能体',
+        description: '通过API创建的测试智能体',
+        modelConfig: {
+          model: 'gpt-4',
+          temperature: 0.7
+        },
+        status: 'active'
+      }
+    });
+
+    expect(createResponse.status()).toBe(200);
+    const createResult = await createResponse.json();
+    expect(createResult).toHaveProperty('success', true);
+    expect(createResult.data).toHaveProperty('id');
+    
+    const agentId = createResult.data.id;
+    
+    // 获取智能体列表
+    const listResponse = await request.get(ENTERPRISE_ROUTES.api.agents, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    expect(listResponse.status()).toBe(200);
+    const listResult = await listResponse.json();
+    expect(listResult.data).toBeInstanceOf(Array);
+    expect(listResult.data.length).toBeGreaterThan(0);
+    
+    // 更新智能体
+    const updateResponse = await request.put(`${ENTERPRISE_ROUTES.api.agents}/${agentId}`, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      data: {
+        name: '更新后的API测试智能体',
+        description: '通过API更新的测试智能体'
+      }
+    });
+    
+    expect(updateResponse.status()).toBe(200);
+    
+    // 删除智能体
+    const deleteResponse = await request.delete(`${ENTERPRISE_ROUTES.api.agents}/${agentId}`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    expect(deleteResponse.status()).toBe(200);
+  });
+
+  test('采购订单API', async ({ request }) => {
+    // 创建采购订单
+    const createResponse = await request.post(ENTERPRISE_ROUTES.api.procurement, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      data: {
+        title: 'API测试采购订单',
+        description: '通过API创建的采购订单',
+        items: [
+          {
+            name: '测试商品1',
+            quantity: 10,
+            unitPrice: 100,
+            category: '电子产品'
+          },
+          {
+            name: '测试商品2',
+            quantity: 5,
+            unitPrice: 200,
+            category: '办公用品'
+          }
+        ],
+        priority: 'medium',
+        status: 'pending'
+      }
+    });
+
+    expect(createResponse.status()).toBe(200);
+    const createResult = await createResponse.json();
+    expect(createResult).toHaveProperty('success', true);
+    expect(createResult.data).toHaveProperty('id');
+    
+    const orderId = createResult.data.id;
+    
+    // 获取订单列表
+    const listResponse = await request.get(ENTERPRISE_ROUTES.api.procurement, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    expect(listResponse.status()).toBe(200);
+    const listResult = await listResponse.json();
+    expect(listResult.data).toBeInstanceOf(Array);
+    
+    // 验证订单数据结构
+    if (listResult.data.length > 0) {
+      const firstOrder = listResult.data[0];
+      expect(firstOrder).toHaveProperty('title');
+      expect(firstOrder).toHaveProperty('status');
+      expect(firstOrder).toHaveProperty('itemsCount');
+    }
+    
+    // 删除测试订单
+    const deleteResponse = await request.delete(`${ENTERPRISE_ROUTES.api.procurement}/${orderId}`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    expect(deleteResponse.status()).toBe(200);
+  });
+
+  test('配件管理API', async ({ request }) => {
+    // 创建配件
+    const createResponse = await request.post(ENTERPRISE_ROUTES.api.parts, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      data: {
+        name: 'API测试配件',
+        category: '电子元件',
+        brand: '测试品牌',
+        model: 'TEST-PART-001',
+        description: '通过API创建的测试配件',
+        price: 99.99,
+        stockQuantity: 100,
+        status: 'active'
+      }
+    });
+
+    expect(createResponse.status()).toBe(200);
+    const createResult = await createResponse.json();
+    expect(createResult.data).toHaveProperty('id');
+    
+    const partId = createResult.data.id;
+    
+    // 查询配件
+    const getResponse = await request.get(`${ENTERPRISE_ROUTES.api.parts}/${partId}`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    expect(getResponse.status()).toBe(200);
+    const getResult = await getResponse.json();
+    expect(getResult.data.name).toBe('API测试配件');
+    
+    // 更新库存
+    const updateResponse = await request.put(`${ENTERPRISE_ROUTES.api.parts}/${partId}/stock`, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      data: { stockQuantity: 150 }
+    });
+    
+    expect(updateResponse.status()).toBe(200);
+    
+    // 搜索配件
+    const searchResponse = await request.get(ENTERPRISE_ROUTES.api.parts, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      params: { search: '测试' }
+    });
+    
+    expect(searchResponse.status()).toBe(200);
+    
+    // 删除配件
+    const deleteResponse = await request.delete(`${ENTERPRISE_ROUTES.api.parts}/${partId}`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    expect(deleteResponse.status()).toBe(200);
+  });
+});
+
+test.describe('API安全测试', () => {
+  test('未认证访问拦截', async ({ request }) => {
+    const protectedEndpoints = [
+      ENTERPRISE_ROUTES.api.dashboard,
+      ENTERPRISE_ROUTES.api.agents,
+      ENTERPRISE_ROUTES.api.procurement,
+      ENTERPRISE_ROUTES.api.profile
+    ];
+
+    for (const endpoint of protectedEndpoints) {
+      const response = await request.get(endpoint);
+      expect([401, 403]).toContain(response.status());
+    }
+  });
+
+  test('无效token访问拦截', async ({ request }) => {
+    const response = await request.get(ENTERPRISE_ROUTES.api.dashboard, {
+      headers: { 'Authorization': 'Bearer invalid-token-123' }
+    });
+    
+    expect([401, 403]).toContain(response.status());
+  });
+
+  test('过期token处理', async ({ request }) => {
+    // 这个测试需要后端支持token过期机制
+    // 可以通过修改系统时间或使用已知过期的token来测试
+  });
+});
+
+test.describe('API性能测试', () => {
+  let authToken: string;
+  
+  test.beforeEach(async ({ request }) => {
+    const response = await request.post(ENTERPRISE_ROUTES.api.login, {
+      data: {
+        email: TEST_ENTERPRISE_USERS.regularUser.email,
+        password: TEST_ENTERPRISE_USERS.regularUser.password
+      }
+    });
+    const result = await response.json();
+    authToken = result.data.token;
+  });
+
+  test('API响应时间测试', async ({ request }) => {
+    const startTime = Date.now();
+    
+    const response = await request.get(ENTERPRISE_ROUTES.api.dashboard, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    const responseTime = Date.now() - startTime;
+    
+    expect(response.status()).toBe(200);
+    expect(responseTime).toBeLessThan(1000); // 响应时间应小于1秒
+    
+    console.log(`API响应时间: ${responseTime}ms`);
+  });
+
+  test('并发请求测试', async ({ request }) => {
+    const requests = [];
+    const concurrentCount = 5;
+    
+    // 创建并发请求
+    for (let i = 0; i < concurrentCount; i++) {
+      requests.push(
+        request.get(ENTERPRISE_ROUTES.api.dashboard, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        })
+      );
+    }
+    
+    // 并发执行
+    const startTime = Date.now();
+    const responses = await Promise.all(requests);
+    const totalTime = Date.now() - startTime;
+    
+    // 验证所有请求都成功
+    for (const response of responses) {
+      expect(response.status()).toBe(200);
+    }
+    
+    console.log(`并发${concurrentCount}个请求总耗时: ${totalTime}ms`);
+  });
+});
+
+test.describe('API错误处理测试', () => {
+  let authToken: string;
+  
+  test.beforeEach(async ({ request }) => {
+    const response = await request.post(ENTERPRISE_ROUTES.api.login, {
+      data: {
+        email: TEST_ENTERPRISE_USERS.regularUser.email,
+        password: TEST_ENTERPRISE_USERS.regularUser.password
+      }
+    });
+    const result = await response.json();
+    authToken = result.data.token;
+  });
+
+  test('404错误处理', async ({ request }) => {
+    const response = await request.get('/api/enterprise/nonexistent-endpoint', {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    expect(response.status()).toBe(404);
+    
+    const result = await response.json();
+    expect(result).toHaveProperty('success', false);
+    expect(result).toHaveProperty('error');
+  });
+
+  test('数据验证错误处理', async ({ request }) => {
+    // 发送无效数据
+    const response = await request.post(ENTERPRISE_ROUTES.api.agents, {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      data: {
+        // 缺少必要字段
+        description: '缺少名称的智能体'
+      }
+    });
+    
+    expect(response.status()).toBe(400);
+    
+    const result = await response.json();
+    expect(result).toHaveProperty('success', false);
+    expect(result).toHaveProperty('error');
+  });
+
+  test('统一错误响应格式', async ({ request }) => {
+    const response = await request.get('/api/enterprise/nonexistent-endpoint', {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    const result = await response.json();
+    
+    // 验证错误响应的标准格式
+    expect(result).toHaveProperty('success');
+    expect(result).toHaveProperty('error');
+    expect(typeof result.error).toBe('string');
+    
+    if (result.details) {
+      expect(typeof result.details).toBe('object');
+    }
+  });
+});

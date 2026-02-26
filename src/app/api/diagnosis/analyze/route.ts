@@ -254,10 +254,4 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // API路由配置
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "1mb",
-    },
-  },
-};
+

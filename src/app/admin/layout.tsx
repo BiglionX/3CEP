@@ -1,9 +1,9 @@
-import EnhancedAdminLayout from '@/components/admin/EnhancedAdminLayout'
+import RoleAwareLayout from '@/components/admin/RoleAwareLayout'
 
 export default function AdminRootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return <EnhancedAdminLayout>{children}</EnhancedAdminLayout>
+  return <RoleAwareLayout>{children}</RoleAwareLayout>
 }

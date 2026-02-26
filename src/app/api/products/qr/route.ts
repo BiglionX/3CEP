@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         model: productModel || '',
         qr_url: productUrl,
         created_at: new Date().toISOString()
-      })
+      } as any)
       .select()
       .single();
 
@@ -102,7 +102,7 @@ async function handleBatchGeneration(products: any[]) {
           model: product.productModel || '',
           qr_url: productUrl,
           created_at: new Date().toISOString()
-        })
+        } as any)
         .select()
         .single();
 

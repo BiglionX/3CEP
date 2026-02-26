@@ -6,9 +6,13 @@ interface GoogleLoginButtonProps {
 
 export default function GoogleLoginButton({ redirect = '/' }: GoogleLoginButtonProps) {
   const handleGoogleLogin = () => {
-    // 构建重定向URL，包含原始的redirect参数
+    // 构建完整的Google OAuth URL，包含redirect参数
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001';
     const redirectParam = redirect ? `&redirect=${encodeURIComponent(redirect)}` : '';
-    window.location.href = `/api/auth/callback/google?origin=login${redirectParam}`;
+    const googleAuthUrl = `${baseUrl}/api/auth/callback/google?origin=login${redirectParam}`;
+    
+    // 重定向到Google OAuth
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(googleAuthUrl)}&response_type=code&scope=email profile`;
   };
 
   return (

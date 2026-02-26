@@ -133,7 +133,7 @@ export async function POST(request: Request) {
         version: '1.0.0',
         created_by: user.id,
         updated_by: user.id
-      })
+      } as any)
       .select()
       .single();
 

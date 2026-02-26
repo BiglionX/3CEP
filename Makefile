@@ -1,9 +1,9 @@
-# FixCycle 项目 Makefile
+# ProdCycleAI 项目 Makefile
 # 统一的开发、测试、部署命令入口
 
 # 项目基本信息
-PROJECT_NAME := FixCycle
-VERSION := 1.0.0
+PROJECT_NAME := ProdCycleAI
+VERSION := 5.0.0
 
 # 默认目标
 .PHONY: help

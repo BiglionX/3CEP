@@ -9,7 +9,9 @@ import { useUser } from '@/components/providers/AuthProvider';
 import { useEffect, useState } from 'react';
 
 // 缓存 RBAC 配置
-let cachedRbacConfig: any = null;
+import type { RbacConfig, PermissionInfo, RoleInfo } from '@/types/common';
+
+let cachedRbacConfig: RbacConfig | null = null;
 
 /**
  * 加载 RBAC 配置
@@ -45,7 +47,7 @@ async function loadRbacConfig() {
  */
 export function useRbacPermission() {
   const { user, roles, isLoading } = useUser();
-  const [rbacConfig, setRbacConfig] = useState<any>(null);
+  const [rbacConfig, setRbacConfig] = useState<RbacConfig | null>(null);
   const [configLoading, setConfigLoading] = useState(true);
 
   // 加载 RBAC 配置
@@ -130,7 +132,7 @@ export function useRbacPermission() {
   /**
    * 获取权限详细信息
    */
-  const getPermissionInfo = (permission: string): any => {
+  const getPermissionInfo = (permission: string): PermissionInfo | null => {
     if (!rbacConfig) return null;
     return rbacConfig.permissions[permission] || null;
   };
@@ -138,7 +140,7 @@ export function useRbacPermission() {
   /**
    * 获取角色信息
    */
-  const getRoleInfo = (role: string): any => {
+  const getRoleInfo = (role: string): RoleInfo | null => {
     if (!rbacConfig) return null;
     return rbacConfig.roles[role] || null;
   };

@@ -124,7 +124,7 @@ export default function TutorialDetailPage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="text-xl font-bold text-gray-900">
-                FixCycle DIY
+                ProdCycleAI DIY
               </Link>
             </div>
             <nav>

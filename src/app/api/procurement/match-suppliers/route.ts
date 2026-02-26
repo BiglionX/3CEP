@@ -10,15 +10,15 @@ import {
   ProcurementItem,
   ProcurementStatus,
   UrgencyLevel,
-} from "../../../../src/b2b-procurement-agent/models/procurement.model";
+} from "@/b2b-procurement-agent/models/procurement.model";
 import {
   DEFAULT_SCORING_WEIGHTS,
   MatchSuppliersRequest,
   VectorDbType,
-} from "../../../../src/b2b-procurement-agent/models/supplier-vector.model";
-import { MultiFactorScoringService } from "../../../../src/b2b-procurement-agent/services/multi-factor-scoring.service";
-import { SupplierMatchingService } from "../../../../src/b2b-procurement-agent/services/supplier-matching.service";
-import { VectorRetrievalService } from "../../../../src/b2b-procurement-agent/services/vector-retrieval.service";
+} from "@/b2b-procurement-agent/models/supplier-vector.model";
+import { MultiFactorScoringService } from "@/b2b-procurement-agent/services/multi-factor-scoring.service";
+import { SupplierMatchingService } from "@/b2b-procurement-agent/services/supplier-matching.service";
+import { VectorRetrievalService } from "@/b2b-procurement-agent/services/vector-retrieval.service";
 
 // 全局服务实例
 let supplierMatchingService: SupplierMatchingService | null = null;

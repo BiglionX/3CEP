@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
         category: category || 'electronics',
         qr_url: productUrl,
         description: description || '',
-        specifications: specifications || {},
+        specifications: specifications || {} as any,
         created_at: new Date().toISOString()
       })
       .select(`

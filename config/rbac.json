@@ -69,6 +69,24 @@
       "description": "第三方合作伙伴，有限的数据访问权限",
       "level": 20,
       "is_system": false
+    },
+    "enterprise_admin": {
+      "name": "企业服务管理员",
+      "description": "负责企业服务门户的管理和维护",
+      "level": 85,
+      "is_system": true
+    },
+    "procurement_manager": {
+      "name": "采购经理",
+      "description": "负责B2B采购业务管理和决策",
+      "level": 75,
+      "is_system": true
+    },
+    "enterprise_user": {
+      "name": "企业用户",
+      "description": "普通企业服务用户，可访问基础功能",
+      "level": 40,
+      "is_system": true
     }
   },
 
@@ -345,6 +363,48 @@
       "category": "monitoring",
       "resource": "monitoring",
       "action": "alerts"
+    },
+    "enterprise_read": {
+      "name": "企业服务查看",
+      "description": "查看企业服务门户和相关信息",
+      "category": "enterprise",
+      "resource": "enterprise",
+      "action": "read"
+    },
+    "enterprise_manage": {
+      "name": "企业服务管理",
+      "description": "管理企业服务配置和设置",
+      "category": "enterprise",
+      "resource": "enterprise",
+      "action": "manage"
+    },
+    "enterprise_agents_read": {
+      "name": "智能体服务查看",
+      "description": "查看智能体定制服务相关信息",
+      "category": "enterprise",
+      "resource": "enterprise_agents",
+      "action": "read"
+    },
+    "enterprise_agents_manage": {
+      "name": "智能体服务管理",
+      "description": "管理智能体定制服务配置",
+      "category": "enterprise",
+      "resource": "enterprise_agents",
+      "action": "manage"
+    },
+    "enterprise_procurement_read": {
+      "name": "采购服务查看",
+      "description": "查看B2B采购服务相关信息",
+      "category": "enterprise",
+      "resource": "enterprise_procurement",
+      "action": "read"
+    },
+    "enterprise_procurement_manage": {
+      "name": "采购服务管理",
+      "description": "管理B2B采购服务配置和流程",
+      "category": "enterprise",
+      "resource": "enterprise_procurement",
+      "action": "manage"
     }
   },
 
@@ -465,6 +525,35 @@
     ],
     "external_partner": [
       "dashboard_read"
+    ],
+    "enterprise_admin": [
+      "dashboard_read",
+      "enterprise_read",
+      "enterprise_manage",
+      "enterprise_agents_read",
+      "enterprise_agents_manage",
+      "enterprise_procurement_read",
+      "enterprise_procurement_manage",
+      "users_read",
+      "reports_read",
+      "audit_read"
+    ],
+    "procurement_manager": [
+      "dashboard_read",
+      "enterprise_read",
+      "enterprise_procurement_read",
+      "enterprise_procurement_manage",
+      "procurement_read",
+      "procurement_create",
+      "procurement_approve",
+      "reports_read"
+    ],
+    "enterprise_user": [
+      "dashboard_read",
+      "enterprise_read",
+      "enterprise_agents_read",
+      "enterprise_procurement_read",
+      "reports_read"
     ]
   },
 

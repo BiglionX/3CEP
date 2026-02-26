@@ -132,7 +132,7 @@ export class InventoryService implements IInventoryService {
             status: InventoryStatus.OUT_OF_STOCK,
             created_at: new Date(),
             updated_at: new Date()
-          });
+          } as any);
 
         if (createError) {
           throw new Error(`创建库存记录失败: ${createError.message}`);
@@ -161,7 +161,7 @@ export class InventoryService implements IInventoryService {
           available_quantity: newAvailableQuantity,
           status: newStatus,
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', inventory.id);
 
       if (updateError) {
@@ -184,7 +184,7 @@ export class InventoryService implements IInventoryService {
           reference_number: dto.referenceNumber,
           created_by: 'system', // 实际应用中应该是当前用户ID
           created_at: new Date()
-        });
+        } as any);
 
       if (movementError) {
         throw new Error(`创建库存变动记录失败: ${movementError.message}`);

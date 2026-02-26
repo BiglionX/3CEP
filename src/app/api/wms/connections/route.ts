@@ -138,7 +138,7 @@ export async function POST(request: Request) {
         client_secret_encrypted: encryptedSecret,
         is_active: isActive,
         sync_frequency: syncFrequency,
-      })
+      } as any)
       .select("id")
       .single();
 

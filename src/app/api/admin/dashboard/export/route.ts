@@ -74,7 +74,7 @@ async function generateDailyReport(supabase: any, startDate?: string | null, end
   
   // 获取各表的统计数据
   const [hotLinksData, articlesData, appointmentsData, shopsData] = await Promise.all([
-    supabase.from('hot_link_pool').select('created_at, status').gte('created_at', start.toISOString()).lte('created_at', end.toISOString()),
+    supabase.from('unified_link_library').select('created_at, status').gte('created_at', start.toISOString()).lte('created_at', end.toISOString()),
     supabase.from('articles').select('created_at, status').gte('created_at', start.toISOString()).lte('created_at', end.toISOString()),
     supabase.from('appointments').select('created_at, status').gte('created_at', start.toISOString()).lte('created_at', end.toISOString()),
     supabase.from('repair_shops').select('created_at, status').gte('created_at', start.toISOString()).lte('created_at', end.toISOString())
@@ -159,7 +159,7 @@ async function generateHotLinksReport(supabase: any, startDate?: string | null, 
   const start = startDate ? new Date(startDate) : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000)
   
   const { data } = await supabase
-    .from('hot_link_pool')
+    .from('unified_link_library')
     .select('title, url, source, category, likes, views, status, created_at')
     .gte('created_at', start.toISOString())
     .lte('created_at', end.toISOString())

@@ -58,7 +58,7 @@ export async function POST(
       .insert({
         agent_id: agentId,
         status: 'running',
-        input_data: body.input_data || {},
+        input_data: body.input_data || {} as any,
         parameters: body.parameters || {},
         started_at: new Date().toISOString(),
         triggered_by: user.id
@@ -167,7 +167,7 @@ export async function PATCH(
       .insert({
         agent_id: agentId,
         status: 'running',
-        input_data: body.input_data || {},
+        input_data: body.input_data || {} as any,
         parameters: { ...body.parameters, debug_mode: true },
         is_debug: true,
         started_at: new Date().toISOString(),

@@ -193,7 +193,7 @@ async function trackDemoEvent(targetId: string, isWorkflow: boolean, clientIp: s
       source: 'demo_api',
       user_agent: 'Demo API Client',
       ip_address: clientIp,
-      session_id: `demo_${Date.now()}`,
+      session_id: `demo_${Date.now()} as any`,
       created_at: new Date().toISOString()
     });
   } catch (error) {

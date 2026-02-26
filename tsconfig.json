@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,19 +13,23 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": [
-      "jest",
-      "node"
-    ],
+    "types": ["jest", "node"],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@tech/*": ["./src/tech/*"],
+      "@auth/*": ["./src/modules/auth/*"],
+      "@repair/*": ["./src/modules/repair-service/*"],
+      "@procurement/*": ["./src/modules/b2b-procurement/*"],
+      "@admin/*": ["./src/modules/admin-panel/*"],
+      "@common/*": ["./src/modules/common/*"],
+      "@database/*": ["./src/tech/database/*"],
+      "@api/*": ["./src/tech/api/*"]
     }
   },
   "include": [
@@ -37,9 +37,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "src/types/**/*.d.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

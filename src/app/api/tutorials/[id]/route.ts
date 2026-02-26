@@ -77,7 +77,7 @@ export async function GET(
     // 增加浏览次数
     await supabase
       .from("repair_tutorials")
-      .update({ view_count: data.view_count + 1 })
+      .update({ view_count: data.view_count + 1 } as any)
       .eq("id", id);
 
     return NextResponse.json({

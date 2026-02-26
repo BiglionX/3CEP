@@ -1,0 +1,141 @@
+{
+  "users": [
+    {
+      "id": "user-admin-001",
+      "email": "admin@test.com",
+      "password": "Admin123!@#",
+      "role": "admin",
+      "permissions": [
+        "system.admin",
+        "user.manage", 
+        "shop.review",
+        "dashboard.view",
+        "settings.update"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "user-consumer-001",
+      "email": "consumer@test.com",
+      "password": "Test123!@#",
+      "role": "consumer",
+      "permissions": [
+        "repair.request",
+        "order.track",
+        "payment.make",
+        "profile.update"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "user-engineer-001", 
+      "email": "engineer@test.com",
+      "password": "Test123!@#",
+      "role": "engineer",
+      "permissions": [
+        "workorder.accept",
+        "repair.complete",
+        "parts.request",
+        "photo.upload"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "user-shopowner-001",
+      "email": "shopowner@test.com",
+      "password": "Test123!@#",
+      "role": "shop_owner",
+      "permissions": [
+        "shop.manage",
+        "order.process",
+        "staff.manage",
+        "finance.view"
+      ],
+      "status": "active"
+    }
+  ],
+  "devices": [
+    {
+      "id": "DEVICE_001",
+      "model": "iPhone 12",
+      "brand": "Apple",
+      "serial": "F2F001A001",
+      "faultTypes": ["screen_broken", "battery_issue", "water_damage"],
+      "purchaseDate": "2022-01-15",
+      "warrantyStatus": "expired"
+    },
+    {
+      "id": "DEVICE_002",
+      "model": "华为 P50",
+      "brand": "Huawei", 
+      "serial": "HW001B002",
+      "faultTypes": ["power_issue", "audio_issue"],
+      "purchaseDate": "2023-03-20",
+      "warrantyStatus": "valid"
+    },
+    {
+      "id": "DEVICE_003",
+      "model": "小米 13",
+      "brand": "Xiaomi",
+      "serial": "XM001C003", 
+      "faultTypes": ["screen_broken", "charging_issue"],
+      "purchaseDate": "2023-08-10",
+      "warrantyStatus": "valid"
+    }
+  ],
+  "parts": [
+    {
+      "sku": "IPH12SCR-001",
+      "name": "iPhone 12 原装屏幕总成",
+      "category": "screen",
+      "price": 280,
+      "supplier": "苹果官方",
+      "stock": 50,
+      "compatibility": "完美适配"
+    },
+    {
+      "sku": "BAT-IPH13-001", 
+      "name": "iPhone 13 电池",
+      "category": "battery",
+      "price": 120,
+      "supplier": "德赛电池",
+      "stock": 100,
+      "compatibility": "原厂规格"
+    },
+    {
+      "sku": "HW-P50-IC-001",
+      "name": "华为 P50 充电IC",
+      "category": "ic_chip",
+      "price": 45,
+      "supplier": "海思芯片",
+      "stock": 75,
+      "compatibility": "官方认证"
+    }
+  ],
+  "shops": [
+    {
+      "id": "SHOP-001",
+      "name": "维修专家店",
+      "contactPerson": "张师傅",
+      "phone": "13800138000",
+      "address": "深圳市南山区科技园南路1001号",
+      "city": "深圳",
+      "province": "广东",
+      "status": "active",
+      "rating": 4.8,
+      "technicians": 3
+    },
+    {
+      "id": "SHOP-002", 
+      "name": "快修连锁店",
+      "contactPerson": "李经理",
+      "phone": "13900139000",
+      "address": "广州市天河区珠江新城花城大道88号",
+      "city": "广州",
+      "province": "广东", 
+      "status": "active",
+      "rating": 4.5,
+      "technicians": 5
+    }
+  ]
+}

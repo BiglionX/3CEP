@@ -1,7 +1,7 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 // 权限映射配置
 const PERMISSION_MAP: Record<string, { resource: string; action: string }> = {
@@ -31,13 +31,62 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // 获取Cookie和创建Supabase客户端
-  const cookieStore = cookies()
-  const supabase = createServerComponentClient({ cookies: () => cookieStore })
+  // 创建Supabase客户端
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 
   try {
-    // 获取用户会话
-    const { data: { session } } = await supabase.auth.getSession()
+    // 优先检查Authorization header
+    const authHeader = request.headers.get('authorization');
+    let session = null;
+    
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const { data, error } = await supabase.auth.getUser(token);
+      
+      if (!error && data.user) {
+        session = {
+          user: data.user
+        };
+      }
+    }
+    
+    // 如果没有有效的header token，尝试从cookie获取会话
+    if (!session) {
+      // 手动从cookie中提取会话信息
+      const cookieHeader = request.headers.get('cookie');
+      if (cookieHeader) {
+        // 查找Supabase auth cookie
+        const supabaseCookieName = `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1].split('.')[0]}-auth-token`;
+        const cookieMatch = cookieHeader.match(new RegExp(`${supabaseCookieName}=([^;]+)`));
+        
+        if (cookieMatch) {
+          try {
+            const cookieValue = decodeURIComponent(cookieMatch[1]);
+            const sessionData = JSON.parse(cookieValue);
+            
+            if (sessionData.access_token) {
+              const { data, error } = await supabase.auth.getUser(sessionData.access_token);
+              if (!error && data.user) {
+                session = {
+                  user: data.user
+                };
+              }
+            }
+          } catch (parseError: unknown) {
+            console.log('Cookie解析失败:', (parseError as Error).message);
+          }
+        }
+      }
+      
+      // 如果cookie解析失败，尝试默认getSession方法
+      if (!session) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        session = sessionData.session;
+      }
+    }
     
     // 如果没有登录，重定向到登录页
     if (!session) {
@@ -77,16 +126,36 @@ export async function middleware(request: NextRequest) {
 }
 
 // 检查用户是否为管理员
-async function checkAdminUser(userId: string, supabase: any): Promise<boolean> {
+async function checkAdminUser(userId: string, supabase: SupabaseClient): Promise<boolean> {
   try {
-    const { data, error } = await supabase
-      .from('admin_users')
-      .select('is_active')
-      .eq('user_id', userId)
-      .eq('is_active', true)
-      .single()
+    // 首先检查用户元数据中的管理员标识（优先方案）
+    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
+    
+    if (!userError && userData?.user?.user_metadata?.isAdmin === true) {
+      console.log(`用户 ${userId} 通过元数据验证为管理员`);
+      return true;
+    }
+    
+    // 如果元数据检查失败，尝试检查数据库中的管理员记录（备用方案）
+    try {
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('is_active')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .single()
 
-    return !error && data !== null
+      if (!error && data !== null) {
+        console.log(`用户 ${userId} 通过数据库验证为管理员`);
+        return true;
+      }
+    } catch (dbError) {
+      // 数据库检查失败时，如果元数据检查也失败，则返回false
+      console.log(`用户 ${userId} 数据库检查失败，且元数据不是管理员`);
+    }
+    
+    console.log(`用户 ${userId} 不是管理员`);
+    return false;
   } catch (error) {
     console.error('检查管理员身份失败:', error)
     return false
@@ -116,39 +185,52 @@ async function checkUserPermission(
   userId: string, 
   resource: string, 
   action: string,
-  supabase: any
+  supabase: SupabaseClient
 ): Promise<boolean> {
   try {
-    // 获取用户角色
-    const { data: adminUserData, error: adminError } = await supabase
-      .from('admin_users')
-      .select('role')
-      .eq('user_id', userId)
-      .eq('is_active', true)
-      .single()
-
-    if (adminError || !adminUserData) {
-      console.log('用户未找到或非活跃管理员:', userId)
-      return false
-    }
-
-    const userRole = adminUserData.role
-    console.log(`用户 ${userId} 的角色: ${userRole}, 请求资源: ${resource}`)
-
-    // 管理员拥有所有权限
-    if (userRole === 'admin') {
-      console.log('超级管理员拥有全部权限')
-      return true
-    }
-
-    // 检查角色对应的资源权限
-    const allowedResources = ROLE_PERMISSIONS[userRole] || []
-    const hasResourceAccess = allowedResources.includes(resource)
+    // 首先检查用户元数据中的管理员标识（优先方案）
+    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
     
-    console.log(`角色 ${userRole} 允许访问的资源:`, allowedResources)
-    console.log(`资源访问权限检查结果: ${hasResourceAccess}`)
+    if (!userError && userData?.user?.user_metadata?.isAdmin === true) {
+      console.log(`用户 ${userId} 是超级管理员，拥有全部权限`);
+      return true;
+    }
     
-    return hasResourceAccess
+    // 如果元数据不是管理员，检查数据库中的管理员记录（备用方案）
+    try {
+      const { data: adminUserData, error: adminError } = await supabase
+        .from('admin_users')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .single()
+
+      if (adminError || !adminUserData) {
+        console.log('用户未找到或非活跃管理员:', userId)
+        return false
+      }
+
+      const userRole = adminUserData.role
+      console.log(`用户 ${userId} 的角色: ${userRole}, 请求资源: ${resource}`)
+
+      // 管理员拥有所有权限
+      if (userRole === 'admin') {
+        console.log('超级管理员拥有全部权限')
+        return true
+      }
+
+      // 检查角色对应的资源权限
+      const allowedResources = ROLE_PERMISSIONS[userRole] || []
+      const hasResourceAccess = allowedResources.includes(resource)
+      
+      console.log(`角色 ${userRole} 允许访问的资源:`, allowedResources)
+      console.log(`资源访问权限检查结果: ${hasResourceAccess}`)
+      
+      return hasResourceAccess;
+    } catch (dbError) {
+      console.log(`用户 ${userId} 数据库权限检查失败`);
+      return false;
+    }
     
   } catch (error) {
     console.error('权限检查失败:', error)

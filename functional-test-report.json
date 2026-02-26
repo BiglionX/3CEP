@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-02-25T09:51:02.357Z",
+  "server": "http://localhost:3002",
+  "summary": {
+    "totalTests": 10,
+    "passedTests": 0,
+    "failedTests": 10,
+    "successRate": "0.00%"
+  },
+  "details": [
+    {
+      "test": "主登录页面 可访问性",
+      "status": "failed",
+      "path": "/login",
+      "error": ""
+    },
+    {
+      "test": "管理员登录页面 可访问性",
+      "status": "failed",
+      "path": "/admin/login",
+      "error": ""
+    },
+    {
+      "test": "品牌商登录页面 可访问性",
+      "status": "failed",
+      "path": "/brand/login",
+      "error": ""
+    },
+    {
+      "test": "维修店登录页面 可访问性",
+      "status": "failed",
+      "path": "/repair-shop/login",
+      "error": ""
+    },
+    {
+      "test": "进口商登录页面 可访问性",
+      "status": "failed",
+      "path": "/importer/login",
+      "error": ""
+    },
+    {
+      "test": "出口商登录页面 可访问性",
+      "status": "failed",
+      "path": "/exporter/login",
+      "error": ""
+    },
+    {
+      "test": "API /api/health",
+      "status": "failed",
+      "endpoint": "/api/health",
+      "error": ""
+    },
+    {
+      "test": "API /api/auth/check-session",
+      "status": "failed",
+      "endpoint": "/api/auth/check-session",
+      "error": ""
+    },
+    {
+      "test": "管理员登录",
+      "status": "failed",
+      "account": "1055603323@qq.com",
+      "error": ""
+    },
+    {
+      "test": "普通用户登录",
+      "status": "failed",
+      "account": "test@example.com",
+      "error": ""
+    }
+  ],
+  "testAccounts": {
+    "admin": {
+      "email": "1055603323@qq.com",
+      "password": "12345678",
+      "is_admin": true
+    },
+    "user": {
+      "email": "test@example.com",
+      "password": "password123",
+      "is_admin": false
+    }
+  }
+}

@@ -6,6 +6,11 @@
     "ms-vscode.vscode-eslint",
     "formulahendry.auto-rename-tag",
     "christian-kohler.path-intellisense",
-    "ms-vscode.vscode-json"
+    "ms-vscode.vscode-json",
+    "ms-vscode.vscode-javascript",
+    "ms-vscode.vscode-html",
+    "ms-vscode.vscode-css",
+    "ms-vscode.vscode-node-debug2",
+    "ms-vscode.vscode-npm"
   ]
 }

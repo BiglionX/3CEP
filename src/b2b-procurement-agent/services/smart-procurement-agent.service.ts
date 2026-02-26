@@ -550,7 +550,7 @@ export class SmartProcurementAgentService {
         ...orderData,
         id: this.generateUUID(),
         created_at: new Date()
-      })
+      } as any)
       .select()
       .single();
     

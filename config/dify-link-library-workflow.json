@@ -1,0 +1,97 @@
+{
+  "dify_workflow_config": {
+    "workflow_name": "OpenQuote_Link_Library_Integration",
+    "description": "集成统一链接库的Dify工作流配置",
+    "nodes": [
+      {
+        "id": "start_node",
+        "type": "start",
+        "name": "开始节点",
+        "config": {
+          "variables": [
+            {
+              "variable": "query",
+              "type": "string",
+              "description": "用户查询问题"
+            }
+          ]
+        }
+      },
+      {
+        "id": "link_query_node",
+        "type": "http_request",
+        "name": "链接库查询",
+        "config": {
+          "method": "POST",
+          "url": "http://localhost:3001/api/links/query",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "query": "{{query}}",
+            "limit": 3
+          },
+          "timeout": 10,
+          "output_variable": "links"
+        }
+      },
+      {
+        "id": "web_scraper_node",
+        "type": "code",
+        "name": "网页抓取处理",
+        "config": {
+          "code_language": "python",
+          "code": "import requests\nimport json\n\n# 获取链接数据\nlinks_data = json.loads(inputs.get('links', '{}'))\nlinks = links_data.get('links', [])\n\n# 抓取网页内容\nresults = []\nfor link in links:\n    try:\n        response = requests.get(link['url'], timeout=5)\n        if response.status_code == 200:\n            results.append({\n                'title': link['title'],\n                'url': link['url'],\n                'content': response.text[:1000],  # 限制内容长度\n                'priority': link['priority']\n            })\n    except Exception as e:\n        print(f\"抓取失败 {link['url']}: {e}\")\n\noutputs = {'scraped_results': json.dumps(results)}"
+        }
+      },
+      {
+        "id": "llm_response_node",
+        "type": "llm",
+        "name": "生成回答",
+        "config": {
+          "prompt_template": "基于以下维修资料回答用户问题：\n\n用户问题：{{query}}\n\n参考资料：\n{% for result in scraped_results %}\n{{loop.index}}. {{result.title}}\n   内容摘要：{{result.content[:500]}}\n   链接：{{result.url}}\n   优先级：{{result.priority}}\n{% endfor %}\n\n请根据以上资料，为用户提供准确、实用的回答。",
+          "model": "deepseek-chat",
+          "temperature": 0.7,
+          "max_tokens": 1000
+        }
+      },
+      {
+        "id": "end_node",
+        "type": "end",
+        "name": "结束节点",
+        "config": {
+          "output_variables": [
+            {
+              "variable": "answer",
+              "type": "string",
+              "description": "最终回答"
+            },
+            {
+              "variable": "used_links",
+              "type": "array",
+              "description": "使用的链接列表"
+            }
+          ]
+        }
+      }
+    ],
+    "connections": [
+      {
+        "source": "start_node",
+        "target": "link_query_node"
+      },
+      {
+        "source": "link_query_node",
+        "target": "web_scraper_node"
+      },
+      {
+        "source": "web_scraper_node",
+        "target": "llm_response_node"
+      },
+      {
+        "source": "llm_response_node",
+        "target": "end_node"
+      }
+    ]
+  }
+}

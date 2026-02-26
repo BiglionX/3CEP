@@ -19,7 +19,7 @@ async function testLinkReviewFunctionality() {
   try {
     // 1. 验证表结构
     console.log('📋 1. 验证数据库表结构...')
-    const tables = ['hot_link_pool', 'articles', 'article_categories']
+    const tables = ['unified_link_library', 'articles', 'article_categories']
     
     for (const tableName of tables) {
       const { data, error } = await supabase
@@ -37,7 +37,7 @@ async function testLinkReviewFunctionality() {
     // 2. 检查示例数据
     console.log('\n📊 2. 检查待审核链接数据...')
     const { data: pendingLinks, error: pendingError } = await supabase
-      .from('hot_link_pool')
+      .from('unified_link_library')
       .select('*')
       .eq('status', 'pending_review')
       .limit(5)
@@ -86,7 +86,7 @@ async function testLinkReviewFunctionality() {
       
       // 恢复原始状态
       await supabase
-        .from('hot_link_pool')
+        .from('unified_link_library')
         .update({ status: 'pending_review' })
         .eq('id', testLink.id)
     }
@@ -129,7 +129,7 @@ async function simulatePublishOperation(supabase, linkId) {
   try {
     // 获取链接详情
     const { data: linkData } = await supabase
-      .from('hot_link_pool')
+      .from('unified_link_library')
       .select('*')
       .eq('id', linkId)
       .single()
@@ -160,7 +160,7 @@ async function simulatePublishOperation(supabase, linkId) {
 
     // 更新链接状态
     const { error: updateError } = await supabase
-      .from('hot_link_pool')
+      .from('unified_link_library')
       .update({
         status: 'promoted',
         article_id: articleData.id,

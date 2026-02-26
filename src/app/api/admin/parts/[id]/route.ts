@@ -105,7 +105,7 @@ export async function PUT(request: Request) {
       .update({ 
         stock_quantity: newStock,
         updated_at: new Date().toISOString()
-      })
+      } as any)
       .eq('id', id);
     
     if (updateError) throw updateError;
@@ -120,7 +120,7 @@ export async function PUT(request: Request) {
         reason: reason || '库存调整',
         reference_number: reference_number,
         created_by: (await supabase.auth.getUser()).data.user?.id
-      });
+      } as any);
     
     if (inventoryError) throw inventoryError;
     

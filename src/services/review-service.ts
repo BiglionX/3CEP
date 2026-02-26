@@ -112,7 +112,7 @@ export async function updateReviewStatus(
         reviewed_at: new Date().toISOString(),
         reviewer_id: user.id,
         updated_at: new Date().toISOString()
-      })
+      } as any)
       .eq('id', reviewId);
 
     if (updateError) throw updateError;
@@ -124,7 +124,7 @@ export async function updateReviewStatus(
         .update({ 
           status: 'published',
           updated_at: new Date().toISOString()
-        })
+        } as any)
         .eq('id', reviewId);
 
       if (docError) throw docError;
@@ -164,7 +164,7 @@ export async function assignReviewer(
         .update({
           reviewer_id: reviewerId,
           updated_at: new Date().toISOString()
-        })
+        } as any)
         .eq('id', existingReview.id);
       
       if (error) throw error;
@@ -178,7 +178,7 @@ export async function assignReviewer(
           status: 'pending',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
-        });
+        } as any);
       
       if (error) throw error;
     }
@@ -272,7 +272,7 @@ async function logReviewAction(
       details,
       created_by: user?.id,
       created_at: new Date().toISOString()
-    });
+    } as any);
   } catch (error) {
     console.error('记录审核日志失败:', error);
   }

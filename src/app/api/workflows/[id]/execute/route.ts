@@ -58,7 +58,7 @@ export async function POST(
       .insert({
         workflow_id: workflowId,
         status: 'running',
-        input_data: body.input_data || {},
+        input_data: body.input_data || {} as any,
         started_at: new Date().toISOString(),
         triggered_by: user.id
       })
@@ -186,7 +186,7 @@ export async function PATCH(
         replayed_from: execution.id,
         started_at: new Date().toISOString(),
         triggered_by: user.id
-      })
+      } as any)
       .select()
       .single();
 

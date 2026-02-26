@@ -230,7 +230,7 @@ export class WarehouseService {
             discrepancy: syncResult.discrepancy,
             sync_completed_at: new Date(),
             error_message: syncResult.errorMessage
-          })
+          } as any)
           .eq('id', syncRecordId);
 
         if (updateError) {
@@ -245,7 +245,7 @@ export class WarehouseService {
               'integration_info.last_synced_at': new Date(),
               'integration_info.sync_status': SyncStatus.SYNCED,
               updated_at: new Date()
-            })
+            } as any)
             .eq('id', dto.warehouseId);
         }
 
@@ -264,7 +264,7 @@ export class WarehouseService {
             sync_completed_at: new Date(),
             error_message: (syncError as Error).message,
             retry_count: 1
-          })
+          } as any)
           .eq('id', syncRecordId);
 
         return {

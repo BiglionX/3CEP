@@ -1,0 +1,77 @@
+{
+  "migrationSummary": {
+    "totalStages": 6,
+    "completedStages": 4,
+    "successCount": 1,
+    "failureCount": 3,
+    "hasCriticalFailure": true,
+    "totalTime": "10.91s",
+    "successRate": "16.7%"
+  },
+  "stageDetails": [
+    {
+      "name": "环境检查",
+      "script": "environment-check.js",
+      "success": false,
+      "duration": "0.00s",
+      "timestamp": "2026-02-25T06:13:58.121Z",
+      "error": "Script not found"
+    },
+    {
+      "name": "备份创建",
+      "script": "create-backups.js",
+      "success": false,
+      "duration": "0.00s",
+      "timestamp": "2026-02-25T06:13:58.126Z",
+      "error": "Script not found"
+    },
+    {
+      "name": "自动化迁移",
+      "script": "automated-auth-migration.js",
+      "success": true,
+      "duration": "10.89s",
+      "timestamp": "2026-02-25T06:14:09.022Z"
+    },
+    {
+      "name": "迁移验证",
+      "script": "validate-migration.js",
+      "success": false,
+      "duration": "0.00s",
+      "timestamp": "2026-02-25T06:14:09.025Z",
+      "error": "Script not found"
+    }
+  ],
+  "errors": [
+    {
+      "name": "环境检查",
+      "script": "environment-check.js",
+      "success": false,
+      "duration": "0.00s",
+      "timestamp": "2026-02-25T06:13:58.121Z",
+      "error": "Script not found"
+    },
+    {
+      "name": "备份创建",
+      "script": "create-backups.js",
+      "success": false,
+      "duration": "0.00s",
+      "timestamp": "2026-02-25T06:13:58.126Z",
+      "error": "Script not found"
+    },
+    {
+      "name": "迁移验证",
+      "script": "validate-migration.js",
+      "success": false,
+      "duration": "0.00s",
+      "timestamp": "2026-02-25T06:14:09.025Z",
+      "error": "Script not found"
+    }
+  ],
+  "timestamp": "2026-02-25T06:14:09.027Z",
+  "environment": {
+    "nodeVersion": "v20.11.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cwd": "D:\\BigLionX\\3cep"
+  }
+}

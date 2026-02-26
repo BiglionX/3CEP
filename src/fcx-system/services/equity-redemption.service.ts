@@ -186,7 +186,7 @@ export class EquityRedemptionService {
             redeemed_at: new Date().toISOString(),
             expires_at: expiresAt,
             status: 'active',
-            metadata: {}
+            metadata: {} as any
           } as any)
           .select()
           .single();
@@ -207,7 +207,7 @@ export class EquityRedemptionService {
       // 暂时注释掉更新操作，避免类型问题
       // const { error: balanceError } = await (supabase
       //   .from('repair_shops')
-      //   .update({ fcx2_balance: newBalance }) as any)
+      //   .update({ fcx2_balance: newBalance } as any) as any)
       //   .eq('id', userId);
 
       // if (balanceError) {
@@ -455,7 +455,7 @@ export class EquityRedemptionService {
       //     quantity: quantity,
       //     total_cost: totalCost,
       //     redeemed_at: new Date().toISOString()
-      //   }) as any);
+      //   } as any) as any);
 
     } catch (error) {
       console.warn('记录兑换日志失败:', error);

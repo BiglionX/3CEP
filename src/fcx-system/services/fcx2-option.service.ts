@@ -75,7 +75,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
       
       const { error: updateError } = await supabase
         .from('repair_shops')
-        .update({ fcx2_balance: newBalance })
+        .update({ fcx2_balance: newBalance } as any)
         .eq('id', shopId);
 
       if (updateError) {
@@ -88,7 +88,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
       if (orderId) {
         await supabase
           .from('repair_orders')
-          .update({ fcx2_option_granted: true })
+          .update({ fcx2_option_granted: true } as any)
           .eq('id', orderId);
       }
 
@@ -184,7 +184,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
           .update({
             status: Fcx2OptionStatus.REDEEMED,
             redeemed_at: new Date().toISOString()
-          })
+          } as any)
           .eq('id', option.id);
       }
 
@@ -203,7 +203,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
       
       const { error: updateError } = await supabase
         .from('repair_shops')
-        .update({ fcx2_balance: newBalance })
+        .update({ fcx2_balance: newBalance } as any)
         .eq('id', shopId);
 
       if (updateError) {
@@ -249,7 +249,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
     try {
       const { data, error } = await supabase
         .from('fcx2_options')
-        .update({ status: Fcx2OptionStatus.EXPIRED })
+        .update({ status: Fcx2OptionStatus.EXPIRED } as any)
         .lt('expires_at', new Date().toISOString())
         .eq('status', Fcx2OptionStatus.ACTIVE)
         .select();
@@ -258,7 +258,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
         throw new Error(`清理过期期权失败: ${error.message}`);
       }
 
-      return data?.length || 0;
+      return (data as any)?.data?.length || 0;
 
     } catch (error) {
       console.error('清理过期期权错误:', error);

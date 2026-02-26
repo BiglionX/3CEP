@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
         agent_name: newAgent.name,
         domain: newAgent.domain,
         type: newAgent.type
-      },
+      } as any,
       ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     });
 

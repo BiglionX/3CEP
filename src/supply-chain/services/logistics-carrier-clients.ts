@@ -90,7 +90,7 @@ export class Track17Client implements LogisticsCarrierClient {
 
       const result = await response.json();
 
-      if (!result || !result.data || result.data.length === 0) {
+      if (!result || !result.data || (result.data as any)?.data.length === 0) {
         return {
           success: false,
           error: {

@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-02-25T10:42:34.719Z",
+  "summary": {
+    "total": 4,
+    "passed": 3,
+    "failed": 1,
+    "successRate": "75.0"
+  },
+  "details": [
+    {
+      "page": "帮助中心",
+      "path": "/help",
+      "status": "PASS",
+      "message": "页面正常打开，包含预期内容"
+    },
+    {
+      "page": "联系我们",
+      "path": "/contact",
+      "status": "PASS",
+      "message": "页面正常打开，包含预期内容"
+    },
+    {
+      "page": "关于我们",
+      "path": "/about",
+      "status": "PASS",
+      "message": "页面正常打开，包含预期内容"
+    },
+    {
+      "page": "用户中心",
+      "path": "/profile/dashboard",
+      "status": "CONTENT_MISSING",
+      "message": "页面可访问但缺少预期内容元素"
+    }
+  ]
+}

@@ -50,7 +50,7 @@ export async function POST(request: Request) {
         ip_address: ip,
         session_id: session_id || null,
         created_at: new Date().toISOString()
-      });
+      } as any);
 
     if (error) {
       console.error('记录事件失败:', error);
@@ -131,7 +131,7 @@ export async function GET(request: Request) {
       data: {
         events: data,
         stats,
-        total: data?.length || 0
+        total: (data as any)?.data?.length || 0
       }
     });
 

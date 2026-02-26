@@ -59,7 +59,7 @@ export class PaymentService implements IPaymentService {
             status: 'active',
             created_at: new Date(),
             updated_at: new Date()
-          });
+          } as any);
 
         if (createError) {
           return {
@@ -95,7 +95,7 @@ export class PaymentService implements IPaymentService {
           amount: fcxAmount,
           transaction_type: FcxTransactionType.PURCHASE,
           reference_id: null,
-          memo: `购买${fcxAmount} FCX`,
+          memo: `购买${fcxAmount} as any FCX`,
           status: 'completed',
           created_at: new Date()
         });
@@ -200,7 +200,7 @@ export class PaymentService implements IPaymentService {
           amount: amount,
           transaction_type: 'refund',
           reference_id: transactionId,
-          memo: `退款 ${amount} FCX`,
+          memo: `退款 ${amount} as any FCX`,
           status: 'completed',
           created_at: new Date()
         });

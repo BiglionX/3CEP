@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登录测试页面</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2>管理员登录测试</h2>
+        <form id="loginForm">
+            <div style="margin-bottom: 15px;">
+                <label>邮箱:</label>
+                <input type="email" id="email" value="1055603323@qq.com" style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>密码:</label>
+                <input type="password" id="password" value="12345678" style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <button type="submit" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px;">登录</button>
+        </form>
+        <div id="result" style="margin-top: 15px; padding: 10px;"></div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = '<p>正在登录...</p>';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 4px;">
+                            <h3 style="color: #155724;">✅ 登录成功!</h3>
+                            <p><strong>用户ID:</strong> ${data.user.id}</p>
+                            <p><strong>邮箱:</strong> ${data.user.email}</p>
+                            <p><strong>管理员:</strong> ${data.user.is_admin ? '是' : '否'}</p>
+                            <p><strong>消息:</strong> ${data.message}</p>
+                        </div>
+                    `;
+                    
+                    // 3秒后跳转到管理后台
+                    setTimeout(() => {
+                        window.location.href = '/admin';
+                    }, 3000);
+                } else {
+                    resultDiv.innerHTML = `
+                        <div style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px;">
+                            <h3 style="color: #721c24;">❌ 登录失败</h3>
+                            <p><strong>错误:</strong> ${data.error}</p>
+                            <p><strong>状态码:</strong> ${response.status}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px;">
+                        <h3 style="color: #721c24;">❌ 网络错误</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

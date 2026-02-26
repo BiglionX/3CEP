@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       user_agent: userAgent || null,
       url: url || null,
       created_at: new Date().toISOString()
-    });
+    } as any);
 
     if (error) {
       console.error('保存性能数据失败:', error);
@@ -109,7 +109,7 @@ export async function GET(request: Request) {
         stats,
         timeframe: {
           hours,
-          record_count: data?.length || 0,
+          record_count: (data as any)?.data?.length || 0,
           from: since,
           to: new Date().toISOString()
         }

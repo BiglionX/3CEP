@@ -53,7 +53,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
             quantity: item.quantity,
             unit_price: item.unitPrice,
             total_price: item.quantity * item.unitPrice
-          })),
+          } as any)),
           total_amount: totalAmount,
           currency: 'CNY',
           status: 'pending',
@@ -182,7 +182,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
         .update({
           status: 'confirmed',
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', orderId)
         .select()
         .single();
@@ -235,7 +235,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
           status_to: status,
           remarks: remarks || '',
           created_at: new Date()
-        });
+        } as any);
 
       return this.mapToPurchaseOrder(data);
 
@@ -256,7 +256,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
           status: 'cancelled',
           cancellation_reason: reason,
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', orderId)
         .select()
         .single();

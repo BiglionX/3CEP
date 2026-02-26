@@ -73,7 +73,7 @@ export class SupplierService {
           submitted_at: new Date(),
           reviewed_at: null,
           created_at: new Date()
-        });
+        } as any);
 
       if (error) {
         return {
@@ -127,7 +127,7 @@ export class SupplierService {
           reviewer_id: dto.reviewerId,
           review_comments: dto.comments,
           reviewed_at: new Date()
-        })
+        } as any)
         .eq('id', dto.supplierId);
 
       if (updateError) {
@@ -312,7 +312,7 @@ export class SupplierService {
           credit_score: dto.creditScore,
           credit_level: dto.creditLevel,
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', dto.supplierId);
 
       if (error) {
@@ -333,7 +333,7 @@ export class SupplierService {
           reason: dto.assessmentReason,
           assessed_by: 'system', // 实际应为用户ID
           assessed_at: new Date()
-        });
+        } as any);
 
       return !historyError;
 

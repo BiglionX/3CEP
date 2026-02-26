@@ -74,7 +74,7 @@ export async function GET(request: NextRequest, { params }: { params: { productI
         ip_address: ipAddress,
         country_code: countryCode,
         scan_time: new Date().toISOString()
-      });
+      } as any);
 
     return NextResponse.json({
       success: true,
@@ -127,7 +127,7 @@ export async function PUT(request: NextRequest, { params }: { params: { productI
       .update({
         ...filteredUpdates,
         updated_at: new Date().toISOString()
-      })
+      } as any)
       .eq('id', productId)
       .select(`
         id,

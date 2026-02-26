@@ -1,0 +1,311 @@
+{
+  "generatedAt": "2026-02-26T06:48:56.475Z",
+  "environment": "development",
+  "baseUrl": "http://localhost:3001",
+  "summary": {
+    "totalRoles": 12,
+    "totalTests": 33,
+    "passedTests": 0,
+    "failedTests": 21,
+    "passRate": "0.00"
+  },
+  "roleResults": {
+    "admin": {
+      "role": "admin",
+      "roleName": "超级管理员",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 401: Unauthorized"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "manager": {
+      "role": "manager",
+      "roleName": "业务管理员",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "content_manager": {
+      "role": "content_manager",
+      "roleName": "内容管理员",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "shop_manager": {
+      "role": "shop_manager",
+      "roleName": "店铺管理员",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "finance_manager": {
+      "role": "finance_manager",
+      "roleName": "财务管理员",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "procurement_specialist": {
+      "role": "procurement_specialist",
+      "roleName": "采购专员",
+      "totalTests": 5,
+      "passedTests": 0,
+      "failedTests": 4,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        },
+        {
+          "test": "边界权限: DELETE /api/users",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        },
+        {
+          "test": "边界权限: POST /api/users",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        },
+        {
+          "test": "边界权限: DELETE /api/settings",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        }
+      ]
+    },
+    "warehouse_operator": {
+      "role": "warehouse_operator",
+      "roleName": "仓库操作员",
+      "totalTests": 5,
+      "passedTests": 0,
+      "failedTests": 4,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        },
+        {
+          "test": "边界权限: DELETE /api/users",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        },
+        {
+          "test": "边界权限: POST /api/users",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        },
+        {
+          "test": "边界权限: DELETE /api/settings",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        }
+      ]
+    },
+    "agent_operator": {
+      "role": "agent_operator",
+      "roleName": "智能体操作员",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "viewer": {
+      "role": "viewer",
+      "roleName": "只读查看员",
+      "totalTests": 5,
+      "passedTests": 0,
+      "failedTests": 4,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        },
+        {
+          "test": "边界权限: DELETE /api/users",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        },
+        {
+          "test": "边界权限: POST /api/users",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        },
+        {
+          "test": "边界权限: DELETE /api/settings",
+          "status": "failed",
+          "statusCode": 500,
+          "note": "权限边界控制不足"
+        }
+      ]
+    },
+    "enterprise_admin": {
+      "role": "enterprise_admin",
+      "roleName": "企业服务管理员",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "procurement_manager": {
+      "role": "procurement_manager",
+      "roleName": "采购经理",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    },
+    "enterprise_user": {
+      "role": "enterprise_user",
+      "roleName": "企业用户",
+      "totalTests": 2,
+      "passedTests": 0,
+      "failedTests": 1,
+      "details": [
+        {
+          "test": "API登录认证",
+          "status": "failed",
+          "error": "HTTP 500: Internal Server Error"
+        },
+        {
+          "test": "Web界面权限测试框架",
+          "status": "skipped",
+          "note": "需要运行Playwright测试"
+        }
+      ]
+    }
+  },
+  "recommendations": [
+    "权限测试通过率较低，建议检查RBAC配置",
+    "角色 超级管理员 存在 1 个失败测试，请检查相关权限配置",
+    "角色 业务管理员 存在 1 个失败测试，请检查相关权限配置",
+    "角色 内容管理员 存在 1 个失败测试，请检查相关权限配置",
+    "角色 店铺管理员 存在 1 个失败测试，请检查相关权限配置",
+    "角色 财务管理员 存在 1 个失败测试，请检查相关权限配置",
+    "角色 采购专员 存在 4 个失败测试，请检查相关权限配置",
+    "角色 仓库操作员 存在 4 个失败测试，请检查相关权限配置",
+    "角色 智能体操作员 存在 1 个失败测试，请检查相关权限配置",
+    "角色 只读查看员 存在 4 个失败测试，请检查相关权限配置",
+    "角色 企业服务管理员 存在 1 个失败测试，请检查相关权限配置",
+    "角色 采购经理 存在 1 个失败测试，请检查相关权限配置",
+    "角色 企业用户 存在 1 个失败测试，请检查相关权限配置"
+  ]
+}

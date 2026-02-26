@@ -22,7 +22,7 @@ export async function GET(request: Request) {
 
     // 构建查询条件
     let query = supabase
-      .from('hot_link_pool')
+      .from('unified_link_library')
       .select(`
         id,
         url,
@@ -129,7 +129,7 @@ export async function POST(request: Request) {
         // 为每个链接创建对应的文章
         for (const id of ids) {
           const { data: linkData } = await supabase
-            .from('hot_link_pool')
+            .from('unified_link_library')
             .select('*')
             .eq('id', id)
             .single()
@@ -146,18 +146,18 @@ export async function POST(request: Request) {
                 status: 'published', // 直接发布
                 tags: linkData.ai_tags?.tags || [],
                 publish_at: new Date().toISOString()
-              })
+              } as any)
               .select()
               .single()
 
             if (articleData && !articleError) {
               // 更新链接关联的文章ID
               await supabase
-                .from('hot_link_pool')
+                .from('unified_link_library')
                 .update({ 
                   article_id: articleData.id,
                   ...updateData
-                })
+                } as any)
                 .eq('id', id)
             }
           }
@@ -170,7 +170,7 @@ export async function POST(request: Request) {
         updateData.rejection_reason = rejectionReason || '审核未通过'
         
         await supabase
-          .from('hot_link_pool')
+          .from('unified_link_library')
           .update(updateData)
           .in('id', ids)
         break

@@ -365,7 +365,7 @@ export class DemandParserService {
       await this.supabase
         .from('processing_logs')
         .insert({
-          id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          id: `log_${Date.now()} as any_${Math.random().toString(36).substr(2, 9)}`,
           request_id: requestId,
           processing_step: step,
           input: input,

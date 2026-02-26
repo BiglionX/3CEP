@@ -124,7 +124,7 @@ export class UserProfileServiceImpl implements UserProfileService {
             brands: preferences.brands || [],
             price_range: preferences.priceRange,
             service_types: preferences.serviceTypes || [],
-          },
+          } as any,
           last_updated: new Date().toISOString(),
         })
         .eq("user_id", userId);

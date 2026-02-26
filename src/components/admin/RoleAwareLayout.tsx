@@ -7,7 +7,7 @@
 
 import { RoleAwareSidebar } from '@/components/admin/RoleAwareSidebar';
 import { RoleAwareTopbar } from '@/components/admin/RoleAwareTopbar';
-import { usePermission } from '@/hooks/use-permission';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -16,26 +16,42 @@ interface RoleAwareLayoutProps {
 }
 
 export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
-  const { isAuthenticated, loading } = usePermission();
+  const { isAuthenticated, isLoading } = useUnifiedAuth();
   const router = useRouter();
 
   // 认证检查
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.push('/login?redirect=/admin');
+    if (!isLoading && !isAuthenticated) {
+      router.push('/login?redirect=/admin/dashboard');
     }
-  }, [isAuthenticated, loading, router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">正在验证身份...</p>
+        </div>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">访问受限</h1>
+          <p className="text-gray-600 mb-6">请先登录管理员账户</p>
+          <button 
+            onClick={() => router.push('/login?redirect=/admin/dashboard')}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+          >
+            前往登录
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

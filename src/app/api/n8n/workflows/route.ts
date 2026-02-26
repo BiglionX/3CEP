@@ -734,7 +734,7 @@ async function logAuditEvent(
     //   resource: resource,
     //   details: details,
     //   timestamp: new Date().toISOString()
-    // });
+    // } as any);
   } catch (error) {
     console.error('记录审计日志失败:', error);
   }

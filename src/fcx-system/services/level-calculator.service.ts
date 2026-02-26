@@ -343,7 +343,7 @@ export class LevelCalculatorService {
       //   .update({ 
       //     alliance_level: newLevel,
       //     updated_at: new Date().toISOString()
-      //   })
+      //   } as any)
       //   .eq('id', shopId) as any;
 
       // if (error) {
@@ -375,7 +375,7 @@ export class LevelCalculatorService {
       //     new_level: newLevel,
       //     score: score,
       //     changed_at: new Date().toISOString()
-      //   }) as any;
+      //   } as any) as any;
 
       // if (error) {
       //   console.warn('记录等级变更日志失败:', error.message);

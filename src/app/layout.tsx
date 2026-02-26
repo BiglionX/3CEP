@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { AnalyticsWrapper } from '@/components/AnalyticsWrapper';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans antialiased">
-        {children}
+        <UnifiedLayout>
+          {children}
+        </UnifiedLayout>
         <AnalyticsWrapper />
       </body>
     </html>

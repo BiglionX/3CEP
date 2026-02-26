@@ -132,7 +132,7 @@ async function processAppointmentReminders() {
       const appointmentIds = upcomingAppointments.map(a => a.id);
       await supabase
         .from('appointments')
-        .update({ reminder_sent: true })
+        .update({ reminder_sent: true } as any)
         .in('id', appointmentIds);
     }
     

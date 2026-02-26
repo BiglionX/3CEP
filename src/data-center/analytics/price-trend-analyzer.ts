@@ -155,7 +155,7 @@ export class PriceTrendAnalyzer {
 
   // 计算统计信息
   private calculateStatistics(data: PriceDataPoint[]): PriceTrendAnalysis['statistics'] {
-    if (data.length === 0) {
+    if ((data as any)?.data.length === 0) {
       return {
         avgPrice: 0,
         minPrice: 0,
@@ -177,7 +177,7 @@ export class PriceTrendAnalyzer {
     
     // 计算价格变化百分比
     const firstPrice = data[0].price;
-    const lastPrice = data[data.length - 1].price;
+    const lastPrice = data[(data as any)?.data.length - 1].price;
     const priceChangePercent = ((lastPrice - firstPrice) / firstPrice) * 100;
 
     return {
@@ -186,7 +186,7 @@ export class PriceTrendAnalyzer {
       maxPrice: Math.round(maxPrice * 100) / 100,
       priceVolatility: Math.round(priceVolatility * 10000) / 100,
       priceChangePercent: Math.round(priceChangePercent * 100) / 100,
-      dataPoints: data.length
+      dataPoints: (data as any)?.data.length
     };
   }
 
@@ -252,7 +252,7 @@ export class PriceTrendAnalyzer {
     data: PriceDataPoint[], 
     days: number
   ): Promise<PriceForecast> {
-    if (data.length < 10) {
+    if ((data as any)?.data.length < 10) {
       throw new Error('数据点不足，无法生成预测');
     }
 

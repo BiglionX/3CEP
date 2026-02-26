@@ -2,8 +2,41 @@
 
 import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts'
+import { useUnifiedAuth } from '@/hooks/use-unified-auth'
 
 export default function DashboardPage() {
+  const { isAuthenticated, is_admin } = useUnifiedAuth()
+  
+  // 保护管理员路由
+  useEffect(() => {
+    if (!isAuthenticated || !is_admin) {
+      window.location.href = '/login?redirect=/admin/dashboard'
+    }
+  }, [isAuthenticated, is_admin])
+
+  // 如果未认证或不是管理员，显示访问受限页面
+  if (!isAuthenticated || !is_admin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 text-yellow-500 mb-4">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">访问受限</h2>
+          <p className="text-gray-600 mb-4">请先登录管理员账户</p>
+          <button 
+            onClick={() => window.location.href = '/login?redirect=/admin/dashboard'}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            前往登录
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const [stats, setStats] = useState({
     todayHotLinks: 0,
     pendingLinks: 0,
@@ -69,12 +102,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">运营数据看板</h1>
-          <p className="mt-1 text-sm text-gray-600">
-            实时监控平台核心运营指标
-          </p>
-        </div>
+        <div className="hidden"></div>
         <div className="flex gap-2">
           <button
             onClick={() => handleExport('daily_report')}

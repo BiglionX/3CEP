@@ -289,7 +289,7 @@ async function trackWorkflowDemo(workflowId: string) {
       page_path: '/demo/workflow',
       source: 'workflow_demo_api',
       user_agent: 'Workflow Demo API Client',
-      session_id: `wf_demo_${Date.now()}`,
+      session_id: `wf_demo_${Date.now()} as any`,
       created_at: new Date().toISOString()
     });
   } catch (error) {

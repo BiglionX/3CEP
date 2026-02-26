@@ -1,0 +1,274 @@
+name: 企业用户端E2E测试
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # 每天凌晨2点执行定时测试
+    - cron: '0 2 * * *'
+
+jobs:
+  setup:
+    name: 环境准备
+    runs-on: ubuntu-latest
+    outputs:
+      node_version: ${{ steps.setup-node.outputs.node-version }}
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        
+      - name: 设置Node.js环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: 安装依赖
+        run: npm ci
+        
+      - name: 缓存Playwright浏览器
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+  e2e-tests:
+    name: E2E测试执行
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [
+          'enterprise-functional-tests',
+          'enterprise-permission-tests', 
+          'enterprise-api-tests',
+          'enterprise-mobile-tests'
+        ]
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        
+      - name: 设置Node.js环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: 安装依赖
+        run: npm ci
+        
+      - name: 安装Playwright浏览器
+        run: npx playwright install --with-deps chromium firefox webkit
+        
+      - name: 启动测试服务
+        run: |
+          npm run dev &
+          # 等待服务启动
+          timeout 60 bash -c 'until curl -s http://localhost:3001/health >/dev/null; do sleep 2; done' || exit 1
+        env:
+          PORT: 3001
+          
+      - name: 执行企业E2E测试 - ${{ matrix.project }}
+        run: npx playwright test --project=${{ matrix.project }}
+        env:
+          TEST_ENV: test
+          CI: true
+          HEADLESS: true
+          
+      - name: 上传测试结果
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results-${{ matrix.project }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 30
+
+  performance-tests:
+    name: 性能基准测试
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        
+      - name: 设置Node.js环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: 安装依赖
+        run: npm ci
+        
+      - name: 启动服务
+        run: |
+          npm run dev &
+          timeout 60 bash -c 'until curl -s http://localhost:3001/health >/dev/null; do sleep 2; done' || exit 1
+        env:
+          PORT: 3001
+          
+      - name: 执行性能测试
+        run: npx playwright test tests/e2e/enterprise/performance/ --project=enterprise-functional-tests
+        env:
+          TEST_ENV: test
+          CI: true
+          
+      - name: 上传性能测试结果
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: performance-results
+          path: test-results/
+          retention-days: 30
+
+  security-tests:
+    name: 安全扫描测试
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        
+      - name: 设置Node.js环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: 安装依赖
+        run: npm ci
+        
+      - name: 启动服务
+        run: |
+          npm run dev &
+          timeout 60 bash -c 'until curl -s http://localhost:3001/health >/dev/null; do sleep 2; done' || exit 1
+        env:
+          PORT: 3001
+          
+      - name: 执行安全测试
+        run: npx playwright test tests/e2e/enterprise/security/ --project=enterprise-functional-tests
+        env:
+          TEST_ENV: test
+          CI: true
+          
+      - name: 上传安全测试结果
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-results
+          path: test-results/
+          retention-days: 30
+
+  quality-gate:
+    name: 质量门禁检查
+    needs: [e2e-tests, performance-tests, security-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        
+      - name: 下载所有测试结果
+        uses: actions/download-artifact@v3
+        with:
+          path: downloaded-results
+          
+      - name: 安装依赖
+        run: npm ci
+        
+      - name: 生成综合测试报告
+        run: |
+          node scripts/generate-enterprise-test-report.js
+        env:
+          TEST_RESULTS_PATH: downloaded-results
+          
+      - name: 检查质量门禁
+        run: |
+          # 检查测试通过率
+          PASS_RATE=$(node -e "
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('test-results/enterprise-e2e-report.json'));
+            console.log(report.summary.passRate);
+          ")
+          
+          echo "测试通过率: $PASS_RATE%"
+          
+          # 通过率必须≥95%
+          if (( $(echo "$PASS_RATE < 95" | bc -l) )); then
+            echo "❌ 测试通过率未达到质量门禁要求 (当前: $PASS_RATE%, 要求: 95%)"
+            exit 1
+          fi
+          
+          # 检查安全漏洞
+          HIGH_VULNS=$(node -e "
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('test-results/enterprise-e2e-report.json'));
+            if (report.security && report.security.vulnerabilities) {
+              const highVulns = report.security.vulnerabilities.filter(v => v.severity === 'high').length;
+              console.log(highVulns);
+            } else {
+              console.log(0);
+            }
+          ")
+          
+          echo "高危安全漏洞数: $HIGH_VULNS"
+          
+          if [ "$HIGH_VULNS" -gt 0 ]; then
+            echo "❌ 发现高危安全漏洞，不符合质量要求"
+            exit 1
+          fi
+          
+          echo "✅ 所有质量门禁检查通过"
+          
+      - name: 上传最终报告
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-test-report
+          path: test-results/
+          retention-days: 90
+
+  notification:
+    name: 测试结果通知
+    needs: [quality-gate]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: 发送Slack通知
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#ci-cd-notifications'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          
+      - name: 发送企业微信通知
+        if: failure()
+        uses: chf007/action-wechat-work@master
+        with:
+          webhook: ${{ secrets.WECHAT_WEBHOOK }}
+          msgtype: text
+          content: |
+            ❌ 企业用户端E2E测试失败
+            仓库: ${{ github.repository }}
+            分支: ${{ github.ref }}
+            提交: ${{ github.sha }}
+            详情: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+  deploy-if-success:
+    name: 成功时部署
+    needs: [quality-gate]
+    runs-on: ubuntu-latest
+    if: success() && github.ref == 'refs/heads/main'
+    steps:
+      - name: 部署到预生产环境
+        run: |
+          echo "✅ 测试通过，准备部署到预生产环境"
+          # 这里添加实际的部署脚本
+          # npm run deploy:stage

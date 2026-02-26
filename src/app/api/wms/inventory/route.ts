@@ -132,7 +132,7 @@ export async function POST(request: Request) {
           success: true,
           data: {
             message: "库存同步成功",
-            itemCount: result.data?.length || 0,
+            itemCount: (result.data as any)?.data?.length || 0,
           },
         });
       } else {
@@ -214,7 +214,7 @@ export async function PUT(request: Request) {
         // 更新特定连接的同步频率
         const { error } = await supabase
           .from("wms_connections")
-          .update({ sync_frequency: syncFrequency })
+          .update({ sync_frequency: syncFrequency } as any)
           .eq("id", connectionId);
 
         if (error) {

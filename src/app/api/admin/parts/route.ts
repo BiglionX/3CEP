@@ -116,7 +116,7 @@ export async function POST(request: Request) {
         min_stock: min_stock || 0,
         max_stock: max_stock || 1000,
         status: status || 'active'
-      })
+      } as any)
       .select()
       .single();
     
@@ -303,7 +303,7 @@ export async function DELETE(request: Request) {
     // 软删除：更新状态为deleted
     const { error } = await supabase
       .from('parts')
-      .update({ status: 'deleted', updated_at: new Date().toISOString() })
+      .update({ status: 'deleted', updated_at: new Date().toISOString() } as any)
       .eq('id', id);
     
     if (error) throw error;

@@ -464,7 +464,7 @@ export class ReplenishmentAdvisorService {
           .not('actual_delivery_date', 'is', null)
           .limit(20);
 
-        if (data && !error && data.length > 0) {
+        if (data && !error && (data as any)?.data.length > 0) {
           const leadTimeData = data.map(order => {
             const expected = new Date(order.expected_delivery_date);
             const actual = new Date(order.actual_delivery_date);
@@ -477,7 +477,7 @@ export class ReplenishmentAdvisorService {
           leadTimes[productId] = {
             averageLeadTime: Math.max(1, Math.round(avgLeadTime)),
             leadTimeVariability: Math.sqrt(variance),
-            supplierReliability: Math.min(1, data.length / 20) // 基于样本量的可靠性评估
+            supplierReliability: Math.min(1, (data as any)?.data.length / 20) // 基于样本量的可靠性评估
           };
         } else {
           leadTimes[productId] = this.getDefaultLeadTime();

@@ -1,4 +1,4 @@
-# FixCycle - 智能循环经济平台
+# ProdCycleAI - 智能循环经济平台
 
 <div align="center">
 
@@ -227,6 +227,16 @@ tests/              # 测试文件
 
 ## 📄 许可证
 
+## 📄 法律文件
+
+- [LICENSE](LICENSE) - MIT开源许可证
+- [CONTRIBUTING](CONTRIBUTING.md) - 贡献指南
+- [SECURITY](SECURITY.md) - 安全政策
+- [PRIVACY](PRIVACY.md) - 隐私政策
+- [TERMS](TERMS.md) - 服务条款
+- [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) - 行为准则
+- [SUPPORT](SUPPORT.md) - 支持指南
+
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
 
 ---
@@ -236,10 +246,10 @@ tests/              # 测试文件
 - 📧 邮箱: support@fixcycle.com
 - 🐛 问题跟踪: [GitHub Issues](https://github.com/username/repository/issues)
 - 💬 技术讨论: [Discussions](https://github.com/username/repository/discussions)
-- 📱 微信: @FixCycleSupport
+- 📱 微信: @ProdCycleAISupport
 
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by the FixCycle Team</sub>
+  <sub>Built with ❤️ by the ProdCycleAI Team</sub>
 </div>

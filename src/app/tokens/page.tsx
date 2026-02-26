@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   CreditCard, 
@@ -58,11 +58,7 @@ export default function TokenPurchasePage() {
   const [processing, setProcessing] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'packages' | 'transactions'>('packages');
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       // 这里应该从认证服务获取当前用户ID
       const userId = 'demo_user_123'; // 示例用户ID
@@ -93,7 +89,11 @@ export default function TokenPurchasePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handlePurchase = async (packageId: string, packageName: string) => {
     setProcessing(packageId);

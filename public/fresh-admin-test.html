@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>管理员后台测试</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        #result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 管理员后台访问测试</h1>
+        <div id="status" class="info">正在检查权限...</div>
+        <div id="result"></div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="testAccess()">测试后台访问</button>
+            <button onclick="goToDashboard()">直接访问后台</button>
+            <button onclick="showToken()">显示访问令牌</button>
+        </div>
+    </div>
+
+    <script>
+        const accessToken = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjRhZDU1M2YwLTNhNTItNGI0Ni05ZGUwLTk1NDEyZDU1NTVhNiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2hyanF6YmhxdWVsZXN6a3Zuc2VuLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2YzgzYzQ2My1iZDg0LTRmM2EtOWU2MS0zODNiMDBiYzNjZmIiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcxODM1MTAxLCJpYXQiOjE3NzE4MzE1MDEsImVtYWlsIjoiMTA1NTYwMzMyM0BxcS5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsIjoiMTA1NTYwMzMyM0BxcS5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNBZG1pbiI6dHJ1ZSwibmFtZSI6Iui2hee6p-euoeeQhuWRmCIsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6ImFkbWluIiwic3ViIjoiNmM4M2M0NjMtYmQ4NC00ZjNhLTllNjEtMzgzYjAwYmMzY2ZiIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzE4MzE1MDF9XSwic2Vzc2lvbl9pZCI6ImIzMGUzYmJlLThmNmEtNGNmMC04OWE2LWMxY2IzN2ZjM2U3YSIsImlzX2Fub255bW91cyI6ZmFsc2V9.tien17XrOmxvqEKMzQf2GYHRE9hnykuPv67iS1CLYoF0FcN5VVVuLVBqgSSezHCZAMFi5rK_ewQMAqRfYQ0JoQ";
+        
+        async function testAccess() {
+            try {
+                const response = await fetch('/api/auth/check-session', {
+                    headers: { 'Authorization': 'Bearer ' + accessToken }
+                });
+                const data = await response.json();
+                
+                document.getElementById('status').className = data.authenticated ? 'status success' : 'status error';
+                document.getElementById('status').innerHTML = data.authenticated ? 
+                    '✅ 权限验证通过' : '❌ 权限验证失败';
+                
+                document.getElementById('result').innerHTML = 
+                    '<h3>验证结果:</h3>' +
+                    '<p><strong>用户:</strong> ' + data.user?.email + '</p>' +
+                    '<p><strong>管理员:</strong> ' + (data.user?.isAdmin ? '是' : '否') + '</p>' +
+                    '<p><strong>角色:</strong> ' + data.user?.role + '</p>';
+                    
+            } catch (error) {
+                document.getElementById('status').className = 'status error';
+                document.getElementById('status').innerHTML = '❌ 验证失败: ' + error.message;
+            }
+        }
+        
+        function goToDashboard() {
+            // 直接跳转到管理后台
+            window.location.href = '/admin/dashboard';
+        }
+        
+        function showToken() {
+            alert('访问令牌:\n' + accessToken.substring(0, 100) + '...');
+        }
+        
+        // 页面加载后自动测试
+        window.onload = testAccess;
+    </script>
+</body>
+</html>

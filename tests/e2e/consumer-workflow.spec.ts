@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { TEST_CONFIG, TestHelpers } from './e2e-config';
+import { TEST_CONFIG, TestHelpers } from '../e2e-config';
 
 test.describe('消费者核心流程测试 (E2E-CON-*)', () => {
   let consumerPage: any;

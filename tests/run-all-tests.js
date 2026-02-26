@@ -371,7 +371,7 @@ function generateHTMLReport(report) {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>FixCycle 测试报告</title>
+    <title>ProdCycleAI 测试报告</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .header { background: #f5f5f5; padding: 20px; border-radius: 5px; }
@@ -391,7 +391,7 @@ function generateHTMLReport(report) {
 </head>
 <body>
     <div class="header">
-        <h1>🧪 FixCycle 测试报告</h1>
+        <h1>🧪 ProdCycleAI 测试报告</h1>
         <p>执行时间: ${report.timestamp}</p>
         <p>环境: ${report.environment.platform} (Node.js ${report.environment.nodeVersion})</p>
     </div>

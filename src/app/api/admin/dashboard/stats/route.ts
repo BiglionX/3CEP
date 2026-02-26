@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import { Database } from '@/lib/database.types'
 
 export async function GET(request: Request) {
-  const cookieStore = cookies()
-  const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
+  // 创建Supabase客户端
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
   
   // 开发环境临时绕过认证检查
   if (process.env.NODE_ENV === 'development') {
@@ -32,14 +34,14 @@ export async function GET(request: Request) {
     
     // 1. 今日新增热点链接数
     const { count: todayHotLinks } = await supabase
-      .from('hot_link_pool')
+      .from('unified_link_library')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', todayStart)
       .lte('created_at', todayEnd)
     
     // 2. 待审核链接数
     const { count: pendingLinks } = await supabase
-      .from('hot_link_pool')
+      .from('unified_link_library')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'pending_review')
     

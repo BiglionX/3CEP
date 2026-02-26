@@ -1,0 +1,137 @@
+{
+  "timestamp": "2026-02-25T11:47:27.676Z",
+  "summary": {
+    "total": 11,
+    "passed": 0,
+    "failed": 0,
+    "errors": 11,
+    "passRate": "0.00"
+  },
+  "pages": [
+    {
+      "page": "企业服务首页",
+      "path": "/enterprise",
+      "category": "门户页面",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10037,
+      "hasContent": false,
+      "errorMessage": "请求超时"
+    },
+    {
+      "page": "智能体定制服务",
+      "path": "/enterprise/agents/customize",
+      "category": "服务页面",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10002,
+      "hasContent": false,
+      "errorMessage": "请求超时"
+    },
+    {
+      "page": "B2B采购服务",
+      "path": "/enterprise/procurement",
+      "category": "服务页面",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10020,
+      "hasContent": false,
+      "errorMessage": "请求超时"
+    },
+    {
+      "page": "企业认证页面",
+      "path": "/enterprise/admin/auth",
+      "category": "管理页面",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10013,
+      "hasContent": false,
+      "errorMessage": "请求超时"
+    },
+    {
+      "page": "企业管理仪表板",
+      "path": "/enterprise/admin/dashboard",
+      "category": "管理页面",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10016,
+      "hasContent": false,
+      "errorMessage": "请求超时"
+    },
+    {
+      "page": "智能体管理页面",
+      "path": "/enterprise/admin/agents",
+      "category": "管理页面",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10008,
+      "hasContent": false,
+      "errorMessage": "请求超时"
+    },
+    {
+      "page": "采购管理页面",
+      "path": "/enterprise/admin/procurement",
+      "category": "管理页面",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10016,
+      "hasContent": false,
+      "errorMessage": "请求超时"
+    }
+  ],
+  "apis": [
+    {
+      "api": "企业注册接口",
+      "path": "/api/enterprise/register",
+      "method": "POST",
+      "category": "认证API",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10017,
+      "isJson": false,
+      "responseData": null,
+      "errorMessage": "请求超时"
+    },
+    {
+      "api": "企业登录接口",
+      "path": "/api/enterprise/login",
+      "method": "POST",
+      "category": "认证API",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10017,
+      "isJson": false,
+      "responseData": null,
+      "errorMessage": "请求超时"
+    },
+    {
+      "api": "智能体列表接口",
+      "path": "/api/enterprise/agents",
+      "method": "GET",
+      "category": "业务API",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10014,
+      "isJson": false,
+      "responseData": null,
+      "errorMessage": "请求超时"
+    },
+    {
+      "api": "采购订单接口",
+      "path": "/api/enterprise/procurement/orders",
+      "method": "GET",
+      "category": "业务API",
+      "status": "ERROR",
+      "statusCode": null,
+      "responseTime": 10010,
+      "isJson": false,
+      "responseData": null,
+      "errorMessage": "请求超时"
+    }
+  ],
+  "performance": {
+    "averageResponseTime": 10015.454545454546,
+    "maxResponseTime": 10037,
+    "minResponseTime": 10002
+  }
+}

@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
         code: code.trim().toUpperCase(),
         description: description?.trim() || null,
         is_active: true,
-      })
+      } as any)
       .select()
       .single();
 
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
       role: 'admin',
       is_primary: true,
       is_active: true,
-    });
+    } as any);
 
     if (assignError) {
       console.warn('自动分配租户管理员失败:', assignError);
@@ -338,7 +338,7 @@ export async function DELETE(request, { params }) {
     // 软删除：标记为非活跃
     const { error } = await supabase
       .from('tenants')
-      .update({ is_active: false })
+      .update({ is_active: false } as any)
       .eq('id', tenantId);
 
     if (error) {

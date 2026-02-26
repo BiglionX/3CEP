@@ -175,7 +175,7 @@ export async function PATCH(
       .update({
         status,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq("id", id)
       .select()
       .single();

@@ -64,7 +64,7 @@ export async function POST(request: Request) {
         status: 'draft',
         tags: tags || [],
         category_id: categoryId
-      })
+      } as any)
       .select()
       .single()
 
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
           article_id: articleData.id,
           reviewed_at: new Date().toISOString(),
           reviewed_by: userId
-        })
+        } as any)
         .eq('id', linkId)
     }
 

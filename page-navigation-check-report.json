@@ -1,0 +1,138 @@
+{
+  "timestamp": "2026-02-25T10:31:50.902Z",
+  "summary": {
+    "total": 15,
+    "passed": 0,
+    "failed": 15,
+    "successRate": "0.00"
+  },
+  "categories": {
+    "用户中心": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4
+    },
+    "业务功能": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4
+    },
+    "系统工具": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4
+    },
+    "核心页面": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3
+    }
+  },
+  "details": [
+    {
+      "category": "用户中心",
+      "page": "个人仪表板",
+      "path": "/profile/dashboard",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "用户中心",
+      "page": "账户设置",
+      "path": "/profile/settings",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "用户中心",
+      "page": "安全设置",
+      "path": "/profile/security",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "用户中心",
+      "page": "用户主页",
+      "path": "/profile",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "业务功能",
+      "page": "维修店铺",
+      "path": "/repair-shop",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "业务功能",
+      "page": "配件商城",
+      "path": "/parts-market",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "业务功能",
+      "page": "众筹平台",
+      "path": "/crowdfunding",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "业务功能",
+      "page": "FCX系统",
+      "path": "/fcx",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "系统工具",
+      "page": "帮助中心",
+      "path": "/help",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "系统工具",
+      "page": "意见反馈",
+      "path": "/feedback",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "系统工具",
+      "page": "联系我们",
+      "path": "/contact",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "系统工具",
+      "page": "关于我们",
+      "path": "/about",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "核心页面",
+      "page": "首页",
+      "path": "/",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "核心页面",
+      "page": "登录页",
+      "path": "/login",
+      "status": "failed",
+      "error": "请求超时"
+    },
+    {
+      "category": "核心页面",
+      "page": "注册页",
+      "path": "/register",
+      "status": "failed",
+      "error": "请求超时"
+    }
+  ]
+}

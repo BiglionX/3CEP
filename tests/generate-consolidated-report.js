@@ -422,7 +422,7 @@ class ConsolidatedTestReporter {
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧪 FixCycle 测试质量门禁报告</h1>
+            <h1>🧪 ProdCycleAI 测试质量门禁报告</h1>
             <p>执行时间: ${qualityReport.timestamp}</p>
             <p>环境: ${qualityReport.environment.platform} (Node.js ${qualityReport.environment.nodeVersion})</p>
         </div>

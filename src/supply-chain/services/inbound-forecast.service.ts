@@ -46,7 +46,7 @@ export class InboundForecastService {
           brand_id: dto.brandId,
           remarks: dto.remarks,
           attachments: dto.attachments || null,
-        })
+        } as any)
         .select()
         .single();
 
@@ -325,7 +325,7 @@ export class InboundForecastService {
         for (const item of receivedItems) {
           await supabase
             .from("wms_inbound_items")
-            .update({ received_quantity: item.receivedQuantity })
+            .update({ received_quantity: item.receivedQuantity } as any)
             .match({ notice_id: noticeId, wms_sku: item.sku });
         }
       }
@@ -371,7 +371,7 @@ export class InboundForecastService {
         to_status: toStatus,
         changed_by: changedBy,
         change_reason: reason,
-      });
+      } as any);
     } catch (error) {
       console.error("创建状态历史记录失败:", error);
       // 不抛出异常，避免影响主流程
@@ -396,7 +396,7 @@ export class InboundForecastService {
         recipient_email: recipientEmail,
         subject,
         content,
-      });
+      } as any);
     } catch (error) {
       console.error("发送通知失败:", error);
       // 不抛出异常，避免影响主流程

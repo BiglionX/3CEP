@@ -16,7 +16,7 @@ export default defineConfig({
       "html",
       {
         open: process.env.CI ? "never" : "on-failure",
-        outputFolder: "test-results/playwright-html-report",
+        outputFolder: "playwright-report",
       },
     ],
     [
@@ -45,17 +45,116 @@ export default defineConfig({
     timeout: 120000,
   },
   projects: [
+    // 桌面浏览器测试
     {
-      name: "chromium",
-      use: { browserName: "chromium" },
+      name: "chromium-desktop",
+      use: { 
+        browserName: "chromium",
+        viewport: { width: 1920, height: 1080 }
+      },
     },
     {
-      name: "firefox",
-      use: { browserName: "firefox" },
+      name: "firefox-desktop", 
+      use: { 
+        browserName: "firefox",
+        viewport: { width: 1920, height: 1080 }
+      },
     },
     {
-      name: "webkit",
-      use: { browserName: "webkit" },
+      name: "webkit-desktop",
+      use: { 
+        browserName: "webkit",
+        viewport: { width: 1920, height: 1080 }
+      },
     },
+    
+    // 移动设备测试
+    {
+      name: "mobile-chrome",
+      use: { 
+        browserName: "chromium",
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+        hasTouch: true
+      },
+    },
+    {
+      name: "mobile-safari", 
+      use: { 
+        browserName: "webkit",
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+        hasTouch: true
+      },
+    },
+    {
+      name: "tablet-chrome",
+      use: { 
+        browserName: "chromium", 
+        viewport: { width: 820, height: 1180 },
+        isMobile: true,
+        hasTouch: true
+      },
+    },
+    
+    // 权限和角色专用测试
+    {
+      name: "admin-tests",
+      testMatch: "**/e2e/roles-*.spec.ts",
+      use: { 
+        browserName: "chromium",
+        viewport: { width: 1920, height: 1080 },
+        storageState: "test-data/admin-storage.json"
+      },
+    },
+    {
+      name: "consumer-tests",
+      testMatch: "**/e2e/consumer-*.spec.ts",
+      use: { 
+        browserName: "chromium",
+        viewport: { width: 390, height: 844 },
+        storageState: "test-data/consumer-storage.json"
+      },
+    },
+    
+    // 企业服务专用测试项目
+    {
+      name: "enterprise-functional-tests",
+      testMatch: "**/e2e/enterprise/**/*functional*.spec.ts",
+      use: { 
+        browserName: "chromium",
+        viewport: { width: 1920, height: 1080 },
+        baseURL: "http://localhost:3003"
+      },
+    },
+    {
+      name: "enterprise-permission-tests",
+      testMatch: "**/e2e/enterprise/**/*permission*.spec.ts",
+      use: { 
+        browserName: "chromium",
+        viewport: { width: 1920, height: 1080 },
+        baseURL: "http://localhost:3003"
+      },
+    },
+    {
+      name: "enterprise-api-tests",
+      testMatch: "**/e2e/enterprise/**/*api*.spec.ts",
+      use: { 
+        browserName: "chromium",
+        ignoreHTTPSErrors: true,
+        baseURL: "http://localhost:3003"
+      },
+    },
+    {
+      name: "enterprise-mobile-tests",
+      testMatch: "**/e2e/enterprise/**/*.spec.ts",
+      use: { 
+        browserName: "chromium",
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+        hasTouch: true,
+        baseURL: "http://localhost:3003"
+      },
+    }
   ],
 });

@@ -119,7 +119,7 @@ export class EnhancedPaymentService {
           metadata: paymentRecord.metadata,
           created_at: new Date(),
           updated_at: new Date()
-        });
+        } as any);
 
       if (paymentError) {
         return {
@@ -162,7 +162,7 @@ export class EnhancedPaymentService {
           amount: fcxAmount,
           transaction_type: FcxTransactionType.PURCHASE,
           reference_id: paymentId,
-          memo: `购买${fcxAmount} FCX via ${dto.paymentMethod}`,
+          memo: `购买${fcxAmount} as any FCX via ${dto.paymentMethod}`,
           status: 'completed',
           created_at: new Date()
         });
@@ -318,7 +318,7 @@ export class EnhancedPaymentService {
           amount: amount,
           transaction_type: 'refund',
           reference_id: transactionId,
-          memo: `退款 ${amount} FCX`,
+          memo: `退款 ${amount} as any FCX`,
           status: 'completed',
           created_at: new Date()
         });

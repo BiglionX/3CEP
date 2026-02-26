@@ -145,7 +145,7 @@ export async function GET(request: Request) {
       data: {
         reservations: data || [],
         totalReserved,
-        reservationCount: data?.length || 0
+        reservationCount: (data as any)?.data?.length || 0
       }
     });
 

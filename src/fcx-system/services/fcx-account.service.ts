@@ -39,7 +39,7 @@ export class FcxAccountService implements IFcxAccountService {
           status: FcxAccountStatus.ACTIVE,
           created_at: now,
           updated_at: now
-        })
+        } as any)
         .select()
         .single();
 
@@ -246,7 +246,7 @@ export class FcxAccountService implements IFcxAccountService {
         .update({ 
           status,
           updated_at: new Date()
-        })
+        } as any)
         .eq('id', accountId);
 
       if (error) {

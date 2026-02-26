@@ -1,0 +1,419 @@
+{
+  "version": "1.0.0",
+  "created_at": "2026-02-26T10:00:00Z",
+  "description": "FixCycle项目完整角色测试账户配置",
+  "roles": {
+    "admin": {
+      "name": "超级管理员",
+      "description": "系统最高权限角色，拥有所有功能访问权限",
+      "level": 100,
+      "accounts": [
+        {
+          "id": "admin-001",
+          "email": "admin@fixcycle.com",
+          "password": "Admin123456!",
+          "name": "系统管理员",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "users_read", "users_create", "users_update", "users_delete",
+            "content_read", "content_create", "content_update", "content_delete", "content_approve",
+            "shops_read", "shops_create", "shops_update", "shops_approve",
+            "payments_read", "payments_refund",
+            "reports_read", "reports_export",
+            "settings_read", "settings_update",
+            "procurement_read", "procurement_create", "procurement_approve",
+            "inventory_read", "inventory_update",
+            "agents_execute", "agents_monitor", "agents_invoke", "agents_debug",
+            "n8n_workflows_read", "n8n_workflows_manage", "n8n_workflows_replay", "n8n_workflows_rollback",
+            "tools_execute", "tools_manage",
+            "audit_read", "audit_export",
+            "monitoring_read", "monitoring_alerts"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/dashboard",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "访问所有管理页面",
+            "用户管理操作",
+            "内容审核和发布",
+            "店铺入驻审批",
+            "财务数据查看",
+            "系统配置管理",
+            "智能体工作流管理",
+            "审计日志查看"
+          ]
+        }
+      ]
+    },
+    "manager": {
+      "name": "业务管理员",
+      "description": "负责日常业务管理，可管理用户、内容和基础配置",
+      "level": 80,
+      "accounts": [
+        {
+          "id": "manager-001",
+          "email": "manager@fixcycle.com",
+          "password": "Manager123!",
+          "name": "业务经理",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "users_read", "users_create", "users_update",
+            "content_read", "content_create", "content_update", "content_approve",
+            "shops_read", "shops_create", "shops_update", "shops_approve",
+            "payments_read",
+            "reports_read", "reports_export",
+            "settings_read",
+            "procurement_read", "procurement_create", "procurement_approve",
+            "n8n_workflows_read", "n8n_workflows_replay",
+            "audit_read",
+            "monitoring_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/dashboard",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "用户账户管理",
+            "内容发布审核",
+            "店铺信息管理",
+            "基础报表查看",
+            "采购流程审批"
+          ]
+        }
+      ]
+    },
+    "content_manager": {
+      "name": "内容管理员",
+      "description": "专门负责内容审核、发布和管理",
+      "level": 70,
+      "accounts": [
+        {
+          "id": "content-001",
+          "email": "content@fixcycle.com",
+          "password": "Content123!",
+          "name": "内容编辑",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "content_read", "content_create", "content_update", "content_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/content",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "文章内容审核",
+            "热点信息发布",
+            "内容分类管理",
+            "内容统计查看"
+          ]
+        }
+      ]
+    },
+    "shop_manager": {
+      "name": "店铺管理员",
+      "description": "负责维修店铺管理和审核",
+      "level": 70,
+      "accounts": [
+        {
+          "id": "shop-001",
+          "email": "shop@fixcycle.com",
+          "password": "Shop123!",
+          "name": "店铺管理员",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "shops_read", "shops_create", "shops_update", "shops_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/shops",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "维修店入驻审核",
+            "店铺信息管理",
+            "服务范围配置",
+            "店铺评级管理"
+          ]
+        }
+      ]
+    },
+    "finance_manager": {
+      "name": "财务管理员",
+      "description": "负责财务管理、支付审核和报表查看",
+      "level": 75,
+      "accounts": [
+        {
+          "id": "finance-001",
+          "email": "finance@fixcycle.com",
+          "password": "Finance123!",
+          "name": "财务主管",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "payments_read", "payments_refund",
+            "reports_read", "reports_export"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/finance",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "支付记录查看",
+            "退款申请处理",
+            "财务报表导出",
+            "收入统计分析"
+          ]
+        }
+      ]
+    },
+    "procurement_specialist": {
+      "name": "采购专员",
+      "description": "负责采购流程管理和供应商对接",
+      "level": 60,
+      "accounts": [
+        {
+          "id": "procurement-001",
+          "email": "procurement@fixcycle.com",
+          "password": "Procure123!",
+          "name": "采购专员",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "procurement_read", "procurement_create", "procurement_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/procurement",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "采购订单创建",
+            "供应商管理",
+            "采购流程审批",
+            "采购数据分析"
+          ]
+        }
+      ]
+    },
+    "warehouse_operator": {
+      "name": "仓库操作员",
+      "description": "负责库存管理和出入库操作",
+      "level": 50,
+      "accounts": [
+        {
+          "id": "warehouse-001",
+          "email": "warehouse@fixcycle.com",
+          "password": "Warehouse123!",
+          "name": "仓库管理员",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "inventory_read", "inventory_update",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/inventory",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "库存盘点操作",
+            "入库出库记录",
+            "库存预警处理",
+            "库存报表查看"
+          ]
+        }
+      ]
+    },
+    "agent_operator": {
+      "name": "智能体操作员",
+      "description": "负责智能体工作流执行和监控",
+      "level": 55,
+      "accounts": [
+        {
+          "id": "agent-001",
+          "email": "agent@fixcycle.com",
+          "password": "Agent123!",
+          "name": "智能体操作员",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "agents_execute", "agents_monitor", "agents_invoke", "agents_debug",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/agents",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "智能体任务执行",
+            "工作流监控",
+            "执行结果查看",
+            "异常处理调试"
+          ]
+        }
+      ]
+    },
+    "viewer": {
+      "name": "只读查看员",
+      "description": "仅能查看基础数据和报表",
+      "level": 30,
+      "accounts": [
+        {
+          "id": "viewer-001",
+          "email": "viewer@fixcycle.com",
+          "password": "Viewer123!",
+          "name": "数据查看员",
+          "tenant_id": "main-tenant",
+          "permissions": [
+            "dashboard_read",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/dashboard",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "仪表板数据查看",
+            "基础报表浏览",
+            "统计信息查阅"
+          ]
+        }
+      ]
+    },
+    "enterprise_admin": {
+      "name": "企业服务管理员",
+      "description": "负责企业服务门户的管理和维护",
+      "level": 85,
+      "accounts": [
+        {
+          "id": "enterprise-admin-001",
+          "email": "enterprise-admin@fixcycle.com",
+          "password": "Enterprise123!",
+          "name": "企业服务管理员",
+          "tenant_id": "enterprise-tenant",
+          "permissions": [
+            "dashboard_read",
+            "enterprise_read", "enterprise_manage",
+            "enterprise_agents_read", "enterprise_agents_manage",
+            "enterprise_procurement_read", "enterprise_procurement_manage",
+            "users_read",
+            "reports_read",
+            "audit_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/admin/dashboard",
+            "api": "http://localhost:3003/api/enterprise/login"
+          },
+          "test_scenarios": [
+            "企业服务门户管理",
+            "智能体定制服务管理",
+            "B2B采购服务配置",
+            "企业用户管理"
+          ]
+        }
+      ]
+    },
+    "procurement_manager": {
+      "name": "采购经理",
+      "description": "负责B2B采购业务管理和决策",
+      "level": 75,
+      "accounts": [
+        {
+          "id": "procurement-manager-001",
+          "email": "procurement-manager@fixcycle.com",
+          "password": "ProcurementMgr123!",
+          "name": "采购经理",
+          "tenant_id": "enterprise-tenant",
+          "permissions": [
+            "dashboard_read",
+            "enterprise_read",
+            "enterprise_procurement_read", "enterprise_procurement_manage",
+            "procurement_read", "procurement_create", "procurement_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/procurement/dashboard",
+            "api": "http://localhost:3003/api/enterprise/login"
+          },
+          "test_scenarios": [
+            "企业采购需求管理",
+            "供应商合作管理",
+            "采购合同审批",
+            "采购成本分析"
+          ]
+        }
+      ]
+    },
+    "enterprise_user": {
+      "name": "企业用户",
+      "description": "普通企业服务用户，可访问基础功能",
+      "level": 40,
+      "accounts": [
+        {
+          "id": "enterprise-user-001",
+          "email": "enterprise-user@fixcycle.com",
+          "password": "EnterpriseUser123!",
+          "name": "企业用户",
+          "tenant_id": "enterprise-tenant",
+          "permissions": [
+            "dashboard_read",
+            "enterprise_read",
+            "enterprise_agents_read",
+            "enterprise_procurement_read",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/dashboard",
+            "api": "http://localhost:3003/api/enterprise/login"
+          },
+          "test_scenarios": [
+            "企业服务门户访问",
+            "智能体服务使用",
+            "采购需求提交",
+            "个人中心管理"
+          ]
+        }
+      ]
+    }
+  },
+  "test_environments": {
+    "development": {
+      "web_url": "http://localhost:3001",
+      "api_url": "http://localhost:3001/api",
+      "enterprise_url": "http://localhost:3003",
+      "enterprise_api_url": "http://localhost:3003/api"
+    },
+    "staging": {
+      "web_url": "https://staging.fixcycle.com",
+      "api_url": "https://staging.fixcycle.com/api",
+      "enterprise_url": "https://enterprise-staging.fixcycle.com",
+      "enterprise_api_url": "https://enterprise-staging.fixcycle.com/api"
+    },
+    "production": {
+      "web_url": "https://fixcycle.com",
+      "api_url": "https://fixcycle.com/api",
+      "enterprise_url": "https://enterprise.fixcycle.com",
+      "enterprise_api_url": "https://enterprise.fixcycle.com/api"
+    }
+  },
+  "usage_guidelines": {
+    "security": [
+      "仅在测试环境中使用这些账户",
+      "定期轮换测试密码",
+      "不要在生产环境中使用测试账户",
+      "测试完成后及时清理测试数据"
+    ],
+    "testing": [
+      "每个角色都有明确的权限边界",
+      "测试时验证权限拒绝场景同样重要",
+      "记录测试结果和发现的问题",
+      "使用不同角色账户进行全面的功能测试"
+    ]
+  }
+}

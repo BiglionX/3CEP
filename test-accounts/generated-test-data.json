@@ -1,0 +1,3342 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-02-26T05:54:27.346Z",
+  "environments": {
+    "development": {
+      "web_url": "http://localhost:3001",
+      "api_url": "http://localhost:3001/api",
+      "enterprise_url": "http://localhost:3003",
+      "enterprise_api_url": "http://localhost:3003/api"
+    },
+    "staging": {
+      "web_url": "https://staging.fixcycle.com",
+      "api_url": "https://staging.fixcycle.com/api",
+      "enterprise_url": "https://enterprise-staging.fixcycle.com",
+      "enterprise_api_url": "https://enterprise-staging.fixcycle.com/api"
+    },
+    "production": {
+      "web_url": "https://fixcycle.com",
+      "api_url": "https://fixcycle.com/api",
+      "enterprise_url": "https://enterprise.fixcycle.com",
+      "enterprise_api_url": "https://enterprise.fixcycle.com/api"
+    }
+  },
+  "roles": {
+    "admin": {
+      "role_info": {
+        "key": "admin",
+        "name": "超级管理员",
+        "description": "系统最高权限角色，拥有所有功能访问权限",
+        "level": 100
+      },
+      "test_accounts": [
+        {
+          "id": "admin-001",
+          "email": "admin@fixcycle.com",
+          "password": "Admin123456!",
+          "name": "系统管理员",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "admin@fixcycle.com",
+            "password": "Admin123456!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "users_read",
+            "users_create",
+            "users_update",
+            "users_delete",
+            "content_read",
+            "content_create",
+            "content_update",
+            "content_delete",
+            "content_approve",
+            "shops_read",
+            "shops_create",
+            "shops_update",
+            "shops_approve",
+            "payments_read",
+            "payments_refund",
+            "reports_read",
+            "reports_export",
+            "settings_read",
+            "settings_update",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
+            "inventory_read",
+            "inventory_update",
+            "agents_execute",
+            "agents_monitor",
+            "agents_invoke",
+            "agents_debug",
+            "n8n_workflows_read",
+            "n8n_workflows_manage",
+            "n8n_workflows_replay",
+            "n8n_workflows_rollback",
+            "tools_execute",
+            "tools_manage",
+            "audit_read",
+            "audit_export",
+            "monitoring_read",
+            "monitoring_alerts"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/dashboard",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "访问所有管理页面",
+            "用户管理操作",
+            "内容审核和发布",
+            "店铺入驻审批",
+            "财务数据查看",
+            "系统配置管理",
+            "智能体工作流管理",
+            "审计日志查看"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "超级管理员",
+        "access_level": 100,
+        "can_access": [
+          "所有系统功能",
+          "用户管理（增删改查）",
+          "内容管理（发布、审核、删除）",
+          "店铺管理（入驻审批、信息维护）",
+          "财务管理（支付、退款、报表）",
+          "采购管理（订单、供应商、审批）",
+          "库存管理（出入库、盘点）",
+          "智能体管理（执行、监控、调试）",
+          "系统配置（所有设置）",
+          "审计日志（完整查看）",
+          "监控告警（配置管理）"
+        ],
+        "restricted_from": [],
+        "menu_items": [
+          "仪表板",
+          "用户管理",
+          "内容管理",
+          "店铺管理",
+          "财务管理",
+          "采购管理",
+          "库存管理",
+          "智能体管理",
+          "系统设置",
+          "审计日志",
+          "监控中心"
+        ],
+        "api_endpoints": [
+          "/api/admin/*",
+          "/api/users/*",
+          "/api/content/*",
+          "/api/shops/*",
+          "/api/payments/*",
+          "/api/procurement/*",
+          "/api/inventory/*",
+          "/api/agents/*",
+          "/api/settings/*",
+          "/api/audit/*",
+          "/api/monitoring/*"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "admin-login-001",
+          "name": "超级管理员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/dashboard",
+            "输入邮箱: admin@fixcycle.com",
+            "输入密码: Admin123456!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/dashboard",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "admin@fixcycle.com",
+              "password": "Admin123456!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "admin-permission-001",
+          "name": "访问所有管理页面",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-permission-002",
+          "name": "用户管理操作",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-permission-003",
+          "name": "内容审核和发布",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-permission-004",
+          "name": "店铺入驻审批",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-permission-005",
+          "name": "财务数据查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-permission-006",
+          "name": "系统配置管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-permission-007",
+          "name": "智能体工作流管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-permission-008",
+          "name": "审计日志查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以系统管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "admin-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "admin-api-002",
+          "name": "users_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/users",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "admin-api-003",
+          "name": "users_create API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/users",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "admin-api-004",
+          "name": "users_update API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/users",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "admin-api-005",
+          "name": "users_delete API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/users",
+            "method": "DELETE",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "manager": {
+      "role_info": {
+        "key": "manager",
+        "name": "业务管理员",
+        "description": "负责日常业务管理，可管理用户、内容和基础配置",
+        "level": 80
+      },
+      "test_accounts": [
+        {
+          "id": "manager-001",
+          "email": "manager@fixcycle.com",
+          "password": "Manager123!",
+          "name": "业务经理",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "manager@fixcycle.com",
+            "password": "Manager123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "users_read",
+            "users_create",
+            "users_update",
+            "content_read",
+            "content_create",
+            "content_update",
+            "content_approve",
+            "shops_read",
+            "shops_create",
+            "shops_update",
+            "shops_approve",
+            "payments_read",
+            "reports_read",
+            "reports_export",
+            "settings_read",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
+            "n8n_workflows_read",
+            "n8n_workflows_replay",
+            "audit_read",
+            "monitoring_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/dashboard",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "用户账户管理",
+            "内容发布审核",
+            "店铺信息管理",
+            "基础报表查看",
+            "采购流程审批"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "业务管理员",
+        "access_level": 80,
+        "can_access": [
+          "仪表板查看",
+          "用户管理（查看、创建、编辑）",
+          "内容管理（发布、审核）",
+          "店铺管理（信息维护、审批）",
+          "财务管理（查看）",
+          "采购管理（创建、审批）",
+          "基础报表导出",
+          "系统基本配置"
+        ],
+        "restricted_from": [
+          "用户删除操作",
+          "内容完全删除",
+          "财务退款操作",
+          "高级系统配置"
+        ],
+        "menu_items": [
+          "仪表板",
+          "用户管理",
+          "内容管理",
+          "店铺管理",
+          "财务管理",
+          "采购管理",
+          "报表中心",
+          "基础设置"
+        ],
+        "api_endpoints": [
+          "/api/dashboard",
+          "/api/users/read",
+          "/api/users/create",
+          "/api/users/update",
+          "/api/content/read",
+          "/api/content/create",
+          "/api/content/update",
+          "/api/content/approve",
+          "/api/shops/read",
+          "/api/shops/update",
+          "/api/shops/approve",
+          "/api/payments/read",
+          "/api/reports/export",
+          "/api/settings/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "manager-login-001",
+          "name": "业务管理员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/dashboard",
+            "输入邮箱: manager@fixcycle.com",
+            "输入密码: Manager123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/dashboard",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "manager@fixcycle.com",
+              "password": "Manager123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "manager-permission-001",
+          "name": "用户账户管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以业务经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "manager-permission-002",
+          "name": "内容发布审核",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以业务经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "manager-permission-003",
+          "name": "店铺信息管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以业务经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "manager-permission-004",
+          "name": "基础报表查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以业务经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "manager-permission-005",
+          "name": "采购流程审批",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以业务经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "manager-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "manager-api-002",
+          "name": "users_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/users",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "manager-api-003",
+          "name": "users_create API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/users",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "manager-api-004",
+          "name": "users_update API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/users",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "manager-api-005",
+          "name": "content_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/content",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "content_manager": {
+      "role_info": {
+        "key": "content_manager",
+        "name": "内容管理员",
+        "description": "专门负责内容审核、发布和管理",
+        "level": 70
+      },
+      "test_accounts": [
+        {
+          "id": "content-001",
+          "email": "content@fixcycle.com",
+          "password": "Content123!",
+          "name": "内容编辑",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "content@fixcycle.com",
+            "password": "Content123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "content_read",
+            "content_create",
+            "content_update",
+            "content_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/content",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "文章内容审核",
+            "热点信息发布",
+            "内容分类管理",
+            "内容统计查看"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "内容管理员",
+        "access_level": 70,
+        "can_access": [
+          "内容创作和编辑",
+          "内容审核和发布",
+          "内容分类管理",
+          "基础数据报表"
+        ],
+        "restricted_from": [
+          "用户管理",
+          "财务管理",
+          "系统配置",
+          "其他业务模块"
+        ],
+        "menu_items": [
+          "内容仪表板",
+          "文章管理",
+          "内容审核",
+          "分类管理",
+          "内容统计"
+        ],
+        "api_endpoints": [
+          "/api/content/*",
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "content_manager-login-001",
+          "name": "内容管理员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/content",
+            "输入邮箱: content@fixcycle.com",
+            "输入密码: Content123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/content",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "content@fixcycle.com",
+              "password": "Content123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "content_manager-permission-001",
+          "name": "文章内容审核",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以内容编辑身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "content_manager-permission-002",
+          "name": "热点信息发布",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以内容编辑身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "content_manager-permission-003",
+          "name": "内容分类管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以内容编辑身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "content_manager-permission-004",
+          "name": "内容统计查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以内容编辑身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "content_manager-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "content_manager-api-002",
+          "name": "content_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/content",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "content_manager-api-003",
+          "name": "content_create API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/content",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "content_manager-api-004",
+          "name": "content_update API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/content",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "content_manager-api-005",
+          "name": "content_approve API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/content",
+            "method": "PATCH",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "shop_manager": {
+      "role_info": {
+        "key": "shop_manager",
+        "name": "店铺管理员",
+        "description": "负责维修店铺管理和审核",
+        "level": 70
+      },
+      "test_accounts": [
+        {
+          "id": "shop-001",
+          "email": "shop@fixcycle.com",
+          "password": "Shop123!",
+          "name": "店铺管理员",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "shop@fixcycle.com",
+            "password": "Shop123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "shops_read",
+            "shops_create",
+            "shops_update",
+            "shops_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/shops",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "维修店入驻审核",
+            "店铺信息管理",
+            "服务范围配置",
+            "店铺评级管理"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "店铺管理员",
+        "access_level": 70,
+        "can_access": [
+          "店铺信息管理",
+          "入驻申请审批",
+          "服务范围配置",
+          "店铺评级管理",
+          "基础报表查看"
+        ],
+        "restricted_from": [
+          "用户个人信息管理",
+          "财务结算操作",
+          "内容管理",
+          "系统核心配置"
+        ],
+        "menu_items": [
+          "店铺仪表板",
+          "店铺列表",
+          "入驻审核",
+          "服务管理",
+          "店铺统计"
+        ],
+        "api_endpoints": [
+          "/api/shops/*",
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "shop_manager-login-001",
+          "name": "店铺管理员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/shops",
+            "输入邮箱: shop@fixcycle.com",
+            "输入密码: Shop123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/shops",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "shop@fixcycle.com",
+              "password": "Shop123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "shop_manager-permission-001",
+          "name": "维修店入驻审核",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以店铺管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "shop_manager-permission-002",
+          "name": "店铺信息管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以店铺管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "shop_manager-permission-003",
+          "name": "服务范围配置",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以店铺管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "shop_manager-permission-004",
+          "name": "店铺评级管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以店铺管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "shop_manager-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "shop_manager-api-002",
+          "name": "shops_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/shops",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "shop_manager-api-003",
+          "name": "shops_create API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/shops",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "shop_manager-api-004",
+          "name": "shops_update API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/shops",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "shop_manager-api-005",
+          "name": "shops_approve API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/shops",
+            "method": "PATCH",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "finance_manager": {
+      "role_info": {
+        "key": "finance_manager",
+        "name": "财务管理员",
+        "description": "负责财务管理、支付审核和报表查看",
+        "level": 75
+      },
+      "test_accounts": [
+        {
+          "id": "finance-001",
+          "email": "finance@fixcycle.com",
+          "password": "Finance123!",
+          "name": "财务主管",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "finance@fixcycle.com",
+            "password": "Finance123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "payments_read",
+            "payments_refund",
+            "reports_read",
+            "reports_export"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/finance",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "支付记录查看",
+            "退款申请处理",
+            "财务报表导出",
+            "收入统计分析"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "财务管理员",
+        "access_level": 75,
+        "can_access": [
+          "支付记录查看",
+          "退款申请处理",
+          "财务报表导出",
+          "收入统计分析"
+        ],
+        "restricted_from": [
+          "用户管理操作",
+          "内容编辑权限",
+          "店铺信息修改",
+          "系统配置变更"
+        ],
+        "menu_items": [
+          "财务仪表板",
+          "支付管理",
+          "退款处理",
+          "财务报表",
+          "收入分析"
+        ],
+        "api_endpoints": [
+          "/api/payments/*",
+          "/api/dashboard",
+          "/api/reports/export"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "finance_manager-login-001",
+          "name": "财务管理员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/finance",
+            "输入邮箱: finance@fixcycle.com",
+            "输入密码: Finance123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/finance",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "finance@fixcycle.com",
+              "password": "Finance123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "finance_manager-permission-001",
+          "name": "支付记录查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以财务主管身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "finance_manager-permission-002",
+          "name": "退款申请处理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以财务主管身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "finance_manager-permission-003",
+          "name": "财务报表导出",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以财务主管身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "finance_manager-permission-004",
+          "name": "收入统计分析",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以财务主管身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "finance_manager-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "finance_manager-api-002",
+          "name": "payments_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/payments",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "finance_manager-api-003",
+          "name": "payments_refund API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/payments",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "finance_manager-api-004",
+          "name": "reports_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/reports",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "finance_manager-api-005",
+          "name": "reports_export API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/reports",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "procurement_specialist": {
+      "role_info": {
+        "key": "procurement_specialist",
+        "name": "采购专员",
+        "description": "负责采购流程管理和供应商对接",
+        "level": 60
+      },
+      "test_accounts": [
+        {
+          "id": "procurement-001",
+          "email": "procurement@fixcycle.com",
+          "password": "Procure123!",
+          "name": "采购专员",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "procurement@fixcycle.com",
+            "password": "Procure123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/procurement",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "采购订单创建",
+            "供应商管理",
+            "采购流程审批",
+            "采购数据分析"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "采购专员",
+        "access_level": 60,
+        "can_access": [
+          "采购订单创建",
+          "供应商信息管理",
+          "采购流程审批",
+          "采购数据分析"
+        ],
+        "restricted_from": [
+          "财务结算权限",
+          "用户管理权限",
+          "系统配置权限",
+          "内容管理权限"
+        ],
+        "menu_items": [
+          "采购仪表板",
+          "采购订单",
+          "供应商管理",
+          "采购审批",
+          "采购分析"
+        ],
+        "api_endpoints": [
+          "/api/procurement/*",
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "procurement_specialist-login-001",
+          "name": "采购专员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/procurement",
+            "输入邮箱: procurement@fixcycle.com",
+            "输入密码: Procure123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/procurement",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "procurement@fixcycle.com",
+              "password": "Procure123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "procurement_specialist-permission-001",
+          "name": "采购订单创建",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购专员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_specialist-permission-002",
+          "name": "供应商管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购专员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_specialist-permission-003",
+          "name": "采购流程审批",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购专员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_specialist-permission-004",
+          "name": "采购数据分析",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购专员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_specialist-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_specialist-api-002",
+          "name": "procurement_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/procurement",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_specialist-api-003",
+          "name": "procurement_create API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/procurement",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_specialist-api-004",
+          "name": "procurement_approve API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/procurement",
+            "method": "PATCH",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_specialist-api-005",
+          "name": "reports_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/reports",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "warehouse_operator": {
+      "role_info": {
+        "key": "warehouse_operator",
+        "name": "仓库操作员",
+        "description": "负责库存管理和出入库操作",
+        "level": 50
+      },
+      "test_accounts": [
+        {
+          "id": "warehouse-001",
+          "email": "warehouse@fixcycle.com",
+          "password": "Warehouse123!",
+          "name": "仓库管理员",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "warehouse@fixcycle.com",
+            "password": "Warehouse123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "inventory_read",
+            "inventory_update",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/inventory",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "库存盘点操作",
+            "入库出库记录",
+            "库存预警处理",
+            "库存报表查看"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "仓库操作员",
+        "access_level": 50,
+        "can_access": [
+          "库存盘点操作",
+          "入库出库记录",
+          "库存预警处理",
+          "库存报表查看"
+        ],
+        "restricted_from": [
+          "采购决策权限",
+          "财务操作权限",
+          "用户管理权限",
+          "系统配置权限"
+        ],
+        "menu_items": [
+          "库存仪表板",
+          "库存查询",
+          "出入库操作",
+          "库存预警",
+          "库存报表"
+        ],
+        "api_endpoints": [
+          "/api/inventory/*",
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "warehouse_operator-login-001",
+          "name": "仓库操作员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/inventory",
+            "输入邮箱: warehouse@fixcycle.com",
+            "输入密码: Warehouse123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/inventory",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "warehouse@fixcycle.com",
+              "password": "Warehouse123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "warehouse_operator-permission-001",
+          "name": "库存盘点操作",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以仓库管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "warehouse_operator-permission-002",
+          "name": "入库出库记录",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以仓库管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "warehouse_operator-permission-003",
+          "name": "库存预警处理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以仓库管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "warehouse_operator-permission-004",
+          "name": "库存报表查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以仓库管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "warehouse_operator-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "warehouse_operator-api-002",
+          "name": "inventory_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/inventory",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "warehouse_operator-api-003",
+          "name": "inventory_update API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/inventory",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "warehouse_operator-api-004",
+          "name": "reports_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/reports",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "agent_operator": {
+      "role_info": {
+        "key": "agent_operator",
+        "name": "智能体操作员",
+        "description": "负责智能体工作流执行和监控",
+        "level": 55
+      },
+      "test_accounts": [
+        {
+          "id": "agent-001",
+          "email": "agent@fixcycle.com",
+          "password": "Agent123!",
+          "name": "智能体操作员",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "agent@fixcycle.com",
+            "password": "Agent123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "agents_execute",
+            "agents_monitor",
+            "agents_invoke",
+            "agents_debug",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/admin/agents",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "智能体任务执行",
+            "工作流监控",
+            "执行结果查看",
+            "异常处理调试"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "智能体操作员",
+        "access_level": 55,
+        "can_access": [
+          "智能体任务执行",
+          "工作流监控",
+          "执行结果查看",
+          "异常处理调试"
+        ],
+        "restricted_from": [
+          "工作流配置权限",
+          "用户管理权限",
+          "财务操作权限",
+          "核心业务管理"
+        ],
+        "menu_items": [
+          "智能体仪表板",
+          "任务执行",
+          "工作流监控",
+          "执行历史",
+          "调试工具"
+        ],
+        "api_endpoints": [
+          "/api/agents/execute",
+          "/api/agents/monitor",
+          "/api/agents/invoke",
+          "/api/agents/debug",
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "agent_operator-login-001",
+          "name": "智能体操作员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/admin/agents",
+            "输入邮箱: agent@fixcycle.com",
+            "输入密码: Agent123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /admin/agents",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "agent@fixcycle.com",
+              "password": "Agent123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "agent_operator-permission-001",
+          "name": "智能体任务执行",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以智能体操作员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "agent_operator-permission-002",
+          "name": "工作流监控",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以智能体操作员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "agent_operator-permission-003",
+          "name": "执行结果查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以智能体操作员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "agent_operator-permission-004",
+          "name": "异常处理调试",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以智能体操作员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "agent_operator-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "agent_operator-api-002",
+          "name": "agents_execute API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/agents",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "agent_operator-api-003",
+          "name": "agents_monitor API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/agents",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "agent_operator-api-004",
+          "name": "agents_invoke API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/agents",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "agent_operator-api-005",
+          "name": "agents_debug API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/agents",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "viewer": {
+      "role_info": {
+        "key": "viewer",
+        "name": "只读查看员",
+        "description": "仅能查看基础数据和报表",
+        "level": 30
+      },
+      "test_accounts": [
+        {
+          "id": "viewer-001",
+          "email": "viewer@fixcycle.com",
+          "password": "Viewer123!",
+          "name": "数据查看员",
+          "tenant_id": "main-tenant",
+          "login_credentials": {
+            "email": "viewer@fixcycle.com",
+            "password": "Viewer123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3001/login?redirect=/dashboard",
+            "api": "http://localhost:3001/api/auth/login"
+          },
+          "test_scenarios": [
+            "仪表板数据查看",
+            "基础报表浏览",
+            "统计信息查阅"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "只读查看员",
+        "access_level": 30,
+        "can_access": [
+          "仪表板数据查看",
+          "基础报表浏览",
+          "统计信息查阅"
+        ],
+        "restricted_from": [
+          "所有写入操作",
+          "敏感数据访问",
+          "系统配置查看",
+          "用户管理功能"
+        ],
+        "menu_items": [
+          "数据仪表板",
+          "基础报表",
+          "统计概览"
+        ],
+        "api_endpoints": [
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "viewer-login-001",
+          "name": "只读查看员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3001/login?redirect=/dashboard",
+            "输入邮箱: viewer@fixcycle.com",
+            "输入密码: Viewer123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /dashboard",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "viewer@fixcycle.com",
+              "password": "Viewer123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "viewer-permission-001",
+          "name": "仪表板数据查看",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以数据查看员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "viewer-permission-002",
+          "name": "基础报表浏览",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以数据查看员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "viewer-permission-003",
+          "name": "统计信息查阅",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以数据查看员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "viewer-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "viewer-api-002",
+          "name": "reports_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/reports",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "enterprise_admin": {
+      "role_info": {
+        "key": "enterprise_admin",
+        "name": "企业服务管理员",
+        "description": "负责企业服务门户的管理和维护",
+        "level": 85
+      },
+      "test_accounts": [
+        {
+          "id": "enterprise-admin-001",
+          "email": "enterprise-admin@fixcycle.com",
+          "password": "Enterprise123!",
+          "name": "企业服务管理员",
+          "tenant_id": "enterprise-tenant",
+          "login_credentials": {
+            "email": "enterprise-admin@fixcycle.com",
+            "password": "Enterprise123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "enterprise_read",
+            "enterprise_manage",
+            "enterprise_agents_read",
+            "enterprise_agents_manage",
+            "enterprise_procurement_read",
+            "enterprise_procurement_manage",
+            "users_read",
+            "reports_read",
+            "audit_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/admin/dashboard",
+            "api": "http://localhost:3003/api/enterprise/login"
+          },
+          "test_scenarios": [
+            "企业服务门户管理",
+            "智能体定制服务管理",
+            "B2B采购服务配置",
+            "企业用户管理"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "企业服务管理员",
+        "access_level": 85,
+        "can_access": [
+          "企业服务门户管理",
+          "智能体定制服务管理",
+          "B2B采购服务配置",
+          "企业用户管理",
+          "企业级报表查看"
+        ],
+        "restricted_from": [
+          "主站用户管理",
+          "核心财务操作",
+          "系统底层配置"
+        ],
+        "menu_items": [
+          "企业仪表板",
+          "服务管理",
+          "智能体定制",
+          "采购服务",
+          "企业管理",
+          "企业报表"
+        ],
+        "api_endpoints": [
+          "/api/enterprise/*",
+          "/api/dashboard",
+          "/api/reports/read",
+          "/api/audit/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "enterprise_admin-login-001",
+          "name": "企业服务管理员登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3003/enterprise/login?redirect=/enterprise/admin/dashboard",
+            "输入邮箱: enterprise-admin@fixcycle.com",
+            "输入密码: Enterprise123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /enterprise/admin/dashboard",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "enterprise-admin@fixcycle.com",
+              "password": "Enterprise123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "enterprise_admin-permission-001",
+          "name": "企业服务门户管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业服务管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_admin-permission-002",
+          "name": "智能体定制服务管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业服务管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_admin-permission-003",
+          "name": "B2B采购服务配置",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业服务管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_admin-permission-004",
+          "name": "企业用户管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业服务管理员身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_admin-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_admin-api-002",
+          "name": "enterprise_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3003/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_admin-api-003",
+          "name": "enterprise_manage API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3003/api/enterprise",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_admin-api-004",
+          "name": "enterprise_agents_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3003/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_admin-api-005",
+          "name": "enterprise_agents_manage API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3003/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "procurement_manager": {
+      "role_info": {
+        "key": "procurement_manager",
+        "name": "采购经理",
+        "description": "负责B2B采购业务管理和决策",
+        "level": 75
+      },
+      "test_accounts": [
+        {
+          "id": "procurement-manager-001",
+          "email": "procurement-manager@fixcycle.com",
+          "password": "ProcurementMgr123!",
+          "name": "采购经理",
+          "tenant_id": "enterprise-tenant",
+          "login_credentials": {
+            "email": "procurement-manager@fixcycle.com",
+            "password": "ProcurementMgr123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "enterprise_read",
+            "enterprise_procurement_read",
+            "enterprise_procurement_manage",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/procurement/dashboard",
+            "api": "http://localhost:3003/api/enterprise/login"
+          },
+          "test_scenarios": [
+            "企业采购需求管理",
+            "供应商合作管理",
+            "采购合同审批",
+            "采购成本分析"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "采购经理",
+        "access_level": 75,
+        "can_access": [
+          "企业采购需求管理",
+          "供应商合作管理",
+          "采购合同审批",
+          "采购成本分析"
+        ],
+        "restricted_from": [
+          "企业服务配置",
+          "用户权限管理",
+          "系统核心功能",
+          "财务结算操作"
+        ],
+        "menu_items": [
+          "采购仪表板",
+          "采购需求",
+          "供应商管理",
+          "合同审批",
+          "成本分析"
+        ],
+        "api_endpoints": [
+          "/api/enterprise/procurement/*",
+          "/api/procurement/read",
+          "/api/procurement/create",
+          "/api/procurement/approve",
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "procurement_manager-login-001",
+          "name": "采购经理登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3003/enterprise/login?redirect=/enterprise/procurement/dashboard",
+            "输入邮箱: procurement-manager@fixcycle.com",
+            "输入密码: ProcurementMgr123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /enterprise/procurement/dashboard",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "procurement-manager@fixcycle.com",
+              "password": "ProcurementMgr123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "procurement_manager-permission-001",
+          "name": "企业采购需求管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_manager-permission-002",
+          "name": "供应商合作管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_manager-permission-003",
+          "name": "采购合同审批",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_manager-permission-004",
+          "name": "采购成本分析",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以采购经理身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "procurement_manager-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_manager-api-002",
+          "name": "enterprise_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_manager-api-003",
+          "name": "enterprise_procurement_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_manager-api-004",
+          "name": "enterprise_procurement_manage API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "procurement_manager-api-005",
+          "name": "procurement_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/procurement",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    },
+    "enterprise_user": {
+      "role_info": {
+        "key": "enterprise_user",
+        "name": "企业用户",
+        "description": "普通企业服务用户，可访问基础功能",
+        "level": 40
+      },
+      "test_accounts": [
+        {
+          "id": "enterprise-user-001",
+          "email": "enterprise-user@fixcycle.com",
+          "password": "EnterpriseUser123!",
+          "name": "企业用户",
+          "tenant_id": "enterprise-tenant",
+          "login_credentials": {
+            "email": "enterprise-user@fixcycle.com",
+            "password": "EnterpriseUser123!"
+          },
+          "expected_permissions": [
+            "dashboard_read",
+            "enterprise_read",
+            "enterprise_agents_read",
+            "enterprise_procurement_read",
+            "reports_read"
+          ],
+          "login_urls": {
+            "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/dashboard",
+            "api": "http://localhost:3003/api/enterprise/login"
+          },
+          "test_scenarios": [
+            "企业服务门户访问",
+            "智能体服务使用",
+            "采购需求提交",
+            "个人中心管理"
+          ]
+        }
+      ],
+      "permissions": {
+        "role_name": "企业用户",
+        "access_level": 40,
+        "can_access": [
+          "企业服务门户访问",
+          "智能体服务使用",
+          "采购需求提交",
+          "个人中心管理"
+        ],
+        "restricted_from": [
+          "管理功能",
+          "数据导出权限",
+          "系统配置",
+          "其他企业管理"
+        ],
+        "menu_items": [
+          "企业首页",
+          "智能体服务",
+          "采购服务",
+          "我的需求",
+          "个人中心"
+        ],
+        "api_endpoints": [
+          "/api/enterprise/read",
+          "/api/enterprise/agents/read",
+          "/api/enterprise/procurement/read",
+          "/api/dashboard",
+          "/api/reports/read"
+        ]
+      },
+      "test_cases": [
+        {
+          "id": "enterprise_user-login-001",
+          "name": "企业用户登录测试",
+          "type": "authentication",
+          "priority": "P0",
+          "steps": [
+            "访问登录页面: http://localhost:3003/enterprise/login?redirect=/enterprise/dashboard",
+            "输入邮箱: enterprise-user@fixcycle.com",
+            "输入密码: EnterpriseUser123!",
+            "点击登录按钮",
+            "验证登录成功并跳转到正确页面"
+          ],
+          "expected_results": [
+            "成功登录系统",
+            "跳转到: /enterprise/dashboard",
+            "显示用户姓名和角色信息",
+            "菜单项符合权限范围"
+          ],
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/auth/login",
+            "method": "POST",
+            "payload": {
+              "email": "enterprise-user@fixcycle.com",
+              "password": "EnterpriseUser123!"
+            },
+            "expected_status": 200,
+            "expected_response_fields": [
+              "success",
+              "user",
+              "token"
+            ]
+          }
+        },
+        {
+          "id": "enterprise_user-permission-001",
+          "name": "企业服务门户访问",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业用户身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_user-permission-002",
+          "name": "智能体服务使用",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业用户身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_user-permission-003",
+          "name": "采购需求提交",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业用户身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_user-permission-004",
+          "name": "个人中心管理",
+          "type": "authorization",
+          "priority": "P1",
+          "steps": [
+            "以企业用户身份登录",
+            "尝试访问相关功能页面",
+            "执行相关操作",
+            "验证权限控制"
+          ],
+          "expected_results": [
+            "能够正常访问授权功能",
+            "界面元素显示正确",
+            "操作按钮可用",
+            "数据展示符合权限范围"
+          ]
+        },
+        {
+          "id": "enterprise_user-api-001",
+          "name": "dashboard_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/dashboard",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_user-api-002",
+          "name": "enterprise_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3003/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_user-api-003",
+          "name": "enterprise_agents_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3003/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_user-api-004",
+          "name": "enterprise_procurement_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3003/api/enterprise",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        },
+        {
+          "id": "enterprise_user-api-005",
+          "name": "reports_read API权限测试",
+          "type": "api_authorization",
+          "priority": "P1",
+          "api_test": {
+            "endpoint": "http://localhost:3001/api/reports",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{token}}",
+              "Content-Type": "application/json"
+            },
+            "expected_status": [
+              200,
+              201
+            ],
+            "expected_error_status": 403
+          }
+        }
+      ]
+    }
+  }
+}

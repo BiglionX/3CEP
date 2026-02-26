@@ -186,7 +186,7 @@ export class RepairOrderService implements IRepairOrderService {
         .update({
           status: OrderStatus.CONFIRMED,
           confirmed_at: new Date().toISOString(),
-        })
+        } as any)
         .eq('id', orderId)
         .select()
         .single();
@@ -251,7 +251,7 @@ export class RepairOrderService implements IRepairOrderService {
           status: OrderStatus.COMPLETED,
           rating: dto.rating,
           completed_at: new Date().toISOString(),
-        })
+        } as any)
         .eq('id', dto.orderId)
         .select()
         .single();
@@ -324,7 +324,7 @@ export class RepairOrderService implements IRepairOrderService {
         .from('repair_orders')
         .update({
           status: OrderStatus.CANCELLED,
-        })
+        } as any)
         .eq('id', orderId)
         .select()
         .single();
@@ -442,7 +442,7 @@ export class RepairOrderService implements IRepairOrderService {
           service_count: currentCount + 1,
           rating: parseFloat(newAverageRating.toFixed(1)),
           review_count: newReviewCount,
-        })
+        } as any)
         .eq('id', shopId);
     } catch (error) {
       console.error('更新维修店统计数据错误:', error);

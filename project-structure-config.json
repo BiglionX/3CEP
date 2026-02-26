@@ -1,0 +1,157 @@
+{
+  "projectInfo": {
+    "name": "FixCycle",
+    "version": "3.0.0",
+    "description": "智能循环经济平台",
+    "lastUpdated": "2026-02-21"
+  },
+  "moduleStructure": {
+    "businessModules": [
+      {
+        "name": "auth",
+        "path": "src/modules/auth",
+        "description": "认证授权模块",
+        "dependencies": ["common"],
+        "exports": ["AuthService", "AuthHooks", "AuthComponents"],
+        "routes": ["/login", "/register", "/auth/*"]
+      },
+      {
+        "name": "repair-service",
+        "path": "src/modules/repair-service",
+        "description": "维修服务模块",
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["RepairService", "WorkOrderService", "DiagnosticService"],
+        "routes": ["/repair-shop/*", "/diagnosis/*"]
+      },
+      {
+        "name": "parts-market",
+        "path": "src/modules/parts-market",
+        "description": "配件商城模块",
+        "dependencies": ["auth", "common"],
+        "exports": ["PartsService", "MarketplaceService"],
+        "routes": ["/parts/*", "/marketplace/*"]
+      },
+      {
+        "name": "b2b-procurement",
+        "path": "src/modules/b2b-procurement",
+        "description": "B2B采购模块",
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["ProcurementService", "SupplierService", "LogisticsService"],
+        "routes": ["/importer/*", "/exporter/*", "/procurement/*"]
+      },
+      {
+        "name": "data-center",
+        "path": "src/modules/data-center",
+        "description": "数据中心模块",
+        "dependencies": ["common"],
+        "exports": ["DataService", "AnalyticsService", "ReportingService"],
+        "routes": ["/data-center/*", "/analytics/*"]
+      },
+      {
+        "name": "fcx-alliance",
+        "path": "src/modules/fcx-alliance",
+        "description": "FCX联盟模块",
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["AllianceService", "StakingService", "RewardService"],
+        "routes": ["/fcx/*", "/alliance/*"]
+      },
+      {
+        "name": "admin-panel",
+        "path": "src/modules/admin-panel",
+        "description": "管理后台模块",
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["AdminService", "UserManagementService"],
+        "routes": ["/admin/*", "/management/*"]
+      },
+      {
+        "name": "common",
+        "path": "src/modules/common",
+        "description": "公共组件和服务",
+        "dependencies": [],
+        "exports": ["UIComponents", "CommonHooks", "Utils", "Constants"],
+        "routes": ["/", "/dashboard"]
+      }
+    ],
+    "techModules": [
+      {
+        "name": "database",
+        "path": "src/tech/database",
+        "description": "数据库相关",
+        "dependencies": [],
+        "exports": ["DatabaseModels", "ConnectionManager", "QueryHelpers"]
+      },
+      {
+        "name": "api",
+        "path": "src/tech/api",
+        "description": "API接口层",
+        "dependencies": ["database", "middleware"],
+        "exports": ["APIControllers", "Services", "RouteHandlers"]
+      },
+      {
+        "name": "middleware",
+        "path": "src/tech/middleware",
+        "description": "中间件",
+        "dependencies": ["utils"],
+        "exports": ["AuthMiddleware", "LoggingMiddleware", "ErrorMiddleware"]
+      },
+      {
+        "name": "utils",
+        "path": "src/tech/utils",
+        "description": "工具函数",
+        "dependencies": [],
+        "exports": ["HelperFunctions", "ValidationUtils", "FormattingUtils"]
+      },
+      {
+        "name": "types",
+        "path": "src/tech/types",
+        "description": "类型定义",
+        "dependencies": [],
+        "exports": ["TypeDefinitions", "InterfaceDeclarations", "EnumTypes"]
+      }
+    ]
+  },
+  "dependencyGraph": {
+    "auth": ["common"],
+    "repair-service": ["auth", "common", "data-center"],
+    "parts-market": ["auth", "common"],
+    "b2b-procurement": ["auth", "common", "data-center"],
+    "data-center": ["common"],
+    "fcx-alliance": ["auth", "common", "data-center"],
+    "admin-panel": ["auth", "common", "data-center"],
+    "common": [],
+    "database": [],
+    "api": ["database", "middleware"],
+    "middleware": ["utils"],
+    "utils": [],
+    "types": []
+  },
+  "routingConfig": {
+    "basePath": "/",
+    "moduleRoutes": {
+      "auth": "/auth",
+      "repair-service": "/repair-shop",
+      "parts-market": "/parts",
+      "b2b-procurement": {
+        "importer": "/importer",
+        "exporter": "/exporter"
+      },
+      "data-center": "/data-center",
+      "fcx-alliance": "/fcx",
+      "admin-panel": "/admin",
+      "common": "/"
+    }
+  },
+  "buildConfig": {
+    "moduleAliases": {
+      "@modules": "./src/modules",
+      "@tech": "./src/tech",
+      "@auth": "./src/modules/auth",
+      "@repair": "./src/modules/repair-service",
+      "@procurement": "./src/modules/b2b-procurement",
+      "@admin": "./src/modules/admin-panel",
+      "@common": "./src/modules/common",
+      "@database": "./src/tech/database",
+      "@api": "./src/tech/api"
+    }
+  }
+}

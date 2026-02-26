@@ -165,7 +165,7 @@ export class NegotiationStrategyService {
           created_by: strategy.createdBy,
           created_at: now,
           updated_at: now,
-        })
+        } as any)
         .select()
         .single();
 
@@ -197,7 +197,7 @@ export class NegotiationStrategyService {
           priority: updates.priority,
           is_active: updates.isActive,
           updated_at: new Date(),
-        })
+        } as any)
         .eq("id", id)
         .select()
         .single();

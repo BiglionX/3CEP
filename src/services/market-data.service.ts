@@ -36,7 +36,7 @@ export class MarketDataService {
           sample_count: data.sampleCount ?? 0,
           source: data.source,
           freshness_score: freshnessScore
-        })
+        } as any)
         .select()
         .single();
 
@@ -238,7 +238,7 @@ export class MarketDataService {
 
       if (error) throw new Error(`清理过期数据失败: ${error.message}`);
       
-      return data?.length || 0;
+      return (data as any)?.data?.length || 0;
     } catch (error) {
       console.error('MarketDataService.cleanupExpiredData 错误:', error);
       throw error;

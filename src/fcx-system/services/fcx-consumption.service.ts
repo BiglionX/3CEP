@@ -62,7 +62,7 @@ export class FcxConsumptionService {
           reference_id: transaction.referenceId,
           balance_after: balanceAfter,
           created_at: new Date()
-        })
+        } as any)
         .select()
         .single();
 
@@ -230,7 +230,7 @@ export class FcxConsumptionService {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ fcx_balance: newBalance })
+        .update({ fcx_balance: newBalance } as any)
         .eq('id', userId);
 
       if (error) {

@@ -113,7 +113,7 @@ export async function POST(request: Request) {
         status: body.status || 'active',
         tenant_id: tenantId,  // 关键：自动设置租户ID
         created_by: userId
-      })
+      } as any)
       .select()
       .single();
 
@@ -192,7 +192,7 @@ export async function PUT(request: Request) {
         ...updateData,
         updated_by: userId,
         updated_at: new Date().toISOString()
-      })
+      } as any)
       .eq('id', id)
       .select()
       .single();
@@ -272,7 +272,7 @@ export async function DELETE(request: Request) {
         status: 'deleted',
         deleted_by: userId,
         deleted_at: new Date().toISOString()
-      })
+      } as any)
       .eq('id', deviceId);
 
     if (error) {

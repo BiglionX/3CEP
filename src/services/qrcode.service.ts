@@ -204,7 +204,7 @@ export class QRCodeService {
             scan_count: stats.scan_count + 1,
             last_scan_time: new Date().toISOString(),
             daily_stats: dailyStats,
-          })
+          } as any)
           .eq("qr_code_id", qrCodeId);
       } else {
         // 创建新记录
@@ -214,7 +214,7 @@ export class QRCodeService {
           scan_count: 1,
           daily_stats: dailyStats,
           last_scan_time: new Date().toISOString(),
-        });
+        } as any);
       }
     } catch (error) {
       console.error("更新扫描统计失败:", error);
@@ -353,7 +353,7 @@ export class QRCodeService {
         margin: config.margin,
         fg_color: config.color.dark,
         bg_color: config.color.light,
-      })
+      } as any)
       .select()
       .single();
 
@@ -367,7 +367,7 @@ export class QRCodeService {
       product_id: productId,
       scan_count: 0,
       unique_scans: 0,
-    });
+    } as any);
 
     return data;
   }
