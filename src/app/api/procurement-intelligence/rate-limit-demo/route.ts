@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   rateLimitMiddleware,
   procurementIntelligenceBreaker,
-} from '@/middleware/rate-limit.middleware';
+} from '@/tech/middleware/rate-limit.middleware';
 import { getMatchingRateLimitRules } from '../../../../../config/ratelimit.config';
 
 // 妯℃嫙閲囪喘鏅鸿兘浣撴湇?class MockProcurementService {

@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/lib/database.types';
 import { RepairOrderService } from '@/fcx-system';
-import { CreateRepairOrderDTO } from '@/fcx-system/models/fcx-account.model';
+import { CreateRepairOrderDTO } from '@/modules/fcx-alliance/models/fcx-account.model';
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });

@@ -9,7 +9,7 @@ import {
   ContentItem,
   ModerationResult,
 } from '@/lib/auto-moderation-service';
-import { logger } from '@/utils/logger';
+import { logger } from '@/tech/utils/logger';
 
 // GET /api/moderation/auto - 鑾峰彇瀹℃牳鏈嶅姟鐘舵€佸拰閰嶇疆
 export async function GET(request: NextRequest) {

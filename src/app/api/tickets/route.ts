@@ -3,7 +3,7 @@
  */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { TicketManagementService } from '@/fcx-system/services/ticket-management.service';
+import { TicketManagementService } from '@/modules/fcx-alliance/services/ticket-management.service';
 
 const ticketService = new TicketManagementService();
 

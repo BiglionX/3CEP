@@ -1,4 +1,4 @@
-﻿import { cacheManager, generateCacheKey } from '@/utils/cache-manager';
+﻿import { cacheManager, generateCacheKey } from '@/tech/utils/cache-manager';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 

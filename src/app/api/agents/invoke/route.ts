@@ -6,7 +6,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { requirePermission } from '@/middleware/permissions';
+import { requirePermission } from '@/tech/middleware/permissions';
 import { audit } from '@/lib/audit';
 
 export async function POST(request: Request) {

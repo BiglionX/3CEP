@@ -36,7 +36,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { useBehaviorTracker } from '@/analytics/behavior-tracker';
+import { useBehaviorTracker } from '@/modules/data-center/analytics/behavior-tracker';
 
 interface BehaviorEvent {
   id: string;

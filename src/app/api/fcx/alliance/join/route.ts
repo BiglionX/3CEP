@@ -4,7 +4,7 @@
 
 import { NextResponse } from 'next/server';
 import { AllianceService } from '@/fcx-system';
-import { STAKING_CONSTANTS } from '@/fcx-system/utils/constants';
+import { STAKING_CONSTANTS } from '@/modules/fcx-alliance/utils/constants';
 
 export async function POST(request: Request) {
   try {

@@ -2,7 +2,7 @@
 import {
   queryOptimizer,
   planGenerator,
-} from '@/data-center/optimizer/query-optimizer';
+} from '@/modules/data-center/optimizer/query-optimizer';
 
 export async function GET(request: NextRequest) {
   try {

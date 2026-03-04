@@ -5,7 +5,7 @@
 
 import { NextResponse } from 'next/server';
 import { FcxAccountService } from '@/fcx-system';
-import { CreateFcxAccountDTO } from '@/fcx-system/models/fcx-account.model';
+import { CreateFcxAccountDTO } from '@/modules/fcx-alliance/models/fcx-account.model';
 
 export async function POST(request: Request) {
   try {

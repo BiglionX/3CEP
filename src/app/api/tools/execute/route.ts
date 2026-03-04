@@ -5,7 +5,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { requirePermission } from '@/middleware/permissions';
+import { requirePermission } from '@/tech/middleware/permissions';
 import { audit } from '@/lib/audit';
 
 // 鐧藉悕鍗曞伐鍏峰垪琛紙瀹為檯椤圭洰涓簲璇ヤ粠閰嶇疆鏂囦欢璇诲彇?const WHITELISTED_TOOLS = [

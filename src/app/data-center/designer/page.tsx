@@ -9,7 +9,7 @@
 'use client';
 
 import React from 'react';
-import { DragDropDesigner } from '@/data-center/components/drag-drop/DragDropDesigner';
+import { DragDropDesigner } from '@/modules/data-center/components/drag-drop/DragDropDesigner';
 
 export default function DragDropDesignerPage() {
   const handleSave = async (config: any) => {

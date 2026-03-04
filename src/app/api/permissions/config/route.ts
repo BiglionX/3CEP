@@ -4,8 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { PermissionConfigManager } from '@/permissions/config/permission-config';
-import { PermissionLoader } from '@/permissions/core/permission-loader';
+import { PermissionConfigManager } from '@/modules/common/permissions/config/permission-config';
+import { PermissionLoader } from '@/modules/common/permissions/core/permission-loader';
 
 // GET /api/permissions/config - 鑾峰彇鏉冮檺閰嶇疆
 export async function GET(request: NextRequest) {

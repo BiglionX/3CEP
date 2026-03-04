@@ -3,8 +3,8 @@ import {
   virtualViewExecutor,
   executeVirtualView,
   executeMultipleViews,
-} from '@/data-center/virtualization/view-executor';
-import { ViewManager } from '@/data-center/virtualization/views-definition';
+} from '@/modules/data-center/virtualization/view-executor';
+import { ViewManager } from '@/modules/data-center/virtualization/views-definition';
 
 // 瑙嗗浘绠＄悊鍣ㄥ疄?const viewManager = new ViewManager();
 

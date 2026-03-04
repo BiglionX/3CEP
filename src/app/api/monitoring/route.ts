@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { monitoringService } from '@/lib/monitoring-service';
 import { MetricThreshold, AlertEvent } from '@/types/monitoring.types';
-import { logger } from '@/utils/logger';
+import { logger } from '@/tech/utils/logger';
 
 // GET /api/monitoring - 鑾峰彇鐩戞帶鏁版嵁
 export async function GET(request: NextRequest) {

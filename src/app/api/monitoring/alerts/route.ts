@@ -1,7 +1,7 @@
 ﻿// 鐩戞帶鍛婅API璺敱
 import { NextRequest, NextResponse } from 'next/server';
 import { performanceMonitor } from '@/lib/performance-monitor';
-import { logger } from '@/utils/logger';
+import { logger } from '@/tech/utils/logger';
 
 // GET /api/monitoring/metrics - 鑾峰彇鐩戞帶鎸囨爣
 export async function GET(request: NextRequest) {

@@ -1,10 +1,10 @@
 ﻿import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { RBACController } from '@/permissions/core/rbac-controller';
+import { RBACController } from '@/modules/common/permissions/core/rbac-controller';
 import {
   PermissionManager,
   UserInfo,
-} from '@/permissions/core/permission-manager';
+} from '@/modules/common/permissions/core/permission-manager';
 
 // 妯℃嫙鐢ㄦ埛鏁版嵁瀛樺偍
 const mockUsers: Record<string, UserInfo> = {

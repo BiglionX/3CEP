@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { securityService } from '@/data-center/security/security-service';
+import { securityService } from '@/modules/data-center/security/security-service';
 
 export async function GET(request: NextRequest) {
   try {

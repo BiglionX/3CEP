@@ -1,7 +1,7 @@
 ﻿// 鏁版嵁璐ㄩ噺瓒嬪娍鍒嗘瀽API
 import { NextRequest, NextResponse } from 'next/server';
-import { trendAnalysisEngine } from '@/data-center/monitoring/trend-analysis-engine';
-import { dataQualityService } from '@/data-center/monitoring/data-quality-service';
+import { trendAnalysisEngine } from '@/modules/data-center/monitoring/trend-analysis-engine';
+import { dataQualityService } from '@/modules/data-center/monitoring/data-quality-service';
 
 export async function GET(request: NextRequest) {
   try {

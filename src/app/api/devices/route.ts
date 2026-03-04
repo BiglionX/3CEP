@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import {
   requireTenant,
   getUserTenantContext,
-} from '@/middleware/require-tenant';
+} from '@/tech/middleware/require-tenant';
 
 export async function GET(request: Request) {
   const supabase = createClient(

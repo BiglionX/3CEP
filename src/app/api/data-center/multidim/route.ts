@@ -11,7 +11,7 @@ import {
   Dimension,
   Metric,
   MultidimQueryConfig,
-} from '@/data-center/analytics/multidimensional-query-builder';
+} from '@/modules/data-center/analytics/multidimensional-query-builder';
 import { getCurrentUser } from '@/lib/auth/session';
 
 // 鍏ㄥ眬鏌ヨ鏋勫缓鍣ㄥ疄?const queryBuilder = new MultidimensionalQueryBuilder();

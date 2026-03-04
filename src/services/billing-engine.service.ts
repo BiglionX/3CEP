@@ -1,6 +1,6 @@
 ﻿// 计费引擎服务
 
-import { BillingRule } from '@/models/token-account.model';
+import { BillingRule } from '@/tech/database/models/token-account.model';
 
 export interface Tier {
   minUsage: number;

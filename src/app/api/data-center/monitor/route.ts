@@ -1,7 +1,7 @@
 ﻿// API缃戝叧鐩戞帶鍜岀鐞嗘帴?// 鎻愪緵缃戝叧鐘舵€佹煡璇€佹寚鏍囩洃鎺у拰閰嶇疆绠＄悊鍔熻兘
 
 import { NextRequest, NextResponse } from 'next/server';
-import { apiGatewayService } from '@/data-center/core/api-gateway.service';
+import { apiGatewayService } from '@/modules/data-center/core/api-gateway.service';
 
 export async function GET(request: NextRequest) {
   try {

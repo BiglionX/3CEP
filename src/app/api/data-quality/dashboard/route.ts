@@ -1,6 +1,6 @@
-﻿import { dataQualityCronService } from '@/data-center/monitoring/data-quality-cron';
-import { dataQualityService } from '@/data-center/monitoring/data-quality-service';
-import { monitoringService } from '@/data-center/monitoring/monitoring-service';
+﻿import { dataQualityCronService } from '@/modules/data-center/monitoring/data-quality-cron';
+import { dataQualityService } from '@/modules/data-center/monitoring/data-quality-service';
+import { monitoringService } from '@/modules/data-center/monitoring/monitoring-service';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET璇锋眰澶勭悊 - 鏁版嵁璐ㄩ噺鐪嬫澘

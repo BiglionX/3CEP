@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/lib/database.types';
 import { RepairOrderService } from '@/fcx-system';
-import { CompleteRepairOrderDTO } from '@/fcx-system/models/fcx-account.model';
+import { CompleteRepairOrderDTO } from '@/modules/fcx-alliance/models/fcx-account.model';
 
 interface RouteParams {
   params: {

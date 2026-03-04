@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { hybridRecommender, UserBehavior } from '@/data-center/ml/recommendation-engine';
+import { hybridRecommender, UserBehavior } from '@/modules/data-center/ml/recommendation-engine';
 
 // 妯℃嫙鐢ㄦ埛琛屼负鏁版嵁锛堝疄闄呭簲璇ヤ粠鏁版嵁搴撹幏鍙栵級
 const mockUserData: UserBehavior[] = [

@@ -7,8 +7,8 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/lib/database.types';
-import { EquityRedemptionService } from '@/fcx-system/services/equity-redemption.service';
-import { AllianceLevel } from '@/fcx-system/models/fcx-account.model';
+import { EquityRedemptionService } from '@/modules/fcx-alliance/services/equity-redemption.service';
+import { AllianceLevel } from '@/modules/fcx-alliance/models/fcx-account.model';
 
 export async function GET(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });

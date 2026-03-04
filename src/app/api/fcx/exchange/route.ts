@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/lib/database.types';
-import { FcxEquipmentService } from '@/fcx-system/services/fcx-equipment.service';
+import { FcxEquipmentService } from '@/modules/fcx-alliance/services/fcx-equipment.service';
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });

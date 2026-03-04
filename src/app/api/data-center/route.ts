@@ -3,7 +3,7 @@ import {
   dataVirtualizationService,
   initializeDataCenter,
   trinoClientInstance,
-} from '@/data-center/core/data-center-service';
+} from '@/modules/data-center/core/data-center-service';
 
 // 鍒濆鍖栨暟鎹腑蹇冿紙濡傛灉灏氭湭鍒濆鍖栵級
 let isInitialized = false;

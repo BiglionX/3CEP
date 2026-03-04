@@ -1,7 +1,7 @@
 ﻿// 鏁版嵁璐ㄩ噺瑙勫垯閰嶇疆绠＄悊API
 import { NextRequest, NextResponse } from 'next/server';
-import { qualityRuleConfigManager } from '@/data-center/monitoring/rule-config-manager';
-import { dataQualityService } from '@/data-center/monitoring/data-quality-service';
+import { qualityRuleConfigManager } from '@/modules/data-center/monitoring/rule-config-manager';
+import { dataQualityService } from '@/modules/data-center/monitoring/data-quality-service';
 
 export async function GET(request: NextRequest) {
   try {

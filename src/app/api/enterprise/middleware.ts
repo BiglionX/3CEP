@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { AuthService } from '@/lib/auth-service'
-import { checkEnterpriseApiAccess } from '@/middleware/enterprise-permissions'
+import { checkEnterpriseApiAccess } from '@/tech/middleware/enterprise-permissions'
 
 // API鏉冮檺鏄犲皠
 const API_PERMISSIONS: Record<string, string> = {

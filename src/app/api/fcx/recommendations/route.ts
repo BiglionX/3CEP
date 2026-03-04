@@ -10,10 +10,10 @@ import {
   RecommendationFeedback,
   RecommendationItemType,
   UserActionType,
-} from '@/fcx-system/models/recommendation.model';
-import { HybridRecommenderService } from '@/fcx-system/services/hybrid-recommender.service';
-import { UserBehaviorCollectorService } from '@/fcx-system/services/user-behavior-collector.service';
-import { generateUUID } from '@/fcx-system/utils/helpers';
+} from '@/modules/fcx-alliance/models/recommendation.model';
+import { HybridRecommenderService } from '@/modules/fcx-alliance/services/hybrid-recommender.service';
+import { UserBehaviorCollectorService } from '@/modules/fcx-alliance/services/user-behavior-collector.service';
+import { generateUUID } from '@/modules/fcx-alliance/utils/helpers';
 
 // 鍏ㄥ眬鎺ㄨ崘寮曟搸瀹炰緥
 let recommender: HybridRecommenderService | null = null;

@@ -26,7 +26,7 @@ import {
   ApplicationSecurityMetrics,
 } from '@/types/monitoring.types';
 
-import { logger } from '@/utils/logger';
+import { logger } from '@/tech/utils/logger';
 
 export class MonitoringService {
   private metrics: Map<string, any[]> = new Map();

@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { priceTrendAnalyzer } from '@/data-center/analytics/price-trend-analyzer';
+import { priceTrendAnalyzer } from '@/modules/data-center/analytics/price-trend-analyzer';
 
 export async function GET(request: NextRequest) {
   try {

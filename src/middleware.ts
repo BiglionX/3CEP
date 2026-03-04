@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { ApiInterceptor } from '@/permissions/core/api-interceptor';
+import { ApiInterceptor } from '@/modules/common/permissions/core/api-interceptor';
 
 // 需要保护的API路径前缀
 const PROTECTED_PATHS = [

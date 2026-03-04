@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { dataQualityService } from '@/data-center/monitoring/data-quality-service';
+import { dataQualityService } from '@/modules/data-center/monitoring/data-quality-service';
 
 // GET璇锋眰澶勭悊
 export async function GET(request: NextRequest) {

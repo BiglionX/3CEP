@@ -4,7 +4,7 @@
 
 import { NextResponse } from 'next/server';
 import { PaymentService } from '@/fcx-system';
-import { PurchaseFcxDTO } from '@/fcx-system/models/fcx-account.model';
+import { PurchaseFcxDTO } from '@/modules/fcx-alliance/models/fcx-account.model';
 
 export async function POST(request: Request) {
   try {

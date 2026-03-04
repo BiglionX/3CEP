@@ -4,7 +4,7 @@
  */
 
 import { AlertEvent, MetricThreshold } from '@/types/monitoring.types';
-import { logger } from '@/utils/logger';
+import { logger } from '@/tech/utils/logger';
 
 export interface AlertRule {
   /** 规则ID */

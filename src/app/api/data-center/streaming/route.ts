@@ -4,7 +4,7 @@ import {
   PriceUpdateProcessor,
   InventoryChangeProcessor,
   UserActionProcessor,
-} from '@/data-center/streaming/real-time-service';
+} from '@/modules/data-center/streaming/real-time-service';
 
 // 鍒濆鍖栨秷璐硅€呯粍锛堝湪棣栨璁块棶鏃跺垱寤猴級
 let isInitialized = false;

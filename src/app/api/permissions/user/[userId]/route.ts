@@ -7,8 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   PermissionManager,
   UserInfo,
-} from '@/permissions/core/permission-manager';
-import { PermissionConfigManager } from '@/permissions/config/permission-config';
+} from '@/modules/common/permissions/core/permission-manager';
+import { PermissionConfigManager } from '@/modules/common/permissions/config/permission-config';
 
 // GET /api/permissions/user/[userId]/permissions - 获取用户权限
 export async function GET_USER_PERMISSIONS(

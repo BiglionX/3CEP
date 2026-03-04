@@ -2,7 +2,7 @@
  * 工单配件更换API
  * 处理工单中的配件更换操作并记录生命周期事件
  */
-import { RepairOrderService } from '@/fcx-system/services/repair-order.service';
+import { RepairOrderService } from '@/modules/fcx-alliance/services/repair-order.service';
 import { Database } from '@/lib/database.types';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';

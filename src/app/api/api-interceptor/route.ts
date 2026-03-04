@@ -1,10 +1,10 @@
 ﻿import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { ApiInterceptor } from '@/permissions/core/api-interceptor';
+import { ApiInterceptor } from '@/modules/common/permissions/core/api-interceptor';
 import {
   PermissionManager,
   UserInfo,
-} from '@/permissions/core/permission-manager';
+} from '@/modules/common/permissions/core/permission-manager';
 
 // 鑾峰彇褰撳墠鐢ㄦ埛淇℃伅
 function getCurrentUser(): UserInfo | null {

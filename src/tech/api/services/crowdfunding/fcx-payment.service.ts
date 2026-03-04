@@ -7,7 +7,7 @@ import { FcxAccountService } from '@/fcx-system';
 import {
   FcxTransactionType,
   FcxTransferDTO,
-} from '@/fcx-system/models/fcx-account.model';
+} from '@/modules/fcx-alliance/models/fcx-account.model';
 import { DeviceEventType } from '@/lib/constants/lifecycle';
 import { supabase } from '@/lib/supabase';
 import { DeviceLifecycleService } from '@/services/device-lifecycle.service';

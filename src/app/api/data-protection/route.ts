@@ -1,10 +1,10 @@
 ﻿import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { DataProtectionController } from '@/permissions/core/data-protection-controller';
+import { DataProtectionController } from '@/modules/common/permissions/core/data-protection-controller';
 import {
   PermissionManager,
   UserInfo,
-} from '@/permissions/core/permission-manager';
+} from '@/modules/common/permissions/core/permission-manager';
 
 // 妯℃嫙鏁忔劅鏁版嵁绀轰緥
 const sampleSensitiveData = {

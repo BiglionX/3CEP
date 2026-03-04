@@ -36,7 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { usePerformanceMonitor } from '@/monitoring/performance-monitor';
+import { usePerformanceMonitor } from '@/tech/api/services/performance-monitor';
 
 interface PerformanceMetrics {
   navigationStart: number;

@@ -39,7 +39,7 @@ import {
   usePerformanceTesting,
   type PerformanceReport,
   type TestResult,
-} from '@/utils/performance-testing';
+} from '@/tech/utils/performance-testing';
 
 export default function PerformanceTestingDemoPage() {
   const [testHistory, setTestHistory] = useState<PerformanceReport[]>([]);

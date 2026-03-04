@@ -11,7 +11,7 @@ import {
   TokenTransactionQuery,
   AccountBalanceResponse,
   ConsumeTokensDTO,
-} from '@/models/token-account.model';
+} from '@/tech/database/models/token-account.model';
 
 export class TokenAccountService {
   private supabase = supabase;

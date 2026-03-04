@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   cacheMiddleware,
   generateCacheKey,
-} from '@/middleware/cache.middleware';
+} from '@/tech/middleware/cache.middleware';
 
 // 妯℃嫙浼樺寲鍚庣殑鏈嶅姟
 class OptimizedProcurementService {

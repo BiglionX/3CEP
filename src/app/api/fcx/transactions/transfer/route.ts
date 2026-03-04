@@ -7,7 +7,7 @@ import { FcxAccountService } from '@/fcx-system';
 import {
   FcxTransferDTO,
   FcxTransactionType,
-} from '@/fcx-system/models/fcx-account.model';
+} from '@/modules/fcx-alliance/models/fcx-account.model';
 
 export async function POST(request: Request) {
   try {

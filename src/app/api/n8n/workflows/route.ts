@@ -4,7 +4,7 @@
  */
 
 import { sanitizeWorkflowExecution } from '@/lib/sanitize';
-import { filterReplayParameters } from '@/middleware/workflow-replay-filter';
+import { filterReplayParameters } from '@/tech/middleware/workflow-replay-filter';
 import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
 import { cookies } from 'next/headers';

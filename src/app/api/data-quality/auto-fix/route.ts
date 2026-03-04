@@ -1,11 +1,11 @@
 ﻿// 鑷姩淇绠＄悊API
 import { NextRequest, NextResponse } from 'next/server';
-import { issueIdentificationEngine } from '@/data-center/monitoring/issue-identification-engine';
+import { issueIdentificationEngine } from '@/modules/data-center/monitoring/issue-identification-engine';
 import {
   autoFixCoordinator,
   fixEffectivenessEvaluator,
-} from '@/data-center/monitoring/auto-fix-executor';
-import { dataQualityService } from '@/data-center/monitoring/data-quality-service';
+} from '@/modules/data-center/monitoring/auto-fix-executor';
+import { dataQualityService } from '@/modules/data-center/monitoring/data-quality-service';
 
 export async function GET(request: NextRequest) {
   try {

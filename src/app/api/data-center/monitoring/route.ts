@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { monitoringService } from '@/data-center/monitoring/monitoring-service';
+import { monitoringService } from '@/modules/data-center/monitoring/monitoring-service';
 
 export async function GET(request: NextRequest) {
   try {

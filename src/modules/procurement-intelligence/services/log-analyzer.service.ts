@@ -2,7 +2,7 @@
  * 日志分析服务
  * 提供日志收集、分析、异常检测和可视化功? */
 
-import { Logger, LogLevel } from '@/utils/logger';
+import { Logger, LogLevel } from '@/tech/utils/logger';
 
 // 日志条目接口
 interface LogEntry {
