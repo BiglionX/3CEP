@@ -102,10 +102,10 @@ const PenaltyStatusBadge: React.FC<{ status: string }> = ({ status }) => {
   return (
     <Badge className={`${getStatusStyle()} capitalize`}>
       {status === 'active'
-        ? '生效?
+        ? '生效中'
         : status === 'expired'
-          ? '已过?
-          : '已解?}
+          ? '已过期'
+          : '已解除'
     </Badge>
   );
 };
@@ -143,15 +143,15 @@ const ViolationListItem: React.FC<{
             <ViolationSeverityBadge severity={violation.severity} />
             <Badge variant="outline" className="text-xs capitalize">
               {violation.status === 'pending'
-                ? '待处?
+              {violation.status === 'pending'
+                ? '待处理'
                 : violation.status === 'processing'
-                  ? '处理?
+                  ? '处理中'
                   : violation.status === 'resolved'
-                    ? '已解?
+                    ? '已解决'
                     : violation.status === 'appealed'
-                      ? '申诉?
-                      : '已驳?}
-            </Badge>
+                      ? '申诉中'
+                      : '已驳回'}
           </div>
 
           <h3 className="font-medium text-gray-900 mb-1">
@@ -196,8 +196,8 @@ const PenaltyManagementPanel: React.FC<{
       <Card>
         <CardContent className="p-8 text-center">
           <Award className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">无处罚记?/h3>
-          <p className="text-gray-600">该用户暂无任何处罚记?/p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">无处罚记录</h3>
+          <p className="text-gray-600">该用户暂无任何处罚记录</p>
         </CardContent>
       </Card>
     );
@@ -280,7 +280,7 @@ export default function ViolationManagementPage() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 30000); // 30秒刷新一?    return () => clearInterval(interval);
+    const interval = setInterval(loadData, 30000); // 30 秒刷新一次
   }, []);
 
   const loadData = async () => {
