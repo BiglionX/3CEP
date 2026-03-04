@@ -1,6 +1,6 @@
-/**
- * 管理后台设备回收API
- * 提供设备回收功能接口
+﻿/**
+ * 绠＄悊鍚庡彴璁惧鍥炴敹API
+ * 鎻愪緵璁惧鍥炴敹鍔熻兘鎺ュ彛
  */
 import { DeviceEventType } from '@/lib/constants/lifecycle';
 import { Database } from '@/lib/database.types';
@@ -24,22 +24,22 @@ export async function POST(request: Request) {
     const body: RecycleDeviceRequest = await request.json();
     const { qrcodeId, reason, userId, location, notes } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!qrcodeId) {
       return NextResponse.json(
-        { success: false, error: '缺少设备二维码ID' },
+        { success: false, error: '缂哄皯璁惧浜岀淮鐮両D' },
         { status: 400 }
       );
     }
 
     if (!reason || reason.trim().length === 0) {
       return NextResponse.json(
-        { success: false, error: '请提供回收原因' },
+        { success: false, error: '璇锋彁渚涘洖鏀跺師? },
         { status: 400 }
       );
     }
 
-    // 验证设备是否存在
+    // 楠岃瘉璁惧鏄惁瀛樺湪
     const { data: deviceExists, error: deviceError } = await supabase
       .from('product_qrcodes')
       .select('qr_code_id')
@@ -48,22 +48,21 @@ export async function POST(request: Request) {
 
     if (deviceError || !deviceExists) {
       return NextResponse.json(
-        { success: false, error: '设备不存在' },
+        { success: false, error: '璁惧涓嶅瓨? },
         { status: 404 }
       );
     }
 
-    // 初始化生命周期服务
-    const lifecycleService = new DeviceLifecycleService();
+    // 鍒濆鍖栫敓鍛藉懆鏈熸湇?    const lifecycleService = new DeviceLifecycleService();
 
-    // 记录回收事件
+    // 璁板綍鍥炴敹浜嬩欢
     const recycleEvent = await lifecycleService.recordEvent({
       qrcodeId,
       eventType: DeviceEventType.RECYCLED,
       eventSubtype: 'manual_recycle',
-      location: location || '管理后台',
-      technician: '管理员',
-      notes: `手动回收: ${reason}${notes ? ` - ${notes}` : ''}`,
+      location: location || '绠＄悊鍚庡彴',
+      technician: '绠＄悊?,
+      notes: `鎵嬪姩鍥炴敹: ${reason}${notes ? ` - ${notes}` : ''}`,
       metadata: {
         recycleReason: reason,
         initiatedBy: userId || 'admin',
@@ -73,12 +72,12 @@ export async function POST(request: Request) {
       },
     });
 
-    // 更新设备状态（如果需要的话）
+    // 鏇存柊璁惧鐘舵€侊紙濡傛灉闇€瑕佺殑璇濓級
     await updateDeviceStatus(qrcodeId, 'recycled');
 
     return NextResponse.json({
       success: true,
-      message: '设备回收记录成功',
+      message: '璁惧鍥炴敹璁板綍鎴愬姛',
       data: {
         eventId: recycleEvent.id,
         qrcodeId: qrcodeId,
@@ -88,11 +87,11 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('设备回收处理错误:', error);
+    console.error('璁惧鍥炴敹澶勭悊閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '设备回收处理失败',
+        error: '璁惧鍥炴敹澶勭悊澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }
@@ -100,7 +99,7 @@ export async function POST(request: Request) {
   }
 }
 
-// GET /api/admin/devices/recycle/history?qrcodeId=xxx - 获取设备回收历史
+// GET /api/admin/devices/recycle/history?qrcodeId=xxx - 鑾峰彇璁惧鍥炴敹鍘嗗彶
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -108,12 +107,12 @@ export async function GET(request: Request) {
 
     if (!qrcodeId) {
       return NextResponse.json(
-        { success: false, error: '缺少设备二维码ID参数' },
+        { success: false, error: '缂哄皯璁惧浜岀淮鐮両D鍙傛暟' },
         { status: 400 }
       );
     }
 
-    // 调用生命周期服务获取回收历史
+    // 璋冪敤鐢熷懡鍛ㄦ湡鏈嶅姟鑾峰彇鍥炴敹鍘嗗彶
     const lifecycleService = new DeviceLifecycleService();
     const recycleEvents = await lifecycleService.getDeviceLifecycleHistory(
       qrcodeId,
@@ -128,14 +127,14 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       data: recycleEvents,
-      message: `找到 ${recycleEvents.length} 条回收记录`,
+      message: `鎵惧埌 ${recycleEvents.length} 鏉″洖鏀惰褰昤,
     });
   } catch (error) {
-    console.error('获取回收历史错误:', error);
+    console.error('鑾峰彇鍥炴敹鍘嗗彶閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '获取回收历史失败',
+        error: '鑾峰彇鍥炴敹鍘嗗彶澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }
@@ -144,8 +143,7 @@ export async function GET(request: Request) {
 }
 
 /**
- * 更新设备状态
- */
+ * 鏇存柊璁惧鐘? */
 async function updateDeviceStatus(
   qrcodeId: string,
   status: string
@@ -153,11 +151,10 @@ async function updateDeviceStatus(
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
 
-    // 这里可以根据实际需求更新设备状态
-    // 例如更新到设备档案表或其他相关表
-    console.log(`设备 ${qrcodeId} 状态更新为: ${status}`);
+    // 杩欓噷鍙互鏍规嵁瀹為檯闇€姹傛洿鏂拌澶囩姸?    // 渚嬪鏇存柊鍒拌澶囨。妗堣〃鎴栧叾浠栫浉鍏宠〃
+    console.log(`璁惧 ${qrcodeId} 鐘舵€佹洿鏂颁负: ${status}`);
   } catch (error) {
-    console.error('更新设备状态错误:', error);
-    // 不抛出异常，避免影响主流程
-  }
+    console.error('鏇存柊璁惧鐘舵€侀敊?', error);
+    // 涓嶆姏鍑哄紓甯革紝閬垮厤褰卞搷涓绘祦?  }
 }
+

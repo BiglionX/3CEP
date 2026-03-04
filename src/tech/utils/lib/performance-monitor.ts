@@ -1,5 +1,4 @@
-// 性能监控和健康检查工具
-import { createClient } from '@supabase/supabase-js';
+// 性能监控和健康检查工?import { createClient } from '@supabase/supabase-js';
 
 // 性能指标接口
 interface PerformanceMetrics {
@@ -14,8 +13,7 @@ interface PerformanceMetrics {
   url: string;
 }
 
-// 健康检查结果接口
-interface HealthCheckResult {
+// 健康检查结果接?interface HealthCheckResult {
   status: 'healthy' | 'degraded' | 'unhealthy';
   services: {
     database: boolean;
@@ -31,8 +29,7 @@ interface HealthCheckResult {
   timestamp: string;
 }
 
-// 性能监控类
-export class PerformanceMonitor {
+// 性能监控?export class PerformanceMonitor {
   private static instance: PerformanceMonitor;
   private metricsBuffer: PerformanceMetrics[] = [];
   private readonly BUFFER_SIZE = 100;
@@ -47,18 +44,20 @@ export class PerformanceMonitor {
   }
 
   // 记录页面性能指标
-  public recordPageMetrics(metrics: Omit<PerformanceMetrics, 'timestamp' | 'userAgent' | 'url'>) {
+  public recordPageMetrics(
+    metrics: Omit<PerformanceMetrics, 'timestamp' | 'userAgent' | 'url'>
+  ) {
     const fullMetrics: PerformanceMetrics = {
       ...metrics,
       timestamp: new Date().toISOString(),
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'server-side',
-      url: typeof window !== 'undefined' ? window.location.href : 'server-side'
+      userAgent:
+        typeof navigator !== 'undefined' ? navigator.userAgent : 'server-side',
+      url: typeof window !== 'undefined' ? window.location.href : 'server-side',
     };
 
     this.metricsBuffer.push(fullMetrics);
-    
-    // 保持缓冲区大小
-    if (this.metricsBuffer.length > this.BUFFER_SIZE) {
+
+    // 保持缓冲区大?    if (this.metricsBuffer.length > this.BUFFER_SIZE) {
       this.metricsBuffer.shift();
     }
 
@@ -66,41 +65,36 @@ export class PerformanceMonitor {
     this.sendMetrics(fullMetrics);
   }
 
-  // 发送性能指标到后端
-  private async sendMetrics(metrics: PerformanceMetrics) {
+  // 发送性能指标到后?  private async sendMetrics(metrics: PerformanceMetrics) {
     try {
       const response = await fetch('/api/analytics/performance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(metrics)
+        body: JSON.stringify(metrics),
       });
 
       if (!response.ok) {
-        console.warn('性能指标发送失败:', response.statusText);
+        console.warn('性能指标发送失?', response.statusText);
       }
     } catch (error) {
-      console.warn('性能指标发送异常:', error);
+      console.warn('性能指标发送异?', error);
     }
   }
 
-  // 获取缓冲区指标
-  public getBufferedMetrics(): PerformanceMetrics[] {
+  // 获取缓冲区指?  public getBufferedMetrics(): PerformanceMetrics[] {
     return [...this.metricsBuffer];
   }
 
-  // 清空缓冲区
-  public clearBuffer(): void {
+  // 清空缓冲?  public clearBuffer(): void {
     this.metricsBuffer = [];
   }
 }
 
-// 健康检查工具
-export class HealthChecker {
+// 健康检查工?export class HealthChecker {
   private static instance: HealthChecker;
-  private readonly CHECK_INTERVAL = 30000; // 30秒检查一次
-  private healthStatus: HealthCheckResult | null = null;
+  private readonly CHECK_INTERVAL = 30000; // 30秒检查一?  private healthStatus: HealthCheckResult | null = null;
 
   private constructor() {}
 
@@ -111,25 +105,24 @@ export class HealthChecker {
     return HealthChecker.instance;
   }
 
-  // 执行完整健康检查
-  public async performHealthCheck(): Promise<HealthCheckResult> {
+  // 执行完整健康检?  public async performHealthCheck(): Promise<HealthCheckResult> {
     const checks = await Promise.allSettled([
       this.checkDatabase(),
       this.checkApi(),
       this.checkN8n(),
-      this.checkSupabase()
+      this.checkSupabase(),
     ]);
 
     const serviceStatus = {
       database: checks[0].status === 'fulfilled' && checks[0].value,
       api: checks[1].status === 'fulfilled' && checks[1].value,
       n8n: checks[2].status === 'fulfilled' && checks[2].value,
-      supabase: checks[3].status === 'fulfilled' && checks[3].value
+      supabase: checks[3].status === 'fulfilled' && checks[3].value,
     };
 
     const healthyServices = Object.values(serviceStatus).filter(Boolean).length;
     const totalServices = Object.keys(serviceStatus).length;
-    
+
     let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
     if (healthyServices === 0) {
       status = 'unhealthy';
@@ -143,9 +136,9 @@ export class HealthChecker {
       metrics: {
         uptime: this.calculateUptime(),
         responseTime: this.calculateAverageResponseTime(),
-        errorRate: this.calculateErrorRate()
+        errorRate: this.calculateErrorRate(),
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.healthStatus = result;
@@ -176,11 +169,11 @@ export class HealthChecker {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
+
       const response = await fetch('/api/health', {
-        signal: controller.signal
+        signal: controller.signal,
       });
-      
+
       clearTimeout(timeoutId);
       return response.ok;
     } catch (error) {
@@ -202,9 +195,12 @@ export class HealthChecker {
   // 检查Supabase服务
   private async checkSupabase(): Promise<boolean> {
     try {
-      const response = await fetch('https://hrjqzbhqueleszkvnsen.supabase.co/rest/v1/', {
-        method: 'HEAD'
-      });
+      const response = await fetch(
+        'https://hrjqzbhqueleszkvnsen.supabase.co/rest/v1/',
+        {
+          method: 'HEAD',
+        }
+      );
       return response.ok;
     } catch (error) {
       return false;
@@ -213,9 +209,7 @@ export class HealthChecker {
 
   // 计算运行时间
   private calculateUptime(): number {
-    // 简化的uptime计算，实际应该从服务器启动时间计算
-    return 99.9; // 模拟值
-  }
+    // 简化的uptime计算，实际应该从服务器启动时间计?    return 99.9; // 模拟?  }
 
   // 计算平均响应时间
   private calculateAverageResponseTime(): number {
@@ -223,24 +217,20 @@ export class HealthChecker {
     const monitor = PerformanceMonitor.getInstance();
     const metrics = monitor.getBufferedMetrics();
     if (metrics.length === 0) return 0;
-    
-    const avg = metrics.reduce((sum, m) => sum + m.apiResponseTime, 0) / metrics.length;
+
+    const avg =
+      metrics.reduce((sum, m) => sum + m.apiResponseTime, 0) / metrics.length;
     return Math.round(avg);
   }
 
-  // 计算错误率
-  private calculateErrorRate(): number {
-    // 简化的错误率计算
-    return 0.1; // 模拟值
-  }
+  // 计算错误?  private calculateErrorRate(): number {
+    // 简化的错误率计?    return 0.1; // 模拟?  }
 
-  // 获取当前健康状态
-  public getCurrentHealth(): HealthCheckResult | null {
+  // 获取当前健康状?  public getCurrentHealth(): HealthCheckResult | null {
     return this.healthStatus;
   }
 
-  // 启动定期健康检查
-  public startPeriodicChecks(): void {
+  // 启动定期健康检?  public startPeriodicChecks(): void {
     setInterval(async () => {
       await this.performHealthCheck();
     }, this.CHECK_INTERVAL);
@@ -250,9 +240,9 @@ export class HealthChecker {
 // Web Vitals 监控
 export function initWebVitals() {
   if (typeof window === 'undefined') return;
-  
+
   const monitor = PerformanceMonitor.getInstance();
-  
+
   // 监听页面加载完成
   window.addEventListener('load', () => {
     // 记录页面加载时间
@@ -263,22 +253,25 @@ export function initWebVitals() {
       firstContentfulPaint: 0,
       largestContentfulPaint: 0,
       cumulativeLayoutShift: 0,
-      firstInputDelay: 0
+      firstInputDelay: 0,
     });
   });
 
   // 监听首次内容绘制
   if ('performance' in window && 'getEntriesByType' in performance) {
-    new PerformanceObserver((list) => {
-      list.getEntries().forEach((entry) => {
-        if (entry.entryType === 'paint' && entry.name === 'first-contentful-paint') {
+    new PerformanceObserver(list => {
+      list.getEntries().forEach(entry => {
+        if (
+          entry.entryType === 'paint' &&
+          entry.name === 'first-contentful-paint'
+        ) {
           monitor.recordPageMetrics({
             pageLoadTime: 0,
             apiResponseTime: 0,
             firstContentfulPaint: entry.startTime,
             largestContentfulPaint: 0,
             cumulativeLayoutShift: 0,
-            firstInputDelay: 0
+            firstInputDelay: 0,
           });
         }
       });
@@ -294,5 +287,5 @@ export const healthChecker = HealthChecker.getInstance();
 export default {
   performanceMonitor,
   healthChecker,
-  initWebVitals
+  initWebVitals,
 };

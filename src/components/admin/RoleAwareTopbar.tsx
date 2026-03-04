@@ -1,7 +1,6 @@
-/**
+﻿/**
  * 角色感知的顶部导航栏组件
- * 显示用户信息、通知和快速操作
- */
+ * 显示用户信息、通知和快速操? */
 
 'use client';
 
@@ -28,23 +27,23 @@ export function RoleAwareTopbar() {
   const notifications = [
     {
       id: 1,
-      title: '新用户注册',
-      message: '有3个新用户等待审核',
-      time: '5分钟前',
+      title: '新用户注?,
+      message: '�?个新用户等待审核',
+      time: '5分钟?,
       unread: true,
     },
     {
       id: 2,
-      title: '内容待审核',
-      message: '有5篇新文章需要审核',
-      time: '1小时前',
+      title: '内容待审?,
+      message: '�?篇新文章需要审?,
+      time: '1小时?,
       unread: true,
     },
     {
       id: 3,
       title: '系统更新',
-      message: '系统将在今晚12点进行维护',
-      time: '2小时前',
+      message: '系统将在今晚12点进行维?,
+      time: '2小时?,
       unread: false,
     },
   ];
@@ -53,8 +52,7 @@ export function RoleAwareTopbar() {
 
   const handleLogout = () => {
     logout();
-    // 这里应该跳转到登录页面
-    window.location.href = '/login';
+    // 这里应该跳转到登录页?    window.location.href = '/login';
   };
 
   return (
@@ -63,7 +61,7 @@ export function RoleAwareTopbar() {
         <div className="flex items-center justify-between h-16">
           {/* 左侧标题区域 */}
           <div className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-900">管理控制台</h1>
+            <h1 className="text-xl font-semibold text-gray-900">管理控制?/h1>
             {userInfo && (
               <Badge className="ml-3">{userInfo.roles?.[0] || '访客'}</Badge>
             )}
@@ -124,10 +122,10 @@ export function RoleAwareTopbar() {
               )}
             </div>
 
-            {/* 用户状态控件 - 统一登录状态逻辑 */}
+            {/* 用户状态控?- 统一登录状态逻辑 */}
             <div className="flex items-center space-x-2">
               {userInfo ? (
-                // ✅ 已登录状态：显示用户菜单
+                // �?已登录状态：显示用户菜单
                 <div className="relative">
                   <Button
                     variant="ghost"
@@ -136,7 +134,7 @@ export function RoleAwareTopbar() {
                   >
                     <div className="bg-primary rounded-full w-8 h-8 flex items-center justify-center">
                       <span className="text-primary-foreground text-sm font-medium">
-                        {userInfo.email?.charAt(0).toUpperCase() || 'U'}
+                        {userInfo?.charAt(0).toUpperCase() || 'U'}
                       </span>
                     </div>
                     <div className="hidden md:block text-left">
@@ -144,22 +142,34 @@ export function RoleAwareTopbar() {
                         {userInfo.email}
                       </div>
                       <div className="text-xs text-muted-foreground truncate">
-                        {userInfo.roles?.[0] ? 
-                          (userInfo.roles[0] === 'admin' ? '超级管理员' : 
-                           userInfo.roles[0] === 'manager' ? '经理' :
-                           userInfo.roles[0] === 'content_manager' ? '内容经理' :
-                           userInfo.roles[0] === 'shop_manager' ? '店铺经理' :
-                           userInfo.roles[0] === 'finance_manager' ? '财务经理' :
-                           userInfo.roles[0] === 'procurement_specialist' ? '采购专员' :
-                           userInfo.roles[0] === 'warehouse_operator' ? '仓库操作员' :
-                           userInfo.roles[0] === 'agent_operator' ? '代理操作员' :
-                           userInfo.roles[0] === 'viewer' ? '查看者' : '访客')
+                        {userInfo.roles?.[0]
+                          ? userInfo.roles[0] === 'admin'
+                            ? '超级管理?
+                            : userInfo.roles[0] === 'manager'
+                              ? '经理'
+                              : userInfo.roles[0] === 'content_manager'
+                                ? '内容经理'
+                                : userInfo.roles[0] === 'shop_manager'
+                                  ? '店铺经理'
+                                  : userInfo.roles[0] === 'finance_manager'
+                                    ? '财务经理'
+                                    : userInfo.roles[0] ===
+                                        'procurement_specialist'
+                                      ? '采购专员'
+                                      : userInfo.roles[0] ===
+                                          'warehouse_operator'
+                                        ? '仓库操作?
+                                        : userInfo.roles[0] === 'agent_operator'
+                                          ? '代理操作?
+                                          : userInfo.roles[0] === 'viewer'
+                                            ? '查看?
+                                            : '访客'
                           : '访客'}
                       </div>
                     </div>
                     <ChevronDown className="w-4 h-4" />
                   </Button>
-                              
+
                   {/* 用户下拉菜单 */}
                   {userMenuOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
@@ -168,20 +178,32 @@ export function RoleAwareTopbar() {
                           {userInfo.email}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {userInfo.roles?.map(role => 
-                            role === 'admin' ? '超级管理员' : 
-                            role === 'manager' ? '经理' :
-                            role === 'content_manager' ? '内容经理' :
-                            role === 'shop_manager' ? '店铺经理' :
-                            role === 'finance_manager' ? '财务经理' :
-                            role === 'procurement_specialist' ? '采购专员' :
-                            role === 'warehouse_operator' ? '仓库操作员' :
-                            role === 'agent_operator' ? '代理操作员' :
-                            role === 'viewer' ? '查看者' : role
-                          ).join(', ') || '访客角色'}
+                          {userInfo
+                            ?.map(role =>
+                              role === 'admin'
+                                ? '超级管理?
+                                : role === 'manager'
+                                  ? '经理'
+                                  : role === 'content_manager'
+                                    ? '内容经理'
+                                    : role === 'shop_manager'
+                                      ? '店铺经理'
+                                      : role === 'finance_manager'
+                                        ? '财务经理'
+                                        : role === 'procurement_specialist'
+                                          ? '采购专员'
+                                          : role === 'warehouse_operator'
+                                            ? '仓库操作?
+                                            : role === 'agent_operator'
+                                              ? '代理操作?
+                                              : role === 'viewer'
+                                                ? '查看?
+                                                : role
+                            )
+                            .join(', ') || '访客角色'}
                         </p>
                       </div>
-                                  
+
                       <div className="py-1">
                         <Link
                           href="/admin/profile"
@@ -191,7 +213,7 @@ export function RoleAwareTopbar() {
                           <User className="w-4 h-4 mr-3" />
                           个人资料
                         </Link>
-                                    
+
                         <Link
                           href="/admin/settings"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -200,7 +222,7 @@ export function RoleAwareTopbar() {
                           <Settings className="w-4 h-4 mr-3" />
                           系统设置
                         </Link>
-                                    
+
                         <Link
                           href="/admin/help"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -209,22 +231,30 @@ export function RoleAwareTopbar() {
                           <HelpCircle className="w-4 h-4 mr-3" />
                           帮助中心
                         </Link>
+
+                        <Link
+                          href="/data-center"
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <BarChart3 className="w-4 h-4 mr-3" />
+                          数据中心
+                        </Link>
                       </div>
-                                  
+
                       <div className="border-t py-1">
                         <button
                           onClick={handleLogout}
                           className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-destructive"
                         >
                           <LogOut className="w-4 h-4 mr-3" />
-                          退出登录
-                        </button>
+                          退出登?                        </button>
                       </div>
                     </div>
                   )}
                 </div>
               ) : (
-                // ✅ 未登录状态：显示登录/注册按钮
+                // �?未登录状态：显示登录/注册按钮
                 <div className="flex items-center space-x-2">
                   <Button
                     variant="outline"

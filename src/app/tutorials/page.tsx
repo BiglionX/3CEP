@@ -1,7 +1,7 @@
-"use client";
+﻿'use client';
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface Tutorial {
   id: string;
@@ -18,29 +18,29 @@ interface Tutorial {
   estimated_time: number;
   view_count: number;
   like_count: number;
-  status: "draft" | "published" | "archived";
+  status: 'draft' | 'published' | 'archived';
   created_at: string;
 }
 
 export default function TutorialsPublicPage() {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDevice, setSelectedDevice] = useState("all");
-  const [selectedFault, setSelectedFault] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDevice, setSelectedDevice] = useState('all');
+  const [selectedFault, setSelectedFault] = useState('all');
 
   // 获取教程列表
   const fetchTutorials = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
-      params.append("page", "1");
-      params.append("pageSize", "10");
+      params.append('page', '1');
+      params.append('pageSize', '10');
 
-      if (searchTerm) params.append("search", searchTerm);
-      if (selectedDevice !== "all")
-        params.append("deviceModel", selectedDevice);
-      if (selectedFault !== "all") params.append("faultType", selectedFault);
+      if (searchTerm) params.append('search', searchTerm);
+      if (selectedDevice !== 'all')
+        params.append('deviceModel', selectedDevice);
+      if (selectedFault !== 'all') params.append('faultType', selectedFault);
 
       const response = await fetch(`/api/tutorials?${params.toString()}`);
       const result = await response.json();
@@ -48,18 +48,18 @@ export default function TutorialsPublicPage() {
       if (response.ok) {
         setTutorials(result.tutorials || []);
       } else {
-        console.error("获取教程列表失败:", result.error);
+        console.error('获取教程列表失败:', result.error);
       }
     } catch (error) {
-      console.error("获取教程列表错误:", error);
+      console.error('获取教程列表错误:', error);
     } finally {
       setLoading(false);
     }
   };
 
   // 获取唯一的设备型号和故障类型
-  const uniqueDevices = [...new Set(mockTutorials.map((t) => t.device_model))];
-  const uniqueFaults = [...new Set(mockTutorials.map((t) => t.fault_type))];
+  const uniqueDevices = [...new Set(mockTutorials.map(t => t.device_model))];
+  const uniqueFaults = [...new Set(mockTutorials.map(t => t.fault_type))];
 
   useEffect(() => {
     fetchTutorials();
@@ -70,7 +70,7 @@ export default function TutorialsPublicPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载教程中...</p>
+          <p className="mt-4 text-gray-600">加载教程?..</p>
         </div>
       </div>
     );
@@ -115,7 +115,7 @@ export default function TutorialsPublicPage() {
           <p className="mt-2 text-gray-600">学习如何自己修理电子设备</p>
         </div>
 
-        {/* 搜索和筛选 */}
+        {/* 搜索和筛?*/}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
@@ -137,17 +137,17 @@ export default function TutorialsPublicPage() {
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="搜索教程..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
 
             <select
               value={selectedDevice}
-              onChange={(e) => setSelectedDevice(e.target.value)}
+              onChange={e => setSelectedDevice(e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="all">所有设备</option>
-              {uniqueDevices.map((device) => (
+              <option value="all">所有设?/option>
+              {uniqueDevices.map(device => (
                 <option key={device} value={device}>
                   {device}
                 </option>
@@ -156,11 +156,11 @@ export default function TutorialsPublicPage() {
 
             <select
               value={selectedFault}
-              onChange={(e) => setSelectedFault(e.target.value)}
+              onChange={e => setSelectedFault(e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="all">所有故障</option>
-              {uniqueFaults.map((fault) => (
+              <option value="all">所有故?/option>
+              {uniqueFaults.map(fault => (
                 <option key={fault} value={fault}>
                   {fault}
                 </option>
@@ -168,8 +168,7 @@ export default function TutorialsPublicPage() {
             </select>
 
             <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
-              筛选
-            </button>
+              筛?            </button>
           </div>
         </div>
 
@@ -190,13 +189,12 @@ export default function TutorialsPublicPage() {
               />
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">
-              未找到相关教程
-            </h3>
+              未找到相关教?            </h3>
             <p className="mt-1 text-gray-500">尝试调整搜索条件或筛选选项</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tutorials.map((tutorial) => (
+            {tutorials.map(tutorial => (
               <div
                 key={tutorial.id}
                 className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
@@ -269,7 +267,7 @@ export default function TutorialsPublicPage() {
       {/* 页脚 */}
       <footer className="bg-gray-800 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>&copy; 2026 FixCycle. 所有权利保留。</p>
+          <p>&copy; 2026 FixCycle. 所有权利保留?/p>
         </div>
       </footer>
     </div>
@@ -279,58 +277,59 @@ export default function TutorialsPublicPage() {
 // Mock数据用于演示
 const mockTutorials: Tutorial[] = [
   {
-    id: "1",
-    device_model: "iPhone 14 Pro",
-    fault_type: "screen_broken",
-    title: "iPhone 14 Pro 屏幕更换详细教程",
+    id: '1',
+    device_model: 'iPhone 14 Pro',
+    fault_type: 'screen_broken',
+    title: 'iPhone 14 Pro 屏幕更换详细教程',
     description:
-      "从拆机到安装的完整iPhone 14 Pro屏幕更换指南，包含所需工具和注意事项",
+      '从拆机到安装的完整iPhone 14 Pro屏幕更换指南，包含所需工具和注意事?,
     steps: [],
-    video_url: "https://www.youtube.com/watch?v=screen_repair_demo",
-    tools: ["螺丝刀套装", "吸盘", "撬棒", "镊子", "热风枪"],
-    parts: ["iPhone 14 Pro原装屏幕", "屏幕胶"],
-    cover_image: "https://picsum.photos/400/200?random=1",
+    video_url: 'https://www.youtube.com/watch?v=screen_repair_demo',
+    tools: ['螺丝刀套装', '吸盘', '撬棒', '镊子', '热风?],
+    parts: ['iPhone 14 Pro原装屏幕', '屏幕?],
+    cover_image: 'https://picsum.photos/400/200?random=1',
     difficulty_level: 4,
     estimated_time: 60,
     view_count: 1250,
     like_count: 89,
-    status: "published",
-    created_at: "2026-02-15T10:00:00Z",
+    status: 'published',
+    created_at: '2026-02-15T10:00:00Z',
   },
   {
-    id: "2",
-    device_model: "Samsung Galaxy S23",
-    fault_type: "battery_issue",
-    title: "三星Galaxy S23 电池更换指南",
-    description: "详细的三星Galaxy S23电池更换步骤，适合有一定动手能力的用户",
+    id: '2',
+    device_model: 'Samsung Galaxy S23',
+    fault_type: 'battery_issue',
+    title: '三星Galaxy S23 电池更换指南',
+    description: '详细的三星Galaxy S23电池更换步骤，适合有一定动手能力的用户',
     steps: [],
-    video_url: "https://www.bilibili.com/video/BV123456789",
-    tools: ["精密螺丝刀", "塑料撬棒", "热风枪", "吸盘"],
-    parts: ["三星S23原装电池", "后盖胶"],
-    cover_image: "https://picsum.photos/400/200?random=2",
+    video_url: 'https://www.bilibili.com/video/BV123456789',
+    tools: ['精密螺丝刀', '塑料撬棒', '热风?, '吸盘'],
+    parts: ['三星S23原装电池', '后盖?],
+    cover_image: 'https://picsum.photos/400/200?random=2',
     difficulty_level: 3,
     estimated_time: 40,
     view_count: 890,
     like_count: 67,
-    status: "published",
-    created_at: "2026-02-14T14:30:00Z",
+    status: 'published',
+    created_at: '2026-02-14T14:30:00Z',
   },
   {
-    id: "3",
-    device_model: "Huawei Mate 50",
-    fault_type: "water_damage",
-    title: "华为Mate 50 进水应急处理方案",
-    description: "手机意外进水后的紧急处理步骤和专业维修建议",
+    id: '3',
+    device_model: 'Huawei Mate 50',
+    fault_type: 'water_damage',
+    title: '华为Mate 50 进水应急处理方?,
+    description: '手机意外进水后的紧急处理步骤和专业维修建议',
     steps: [],
     video_url: null,
-    tools: ["干净毛巾", "干燥剂", "吹风机(冷风)"],
+    tools: ['干净毛巾', '干燥?, '吹风?冷风)'],
     parts: [],
-    cover_image: "https://picsum.photos/400/200?random=3",
+    cover_image: 'https://picsum.photos/400/200?random=3',
     difficulty_level: 2,
     estimated_time: 30,
     view_count: 2100,
     like_count: 156,
-    status: "published",
-    created_at: "2026-02-13T09:15:00Z",
+    status: 'published',
+    created_at: '2026-02-13T09:15:00Z',
   },
 ];
+

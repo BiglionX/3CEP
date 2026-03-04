@@ -17,100 +17,135 @@ const VALIDATION_ITEMS = [
   {
     name: '分支保护规则',
     check: () => {
-      const rulesPath = path.join(__dirname, '..', '.github', 'branch-protection-rules.json');
+      const rulesPath = path.join(
+        __dirname,
+        '..',
+        '.github',
+        'branch-protection-rules.json'
+      );
       return fs.existsSync(rulesPath);
     },
-    description: '检查分支保护规则配置文件'
+    description: '检查分支保护规则配置文件',
   },
   {
     name: 'CI/CD 流水线配置',
     check: () => {
-      const workflowPath = path.join(__dirname, '..', '.github', 'workflows', 'enhanced-ci-cd.yml');
+      const workflowPath = path.join(
+        __dirname,
+        '..',
+        '.github',
+        'workflows',
+        'enhanced-ci-cd.yml'
+      );
       return fs.existsSync(workflowPath);
     },
-    description: '检查增强版 CI/CD 流水线配置'
+    description: '检查增强版 CI/CD 流水线配置',
   },
   {
     name: '测试套件完整性',
     check: () => {
-      const testRunnerPath = path.join(__dirname, '..', 'tests', 'run-all-tests.js');
+      const testRunnerPath = path.join(
+        __dirname,
+        '..',
+        'tests',
+        'run-all-tests.js'
+      );
       return fs.existsSync(testRunnerPath);
     },
-    description: '检查统一测试套件执行器'
+    description: '检查统一测试套件执行器',
   },
   {
     name: '数据库迁移校验工具',
     check: () => {
-      const validatorPath = path.join(__dirname, '..', 'scripts', 'db-migration-validate.js');
+      const validatorPath = path.join(
+        __dirname,
+        '..',
+        'scripts',
+        'db-migration-validate.js'
+      );
       return fs.existsSync(validatorPath);
     },
-    description: '检查数据库迁移语法校验工具'
+    description: '检查数据库迁移语法校验工具',
   },
   {
     name: 'n8n 冒烟测试',
     check: () => {
-      const smokeTestPath = path.join(__dirname, '..', 'tests', 'n8n', 'n8n-smoke-test.js');
+      const smokeTestPath = path.join(
+        __dirname,
+        '..',
+        'tests',
+        'n8n',
+        'n8n-smoke-test.js'
+      );
       return fs.existsSync(smokeTestPath);
     },
-    description: '检查 n8n 关键流程冒烟测试'
+    description: '检查 n8n 关键流程冒烟测试',
   },
   {
     name: '开发环境配置',
     check: () => {
-      const devComposePath = path.join(__dirname, '..', 'docker-compose.dev.yml');
+      const devComposePath = path.join(
+        __dirname,
+        '..',
+        'docker-compose.dev.yml'
+      );
       return fs.existsSync(devComposePath);
     },
-    description: '检查开发环境 Docker Compose 配置'
+    description: '检查开发环境 Docker Compose 配置',
   },
   {
     name: '预发布环境配置',
     check: () => {
-      const stageComposePath = path.join(__dirname, '..', 'docker-compose.stage.yml');
+      const stageComposePath = path.join(
+        __dirname,
+        '..',
+        'docker-compose.stage.yml'
+      );
       return fs.existsSync(stageComposePath);
     },
-    description: '检查预发布环境 Docker Compose 配置'
+    description: '检查预发布环境 Docker Compose 配置',
   },
   {
     name: '回滚脚本',
     check: () => {
       const rollbackPaths = [
         path.join(__dirname, '..', 'scripts', 'rollback-deployment.js'),
-        path.join(__dirname, '..', 'scripts', 'db-rollback.js')
+        path.join(__dirname, '..', 'scripts', 'db-rollback.js'),
       ];
       return rollbackPaths.every(p => fs.existsSync(p));
     },
-    description: '检查部署回滚相关脚本'
+    description: '检查部署回滚相关脚本',
   },
   {
     name: 'npm 脚本配置',
     check: () => {
       try {
-        const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
-        const requiredScripts = [
-          'test:all',
-          'db:validate',
-          'db:check-syntax'
-        ];
-        return requiredScripts.every(script => packageJson.scripts && packageJson.scripts[script]);
+        const packageJson = JSON.parse(
+          fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8')
+        );
+        const requiredScripts = ['test:all', 'db:validate', 'db:check-syntax'];
+        return requiredScripts.every(
+          script => packageJson.scripts && packageJson.scripts[script]
+        );
       } catch (error) {
         return false;
       }
     },
-    description: '检查必需的 npm 脚本配置'
-  }
+    description: '检查必需的 npm 脚本配置',
+  },
 ];
 
 function runValidation() {
   console.log('🔍 开始验证 CI/CD 流水线配置...\n');
-  
+
   let passedChecks = 0;
   let failedChecks = 0;
   const results = [];
-  
+
   for (const item of VALIDATION_ITEMS) {
     console.log(`🔍 ${item.name}`);
     console.log(`   ${item.description}`);
-    
+
     try {
       const result = item.check();
       if (result) {
@@ -128,36 +163,36 @@ function runValidation() {
       results.push({ name: item.name, status: 'ERROR', error: error.message });
     }
   }
-  
+
   // 功能测试验证
   console.log('🧪 运行功能测试...\n');
-  
+
   const functionalTests = [
     {
       name: '数据库迁移校验测试',
       command: 'node',
-      args: ['scripts/db-migration-validate.js', '--help']
+      args: ['scripts/db-migration-validate.js', '--help'],
     },
     {
       name: 'n8n 冒烟测试帮助',
       command: 'node',
-      args: ['tests/n8n/n8n-smoke-test.js', '--help']
+      args: ['tests/n8n/n8n-smoke-test.js', '--help'],
     },
     {
       name: '回滚脚本帮助',
       command: 'node',
-      args: ['scripts/rollback-deployment.js', '--help']
-    }
+      args: ['scripts/rollback-deployment.js', '--help'],
+    },
   ];
-  
+
   for (const test of functionalTests) {
     console.log(`🧪 ${test.name}`);
     try {
       const result = spawnSync(test.command, test.args, {
         cwd: process.cwd(),
-        timeout: 5000
+        timeout: 5000,
       });
-      
+
       if (result.status === 0) {
         console.log('   ✅ 功能正常\n');
         passedChecks++;
@@ -170,35 +205,42 @@ function runValidation() {
     } catch (error) {
       console.log(`   💥 测试失败: ${error.message}\n`);
       failedChecks++;
-      results.push({ name: `${test.name} (功能)`, status: 'ERROR', error: error.message });
+      results.push({
+        name: `${test.name} (功能)`,
+        status: 'ERROR',
+        error: error.message,
+      });
     }
   }
-  
+
   // 生成验证报告
   console.log('=====================================');
   console.log('📋 CI/CD 流水线验证报告');
   console.log('=====================================\n');
-  
+
   console.log('📊 验证结果统计:');
   console.log(`   通过: ${passedChecks}`);
   console.log(`   失败: ${failedChecks}`);
   console.log(`   总计: ${passedChecks + failedChecks}`);
-  console.log(`   通过率: ${Math.round((passedChecks / (passedChecks + failedChecks)) * 100)}%\n`);
-  
+  console.log(
+    `   通过率: ${Math.round((passedChecks / (passedChecks + failedChecks)) * 100)}%\n`
+  );
+
   console.log('📋 详细验证结果:');
   results.forEach(result => {
-    const statusIcon = {
-      'PASS': '✅',
-      'FAIL': '❌',
-      'ERROR': '💥'
-    }[result.status] || '❓';
-    
+    const statusIcon =
+      {
+        PASS: '✅',
+        FAIL: '❌',
+        ERROR: '💥',
+      }[result.status] || '❓';
+
     console.log(`  ${statusIcon} ${result.name} [${result.status}]`);
     if (result.error) {
       console.log(`     错误详情: ${result.error}`);
     }
   });
-  
+
   // 配置建议
   console.log('\n📝 配置建议:');
   if (failedChecks === 0) {
@@ -217,9 +259,9 @@ function runValidation() {
     });
     console.log('\n💡 提示: 运行此脚本可以随时验证配置状态');
   }
-  
+
   console.log('\n✨ CI/CD 流水线验证完成！');
-  
+
   return failedChecks === 0;
 }
 

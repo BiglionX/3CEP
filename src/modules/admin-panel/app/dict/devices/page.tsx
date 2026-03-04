@@ -23,7 +23,7 @@ export default function DevicesDictPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingDevice, setEditingDevice] = useState<Device | null>(null)
   
-  // 表单状态
+  // 表单状?
   const [formData, setFormData] = useState({
     brand: '',
     model: '',
@@ -115,7 +115,7 @@ export default function DevicesDictPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('确定要删除这个设备吗？')) return
+    if (!confirm('确定要删除这个设备吗?)) return
     
     try {
       // 模拟删除设备
@@ -180,11 +180,11 @@ export default function DevicesDictPage() {
 
     const reader = new FileReader()
     reader.onload = (e) => {
-      const text = e.target?.result as string
+      const text = e?.result as string
       const lines = text.split('\n')
       const headers = lines[0].split(',')
       
-      // 跳过标题行，处理数据行
+      // 跳过标题行，处理数据?
       const importedDevices: Device[] = lines.slice(1).map((line, index) => {
         const values = line.split(',')
         return {
@@ -265,7 +265,7 @@ export default function DevicesDictPage() {
                   <Input
                     value={formData.brand}
                     onChange={(e) => setFormData({...formData, brand: e.target.value})}
-                    placeholder="请输入品牌名称"
+                    placeholder="请输入品牌名?
                   />
                 </div>
                 <div>
@@ -273,7 +273,7 @@ export default function DevicesDictPage() {
                   <Input
                     value={formData.model}
                     onChange={(e) => setFormData({...formData, model: e.target.value})}
-                    placeholder="请输入设备型号"
+                    placeholder="请输入设备型?
                   />
                 </div>
                 <div>
@@ -286,8 +286,8 @@ export default function DevicesDictPage() {
                     <option value="">请选择类别</option>
                     <option value="手机">手机</option>
                     <option value="平板">平板</option>
-                    <option value="笔记本电脑">笔记本电脑</option>
-                    <option value="台式机">台式机</option>
+                    <option value="笔记本电?>笔记本电?/option>
+                    <option value="台式?>台式?/option>
                     <option value="智能手表">智能手表</option>
                     <option value="耳机">耳机</option>
                     <option value="其他">其他</option>
@@ -299,7 +299,7 @@ export default function DevicesDictPage() {
                     type="number"
                     value={formData.release_year}
                     onChange={(e) => setFormData({...formData, release_year: parseInt(e.target.value) || new Date().getFullYear()})}
-                    placeholder="请输入发布年份"
+                    placeholder="请输入发布年?
                   />
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
@@ -314,7 +314,7 @@ export default function DevicesDictPage() {
         </div>
       </div>
 
-      {/* 搜索框 */}
+      {/* 搜索?*/}
       <div className="bg-white shadow rounded-lg p-4">
         <Input
           placeholder="搜索品牌、型号或类别..."
@@ -341,7 +341,7 @@ export default function DevicesDictPage() {
             {filteredDevices.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                  {searchTerm ? '没有找到匹配的设备' : '暂无设备数据'}
+                  {searchTerm ? '没有找到匹配的设? : '暂无设备数据'}
                 </TableCell>
               </TableRow>
             ) : (
@@ -382,10 +382,10 @@ export default function DevicesDictPage() {
       <div className="bg-white shadow rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-600">
-            共找到 <span className="font-medium text-gray-900">{filteredDevices.length}</span> 个设备
+            共找?<span className="font-medium text-gray-900">{filteredDevices.length}</span> 个设?
           </p>
           <p className="text-sm text-gray-500">
-            总计: {devices.length} 个设备
+            总计: {devices.length} 个设?
           </p>
         </div>
       </div>

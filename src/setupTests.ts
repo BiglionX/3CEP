@@ -5,9 +5,12 @@ global.IntersectionObserver = class IntersectionObserver {
   readonly root: Element | null = null;
   readonly rootMargin: string = '';
   readonly thresholds: ReadonlyArray<number> = [];
-  
-  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
-  
+
+  constructor(
+    callback: IntersectionObserverCallback,
+    options?: IntersectionObserverInit
+  ) {}
+
   disconnect(): void {}
   observe(target: Element): void {}
   unobserve(target: Element): void {}
@@ -19,7 +22,7 @@ global.IntersectionObserver = class IntersectionObserver {
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
   constructor(callback: ResizeObserverCallback) {}
-  
+
   disconnect(): void {}
   observe(target: Element, options?: ResizeObserverOptions): void {}
   unobserve(target: Element): void {}

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface Tutorial {
   id: string;
@@ -26,7 +26,7 @@ interface Tutorial {
   estimated_time: number;
   view_count: number;
   like_count: number;
-  status: "draft" | "published" | "archived";
+  status: 'draft' | 'published' | 'archived';
   created_at: string;
 }
 
@@ -47,10 +47,10 @@ export default function TutorialDetailPage() {
         if (response.ok) {
           setTutorial(result.tutorial);
         } else {
-          console.error("获取教程详情失败:", result.error);
+          console.error('获取教程详情失败:', result.error);
         }
       } catch (error) {
-        console.error("获取教程详情错误:", error);
+        console.error('获取教程详情错误:', error);
       } finally {
         setLoading(false);
       }
@@ -67,8 +67,8 @@ export default function TutorialDetailPage() {
   };
 
   const getDifficultyText = (level: number) => {
-    const difficulties = ["入门", "简单", "中等", "困难", "专家"];
-    return difficulties[level - 1] || "未知";
+    const difficulties = ['入门', '简单', '中等', '困难', '专家'];
+    return difficulties[level - 1] || '未知';
   };
 
   if (loading) {
@@ -372,12 +372,12 @@ export default function TutorialDetailPage() {
             <div className="flex items-center space-x-4">
               <Button
                 onClick={handleLike}
-                variant={liked ? "default" : "outline"}
-                className={liked ? "bg-red-500 hover:bg-red-600" : ""}
+                variant={liked ? 'default' : 'outline'}
+                className={liked ? 'bg-red-500 hover:bg-red-600' : ''}
               >
                 <svg
                   className="w-5 h-5 mr-2"
-                  fill={liked ? "white" : "currentColor"}
+                  fill={liked ? 'white' : 'currentColor'}
                   viewBox="0 0 20 20"
                 >
                   <path
@@ -386,7 +386,7 @@ export default function TutorialDetailPage() {
                     clipRule="evenodd"
                   />
                 </svg>
-                {liked ? "已喜欢" : "喜欢"} (
+                {liked ? '已喜欢' : '喜欢'} (
                 {tutorial.like_count + (liked ? 1 : 0)})
               </Button>
 

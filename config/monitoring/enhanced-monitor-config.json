@@ -342,12 +342,7 @@
     "export_formats": ["pdf", "csv", "json"]
   },
   "health_checks": {
-    "enabled_endpoints": [
-      "/health",
-      "/healthz",
-      "/api/health",
-      "/status"
-    ],
+    "enabled_endpoints": ["/health", "/healthz", "/api/health", "/status"],
     "custom_checks": [
       {
         "name": "database_connectivity",

@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-02-28T09:22:56.472Z",
+  "testName": "DC006 API Integration Backtest",
+  "modules": {
+    "fileStructure": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "网关文件存在性: src/app/api/data-center/gateway/route.ts",
+          "status": "passed",
+          "details": "文件存在"
+        }
+      ]
+    },
+    "codeQuality": {
+      "status": "partial",
+      "tests": [
+        {
+          "name": "导出函数完整性",
+          "status": "passed",
+          "details": "检查通过"
+        },
+        {
+          "name": "错误处理机制",
+          "status": "passed",
+          "details": "检查通过"
+        },
+        {
+          "name": "模块路由映射",
+          "status": "failed",
+          "details": "检查未通过"
+        },
+        {
+          "name": "健康检查功能",
+          "status": "passed",
+          "details": "检查通过"
+        }
+      ]
+    },
+    "routing": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "模块路由配置",
+          "status": "passed",
+          "details": "配置了 8/8 个模块"
+        },
+        {
+          "name": "健康检查配置",
+          "status": "passed",
+          "details": "健康检查已配置"
+        }
+      ]
+    },
+    "functionality": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "代理请求功能",
+          "status": "passed",
+          "details": "功能实现完整"
+        },
+        {
+          "name": "数据聚合功能",
+          "status": "passed",
+          "details": "功能实现完整"
+        },
+        {
+          "name": "参数解析功能",
+          "status": "passed",
+          "details": "功能实现完整"
+        },
+        {
+          "name": "响应格式标准化",
+          "status": "passed",
+          "details": "功能实现完整"
+        }
+      ]
+    },
+    "documentation": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "文档文件存在性: docs/api/API_INTEGRATION_GUIDE.md",
+          "status": "passed",
+          "details": "文档存在"
+        },
+        {
+          "name": "文档文件存在性: docs/technical/DC005_PROTOTYPE_IMPLEMENTATION_REPORT.md",
+          "status": "passed",
+          "details": "文档存在"
+        }
+      ]
+    }
+  },
+  "summary": {
+    "totalTests": 13,
+    "passedTests": 12,
+    "failedTests": 1,
+    "successRate": 92
+  }
+}

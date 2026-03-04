@@ -3,9 +3,9 @@
  * 处理FCX购买、支付验证等功能
  */
 
-import { 
+import {
   PurchaseFcxDTO,
-  FcxTransactionType
+  FcxTransactionType,
 } from '../models/fcx-account.model';
 import { IPaymentService } from './interfaces';
 import { supabase } from '@/lib/supabase';
@@ -14,7 +14,6 @@ import { usdToFcx } from '../utils/helpers';
 import { FCX_CONSTANTS } from '../index';
 
 export class PaymentService implements IPaymentService {
-  
   /**
    * 处理FCX购买支付
    */
@@ -30,7 +29,7 @@ export class PaymentService implements IPaymentService {
         return {
           success: false,
           fcxAmount: 0,
-          errorMessage: '购买金额必须大于0'
+          errorMessage: '购买金额必须大于0',
         };
       }
 
@@ -58,14 +57,14 @@ export class PaymentService implements IPaymentService {
             account_type: 'user',
             status: 'active',
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
           } as any);
 
         if (createError) {
           return {
             success: false,
             fcxAmount: 0,
-            errorMessage: `创建账户失败: ${createError.message}`
+            errorMessage: `创建账户失败: ${createError.message}`,
           };
         }
         accountId = newAccountId;
@@ -75,18 +74,18 @@ export class PaymentService implements IPaymentService {
 
       // 4. 模拟支付处理（实际项目中需要集成真实支付网关）
       const paymentSuccess = await this.simulatePaymentProcessing(dto);
-      
+
       if (!paymentSuccess) {
         return {
           success: false,
           fcxAmount: 0,
-          errorMessage: '支付处理失败'
+          errorMessage: '支付处理失败',
         };
       }
 
       // 5. 创建交易记录
       const transactionId = generateUUID();
-      const { error: transactionError } = await supabase
+      const { error: transactionError } = (await supabase
         .from('fcx_transactions')
         .insert({
           id: transactionId,
@@ -97,43 +96,42 @@ export class PaymentService implements IPaymentService {
           reference_id: null,
           memo: `购买${fcxAmount} as any FCX`,
           status: 'completed',
-          created_at: new Date()
-        });
+          created_at: new Date(),
+        })) as any;
 
       if (transactionError) {
         return {
           success: false,
           fcxAmount: 0,
-          errorMessage: `创建交易记录失败: ${transactionError.message}`
+          errorMessage: `创建交易记录失败: ${transactionError.message}`,
         };
       }
 
       // 6. 更新账户余额
       const { error: updateError } = await supabase.rpc('add_fcx_balance', {
         p_account_id: accountId,
-        p_amount: fcxAmount
+        p_amount: fcxAmount,
       });
 
       if (updateError) {
         return {
           success: false,
           fcxAmount: 0,
-          errorMessage: `更新账户余额失败: ${updateError.message}`
+          errorMessage: `更新账户余额失败: ${updateError.message}`,
         };
       }
 
       return {
         success: true,
         transactionId,
-        fcxAmount
+        fcxAmount,
       };
-
     } catch (error) {
       console.error('处理FCX购买错误:', error);
       return {
         success: false,
         fcxAmount: 0,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
@@ -145,7 +143,7 @@ export class PaymentService implements IPaymentService {
     try {
       // 在实际项目中，这里需要调用支付网关的验证接口
       // 目前模拟验证逻辑
-      
+
       const { data, error } = await supabase
         .from('payment_records')
         .select('status')
@@ -164,8 +162,7 @@ export class PaymentService implements IPaymentService {
   }
 
   /**
-   * 退款处理
-   */
+   * 退款处?   */
   async processRefund(transactionId: string, amount: number): Promise<boolean> {
     try {
       // 1. 验证交易记录
@@ -179,19 +176,16 @@ export class PaymentService implements IPaymentService {
         return false;
       }
 
-      // 2. 验证退款金额
-      if (amount <= 0 || amount > transaction.amount) {
+      // 2. 验证退款金?      if (amount <= 0 || amount > transaction.amount) {
         return false;
       }
 
-      // 3. 验证交易类型是否支持退款
-      if (transaction.transaction_type !== 'purchase') {
+      // 3. 验证交易类型是否支持退?      if (transaction.transaction_type !== 'purchase') {
         return false;
       }
 
-      // 4. 创建退款交易记录
-      const refundTransactionId = generateUUID();
-      const { error: refundError } = await supabase
+      // 4. 创建退款交易记?      const refundTransactionId = generateUUID();
+      const { error: refundError } = (await supabase
         .from('fcx_transactions')
         .insert({
           id: refundTransactionId,
@@ -200,20 +194,23 @@ export class PaymentService implements IPaymentService {
           amount: amount,
           transaction_type: 'refund',
           reference_id: transactionId,
-          memo: `退款 ${amount} as any FCX`,
+          memo: `退?${amount} as any FCX`,
           status: 'completed',
-          created_at: new Date()
-        });
+          created_at: new Date(),
+        })) as any;
 
       if (refundError) {
         return false;
       }
 
       // 5. 更新账户余额
-      const { error: updateError } = await supabase.rpc('subtract_fcx_balance', {
-        p_account_id: transaction.to_account_id,
-        p_amount: amount
-      });
+      const { error: updateError } = await supabase.rpc(
+        'subtract_fcx_balance',
+        {
+          p_account_id: transaction.to_account_id,
+          p_amount: amount,
+        }
+      );
 
       if (updateError) {
         return false;
@@ -221,7 +218,7 @@ export class PaymentService implements IPaymentService {
 
       return true;
     } catch (error) {
-      console.error('处理退款错误:', error);
+      console.error('处理退款错?', error);
       return false;
     }
   }
@@ -229,11 +226,13 @@ export class PaymentService implements IPaymentService {
   /**
    * 模拟支付处理（实际项目中需要替换为真实的支付网关集成）
    */
-  private async simulatePaymentProcessing(dto: PurchaseFcxDTO): Promise<boolean> {
+  private async simulatePaymentProcessing(
+    dto: PurchaseFcxDTO
+  ): Promise<boolean> {
     try {
       // 模拟支付处理延迟
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // 模拟95%的成功率
       return Math.random() > 0.05;
     } catch (error) {

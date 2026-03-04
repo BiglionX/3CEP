@@ -7,7 +7,7 @@ console.log('🧪 实时处理服务配置检查...\n');
 console.log('1️⃣ 检查核心文件...');
 const filesToCheck = [
   'src/data-center/streaming/real-time-service.ts',
-  'src/data-center/streaming/extended-processors.ts'
+  'src/data-center/streaming/extended-processors.ts',
 ];
 
 filesToCheck.forEach(file => {
@@ -19,7 +19,7 @@ filesToCheck.forEach(file => {
 console.log('\n2️⃣ 检查事件类型...');
 const eventTypes = [
   'price_update',
-  'inventory_change', 
+  'inventory_change',
   'user_action',
   'system_alert',
   'data_quality_issue',
@@ -27,7 +27,7 @@ const eventTypes = [
   'supplier_notification',
   'maintenance_alert',
   'performance_metric',
-  'security_event'
+  'security_event',
 ];
 
 console.log('   📋 支持的事件类型:');
@@ -45,7 +45,7 @@ const processors = [
   'SupplierNotificationProcessor',
   'MaintenanceAlertProcessor',
   'PerformanceMetricProcessor',
-  'SecurityEventProcessor'
+  'SecurityEventProcessor',
 ];
 
 console.log('   📋 实现的处理器:');
@@ -65,7 +65,7 @@ const features = [
   '✅ 死信队列机制',
   '✅ 性能指标收集',
   '✅ 超时控制机制',
-  '✅ 服务状态管理'
+  '✅ 服务状态管理',
 ];
 
 features.forEach(feature => {

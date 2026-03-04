@@ -2,37 +2,21 @@
  * 自动询价比价平台数据模型定义
  */
 
-// 询价模板状态枚举
-export enum QuotationTemplateStatus {
-  ACTIVE = "active",
-  INACTIVE = "inactive",
+// 询价模板状态枚?export enum QuotationTemplateStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
 }
 
-// 询价请求状态枚举
-export enum QuotationRequestStatus {
-  DRAFT = "draft", // 草稿
-  SENT = "sent", // 已发送
-  PARTIAL_RESPONSE = "partial_response", // 部分回复
-  COMPLETED = "completed", // 已完成
-  CANCELLED = "cancelled", // 已取消
-}
+// 询价请求状态枚?export enum QuotationRequestStatus {
+  DRAFT = 'draft', // 草稿
+  SENT = 'sent', // 已发?  PARTIAL_RESPONSE = 'partial_response', // 部分回复
+  COMPLETED = 'completed', // 已完?  CANCELLED = 'cancelled', // 已取?}
 
-// 供应商报价状态枚举
-export enum SupplierQuoteStatus {
-  RECEIVED = "received", // 已收到
-  ACCEPTED = "accepted", // 已接受
-  REJECTED = "rejected", // 已拒绝
-  NEGOTIATING = "negotiating", // 谈判中
-  EXPIRED = "expired", // 已过期
-}
+// 供应商报价状态枚?export enum SupplierQuoteStatus {
+  RECEIVED = 'received', // 已收?  ACCEPTED = 'accepted', // 已接?  REJECTED = 'rejected', // 已拒?  NEGOTIATING = 'negotiating', // 谈判?  EXPIRED = 'expired', // 已过?}
 
-// 邮件发送状态枚举
-export enum EmailStatus {
-  PENDING = "pending", // 待发送
-  SENT = "sent", // 已发送
-  FAILED = "failed", // 发送失败
-  DELIVERED = "delivered", // 已投递
-  OPENED = "opened", // 已打开
+// 邮件发送状态枚?export enum EmailStatus {
+  PENDING = 'pending', // 待发?  SENT = 'sent', // 已发?  FAILED = 'failed', // 发送失?  DELIVERED = 'delivered', // 已投?  OPENED = 'opened', // 已打开
 }
 
 // 询价模板接口
@@ -41,17 +25,15 @@ export interface QuotationTemplate {
   name: string; // 模板名称
   subject: string; // 邮件主题模板
   content: string; // 邮件内容模板
-  contentType: "html" | "text"; // 内容类型
-  language: "zh" | "en"; // 语言
+  contentType: 'html' | 'text'; // 内容类型
+  language: 'zh' | 'en'; // 语言
   variables: Record<string, string>; // 模板变量定义
-  isActive: boolean; // 是否激活
-  createdBy: string; // 创建人ID
+  isActive: boolean; // 是否激?  createdBy: string; // 创建人ID
   createdAt: Date;
   updatedAt: Date;
 }
 
-// 询价商品项接口
-export interface QuotationItem {
+// 询价商品项接?export interface QuotationItem {
   id: string;
   productId?: string; // 商品ID
   productName: string; // 商品名称
@@ -74,32 +56,24 @@ export interface QuotationRequest {
   deliveryDeadline?: Date; // 交货截止时间
   responseDeadline: Date; // 回复截止时间
   specialRequirements?: string; // 特殊要求
-  status: QuotationRequestStatus; // 状态
-  sentAt?: Date; // 发送时间
-  completedAt?: Date; // 完成时间
+  status: QuotationRequestStatus; // 状?  sentAt?: Date; // 发送时?  completedAt?: Date; // 完成时间
   createdBy: string; // 创建人ID
   createdAt: Date;
   updatedAt: Date;
 }
 
-// 供应商报价接口
-export interface SupplierQuote {
+// 供应商报价接?export interface SupplierQuote {
   id: string;
   quotationRequestId: string; // 关联询价请求ID
   supplierId: string; // 供应商ID
   quoteNumber?: string; // 报价单号
   items: QuoteItem[]; // 报价项目明细
-  totalAmount: number; // 总金额
-  currency: string; // 货币
-  validityPeriodStart?: Date; // 有效期开始
-  validityPeriodEnd?: Date; // 有效期结束
-  deliveryTime?: number; // 交货时间（天）
-  deliveryTerms?: string; // 交货条款
+  totalAmount: number; // 总金?  currency: string; // 货币
+  validityPeriodStart?: Date; // 有效期开?  validityPeriodEnd?: Date; // 有效期结?  deliveryTime?: number; // 交货时间（天?  deliveryTerms?: string; // 交货条款
   paymentTerms?: string; // 付款条款
   warrantyTerms?: string; // 保修条款
   remarks?: string; // 备注
-  status: SupplierQuoteStatus; // 状态
-  receivedAt: Date; // 收到时间
+  status: SupplierQuoteStatus; // 状?  receivedAt: Date; // 收到时间
   processedAt?: Date; // 处理时间
   createdAt: Date;
   updatedAt: Date;
@@ -120,18 +94,13 @@ export interface QuoteItem {
   createdAt: Date;
 }
 
-// 邮件发送记录接口
-export interface EmailLog {
+// 邮件发送记录接?export interface EmailLog {
   id: string;
   quotationRequestId: string; // 关联询价请求ID
   supplierId: string; // 供应商ID
-  toAddress: string; // 收件人邮箱
-  subject: string; // 邮件主题
+  toAddress: string; // 收件人邮?  subject: string; // 邮件主题
   content: string; // 邮件内容
-  status: EmailStatus; // 发送状态
-  sentAt?: Date; // 发送时间
-  deliveredAt?: Date; // 投递时间
-  openedAt?: Date; // 打开时间
+  status: EmailStatus; // 发送状?  sentAt?: Date; // 发送时?  deliveredAt?: Date; // 投递时?  openedAt?: Date; // 打开时间
   errorMessage?: string; // 错误信息
   retryCount: number; // 重试次数
   createdAt: Date;
@@ -155,12 +124,8 @@ export interface ComparisonReport {
 
 // 报告摘要接口
 export interface ReportSummary {
-  totalSuppliers: number; // 总供应商数
-  respondedSuppliers: number; // 已回复供应商数
-  averagePrice: number; // 平均价格
-  lowestPrice: number; // 最低价格
-  highestPrice: number; // 最高价格
-  currency: string; // 货币
+  totalSuppliers: number; // 总供应商?  respondedSuppliers: number; // 已回复供应商?  averagePrice: number; // 平均价格
+  lowestPrice: number; // 最低价?  highestPrice: number; // 最高价?  currency: string; // 货币
 }
 
 // 价格分析接口
@@ -169,9 +134,7 @@ export interface PriceAnalysis {
     supplierId: string;
     supplierName: string;
     totalPrice: number;
-    priceDeviation: number; // 与平均价格的偏差百分比
-    competitiveness: "high" | "medium" | "low"; // 竞争力等级
-  }>;
+    priceDeviation: number; // 与平均价格的偏差百分?    competitiveness: 'high' | 'medium' | 'low'; // 竞争力等?  }>;
   priceTrends: Array<{
     itemId: string;
     itemName: string;
@@ -190,10 +153,9 @@ export interface DeliveryAnalysis {
     supplierName: string;
     deliveryTime: number;
     deliveryTerms: string;
-    riskLevel: "low" | "medium" | "high";
+    riskLevel: 'low' | 'medium' | 'high';
   }>;
-  onTimeDeliveryRate: number; // 准时交货率
-}
+  onTimeDeliveryRate: number; // 准时交货?}
 
 // 风险评估接口
 export interface RiskAssessment {
@@ -201,21 +163,20 @@ export interface RiskAssessment {
     supplierId: string;
     supplierName: string;
     riskScore: number; // 风险评分 0-100
-    riskLevel: "low" | "medium" | "high";
+    riskLevel: 'low' | 'medium' | 'high';
     riskFactors: string[]; // 风险因素
   }>;
   overallRisk: {
     score: number;
-    level: "low" | "medium" | "high";
+    level: 'low' | 'medium' | 'high';
     summary: string;
   };
 }
 
 // 推荐建议接口
 export interface Recommendation {
-  type: "supplier" | "price" | "delivery" | "risk"; // 建议类型
-  priority: "high" | "medium" | "low"; // 优先级
-  content: string; // 建议内容
+  type: 'supplier' | 'price' | 'delivery' | 'risk'; // 建议类型
+  priority: 'high' | 'medium' | 'low'; // 优先?  content: string; // 建议内容
   rationale: string; // 建议理由
 }
 
@@ -224,8 +185,8 @@ export interface CreateQuotationTemplateDTO {
   name: string;
   subject: string;
   content: string;
-  contentType: "html" | "text";
-  language: "zh" | "en";
+  contentType: 'html' | 'text';
+  language: 'zh' | 'en';
   variables: Record<string, string>;
 }
 
@@ -234,8 +195,8 @@ export interface UpdateQuotationTemplateDTO {
   name?: string;
   subject?: string;
   content?: string;
-  contentType?: "html" | "text";
-  language?: "zh" | "en";
+  contentType?: 'html' | 'text';
+  language?: 'zh' | 'en';
   variables?: Record<string, string>;
   isActive?: boolean;
 }
@@ -301,14 +262,13 @@ export interface QuotationQueryParams {
   startDate?: Date;
   endDate?: Date;
   keyword?: string;
-  sortBy?: "createdAt" | "updatedAt" | "responseDeadline";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'createdAt' | 'updatedAt' | 'responseDeadline';
+  sortOrder?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
 }
 
-// 模板变量上下文接口
-export interface TemplateVariables {
+// 模板变量上下文接?export interface TemplateVariables {
   quotationNumber: string;
   sendDate: string;
   supplierName: string;
@@ -345,7 +305,7 @@ export interface QuoteParseResult {
     deliveryTime?: number;
     validityDays?: number;
   };
-  confidence: number; // 解析置信度 0-100
+  confidence: number; // 解析置信?0-100
   warnings?: string[];
   errors?: string[];
 }

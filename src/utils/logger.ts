@@ -1,9 +1,9 @@
-// 日志工具类 - 规范化日志输出
+﻿// 日志工具 - 规范化日志输出
 export enum LogLevel {
   DEBUG = 0,
   INFO = 1,
   WARN = 2,
-  ERROR = 3
+  ERROR = 3,
 }
 
 interface LogEntry {
@@ -34,17 +34,21 @@ class Logger {
     const timestamp = entry.timestamp.toISOString();
     const service = `[${this.serviceName}]`;
     const traceInfo = entry.traceId ? `[${entry.traceId}]` : '';
-    
+
     let message = `${timestamp} ${service}${traceInfo} ${levelStr}: ${entry.message}`;
-    
+
     if (entry.context) {
       message += ` | Context: ${JSON.stringify(entry.context)}`;
     }
-    
+
     return message;
   }
 
-  private log(level: LogLevel, message: string, context?: Record<string, any>): void {
+  private log(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, any>
+  ): void {
     if (level < this.minLevel) return;
 
     const entry: LogEntry = {
@@ -52,14 +56,14 @@ class Logger {
       message,
       timestamp: new Date(),
       context,
-      traceId: this.generateTraceId()
+      traceId: this.generateTraceId(),
     };
 
     const formattedMessage = this.formatMessage(entry);
-
+    
     // 发送到日志服务（实际项目中实现）
     this.sendToLogService(entry);
-
+    
     // 控制台输出
     if (this.enableConsole) {
       switch (level) {
@@ -85,7 +89,7 @@ class Logger {
 
   private sendToLogService(entry: LogEntry): void {
     // 实际项目中应该发送到日志收集服务
-    // 例如: Sentry, ELK, DataDog 等
+    // 例如：Sentry, ELK, DataDog 等
     /*
     fetch('/api/logs', {
       method: 'POST',
@@ -116,11 +120,16 @@ class Logger {
   }
 
   // 特定场景的日志方法
-  httpRequest(method: string, url: string, statusCode: number, duration: number): void {
+  httpRequest(
+    method: string,
+    url: string,
+    statusCode: number,
+    duration: number
+  ): void {
     this.info(`HTTP ${method} ${url}`, {
       statusCode,
       duration: `${duration}ms`,
-      type: 'http_request'
+      type: 'http_request',
     });
   }
 
@@ -128,22 +137,26 @@ class Logger {
     this.debug(`DB Query: ${query}`, {
       duration: `${duration}ms`,
       rowsAffected,
-      type: 'database_query'
+      type: 'database_query',
     });
   }
 
-  userAction(action: string, userId?: string, metadata?: Record<string, any>): void {
+  userAction(
+    action: string,
+    userId?: string,
+    metadata?: Record<string, any>
+  ): void {
     this.info(`User Action: ${action}`, {
       userId,
       ...metadata,
-      type: 'user_action'
+      type: 'user_action',
     });
   }
 
   securityEvent(event: string, details?: Record<string, any>): void {
     this.warn(`Security Event: ${event}`, {
       ...details,
-      type: 'security_event'
+      type: 'security_event',
     });
   }
 
@@ -152,7 +165,7 @@ class Logger {
       stack: error.stack,
       name: error.name,
       ...context,
-      type: 'exception'
+      type: 'exception',
     });
   }
 

@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-02-28T10:12:10.250Z",
+  "testName": "DC009 Metadata Management Backtest",
+  "modules": {
+    "fileStructure": {
+      "status": "passed",
+      "tests": [
+        {
+          "name": "文件存在性: src/data-center/models/metadata-models.ts",
+          "status": "passed",
+          "details": "文件存在"
+        },
+        {
+          "name": "文件存在性: src/data-center/core/metadata-service.ts",
+          "status": "passed",
+          "details": "文件存在"
+        },
+        {
+          "name": "文件存在性: src/app/data-center/metadata/page.tsx",
+          "status": "passed",
+          "details": "文件存在"
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    },
+    "codeQuality": {
+      "status": "passed",
+      "tests": [
+        {
+          "name": "模型接口定义完整性",
+          "status": "passed",
+          "details": "包含必要接口定义"
+        },
+        {
+          "name": "服务类实现",
+          "status": "passed",
+          "details": "包含MetadataService类"
+        },
+        {
+          "name": "搜索功能实现",
+          "status": "passed",
+          "details": "包含搜索方法"
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    },
+    "functionality": {
+      "status": "passed",
+      "tests": [
+        {
+          "name": "搜索功能",
+          "status": "passed",
+          "details": "包含搜索功能"
+        },
+        {
+          "name": "筛选功能",
+          "status": "passed",
+          "details": "包含筛选功能"
+        },
+        {
+          "name": "资产展示",
+          "status": "passed",
+          "details": "包含资产展示"
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "summary": {
+    "totalTests": 9,
+    "passedTests": 9,
+    "failedTests": 0,
+    "successRate": 100
+  }
+}

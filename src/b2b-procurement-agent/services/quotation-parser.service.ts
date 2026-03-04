@@ -3,16 +3,16 @@
  * 负责解析供应商回复的邮件内容，提取结构化报价信息
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { QuotationItem, QuoteParseResult } from "../models/quotation.model";
+import { createClient } from '@supabase/supabase-js';
+import { QuotationItem, QuoteParseResult } from '../models/quotation.model';
 
 export class QuotationParserService {
   private supabase: any;
 
   constructor() {
     this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-      process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
     );
   }
 
@@ -33,14 +33,12 @@ export class QuotationParserService {
       // 提取报价项目
       const quoteItems = this.extractQuoteItems(cleanContent, quotationItems);
 
-      // 计算总金额
-      const totalAmount = quoteItems.reduce(
+      // 计算总金?      const totalAmount = quoteItems.reduce(
         (sum, item) => sum + item.totalPrice,
         0
       );
 
-      // 计算解析置信度
-      const confidence = this.calculateConfidence(quoteItems, quotationItems);
+      // 计算解析置信?      const confidence = this.calculateConfidence(quoteItems, quotationItems);
 
       // 识别潜在问题
       const { warnings, errors } = this.identifyIssues(
@@ -54,7 +52,7 @@ export class QuotationParserService {
           quoteNumber: quoteInfo.quoteNumber,
           items: quoteItems,
           totalAmount,
-          currency: quoteInfo.currency || "CNY",
+          currency: quoteInfo.currency || 'CNY',
           deliveryTime: quoteInfo.deliveryTime,
           validityDays: quoteInfo.validityDays,
         },
@@ -63,7 +61,7 @@ export class QuotationParserService {
         errors,
       };
     } catch (error) {
-      console.error("报价解析错误:", error);
+      console.error('报价解析错误:', error);
       return {
         success: false,
         confidence: 0,
@@ -77,19 +75,19 @@ export class QuotationParserService {
    */
   private cleanHtmlContent(html: string): string {
     // 移除HTML标签
-    let text = html.replace(/<[^>]*>/g, " ");
+    let text = html.replace(/<[^>]*>/g, ' ');
 
     // 替换HTML实体
     text = text
-      .replace(/&nbsp;/g, " ")
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'");
 
     // 清理多余空白字符
-    text = text.replace(/\s+/g, " ").trim();
+    text = text.replace(/\s+/g, ' ').trim();
 
     return text;
   }
@@ -105,7 +103,7 @@ export class QuotationParserService {
   } {
     const result = {
       quoteNumber: undefined as string | undefined,
-      currency: "CNY",
+      currency: 'CNY',
       deliveryTime: undefined as number | undefined,
       validityDays: undefined as number | undefined,
     };
@@ -134,7 +132,7 @@ export class QuotationParserService {
 
     for (const [index, pattern] of currencyPatterns.entries()) {
       if (pattern.test(content)) {
-        result.currency = ["CNY", "USD", "EUR"][index];
+        result.currency = ['CNY', 'USD', 'EUR'][index];
         break;
       }
     }
@@ -154,9 +152,8 @@ export class QuotationParserService {
       }
     }
 
-    // 提取有效期
-    const validityPatterns = [
-      /有效期[:：]?\s*(\d+)\s*(天|日)/i,
+    // 提取有效?    const validityPatterns = [
+      /有效期[:：]?\s*(\d+)\s*(天|�?/i,
       /Validity[:：]?\s*(\d+)\s*(days|day)/i,
       /报价有效期[:：]?\s*(\d+)/i,
     ];
@@ -186,7 +183,7 @@ export class QuotationParserService {
     specifications?: string;
   }> {
     const quoteItems: Array<any> = [];
-    const lines = content.split("\n");
+    const lines = content.split('\n');
 
     // 查找包含价格信息的行
     for (const line of lines) {
@@ -196,8 +193,7 @@ export class QuotationParserService {
       }
     }
 
-    // 如果没有找到结构化的价格信息，尝试智能匹配
-    if (quoteItems.length === 0) {
+    // 如果没有找到结构化的价格信息，尝试智能匹?    if (quoteItems.length === 0) {
       quoteItems.push(...this.intelligentItemMatching(content, originalItems));
     }
 
@@ -211,10 +207,10 @@ export class QuotationParserService {
     line: string,
     originalItems: QuotationItem[]
   ): any | null {
-    // 匹配价格模式：数字 + 价格关键词 + 数字（价格）
+    // 匹配价格模式：数?+ 价格关键?+ 数字（价格）
     const pricePatterns = [
-      /(.+?)\s+(\d+(?:\.\d+)?)\s*(元|￥|\$|€)\s*(\d+(?:\.\d+)?)/i,
-      /(.+?)\s+(\d+(?:\.\d+)?)\s*[:：]?\s*(\d+(?:\.\d+)?)\s*(元|￥|\$|€)/i,
+      /(.+?)\s+(\d+(?:\.\d+)?)\s*(元|￥|\$|�?\s*(\d+(?:\.\d+)?)/i,
+      /(.+?)\s+(\d+(?:\.\d+)?)\s*[:：]?\s*(\d+(?:\.\d+)?)\s*(元|￥|\$|�?/i,
       /(.+?)\s*单价[:：]?\s*(\d+(?:\.\d+)?)\s*总价[:：]?\s*(\d+(?:\.\d+)?)/i,
     ];
 
@@ -231,8 +227,7 @@ export class QuotationParserService {
           quantity > 0 &&
           unitPrice > 0
         ) {
-          // 匹配最相似的商品名称
-          const matchedItem = this.findMostSimilarItem(
+          // 匹配最相似的商品名?          const matchedItem = this.findMostSimilarItem(
             itemName.trim(),
             originalItems
           );
@@ -264,12 +259,12 @@ export class QuotationParserService {
       // 在内容中查找商品相关信息
       const itemPattern = new RegExp(
         `(?:${originalItem.productName}|${originalItem.category})`,
-        "i"
+        'i'
       );
 
       if (itemPattern.test(content)) {
         // 尝试提取价格信息
-        const priceMatch = content.match(/(\d+(?:\.\d+)?)\s*(?:元|￥|\$|€)/);
+        const priceMatch = content.match(/(\d+(?:\.\d+)?)\s*(?:元|￥|\$|�?/);
         if (priceMatch) {
           const unitPrice = parseFloat(priceMatch[1]);
           if (!isNaN(unitPrice) && unitPrice > 0) {
@@ -289,8 +284,7 @@ export class QuotationParserService {
   }
 
   /**
-   * 查找最相似的商品
-   */
+   * 查找最相似的商?   */
   private findMostSimilarItem(
     itemName: string,
     items: QuotationItem[]
@@ -320,8 +314,7 @@ export class QuotationParserService {
     if (s1 === s2) return 1;
     if (s1.includes(s2) || s2.includes(s1)) return 0.8;
 
-    // 计算编辑距离相似度
-    const distance = this.levenshteinDistance(s1, s2);
+    // 计算编辑距离相似?    const distance = this.levenshteinDistance(s1, s2);
     const maxLength = Math.max(s1.length, s2.length);
     return maxLength > 0 ? 1 - distance / maxLength : 0;
   }
@@ -358,28 +351,23 @@ export class QuotationParserService {
   }
 
   /**
-   * 计算解析置信度
-   */
+   * 计算解析置信?   */
   private calculateConfidence(
     parsedItems: any[],
     originalItems: QuotationItem[]
   ): number {
     if (parsedItems.length === 0) return 0;
 
-    // 基础分数：成功解析的项目数占比
-    const itemMatchRatio = parsedItems.length / originalItems.length;
-    let confidence = itemMatchRatio * 60; // 最高60分
-
-    // 价格合理性检查
-    let priceValidCount = 0;
+    // 基础分数：成功解析的项目数占?    const itemMatchRatio = parsedItems.length / originalItems.length;
+    let confidence = itemMatchRatio * 60; // 最?0�?
+    // 价格合理性检?    let priceValidCount = 0;
     for (const parsedItem of parsedItems) {
       const originalItem = originalItems.find(
-        (item) => item.productName === parsedItem.itemName
+        item => item.productName === parsedItem.itemName
       );
 
       if (originalItem && parsedItem.unitPrice > 0) {
-        // 检查价格是否在合理范围内（±50%）
-        const estimatedPrice = originalItem.estimatedUnitPrice || 0;
+        // 检查价格是否在合理范围内（±50%�?        const estimatedPrice = originalItem.estimatedUnitPrice || 0;
         if (
           estimatedPrice === 0 ||
           (parsedItem.unitPrice >= estimatedPrice * 0.5 &&
@@ -390,8 +378,7 @@ export class QuotationParserService {
       }
     }
 
-    confidence += (priceValidCount / parsedItems.length) * 40; // 最高40分
-
+    confidence += (priceValidCount / parsedItems.length) * 40; // 最?0�?
     return Math.min(Math.round(confidence), 100);
   }
 
@@ -405,23 +392,21 @@ export class QuotationParserService {
     const warnings: string[] = [];
     const errors: string[] = [];
 
-    // 检查是否所有商品都被报价
-    if (parsedItems.length < originalItems.length) {
+    // 检查是否所有商品都被报?    if (parsedItems.length < originalItems.length) {
       const missingItems = originalItems.filter(
-        (orig) =>
-          !parsedItems.some((parsed) => parsed.itemName === orig.productName)
+        orig =>
+          !parsedItems.some(parsed => parsed.itemName === orig.productName)
       );
       warnings.push(
         `以下商品未被报价: ${missingItems
-          .map((item) => item.productName)
-          .join(", ")}`
+          .map(item => item.productName)
+          .join(', ')}`
       );
     }
 
-    // 检查价格异常
-    for (const parsedItem of parsedItems) {
+    // 检查价格异?    for (const parsedItem of parsedItems) {
       const originalItem = originalItems.find(
-        (item) => item.productName === parsedItem.itemName
+        item => item.productName === parsedItem.itemName
       );
 
       if (originalItem && originalItem.estimatedUnitPrice) {
@@ -441,15 +426,14 @@ export class QuotationParserService {
       }
     }
 
-    // 检查数量是否匹配
-    for (const parsedItem of parsedItems) {
+    // 检查数量是否匹?    for (const parsedItem of parsedItems) {
       const originalItem = originalItems.find(
-        (item) => item.productName === parsedItem.itemName
+        item => item.productName === parsedItem.itemName
       );
 
       if (originalItem && parsedItem.quantity !== originalItem.quantity) {
         warnings.push(
-          `${parsedItem.itemName} 的报价数量 (${parsedItem.quantity}) 与请求数量 (${originalItem.quantity}) 不一致`
+          `${parsedItem.itemName} 的报价数?(${parsedItem.quantity}) 与请求数?(${originalItem.quantity}) 不一致`
         );
       }
     }
@@ -466,13 +450,12 @@ export class QuotationParserService {
     parseResult: QuoteParseResult
   ): Promise<any> {
     if (!parseResult.quoteData || !parseResult.success) {
-      throw new Error("无效的解析结果");
+      throw new Error('无效的解析结?);
     }
 
     try {
-      // 创建供应商报价记录
-      const { data: quoteData, error: quoteError } = await this.supabase
-        .from("supplier_quotes")
+      // 创建供应商报价记?      const { data: quoteData, error: quoteError } = await this.supabase
+        .from('supplier_quotes')
         .insert([
           {
             quotation_request_id: quotationRequestId,
@@ -488,7 +471,7 @@ export class QuotationParserService {
                     parseResult.quoteData.validityDays * 24 * 60 * 60 * 1000
                 )
               : null,
-            status: "received",
+            status: 'received',
           },
         ])
         .select()
@@ -499,10 +482,9 @@ export class QuotationParserService {
       // 创建报价项目明细
       const quoteItems = parseResult.quoteData.items.map((item: any) => ({
         quote_id: quoteData.id,
-        item_id: "", // 需要根据实际情况关联
-        item_name: item.itemName,
+        item_id: '', // 需要根据实际情况关?        item_name: item.itemName,
         quantity: item.quantity,
-        unit: "件", // 默认单位
+        unit: '�?, // 默认单位
         unit_price: item.unitPrice,
         total_price: item.totalPrice,
         specifications: item.specifications,
@@ -510,17 +492,17 @@ export class QuotationParserService {
 
       if (quoteItems.length > 0) {
         const { error: itemsError } = await this.supabase
-          .from("quote_items")
+          .from('quote_items')
           .insert(quoteItems);
 
         if (itemsError) {
-          console.warn("保存报价项目明细失败:", itemsError);
+          console.warn('保存报价项目明细失败:', itemsError);
         }
       }
 
       return quoteData;
     } catch (error) {
-      console.error("保存解析结果错误:", error);
+      console.error('保存解析结果错误:', error);
       throw error;
     }
   }

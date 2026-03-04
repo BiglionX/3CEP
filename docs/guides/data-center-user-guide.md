@@ -32,11 +32,13 @@
 ### 环境准备
 
 1. **安装依赖**
+
 ```bash
 npm install
 ```
 
 2. **配置环境变量**
+
 ```bash
 # 复制环境变量模板
 cp .env.datacenter.example .env.datacenter
@@ -46,6 +48,7 @@ vim .env.datacenter
 ```
 
 3. **启动服务**
+
 ```bash
 # 启动开发服务器
 npm run dev
@@ -66,11 +69,11 @@ const event = {
   payload: {
     partId: 'PART001',
     oldPrice: 100,
-    newPrice: 95
+    newPrice: 95,
   },
   timestamp: new Date().toISOString(),
   source: 'pricing_service',
-  priority: 'medium'
+  priority: 'medium',
 };
 
 await realTimeDataService.publishEvent(event);
@@ -82,7 +85,7 @@ await realTimeDataService.publishEvent(event);
 // 记录监控指标
 monitoringService.recordMetric('query_response_time', 150, {
   endpoint: '/api/parts',
-  method: 'GET'
+  method: 'GET',
 });
 
 // 添加告警规则
@@ -93,7 +96,7 @@ monitoringService.addAlertRule({
   condition: 'above',
   threshold: 2000,
   severity: 'warning',
-  notifications: ['console', 'email']
+  notifications: ['console', 'email'],
 });
 ```
 
@@ -113,6 +116,7 @@ console.log(`整体质量评分: ${report.summary.overallScore}%`);
 ### 实时处理API
 
 **发布事件**
+
 ```
 POST /api/data-center/streaming
 {
@@ -125,6 +129,7 @@ POST /api/data-center/streaming
 ```
 
 **获取服务状态**
+
 ```
 GET /api/data-center/streaming?action=status
 ```
@@ -132,11 +137,13 @@ GET /api/data-center/streaming?action=status
 ### 监控API
 
 **获取监控仪表板**
+
 ```
 GET /api/monitoring?action=dashboard
 ```
 
 **记录指标**
+
 ```
 POST /api/monitoring
 {
@@ -151,11 +158,13 @@ POST /api/monitoring
 ### 数据质量API
 
 **生成质量报告**
+
 ```
 GET /api/data-quality?action=report
 ```
 
 **执行特定检查**
+
 ```
 POST /api/data-quality
 {
@@ -192,20 +201,20 @@ ALERT_SLACK_WEBHOOK_URL=your-webhook-url
 const realtimeConfig = {
   batchSize: 10,
   blockTime: 2000,
-  maxRetries: 3
+  maxRetries: 3,
 };
 
 // 监控配置
 const monitoringConfig = {
   retentionPeriod: 24 * 60 * 60 * 1000, // 24小时
-  alertCooldown: 5 * 60 * 1000 // 5分钟
+  alertCooldown: 5 * 60 * 1000, // 5分钟
 };
 
 // 数据质量配置
 const qualityConfig = {
   defaultThreshold: 5,
   samplingRate: 1.0,
-  enableAutoFix: false
+  enableAutoFix: false,
 };
 ```
 
@@ -221,13 +230,13 @@ dataQualityService.addCheckRule({
   tableName: 'custom_table',
   checkType: 'missing_value',
   threshold: 2.0,
-  enabled: true
+  enabled: true,
 });
 
 // 更新检查规则
 dataQualityService.updateCheckRule('custom_check_001', {
   threshold: 1.0,
-  enabled: false
+  enabled: false,
 });
 
 // 删除检查规则
@@ -244,11 +253,11 @@ monitoringService.configureNotifications({
     smtpPort: 587,
     username: 'your-email@gmail.com',
     password: 'your-app-password',
-    toAddresses: ['admin@company.com']
+    toAddresses: ['admin@company.com'],
   },
   slack: {
-    webhookUrl: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
-  }
+    webhookUrl: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK',
+  },
 });
 ```
 
@@ -257,44 +266,48 @@ monitoringService.configureNotifications({
 ### 监控最佳实践
 
 1. **合理的指标采样率**
+
 ```javascript
 // 高频指标适当采样
 monitoringService.recordMetric('request_count', requestCount, {
-  samplingRate: 0.1 // 10%采样
+  samplingRate: 0.1, // 10%采样
 });
 ```
 
 2. **告警去抖动**
+
 ```javascript
 // 设置告警冷却时间
 const alertRule = {
   ...ruleConfig,
   duration: 300, // 持续5分钟才触发
-  cooldown: 300  // 告警间隔5分钟
+  cooldown: 300, // 告警间隔5分钟
 };
 ```
 
 ### 数据质量优化
 
 1. **增量检查**
+
 ```javascript
 // 只检查最近更新的数据
 const incrementalRule = {
   ...baseRule,
   parameters: {
     timeWindow: '1 hour',
-    modifiedOnly: true
-  }
+    modifiedOnly: true,
+  },
 };
 ```
 
 2. **并行处理**
+
 ```javascript
 // 并行执行多个检查
 const results = await Promise.all([
   dataQualityService.executeCheckRule('rule_1'),
   dataQualityService.executeCheckRule('rule_2'),
-  dataQualityService.executeCheckRule('rule_3')
+  dataQualityService.executeCheckRule('rule_3'),
 ]);
 ```
 
@@ -320,7 +333,7 @@ function maskSensitiveData(data) {
   return {
     ...data,
     email: maskEmail(data.email),
-    phone: maskPhone(data.phone)
+    phone: maskPhone(data.phone),
   };
 }
 ```
@@ -330,6 +343,7 @@ function maskSensitiveData(data) {
 ### 常见问题
 
 1. **Redis连接失败**
+
 ```bash
 # 检查Redis服务状态
 redis-cli ping
@@ -342,13 +356,18 @@ console.log('Redis配置:', {
 ```
 
 2. **告警不触发**
+
 ```javascript
 // 检查告警规则状态
 const rules = monitoringService.getAllAlertRules();
-console.log('启用的告警规则:', rules.filter(r => r.enabled));
+console.log(
+  '启用的告警规则:',
+  rules.filter(r => r.enabled)
+);
 ```
 
 3. **数据质量检查异常**
+
 ```javascript
 // 查看检查历史
 const history = dataQualityService.getCheckHistory(10);

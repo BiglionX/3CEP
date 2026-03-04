@@ -1,6 +1,5 @@
 /**
- * B2B采购需求理解服务
- * 整合多模态输入处理、大模型解析和结构化输出
+ * B2B采购需求理解服? * 整合多模态输入处理、大模型解析和结构化输出
  */
 
 import {
@@ -10,12 +9,11 @@ import {
   ProcurementStatus,
   RawProcurementRequest,
   UrgencyLevel,
-} from "../models/procurement.model";
-import { InputDetectorService } from "./input-detector.service";
-import { LargeModelProcurementService } from "./large-model-parser.service";
+} from '../models/procurement.model';
+import { InputDetectorService } from './input-detector.service';
+import { LargeModelProcurementService } from './large-model-parser.service';
 
-// 需求理解结果
-interface RequirementUnderstandingResult {
+// 需求理解结?interface RequirementUnderstandingResult {
   parsedRequest: ParsedProcurementRequest;
   modelUsed: string;
   confidenceLevel: string;
@@ -33,31 +31,28 @@ export class RequirementUnderstandingService {
   }
 
   /**
-   * 处理采购需求请求
-   */
+   * 处理采购需求请?   */
   async processRequest(
     rawRequest: RawProcurementRequest
   ): Promise<RequirementUnderstandingResult> {
     const startTime = Date.now();
-    const processingSteps: string[] = ["开始需求理解处理"];
+    const processingSteps: string[] = ['开始需求理解处?];
 
     try {
       // 1. 输入验证
-      processingSteps.push("输入验证");
+      processingSteps.push('输入验证');
       const validation = await this.inputDetector.validateInput(rawRequest);
       if (!validation.isValid) {
-        throw new Error(`输入验证失败: ${validation.errors.join(", ")}`);
+        throw new Error(`输入验证失败: ${validation.errors.join(', ')}`);
       }
 
       if (validation.warnings.length > 0) {
-        console.warn("输入警告:", validation.warnings);
+        console.warn('输入警告:', validation.warnings);
       }
 
-      // 2. 输入类型检测和预处理
-      processingSteps.push("输入类型检测和预处理");
-      const detectionResult = await this.inputDetector.detectAndProcess(
-        rawRequest
-      );
+      // 2. 输入类型检测和预处?      processingSteps.push('输入类型检测和预处?);
+      const detectionResult =
+        await this.inputDetector.detectAndProcess(rawRequest);
       processingSteps.push(...detectionResult.detectionSteps);
 
       // 3. 更新原始请求中的提取内容
@@ -66,29 +61,24 @@ export class RequirementUnderstandingService {
         detectionResult
       );
 
-      // 4. 调用大模型进行需求解析
-      processingSteps.push("调用大模型进行需求解析");
-      const parsedRequest = await this.modelService.parseDemand(
-        enrichedRequest
-      );
-      processingSteps.push("大模型解析完成");
+      // 4. 调用大模型进行需求解?      processingSteps.push('调用大模型进行需求解?);
+      const parsedRequest =
+        await this.modelService.parseDemand(enrichedRequest);
+      processingSteps.push('大模型解析完?);
 
-      // 5. 后处理和格式化
-      processingSteps.push("结果后处理和格式化");
+      // 5. 后处理和格式?      processingSteps.push('结果后处理和格式?);
       const finalResult = this.postProcessResult(
         parsedRequest,
         detectionResult,
         enrichedRequest
       );
-      processingSteps.push("结果处理完成");
+      processingSteps.push('结果处理完成');
 
       const totalTime = Date.now() - startTime;
 
       return {
         parsedRequest: finalResult,
-        modelUsed:
-          detectionResult.processingResult.additionalData?.modelUsed ||
-          "Unknown",
+        modelUsed: detectionResult.processingResult?.modelUsed || 'Unknown',
         confidenceLevel: this.determineConfidenceLevel(
           finalResult.aiConfidence
         ),
@@ -96,9 +86,9 @@ export class RequirementUnderstandingService {
         processingTimeMs: totalTime,
       };
     } catch (error) {
-      console.error("需求理解处理失败:", error);
+      console.error('需求理解处理失?', error);
       processingSteps.push(
-        "处理失败: " + (error instanceof Error ? error.message : "未知错误")
+        '处理失败: ' + (error instanceof Error ? error.message : '未知错误')
       );
 
       // 返回错误结果
@@ -110,8 +100,8 @@ export class RequirementUnderstandingService {
 
       return {
         parsedRequest: errorResult,
-        modelUsed: "Error",
-        confidenceLevel: "Low",
+        modelUsed: 'Error',
+        confidenceLevel: 'Low',
         processingSteps,
         processingTimeMs: Date.now() - startTime,
       };
@@ -124,16 +114,14 @@ export class RequirementUnderstandingService {
   private enrichRawRequest(
     rawRequest: RawProcurementRequest,
     detectionResult: Awaited<
-      ReturnType<InputDetectorService["detectAndProcess"]>
+      ReturnType<InputDetectorService['detectAndProcess']>
     >
   ): RawProcurementRequest {
     const enriched = { ...rawRequest };
 
-    // 更新输入类型为检测结果
-    enriched.inputType = detectionResult.detectedType;
+    // 更新输入类型为检测结?    enriched.inputType = detectionResult.detectedType;
 
-    // 设置提取的内容
-    enriched.extractedContent =
+    // 设置提取的内?    enriched.extractedContent =
       detectionResult.processingResult.extractedContent;
 
     // 根据不同输入类型设置相应字段
@@ -166,8 +154,7 @@ export class RequirementUnderstandingService {
   }
 
   /**
-   * 后处理解析结果
-   */
+   * 后处理解析结?   */
   private postProcessResult(
     parsedRequest: ParsedProcurementRequest,
     detectionResult: any,
@@ -185,14 +172,10 @@ export class RequirementUnderstandingService {
       processed.sourceUrl = enrichedRequest.sourceUrl;
     }
 
-    // 添加提取的内容
-    processed.extractedContent = enrichedRequest.extractedContent;
+    // 添加提取的内?    processed.extractedContent = enrichedRequest.extractedContent;
 
-    // 添加处理上下文
-    processed.processingContext = {
-      modelUsed:
-        detectionResult.processingResult.additionalData?.modelUsed ||
-        "LargeModel",
+    // 添加处理上下?    processed.processingContext = {
+      modelUsed: detectionResult.processingResult?.modelUsed || 'LargeModel',
       confidenceLevel: this.determineConfidenceLevel(
         parsedRequest.aiConfidence
       ),
@@ -204,53 +187,49 @@ export class RequirementUnderstandingService {
       processed.items = [this.createDefaultItem(enrichedRequest)];
     }
 
-    // 验证和清理数据
-    this.validateAndCleanResult(processed);
+    // 验证和清理数?    this.validateAndCleanResult(processed);
 
     return processed;
   }
 
   /**
-   * 创建默认物品项
-   */
+   * 创建默认物品?   */
   private createDefaultItem(
     rawRequest: RawProcurementRequest
   ): ProcurementItem {
     return {
       id: `item_default_${Date.now()}`,
-      productId: "generic_item",
-      productName: "通用采购物品",
-      category: "general",
+      productId: 'generic_item',
+      productName: '通用采购物品',
+      category: 'general',
       quantity: 1,
-      unit: "件",
+      unit: '�?,
       specifications:
         rawRequest.extractedContent ||
         rawRequest.rawDescription ||
         rawRequest.input,
-      requiredQuality: "standard",
+      requiredQuality: 'standard',
     };
   }
 
   /**
-   * 验证和清理结果数据
-   */
+   * 验证和清理结果数?   */
   private validateAndCleanResult(
     parsedRequest: ParsedProcurementRequest
   ): void {
     // 验证物品数量
     parsedRequest.items = parsedRequest.items.filter(
-      (item) => item.quantity > 0 && item.productName.trim().length > 0
+      item => item.quantity > 0 && item.productName.trim().length > 0
     );
 
     // 清理特殊要求
     if (parsedRequest.specialRequirements) {
       parsedRequest.specialRequirements = parsedRequest.specialRequirements
-        .filter((req) => req.trim().length > 0)
-        .map((req) => req.trim());
+        .filter(req => req.trim().length > 0)
+        .map(req => req.trim());
     }
 
-    // 确保预算范围合理性
-    if (parsedRequest.budgetRange) {
+    // 确保预算范围合理?    if (parsedRequest.budgetRange) {
       if (parsedRequest.budgetRange.min < 0) {
         parsedRequest.budgetRange.min = 0;
       }
@@ -258,26 +237,24 @@ export class RequirementUnderstandingService {
         parsedRequest.budgetRange.max = parsedRequest.budgetRange.min;
       }
       if (!parsedRequest.budgetRange.currency) {
-        parsedRequest.budgetRange.currency = "CNY";
+        parsedRequest.budgetRange.currency = 'CNY';
       }
     }
 
-    // 确保置信度在合理范围内
-    parsedRequest.aiConfidence = Math.max(
+    // 确保置信度在合理范围?    parsedRequest.aiConfidence = Math.max(
       0,
       Math.min(100, parsedRequest.aiConfidence)
     );
   }
 
   /**
-   * 确定置信度等级
-   */
+   * 确定置信度等?   */
   private determineConfidenceLevel(confidence: number): string {
-    if (confidence >= 90) return "Excellent";
-    if (confidence >= 80) return "Good";
-    if (confidence >= 70) return "Fair";
-    if (confidence >= 60) return "Poor";
-    return "Very Poor";
+    if (confidence >= 90) return 'Excellent';
+    if (confidence >= 80) return 'Good';
+    if (confidence >= 70) return 'Fair';
+    if (confidence >= 60) return 'Poor';
+    return 'Very Poor';
   }
 
   /**
@@ -297,51 +274,49 @@ export class RequirementUnderstandingService {
       items: [this.createDefaultItem(rawRequest)],
       urgency: UrgencyLevel.MEDIUM,
       specialRequirements: [
-        `处理错误: ${error instanceof Error ? error.message : "未知错误"}`,
+        `处理错误: ${error instanceof Error ? error.message : '未知错误'}`,
       ],
       status: ProcurementStatus.PROCESSING,
       aiConfidence: 0,
       parsedAt: new Date(),
       processingTimeMs: 0,
       processingContext: {
-        modelUsed: "Error Handler",
-        confidenceLevel: "Very Poor",
+        modelUsed: 'Error Handler',
+        confidenceLevel: 'Very Poor',
         processingSteps,
       },
     };
   }
 
   /**
-   * 健康检查
-   */
+   * 健康检?   */
   async healthCheck(): Promise<{
-    status: "healthy" | "degraded" | "unhealthy";
-    services: Record<string, "ok" | "error">;
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    services: Record<string, 'ok' | 'error'>;
     message: string;
   }> {
-    const services: Record<string, "ok" | "error"> = {};
+    const services: Record<string, 'ok' | 'error'> = {};
 
     try {
-      // 检查输入检测服务
-      services.inputDetector = "ok";
+      // 检查输入检测服?      services.inputDetector = 'ok';
 
       // 检查大模型服务
       const modelHealth = await this.modelService.healthCheck();
-      services.largeModel = modelHealth.healthy ? "ok" : "error";
+      services.largeModel = modelHealth.healthy ? 'ok' : 'error';
 
       const healthyServices = Object.values(services).filter(
-        (status) => status === "ok"
+        status => status === 'ok'
       ).length;
       const totalServices = Object.keys(services).length;
 
-      let status: "healthy" | "degraded" | "unhealthy" = "healthy";
-      let message = "所有服务正常运行";
+      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      let message = '所有服务正常运?;
 
       if (healthyServices === 0) {
-        status = "unhealthy";
-        message = "所有服务都不可用";
+        status = 'unhealthy';
+        message = '所有服务都不可?;
       } else if (healthyServices < totalServices) {
-        status = "degraded";
+        status = 'degraded';
         message = `${healthyServices}/${totalServices} 服务正常运行`;
       }
 
@@ -352,10 +327,10 @@ export class RequirementUnderstandingService {
       };
     } catch (error) {
       return {
-        status: "unhealthy",
-        services: { overall: "error" },
-        message: `健康检查失败: ${
-          error instanceof Error ? error.message : "未知错误"
+        status: 'unhealthy',
+        services: { overall: 'error' },
+        message: `健康检查失? ${
+          error instanceof Error ? error.message : '未知错误'
         }`,
       };
     }

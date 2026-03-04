@@ -7,6 +7,7 @@
 ## 系统架构总览
 
 ### 整体架构模式
+
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   前端应用层    │────│   API服务层      │────│   数据存储层    │
@@ -29,6 +30,7 @@
 ## 核心技术栈
 
 ### 后端技术栈
+
 - **运行环境**: Node.js 18+/20+
 - **Web框架**: Next.js 14 (App Router)
 - **编程语言**: TypeScript 5.0+
@@ -38,6 +40,7 @@
 - **任务调度**: node-cron
 
 ### 外部服务集成
+
 - **海外仓WMS**: 标准化API对接
 - **物流商**: 17track API聚合
 - **地理服务**: Google Maps API
@@ -48,6 +51,7 @@
 ### 1. WMS系统对接模块
 
 #### 1.1 数据对接架构
+
 ```typescript
 // src/lib/warehouse/wms-client.ts
 interface WMSClient {
@@ -76,28 +80,29 @@ class StandardWMSClient implements WMSClient {
 
   private async makeAuthenticatedRequest(endpoint: string, data?: any) {
     const headers = {
-      'Authorization': `Bearer ${this.apiKey}`,
+      Authorization: `Bearer ${this.apiKey}`,
       'Content-Type': 'application/json',
-      'X-Warehouse-ID': this.warehouseId
+      'X-Warehouse-ID': this.warehouseId,
     };
 
     return await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
   }
 }
 ```
 
 #### 1.2 数据同步策略
+
 ```typescript
 // src/lib/warehouse/sync-scheduler.ts
 class InventorySyncScheduler {
   private syncIntervals = {
     inventory: 300, // 5分钟
-    orders: 60,     // 1分钟
-    shipments: 300  // 5分钟
+    orders: 60, // 1分钟
+    shipments: 300, // 5分钟
   };
 
   async startScheduledSync() {
@@ -116,9 +121,7 @@ class InventorySyncScheduler {
     try {
       const warehouses = await this.getConnectedWarehouses();
       const syncResults = await Promise.allSettled(
-        warehouses.map(warehouse => 
-          this.syncSingleWarehouse(warehouse)
-        )
+        warehouses.map(warehouse => this.syncSingleWarehouse(warehouse))
       );
 
       await this.updateSyncStatus(syncResults);
@@ -132,6 +135,7 @@ class InventorySyncScheduler {
 ### 2. 智能分仓引擎
 
 #### 2.1 分仓决策算法
+
 ```typescript
 // src/lib/warehouse/distribution-router.ts
 interface DistributionFactors {
@@ -156,11 +160,11 @@ class SmartDistributionRouter {
     // 2. 计算综合得分
     const scoredWarehouses = availableWarehouses.map(warehouse => ({
       warehouse,
-      score: this.calculateWarehouseScore(warehouse, order, factors)
+      score: this.calculateWarehouseScore(warehouse, order, factors),
     }));
 
     // 3. 选择最优仓库
-    const optimal = scoredWarehouses.reduce((best, current) => 
+    const optimal = scoredWarehouses.reduce((best, current) =>
       current.score > best.score ? current : best
     );
 
@@ -168,7 +172,7 @@ class SmartDistributionRouter {
       warehouseId: optimal.warehouse.id,
       estimatedDelivery: factors.deliveryTimes.get(optimal.warehouse.id)!,
       totalCost: factors.shippingCosts.get(optimal.warehouse.id)!,
-      confidence: optimal.score
+      confidence: optimal.score,
     };
   }
 
@@ -181,7 +185,7 @@ class SmartDistributionRouter {
       proximity: 0.3,
       cost: 0.25,
       speed: 0.25,
-      capacity: 0.2
+      capacity: 0.2,
     };
 
     const proximityScore = this.calculateProximityScore(
@@ -215,6 +219,7 @@ class SmartDistributionRouter {
 ### 3. 入库预报管理系统
 
 #### 3.1 入库流程设计
+
 ```typescript
 // src/lib/warehouse/inbound-management.ts
 interface InboundOrder {
@@ -238,7 +243,7 @@ class InboundOrderManager {
     const inboundOrder = await this.database.inboundOrders.create({
       ...data,
       orderNumber,
-      status: 'draft'
+      status: 'draft',
     });
 
     // 4. 通知海外仓
@@ -252,7 +257,7 @@ class InboundOrderManager {
     receivedItems: ReceivedItem[]
   ): Promise<void> {
     const order = await this.getInboundOrder(orderId);
-    
+
     // 1. 验证收货数量
     await this.verifyReceivedQuantities(order.items, receivedItems);
 
@@ -271,12 +276,16 @@ class InboundOrderManager {
 ### 4. 物流追踪聚合服务
 
 #### 4.1 多物流商适配
+
 ```typescript
 // src/lib/logistics/tracking-aggregator.ts
 interface TrackingProvider {
   name: string;
   getCouriers(): Courier[];
-  trackPackage(trackingNumber: string, courierCode: string): Promise<TrackingInfo>;
+  trackPackage(
+    trackingNumber: string,
+    courierCode: string
+  ): Promise<TrackingInfo>;
 }
 
 class LogisticsTrackingAggregator {
@@ -294,7 +303,11 @@ class LogisticsTrackingAggregator {
     if (courierCode) {
       const provider = this.findProviderForCourier(courierCode);
       if (provider) {
-        return await this.fetchFromProvider(provider, trackingNumber, courierCode);
+        return await this.fetchFromProvider(
+          provider,
+          trackingNumber,
+          courierCode
+        );
       }
     }
 
@@ -339,6 +352,7 @@ class LogisticsTrackingAggregator {
 ### 5. 智能补货建议引擎
 
 #### 5.1 需求预测模型
+
 ```typescript
 // src/lib/warehouse/replenishment-engine.ts
 interface DemandForecast {
@@ -356,7 +370,10 @@ class ReplenishmentEngine {
     horizonDays: number = 30
   ): Promise<ReplenishmentPlan> {
     // 1. 获取历史销售数据
-    const salesHistory = await this.getSalesHistory(warehouseId, horizonDays * 2);
+    const salesHistory = await this.getSalesHistory(
+      warehouseId,
+      horizonDays * 2
+    );
 
     // 2. 预测未来需求
     const demandForecasts = await Promise.all(
@@ -366,40 +383,42 @@ class ReplenishmentEngine {
     );
 
     // 3. 计算补货建议
-    const replenishmentSuggestions = demandForecasts.map(forecast => {
-      const currentInventory = this.getCurrentInventory(
-        forecast.productId,
-        forecast.warehouseId
-      );
-
-      const safetyStock = this.calculateSafetyStock(forecast);
-      const reorderPoint = safetyStock + forecast.predictedDemand;
-      
-      if (currentInventory <= reorderPoint) {
-        const orderQuantity = this.calculateEOQ(
-          forecast.predictedDemand,
-          currentInventory,
-          safetyStock
+    const replenishmentSuggestions = demandForecasts
+      .map(forecast => {
+        const currentInventory = this.getCurrentInventory(
+          forecast.productId,
+          forecast.warehouseId
         );
 
-        return {
-          productId: forecast.productId,
-          suggestedQuantity: orderQuantity,
-          reorderPoint,
-          safetyStock,
-          confidence: forecast.confidenceInterval
-        };
-      }
+        const safetyStock = this.calculateSafetyStock(forecast);
+        const reorderPoint = safetyStock + forecast.predictedDemand;
 
-      return null;
-    }).filter(Boolean);
+        if (currentInventory <= reorderPoint) {
+          const orderQuantity = this.calculateEOQ(
+            forecast.predictedDemand,
+            currentInventory,
+            safetyStock
+          );
+
+          return {
+            productId: forecast.productId,
+            suggestedQuantity: orderQuantity,
+            reorderPoint,
+            safetyStock,
+            confidence: forecast.confidenceInterval,
+          };
+        }
+
+        return null;
+      })
+      .filter(Boolean);
 
     return {
       warehouseId,
       generationTime: new Date(),
       horizonDays,
       suggestions: replenishmentSuggestions,
-      totalValue: this.calculateTotalValue(replenishmentSuggestions)
+      totalValue: this.calculateTotalValue(replenishmentSuggestions),
     };
   }
 
@@ -424,11 +443,11 @@ class ReplenishmentEngine {
       warehouseId,
       forecastPeriod: {
         start: new Date(),
-        end: new Date(Date.now() + horizonDays * 24 * 60 * 60 * 1000)
+        end: new Date(Date.now() + horizonDays * 24 * 60 * 60 * 1000),
       },
       predictedDemand: forecast.mean,
       confidenceInterval: [forecast.lower, forecast.upper],
-      seasonalFactors
+      seasonalFactors,
     };
   }
 }
@@ -437,6 +456,7 @@ class ReplenishmentEngine {
 ### 6. 效能分析看板
 
 #### 6.1 数据指标体系
+
 ```typescript
 // src/lib/analytics/warehouse-metrics.ts
 interface WarehouseMetrics {
@@ -455,11 +475,14 @@ class WarehouseAnalytics {
       operational: await this.calculateOperationalMetrics(warehouseId, period),
       financial: await this.calculateFinancialMetrics(warehouseId, period),
       quality: await this.calculateQualityMetrics(warehouseId, period),
-      efficiency: await this.calculateEfficiencyMetrics(warehouseId, period)
+      efficiency: await this.calculateEfficiencyMetrics(warehouseId, period),
     };
 
     const anomalies = await this.detectAnomalies(metrics);
-    const recommendations = await this.generateRecommendations(metrics, anomalies);
+    const recommendations = await this.generateRecommendations(
+      metrics,
+      anomalies
+    );
 
     return {
       warehouseId,
@@ -467,7 +490,7 @@ class WarehouseAnalytics {
       metrics,
       anomalies,
       recommendations,
-      benchmarkComparison: await this.compareWithBenchmark(warehouseId)
+      benchmarkComparison: await this.compareWithBenchmark(warehouseId),
     };
   }
 
@@ -483,18 +506,24 @@ class WarehouseAnalytics {
         period,
         'inbound'
       ),
-      
+
       // 出库效率指标
-      outboundAccuracy: await this.calculateOutboundAccuracy(warehouseId, period),
+      outboundAccuracy: await this.calculateOutboundAccuracy(
+        warehouseId,
+        period
+      ),
       avgOutboundProcessingTime: await this.calculateAvgProcessingTime(
         warehouseId,
         period,
         'outbound'
       ),
-      
+
       // 库存周转指标
-      inventoryTurnover: await this.calculateInventoryTurnover(warehouseId, period),
-      stockoutRate: await this.calculateStockoutRate(warehouseId, period)
+      inventoryTurnover: await this.calculateInventoryTurnover(
+        warehouseId,
+        period
+      ),
+      stockoutRate: await this.calculateStockoutRate(warehouseId, period),
     };
   }
 }
@@ -631,7 +660,7 @@ export async function GET(
 ) {
   const { searchParams } = new URL(request.url);
   const partId = searchParams.get('partId');
-  
+
   if (partId) {
     const inventory = await inventoryService.getByPart(
       params.warehouseId,
@@ -647,24 +676,24 @@ export async function GET(
 // src/app/api/warehouse/distribution/optimize/route.ts
 export async function POST(request: Request) {
   const { order, userLocation } = await request.json();
-  
+
   const optimalWarehouse = await distributionRouter.calculateOptimalWarehouse(
     order,
     userLocation
   );
-  
+
   return NextResponse.json(optimalWarehouse);
 }
 
 // src/app/api/warehouse/replenishment/generate/route.ts
 export async function POST(request: Request) {
   const { warehouseId, horizonDays } = await request.json();
-  
+
   const plan = await replenishmentEngine.generateReplenishmentPlan(
     warehouseId,
     horizonDays
   );
-  
+
   return NextResponse.json(plan);
 }
 ```
@@ -677,17 +706,17 @@ export async function POST(request: Request) {
 // src/lib/cache/warehouse-cache.ts
 class WarehouseCacheManager {
   private readonly TTL_CONFIG = {
-    inventory: 300,        // 5分钟
-    warehouse_list: 3600,  // 1小时
-    shipping_rates: 1800,  // 30分钟
-    tracking_info: 600     // 10分钟
+    inventory: 300, // 5分钟
+    warehouse_list: 3600, // 1小时
+    shipping_rates: 1800, // 30分钟
+    tracking_info: 600, // 10分钟
   };
 
   async getCachedInventory(
     warehouseId: string,
     partId?: string
   ): Promise<WarehouseInventory | WarehouseInventory[] | null> {
-    const cacheKey = partId 
+    const cacheKey = partId
       ? `warehouse:${warehouseId}:inventory:${partId}`
       : `warehouse:${warehouseId}:inventory`;
 
@@ -732,8 +761,8 @@ class WarehouseMonitor {
   private readonly ALERT_THRESHOLDS = {
     inventory_accuracy: 0.95,
     order_processing_time: 3600, // 1小时
-    shipping_delay: 86400,       // 1天
-    system_uptime: 0.999
+    shipping_delay: 86400, // 1天
+    system_uptime: 0.999,
   };
 
   async checkWarehouseHealth(warehouseId: string): Promise<HealthStatus> {
@@ -741,26 +770,27 @@ class WarehouseMonitor {
       this.checkInventoryAccuracy(warehouseId),
       this.checkOrderProcessingPerformance(warehouseId),
       this.checkShippingPerformance(warehouseId),
-      this.checkSystemConnectivity(warehouseId)
+      this.checkSystemConnectivity(warehouseId),
     ]);
 
     const overallHealth = checks.every(check => check.status === 'healthy')
       ? 'healthy'
       : checks.some(check => check.status === 'critical')
-      ? 'critical'
-      : 'degraded';
+        ? 'critical'
+        : 'degraded';
 
     return {
       warehouseId,
       overallStatus: overallHealth,
       checks,
-      lastChecked: new Date()
+      lastChecked: new Date(),
     };
   }
 
   private async checkInventoryAccuracy(warehouseId: string) {
-    const discrepancyRate = await this.calculateInventoryDiscrepancy(warehouseId);
-    
+    const discrepancyRate =
+      await this.calculateInventoryDiscrepancy(warehouseId);
+
     let status: 'healthy' | 'warning' | 'critical' = 'healthy';
     if (discrepancyRate > 0.1) status = 'critical';
     else if (discrepancyRate > 0.05) status = 'warning';
@@ -769,7 +799,7 @@ class WarehouseMonitor {
       check: 'inventory_accuracy',
       status,
       value: 1 - discrepancyRate,
-      threshold: this.ALERT_THRESHOLDS.inventory_accuracy
+      threshold: this.ALERT_THRESHOLDS.inventory_accuracy,
     };
   }
 }
@@ -813,26 +843,26 @@ spec:
         app: warehouse-service
     spec:
       containers:
-      - name: warehouse-service
-        image: fixcycle/warehouse-service:latest
-        ports:
-        - containerPort: 3001
-        envFrom:
-        - secretRef:
-            name: warehouse-secrets
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        readinessProbe:
-          httpGet:
-            path: /api/health
-            port: 3001
-          initialDelaySeconds: 30
-          periodSeconds: 10
+        - name: warehouse-service
+          image: fixcycle/warehouse-service:latest
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - secretRef:
+                name: warehouse-secrets
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '250m'
+            limits:
+              memory: '1Gi'
+              cpu: '500m'
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3001
+            initialDelaySeconds: 30
+            periodSeconds: 10
 ```
 
 ## 安全考虑
@@ -875,7 +905,7 @@ class WarehouseSecurity {
       resourceId: warehouseId,
       operation,
       details,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 }
@@ -883,6 +913,6 @@ class WarehouseSecurity {
 
 ---
 
-*文档版本：v1.0*
-*最后更新：2026年2月15日*
-*适用范围：FixCycle 3.5 海外仓智能管理系统*
+_文档版本：v1.0_
+_最后更新：2026年2月15日_
+_适用范围：FixCycle 3.5 海外仓智能管理系统_

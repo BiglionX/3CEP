@@ -1,32 +1,31 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 
-// 模拟审核API端点
+// 妯℃嫙瀹℃牳API绔偣
 export async function GET() {
   try {
-    // 模拟待审核文档数据
-    const pendingReviews = [
+    // 妯℃嫙寰呭鏍告枃妗ｆ暟?    const pendingReviews = [
       {
         id: 'review_1',
         document_id: 'doc_1',
         status: 'pending',
         created_at: '2024-01-15T10:00:00Z',
         document: {
-          title: '待审核的说明书',
+          title: '寰呭鏍哥殑璇存槑?,
           language: 'zh-CN',
-          category: '手机'
-        }
-      }
+          category: '鎵嬫満',
+        },
+      },
     ];
 
     return NextResponse.json({
       success: true,
-      data: pendingReviews
+      data: pendingReviews,
     });
-
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: '获取审核列表失败' },
+      { success: false, error: '鑾峰彇瀹℃牳鍒楄〃澶辫触' },
       { status: 500 }
     );
   }
 }
+

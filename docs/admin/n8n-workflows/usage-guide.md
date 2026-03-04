@@ -33,10 +33,12 @@
 ### 1. 扫码服务工作流触发
 
 #### 触发条件
+
 - 用户通过移动端或网页端扫描设备二维码
 - 系统识别到有效的设备标识信息
 
 #### 请求示例
+
 ```bash
 curl -X POST https://your-n8n-domain.com/webhook/scan-service \
   -H "Content-Type: application/json" \
@@ -50,6 +52,7 @@ curl -X POST https://your-n8n-domain.com/webhook/scan-service \
 ```
 
 #### 响应格式
+
 ```json
 {
   "success": true,
@@ -83,11 +86,13 @@ curl -X POST https://your-n8n-domain.com/webhook/scan-service \
 ### 2. 教程引导工作流触发
 
 #### 触发条件
+
 - 用户在教程页面停留超过30秒
 - 用户滚动页面超过50%
 - 用户点击教程中的关键步骤
 
 #### 请求示例
+
 ```bash
 curl -X POST https://your-n8n-domain.com/webhook/tutorial-guide \
   -H "Content-Type: application/json" \
@@ -106,11 +111,13 @@ curl -X POST https://your-n8n-domain.com/webhook/tutorial-guide \
 ### 3. 支付成功工作流触发
 
 #### 触发条件
+
 - 收到第三方支付平台的成功回调
 - 签名验证通过
 - 订单金额与系统记录一致
 
 #### 请求示例
+
 ```bash
 curl -X POST https://your-n8n-domain.com/webhook/payment-success \
   -H "Content-Type: application/json" \
@@ -129,11 +136,13 @@ curl -X POST https://your-n8n-domain.com/webhook/payment-success \
 ### 4. AI转人工工作流触发
 
 #### 触发条件
+
 - AI诊断置信度低于70%阈值
 - 问题复杂度评估为高级别
 - 用户明确要求人工协助
 
 #### 请求示例
+
 ```bash
 curl -X POST https://your-n8n-domain.com/webhook/ai-escalation \
   -H "Content-Type: application/json" \
@@ -153,35 +162,39 @@ curl -X POST https://your-n8n-domain.com/webhook/ai-escalation \
 ### 监控指标
 
 #### 核心性能指标
-| 指标名称 | 目标值 | 告警阈值 | 监控频率 |
-|---------|--------|----------|----------|
-| 平均响应时间 | < 2秒 | > 5秒 | 实时 |
-| 成功率 | > 95% | < 90% | 每分钟 |
-| 并发处理能力 | > 100 | < 50 | 每5分钟 |
-| 错误率 | < 1% | > 3% | 实时 |
+
+| 指标名称     | 目标值 | 告警阈值 | 监控频率 |
+| ------------ | ------ | -------- | -------- |
+| 平均响应时间 | < 2秒  | > 5秒    | 实时     |
+| 成功率       | > 95%  | < 90%    | 每分钟   |
+| 并发处理能力 | > 100  | < 50     | 每5分钟  |
+| 错误率       | < 1%   | > 3%     | 实时     |
 
 #### 业务指标
-| 指标名称 | 说明 | 监控方式 |
-|---------|------|----------|
-| 工作流执行次数 | 各工作流每日执行量 | n8n执行历史 |
-| 用户转化率 | 从推荐到实际购买的比例 | 数据分析 |
-| 工单创建量 | AI转人工的频率 | 工单系统统计 |
-| 积分发放准确性 | 积分计算正确率 | 财务审计 |
+
+| 指标名称       | 说明                   | 监控方式     |
+| -------------- | ---------------------- | ------------ |
+| 工作流执行次数 | 各工作流每日执行量     | n8n执行历史  |
+| 用户转化率     | 从推荐到实际购买的比例 | 数据分析     |
+| 工单创建量     | AI转人工的频率         | 工单系统统计 |
+| 积分发放准确性 | 积分计算正确率         | 财务审计     |
 
 ### 监控工具配置
 
 #### 1. n8n内置监控
+
 ```javascript
 // 在n8n中设置执行监控
 监控配置 = {
-  执行历史保留: "30天",
-  失败执行告警: "邮件+短信",
-  性能阈值监控: "启用",
-  执行时间分析: "每日报告"
-}
+  执行历史保留: '30天',
+  失败执行告警: '邮件+短信',
+  性能阈值监控: '启用',
+  执行时间分析: '每日报告',
+};
 ```
 
 #### 2. 外部监控集成
+
 ```yaml
 # Prometheus监控配置示例
 scrape_configs:
@@ -193,6 +206,7 @@ scrape_configs:
 ```
 
 #### 3. 告警规则设置
+
 ```json
 {
   "告警规则": {
@@ -217,21 +231,25 @@ scrape_configs:
 ### 问题1：工作流执行失败
 
 #### 现象
+
 - Webhook返回500错误
 - 执行历史显示红色失败标记
 - 用户反馈服务不可用
 
 #### 排查步骤
+
 1. **检查n8n服务状态**
+
    ```bash
    # 检查n8n进程
    ps aux | grep n8n
-   
+
    # 检查端口占用
    netstat -tlnp | grep 5678
    ```
 
 2. **查看执行日志**
+
    ```bash
    # 查看最近的执行日志
    curl -X GET "https://n8n.yourdomain.com/executions/current" \
@@ -239,6 +257,7 @@ scrape_configs:
    ```
 
 3. **验证API连接**
+
    ```bash
    # 测试依赖的API服务
    curl -X GET "https://api.yourdomain.com/health"
@@ -252,6 +271,7 @@ scrape_configs:
    ```
 
 #### 解决方案
+
 - 重启n8n服务
 - 更新失效的API端点
 - 修正环境变量配置
@@ -260,12 +280,15 @@ scrape_configs:
 ### 问题2：数据处理异常
 
 #### 现象
+
 - 返回数据格式错误
 - 缺少关键字段
 - 数据类型不匹配
 
 #### 处理方法
+
 1. **验证输入数据格式**
+
    ```json
    // 正确的输入格式示例
    {
@@ -288,12 +311,15 @@ scrape_configs:
 ### 问题3：性能下降
 
 #### 现象
+
 - 响应时间明显延长
 - 并发处理能力下降
 - 系统资源占用过高
 
 #### 优化措施
+
 1. **性能调优**
+
    ```bash
    # 调整n8n配置
    N8N_CONCURRENCY=10
@@ -310,25 +336,28 @@ scrape_configs:
    ```yaml
    # nginx负载均衡配置
    upstream n8n_backend {
-     server n8n-node1:5678 weight=3;
-     server n8n-node2:5678 weight=3;
-     server n8n-node3:5678 backup;
+   server n8n-node1:5678 weight=3;
+   server n8n-node2:5678 weight=3;
+   server n8n-node3:5678 backup;
    }
    ```
 
 ## 安全管理
 
 ### 访问控制
+
 - API密钥定期轮换（建议每月）
 - Webhook端点启用签名验证
 - 敏感操作需要二次确认
 
 ### 数据保护
+
 - 用户隐私信息脱敏处理
 - 敏感配置使用环境变量
 - 执行日志定期清理
 
 ### 审计日志
+
 - 记录所有工作流修改操作
 - 监控异常访问行为
 - 定期审查权限分配
@@ -336,6 +365,7 @@ scrape_configs:
 ## 版本管理和更新
 
 ### 更新流程
+
 1. 在测试环境验证新版本
 2. 备份当前生产配置
 3. 执行灰度发布
@@ -343,6 +373,7 @@ scrape_configs:
 5. 准备回滚方案
 
 ### 回滚操作
+
 ```bash
 # 使用部署脚本回滚
 ./scripts/deploy-n8n-workflows.sh --rollback --backup-id BACKUP_20260220_143022
@@ -351,16 +382,19 @@ scrape_configs:
 ## 联系支持
 
 ### 技术支持
+
 - **紧急问题**: 电话支持热线 400-XXX-XXXX
 - **一般问题**: support@yourdomain.com
 - **文档更新**: docs-team@yourdomain.com
 
 ### 社区资源
+
 - 官方文档: https://docs.n8n.io
 - 社区论坛: https://community.n8n.io
 - GitHub仓库: https://github.com/your-org/n8n-workflows
 
 ---
+
 **文档版本**: v1.0.0  
 **最后更新**: 2026年2月20日  
 **维护团队**: 技术运维部

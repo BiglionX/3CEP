@@ -1,16 +1,9 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { Button } from '@/components/ui/button';
-import { 
-  User, 
-  LogOut, 
-  Settings, 
-  ChevronDown,
-  Menu,
-  X
-} from 'lucide-react';
+import { User, LogOut, Settings, ChevronDown, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -25,9 +18,10 @@ export function AuthControls({
   variant = 'navbar',
   showLabels = true,
   onLoginClick,
-  onRegisterClick
+  onRegisterClick,
 }: AuthControlsProps) {
-  const { user, isAuthenticated, is_admin, logout, isLoading } = useUnifiedAuth();
+  const { user, isAuthenticated, is_admin, logout, isLoading } =
+    useUnifiedAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -56,28 +50,31 @@ export function AuthControls({
     }
   };
 
-  // 加载状态
-  if (isLoading) {
+  // 加载状?  if (isLoading) {
     return (
-      <div className={`${variant === 'navbar' ? 'flex items-center space-x-2' : ''}`}>
+      <div
+        className={`${variant === 'navbar' ? 'flex items-center space-x-2' : ''}`}
+      >
         <div className="animate-pulse flex items-center space-x-2">
           <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-          {showLabels && (
-            <div className="w-16 h-4 bg-gray-200 rounded"></div>
-          )}
+          {showLabels && <div className="w-16 h-4 bg-gray-200 rounded"></div>}
         </div>
       </div>
     );
   }
 
-  // 已登录状态
-  if (isAuthenticated && user) {
+  // 已登录状?  if (isAuthenticated && user) {
     return (
       <div className={`${variant === 'navbar' ? 'relative' : ''}`}>
-        <div className={`flex items-center ${
-          variant === 'navbar' ? 'space-x-3' : 
-          variant === 'sidebar' ? 'space-x-3 flex-col items-start' : 'space-x-2'
-        }`}>
+        <div
+          className={`flex items-center ${
+            variant === 'navbar'
+              ? 'space-x-3'
+              : variant === 'sidebar'
+                ? 'space-x-3 flex-col items-start'
+                : 'space-x-2'
+          }`}
+        >
           {/* 用户头像 */}
           <div className="relative">
             <button
@@ -90,23 +87,27 @@ export function AuthControls({
               aria-haspopup="true"
               aria-expanded={userMenuOpen}
             >
-              <div className={`
+              <div
+                className={`
                 w-8 h-8 rounded-full flex items-center justify-center text-white font-medium
                 ${is_admin ? 'bg-red-500' : 'bg-blue-500'}
-              `}>
-                {user.email?.charAt(0).toUpperCase() || 'U'}
+              `}
+              >
+                {user?.charAt(0).toUpperCase() || 'U'}
               </div>
-              
+
               {showLabels && (
                 <span className="hidden md:inline text-sm font-medium text-gray-700">
                   {user.email}
                 </span>
               )}
-              
+
               {variant === 'navbar' && (
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${
-                  userMenuOpen ? 'rotate-180' : ''
-                }`} />
+                <ChevronDown
+                  className={`w-4 h-4 text-gray-500 transition-transform ${
+                    userMenuOpen ? 'rotate-180' : ''
+                  }`}
+                />
               )}
             </button>
 
@@ -126,11 +127,11 @@ export function AuthControls({
                       {user.email}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {is_admin ? '管理员' : '普通用户'}
+                      {is_admin ? '管理? : '普通用?}
                     </p>
                   </div>
 
-                  {/* 菜单项 */}
+                  {/* 菜单?*/}
                   <div className="py-1">
                     <Link
                       href="/profile"
@@ -140,7 +141,7 @@ export function AuthControls({
                       <User className="w-4 h-4 mr-3" />
                       个人资料
                     </Link>
-                    
+
                     <Link
                       href="/profile/settings"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -149,7 +150,7 @@ export function AuthControls({
                       <Settings className="w-4 h-4 mr-3" />
                       账户设置
                     </Link>
-                    
+
                     {is_admin && (
                       <Link
                         href="/admin/dashboard"
@@ -169,17 +170,16 @@ export function AuthControls({
                       className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                     >
                       <LogOut className="w-4 h-4 mr-3" />
-                      退出登录
-                    </button>
+                      退出登?                    </button>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* 移动端用户菜单 */}
+          {/* 移动端用户菜?*/}
           {userMenuOpen && variant === 'navbar' && (
-            <div 
+            <div
               className="fixed inset-0 z-40"
               onClick={() => setUserMenuOpen(false)}
             />
@@ -189,15 +189,19 @@ export function AuthControls({
     );
   }
 
-  // 未登录状态
-  return (
-    <div className={`flex items-center ${
-      variant === 'navbar' ? 'space-x-2 md:space-x-3' :
-      variant === 'sidebar' ? 'space-x-3 flex-col items-start' : 'space-x-2'
-    }`}>
+  // 未登录状?  return (
+    <div
+      className={`flex items-center ${
+        variant === 'navbar'
+          ? 'space-x-2 md:space-x-3'
+          : variant === 'sidebar'
+            ? 'space-x-3 flex-col items-start'
+            : 'space-x-2'
+      }`}
+    >
       <Button
         variant="outline"
-        size={variant === 'compact' ? "sm" : "default"}
+        size={variant === 'compact' ? 'sm' : 'default'}
         onClick={handleLoginClick}
         className={`
           ${variant === 'navbar' ? 'h-8 md:h-9 text-sm' : ''}
@@ -206,9 +210,9 @@ export function AuthControls({
       >
         {showLabels ? '登录' : <LogOut className="w-4 h-4" />}
       </Button>
-      
+
       <Button
-        size={variant === 'compact' ? "sm" : "default"}
+        size={variant === 'compact' ? 'sm' : 'default'}
         onClick={handleRegisterClick}
         className={`
           ${variant === 'navbar' ? 'h-8 md:h-9 text-sm' : ''}
@@ -231,7 +235,8 @@ export function SidebarAuthControls(props: Omit<AuthControlsProps, 'variant'>) {
   return <AuthControls variant="sidebar" showLabels={true} {...props} />;
 }
 
-// 紧凑版本的认证控件
-export function CompactAuthControls(props: Omit<AuthControlsProps, 'variant' | 'showLabels'>) {
+// 紧凑版本的认证控?export function CompactAuthControls(
+  props: Omit<AuthControlsProps, 'variant' | 'showLabels'>
+) {
   return <AuthControls variant="compact" showLabels={false} {...props} />;
 }

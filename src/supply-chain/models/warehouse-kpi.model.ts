@@ -4,24 +4,16 @@
 
 // 仓库运营KPI指标枚举
 export enum WarehouseKPI {
-  INBOUND_TIMELINESS = 'inbound_timeliness',        // 入库时效
-  OUTBOUND_TIMELINESS = 'outbound_timeliness',      // 出库时效
-  INVENTORY_TURNOVER = 'inventory_turnover',        // 库存周转率
-  EXCEPTION_RATE = 'exception_rate',                // 异常率
-  ACCURACY_RATE = 'accuracy_rate',                  // 准确率
-  ON_TIME_RATE = 'on_time_rate',                    // 准时率
-  DAMAGE_RATE = 'damage_rate',                      // 损坏率
-  STORAGE_UTILIZATION = 'storage_utilization',      // 存储利用率
-  LABOR_EFFICIENCY = 'labor_efficiency',            // 劳动力效率
-  COST_PER_ORDER = 'cost_per_order'                 // 单订单成本
-}
+  INBOUND_TIMELINESS = 'inbound_timeliness', // 入库时效
+  OUTBOUND_TIMELINESS = 'outbound_timeliness', // 出库时效
+  INVENTORY_TURNOVER = 'inventory_turnover', // 库存周转?  EXCEPTION_RATE = 'exception_rate', // 异常?  ACCURACY_RATE = 'accuracy_rate', // 准确?  ON_TIME_RATE = 'on_time_rate', // 准时?  DAMAGE_RATE = 'damage_rate', // 损坏?  STORAGE_UTILIZATION = 'storage_utilization', // 存储利用?  LABOR_EFFICIENCY = 'labor_efficiency', // 劳动力效?  COST_PER_ORDER = 'cost_per_order', // 单订单成?}
 
 // 时间维度枚举
 export enum TimeDimension {
   DAILY = 'daily',
   WEEKLY = 'weekly',
   MONTHLY = 'monthly',
-  QUARTERLY = 'quarterly'
+  QUARTERLY = 'quarterly',
 }
 
 // KPI指标基础接口
@@ -56,41 +48,41 @@ export interface WarehouseOperationData {
     countryCode: string;
   };
   date: Date;
-  
+
   // 入库相关指标
   inbound: {
     totalShipments: number;
     totalItems: number;
     avgProcessingTime: number; // 分钟
-    onTimeRate: number;        // %
-    accuracyRate: number;      // %
+    onTimeRate: number; // %
+    accuracyRate: number; // %
     exceptionCount: number;
-    exceptionRate: number;     // %
+    exceptionRate: number; // %
   };
-  
+
   // 出库相关指标
   outbound: {
     totalOrders: number;
     totalItems: number;
-    avgPickTime: number;       // 分钟
-    avgPackTime: number;       // 分钟
-    avgShipTime: number;       // 分钟
-    onTimeRate: number;        // %
-    accuracyRate: number;      // %
+    avgPickTime: number; // 分钟
+    avgPackTime: number; // 分钟
+    avgShipTime: number; // 分钟
+    onTimeRate: number; // %
+    accuracyRate: number; // %
     exceptionCount: number;
-    exceptionRate: number;     // %
+    exceptionRate: number; // %
   };
-  
+
   // 库存相关指标
   inventory: {
     totalValue: number;
     turnoverRate: number;
-    accuracyRate: number;      // %
-    utilizationRate: number;   // %
-    obsolescenceRate: number;  // %
+    accuracyRate: number; // %
+    utilizationRate: number; // %
+    obsolescenceRate: number; // %
     safetyStockCompliance: number; // %
   };
-  
+
   // 成本相关指标
   costs: {
     totalCost: number;
@@ -100,7 +92,7 @@ export interface WarehouseOperationData {
     otherCost: number;
     costPerOrder: number;
   };
-  
+
   // 人员相关指标
   labor: {
     totalStaff: number;
@@ -108,11 +100,11 @@ export interface WarehouseOperationData {
     ordersPerHour: number;
     itemsPerHour: number;
   };
-  
+
   // 质量相关指标
   quality: {
-    damageRate: number;        // %
-    returnRate: number;        // %
+    damageRate: number; // %
+    returnRate: number; // %
     customerSatisfaction: number; // %
     complaintCount: number;
   };
@@ -133,7 +125,7 @@ export interface AggregatedWarehouseMetrics {
     endDate: Date;
     timeDimension: TimeDimension;
   };
-  
+
   // 核心KPI指标
   kpiMetrics: {
     [key in WarehouseKPI]: {
@@ -143,15 +135,15 @@ export interface AggregatedWarehouseMetrics {
       trend: 'up' | 'down' | 'stable';
       variance?: number; // 与上期对比变化率
       status: 'excellent' | 'good' | 'warning' | 'critical';
-    }
+    };
   };
-  
+
   // 综合评分
   compositeScore: {
     operationalEfficiency: number; // 运营效率 0-100
-    serviceQuality: number;        // 服务质量 0-100
-    costControl: number;           // 成本控制 0-100
-    overallScore: number;          // 综合评分 0-100
+    serviceQuality: number; // 服务质量 0-100
+    costControl: number; // 成本控制 0-100
+    overallScore: number; // 综合评分 0-100
   };
 }
 
@@ -180,15 +172,15 @@ export interface WarehouseDashboardData {
       scoreChange: number; // %
     };
   };
-  
+
   warehouseMetrics: AggregatedWarehouseMetrics[];
-  
+
   trends: {
     timelineData: Array<{
       date: Date;
       metrics: Partial<Record<WarehouseKPI, number>>;
     }>;
-    
+
     warehouseRankings: Array<{
       warehouseId: string;
       warehouseName: string;
@@ -196,7 +188,7 @@ export interface WarehouseDashboardData {
       rank: number;
       improvement: number; // 排名变化
     }>;
-    
+
     kpiTrendAnalysis: Array<{
       kpiType: WarehouseKPI;
       kpiName: string;
@@ -206,7 +198,7 @@ export interface WarehouseDashboardData {
       variance: number;
     }>;
   };
-  
+
   alerts: Array<{
     type: 'performance_warning' | 'threshold_breach' | 'operational_issue';
     severity: 'low' | 'medium' | 'high' | 'critical';
@@ -218,12 +210,15 @@ export interface WarehouseDashboardData {
     thresholdValue: number;
     timestamp: Date;
   }>;
-  
+
   filters: DashboardFilters;
 }
 
 // 导出预定义的KPI指标配置
-export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinition> = {
+export const WAREHOUSE_KPI_DEFINITIONS: Record<
+  WarehouseKPI,
+  WarehouseKPIDefinition
+> = {
   [WarehouseKPI.INBOUND_TIMELINESS]: {
     id: 'kpi_inbound_timeliness',
     name: '入库时效',
@@ -235,11 +230,11 @@ export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinit
     targetValue: 30,
     warningThreshold: 45,
     criticalThreshold: 60,
-    calculationMethod: '总入库处理时间 ÷ 总入库单数',
+    calculationMethod: '总入库处理时?÷ 总入库单?,
     benchmarkIndustryAverage: 35,
-    benchmarkBestPractice: 25
+    benchmarkBestPractice: 25,
   },
-  
+
   [WarehouseKPI.OUTBOUND_TIMELINESS]: {
     id: 'kpi_outbound_timeliness',
     name: '出库时效',
@@ -251,30 +246,30 @@ export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinit
     targetValue: 45,
     warningThreshold: 60,
     criticalThreshold: 90,
-    calculationMethod: '(拣货时间 + 打包时间 + 发货时间) ÷ 总出库单数',
+    calculationMethod: '(拣货时间 + 打包时间 + 发货时间) ÷ 总出库单?,
     benchmarkIndustryAverage: 55,
-    benchmarkBestPractice: 35
+    benchmarkBestPractice: 35,
   },
-  
+
   [WarehouseKPI.INVENTORY_TURNOVER]: {
     id: 'kpi_inventory_turnover',
-    name: '库存周转率',
+    name: '库存周转?,
     description: '库存资金周转次数',
-    unit: '次/周期',
+    unit: '�?周期',
     kpiType: WarehouseKPI.INVENTORY_TURNOVER,
     category: 'efficiency',
     isHigherBetter: true,
     targetValue: 12,
     warningThreshold: 8,
     criticalThreshold: 5,
-    calculationMethod: '销售成本 ÷ 平均库存价值',
+    calculationMethod: '销售成?÷ 平均库存价?,
     benchmarkIndustryAverage: 10,
-    benchmarkBestPractice: 15
+    benchmarkBestPractice: 15,
   },
-  
+
   [WarehouseKPI.EXCEPTION_RATE]: {
     id: 'kpi_exception_rate',
-    name: '异常率',
+    name: '异常?,
     description: '作业异常发生比例',
     unit: '%',
     kpiType: WarehouseKPI.EXCEPTION_RATE,
@@ -283,15 +278,15 @@ export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinit
     targetValue: 2,
     warningThreshold: 5,
     criticalThreshold: 10,
-    calculationMethod: '异常单数 ÷ 总作业单数 × 100%',
+    calculationMethod: '异常单数 ÷ 总作业单?× 100%',
     benchmarkIndustryAverage: 3,
-    benchmarkBestPractice: 1
+    benchmarkBestPractice: 1,
   },
-  
+
   [WarehouseKPI.ACCURACY_RATE]: {
     id: 'kpi_accuracy_rate',
-    name: '准确率',
-    description: '作业准确率',
+    name: '准确?,
+    description: '作业准确?,
     unit: '%',
     kpiType: WarehouseKPI.ACCURACY_RATE,
     category: 'quality',
@@ -299,14 +294,14 @@ export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinit
     targetValue: 99.5,
     warningThreshold: 98,
     criticalThreshold: 95,
-    calculationMethod: '准确作业数 ÷ 总作业数 × 100%',
+    calculationMethod: '准确作业?÷ 总作业数 × 100%',
     benchmarkIndustryAverage: 98.5,
-    benchmarkBestPractice: 99.8
+    benchmarkBestPractice: 99.8,
   },
-  
+
   [WarehouseKPI.ON_TIME_RATE]: {
     id: 'kpi_on_time_rate',
-    name: '准时率',
+    name: '准时?,
     description: '按时完成作业比例',
     unit: '%',
     kpiType: WarehouseKPI.ON_TIME_RATE,
@@ -315,14 +310,14 @@ export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinit
     targetValue: 98,
     warningThreshold: 95,
     criticalThreshold: 90,
-    calculationMethod: '按时完成单数 ÷ 总单数 × 100%',
+    calculationMethod: '按时完成单数 ÷ 总单?× 100%',
     benchmarkIndustryAverage: 96,
-    benchmarkBestPractice: 99
+    benchmarkBestPractice: 99,
   },
-  
+
   [WarehouseKPI.DAMAGE_RATE]: {
     id: 'kpi_damage_rate',
-    name: '损坏率',
+    name: '损坏?,
     description: '货物损坏比例',
     unit: '%',
     kpiType: WarehouseKPI.DAMAGE_RATE,
@@ -331,14 +326,14 @@ export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinit
     targetValue: 0.5,
     warningThreshold: 1,
     criticalThreshold: 2,
-    calculationMethod: '损坏件数 ÷ 总处理件数 × 100%',
+    calculationMethod: '损坏件数 ÷ 总处理件?× 100%',
     benchmarkIndustryAverage: 0.8,
-    benchmarkBestPractice: 0.2
+    benchmarkBestPractice: 0.2,
   },
-  
+
   [WarehouseKPI.STORAGE_UTILIZATION]: {
     id: 'kpi_storage_utilization',
-    name: '存储利用率',
+    name: '存储利用?,
     description: '仓库空间利用效率',
     unit: '%',
     kpiType: WarehouseKPI.STORAGE_UTILIZATION,
@@ -347,40 +342,40 @@ export const WAREHOUSE_KPI_DEFINITIONS: Record<WarehouseKPI, WarehouseKPIDefinit
     targetValue: 85,
     warningThreshold: 70,
     criticalThreshold: 95,
-    calculationMethod: '已用存储空间 ÷ 总存储空间 × 100%',
+    calculationMethod: '已用存储空间 ÷ 总存储空?× 100%',
     benchmarkIndustryAverage: 75,
-    benchmarkBestPractice: 90
+    benchmarkBestPractice: 90,
   },
-  
+
   [WarehouseKPI.LABOR_EFFICIENCY]: {
     id: 'kpi_labor_efficiency',
-    name: '劳动力效率',
-    description: '人均处理订单数',
-    unit: '订单/人/小时',
+    name: '劳动力效?,
+    description: '人均处理订单?,
+    unit: '订单/�?小时',
     kpiType: WarehouseKPI.LABOR_EFFICIENCY,
     category: 'efficiency',
     isHigherBetter: true,
     targetValue: 25,
     warningThreshold: 20,
     criticalThreshold: 15,
-    calculationMethod: '总处理订单数 ÷ (员工数 × 工作小时数)',
+    calculationMethod: '总处理订单数 ÷ (员工?× 工作小时?',
     benchmarkIndustryAverage: 22,
-    benchmarkBestPractice: 30
+    benchmarkBestPractice: 30,
   },
-  
+
   [WarehouseKPI.COST_PER_ORDER]: {
     id: 'kpi_cost_per_order',
-    name: '单订单成本',
-    description: '平均每订单处理成本',
-    unit: '元/订单',
+    name: '单订单成?,
+    description: '平均每订单处理成?,
+    unit: '�?订单',
     kpiType: WarehouseKPI.COST_PER_ORDER,
     category: 'cost',
     isHigherBetter: false,
     targetValue: 15,
     warningThreshold: 20,
     criticalThreshold: 25,
-    calculationMethod: '总运营成本 ÷ 总处理订单数',
+    calculationMethod: '总运营成?÷ 总处理订单数',
     benchmarkIndustryAverage: 18,
-    benchmarkBestPractice: 12
-  }
+    benchmarkBestPractice: 12,
+  },
 };

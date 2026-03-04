@@ -15,7 +15,7 @@ const requiredFiles = [
   'src/app/api/manuals/[manualId]/comments/route.ts',
   'src/app/admin/manuals/page.tsx',
   'src/components/RichTextEditor.tsx',
-  'supabase/migrations/019_enhance_manuals_system.sql'
+  'supabase/migrations/019_enhance_manuals_system.sql',
 ];
 
 requiredFiles.forEach(file => {
@@ -36,7 +36,9 @@ console.log('       "en": "iPhone 15 Pro User Manual"');
 console.log('     },');
 console.log('     "content": {');
 console.log('       "zh": "<h1>开始使用</h1><p>欢迎使用iPhone 15 Pro...</p>",');
-console.log('       "en": "<h1>Getting Started</h1><p>Welcome to iPhone 15 Pro...</p>"');
+console.log(
+  '       "en": "<h1>Getting Started</h1><p>Welcome to iPhone 15 Pro...</p>"'
+);
 console.log('     },');
 console.log('     "languageCodes": ["zh", "en"],');
 console.log('     "coverImageUrl": "https://example.com/cover.jpg",');
@@ -45,7 +47,9 @@ console.log('     "createdBy": "user_001"');
 console.log('   }');
 
 console.log('\n   🔹 获取说明书列表:');
-console.log('   GET /api/manuals?productId=prod_apple_iphone15_001&status=published');
+console.log(
+  '   GET /api/manuals?productId=prod_apple_iphone15_001&status=published'
+);
 
 console.log('\n   🔹 获取说明书详情:');
 console.log('   GET /api/manuals/manual_001');
@@ -79,7 +83,7 @@ const features = [
   '✅ 评论和评分系统',
   '✅ 查看和下载统计',
   '✅ 完整的CRUD操作',
-  '✅ 权限控制和安全验证'
+  '✅ 权限控制和安全验证',
 ];
 
 console.log('   📋 已实现功能:');
@@ -94,7 +98,7 @@ const tables = [
   'manual_sections - 说明书章节表',
   'manual_versions - 版本历史表',
   'manual_reviews - 审核记录表',
-  'manual_comments - 评论表'
+  'manual_comments - 评论表',
 ];
 
 console.log('   📊 主要数据表:');
@@ -112,7 +116,7 @@ const checklist = [
   '✅ 富文本编辑器集成',
   '✅ 多语言支持实现',
   '✅ 权限策略设置',
-  '✅ 索引和触发器创建'
+  '✅ 索引和触发器创建',
 ];
 
 console.log('   📋 部署检查项:');

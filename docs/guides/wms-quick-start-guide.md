@@ -191,13 +191,11 @@ accuracyMonitor.triggerManualCheck().then(report => {
 ### 常见问题
 
 1. **连接失败**
-
    - 检查网络连接
    - 验证 API 凭证
    - 确认 WMS 服务状态
 
 2. **同步超时**
-
    - 检查网络延迟
    - 调整超时设置
    - 减少批量处理大小

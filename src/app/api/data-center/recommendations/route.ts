@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { hybridRecommender, UserBehavior } from '@/data-center/ml/recommendation-engine';
 
-// 模拟用户行为数据（实际应该从数据库获取）
+// 妯℃嫙鐢ㄦ埛琛屼负鏁版嵁锛堝疄闄呭簲璇ヤ粠鏁版嵁搴撹幏鍙栵級
 const mockUserData: UserBehavior[] = [
   { userId: 'user_001', itemId: 'iphone_15_pro', actionType: 'view', timestamp: '2024-01-01T10:00:00Z', score: 1.0 },
   { userId: 'user_001', itemId: 'iphone_screen', actionType: 'search', timestamp: '2024-01-01T10:05:00Z', score: 0.8 },
@@ -14,17 +14,17 @@ const mockUserData: UserBehavior[] = [
 
 let isTrained = false;
 
-// 初始化推荐模型
+// 鍒濆鍖栨帹鑽愭ā?
 async function initializeRecommender() {
   if (isTrained) return;
   
   try {
-    console.log('🤖 初始化推荐系统...');
+    console.log('馃 鍒濆鍖栨帹鑽愮郴?..');
     await hybridRecommender.train(mockUserData);
     isTrained = true;
-    console.log('✅ 推荐系统初始化完成');
+    console.log('锟?鎺ㄨ崘绯荤粺鍒濆鍖栧畬?);
   } catch (error) {
-    console.error('❌ 推荐系统初始化失败:', error);
+    console.error('锟?鎺ㄨ崘绯荤粺鍒濆鍖栧け?', error);
     throw error;
   }
 }
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       case 'recommend':
         if (!userId) {
           return NextResponse.json(
-            { error: '缺少userId参数' },
+            { error: '缂哄皯userId鍙傛暟' },
             { status: 400 }
           );
         }
@@ -67,11 +67,11 @@ export async function GET(request: NextRequest) {
         });
 
       case 'popular-items':
-        // 返回热门物品推荐
+        // 杩斿洖鐑棬鐗╁搧鎺ㄨ崘
         const popularItems = [
-          { itemId: 'iphone_15_pro_max', itemType: 'device', score: 95, reason: '本周最热门', confidence: 0.95 },
-          { itemId: 'galaxy_s24_ultra', itemType: 'device', score: 92, reason: '热销新品', confidence: 0.92 },
-          { itemId: 'premium_screen', itemType: 'part', score: 88, reason: '高性价比', confidence: 0.88 }
+          { itemId: 'iphone_15_pro_max', itemType: 'device', score: 95, reason: '鏈懆鏈€鐑棬', confidence: 0.95 },
+          { itemId: 'galaxy_s24_ultra', itemType: 'device', score: 92, reason: '鐑攢鏂板搧', confidence: 0.92 },
+          { itemId: 'premium_screen', itemType: 'part', score: 88, reason: '楂樻€т环?, confidence: 0.88 }
         ];
         
         return NextResponse.json({
@@ -81,16 +81,16 @@ export async function GET(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { error: '未知的操作类型' },
+          { error: '鏈煡鐨勬搷浣滅被? },
           { status: 400 }
         );
     }
 
   } catch (error: any) {
-    console.error('推荐系统API错误:', error);
+    console.error('鎺ㄨ崘绯荤粺API閿欒:', error);
     return NextResponse.json(
       { 
-        error: error.message || '内部服务器错误',
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
         timestamp: new Date().toISOString()
       },
       { status: 500 }
@@ -109,12 +109,12 @@ export async function POST(request: NextRequest) {
       case 'record-behavior':
         if (!userId || !behavior) {
           return NextResponse.json(
-            { error: '缺少必要参数' },
+            { error: '缂哄皯蹇呰鍙傛暟' },
             { status: 400 }
           );
         }
 
-        // 记录用户行为（简化处理）
+        // 璁板綍鐢ㄦ埛琛屼负锛堢畝鍖栧鐞嗭級
         const newBehavior: UserBehavior = {
           userId,
           itemId: behavior.itemId,
@@ -123,16 +123,16 @@ export async function POST(request: NextRequest) {
           score: behavior.score || 1.0
         };
 
-        // 在实际应用中，这里应该将行为数据存储到数据库
+        // 鍦ㄥ疄闄呭簲鐢ㄤ腑锛岃繖閲屽簲璇ュ皢琛屼负鏁版嵁瀛樺偍鍒版暟鎹簱
         mockUserData.push(newBehavior);
         
-        // 可选：重新训练模型
+        // 鍙€夛細閲嶆柊璁粌妯″瀷
         if (retrain) {
           await hybridRecommender.train(mockUserData);
         }
 
         return NextResponse.json({
-          message: '用户行为记录成功',
+          message: '鐢ㄦ埛琛屼负璁板綍鎴愬姛',
           behavior: newBehavior,
           totalBehaviors: mockUserData.length,
           timestamp: new Date().toISOString()
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
       case 'batch-recommend':
         if (!body.userIds || !Array.isArray(body.userIds)) {
           return NextResponse.json(
-            { error: '缺少userIds数组参数' },
+            { error: '缂哄皯userIds鏁扮粍鍙傛暟' },
             { status: 400 }
           );
         }
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
         const count = body.count || 5;
         const batchResults: Record<string, any> = {};
 
-        // 并行生成推荐
+        // 骞惰鐢熸垚鎺ㄨ崘
         await Promise.all(
           body.userIds.map(async (uid: string) => {
             try {
@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
             } catch (error) {
               batchResults[uid] = {
                 success: false,
-                error: error instanceof Error ? error.message : '推荐生成失败'
+                error: error instanceof Error ? error.message : '鎺ㄨ崘鐢熸垚澶辫触'
               };
             }
           })
@@ -180,16 +180,16 @@ export async function POST(request: NextRequest) {
         
         if (!recommendationId || rating === undefined) {
           return NextResponse.json(
-            { error: '缺少推荐ID或评分' },
+            { error: '缂哄皯鎺ㄨ崘ID鎴栬瘎? },
             { status: 400 }
           );
         }
 
-        // 记录用户反馈（用于模型优化）
-        console.log(`📝 用户反馈: ${recommendationId}, 评分: ${rating}, 反馈: ${feedback || '无'}`);
+        // 璁板綍鐢ㄦ埛鍙嶉锛堢敤浜庢ā鍨嬩紭鍖栵級
+        console.log(`馃摑 鐢ㄦ埛鍙嶉: ${recommendationId}, 璇勫垎: ${rating}, 鍙嶉: ${feedback || '锟?}`);
         
         return NextResponse.json({
-          message: '反馈记录成功',
+          message: '鍙嶉璁板綍鎴愬姛',
           recommendationId,
           rating,
           timestamp: new Date().toISOString()
@@ -197,16 +197,16 @@ export async function POST(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { error: '未知的操作类型' },
+          { error: '鏈煡鐨勬搷浣滅被? },
           { status: 400 }
         );
     }
 
   } catch (error: any) {
-    console.error('推荐系统API错误:', error);
+    console.error('鎺ㄨ崘绯荤粺API閿欒:', error);
     return NextResponse.json(
       { 
-        error: error.message || '内部服务器错误',
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
         timestamp: new Date().toISOString()
       },
       { status: 500 }

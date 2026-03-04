@@ -1,0 +1,109 @@
+{
+  "testName": "报表调度器功能测试",
+  "timestamp": "2026-03-01T06:05:49.059Z",
+  "environment": "development",
+  "results": [
+    {
+      "name": "调度器状态获取",
+      "success": true,
+      "details": {
+        "total": 0,
+        "active": 0,
+        "schedules": []
+      }
+    },
+    {
+      "name": "报表模板获取",
+      "success": true,
+      "details": {
+        "count": 2,
+        "sample": [
+          {
+            "id": "device-overview",
+            "name": "设备概览报表",
+            "description": "展示设备基本信息和统计数据",
+            "type": "dashboard"
+          },
+          {
+            "id": "sales-analysis",
+            "name": "销售分析报表",
+            "description": "销售数据趋势和分析",
+            "type": "chart"
+          }
+        ]
+      }
+    },
+    {
+      "name": "调度任务创建",
+      "success": true,
+      "details": {
+        "id": "sched_1772345147493",
+        "templateId": "device-overview",
+        "name": "设备概览日报",
+        "description": "每日生成设备统计数据报表",
+        "schedule": {
+          "frequency": "day",
+          "interval": 1,
+          "startTime": "09:00"
+        },
+        "recipients": ["admin@example.com", "manager@example.com"],
+        "format": "pdf",
+        "enabled": true,
+        "createdAt": "2026-03-01T06:05:47.493Z",
+        "updatedAt": "2026-03-01T06:05:47.493Z"
+      }
+    },
+    {
+      "name": "调度任务列表获取",
+      "success": true,
+      "details": {
+        "count": 1,
+        "sample": [
+          {
+            "id": "sched_1",
+            "templateId": "device-overview",
+            "name": "设备日报",
+            "description": "每日设备统计报表",
+            "schedule": {
+              "frequency": "day",
+              "interval": 1
+            },
+            "recipients": ["admin@example.com"],
+            "format": "pdf",
+            "enabled": true,
+            "lastRun": "2026-03-01T09:00:00Z",
+            "nextRun": "2026-03-02T09:00:00Z",
+            "createdAt": "2026-03-01T08:00:00Z",
+            "updatedAt": "2026-03-01T08:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "name": "手动触发报表生成",
+      "success": false
+    },
+    {
+      "name": "调度任务更新",
+      "success": true,
+      "details": {
+        "id": "sched_1772345147493",
+        "name": "设备概览日报 - 更新版",
+        "description": "更新后的每日设备统计数据报表",
+        "enabled": false,
+        "updatedAt": "2026-03-01T06:05:48.937Z"
+      }
+    },
+    {
+      "name": "调度任务删除",
+      "success": true,
+      "details": "调度任务删除成功"
+    }
+  ],
+  "summary": {
+    "total": 7,
+    "passed": 6,
+    "failed": 1,
+    "successRate": "85.7%"
+  }
+}

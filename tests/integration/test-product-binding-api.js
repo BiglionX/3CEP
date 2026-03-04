@@ -9,7 +9,7 @@ console.log('🧪 FixCycle 3.0 产品绑定API测试开始...\n');
 console.log('1️⃣ 检查API文件...');
 const apiFiles = [
   'src/app/api/products/[productId]/route.ts',
-  'src/app/api/brands/[brandId]/products/route.ts'
+  'src/app/api/brands/[brandId]/products/route.ts',
 ];
 
 apiFiles.forEach(file => {
@@ -22,7 +22,7 @@ console.log('\n2️⃣ 数据库表结构验证...');
 const tables = [
   'brands - 品牌信息表',
   'products - 产品信息表',
-  'scan_records - 扫描记录表'
+  'scan_records - 扫描记录表',
 ];
 
 console.log('   📊 核心数据表:');
@@ -40,7 +40,7 @@ const features = [
   '✅ 扫描记录自动记录',
   '✅ 品牌-产品关联查询',
   '✅ 分页查询支持',
-  '✅ 数据验证和错误处理'
+  '✅ 数据验证和错误处理',
 ];
 
 console.log('   📋 已实现功能:');
@@ -123,7 +123,7 @@ const deploymentItems = [
   '✅ 请求参数验证',
   '✅ 错误处理和日志记录',
   '✅ 分页查询实现',
-  '✅ 扫描记录自动插入'
+  '✅ 扫描记录自动插入',
 ];
 
 console.log('   📋 部署检查项:');

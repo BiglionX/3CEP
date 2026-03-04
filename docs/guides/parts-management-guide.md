@@ -1,7 +1,9 @@
 # 配件管理模块部署指南
 
 ## 功能概述
+
 已完成配件管理模块的核心功能开发，包括：
+
 - 配件信息管理（增删改查）
 - 设备和故障关联
 - 库存管理
@@ -12,24 +14,29 @@
 ## 数据库部署步骤
 
 ### 1. 执行表结构迁移
+
 在Supabase控制台执行以下SQL文件：
+
 - `supabase/migrations/006_create_parts_management_tables.sql`
 - `supabase/migrations/007_seed_parts_data.sql`
 
 或者按顺序执行：
+
 1. 登录 [Supabase控制台](https://app.supabase.com/project/hrjqzbhqueleszkvnsen/sql)
 2. 打开SQL Editor
 3. 依次粘贴并执行两个SQL文件的内容
 
 ### 2. 验证表结构
+
 执行以下查询验证表是否创建成功：
+
 ```sql
 -- 检查主要表是否存在
-SELECT tablename FROM pg_tables WHERE schemaname = 'public' 
+SELECT tablename FROM pg_tables WHERE schemaname = 'public'
 AND tablename IN ('parts', 'part_devices', 'part_faults', 'part_images', 'part_inventory');
 
 -- 检查视图是否存在
-SELECT viewname FROM pg_views WHERE schemaname = 'public' 
+SELECT viewname FROM pg_views WHERE schemaname = 'public'
 AND viewname = 'parts_complete_view';
 
 -- 检查示例数据
@@ -41,9 +48,11 @@ SELECT COUNT(*) FROM fault_types;
 ## 前端功能验证
 
 ### 1. 访问管理页面
+
 访问地址：`http://localhost:3001/admin/parts`
 
 ### 2. 主要功能点
+
 - ✅ 配件列表展示
 - ✅ 搜索和筛选功能
 - ✅ 分页功能
@@ -56,6 +65,7 @@ SELECT COUNT(*) FROM fault_types;
 - ✅ Excel模板下载和批量导入
 
 ### 3. API接口测试
+
 可以使用以下curl命令测试API：
 
 ```bash
@@ -105,6 +115,7 @@ scripts/
 ## 注意事项
 
 1. **依赖安装**：确保已安装xlsx依赖包
+
    ```bash
    npm install xlsx
    ```

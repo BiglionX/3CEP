@@ -15,7 +15,7 @@ export class DeviceLifecycleService {
    * 记录生命周期事件
    * @param params 事件记录参数
    * @param userId 用户ID（可选）
-   * @returns 创建的事件记录
+   * @returns 创建的事件记?
    */
   async recordEvent(
     params: RecordLifecycleEventParams,
@@ -39,7 +39,7 @@ export class DeviceLifecycleService {
           location: params.location,
           notes: params.notes,
           metadata: params.metadata
-        })
+        }) as any
         .select()
         .single();
 
@@ -113,7 +113,7 @@ export class DeviceLifecycleService {
    * 根据事件类型获取设备历史
    * @param qrcodeId 二维码ID
    * @param eventType 事件类型
-   * @returns 特定类型的事件列表
+   * @returns 特定类型的事件列?
    */
   async getEventsByType(
     qrcodeId: string,
@@ -123,9 +123,9 @@ export class DeviceLifecycleService {
   }
 
   /**
-   * 获取设备最新事件
+   * 获取设备最新事?
    * @param qrcodeId 二维码ID
-   * @returns 最新事件
+   * @returns 最新事?
    */
   async getLatestEvent(qrcodeId: string): Promise<LifecycleEvent | null> {
     const events = await this.getDeviceLifecycleHistory(qrcodeId, {
@@ -138,7 +138,7 @@ export class DeviceLifecycleService {
    * 批量记录事件
    * @param events 事件列表
    * @param userId 用户ID
-   * @returns 成功记录的事件数量
+   * @returns 成功记录的事件数?
    */
   async recordMultipleEvents(
     events: RecordLifecycleEventParams[],
@@ -152,7 +152,7 @@ export class DeviceLifecycleService {
         successCount++;
       } catch (error) {
         console.error(`记录事件失败 (${event.qrcodeId}):`, error);
-        // 继续处理下一个事件
+        // 继续处理下一个事?
       }
     }
     
@@ -192,7 +192,7 @@ export class DeviceLifecycleService {
       // 计算统计数据
       const stats = this.calculateDeviceStats(latestEvents);
 
-      // 确定新的设备状态
+      // 确定新的设备状?
       const newStatus = this.determineDeviceStatus(eventType, latestEvents);
 
       // 更新设备档案
@@ -254,7 +254,7 @@ export class DeviceLifecycleService {
       const product = qrData.products as any;
       const brand = product.brands as any;
 
-      // 设置初始状态
+      // 设置初始状?
       let initialStatus = DeviceStatus.MANUFACTURED;
       let firstActivatedAt: string | null = null;
 
@@ -268,11 +268,11 @@ export class DeviceLifecycleService {
         .insert({
           qrcode_id: qrcodeId,
           product_model: product.model || product.name,
-          product_category: '未分类',
+          product_category: '未分?,
           brand_name: brand?.name,
           manufacturing_date: new Date().toISOString().split('T')[0],
           first_activated_at: firstActivatedAt,
-          warranty_period: 12, // 默认12个月保修期
+          warranty_period: 12, // 默认12个月保修?
           current_status: initialStatus,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -299,10 +299,10 @@ export class DeviceLifecycleService {
   }
 
   /**
-   * 确定设备状态
+   * 确定设备状?
    * @param eventType 事件类型
    * @param events 事件列表
-   * @returns 设备状态
+   * @returns 设备状?
    */
   private determineDeviceStatus(eventType: DeviceEventType, events: LifecycleEvent[]): DeviceStatus {
     switch (eventType) {
@@ -326,7 +326,7 @@ export class DeviceLifecycleService {
 
   /**
    * 将数据库记录映射到LifecycleEvent对象
-   * @param record 数据库记录
+   * @param record 数据库记?
    * @returns LifecycleEvent对象
    */
   private mapToLifecycleEvent(record: any): LifecycleEvent {

@@ -13,7 +13,7 @@ console.log('🔍 登录跳转问题深度诊断\n');
 console.log('1️⃣ 环境变量检查');
 
 const envFiles = ['.env.local', '.env'];
-let envConfig = {};
+const envConfig = {};
 
 envFiles.forEach(envFile => {
   const envPath = path.join(process.cwd(), envFile);
@@ -30,7 +30,9 @@ envFiles.forEach(envFile => {
       if (line.includes('NEXT_PUBLIC_GOOGLE_CLIENT_ID')) {
         const [, value] = line.split('=');
         envConfig.NEXT_PUBLIC_GOOGLE_CLIENT_ID = value;
-        console.log(`   NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${value ? '已配置' : '未配置'}`);
+        console.log(
+          `   NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${value ? '已配置' : '未配置'}`
+        );
       }
     });
   } else {
@@ -41,23 +43,31 @@ envFiles.forEach(envFile => {
 // 2. 检查登录API响应格式
 console.log('\n2️⃣ 登录API响应格式检查');
 
-const loginApiPath = path.join(process.cwd(), 'src', 'app', 'api', 'auth', 'login', 'route.ts');
+const loginApiPath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'api',
+  'auth',
+  'login',
+  'route.ts'
+);
 if (fs.existsSync(loginApiPath)) {
   const content = fs.readFileSync(loginApiPath, 'utf8');
-  
+
   // 检查响应结构
   const hasUserResponse = content.includes('user: {');
   const hasIsAdminField = content.includes('is_admin:');
   const hasSessionField = content.includes('session:');
-  
+
   console.log(`用户响应结构: ${hasUserResponse ? '✅' : '❌'}`);
   console.log(`管理员字段: ${hasIsAdminField ? '✅' : '❌'}`);
   console.log(`会话字段: ${hasSessionField ? '✅' : '❌'}`);
-  
+
   // 检查管理员判断逻辑
   const hasMetadataCheck = content.includes('user_metadata?.isAdmin');
   const hasDatabaseCheck = content.includes('admin_users');
-  
+
   console.log(`用户元数据检查: ${hasMetadataCheck ? '✅' : '❌'}`);
   console.log(`数据库检查: ${hasDatabaseCheck ? '✅' : '❌'}`);
 }
@@ -65,42 +75,50 @@ if (fs.existsSync(loginApiPath)) {
 // 3. 检查前端跳转逻辑
 console.log('\n3️⃣ 前端跳转逻辑详细检查');
 
-const loginPagePath = path.join(process.cwd(), 'src', 'app', 'login', 'page.tsx');
+const loginPagePath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'login',
+  'page.tsx'
+);
 if (fs.existsSync(loginPagePath)) {
   const content = fs.readFileSync(loginPagePath, 'utf8');
-  
+
   // 检查关键跳转逻辑
   const checks = [
     {
       name: '获取redirect参数',
-      pattern: 'const redirect = searchParams.get(\'redirect\')'
+      pattern: "const redirect = searchParams.get('redirect')",
     },
     {
       name: '管理员检查',
-      pattern: 'if (result.user?.is_admin)'
+      pattern: 'if (result.user?.is_admin)',
     },
     {
       name: '管理员跳转逻辑',
-      pattern: 'router.push(\'/admin/dashboard\')'
+      pattern: "router.push('/admin/dashboard')",
     },
     {
       name: 'redirect参数使用',
-      pattern: 'router.push(targetRedirect)'
+      pattern: 'router.push(targetRedirect)',
     },
     {
       name: '错误处理',
-      pattern: 'setError(result.error || \'登录失败\')'
-    }
+      pattern: "setError(result.error || '登录失败')",
+    },
   ];
-  
+
   checks.forEach(check => {
     const found = content.includes(check.pattern);
     console.log(`${check.name}: ${found ? '✅' : '❌'}`);
   });
-  
+
   // 显示实际的跳转逻辑
   console.log('\n📋 实际跳转逻辑代码片段:');
-  const jumpSection = content.match(/if \(response\.ok\) \{[\s\S]*?\n\s*\} else \{/);
+  const jumpSection = content.match(
+    /if \(response\.ok\) \{[\s\S]*?\n\s*\} else \{/
+  );
   if (jumpSection) {
     console.log(jumpSection[0]);
   }
@@ -111,12 +129,12 @@ console.log('\n4️⃣ Cookie设置检查');
 
 if (fs.existsSync(loginApiPath)) {
   const content = fs.readFileSync(loginApiPath, 'utf8');
-  
+
   const hasCookieSetting = content.includes('response.cookies.set');
   const hasAuthCookie = content.includes('auth-token');
   const hasSecureFlag = content.includes('secure:');
   const hasHttpOnlyFlag = content.includes('httpOnly:');
-  
+
   console.log(`Cookie设置: ${hasCookieSetting ? '✅' : '❌'}`);
   console.log(`认证Cookie: ${hasAuthCookie ? '✅' : '❌'}`);
   console.log(`Secure标志: ${hasSecureFlag ? '✅' : '❌'}`);
@@ -138,8 +156,8 @@ const debugTests = [
       '点击登录按钮',
       '观察Network中的POST /api/auth/login请求',
       '检查响应数据格式',
-      '观察是否发生页面跳转'
-    ]
+      '观察是否发生页面跳转',
+    ],
   },
   {
     name: '带redirect参数测试',
@@ -148,8 +166,8 @@ const debugTests = [
       '访问带redirect参数的登录页',
       '执行登录操作',
       '检查是否跳转到指定页面',
-      '验证URL是否包含redirect参数'
-    ]
+      '验证URL是否包含redirect参数',
+    ],
   },
   {
     name: 'Cookie验证测试',
@@ -158,9 +176,9 @@ const debugTests = [
       '登录成功后',
       '打开Application标签',
       '查看Cookies中的认证信息',
-      '检查是否有is_admin标记'
-    ]
-  }
+      '检查是否有is_admin标记',
+    ],
+  },
 ];
 
 debugTests.forEach((test, index) => {
@@ -183,7 +201,7 @@ const troubleshooting = [
   '确认没有跨域问题',
   '验证Cookie是否被正确设置和读取',
   '检查是否有网络拦截或防火墙阻止',
-  '确认服务器时间和客户端时间同步'
+  '确认服务器时间和客户端时间同步',
 ];
 
 console.log('\n📋 排查步骤:');

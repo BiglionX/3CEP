@@ -3,7 +3,7 @@
  * 处理仓库管理、库存同步、跨仓调拨等核心功能
  */
 
-import { 
+import {
   Warehouse,
   WarehouseType,
   WarehouseStatus,
@@ -14,13 +14,12 @@ import {
   CreateWarehouseDTO,
   SyncInventoryDTO,
   CreateTransferDTO,
-  WarehouseQueryParams
+  WarehouseQueryParams,
 } from '../models/warehouse.model';
 import { supabase } from '@/lib/supabase';
 import { generateUUID } from '@/fcx-system/utils/helpers';
 
 export class WarehouseService {
-  
   /**
    * 创建仓库
    */
@@ -35,13 +34,17 @@ export class WarehouseService {
       if (!validation.isValid) {
         return {
           success: false,
-          errorMessage: validation.errors.join('; ')
+          errorMessage: validation.errors.join('; '),
         };
       }
 
       // 2. 生成仓库编码
       const warehouseId = generateUUID();
-      const warehouseCode = this.generateWarehouseCode(dto.type, dto.location.countryCode, dto.location.city);
+      const warehouseCode = this.generateWarehouseCode(
+        dto.type,
+        dto.location.countryCode,
+        dto.location.city
+      );
 
       // 3. 创建仓库记录
       const warehouseData = {
@@ -57,40 +60,37 @@ export class WarehouseService {
         integration_info: {
           ...dto.integrationInfo,
           sync_status: SyncStatus.PENDING,
-          last_synced_at: null
+          last_synced_at: null,
         },
         cost_structure: dto.costStructure,
         performance_metrics: {
           accuracy_rate: 0,
           on_time_rate: 0,
           damage_rate: 0,
-          last_updated: new Date()
+          last_updated: new Date(),
         },
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       };
 
-      const { error } = await supabase
-        .from('warehouses')
-        .insert(warehouseData);
+      const { error } = await supabase.from('warehouses').insert(warehouseData);
 
       if (error) {
         return {
           success: false,
-          errorMessage: `创建仓库失败: ${error.message}`
+          errorMessage: `创建仓库失败: ${error.message}`,
         };
       }
 
       return {
         success: true,
-        warehouseId
+        warehouseId,
       };
-
     } catch (error) {
       console.error('创建仓库错误:', error);
       return {
         success: false,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
@@ -114,7 +114,6 @@ export class WarehouseService {
       }
 
       return this.mapToWarehouse(data);
-
     } catch (error) {
       console.error('获取仓库信息错误:', error);
       throw error;
@@ -126,9 +125,7 @@ export class WarehouseService {
    */
   async listWarehouses(params: WarehouseQueryParams): Promise<Warehouse[]> {
     try {
-      let query = supabase
-        .from('warehouses')
-        .select('*');
+      let query = supabase.from('warehouses').select('*');
 
       // 添加查询条件
       if (params.type) {
@@ -144,11 +141,16 @@ export class WarehouseService {
       }
 
       if (params.hasTemperatureControl !== undefined) {
-        query = query.eq('operational_info.temperature_controlled', params.hasTemperatureControl);
+        query = query.eq(
+          'operational_info.temperature_controlled',
+          params.hasTemperatureControl
+        );
       }
 
       if (params.keyword) {
-        query = query.or(`name.ilike.%${params.keyword}%,code.ilike.%${params.keyword}%`);
+        query = query.or(
+          `name.ilike.%${params.keyword}%,code.ilike.%${params.keyword}%`
+        );
       }
 
       // 排序
@@ -169,7 +171,6 @@ export class WarehouseService {
       }
 
       return data.map(this.mapToWarehouse);
-
     } catch (error) {
       console.error('查询仓库列表错误:', error);
       throw error;
@@ -189,7 +190,7 @@ export class WarehouseService {
       if (!warehouse) {
         return {
           success: false,
-          errorMessage: '仓库不存在'
+          errorMessage: '仓库不存?,
         };
       }
 
@@ -202,7 +203,7 @@ export class WarehouseService {
         sync_status: SyncStatus.SYNCING,
         sync_started_at: new Date(),
         retry_count: 0,
-        created_at: new Date()
+        created_at: new Date(),
       };
 
       const { error: recordError } = await supabase
@@ -212,24 +213,25 @@ export class WarehouseService {
       if (recordError) {
         return {
           success: false,
-          errorMessage: `创建同步记录失败: ${recordError.message}`
+          errorMessage: `创建同步记录失败: ${recordError.message}`,
         };
       }
 
       // 2. 调用WMS系统API进行同步（模拟）
       try {
         const syncResult = await this.callWMSSyncAPI(warehouse, dto);
-        
-        // 3. 更新同步状态
-        const { error: updateError } = await supabase
+
+        // 3. 更新同步状?        const { error: updateError } = await supabase
           .from('inventory_sync_records')
           .update({
-            sync_status: syncResult.success ? SyncStatus.SYNCED : SyncStatus.FAILED,
+            sync_status: syncResult.success
+              ? SyncStatus.SYNCED
+              : SyncStatus.FAILED,
             quantity_before: syncResult.quantityBefore,
             quantity_after: syncResult.quantityAfter,
             discrepancy: syncResult.discrepancy,
             sync_completed_at: new Date(),
-            error_message: syncResult.errorMessage
+            error_message: syncResult.errorMessage,
           } as any)
           .eq('id', syncRecordId);
 
@@ -237,14 +239,13 @@ export class WarehouseService {
           console.error('更新同步记录失败:', updateError);
         }
 
-        // 4. 更新仓库最后同步时间
-        if (syncResult.success) {
+        // 4. 更新仓库最后同步时?        if (syncResult.success) {
           await supabase
             .from('warehouses')
             .update({
               'integration_info.last_synced_at': new Date(),
               'integration_info.sync_status': SyncStatus.SYNCED,
-              updated_at: new Date()
+              updated_at: new Date(),
             } as any)
             .eq('id', dto.warehouseId);
         }
@@ -252,9 +253,8 @@ export class WarehouseService {
         return {
           success: syncResult.success,
           syncRecordId: syncResult.success ? syncRecordId : undefined,
-          errorMessage: syncResult.errorMessage
+          errorMessage: syncResult.errorMessage,
         };
-
       } catch (syncError) {
         // 更新同步状态为失败
         await supabase
@@ -263,21 +263,20 @@ export class WarehouseService {
             sync_status: SyncStatus.FAILED,
             sync_completed_at: new Date(),
             error_message: (syncError as Error).message,
-            retry_count: 1
+            retry_count: 1,
           } as any)
           .eq('id', syncRecordId);
 
         return {
           success: false,
-          errorMessage: `同步失败: ${(syncError as Error).message}`
+          errorMessage: `同步失败: ${(syncError as Error).message}`,
         };
       }
-
     } catch (error) {
       console.error('库存同步错误:', error);
       return {
         success: false,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
@@ -292,29 +291,28 @@ export class WarehouseService {
     errorMessage?: string;
   }> {
     try {
-      // 1. 验证仓库存在性
-      const fromWarehouse = await this.getWarehouse(dto.fromWarehouseId);
+      // 1. 验证仓库存在?      const fromWarehouse = await this.getWarehouse(dto.fromWarehouseId);
       const toWarehouse = await this.getWarehouse(dto.toWarehouseId);
 
       if (!fromWarehouse || !toWarehouse) {
         return {
           success: false,
-          errorMessage: '调出或调入仓库不存在'
+          errorMessage: '调出或调入仓库不存在',
         };
       }
 
       // 2. 验证库存可用性（简化验证）
       for (const item of dto.items) {
         const inventoryCheck = await this.checkInventoryAvailability(
-          dto.fromWarehouseId, 
-          item.productId, 
+          dto.fromWarehouseId,
+          item.productId,
           item.quantity
         );
-        
+
         if (!inventoryCheck.available) {
           return {
             success: false,
-            errorMessage: `产品 ${item.productId} 库存不足`
+            errorMessage: `产品 ${item.productId} 库存不足`,
           };
         }
       }
@@ -323,8 +321,10 @@ export class WarehouseService {
       const transferId = generateUUID();
       const transferNumber = this.generateTransferNumber();
 
-      // 4. 计算总价值
-      const totalValue = dto.items.reduce((sum, item) => sum + (item.quantity * item.unitValue), 0);
+      // 4. 计算总价?      const totalValue = dto.items.reduce(
+        (sum, item) => sum + item.quantity * item.unitValue,
+        0
+      );
 
       // 5. 创建调拨记录
       const transferData = {
@@ -337,20 +337,18 @@ export class WarehouseService {
           product_name: 'Unknown',
           quantity: item.quantity,
           unit_value: item.unitValue,
-          total_price: item.quantity * item.unitValue
+          total_price: item.quantity * item.unitValue,
         })),
         total_value: totalValue,
         status: 'pending',
         priority: dto.priority,
         estimated_departure: dto.estimatedDeparture,
-        estimated_arrival: dto.estimatedDeparture, // 简化处理
-        logistics_info: {
+        estimated_arrival: dto.estimatedDeparture, // 简化处?        logistics_info: {
           provider: dto.logisticsProvider,
-          shipping_cost: 0 // 需要计算
-        },
+          shipping_cost: 0, // 需要计?        },
         created_by: 'system', // 实际应为用户ID
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       };
 
       const { error } = await supabase
@@ -360,21 +358,20 @@ export class WarehouseService {
       if (error) {
         return {
           success: false,
-          errorMessage: `创建调拨记录失败: ${error.message}`
+          errorMessage: `创建调拨记录失败: ${error.message}`,
         };
       }
 
       return {
         success: true,
         transferId,
-        transferNumber
+        transferNumber,
       };
-
     } catch (error) {
       console.error('创建跨仓调拨错误:', error);
       return {
         success: false,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
@@ -382,7 +379,9 @@ export class WarehouseService {
   /**
    * 获取仓库容量规划
    */
-  async getWarehouseCapacityPlan(warehouseId: string): Promise<WarehouseCapacityPlan | null> {
+  async getWarehouseCapacityPlan(
+    warehouseId: string
+  ): Promise<WarehouseCapacityPlan | null> {
     try {
       const warehouse = await this.getWarehouse(warehouseId);
       if (!warehouse) {
@@ -400,43 +399,44 @@ export class WarehouseService {
         warehouseId: warehouseId,
         planningPeriod: {
           startDate: new Date(),
-          endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+          endDate: new Date(
+            new Date().setFullYear(new Date().getFullYear() + 1)
+          ),
         },
         capacityAllocation: {
           totalCapacity,
           allocatedCapacity: currentOccupancy,
           reservedCapacity: totalCapacity * 0.1, // 预留10%
-          availableCapacity
+          availableCapacity,
         },
         productCategories: [
           {
             category: '手机配件',
             allocatedSpace: currentOccupancy * 0.6,
-            plannedInventory: 10000
+            plannedInventory: 10000,
           },
           {
-            category: '笔记本配件',
+            category: '笔记本配?,
             allocatedSpace: currentOccupancy * 0.3,
-            plannedInventory: 5000
+            plannedInventory: 5000,
           },
           {
             category: '其他',
             allocatedSpace: currentOccupancy * 0.1,
-            plannedInventory: 2000
-          }
+            plannedInventory: 2000,
+          },
         ],
         utilizationRate: (currentOccupancy / totalCapacity) * 100,
         recommendations: [
           '建议增加存储设备以提高容量利用率',
           '考虑优化拣货路径提升作业效率',
-          '定期清理呆滞库存释放存储空间'
+          '定期清理呆滞库存释放存储空间',
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       return capacityPlan;
-
     } catch (error) {
       console.error('获取仓库容量规划错误:', error);
       throw error;
@@ -446,11 +446,15 @@ export class WarehouseService {
   /**
    * 生成仓库绩效报告
    */
-  async generatePerformanceReport(warehouseId: string, startDate: Date, endDate: Date): Promise<WarehousePerformanceReport> {
+  async generatePerformanceReport(
+    warehouseId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<WarehousePerformanceReport> {
     try {
       const warehouse = await this.getWarehouse(warehouseId);
       if (!warehouse) {
-        throw new Error('仓库不存在');
+        throw new Error('仓库不存?);
       }
 
       // 模拟生成绩效数据
@@ -459,45 +463,44 @@ export class WarehouseService {
         warehouseName: warehouse.name,
         reportPeriod: {
           startDate,
-          endDate
+          endDate,
         },
         metrics: {
           inbound: {
             totalShipments: Math.floor(Math.random() * 1000) + 500,
             totalItems: Math.floor(Math.random() * 50000) + 20000,
             accuracyRate: 98.5 + Math.random() * 1.5,
-            avgProcessingTime: 30 + Math.random() * 20
+            avgProcessingTime: 30 + Math.random() * 20,
           },
           outbound: {
             totalOrders: Math.floor(Math.random() * 2000) + 1000,
             totalItems: Math.floor(Math.random() * 80000) + 40000,
             onTimeRate: 95 + Math.random() * 5,
             avgPickTime: 15 + Math.random() * 10,
-            avgPackTime: 8 + Math.random() * 5
+            avgPackTime: 8 + Math.random() * 5,
           },
           inventory: {
             accuracyRate: 99 + Math.random(),
             turnoverRate: 8 + Math.random() * 4,
-            obsolescenceRate: 2 + Math.random() * 3
+            obsolescenceRate: 2 + Math.random() * 3,
           },
           costs: {
             totalCost: 50000 + Math.random() * 30000,
             storageCost: 20000 + Math.random() * 10000,
             laborCost: 25000 + Math.random() * 15000,
-            equipmentCost: 5000 + Math.random() * 3000
-          }
+            equipmentCost: 5000 + Math.random() * 3000,
+          },
         },
         kpiScores: {
           operationalEfficiency: 85 + Math.random() * 15,
           serviceQuality: 90 + Math.random() * 10,
           costControl: 80 + Math.random() * 20,
-          overallScore: 85 + Math.random() * 15
+          overallScore: 85 + Math.random() * 15,
         },
-        createdAt: new Date()
+        createdAt: new Date(),
       };
 
       return report;
-
     } catch (error) {
       console.error('生成绩效报告错误:', error);
       throw error;
@@ -506,7 +509,10 @@ export class WarehouseService {
 
   // 私有辅助方法
 
-  private validateWarehouseData(data: CreateWarehouseDTO): { isValid: boolean; errors: string[] } {
+  private validateWarehouseData(data: CreateWarehouseDTO): {
+    isValid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
     if (!data.name) {
@@ -522,7 +528,7 @@ export class WarehouseService {
     }
 
     if (!data.contactInfo.manager) {
-      errors.push('负责人不能为空');
+      errors.push('负责人不能为?);
     }
 
     if (data.operationalInfo.capacity <= 0) {
@@ -531,11 +537,15 @@ export class WarehouseService {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
-  private generateWarehouseCode(type: WarehouseType, countryCode: string, city: string): string {
+  private generateWarehouseCode(
+    type: WarehouseType,
+    countryCode: string,
+    city: string
+  ): string {
     const typePrefix = type.substring(0, 2).toUpperCase();
     const country = countryCode.toUpperCase();
     const cityCode = city.substring(0, 3).toUpperCase();
@@ -550,7 +560,10 @@ export class WarehouseService {
     return `${prefix}${date}${random}`;
   }
 
-  private async callWMSSyncAPI(warehouse: Warehouse, dto: SyncInventoryDTO): Promise<{
+  private async callWMSSyncAPI(
+    warehouse: Warehouse,
+    dto: SyncInventoryDTO
+  ): Promise<{
     success: boolean;
     quantityBefore?: number;
     quantityAfter?: number;
@@ -559,32 +572,34 @@ export class WarehouseService {
   }> {
     // 模拟WMS系统API调用
     await new Promise(resolve => setTimeout(resolve, 2000)); // 模拟网络延迟
-    
-    // 95%成功率
-    if (Math.random() > 0.05) {
+
+    // 95%成功?    if (Math.random() > 0.05) {
       return {
         success: true,
         quantityBefore: 1000,
         quantityAfter: 1005,
-        discrepancy: 5
+        discrepancy: 5,
       };
     } else {
       return {
         success: false,
-        errorMessage: 'WMS系统连接超时'
+        errorMessage: 'WMS系统连接超时',
       };
     }
   }
 
-  private async checkInventoryAvailability(warehouseId: string, productId: string, requiredQuantity: number): Promise<{
+  private async checkInventoryAvailability(
+    warehouseId: string,
+    productId: string,
+    requiredQuantity: number
+  ): Promise<{
     available: boolean;
     availableQuantity: number;
   }> {
-    // 模拟库存检查
-    const availableQuantity = Math.floor(Math.random() * 2000) + 1000;
+    // 模拟库存检?    const availableQuantity = Math.floor(Math.random() * 2000) + 1000;
     return {
       available: availableQuantity >= requiredQuantity,
-      availableQuantity
+      availableQuantity,
     };
   }
 
@@ -603,7 +618,7 @@ export class WarehouseService {
       costStructure: data.cost_structure,
       performanceMetrics: data.performance_metrics,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at)
+      updatedAt: new Date(data.updated_at),
     };
   }
 }

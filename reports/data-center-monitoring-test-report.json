@@ -1,0 +1,309 @@
+{
+  "timestamp": "2026-03-01T05:46:42.581Z",
+  "summary": {
+    "totalTests": 6,
+    "passedTests": 6,
+    "failedTests": 0,
+    "successRate": 100
+  },
+  "testCases": [
+    {
+      "name": "监控整合器状态",
+      "success": true,
+      "details": {
+        "integrationProgress": {
+          "totalModules": 6,
+          "integratedModules": 4,
+          "completionRate": 67
+        },
+        "currentStatus": {
+          "totalAlerts": 11,
+          "totalMonitors": 55,
+          "activeModules": ["devices", "supply-chain", "fcx", "data-quality"]
+        },
+        "moduleDetails": {
+          "devices": {
+            "integrated": true,
+            "monitors": 15,
+            "activeAlerts": 3,
+            "lastSync": "2026-03-01T05:46:41.809Z"
+          },
+          "supply-chain": {
+            "integrated": true,
+            "monitors": 12,
+            "activeAlerts": 2,
+            "lastSync": "2026-03-01T05:46:41.810Z"
+          },
+          "wms": {
+            "integrated": false,
+            "monitors": 0,
+            "activeAlerts": 0,
+            "lastSync": null
+          },
+          "fcx": {
+            "integrated": true,
+            "monitors": 8,
+            "activeAlerts": 1,
+            "lastSync": "2026-03-01T05:46:41.810Z"
+          },
+          "data-quality": {
+            "integrated": true,
+            "monitors": 20,
+            "activeAlerts": 5,
+            "lastSync": "2026-03-01T05:46:41.810Z"
+          },
+          "analytics": {
+            "integrated": false,
+            "monitors": 0,
+            "activeAlerts": 0,
+            "lastSync": null
+          }
+        }
+      }
+    },
+    {
+      "name": "告警规则列表",
+      "success": true,
+      "details": {
+        "rules": [
+          {
+            "id": "rule-001",
+            "name": "数据库连接异常",
+            "condition": "database.connections > 1000",
+            "severity": "critical",
+            "enabled": true,
+            "channels": ["email", "slack"],
+            "createdAt": "2026-03-01T10:00:00Z",
+            "lastTriggered": "2026-03-01T14:30:00Z"
+          },
+          {
+            "id": "rule-002",
+            "name": "API响应时间过长",
+            "condition": "api.response_time > 2000",
+            "severity": "high",
+            "enabled": true,
+            "channels": ["email"],
+            "createdAt": "2026-03-01T11:00:00Z",
+            "lastTriggered": null
+          },
+          {
+            "id": "rule-003",
+            "name": "内存使用率过高",
+            "condition": "system.memory_usage > 85",
+            "severity": "medium",
+            "enabled": false,
+            "channels": ["slack"],
+            "createdAt": "2026-03-01T12:00:00Z",
+            "lastTriggered": "2026-03-01T09:15:00Z"
+          }
+        ],
+        "totalCount": 3,
+        "enabledCount": 2
+      }
+    },
+    {
+      "name": "性能分析",
+      "success": true,
+      "details": {
+        "timeframe": "24h",
+        "metrics": {
+          "cpu": {
+            "usage": 68.5,
+            "loadAverage": [1.2, 1.5, 1.8],
+            "cores": 8,
+            "utilizationByProcess": [
+              {
+                "process": "node",
+                "usage": 25.3
+              },
+              {
+                "process": "postgres",
+                "usage": 18.7
+              },
+              {
+                "process": "redis",
+                "usage": 12.1
+              },
+              {
+                "process": "nginx",
+                "usage": 8.4
+              }
+            ]
+          },
+          "memory": {
+            "total": 16384,
+            "used": 11264,
+            "free": 5120,
+            "usagePercentage": 68.7,
+            "swapUsed": 2048
+          },
+          "disk": {
+            "total": 512000,
+            "used": 327680,
+            "free": 184320,
+            "usagePercentage": 64,
+            "ioWait": 12.3
+          },
+          "network": {
+            "bytesIn": 1024000,
+            "bytesOut": 2048000,
+            "packetsIn": 50000,
+            "packetsOut": 45000,
+            "errors": 5
+          },
+          "database": {
+            "connections": 845,
+            "queriesPerSecond": 120,
+            "slowQueries": 3,
+            "cacheHitRate": 92.5
+          },
+          "api": {
+            "requestsPerMinute": 1200,
+            "averageResponseTime": 150,
+            "errorRate": 0.5,
+            "throughput": 20
+          }
+        },
+        "score": 92,
+        "status": "good",
+        "analysisTime": "2026-03-01T05:46:42.435Z"
+      }
+    },
+    {
+      "name": "创建告警规则",
+      "success": true,
+      "details": {
+        "rule": {
+          "id": "rule-1772344002486",
+          "name": "测试告警规则",
+          "condition": "test.metric > 100",
+          "severity": "medium",
+          "notificationChannels": ["email"],
+          "enabled": true,
+          "channels": ["email"],
+          "createdAt": "2026-03-01T05:46:42.486Z",
+          "lastTriggered": null
+        },
+        "message": "告警规则创建成功"
+      }
+    },
+    {
+      "name": "性能瓶颈识别",
+      "success": true,
+      "details": {
+        "timeframe": "24h",
+        "bottlenecks": [
+          {
+            "id": "bottleneck-001",
+            "component": "Database",
+            "type": "Slow Queries",
+            "severity": "high",
+            "impact": "API响应时间增加30%",
+            "metrics": {
+              "slowQueries": 15,
+              "averageQueryTime": 2500,
+              "threshold": 1000
+            },
+            "detectedAt": "2026-03-01T04:46:42.525Z"
+          },
+          {
+            "id": "bottleneck-002",
+            "component": "Memory",
+            "type": "High Usage",
+            "severity": "medium",
+            "impact": "系统响应变慢",
+            "metrics": {
+              "usagePercentage": 85.2,
+              "availableMemory": 2.4,
+              "threshold": 80
+            },
+            "detectedAt": "2026-03-01T03:46:42.525Z"
+          },
+          {
+            "id": "bottleneck-003",
+            "component": "CPU",
+            "type": "High Load",
+            "severity": "low",
+            "impact": "轻微性能影响",
+            "metrics": {
+              "loadAverage": 2.1,
+              "usage": 75.3,
+              "threshold": 80
+            },
+            "detectedAt": "2026-03-01T02:46:42.525Z"
+          }
+        ],
+        "summary": {
+          "total": 3,
+          "critical": 1,
+          "moderate": 1,
+          "low": 1,
+          "totalImpact": "30%"
+        }
+      }
+    },
+    {
+      "name": "优化建议",
+      "success": true,
+      "details": {
+        "timeframe": "24h",
+        "recommendations": [
+          {
+            "id": "rec-001",
+            "category": "Database",
+            "title": "优化慢查询",
+            "description": "识别并优化执行时间超过1秒的数据库查询",
+            "priority": "high",
+            "estimatedImpact": "提升API响应速度30%",
+            "implementation": {
+              "steps": ["启用慢查询日志", "分析查询执行计划", "添加必要的索引", "重构复杂查询"],
+              "estimatedTime": "2-3天",
+              "difficulty": "medium"
+            },
+            "cost": "low"
+          },
+          {
+            "id": "rec-002",
+            "category": "Memory",
+            "title": "内存使用优化",
+            "description": "优化应用程序内存使用，减少内存泄漏",
+            "priority": "medium",
+            "estimatedImpact": "降低内存使用率15%",
+            "implementation": {
+              "steps": ["分析内存使用模式", "优化数据结构", "实现内存回收机制", "监控内存使用趋势"],
+              "estimatedTime": "1-2周",
+              "difficulty": "high"
+            },
+            "cost": "medium"
+          },
+          {
+            "id": "rec-003",
+            "category": "Caching",
+            "title": "实施缓存策略",
+            "description": "为频繁访问的数据实施缓存机制",
+            "priority": "high",
+            "estimatedImpact": "减少数据库负载40%",
+            "implementation": {
+              "steps": ["识别热点数据", "选择合适的缓存方案", "实现缓存失效策略", "监控缓存命中率"],
+              "estimatedTime": "3-5天",
+              "difficulty": "medium"
+            },
+            "cost": "low"
+          }
+        ],
+        "summary": {
+          "total": 3,
+          "highPriority": 2,
+          "mediumPriority": 1,
+          "lowPriority": 0,
+          "estimatedTotalImpact": "提升系统性能45%"
+        }
+      }
+    }
+  ],
+  "systemInfo": {
+    "nodeVersion": "v20.11.0",
+    "platform": "win32",
+    "architecture": "x64"
+  }
+}

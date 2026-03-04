@@ -36,7 +36,6 @@ async function runTicketSystemTests() {
     console.log('   - 平均响应时间: 28.5分钟\n');
 
     console.log('🎉 所有测试完成！工单管理系统运行正常。');
-
   } catch (error) {
     console.error('❌ 测试过程中出现错误:', error);
     process.exit(1);

@@ -1,4 +1,4 @@
-// 消息队列管理器
+// 消息队列管理?
 // 支持多种消息队列后端：Redis Streams、Kafka、RabbitMQ
 
 // @ts-ignore
@@ -53,7 +53,7 @@ export interface MessageQueueAdapter {
   isConnected(): boolean;
 }
 
-// Redis Streams适配器
+// Redis Streams适配?
 export class RedisStreamsAdapter implements MessageQueueAdapter {
   private client: Redis;
   private handlers: Map<string, MessageHandler> = new Map();
@@ -62,9 +62,9 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
 
   constructor(private config: MessageQueueConfig) {
     this.client = new Redis({
-      host: config.redis?.host || 'localhost',
-      port: config.redis?.port || 6379,
-      password: config.redis?.password,
+      host: config?.host || 'localhost',
+      port: config?.port || 6379,
+      password: config?.password,
       retryStrategy: (times: number) => Math.min(times * 50, 2000),
       maxRetriesPerRequest: 3
     });
@@ -73,12 +73,11 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
   async connect(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.client.on('connect', () => {
-        console.log('✅ Redis Streams连接成功');
-        resolve();
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?Redis Streams连接成功')resolve();
       });
       
       this.client.on('error', (error: any) => {
-        console.error('❌ Redis Streams连接错误:', error);
+        console.error('�?Redis Streams连接错误:', error);
         reject(error);
       });
     });
@@ -87,8 +86,7 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
   async disconnect(): Promise<void> {
     this.isRunning = false;
     await this.client.quit();
-    console.log('🔒 Redis Streams连接已断开');
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔒 Redis Streams连接已断开')}
 
   async publish(topic: string, message: QueueMessage): Promise<string> {
     const streamKey = `stream:${topic}`;
@@ -98,11 +96,11 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
       'id', message.id,
       'payload', JSON.stringify(message.payload),
       'timestamp', message.timestamp,
-      'priority', message.priority?.toString() || '0',
+      'priority', message?.toString() || '0',
       'metadata', JSON.stringify(message.metadata || {})
     );
     
-    console.log(`📤 Redis发布消息: ${topic} (${messageId})`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📤 Redis发布消息: ${topic} (${messageId})`);
     return messageId!;
   }
 
@@ -128,8 +126,7 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
       this.startConsuming();
     }
     
-    console.log(`✅ Redis订阅主题: ${topic}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?Redis订阅主题: ${topic}`)}
 
   private async startConsuming(): Promise<void> {
     this.isRunning = true;
@@ -161,7 +158,7 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
             }
           }
         } catch (error) {
-          console.error(`❌ Redis消费错误 ${topic}:`, error);
+          console.error(`�?Redis消费错误 ${topic}:`, error);
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
@@ -181,10 +178,10 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
       
       // 确认消息处理完成
       await this.client.xack(`stream:${topic}`, consumerInfo.groupName, messageId);
-      console.log(`✅ Redis消息处理完成: ${topic} (${messageId})`);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?Redis消息处理完成: ${topic} (${messageId})`);
       
     } catch (error) {
-      console.error(`❌ Redis消息处理失败 ${topic} ${messageId}:`, error);
+      console.error(`�?Redis消息处理失败 ${topic} ${messageId}:`, error);
       // 可以实现死信队列逻辑
     }
   }
@@ -198,7 +195,7 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
 
     return {
       id: dataMap.id,
-      topic: '', // 将在subscribe方法中设置
+      topic: '', // 将在subscribe方法中设?
       payload: JSON.parse(dataMap.payload),
       timestamp: dataMap.timestamp,
       priority: parseInt(dataMap.priority || '0'),
@@ -209,8 +206,7 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
   async unsubscribe(topic: string): Promise<void> {
     this.handlers.delete(topic);
     this.consumers.delete(topic);
-    console.log(`🚫 Redis取消订阅: ${topic}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🚫 Redis取消订阅: ${topic}`)}
 
   async getQueueStats(topic: string): Promise<any> {
     try {
@@ -232,7 +228,7 @@ export class RedisStreamsAdapter implements MessageQueueAdapter {
   }
 }
 
-// Kafka适配器
+// Kafka适配?
 export class KafkaAdapter implements MessageQueueAdapter {
   private kafka: Kafka;
   private producer: Producer | null = null;
@@ -241,8 +237,8 @@ export class KafkaAdapter implements MessageQueueAdapter {
 
   constructor(private config: MessageQueueConfig) {
     const kafkaConfig: KafkaConfig = {
-      clientId: config.kafka?.clientId || 'data-center-client',
-      brokers: config.kafka?.brokers || ['localhost:9092']
+      clientId: config?.clientId || 'data-center-client',
+      brokers: config?.brokers || ['localhost:9092']
     };
     
     this.kafka = new Kafka(kafkaConfig);
@@ -251,8 +247,7 @@ export class KafkaAdapter implements MessageQueueAdapter {
   async connect(): Promise<void> {
     this.producer = this.kafka.producer();
     await this.producer.connect();
-    console.log('✅ Kafka生产者连接成功');
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?Kafka生产者连接成?)}
 
   async disconnect(): Promise<void> {
     if (this.producer) {
@@ -263,8 +258,7 @@ export class KafkaAdapter implements MessageQueueAdapter {
       await consumer.disconnect();
     }
     
-    console.log('🔒 Kafka连接已断开');
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔒 Kafka连接已断开')}
 
   async publish(topic: string, message: QueueMessage): Promise<string> {
     if (!this.producer) {
@@ -277,18 +271,18 @@ export class KafkaAdapter implements MessageQueueAdapter {
         key: message.id,
         value: JSON.stringify({
           ...message,
-          topic // Kafka中topic是分离的，需要在消息中包含
+          topic // Kafka中topic是分离的，需要在消息中包?
         }),
         timestamp: Date.now().toString()
       }]
     });
 
-    console.log(`📤 Kafka发布消息: ${topic} (${message.id})`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📤 Kafka发布消息: ${topic} (${message.id})`);
     return message.id;
   }
 
   async subscribe(topic: string, handler: MessageHandler): Promise<void> {
-    const groupId = this.config.kafka?.groupId || `data-center-group-${topic}`;
+    const groupId = this.config?.groupId || `data-center-group-${topic}`;
     const consumer = this.kafka.consumer({ groupId });
     
     await consumer.connect();
@@ -299,17 +293,16 @@ export class KafkaAdapter implements MessageQueueAdapter {
         try {
           const msgData = JSON.parse(message.value!.toString());
           await handler(msgData);
-          console.log(`✅ Kafka消息处理完成: ${msgTopic} (${msgData.id})`);
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?Kafka消息处理完成: ${msgTopic} (${msgData.id})`);
         } catch (error) {
-          console.error(`❌ Kafka消息处理失败:`, error);
+          console.error(`�?Kafka消息处理失败:`, error);
         }
       }
     });
 
     this.consumers.set(topic, consumer);
     this.handlers.set(topic, handler);
-    console.log(`✅ Kafka订阅主题: ${topic}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?Kafka订阅主题: ${topic}`)}
 
   async unsubscribe(topic: string): Promise<void> {
     const consumer = this.consumers.get(topic);
@@ -318,11 +311,10 @@ export class KafkaAdapter implements MessageQueueAdapter {
       this.consumers.delete(topic);
     }
     this.handlers.delete(topic);
-    console.log(`🚫 Kafka取消订阅: ${topic}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🚫 Kafka取消订阅: ${topic}`)}
 
   async getQueueStats(topic: string): Promise<any> {
-    // Kafka统计信息需要通过Admin客户端获取
+    // Kafka统计信息需要通过Admin客户端获?
     return { message: 'Kafka统计信息需要Admin权限' };
   }
 
@@ -331,7 +323,7 @@ export class KafkaAdapter implements MessageQueueAdapter {
   }
 }
 
-// RabbitMQ适配器
+// RabbitMQ适配?
 export class RabbitMQAdapter implements MessageQueueAdapter {
   private connection: any = null;
   private channel: any = null;
@@ -340,15 +332,14 @@ export class RabbitMQAdapter implements MessageQueueAdapter {
   constructor(private config: MessageQueueConfig) {}
 
   async connect(): Promise<void> {
-    this.connection = await amqp.connect(this.config.rabbitmq?.url || 'amqp://localhost');
+    this.connection = await amqp.connect(this.config?.url || 'amqp://localhost');
     this.channel = await this.connection.createChannel();
     
-    const exchange = this.config.rabbitmq?.exchange || 'data_center_exchange';
-    const exchangeType = this.config.rabbitmq?.exchangeType || 'topic';
+    const exchange = this.config?.exchange || 'data_center_exchange';
+    const exchangeType = this.config?.exchangeType || 'topic';
     
     await this.channel.assertExchange(exchange, exchangeType, { durable: true });
-    console.log('✅ RabbitMQ连接成功');
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?RabbitMQ连接成功')}
 
   async disconnect(): Promise<void> {
     if (this.channel) {
@@ -357,15 +348,14 @@ export class RabbitMQAdapter implements MessageQueueAdapter {
     if (this.connection) {
       await this.connection.close();
     }
-    console.log('🔒 RabbitMQ连接已断开');
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔒 RabbitMQ连接已断开')}
 
   async publish(topic: string, message: QueueMessage): Promise<string> {
     if (!this.channel) {
-      throw new Error('RabbitMQ通道未建立');
+      throw new Error('RabbitMQ通道未建?);
     }
 
-    const exchange = this.config.rabbitmq?.exchange || 'data_center_exchange';
+    const exchange = this.config?.exchange || 'data_center_exchange';
     const routingKey = topic;
 
     const result = await this.channel.publish(
@@ -380,16 +370,16 @@ export class RabbitMQAdapter implements MessageQueueAdapter {
       }
     );
 
-    console.log(`📤 RabbitMQ发布消息: ${topic} (${message.id})`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📤 RabbitMQ发布消息: ${topic} (${message.id})`);
     return message.id;
   }
 
   async subscribe(topic: string, handler: MessageHandler): Promise<void> {
     if (!this.channel) {
-      throw new Error('RabbitMQ通道未建立');
+      throw new Error('RabbitMQ通道未建?);
     }
 
-    const exchange = this.config.rabbitmq?.exchange || 'data_center_exchange';
+    const exchange = this.config?.exchange || 'data_center_exchange';
     const queueName = `data_center_${topic}_${process.pid}`;
     
     // 创建队列
@@ -407,26 +397,24 @@ export class RabbitMQAdapter implements MessageQueueAdapter {
           
           // 确认消息处理完成
           this.channel.ack(msg);
-          console.log(`✅ RabbitMQ消息处理完成: ${topic} (${messageData.id})`);
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?RabbitMQ消息处理完成: ${topic} (${messageData.id})`);
           
         } catch (error) {
-          console.error(`❌ RabbitMQ消息处理失败:`, error);
-          this.channel.nack(msg, false, false); // 不重新入队
+          console.error(`�?RabbitMQ消息处理失败:`, error);
+          this.channel.nack(msg, false, false); // 不重新入?
         }
       }
     });
 
     this.handlers.set(topic, handler);
-    console.log(`✅ RabbitMQ订阅主题: ${topic}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?RabbitMQ订阅主题: ${topic}`)}
 
   async unsubscribe(topic: string): Promise<void> {
     this.handlers.delete(topic);
-    console.log(`🚫 RabbitMQ取消订阅: ${topic}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🚫 RabbitMQ取消订阅: ${topic}`)}
 
   async getQueueStats(topic: string): Promise<any> {
-    if (!this.channel) return { error: '通道未建立' };
+    if (!this.channel) return { error: '通道未建? };
     
     const queueName = `data_center_${topic}_${process.pid}`;
     try {
@@ -445,7 +433,7 @@ export class RabbitMQAdapter implements MessageQueueAdapter {
   }
 }
 
-// 消息队列管理器主类
+// 消息队列管理器主?
 export class MessageQueueManager {
   private adapters: Map<MessageQueueType, MessageQueueAdapter> = new Map();
   private activeAdapter: MessageQueueAdapter | null = null;
@@ -480,15 +468,14 @@ export class MessageQueueManager {
   async connect(type: MessageQueueType): Promise<void> {
     const adapter = this.adapters.get(type);
     if (!adapter) {
-      throw new Error(`未找到消息队列适配器: ${type}`);
+      throw new Error(`未找到消息队列适配? ${type}`);
     }
 
     await adapter.connect();
     this.activeAdapter = adapter;
     this.activeType = type;
     
-    console.log(`✅ 消息队列管理器已连接到: ${type}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?消息队列管理器已连接? ${type}`)}
 
   async disconnect(): Promise<void> {
     if (this.activeAdapter) {
@@ -500,7 +487,7 @@ export class MessageQueueManager {
 
   async publish(topic: string, message: Omit<QueueMessage, 'topic'>): Promise<string> {
     if (!this.activeAdapter) {
-      throw new Error('消息队列未连接');
+      throw new Error('消息队列未连?);
     }
 
     const fullMessage: QueueMessage = {
@@ -513,7 +500,7 @@ export class MessageQueueManager {
 
   async subscribe(topic: string, handler: MessageHandler): Promise<void> {
     if (!this.activeAdapter) {
-      throw new Error('消息队列未连接');
+      throw new Error('消息队列未连?);
     }
 
     await this.activeAdapter.subscribe(topic, handler);
@@ -521,7 +508,7 @@ export class MessageQueueManager {
 
   async unsubscribe(topic: string): Promise<void> {
     if (!this.activeAdapter) {
-      throw new Error('消息队列未连接');
+      throw new Error('消息队列未连?);
     }
 
     await this.activeAdapter.unsubscribe(topic);
@@ -529,14 +516,14 @@ export class MessageQueueManager {
 
   async getQueueStats(topic: string): Promise<any> {
     if (!this.activeAdapter) {
-      throw new Error('消息队列未连接');
+      throw new Error('消息队列未连?);
     }
 
     return await this.activeAdapter.getQueueStats(topic);
   }
 
   isConnected(): boolean {
-    return this.activeAdapter?.isConnected() || false;
+    return this?.isConnected() || false;
   }
 
   getActiveType(): MessageQueueType | null {
@@ -554,7 +541,7 @@ export class MessageQueueManager {
       await this.disconnect();
     }
 
-    // 连接到新的队列类型
+    // 连接到新的队列类?
     await this.connect(newType);
   }
 

@@ -44,8 +44,7 @@ export class RepairOrderService implements IRepairOrderService {
         throw new Error(`数据验证失败: ${validation.errors.join(', ')}`);
       }
 
-      // 2. 检查消费者账户是否存在
-      const consumerAccount = await this.accountService.getAccountByUserId(
+      // 2. 检查消费者账户是否存?      const consumerAccount = await this.accountService.getAccountByUserId(
         dto.consumerId
       );
       if (!consumerAccount) {
@@ -68,25 +67,23 @@ export class RepairOrderService implements IRepairOrderService {
         .single();
 
       if (!shopData?.is_alliance_member) {
-        throw new Error('该维修店不是联盟成员，无法接收工单');
+        throw new Error('该维修店不是联盟成员，无法接收工?);
       }
 
       if ((shopData.fcx_staked || 0) < 1000) {
-        throw new Error('维修店质押金额不足，需要至少1000 FCX');
+        throw new Error('维修店质押金额不足，需要至?000 FCX');
       }
 
-      // 5. 检查消费者余额是否足够
-      const consumerBalance = await this.accountService.getBalance(
+      // 5. 检查消费者余额是否足?      const consumerBalance = await this.accountService.getBalance(
         consumerAccount.id
       );
       if (consumerBalance.availableBalance < dto.fcxAmount) {
         throw new Error(
-          `余额不足，需要${dto.fcxAmount} FCX，当前余额${consumerBalance.availableBalance} FCX`
+          `余额不足，需?{dto.fcxAmount} FCX，当前余?{consumerBalance.availableBalance} FCX`
         );
       }
 
-      // 6. 冻结消费者资金
-      await this.accountService.freeze(consumerAccount.id, dto.fcxAmount);
+      // 6. 冻结消费者资?      await this.accountService.freeze(consumerAccount.id, dto.fcxAmount);
 
       // 7. 生成唯一工单编号
       const orderNumber = await this.generateOrderNumber();
@@ -112,8 +109,7 @@ export class RepairOrderService implements IRepairOrderService {
         .single();
 
       if (error) {
-        // 如果插入失败，解冻资金
-        await this.accountService.unfreeze(consumerAccount.id, dto.fcxAmount);
+        // 如果插入失败，解冻资?        await this.accountService.unfreeze(consumerAccount.id, dto.fcxAmount);
         throw new Error(`创建工单失败: ${error.message}`);
       }
 
@@ -147,8 +143,7 @@ export class RepairOrderService implements IRepairOrderService {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          return null; // 工单不存在
-        }
+          return null; // 工单不存?        }
         throw new Error(`查询工单失败: ${error.message}`);
       }
 
@@ -167,21 +162,18 @@ export class RepairOrderService implements IRepairOrderService {
       // 1. 获取工单信息
       const order = await this.getOrder(orderId);
       if (!order) {
-        throw new Error('工单不存在');
+        throw new Error('工单不存?);
       }
 
-      // 2. 验证工单状态
-      if (order.status !== OrderStatus.PENDING) {
-        throw new Error('只有待确认的工单才能被确认');
+      // 2. 验证工单状?      if (order.status !== OrderStatus.PENDING) {
+        throw new Error('只有待确认的工单才能被确?);
       }
 
-      // 3. 验证维修店权限
-      if (order.repairShopId !== shopId) {
-        throw new Error('无权操作此工单');
+      // 3. 验证维修店权?      if (order.repairShopId !== shopId) {
+        throw new Error('无权操作此工?);
       }
 
-      // 4. 更新工单状态
-      const { data, error } = await supabase
+      // 4. 更新工单状?      const { data, error } = await supabase
         .from('repair_orders')
         .update({
           status: OrderStatus.CONFIRMED,
@@ -203,8 +195,7 @@ export class RepairOrderService implements IRepairOrderService {
   }
 
   /**
-   * 完成工单并结算
-   */
+   * 完成工单并结?   */
   async completeOrder(dto: CompleteRepairOrderDTO): Promise<RepairOrder> {
     try {
       // 1. 数据验证
@@ -216,11 +207,10 @@ export class RepairOrderService implements IRepairOrderService {
       // 2. 获取工单信息
       const order = await this.getOrder(dto.orderId);
       if (!order) {
-        throw new Error('工单不存在');
+        throw new Error('工单不存?);
       }
 
-      // 3. 验证工单状态
-      if (
+      // 3. 验证工单状?      if (
         order.status !== OrderStatus.CONFIRMED &&
         order.status !== OrderStatus.IN_PROGRESS
       ) {
@@ -229,7 +219,7 @@ export class RepairOrderService implements IRepairOrderService {
 
       // 4. 验证评分范围
       if (dto.rating < 0 || dto.rating > 5) {
-        throw new Error('评分必须在0-5之间');
+        throw new Error('评分必须?-5之间');
       }
 
       // 5. 获取相关账户
@@ -241,7 +231,7 @@ export class RepairOrderService implements IRepairOrderService {
         : null;
 
       if (!consumerAccount || !shopAccount) {
-        throw new Error('相关账户不存在');
+        throw new Error('相关账户不存?);
       }
 
       // 6. 更新工单状态和评分
@@ -260,11 +250,9 @@ export class RepairOrderService implements IRepairOrderService {
         throw new Error(`完成工单失败: ${error.message}`);
       }
 
-      // 7. 解冻并转移资金给维修店
-      const lockedAmount = order.fcxAmountLocked || 0;
+      // 7. 解冻并转移资金给维修?      const lockedAmount = order.fcxAmountLocked || 0;
 
-      // 解冻消费者资金
-      await this.accountService.unfreeze(consumerAccount.id, lockedAmount);
+      // 解冻消费者资?      await this.accountService.unfreeze(consumerAccount.id, lockedAmount);
 
       // 转移资金给维修店
       await this.accountService.transfer({
@@ -276,8 +264,7 @@ export class RepairOrderService implements IRepairOrderService {
         memo: `工单完成结算: ${order.orderNumber}`,
       });
 
-      // 8. 更新维修店统计数据
-      await this.updateShopStatistics(order.repairShopId!, dto.rating);
+      // 8. 更新维修店统计数?      await this.updateShopStatistics(order.repairShopId!, dto.rating);
 
       // 9. 记录设备生命周期事件
       await this.recordLifecycleEvents(order, dto);
@@ -297,16 +284,14 @@ export class RepairOrderService implements IRepairOrderService {
       // 1. 获取工单信息
       const order = await this.getOrder(orderId);
       if (!order) {
-        throw new Error('工单不存在');
+        throw new Error('工单不存?);
       }
 
-      // 2. 验证工单状态（只能取消待确认的工单）
-      if (order.status !== OrderStatus.PENDING) {
+      // 2. 验证工单状态（只能取消待确认的工单?      if (order.status !== OrderStatus.PENDING) {
         throw new Error('只能取消待确认的工单');
       }
 
-      // 3. 获取消费者账户
-      const consumerAccount = order.consumerId
+      // 3. 获取消费者账?      const consumerAccount = order.consumerId
         ? await this.accountService.getAccountByUserId(order.consumerId)
         : null;
       if (!consumerAccount) {
@@ -319,8 +304,7 @@ export class RepairOrderService implements IRepairOrderService {
         await this.accountService.unfreeze(consumerAccount.id, lockedAmount);
       }
 
-      // 5. 更新工单状态
-      const { data, error } = await supabase
+      // 5. 更新工单状?      const { data, error } = await supabase
         .from('repair_orders')
         .update({
           status: OrderStatus.CANCELLED,
@@ -341,7 +325,7 @@ export class RepairOrderService implements IRepairOrderService {
           amount: lockedAmount,
           transactionType: FcxTransactionType.UNFREEZE,
           referenceId: orderId,
-          memo: `工单取消退款: ${order.orderNumber}, 原因: ${reason}`,
+          memo: `工单取消退? ${order.orderNumber}, 原因: ${reason}`,
         });
       }
 
@@ -410,8 +394,7 @@ export class RepairOrderService implements IRepairOrderService {
   }
 
   /**
-   * 更新维修店统计数据
-   */
+   * 更新维修店统计数?   */
   private async updateShopStatistics(
     shopId: string,
     rating: number
@@ -445,9 +428,8 @@ export class RepairOrderService implements IRepairOrderService {
         } as any)
         .eq('id', shopId);
     } catch (error) {
-      console.error('更新维修店统计数据错误:', error);
-      // 不抛出异常，避免影响主流程
-    }
+      console.error('更新维修店统计数据错?', error);
+      // 不抛出异常，避免影响主流?    }
   }
 
   /**
@@ -482,10 +464,10 @@ export class RepairOrderService implements IRepairOrderService {
   ): Promise<void> {
     try {
       // 从设备信息中提取二维码ID
-      const qrcodeId = order.deviceInfo?.qrcodeId || order.deviceInfo?.qrCodeId;
+      const qrcodeId = order?.qrcodeId || order?.qrCodeId;
 
       if (!qrcodeId) {
-        console.warn('工单中未找到设备二维码ID，跳过生命周期事件记录');
+        console.warn('工单中未找到设备二维码ID，跳过生命周期事件记?);
         return;
       }
 
@@ -498,10 +480,10 @@ export class RepairOrderService implements IRepairOrderService {
         eventType: DeviceEventType.REPAIRED,
         eventSubtype: repairType,
         location: '维修中心',
-        technician: '维修技师',
+        technician: '维修技?,
         cost: order.fcxAmountLocked || 0,
-        notes: `工单号: ${order.orderNumber}, 故障描述: ${
-          order.faultDescription || '无'
+        notes: `工单? ${order.orderNumber}, 故障描述: ${
+          order.faultDescription || '�?
         }, 评分: ${dto.rating}`,
         metadata: {
           orderId: order.id,
@@ -514,11 +496,9 @@ export class RepairOrderService implements IRepairOrderService {
         },
       });
 
-      console.log(`已为设备 ${qrcodeId} 记录维修生命周期事件`);
-    } catch (error) {
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`已为设备 ${qrcodeId} 记录维修生命周期事件`)} catch (error) {
       console.error('记录生命周期事件失败:', error);
-      // 不抛出异常，避免影响主流程
-    }
+      // 不抛出异常，避免影响主流?    }
   }
 
   /**
@@ -572,10 +552,10 @@ export class RepairOrderService implements IRepairOrderService {
   ): Promise<void> {
     try {
       // 从设备信息中提取二维码ID
-      const qrcodeId = order.deviceInfo?.qrcodeId || order.deviceInfo?.qrCodeId;
+      const qrcodeId = order?.qrcodeId || order?.qrCodeId;
 
       if (!qrcodeId) {
-        console.warn('工单中未找到设备二维码ID，跳过配件更换事件记录');
+        console.warn('工单中未找到设备二维码ID，跳过配件更换事件记?);
         return;
       }
 
@@ -585,9 +565,9 @@ export class RepairOrderService implements IRepairOrderService {
         eventType: DeviceEventType.PART_REPLACED,
         eventSubtype: partInfo.partType || 'other',
         location: '维修中心',
-        technician: '维修技师',
+        technician: '维修技?,
         cost: partInfo.cost || 0,
-        notes: `更换配件: ${partInfo.partName}, 工单号: ${order.orderNumber}`,
+        notes: `更换配件: ${partInfo.partName}, 工单? ${order.orderNumber}`,
         metadata: {
           orderId: order.id,
           orderNumber: order.orderNumber,
@@ -602,10 +582,9 @@ export class RepairOrderService implements IRepairOrderService {
         },
       });
 
-      console.log(
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
         `已为设备 ${qrcodeId} 记录配件更换事件: ${partInfo.partName}`
-      );
-    } catch (error) {
+      )} catch (error) {
       console.error('记录配件更换事件失败:', error);
       throw error;
     }

@@ -1,10 +1,10 @@
 // 直接通过Supabase API创建表结构
 async function createDatabaseTables() {
   console.log('🚀 开始创建数据库表结构...');
-  
+
   const supabaseUrl = 'https://hrjqzbhqueleszkvnsen.supabase.co';
   const serviceKey = 'your_service_role_key_here';
-  
+
   try {
     // 1. 创建配件表 (parts)
     console.log('\n1️⃣ 创建配件表 (parts)...');
@@ -21,17 +21,20 @@ async function createDatabaseTables() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `;
-    
-    const partsResponse = await fetch(`${supabaseUrl}/rest/v1/rpc/execute_sql`, {
-      method: 'POST',
-      headers: {
-        'apikey': serviceKey,
-        'Authorization': `Bearer ${serviceKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ sql: createPartsTable })
-    });
-    
+
+    const partsResponse = await fetch(
+      `${supabaseUrl}/rest/v1/rpc/execute_sql`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: serviceKey,
+          Authorization: `Bearer ${serviceKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sql: createPartsTable }),
+      }
+    );
+
     if (partsResponse.ok) {
       console.log('✅ 配件表创建成功');
     } else {
@@ -51,17 +54,20 @@ async function createDatabaseTables() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `;
-    
-    const pricesResponse = await fetch(`${supabaseUrl}/rest/v1/rpc/execute_sql`, {
-      method: 'POST',
-      headers: {
-        'apikey': serviceKey,
-        'Authorization': `Bearer ${serviceKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ sql: createPricesTable })
-    });
-    
+
+    const pricesResponse = await fetch(
+      `${supabaseUrl}/rest/v1/rpc/execute_sql`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: serviceKey,
+          Authorization: `Bearer ${serviceKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sql: createPricesTable }),
+      }
+    );
+
     if (pricesResponse.ok) {
       console.log('✅ 价格表创建成功');
     } else {
@@ -82,7 +88,7 @@ async function createDatabaseTables() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `;
-    
+
     // 4. 创建预约表 (appointments)
     console.log('\n4️⃣ 创建预约表 (appointments)...');
     const createAppointmentsTable = `
@@ -97,7 +103,7 @@ async function createDatabaseTables() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `;
-    
+
     // 5. 创建系统配置表 (system_config)
     console.log('\n5️⃣ 创建系统配置表 (system_config)...');
     const createConfigTable = `
@@ -116,24 +122,30 @@ async function createDatabaseTables() {
     console.log('   1. 登录 Supabase 控制台');
     console.log('   2. 进入 SQL Editor');
     console.log('   3. 执行 supabase/migrations/001_init_schema.sql 文件内容');
-    
+
     // 尝试检查表是否已存在
     console.log('\n🔍 检查现有表结构...');
-    const tablesToCheck = ['parts', 'part_prices', 'uploaded_content', 'appointments', 'system_config'];
+    const tablesToCheck = [
+      'parts',
+      'part_prices',
+      'uploaded_content',
+      'appointments',
+      'system_config',
+    ];
     const existingTables = [];
-    
+
     for (const tableName of tablesToCheck) {
       try {
         const checkResponse = await fetch(
           `${supabaseUrl}/rest/v1/${tableName}?select=count&id=eq.1`,
           {
             headers: {
-              'apikey': serviceKey,
-              'Authorization': `Bearer ${serviceKey}`
-            }
+              apikey: serviceKey,
+              Authorization: `Bearer ${serviceKey}`,
+            },
           }
         );
-        
+
         if (checkResponse.ok) {
           existingTables.push(tableName);
           console.log(`✅ 表 ${tableName} 已存在`);
@@ -144,17 +156,22 @@ async function createDatabaseTables() {
         console.log(`❌ 检查表 ${tableName} 时出错`);
       }
     }
-    
-    console.log(`\n📊 当前状态: ${existingTables.length}/${tablesToCheck.length} 个表已存在`);
-    
+
+    console.log(
+      `\n📊 当前状态: ${existingTables.length}/${tablesToCheck.length} 个表已存在`
+    );
+
     if (existingTables.length === tablesToCheck.length) {
       console.log('🎉 所有表结构已存在！');
     } else {
-      const missingTables = tablesToCheck.filter(t => !existingTables.includes(t));
+      const missingTables = tablesToCheck.filter(
+        t => !existingTables.includes(t)
+      );
       console.log(`⚠️ 缺失的表: ${missingTables.join(', ')}`);
-      console.log('🔧 请通过Supabase控制台SQL Editor执行相应的CREATE TABLE语句');
+      console.log(
+        '🔧 请通过Supabase控制台SQL Editor执行相应的CREATE TABLE语句'
+      );
     }
-
   } catch (error) {
     console.error('❌ 创建表结构时发生错误:', error.message);
     console.log('\n💡 建议解决方案:');

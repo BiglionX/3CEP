@@ -1,43 +1,46 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+﻿import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 // import { Database } from '@/lib/database.types'
 import { AuthService } from '@/lib/auth-service';
 import { cache } from '@/lib/cache-manager';
 
-// 获取用户列表
+// 鑾峰彇鐢ㄦ埛鍒楄〃
 export async function GET(request: Request) {
-  const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
 
   try {
-    // 验证管理员权限
-    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '用户未登录' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '只有超级管理员可以访问用户管理' },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ヨ闂敤鎴风? },
         { status: 403 }
       );
     }
 
-    // 解析查询参数
+    // 瑙ｆ瀽鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search') || '';
     const role = searchParams.get('role') || '';
     const status = searchParams.get('status') || '';
+    const dateStart = searchParams.get('date_start') || '';
+    const dateEnd = searchParams.get('date_end') || '';
+    const lastActive = searchParams.get('last_active') || '';
+    const regSource = searchParams.get('reg_source') || '';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
 
-    // 生成缓存键
-    const cacheKey = `admin_users:${search}:${role}:${status}:${page}:${limit}`;
+    // 鐢熸垚缂撳瓨?    const cacheKey = `admin_users:${search}:${role}:${status}:${dateStart}:${dateEnd}:${lastActive}:${regSource}:${page}:${limit}`;
 
-    // 尝试从缓存获取
-    const cachedResult = await cache.get<{ data: any[]; meta: any }>(cacheKey);
+    // 灏濊瘯浠庣紦瀛樿幏?    const cachedResult = await cache.get<{ data: any[]; meta: any }>(cacheKey);
     if (cachedResult) {
       return NextResponse.json({
         success: true,
@@ -47,27 +50,70 @@ export async function GET(request: Request) {
       });
     }
 
-    // 构建查询条件
+    // 鏋勫缓鏌ヨ鏉′欢
     let query = supabase
       .from('user_management_view')
       .select('*', { count: 'exact' });
 
-    // 添加搜索条件
+    // 娣诲姞鎼滅储鏉′欢
     if (search) {
       query = query.or(`email.ilike.%${search}%,user_id.ilike.%${search}%`);
     }
 
-    // 添加角色筛选
-    if (role) {
+    // 娣诲姞瑙掕壊绛?    if (role) {
       query = query.eq('role', role);
     }
 
-    // 添加状态筛选
-    if (status) {
+    // 娣诲姞鐘舵€佺瓫?    if (status) {
       query = query.eq('status', status);
     }
 
-    // 分页
+    // 娣诲姞娉ㄥ唽鏃堕棿鑼冨洿绛?    if (dateStart) {
+      query = query.gte('created_at', dateStart);
+    }
+    if (dateEnd) {
+      query = query.lte('created_at', dateEnd);
+    }
+
+    // 娣诲姞鏈€鍚庢椿璺冩椂闂寸瓫?    if (lastActive) {
+      const now = new Date();
+      let activeDate: Date;
+
+      switch (lastActive) {
+        case '24h':
+          activeDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+          break;
+        case '7d':
+          activeDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case '30d':
+          activeDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        case '90d':
+          activeDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+          break;
+        case 'inactive_30d':
+          activeDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          query = query.lt('updated_at', activeDate.toISOString());
+          break;
+        case 'inactive_90d':
+          activeDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+          query = query.lt('updated_at', activeDate.toISOString());
+          break;
+        default:
+          activeDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      }
+
+      if (!lastActive.includes('inactive')) {
+        query = query.gte('updated_at', activeDate.toISOString());
+      }
+    }
+
+    // 娣诲姞娉ㄥ唽鏉ユ簮绛涢€夛紙鍋囪鍦╱ser_profiles_ext琛ㄤ腑鏈塻ource瀛楁?    if (regSource) {
+      // 杩欓噷鍙互鏍规嵁瀹為檯鐨勬敞鍐屾潵婧愬瓧娈佃繘琛岀瓫?      // 绀轰緥锛歲uery = query.eq('registration_source', regSource);
+    }
+
+    // 鍒嗛〉
     const from = (page - 1) * limit;
     const to = from + limit - 1;
     query = query.range(from, to).order('created_at', { ascending: false });
@@ -75,12 +121,18 @@ export async function GET(request: Request) {
     const { data, error, count } = await query;
 
     if (error) {
-      console.error('获取用户列表失败:', error);
-      return NextResponse.json({ error: '获取用户列表失败' }, { status: 500 });
+      console.error('鑾峰彇鐢ㄦ埛鍒楄〃澶辫触:', error);
+      return NextResponse.json({ error: '鑾峰彇鐢ㄦ埛鍒楄〃澶辫触' }, { status: 500 });
     }
 
-    // 缓存结果（仅缓存非搜索结果，避免缓存污染）
-    const shouldCache = !search && !role && !status;
+    // 缂撳瓨缁撴灉锛堜粎缂撳瓨闈炴悳绱㈢粨鏋滐紝閬垮厤缂撳瓨姹℃煋?    const shouldCache =
+      !search &&
+      !role &&
+      !status &&
+      !dateStart &&
+      !dateEnd &&
+      !lastActive &&
+      !regSource;
     const result = {
       success: true,
       data: data || [],
@@ -97,7 +149,7 @@ export async function GET(request: Request) {
     };
 
     if (shouldCache) {
-      await cache.set(cacheKey, result, { ttl: 300 }); // 缓存5分钟
+      await cache.set(cacheKey, result, { ttl: 300 }); // 缂撳瓨5鍒嗛挓
     }
 
     return NextResponse.json({
@@ -105,34 +157,35 @@ export async function GET(request: Request) {
       fromCache: false,
     });
   } catch (error) {
-    console.error('用户管理API错误:', error);
+    console.error('鐢ㄦ埛绠＄悊API閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '服务器内部错误',
-        message: error instanceof Error ? error.message : '未知错误',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: error instanceof Error ? error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// 更新用户信息
+// 鏇存柊鐢ㄦ埛淇℃伅
 export async function PUT(request: Request) {
-  const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
 
   try {
-    // 验证管理员权限
-    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '用户未登录' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '只有超级管理员可以修改用户信息' },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ヤ慨鏀圭敤鎴蜂俊? },
         { status: 403 }
       );
     }
@@ -140,36 +193,33 @@ export async function PUT(request: Request) {
     const { userId, updates } = await request.json();
 
     if (!userId) {
-      return NextResponse.json({ error: '缺少用户ID' }, { status: 400 });
+      return NextResponse.json({ error: '缂哄皯鐢ㄦ埛ID' }, { status: 400 });
     }
 
-    // 准备更新数据
+    // 鍑嗗鏇存柊鏁版嵁
     const updateData: any = {
       updated_at: new Date().toISOString(),
     };
 
-    // 处理角色更新
+    // 澶勭悊瑙掕壊鏇存柊
     if (updates.role) {
       updateData.role = updates.role;
     }
 
-    // 处理子角色更新
-    if (updates.sub_roles !== undefined) {
+    // 澶勭悊瀛愯鑹叉洿?    if (updates.sub_roles !== undefined) {
       updateData.sub_roles = updates.sub_roles;
     }
 
-    // 处理激活状态更新
-    if (updates.is_active !== undefined) {
+    // 澶勭悊婵€娲荤姸鎬佹洿?    if (updates.is_active !== undefined) {
       updateData.is_active = updates.is_active;
     }
 
-    // 处理封禁状态更新
-    if (updates.status) {
+    // 澶勭悊灏佺鐘舵€佹洿?    if (updates.status) {
       updateData.status = updates.status;
 
       if (updates.status === 'banned') {
         updateData.banned_at = new Date().toISOString();
-        updateData.banned_reason = updates.banned_reason || '管理员封禁';
+        updateData.banned_reason = updates.banned_reason || '绠＄悊鍛樺皝?;
       } else if (updates.status === 'active') {
         updateData.unbanned_at = new Date().toISOString();
         updateData.banned_reason = null;
@@ -185,47 +235,48 @@ export async function PUT(request: Request) {
       .single();
 
     if (error) {
-      console.error('更新用户信息失败:', error);
+      console.error('鏇存柊鐢ㄦ埛淇℃伅澶辫触:', error);
       return NextResponse.json(
-        { error: '更新用户信息失败', details: error.message },
+        { error: '鏇存柊鐢ㄦ埛淇℃伅澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: '用户信息更新成功',
+      message: '鐢ㄦ埛淇℃伅鏇存柊鎴愬姛',
       data,
     });
   } catch (error) {
-    console.error('更新用户API错误:', error);
+    console.error('鏇存柊鐢ㄦ埛API閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '服务器内部错误',
-        message: error instanceof Error ? error.message : '未知错误',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: error instanceof Error ? error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// 批量操作用户
+// 鎵归噺鎿嶄綔鐢ㄦ埛
 export async function POST(request: Request) {
-  const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
 
   try {
-    // 验证管理员权限
-    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '用户未登录' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '只有超级管理员可以执行批量操作' },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ユ墽琛屾壒閲忔搷? },
         { status: 403 }
       );
     }
@@ -233,7 +284,7 @@ export async function POST(request: Request) {
     const { action, userIds, reason } = await request.json();
 
     if (!action || !userIds || !Array.isArray(userIds)) {
-      return NextResponse.json({ error: '缺少必要参数' }, { status: 400 });
+      return NextResponse.json({ error: '缂哄皯蹇呰鍙傛暟' }, { status: 400 });
     }
 
     let updateData: any = {};
@@ -243,7 +294,7 @@ export async function POST(request: Request) {
         updateData = {
           status: 'banned',
           banned_at: new Date().toISOString(),
-          banned_reason: reason || '批量封禁操作',
+          banned_reason: reason || '鎵归噺灏佺鎿嶄綔',
           updated_at: new Date().toISOString(),
         };
         break;
@@ -274,47 +325,47 @@ export async function POST(request: Request) {
 
       default:
         return NextResponse.json(
-          { error: '不支持的操作类型' },
+          { error: '涓嶆敮鎸佺殑鎿嶄綔绫诲瀷' },
           { status: 400 }
         );
     }
 
-    // 批量更新用户状态
-    const { data, error } = await supabase
+    // 鎵归噺鏇存柊鐢ㄦ埛鐘?    const { data, error } = await supabase
       .from('user_profiles_ext')
       .update(updateData)
       .in('id', userIds);
 
     if (error) {
-      console.error('批量操作失败:', error);
+      console.error('鎵归噺鎿嶄綔澶辫触:', error);
       return NextResponse.json(
-        { error: '批量操作失败', details: error.message },
+        { error: '鎵归噺鎿嶄綔澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: `批量${
+      message: `鎵归噺${
         action === 'ban'
-          ? '封禁'
+          ? '灏佺'
           : action === 'unban'
-          ? '解封'
-          : action === 'activate'
-          ? '激活'
-          : '停用'
-      }操作成功`,
+            ? '瑙ｅ皝'
+            : action === 'activate'
+              ? '婵€?
+              : '鍋滅敤'
+      }鎿嶄綔鎴愬姛`,
       affected: userIds.length,
     });
   } catch (error) {
-    console.error('批量操作API错误:', error);
+    console.error('鎵归噺鎿嶄綔API閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '服务器内部错误',
-        message: error instanceof Error ? error.message : '未知错误',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: error instanceof Error ? error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
+

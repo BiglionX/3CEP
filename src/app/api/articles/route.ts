@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 获取文章列表
+// 鑾峰彇鏂囩珷鍒楄〃
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     const sortBy = searchParams.get('sortBy') || 'created_at';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
-    // 构建查询
+    // 鏋勫缓鏌ヨ
     let query = supabase
       .from('articles')
       .select(
@@ -41,26 +41,24 @@ export async function GET(request: Request) {
       .eq('status', 'published')
       .range((page - 1) * pageSize, page * pageSize - 1);
 
-    // 添加搜索条件
+    // 娣诲姞鎼滅储鏉′欢
     if (search) {
       query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`);
     }
 
-    // 添加分类筛选
-    // 暂时移除分类筛选，因为缺少关联表
-    // if (category) {
+    // 娣诲姞鍒嗙被绛?    // 鏆傛椂绉婚櫎鍒嗙被绛涢€夛紝鍥犱负缂哄皯鍏宠仈?    // if (category) {
     //   query = query.eq('article_categories.slug', category)
     // }
 
-    // 添加排序
+    // 娣诲姞鎺掑簭
     query = query.order(sortBy, { ascending: sortOrder === 'asc' });
 
     const { data: articles, error, count } = await query;
 
     if (error) {
-      console.error('获取文章列表失败:', error);
+      console.error('鑾峰彇鏂囩珷鍒楄〃澶辫触:', error);
       return NextResponse.json(
-        { error: '获取文章列表失败', details: error.message },
+        { error: '鑾峰彇鏂囩珷鍒楄〃澶辫触', details: error.message },
         { status: 500 }
       );
     }
@@ -76,10 +74,11 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('获取文章列表异常:', error);
+    console.error('鑾峰彇鏂囩珷鍒楄〃寮傚父:', error);
     return NextResponse.json(
-      { error: '服务器内部错误', details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
       { status: 500 }
     );
   }
 }
+

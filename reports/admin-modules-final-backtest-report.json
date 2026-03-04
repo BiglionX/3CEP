@@ -1,0 +1,183 @@
+{
+  "timestamp": "2026-02-28T12:21:57.392Z",
+  "modules": {
+    "src/app/admin/diagnostics/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/parts-market/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/user-manager/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/device-manager/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/system-dashboard/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/shops/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/content/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/finance/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/procurement/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "src/app/admin/inventory/page.tsx": {
+      "exists": true,
+      "status": "passed",
+      "message": "文件存在"
+    },
+    "summary": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "passRate": "100.0%"
+    },
+    "src/app/api/admin/users": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/devices": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/shops": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/content": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/finance": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/procurement": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/inventory": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/diagnostics": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "src/app/api/admin/parts": {
+      "exists": true,
+      "status": "passed",
+      "message": "API目录存在"
+    },
+    "apiSummary": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "passRate": "100.0%"
+    },
+    "config/rbac.json": {
+      "exists": true,
+      "status": "passed",
+      "message": "权限配置存在"
+    },
+    "config/rbac.schema.json": {
+      "exists": true,
+      "status": "passed",
+      "message": "权限配置存在"
+    },
+    "permissionsSummary": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "passRate": "100.0%"
+    },
+    ".eslintrc": {
+      "exists": true,
+      "status": "passed",
+      "message": "规范配置存在"
+    },
+    ".prettierrc": {
+      "exists": true,
+      "status": "passed",
+      "message": "规范配置存在"
+    },
+    "tsconfig.json": {
+      "exists": true,
+      "status": "passed",
+      "message": "规范配置存在"
+    },
+    "package.json": {
+      "exists": true,
+      "status": "passed",
+      "message": "规范配置存在"
+    },
+    "standardsSummary": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "passRate": "100.0%"
+    }
+  },
+  "documentation": {
+    "docs/user-guides/admin-modules-user-manual.md": {
+      "exists": true,
+      "status": "passed",
+      "message": "文档存在"
+    },
+    "docs/technical-docs/admin-modules-api-reference.md": {
+      "exists": true,
+      "status": "passed",
+      "message": "文档存在"
+    },
+    "docs/deployment/admin-modules-deployment-guide.md": {
+      "exists": true,
+      "status": "passed",
+      "message": "文档存在"
+    },
+    "docs/admin-module-development-spec.md": {
+      "exists": true,
+      "status": "passed",
+      "message": "文档存在"
+    },
+    "summary": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "passRate": "100.0%"
+    }
+  },
+  "overallStatus": "excellent"
+}

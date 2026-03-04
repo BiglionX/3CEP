@@ -1,7 +1,7 @@
-/**
- * 入库预报管理API路由
- * 处理预报单的创建和查询操作
- * WMS-203 入库预报管理功能
+﻿/**
+ * 鍏ュ簱棰勬姤绠＄悊API璺敱
+ * 澶勭悊棰勬姤鍗曠殑鍒涘缓鍜屾煡璇㈡搷?
+ * WMS-203 鍏ュ簱棰勬姤绠＄悊鍔熻兘
  */
 
 import {
@@ -18,59 +18,59 @@ const forecastService = new InboundForecastService();
 
 /**
  * POST /api/wms/inbound-forecast
- * 创建新的入库预报单
+ * 鍒涘缓鏂扮殑鍏ュ簱棰勬姤?
  */
 export async function POST(request: Request) {
   try {
-    // 验证用户会话
+    // 楠岃瘉鐢ㄦ埛浼氳瘽
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const {
       data: { session },
     } = await supabase.auth.getSession();
 
-    if (!session?.user?.id) {
+    if (!session??.id) {
       return NextResponse.json(
-        { error: "未授权访问，请先登录" },
+        { error: "鏈巿鏉冭闂紝璇峰厛鐧诲綍" },
         { status: 401 }
       );
     }
 
-    // 解析请求体
+    // 瑙ｆ瀽璇锋眰?
     const body: CreateInboundForecastDTO = await request.json();
 
-    // 基础参数验证
+    // 鍩虹鍙傛暟楠岃瘉
     const validationErrors = validateCreateForecastDTO(body);
     if (validationErrors.length > 0) {
       return NextResponse.json(
         {
-          error: "参数验证失败",
+          error: "鍙傛暟楠岃瘉澶辫触",
           details: validationErrors,
         },
         { status: 400 }
       );
     }
 
-    // 创建预报单
+    // 鍒涘缓棰勬姤?
     const forecast = await forecastService.createForecast(
       body,
       session.user.id
     );
 
-    // 返回成功响应
+    // 杩斿洖鎴愬姛鍝嶅簲
     return NextResponse.json(
       {
         success: true,
-        message: "预报单创建成功",
+        message: "棰勬姤鍗曞垱寤烘垚?,
         data: forecast,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("创建入库预报失败:", error);
+    console.error("鍒涘缓鍏ュ簱棰勬姤澶辫触:", error);
     return NextResponse.json(
       {
-        error: "创建预报单失败",
+        error: "鍒涘缓棰勬姤鍗曞け?,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -80,34 +80,34 @@ export async function POST(request: Request) {
 
 /**
  * GET /api/wms/inbound-forecast
- * 查询预报单列表
+ * 鏌ヨ棰勬姤鍗曞垪?
  */
 export async function GET(request: Request) {
   try {
-    // 验证用户会话
+    // 楠岃瘉鐢ㄦ埛浼氳瘽
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const {
       data: { session },
     } = await supabase.auth.getSession();
 
-    if (!session?.user?.id) {
+    if (!session??.id) {
       return NextResponse.json(
-        { error: "未授权访问，请先登录" },
+        { error: "鏈巿鏉冭闂紝璇峰厛鐧诲綍" },
         { status: 401 }
       );
     }
 
-    // 解析查询参数
+    // 瑙ｆ瀽鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
     const params: InboundForecastQueryParams = {};
 
-    // 仓库ID过滤
+    // 浠撳簱ID杩囨护
     if (searchParams.get("warehouseId")) {
       params.warehouseId = searchParams.get("warehouseId")!;
     }
 
-    // 状态过滤
+    // 鐘舵€佽繃?
     if (searchParams.get("status")) {
       const status = searchParams.get("status") as InboundForecastStatus;
       if (Object.values(InboundForecastStatus).includes(status)) {
@@ -115,12 +115,12 @@ export async function GET(request: Request) {
       }
     }
 
-    // 供应商名称搜索
+    // 渚涘簲鍟嗗悕绉版悳?
     if (searchParams.get("supplierName")) {
       params.supplierName = searchParams.get("supplierName")!;
     }
 
-    // 日期范围过滤
+    // 鏃ユ湡鑼冨洿杩囨护
     if (searchParams.get("startDate")) {
       params.startDate = new Date(searchParams.get("startDate")!);
     }
@@ -129,20 +129,20 @@ export async function GET(request: Request) {
       params.endDate = new Date(searchParams.get("endDate")!);
     }
 
-    // 品牌ID过滤
+    // 鍝佺墝ID杩囨护
     if (searchParams.get("brandId")) {
       params.brandId = searchParams.get("brandId")!;
     }
 
-    // 创建者过滤
+    // 鍒涘缓鑰呰繃?
     if (searchParams.get("createdBy")) {
       params.createdBy = searchParams.get("createdBy")!;
     }
 
-    // 分页参数
+    // 鍒嗛〉鍙傛暟
     if (searchParams.get("limit")) {
       params.limit = parseInt(searchParams.get("limit")!);
-      // 限制最大返回数量
+      // 闄愬埗鏈€澶ц繑鍥炴暟?
       if (params.limit > 100) params.limit = 100;
     }
 
@@ -150,10 +150,10 @@ export async function GET(request: Request) {
       params.offset = parseInt(searchParams.get("offset")!);
     }
 
-    // 查询预报单列表
+    // 鏌ヨ棰勬姤鍗曞垪?
     const forecasts = await forecastService.listForecasts(params);
 
-    // 返回成功响应
+    // 杩斿洖鎴愬姛鍝嶅簲
     return NextResponse.json({
       success: true,
       data: forecasts,
@@ -164,10 +164,10 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error("查询入库预报列表失败:", error);
+    console.error("鏌ヨ鍏ュ簱棰勬姤鍒楄〃澶辫触:", error);
     return NextResponse.json(
       {
-        error: "查询预报单失败",
+        error: "鏌ヨ棰勬姤鍗曞け?,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -176,72 +176,72 @@ export async function GET(request: Request) {
 }
 
 /**
- * 验证创建预报单DTO
+ * 楠岃瘉鍒涘缓棰勬姤鍗旸TO
  */
 function validateCreateForecastDTO(dto: CreateInboundForecastDTO): string[] {
   const errors: string[] = [];
 
-  // 必填字段验证
+  // 蹇呭～瀛楁楠岃瘉
   if (!dto.warehouseId) {
-    errors.push("仓库ID不能为空");
+    errors.push("浠撳簱ID涓嶈兘涓虹┖");
   }
 
   if (!dto.supplierName) {
-    errors.push("供应商名称不能为空");
+    errors.push("渚涘簲鍟嗗悕绉颁笉鑳戒负?);
   } else if (dto.supplierName.length < 2 || dto.supplierName.length > 100) {
-    errors.push("供应商名称长度应在2-100字符之间");
+    errors.push("渚涘簲鍟嗗悕绉伴暱搴﹀簲?-100瀛楃涔嬮棿");
   }
 
   if (!dto.supplierContact) {
-    errors.push("供应商联系人不能为空");
+    errors.push("渚涘簲鍟嗚仈绯讳汉涓嶈兘涓虹┖");
   } else if (
     dto.supplierContact.length < 5 ||
     dto.supplierContact.length > 50
   ) {
-    errors.push("供应商联系人长度应在5-50字符之间");
+    errors.push("渚涘簲鍟嗚仈绯讳汉闀垮害搴斿湪5-50瀛楃涔嬮棿");
   }
 
   if (!dto.supplierAddress) {
-    errors.push("供应商地址不能为空");
+    errors.push("渚涘簲鍟嗗湴鍧€涓嶈兘涓虹┖");
   } else if (
     dto.supplierAddress.length < 10 ||
     dto.supplierAddress.length > 200
   ) {
-    errors.push("供应商地址长度应在10-200字符之间");
+    errors.push("渚涘簲鍟嗗湴鍧€闀垮害搴斿湪10-200瀛楃涔嬮棿");
   }
 
   if (!dto.expectedArrival) {
-    errors.push("预计到货时间不能为空");
+    errors.push("棰勮鍒拌揣鏃堕棿涓嶈兘涓虹┖");
   } else {
     const arrivalDate = new Date(dto.expectedArrival);
     if (isNaN(arrivalDate.getTime())) {
-      errors.push("预计到货时间格式无效");
+      errors.push("棰勮鍒拌揣鏃堕棿鏍煎紡鏃犳晥");
     } else if (arrivalDate < new Date()) {
-      errors.push("预计到货时间不能早于当前时间");
+      errors.push("棰勮鍒拌揣鏃堕棿涓嶈兘鏃╀簬褰撳墠鏃堕棿");
     }
   }
 
-  // 商品项验证
+  // 鍟嗗搧椤归獙?
   if (!dto.items || dto.items.length === 0) {
-    errors.push("至少需要添加一个商品项");
+    errors.push("鑷冲皯闇€瑕佹坊鍔犱竴涓晢鍝侀」");
   } else if (dto.items.length > 100) {
-    errors.push("商品项数量不能超过100个");
+    errors.push("鍟嗗搧椤规暟閲忎笉鑳借秴?00锟?);
   } else {
     dto.items.forEach((item, index) => {
       if (!item.sku) {
-        errors.push(`第${index + 1}个商品的SKU不能为空`);
+        errors.push(`锟?{index + 1}涓晢鍝佺殑SKU涓嶈兘涓虹┖`);
       } else if (item.sku.length > 50) {
-        errors.push(`第${index + 1}个商品的SKU长度不能超过50字符`);
+        errors.push(`锟?{index + 1}涓晢鍝佺殑SKU闀垮害涓嶈兘瓒呰繃50瀛楃`);
       }
 
       if (!item.forecastedQuantity || item.forecastedQuantity <= 0) {
-        errors.push(`第${index + 1}个商品的预报数量必须大于0`);
+        errors.push(`锟?{index + 1}涓晢鍝佺殑棰勬姤鏁伴噺蹇呴』澶т簬0`);
       } else if (item.forecastedQuantity > 999999) {
-        errors.push(`第${index + 1}个商品的预报数量不能超过999999`);
+        errors.push(`锟?{index + 1}涓晢鍝佺殑棰勬姤鏁伴噺涓嶈兘瓒呰繃999999`);
       }
 
       if (item.unitWeight !== undefined && item.unitWeight < 0) {
-        errors.push(`第${index + 1}个商品的单位重量不能为负数`);
+        errors.push(`锟?{index + 1}涓晢鍝佺殑鍗曚綅閲嶉噺涓嶈兘涓鸿礋鏁癭);
       }
 
       if (item.dimensions) {
@@ -250,7 +250,7 @@ function validateCreateForecastDTO(dto: CreateInboundForecastDTO): string[] {
           item.dimensions.width <= 0 ||
           item.dimensions.height <= 0
         ) {
-          errors.push(`第${index + 1}个商品的尺寸必须大于0`);
+          errors.push(`锟?{index + 1}涓晢鍝佺殑灏哄蹇呴』澶т簬0`);
         }
       }
     });
@@ -258,3 +258,4 @@ function validateCreateForecastDTO(dto: CreateInboundForecastDTO): string[] {
 
   return errors;
 }
+

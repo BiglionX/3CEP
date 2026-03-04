@@ -3,21 +3,21 @@
  * 负责询价邮件模板的创建、管理、渲染等功能
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 import {
   CreateQuotationTemplateDTO,
   QuotationTemplate,
   TemplateVariables,
   UpdateQuotationTemplateDTO,
-} from "../models/quotation.model";
+} from '../models/quotation.model';
 
 export class QuotationTemplateService {
   private supabase: any;
 
   constructor() {
     this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-      process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
     );
   }
 
@@ -30,7 +30,7 @@ export class QuotationTemplateService {
   ): Promise<QuotationTemplate> {
     try {
       const { data, error } = await this.supabase
-        .from("quotation_templates")
+        .from('quotation_templates')
         .insert([
           {
             name: dto.name,
@@ -50,7 +50,7 @@ export class QuotationTemplateService {
 
       return this.mapToQuotationTemplate(data);
     } catch (error) {
-      console.error("创建询价模板错误:", error);
+      console.error('创建询价模板错误:', error);
       throw error;
     }
   }
@@ -64,12 +64,12 @@ export class QuotationTemplateService {
   ): Promise<QuotationTemplate[]> {
     try {
       let query = this.supabase
-        .from("quotation_templates")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('quotation_templates')
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (activeOnly) {
-        query = query.eq("is_active", true);
+        query = query.eq('is_active', true);
       }
 
       const { data, error } = await query;
@@ -78,7 +78,7 @@ export class QuotationTemplateService {
 
       return data.map((item: any) => this.mapToQuotationTemplate(item));
     } catch (error) {
-      console.error("获取模板列表错误:", error);
+      console.error('获取模板列表错误:', error);
       throw error;
     }
   }
@@ -89,19 +89,18 @@ export class QuotationTemplateService {
   async getTemplateById(id: string): Promise<QuotationTemplate | null> {
     try {
       const { data, error } = await this.supabase
-        .from("quotation_templates")
-        .select("*")
-        .eq("id", id)
+        .from('quotation_templates')
+        .select('*')
+        .eq('id', id)
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") return null; // 未找到记录
-        throw new Error(`获取模板失败: ${error.message}`);
+        if (error.code === 'PGRST116') return null; // 未找到记?        throw new Error(`获取模板失败: ${error.message}`);
       }
 
       return this.mapToQuotationTemplate(data);
     } catch (error) {
-      console.error("获取模板错误:", error);
+      console.error('获取模板错误:', error);
       throw error;
     }
   }
@@ -129,10 +128,10 @@ export class QuotationTemplateService {
       updateData.updated_at = new Date();
 
       const { data, error } = await this.supabase
-        .from("quotation_templates")
+        .from('quotation_templates')
         .update(updateData)
-        .eq("id", id)
-        .eq("created_by", userId)
+        .eq('id', id)
+        .eq('created_by', userId)
         .select()
         .single();
 
@@ -140,7 +139,7 @@ export class QuotationTemplateService {
 
       return this.mapToQuotationTemplate(data);
     } catch (error) {
-      console.error("更新模板错误:", error);
+      console.error('更新模板错误:', error);
       throw error;
     }
   }
@@ -151,21 +150,20 @@ export class QuotationTemplateService {
   async deleteTemplate(id: string, userId: string): Promise<void> {
     try {
       const { error } = await this.supabase
-        .from("quotation_templates")
+        .from('quotation_templates')
         .delete()
-        .eq("id", id)
-        .eq("created_by", userId);
+        .eq('id', id)
+        .eq('created_by', userId);
 
       if (error) throw new Error(`删除模板失败: ${error.message}`);
     } catch (error) {
-      console.error("删除模板错误:", error);
+      console.error('删除模板错误:', error);
       throw error;
     }
   }
 
   /**
-   * 渲染模板（简单字符串替换）
-   */
+   * 渲染模板（简单字符串替换?   */
   renderTemplate(
     template: QuotationTemplate,
     variables: TemplateVariables
@@ -176,15 +174,15 @@ export class QuotationTemplateService {
       let renderedContent = template.content;
 
       // 替换变量
-      Object.keys(variables).forEach((key) => {
+      Object.keys(variables).forEach(key => {
         const value = (variables as any)[key];
         const placeholder = `{{${key}}}`;
         renderedSubject = renderedSubject.replace(
-          new RegExp(placeholder, "g"),
+          new RegExp(placeholder, 'g'),
           String(value)
         );
         renderedContent = renderedContent.replace(
-          new RegExp(placeholder, "g"),
+          new RegExp(placeholder, 'g'),
           String(value)
         );
       });
@@ -194,7 +192,7 @@ export class QuotationTemplateService {
         content: renderedContent,
       };
     } catch (error) {
-      console.error("模板渲染错误:", error);
+      console.error('模板渲染错误:', error);
       throw new Error(`模板渲染失败: ${(error as Error).message}`);
     }
   }
@@ -210,19 +208,18 @@ export class QuotationTemplateService {
       const missingVars: string[] = [];
       const templateText = `${template.subject} ${template.content}`;
 
-      // 检查必需的变量是否存在
-      const requiredVars = [
-        "quotationNumber",
-        "sendDate",
-        "supplierName",
-        "companyName",
-        "contactPerson",
-        "contactPhone",
-        "contactEmail",
-        "deliveryDeadline",
-        "responseDeadline",
-        "validityDays",
-        "items",
+      // 检查必需的变量是否存?      const requiredVars = [
+        'quotationNumber',
+        'sendDate',
+        'supplierName',
+        'companyName',
+        'contactPerson',
+        'contactPhone',
+        'contactEmail',
+        'deliveryDeadline',
+        'responseDeadline',
+        'validityDays',
+        'items',
       ];
 
       for (const varName of requiredVars) {
@@ -231,10 +228,9 @@ export class QuotationTemplateService {
         }
       }
 
-      // 检查模板中使用的变量是否都提供了
-      const templateVars = templateText.match(/{{\s*[a-zA-Z0-9_]+\s*}}/g);
+      // 检查模板中使用的变量是否都提供?      const templateVars = templateText.match(/{{\s*[a-zA-Z0-9_]+\s*}}/g);
       if (templateVars) {
-        const usedVars = templateVars.map((v) => v.replace(/[{}]/g, "").trim());
+        const usedVars = templateVars.map(v => v.replace(/[{}]/g, '').trim());
         const uniqueVars = [...new Set(usedVars)];
 
         for (const varName of uniqueVars) {
@@ -249,8 +245,8 @@ export class QuotationTemplateService {
         missingVars,
       };
     } catch (error) {
-      console.error("模板变量验证错误:", error);
-      return { isValid: false, missingVars: ["验证过程出错"] };
+      console.error('模板变量验证错误:', error);
+      return { isValid: false, missingVars: ['验证过程出错'] };
     }
   }
 
@@ -263,13 +259,13 @@ export class QuotationTemplateService {
   ): Promise<{ subject: string; content: string }> {
     const template = await this.getTemplateById(templateId);
     if (!template) {
-      throw new Error("模板不存在");
+      throw new Error('模板不存?);
     }
 
     const validation = this.validateTemplateVariables(template, variables);
     if (!validation.isValid) {
       throw new Error(
-        `缺少必要的模板变量: ${validation.missingVars.join(", ")}`
+        `缺少必要的模板变? ${validation.missingVars.join(', ')}`
       );
     }
 
@@ -282,17 +278,17 @@ export class QuotationTemplateService {
   async getSystemTemplates(): Promise<QuotationTemplate[]> {
     try {
       const { data, error } = await this.supabase
-        .from("quotation_templates")
-        .select("*")
-        .eq("created_by", "00000000-0000-0000-0000-000000000000") // 系统用户ID
-        .eq("is_active", true)
-        .order("name");
+        .from('quotation_templates')
+        .select('*')
+        .eq('created_by', '00000000-0000-0000-0000-000000000000') // 系统用户ID
+        .eq('is_active', true)
+        .order('name');
 
       if (error) throw new Error(`获取系统模板失败: ${error.message}`);
 
       return data.map((item: any) => this.mapToQuotationTemplate(item));
     } catch (error) {
-      console.error("获取系统模板错误:", error);
+      console.error('获取系统模板错误:', error);
       throw error;
     }
   }
@@ -308,7 +304,7 @@ export class QuotationTemplateService {
     try {
       const originalTemplate = await this.getTemplateById(templateId);
       if (!originalTemplate) {
-        throw new Error("原模板不存在");
+        throw new Error('原模板不存在');
       }
 
       const newTemplate = await this.createTemplate(
@@ -325,7 +321,7 @@ export class QuotationTemplateService {
 
       return newTemplate;
     } catch (error) {
-      console.error("复制模板错误:", error);
+      console.error('复制模板错误:', error);
       throw error;
     }
   }

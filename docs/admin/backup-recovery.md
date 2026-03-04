@@ -82,18 +82,18 @@ const BACKUP_RETENTION_POLICY = {
 ```javascript
 const BACKUP_SECURITY_CONFIG = {
   encryption: {
-    algorithm: "AES-256-GCM",
-    key_management: "AWS KMS/HSM",
+    algorithm: 'AES-256-GCM',
+    key_management: 'AWS KMS/HSM',
     at_rest: true,
     in_transit: true,
   },
   access_control: {
-    backup_operators: ["backup_admin", "dba"],
-    restore_operators: ["system_admin", "dba"],
+    backup_operators: ['backup_admin', 'dba'],
+    restore_operators: ['system_admin', 'dba'],
     audit_logging: true,
   },
   integrity_verification: {
-    checksum_algorithm: "SHA-256",
+    checksum_algorithm: 'SHA-256',
     signature_verification: true,
     blockchain_hash: false, // 可选增强安全性
   },
@@ -192,22 +192,22 @@ fi
 
 ```javascript
 // scripts/backup-database.js 的增强配置
-const BackupManager = require("./backup-manager");
+const BackupManager = require('./backup-manager');
 
 const backupConfig = {
   postgresql: {
     connection: {
-      host: process.env.DB_HOST || "localhost",
+      host: process.env.DB_HOST || 'localhost',
       port: process.env.DB_PORT || 5432,
-      database: process.env.DB_NAME || "fixcycle_db",
-      user: process.env.DB_USER || "postgres",
+      database: process.env.DB_NAME || 'fixcycle_db',
+      user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD,
     },
     backup: {
-      type: "full", // full, incremental, differential
-      format: "custom", // plain, custom, directory, tar
+      type: 'full', // full, incremental, differential
+      format: 'custom', // plain, custom, directory, tar
       compression: true,
-      excludeTables: ["temp_*", "cache_*", "session_*"],
+      excludeTables: ['temp_*', 'cache_*', 'session_*'],
       parallelJobs: 4,
     },
     retention: {
@@ -223,24 +223,24 @@ const backupManager = new BackupManager(backupConfig);
 // 执行备份
 async function performBackup() {
   try {
-    console.log("🚀 开始数据库备份...");
+    console.log('🚀 开始数据库备份...');
 
     const result = await backupManager.createBackup({
-      type: "full",
-      description: "每日例行备份",
+      type: 'full',
+      description: '每日例行备份',
     });
 
-    console.log("✅ 备份完成:", result);
+    console.log('✅ 备份完成:', result);
 
     // 验证备份完整性
     const isValid = await backupManager.verifyBackup(result.backupId);
-    console.log("🔍 备份验证:", isValid ? "通过" : "失败");
+    console.log('🔍 备份验证:', isValid ? '通过' : '失败');
 
     // 清理过期备份
     const cleaned = await backupManager.cleanupOldBackups();
-    console.log("🧹 清理完成:", cleaned.deletedCount, "个过期备份");
+    console.log('🧹 清理完成:', cleaned.deletedCount, '个过期备份');
   } catch (error) {
-    console.error("❌ 备份失败:", error.message);
+    console.error('❌ 备份失败:', error.message);
     process.exit(1);
   }
 }
@@ -250,24 +250,24 @@ if (require.main === module) {
   const args = process.argv.slice(2);
 
   switch (args[0]) {
-    case "backup":
+    case 'backup':
       performBackup();
       break;
-    case "list":
-      backupManager.listBackups().then((backups) => {
+    case 'list':
+      backupManager.listBackups().then(backups => {
         console.table(backups);
       });
       break;
-    case "verify":
+    case 'verify':
       const backupId = args[1];
-      backupManager.verifyBackup(backupId).then((result) => {
-        console.log("验证结果:", result);
+      backupManager.verifyBackup(backupId).then(result => {
+        console.log('验证结果:', result);
       });
       break;
-    case "restore":
+    case 'restore':
       const restoreId = args[1];
       backupManager.restoreBackup(restoreId).then(() => {
-        console.log("恢复完成");
+        console.log('恢复完成');
       });
       break;
     default:
@@ -304,7 +304,7 @@ if (require.main === module) {
 // 备份监控脚本: scripts/monitor-backups.js
 class BackupMonitor {
   constructor() {
-    this.backupDir = "./backups";
+    this.backupDir = './backups';
     this.alertThresholds = {
       lastBackupHours: 24,
       successRate: 0.95,
@@ -320,8 +320,8 @@ class BackupMonitor {
     const hoursSinceLastBackup = this.getHoursSince(backupInfo.lastBackup);
     if (hoursSinceLastBackup > this.alertThresholds.lastBackupHours) {
       alerts.push({
-        type: "MISSING_BACKUP",
-        severity: "WARNING",
+        type: 'MISSING_BACKUP',
+        severity: 'WARNING',
         message: `距离上次备份已超过${hoursSinceLastBackup}小时`,
       });
     }
@@ -330,8 +330,8 @@ class BackupMonitor {
     const successRate = backupInfo.successfulCount / backupInfo.totalCount;
     if (successRate < this.alertThresholds.successRate) {
       alerts.push({
-        type: "LOW_SUCCESS_RATE",
-        severity: "CRITICAL",
+        type: 'LOW_SUCCESS_RATE',
+        severity: 'CRITICAL',
         message: `备份成功率${(successRate * 100).toFixed(1)}%低于阈值`,
       });
     }
@@ -340,14 +340,14 @@ class BackupMonitor {
     const storageUsage = await this.getStorageUsage();
     if (storageUsage.percent > this.alertThresholds.storageUsagePercent) {
       alerts.push({
-        type: "STORAGE_FULL",
-        severity: "WARNING",
+        type: 'STORAGE_FULL',
+        severity: 'WARNING',
         message: `备份存储使用率${storageUsage.percent}%过高`,
       });
     }
 
     return {
-      status: alerts.length === 0 ? "HEALTHY" : "DEGRADED",
+      status: alerts.length === 0 ? 'HEALTHY' : 'DEGRADED',
       alerts,
       metrics: {
         lastBackup: backupInfo.lastBackup,
@@ -365,8 +365,7 @@ class BackupMonitor {
     return {
       lastBackup: backupHistory[backupHistory.length - 1]?.timestamp,
       totalCount: backupHistory.length,
-      successfulCount: backupHistory.filter((b) => b.status === "SUCCESS")
-        .length,
+      successfulCount: backupHistory.filter(b => b.status === 'SUCCESS').length,
     };
   }
 }
@@ -458,52 +457,52 @@ pg_dump \
 
 ```javascript
 // scripts/backup-n8n-workflows.js
-const fs = require("fs").promises;
-const path = require("path");
+const fs = require('fs').promises;
+const path = require('path');
 
 class N8nBackup {
   constructor(config) {
-    this.n8nApiUrl = config.n8nApiUrl || "http://localhost:5678";
+    this.n8nApiUrl = config.n8nApiUrl || 'http://localhost:5678';
     this.apiToken = config.apiToken;
-    this.backupDir = config.backupDir || "./backups/n8n";
+    this.backupDir = config.backupDir || './backups/n8n';
   }
 
   async createBackup(options = {}) {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const backupPath = path.join(this.backupDir, `n8n-backup-${timestamp}`);
 
     await fs.mkdir(backupPath, { recursive: true });
 
     try {
       // 1. 备份工作流
-      console.log("📥 备份n8n工作流...");
+      console.log('📥 备份n8n工作流...');
       const workflows = await this.exportWorkflows();
       await fs.writeFile(
-        path.join(backupPath, "workflows.json"),
+        path.join(backupPath, 'workflows.json'),
         JSON.stringify(workflows, null, 2)
       );
 
       // 2. 备份凭据
-      console.log("🔐 备份凭据...");
+      console.log('🔐 备份凭据...');
       const credentials = await this.exportCredentials();
       await fs.writeFile(
-        path.join(backupPath, "credentials.json"),
+        path.join(backupPath, 'credentials.json'),
         JSON.stringify(credentials, null, 2)
       );
 
       // 3. 备份环境变量
-      console.log("🌍 备份环境变量...");
+      console.log('🌍 备份环境变量...');
       const variables = await this.exportVariables();
       await fs.writeFile(
-        path.join(backupPath, "variables.json"),
+        path.join(backupPath, 'variables.json'),
         JSON.stringify(variables, null, 2)
       );
 
       // 4. 备份标签
-      console.log("🏷️  备份标签...");
+      console.log('🏷️  备份标签...');
       const tags = await this.exportTags();
       await fs.writeFile(
-        path.join(backupPath, "tags.json"),
+        path.join(backupPath, 'tags.json'),
         JSON.stringify(tags, null, 2)
       );
 
@@ -522,14 +521,14 @@ class N8nBackup {
       };
 
       await fs.writeFile(
-        path.join(backupPath, "metadata.json"),
+        path.join(backupPath, 'metadata.json'),
         JSON.stringify(metadata, null, 2)
       );
 
       console.log(`✅ n8n备份完成: ${backupPath}`);
       return backupPath;
     } catch (error) {
-      console.error("❌ n8n备份失败:", error.message);
+      console.error('❌ n8n备份失败:', error.message);
       throw error;
     }
   }
@@ -538,7 +537,7 @@ class N8nBackup {
     const response = await fetch(`${this.n8nApiUrl}/workflows`, {
       headers: {
         Authorization: `Bearer ${this.apiToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -549,9 +548,9 @@ class N8nBackup {
     const workflows = await response.json();
 
     // 清理敏感信息
-    return workflows.map((workflow) => ({
+    return workflows.map(workflow => ({
       ...workflow,
-      nodes: workflow.nodes.map((node) => {
+      nodes: workflow.nodes.map(node => {
         // 移除敏感的凭据引用
         const cleanNode = { ...node };
         if (cleanNode.credentials) {
@@ -566,7 +565,7 @@ class N8nBackup {
     const response = await fetch(`${this.n8nApiUrl}/credentials`, {
       headers: {
         Authorization: `Bearer ${this.apiToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -581,7 +580,7 @@ class N8nBackup {
     const response = await fetch(`${this.n8nApiUrl}/variables`, {
       headers: {
         Authorization: `Bearer ${this.apiToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -596,7 +595,7 @@ class N8nBackup {
     const response = await fetch(`${this.n8nApiUrl}/tags`, {
       headers: {
         Authorization: `Bearer ${this.apiToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -611,9 +610,9 @@ class N8nBackup {
     try {
       const response = await fetch(`${this.n8nApiUrl}/healthz`);
       const health = await response.json();
-      return health.version || "unknown";
+      return health.version || 'unknown';
     } catch {
-      return "unknown";
+      return 'unknown';
     }
   }
 
@@ -622,7 +621,7 @@ class N8nBackup {
 
     // 检查备份完整性
     const metadata = JSON.parse(
-      await fs.readFile(path.join(backupPath, "metadata.json"), "utf8")
+      await fs.readFile(path.join(backupPath, 'metadata.json'), 'utf8')
     );
 
     // 按顺序恢复各项内容
@@ -631,21 +630,21 @@ class N8nBackup {
     await this.importCredentials(backupPath);
     await this.importWorkflows(backupPath);
 
-    console.log("✅ n8n恢复完成");
+    console.log('✅ n8n恢复完成');
   }
 
   // 恢复方法实现...
   async importWorkflows(backupPath) {
     const workflows = JSON.parse(
-      await fs.readFile(path.join(backupPath, "workflows.json"), "utf8")
+      await fs.readFile(path.join(backupPath, 'workflows.json'), 'utf8')
     );
 
     for (const workflow of workflows) {
       await fetch(`${this.n8nApiUrl}/workflows`, {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${this.apiToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(workflow),
       });
@@ -656,15 +655,15 @@ class N8nBackup {
 // 使用示例
 if (require.main === module) {
   const backup = new N8nBackup({
-    n8nApiUrl: process.env.N8N_API_URL || "http://localhost:5678",
+    n8nApiUrl: process.env.N8N_API_URL || 'http://localhost:5678',
     apiToken: process.env.N8N_API_TOKEN,
-    backupDir: "./backups/n8n",
+    backupDir: './backups/n8n',
   });
 
   backup
     .createBackup()
-    .then((path) => console.log("备份路径:", path))
-    .catch((err) => console.error("备份失败:", err));
+    .then(path => console.log('备份路径:', path))
+    .catch(err => console.error('备份失败:', err));
 }
 ```
 
@@ -797,13 +796,13 @@ find "$BACKUP_DIR" -mindepth 1 -maxdepth 1 -type d -name "202*" -mtime +7 -exec 
 
 ```javascript
 // scripts/verify-backup.js
-const fs = require("fs").promises;
-const path = require("path");
-const crypto = require("crypto");
+const fs = require('fs').promises;
+const path = require('path');
+const crypto = require('crypto');
 
 class BackupValidator {
   constructor() {
-    this.backupDir = "./backups";
+    this.backupDir = './backups';
   }
 
   async verifyBackup(backupPath) {
@@ -823,8 +822,8 @@ class BackupValidator {
       results.exists = true;
 
       // 读取元数据
-      const metadataPath = path.join(backupPath, "metadata.json");
-      const metadataContent = await fs.readFile(metadataPath, "utf8");
+      const metadataPath = path.join(backupPath, 'metadata.json');
+      const metadataContent = await fs.readFile(metadataPath, 'utf8');
       results.metadata = JSON.parse(metadataContent);
       results.readable = true;
 
@@ -832,11 +831,11 @@ class BackupValidator {
       if (await this.verifyChecksums(backupPath)) {
         results.integrity = true;
       } else {
-        results.errors.push("校验和验证失败");
+        results.errors.push('校验和验证失败');
       }
 
       // 验证关键文件存在
-      const requiredFiles = ["metadata.json"];
+      const requiredFiles = ['metadata.json'];
       for (const file of requiredFiles) {
         try {
           await fs.access(path.join(backupPath, file));
@@ -854,9 +853,9 @@ class BackupValidator {
       results.integrity &&
       results.errors.length === 0;
 
-    console.log(`验证结果: ${results.valid ? "✅ 通过" : "❌ 失败"}`);
+    console.log(`验证结果: ${results.valid ? '✅ 通过' : '❌ 失败'}`);
     if (results.errors.length > 0) {
-      console.log("错误详情:", results.errors);
+      console.log('错误详情:', results.errors);
     }
 
     return results;
@@ -864,21 +863,21 @@ class BackupValidator {
 
   async verifyChecksums(backupPath) {
     try {
-      const checksumFile = path.join(backupPath, "checksums.md5");
-      const checksums = await fs.readFile(checksumFile, "utf8");
+      const checksumFile = path.join(backupPath, 'checksums.md5');
+      const checksums = await fs.readFile(checksumFile, 'utf8');
 
-      const lines = checksums.split("\n").filter((line) => line.trim());
+      const lines = checksums.split('\n').filter(line => line.trim());
 
       for (const line of lines) {
         const [expectedHash, filePath] = line.split(/\s+/);
-        const fullPath = path.join(backupPath, filePath.replace(/^\.\//, ""));
+        const fullPath = path.join(backupPath, filePath.replace(/^\.\//, ''));
 
         try {
           const fileBuffer = await fs.readFile(fullPath);
           const actualHash = crypto
-            .createHash("md5")
+            .createHash('md5')
             .update(fileBuffer)
-            .digest("hex");
+            .digest('hex');
 
           if (actualHash !== expectedHash) {
             console.error(`校验和不匹配: ${filePath}`);
@@ -897,7 +896,7 @@ class BackupValidator {
     }
   }
 
-  async testRestore(backupPath, testDir = "./restore-test") {
+  async testRestore(backupPath, testDir = './restore-test') {
     console.log(`🧪 测试恢复: ${backupPath}`);
 
     try {
@@ -909,7 +908,7 @@ class BackupValidator {
       const files = await fs.readdir(backupPath);
 
       for (const file of files) {
-        if (file !== "backup-info.json") {
+        if (file !== 'backup-info.json') {
           const src = path.join(backupPath, file);
           const dest = path.join(testDir, file);
 
@@ -921,10 +920,10 @@ class BackupValidator {
         }
       }
 
-      console.log("✅ 恢复测试成功");
+      console.log('✅ 恢复测试成功');
       return true;
     } catch (error) {
-      console.error("❌ 恢复测试失败:", error.message);
+      console.error('❌ 恢复测试失败:', error.message);
       return false;
     } finally {
       // 清理测试目录
@@ -938,10 +937,10 @@ if (require.main === module) {
   const validator = new BackupValidator();
 
   // 验证最新的备份
-  fs.readdir("./backups")
-    .then((dirs) => {
+  fs.readdir('./backups')
+    .then(dirs => {
       const latestBackup = dirs
-        .filter((d) => d.startsWith("202"))
+        .filter(d => d.startsWith('202'))
         .sort()
         .pop();
 
@@ -1104,27 +1103,27 @@ log "恢复日志: $RESTORE_LOG"
 ```javascript
 // scripts/verify-restoration.js
 async function verifyRestoration() {
-  console.log("🔍 验证恢复结果...\n");
+  console.log('🔍 验证恢复结果...\n');
 
   const checks = [
     {
-      name: "数据库连接",
+      name: '数据库连接',
       check: () => verifyDatabaseConnection(),
     },
     {
-      name: "核心表存在性",
+      name: '核心表存在性',
       check: () => verifyCoreTables(),
     },
     {
-      name: "API服务状态",
+      name: 'API服务状态',
       check: () => verifyApiHealth(),
     },
     {
-      name: "n8n工作流状态",
+      name: 'n8n工作流状态',
       check: () => verifyN8nWorkflows(),
     },
     {
-      name: "关键数据完整性",
+      name: '关键数据完整性',
       check: () => verifyDataIntegrity(),
     },
   ];
@@ -1152,40 +1151,40 @@ async function verifyRestoration() {
   console.log(`恢复验证完成: ${passed}/${total} 项检查通过 (${successRate}%)`);
 
   if (successRate >= 80) {
-    console.log("✅ 恢复基本成功，系统可以正常使用");
+    console.log('✅ 恢复基本成功，系统可以正常使用');
   } else {
-    console.log("❌ 恢复存在问题，需要进一步检查");
+    console.log('❌ 恢复存在问题，需要进一步检查');
     process.exit(1);
   }
 }
 
 async function verifyDatabaseConnection() {
   // 实现数据库连接验证
-  return { success: true, message: "数据库连接正常" };
+  return { success: true, message: '数据库连接正常' };
 }
 
 async function verifyCoreTables() {
   // 检查核心表是否存在且有数据
-  return { success: true, message: "核心表结构完整" };
+  return { success: true, message: '核心表结构完整' };
 }
 
 async function verifyApiHealth() {
   // 检查API服务是否响应
-  const response = await fetch("http://localhost:3000/api/health");
+  const response = await fetch('http://localhost:3000/api/health');
   return {
     success: response.ok,
-    message: response.ok ? "API服务正常" : "API服务无响应",
+    message: response.ok ? 'API服务正常' : 'API服务无响应',
   };
 }
 
 async function verifyN8nWorkflows() {
   // 检查n8n工作流状态
-  return { success: true, message: "n8n工作流已恢复" };
+  return { success: true, message: 'n8n工作流已恢复' };
 }
 
 async function verifyDataIntegrity() {
   // 检查关键业务数据完整性
-  return { success: true, message: "数据完整性验证通过" };
+  return { success: true, message: '数据完整性验证通过' };
 }
 
 if (require.main === module) {
@@ -1209,13 +1208,13 @@ class BackupManager {
 
   async executeBackupSchedule() {
     const schedule = [
-      { time: "02:00", task: "database-full", priority: "high" },
-      { time: "03:00", task: "n8n-config", priority: "medium" },
-      { time: "04:00", task: "filesystem", priority: "low" },
-      { time: "05:00", task: "config-files", priority: "medium" },
+      { time: '02:00', task: 'database-full', priority: 'high' },
+      { time: '03:00', task: 'n8n-config', priority: 'medium' },
+      { time: '04:00', task: 'filesystem', priority: 'low' },
+      { time: '05:00', task: 'config-files', priority: 'medium' },
     ];
 
-    console.log("📅 执行备份计划...");
+    console.log('📅 执行备份计划...');
 
     for (const { time, task, priority } of schedule) {
       console.log(`⏰ ${time} - 执行任务: ${task} (${priority})`);
@@ -1225,17 +1224,17 @@ class BackupManager {
         console.log(`✅ ${task} 备份完成`);
       } catch (error) {
         console.error(`❌ ${task} 备份失败:`, error.message);
-        await this.sendAlert(`备份失败: ${task}`, error.message, "critical");
+        await this.sendAlert(`备份失败: ${task}`, error.message, 'critical');
       }
     }
   }
 
   async executeTask(taskName) {
     const tasks = {
-      "database-full": () => this.backupDatabase("full"),
-      "n8n-config": () => this.backupN8n(),
+      'database-full': () => this.backupDatabase('full'),
+      'n8n-config': () => this.backupN8n(),
       filesystem: () => this.backupFilesystem(),
-      "config-files": () => this.backupConfig(),
+      'config-files': () => this.backupConfig(),
     };
 
     const task = tasks[taskName];
@@ -1246,17 +1245,17 @@ class BackupManager {
     }
   }
 
-  async backupDatabase(type = "full") {
+  async backupDatabase(type = 'full') {
     // 调用数据库备份逻辑
-    const result = await require("./backup-database.js").createBackup({ type });
-    this.recordBackup("database", type, result);
+    const result = await require('./backup-database.js').createBackup({ type });
+    this.recordBackup('database', type, result);
     return result;
   }
 
   async backupN8n() {
-    const backup = new (require("./backup-n8n-workflows.js"))(this.config.n8n);
+    const backup = new (require('./backup-n8n-workflows.js'))(this.config.n8n);
     const result = await backup.createBackup();
-    this.recordBackup("n8n", "config", result);
+    this.recordBackup('n8n', 'config', result);
     return result;
   }
 
@@ -1271,7 +1270,7 @@ class BackupManager {
       type,
       subtype,
       result,
-      status: "completed",
+      status: 'completed',
     });
   }
 }
@@ -1283,7 +1282,7 @@ module.exports = BackupManager;
 
 ```javascript
 // scripts/backup-dashboard.js
-const express = require("express");
+const express = require('express');
 const app = express();
 
 class BackupDashboard {
@@ -1293,7 +1292,7 @@ class BackupDashboard {
   }
 
   setupRoutes() {
-    app.get("/api/backup/status", (req, res) => {
+    app.get('/api/backup/status', (req, res) => {
       res.json({
         lastBackup: this.getLastBackup(),
         upcomingBackups: this.getUpcomingBackups(),
@@ -1302,11 +1301,11 @@ class BackupDashboard {
       });
     });
 
-    app.get("/api/backup/history", (req, res) => {
+    app.get('/api/backup/history', (req, res) => {
       res.json(this.backupManager.backupHistory.slice(-50));
     });
 
-    app.post("/api/backup/run/:type", async (req, res) => {
+    app.post('/api/backup/run/:type', async (req, res) => {
       try {
         const result = await this.backupManager.executeTask(req.params.type);
         res.json({ success: true, result });
@@ -1315,7 +1314,7 @@ class BackupDashboard {
       }
     });
 
-    app.use(express.static("public"));
+    app.use(express.static('public'));
   }
 
   start(port = 3001) {
@@ -1407,15 +1406,15 @@ esac
 class StorageTierManager {
   constructor() {
     this.tiers = {
-      hot: { path: "./backups", retention: "7d", compression: false },
+      hot: { path: './backups', retention: '7d', compression: false },
       warm: {
-        path: "/mnt/nearline/backups",
-        retention: "90d",
+        path: '/mnt/nearline/backups',
+        retention: '90d',
         compression: true,
       },
       cold: {
-        path: "/mnt/offline/backups",
-        retention: "365d",
+        path: '/mnt/offline/backups',
+        retention: '365d',
         compression: true,
       },
     };
@@ -1431,9 +1430,9 @@ class StorageTierManager {
     const targetPath = path.join(tier.path, fileName);
 
     // 压缩（如果需要）
-    if (tier.compression && !backupPath.endsWith(".gz")) {
+    if (tier.compression && !backupPath.endsWith('.gz')) {
       await this.compressBackup(backupPath);
-      backupPath += ".gz";
+      backupPath += '.gz';
     }
 
     // 移动文件
@@ -1443,14 +1442,14 @@ class StorageTierManager {
   }
 
   async compressBackup(backupPath) {
-    const gzPath = backupPath + ".gz";
-    const compress = spawn("gzip", ["-c", backupPath]);
+    const gzPath = backupPath + '.gz';
+    const compress = spawn('gzip', ['-c', backupPath]);
     const output = fs.createWriteStream(gzPath);
 
     return new Promise((resolve, reject) => {
       compress.stdout.pipe(output);
-      compress.on("close", resolve);
-      compress.on("error", reject);
+      compress.on('close', resolve);
+      compress.on('error', reject);
     });
   }
 }

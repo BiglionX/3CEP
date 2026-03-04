@@ -4,8 +4,56 @@
 
 本文档描述系统的 JWT 认证流程和会话管理机制。
 
-**版本**: 1.0.0  
-**最后更新**: 2026-02-21
+**版本**: 2.0.0  
+**最后更新**: 2026-02-27
+
+---
+
+## 🛡️ 安全增强特性
+
+### 速率限制保护 (Task 2.3)
+
+系统实现了多层级的速率限制保护机制，防止恶意攻击和滥用：
+
+#### 限流策略
+
+| 类型     | 限制频率      | 适用场景    | 封禁时长 |
+| -------- | ------------- | ----------- | -------- |
+| API通用  | 1000 req/min  | 普通API接口 | 1小时    |
+| 敏感操作 | 15-20 req/min | 高风险操作  | 2小时    |
+| 认证相关 | 5 req/min     | 登录注册等  | 1小时    |
+| 搜索功能 | 30 req/min    | 搜索接口    | 30分钟   |
+
+#### 限流规则示例
+
+```typescript
+// 采购智能体API限流
+{
+  name: 'supplier-profiling-rate-limit',
+  pathPattern: '/api/procurement-intelligence/supplier-profiling*',
+  methods: ['GET', 'POST'],
+  config: {
+    windowMs: 60000,    // 1分钟窗口
+    maxRequests: 50,    // 最多50次请求
+    banDuration: 3600000 // 封禁1小时
+  },
+  type: 'api'
+}
+```
+
+#### 熔断器机制
+
+```typescript
+// 采购智能体熔断器配置
+const procurementIntelligenceBreaker = new CircuitBreaker({
+  failureThreshold: 3, // 3次失败后熔断
+  timeout: 30000, // 30秒后半开状态
+});
+```
+
+#### 管理员豁免
+
+管理员用户享受更宽松的限流策略，确保运维工作的正常进行。
 
 ---
 

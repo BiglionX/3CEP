@@ -1,0 +1,129 @@
+{
+  "moduleName": "采购智能体模块",
+  "generatedAt": "2026-02-27T08:23:21.150Z",
+  "testResults": [
+    {
+      "testName": "API认证检查 - /api/procurement-intelligence/search",
+      "status": "PASS",
+      "description": "所有敏感API端点都需要认证",
+      "timestamp": "2026-02-27T08:23:21.145Z"
+    },
+    {
+      "testName": "API输入验证 - /api/procurement-intelligence/search",
+      "status": "PASS",
+      "description": "实现了适当的输入验证",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API速率限制 - /api/procurement-intelligence/search",
+      "status": "PASS",
+      "description": "实施了合理的速率限制",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API认证检查 - /api/procurement-intelligence/analyze-supplier",
+      "status": "PASS",
+      "description": "所有敏感API端点都需要认证",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API输入验证 - /api/procurement-intelligence/analyze-supplier",
+      "status": "PASS",
+      "description": "实现了适当的输入验证",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API速率限制 - /api/procurement-intelligence/analyze-supplier",
+      "status": "PASS",
+      "description": "实施了合理的速率限制",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API认证检查 - /api/procurement-intelligence/generate-quote",
+      "status": "PASS",
+      "description": "所有敏感API端点都需要认证",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API输入验证 - /api/procurement-intelligence/generate-quote",
+      "status": "PASS",
+      "description": "实现了适当的输入验证",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API速率限制 - /api/procurement-intelligence/generate-quote",
+      "status": "PASS",
+      "description": "实施了合理的速率限制",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API认证检查 - /api/procurement-intelligence/admin-actions",
+      "status": "PASS",
+      "description": "所有敏感API端点都需要认证",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API输入验证 - /api/procurement-intelligence/admin-actions",
+      "status": "PASS",
+      "description": "实现了适当的输入验证",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "API速率限制 - /api/procurement-intelligence/admin-actions",
+      "status": "PASS",
+      "description": "实施了合理的速率限制",
+      "timestamp": "2026-02-27T08:23:21.147Z"
+    },
+    {
+      "testName": "RBAC角色定义",
+      "status": "FAIL",
+      "description": "缺少必要的角色定义",
+      "timestamp": "2026-02-27T08:23:21.149Z"
+    },
+    {
+      "testName": "管理员权限配置",
+      "status": "WARN",
+      "description": "建议审查管理员权限范围",
+      "timestamp": "2026-02-27T08:23:21.149Z"
+    },
+    {
+      "testName": "敏感数据加密",
+      "status": "PASS",
+      "description": "供应商信息和报价数据得到适当保护",
+      "timestamp": "2026-02-27T08:23:21.149Z"
+    },
+    {
+      "testName": "数据完整性验证",
+      "status": "PASS",
+      "description": "实施了数据校验和完整性检查",
+      "timestamp": "2026-02-27T08:23:21.149Z"
+    },
+    {
+      "testName": "数据清理机制",
+      "status": "PASS",
+      "description": "临时数据和缓存得到适当清理",
+      "timestamp": "2026-02-27T08:23:21.149Z"
+    },
+    {
+      "testName": "生产环境配置",
+      "status": "PASS",
+      "description": "生产配置安全",
+      "timestamp": "2026-02-27T08:23:21.150Z"
+    },
+    {
+      "testName": "密钥安全管理",
+      "status": "PASS",
+      "description": "使用环境变量管理敏感配置",
+      "timestamp": "2026-02-27T08:23:21.150Z"
+    }
+  ],
+  "vulnerabilities": [],
+  "summary": {
+    "totalTests": 19,
+    "passed": 17,
+    "failed": 1,
+    "warnings": 1,
+    "vulnerabilities": 0
+  },
+  "securityScore": 89.47368421052632
+}

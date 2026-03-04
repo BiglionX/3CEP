@@ -1,5 +1,5 @@
-/**
- * 供应链库存查询API
+﻿/**
+ * 渚涘簲閾惧簱瀛樻煡璇PI
  */
 
 import { NextResponse } from 'next/server';
@@ -8,38 +8,38 @@ import { InventoryService } from '@/supply-chain';
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    
+
     const params: any = {};
-    
-    // 解析查询参数
+
+    // 瑙ｆ瀽鏌ヨ鍙傛暟
     if (searchParams.get('productId')) {
       params.productId = searchParams.get('productId');
     }
-    
+
     if (searchParams.get('warehouseId')) {
       params.warehouseId = searchParams.get('warehouseId');
     }
-    
+
     if (searchParams.get('category')) {
       params.category = searchParams.get('category');
     }
-    
+
     if (searchParams.get('status')) {
       params.status = searchParams.get('status');
     }
-    
+
     if (searchParams.get('minQuantity')) {
       params.minQuantity = parseInt(searchParams.get('minQuantity') || '0');
     }
-    
+
     if (searchParams.get('maxQuantity')) {
       params.maxQuantity = parseInt(searchParams.get('maxQuantity') || '0');
     }
-    
+
     if (searchParams.get('limit')) {
       params.limit = parseInt(searchParams.get('limit') || '50');
     }
-    
+
     if (searchParams.get('offset')) {
       params.offset = parseInt(searchParams.get('offset') || '0');
     }
@@ -50,15 +50,14 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       data: inventoryList,
-      count: inventoryList.length
+      count: inventoryList.length,
     });
-
   } catch (error) {
-    console.error('查询库存错误:', error);
+    console.error('鏌ヨ搴撳瓨閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '查询库存失败',
-        details: (error as Error).message 
+      {
+        error: '鏌ヨ搴撳瓨澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -68,12 +67,13 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { productId, warehouseId, quantityChange, reason, referenceNumber } = body;
+    const { productId, warehouseId, quantityChange, reason, referenceNumber } =
+      body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!productId || !warehouseId || quantityChange === undefined) {
       return NextResponse.json(
-        { error: '缺少必要参数: productId, warehouseId, quantityChange' },
+        { error: '缂哄皯蹇呰鍙傛暟: productId, warehouseId, quantityChange' },
         { status: 400 }
       );
     }
@@ -82,8 +82,8 @@ export async function POST(request: Request) {
       productId,
       warehouseId,
       quantityChange,
-      reason: reason || '库存调整',
-      referenceNumber: referenceNumber || ''
+      reason: reason || '搴撳瓨璋冩暣',
+      referenceNumber: referenceNumber || '',
     };
 
     const inventoryService = new InventoryService();
@@ -92,17 +92,17 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: movement,
-      message: '库存调整成功'
+      message: '搴撳瓨璋冩暣鎴愬姛',
     });
-
   } catch (error) {
-    console.error('调整库存错误:', error);
+    console.error('璋冩暣搴撳瓨閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '库存调整失败',
-        details: (error as Error).message 
+      {
+        error: '搴撳瓨璋冩暣澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

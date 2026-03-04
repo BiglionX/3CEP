@@ -1,18 +1,17 @@
-/**
- * AI诊断分析API端点
+﻿/**
+ * AI璇婃柇鍒嗘瀽API绔偣
  * POST /api/diagnosis/analyze
- * 接收故障描述，返回结构化诊断结果
+ * 鎺ユ敹鏁呴殰鎻忚堪锛岃繑鍥炵粨鏋勫寲璇婃柇缁撴灉
  */
 
 import {
   DiagnosisAnalysisService,
   DiagnosisRequest,
-} from "@/services/diagnosis-analysis.service";
-import { validateDiagnosisResult } from "@/services/diagnosis-prompt-template";
-import { NextResponse } from "next/server";
+} from '@/services/diagnosis-analysis.service';
+import { validateDiagnosisResult } from '@/services/diagnosis-prompt-template';
+import { NextResponse } from 'next/server';
 
-// 请求体接口
-interface DiagnosisApiRequest {
+// 璇锋眰浣撴帴?interface DiagnosisApiRequest {
   faultDescription: string;
   deviceId?: string;
   deviceInfo?: {
@@ -25,8 +24,7 @@ interface DiagnosisApiRequest {
   language?: string;
 }
 
-// 响应体接口
-interface DiagnosisApiResponse {
+// 鍝嶅簲浣撴帴?interface DiagnosisApiResponse {
   success: boolean;
   data?: {
     diagnosisResult: any;
@@ -41,10 +39,9 @@ export async function POST(request: Request) {
   const startTime = Date.now();
 
   try {
-    // 1. 解析请求体
-    const body: DiagnosisApiRequest = await request.json();
+    // 1. 瑙ｆ瀽璇锋眰?    const body: DiagnosisApiRequest = await request.json();
 
-    // 2. 参数验证
+    // 2. 鍙傛暟楠岃瘉
     const validationError = validateRequest(body);
     if (validationError) {
       return NextResponse.json(
@@ -57,18 +54,17 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. 构造诊断请求
-    const diagnosisRequest: DiagnosisRequest = {
+    // 3. 鏋勯€犺瘖鏂?    const diagnosisRequest: DiagnosisRequest = {
       faultDescription: body.faultDescription,
       deviceId: body.deviceId,
       deviceInfo: body.deviceInfo,
       sessionId:
         body.sessionId ||
         `sess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      language: body.language || "zh",
+      language: body.language || 'zh',
     };
 
-    // 4. 调用诊断服务
+    // 4. 璋冪敤璇婃柇鏈嶅姟
     const diagnosisService = new DiagnosisAnalysisService({
       timeoutMs: 30000,
       maxRetries: 2,
@@ -76,17 +72,15 @@ export async function POST(request: Request) {
       enableLogging: true,
     });
 
-    const diagnosisResult = await diagnosisService.analyzeFault(
-      diagnosisRequest
-    );
+    const diagnosisResult =
+      await diagnosisService.analyzeFault(diagnosisRequest);
 
-    // 5. 验证结果格式
+    // 5. 楠岃瘉缁撴灉鏍煎紡
     if (!validateDiagnosisResult(diagnosisResult)) {
-      throw new Error("诊断结果格式验证失败");
+      throw new Error('璇婃柇缁撴灉鏍煎紡楠岃瘉澶辫触');
     }
 
-    // 6. 构造成功响应
-    const response: DiagnosisApiResponse = {
+    // 6. 鏋勯€犳垚鍔熷搷?    const response: DiagnosisApiResponse = {
       success: true,
       data: {
         diagnosisResult: diagnosisResult,
@@ -98,18 +92,18 @@ export async function POST(request: Request) {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
-    console.error("诊断API处理错误:", error);
+    console.error('璇婃柇API澶勭悊閿欒:', error);
 
-    // 7. 错误响应
+    // 7. 閿欒鍝嶅簲
     const response: DiagnosisApiResponse = {
       success: false,
-      error: error instanceof Error ? error.message : "服务器内部错误",
+      error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       timestamp: new Date().toISOString(),
     };
 
-    // 根据错误类型返回不同的HTTP状态码
+    // 鏍规嵁閿欒绫诲瀷杩斿洖涓嶅悓鐨凥TTP鐘舵€佺爜
     const statusCode =
-      error instanceof Error && error.message.includes("超时") ? 408 : 500;
+      error instanceof Error && error.message.includes('瓒呮椂') ? 408 : 500;
 
     return NextResponse.json(response, { status: statusCode });
   }
@@ -118,20 +112,20 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get("sessionId");
+    const sessionId = searchParams.get('sessionId');
 
     if (!sessionId) {
       return NextResponse.json(
         {
           success: false,
-          error: "缺少sessionId参数",
+          error: '缂哄皯sessionId鍙傛暟',
           timestamp: new Date().toISOString(),
         },
         { status: 400 }
       );
     }
 
-    // 获取会话信息
+    // 鑾峰彇浼氳瘽淇℃伅
     const diagnosisService = new DiagnosisAnalysisService();
     const sessionStats = diagnosisService.getSessionStats(sessionId);
 
@@ -145,11 +139,11 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("获取会话信息错误:", error);
+    console.error('鑾峰彇浼氳瘽淇℃伅閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "服务器内部错误",
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -160,34 +154,34 @@ export async function GET(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get("sessionId");
+    const sessionId = searchParams.get('sessionId');
 
     if (!sessionId) {
       return NextResponse.json(
         {
           success: false,
-          error: "缺少sessionId参数",
+          error: '缂哄皯sessionId鍙傛暟',
           timestamp: new Date().toISOString(),
         },
         { status: 400 }
       );
     }
 
-    // 清理会话
+    // 娓呯悊浼氳瘽
     const diagnosisService = new DiagnosisAnalysisService();
     diagnosisService.clearSession(sessionId);
 
     return NextResponse.json({
       success: true,
-      message: "会话已清除",
+      message: '浼氳瘽宸叉竻?,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("清除会话错误:", error);
+    console.error('娓呴櫎浼氳瘽閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "服务器内部错误",
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -196,62 +190,60 @@ export async function DELETE(request: Request) {
 }
 
 /**
- * 验证请求参数
+ * 楠岃瘉璇锋眰鍙傛暟
  */
 function validateRequest(body: DiagnosisApiRequest): string | null {
-  // 必需字段检查
-  if (!body.faultDescription) {
-    return "故障描述不能为空";
+  // 蹇呴渶瀛楁妫€?  if (!body.faultDescription) {
+    return '鏁呴殰鎻忚堪涓嶈兘涓虹┖';
   }
 
-  if (typeof body.faultDescription !== "string") {
-    return "故障描述必须是字符串类型";
+  if (typeof body.faultDescription !== 'string') {
+    return '鏁呴殰鎻忚堪蹇呴』鏄瓧绗︿覆绫诲瀷';
   }
 
   if (body.faultDescription.trim().length === 0) {
-    return "故障描述不能为空字符串";
+    return '鏁呴殰鎻忚堪涓嶈兘涓虹┖瀛楃?;
   }
 
   if (body.faultDescription.length > 1000) {
-    return "故障描述长度不能超过1000字符";
+    return '鏁呴殰鎻忚堪闀垮害涓嶈兘瓒呰繃1000瀛楃';
   }
 
-  // 设备信息验证
+  // 璁惧淇℃伅楠岃瘉
   if (body.deviceInfo) {
-    if (body.deviceInfo.brand && typeof body.deviceInfo.brand !== "string") {
-      return "设备品牌必须是字符串类型";
+    if (body.deviceInfo.brand && typeof body.deviceInfo.brand !== 'string') {
+      return '璁惧鍝佺墝蹇呴』鏄瓧绗︿覆绫诲瀷';
     }
 
-    if (body.deviceInfo.model && typeof body.deviceInfo.model !== "string") {
-      return "设备型号必须是字符串类型";
+    if (body.deviceInfo.model && typeof body.deviceInfo.model !== 'string') {
+      return '璁惧鍨嬪彿蹇呴』鏄瓧绗︿覆绫诲瀷';
     }
 
     if (
       body.deviceInfo.category &&
-      typeof body.deviceInfo.category !== "string"
+      typeof body.deviceInfo.category !== 'string'
     ) {
-      return "设备类别必须是字符串类型";
+      return '璁惧绫诲埆蹇呴』鏄瓧绗︿覆绫诲瀷';
     }
   }
 
-  // 会话ID验证
-  if (body.sessionId && typeof body.sessionId !== "string") {
-    return "会话ID必须是字符串类型";
+  // 浼氳瘽ID楠岃瘉
+  if (body.sessionId && typeof body.sessionId !== 'string') {
+    return '浼氳瘽ID蹇呴』鏄瓧绗︿覆绫诲瀷';
   }
 
-  // 语言验证
-  if (body.language && !["zh", "en"].includes(body.language)) {
-    return "语言参数只能是zh或en";
+  // 璇█楠岃瘉
+  if (body.language && !['zh', 'en'].includes(body.language)) {
+    return '璇█鍙傛暟鍙兘鏄痾h鎴杄n';
   }
 
   return null;
 }
 
 /**
- * API使用示例和文档
- */
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+ * API浣跨敤绀轰緥鍜屾枃? */
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-// API路由配置
+// API璺敱閰嶇疆
 

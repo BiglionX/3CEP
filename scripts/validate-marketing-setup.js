@@ -17,7 +17,7 @@ async function runFullValidation() {
     'src/app/api/marketing/lead/route.ts',
     'src/app/api/marketing/track/route.ts',
     'src/lib/marketing/analytics.ts',
-    'src/components/SeoHead.tsx'
+    'src/components/SeoHead.tsx',
   ];
 
   let allFilesExist = true;
@@ -71,18 +71,17 @@ async function runFullValidation() {
 
   // 4. 检查API端点
   console.log('\n4️⃣ 检查API端点...');
-  const apiEndpoints = [
-    '/api/health',
-    '/api/marketing/track'
-  ];
+  const apiEndpoints = ['/api/health', '/api/marketing/track'];
 
   for (const endpoint of apiEndpoints) {
     try {
       const response = await fetch(`http://localhost:3006${endpoint}`, {
         method: 'HEAD',
-        timeout: 3000
+        timeout: 3000,
       });
-      console.log(`  ${response.ok ? '✅' : '⚠️'} ${endpoint} (${response.status})`);
+      console.log(
+        `  ${response.ok ? '✅' : '⚠️'} ${endpoint} (${response.status})`
+      );
     } catch (error) {
       console.log(`  ❌ ${endpoint} (无法访问)`);
     }
@@ -95,16 +94,18 @@ async function runFullValidation() {
     '/marketing-test',
     '/landing/overview',
     '/landing/ops',
-    '/landing/tech'
+    '/landing/tech',
   ];
 
   for (const page of pages) {
     try {
       const response = await fetch(`http://localhost:3006${page}`, {
         method: 'HEAD',
-        timeout: 3000
+        timeout: 3000,
       });
-      console.log(`  ${response.ok ? '✅' : '⚠️'} ${page} (${response.status})`);
+      console.log(
+        `  ${response.ok ? '✅' : '⚠️'} ${page} (${response.status})`
+      );
     } catch (error) {
       console.log(`  ❌ ${page} (无法访问)`);
     }
@@ -113,7 +114,10 @@ async function runFullValidation() {
   // 6. 输出总结
   console.log('\n📊 验证总结:');
   console.log('  📁 文件完整性:', allFilesExist ? '✅ 通过' : '❌ 失败');
-  console.log('  ⚙️  环境配置:', fs.existsSync(envPath) ? '✅ 通过' : '⚠️  需要配置');
+  console.log(
+    '  ⚙️  环境配置:',
+    fs.existsSync(envPath) ? '✅ 通过' : '⚠️  需要配置'
+  );
   console.log('  🌐 服务状态: 运行中 (端口3006)');
   console.log('  🎯 系统状态: 准备就绪');
 

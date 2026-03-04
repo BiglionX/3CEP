@@ -1,7 +1,6 @@
 /**
  * 协同过滤推荐算法服务
- * 实现基于用户行为的协同过滤推荐
- */
+ * 实现基于用户行为的协同过滤推? */
 
 import {
   CollaborativeFilterConfig,
@@ -9,11 +8,11 @@ import {
   RecommendationItem,
   RecommendationItemType,
   UserBehavior,
-} from "../models/recommendation.model";
-import { ItemProfileServiceImpl } from "./item-profile.service";
-import { Recommender } from "./recommendation.interfaces";
-import { UserBehaviorCollectorService } from "./user-behavior-collector.service";
-import { UserProfileServiceImpl } from "./user-profile.service";
+} from '../models/recommendation.model';
+import { ItemProfileServiceImpl } from './item-profile.service';
+import { Recommender } from './recommendation.interfaces';
+import { UserBehaviorCollectorService } from './user-behavior-collector.service';
+import { UserProfileServiceImpl } from './user-profile.service';
 
 export class CollaborativeFilterRecommender implements Recommender {
   private userProfiles: Map<string, any> = new Map();
@@ -43,22 +42,17 @@ export class CollaborativeFilterRecommender implements Recommender {
    * 训练协同过滤模型
    */
   async train(userData: UserBehavior[]): Promise<void> {
-    console.log("🤖 开始训练协同过滤模型...");
-
-    try {
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🤖 开始训练协同过滤模?..')try {
       // 1. 构建用户画像
       await this.buildUserProfiles(userData);
 
-      // 2. 计算用户相似度矩阵
-      await this.calculateUserSimilarities();
+      // 2. 计算用户相似度矩?      await this.calculateUserSimilarities();
 
-      // 3. 计算物品相似度矩阵
-      await this.calculateItemSimilarities();
+      // 3. 计算物品相似度矩?      await this.calculateItemSimilarities();
 
       this.isTrained = true;
-      console.log("✅ 协同过滤模型训练完成");
-    } catch (error) {
-      console.error("协同过滤模型训练失败:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?协同过滤模型训练完成')} catch (error) {
+      console.error('协同过滤模型训练失败:', error);
       throw error;
     }
   }
@@ -71,7 +65,7 @@ export class CollaborativeFilterRecommender implements Recommender {
     count: number = 10
   ): Promise<RecommendationItem[]> {
     if (!this.isTrained) {
-      console.warn("模型尚未训练，返回默认推荐");
+      console.warn('模型尚未训练，返回默认推?);
       return this.getDefaultRecommendations(count);
     }
 
@@ -98,8 +92,7 @@ export class CollaborativeFilterRecommender implements Recommender {
         filters
       );
 
-      // 4. 去重和排序
-      const mergedRecs = this.mergeAndRankRecommendations(
+      // 4. 去重和排?      const mergedRecs = this.mergeAndRankRecommendations(
         personalizedRecs,
         count
       );
@@ -109,7 +102,7 @@ export class CollaborativeFilterRecommender implements Recommender {
 
       return finalRecs;
     } catch (error) {
-      console.error("生成协同过滤推荐失败:", error);
+      console.error('生成协同过滤推荐失败:', error);
       return this.getDefaultRecommendations(count);
     }
   }
@@ -118,7 +111,7 @@ export class CollaborativeFilterRecommender implements Recommender {
    * 获取算法类型
    */
   getType(): string {
-    return "collaborative-filter";
+    return 'collaborative-filter';
   }
 
   /**
@@ -128,32 +121,26 @@ export class CollaborativeFilterRecommender implements Recommender {
     config: Partial<CollaborativeFilterConfig>
   ): Promise<void> {
     this.config = { ...this.config, ...config };
-    console.log("✅ 协同过滤配置已更新");
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?协同过滤配置已更?)}
 
   /**
    * 构建用户画像
    */
   private async buildUserProfiles(userData: UserBehavior[]): Promise<void> {
-    console.log("👤 构建用户画像...");
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('👤 构建用户画像...')// 按用户分组行为数?    const userBehaviors = new Map<string, UserBehavior[]>();
 
-    // 按用户分组行为数据
-    const userBehaviors = new Map<string, UserBehavior[]>();
-
-    userData.forEach((behavior) => {
+    userData.forEach(behavior => {
       if (!userBehaviors.has(behavior.userId)) {
         userBehaviors.set(behavior.userId, []);
       }
       userBehaviors.get(behavior.userId)?.push(behavior);
     });
 
-    // 并行构建每个用户的画像
-    const profilePromises = Array.from(userBehaviors.entries()).map(
+    // 并行构建每个用户的画?    const profilePromises = Array.from(userBehaviors.entries()).map(
       async ([userId, behaviors]) => {
         try {
-          const profile = await this.userProfileService.buildUserProfile(
-            userId
-          );
+          const profile =
+            await this.userProfileService.buildUserProfile(userId);
           this.userProfiles.set(userId, {
             ...profile,
             behaviorHistory: behaviors,
@@ -165,16 +152,12 @@ export class CollaborativeFilterRecommender implements Recommender {
     );
 
     await Promise.all(profilePromises);
-    console.log(`✅ 构建了 ${this.userProfiles.size} 个用户画像`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?构建?${this.userProfiles.size} 个用户画像`)}
 
   /**
-   * 计算用户相似度矩阵
-   */
+   * 计算用户相似度矩?   */
   private async calculateUserSimilarities(): Promise<void> {
-    console.log("👥 计算用户相似度矩阵...");
-
-    const userIds = Array.from(this.userProfiles.keys());
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('👥 计算用户相似度矩?..')const userIds = Array.from(this.userProfiles.keys());
     const similarityMatrix = new Map<string, Map<string, number>>();
 
     // 计算所有用户对之间的相似度
@@ -199,25 +182,20 @@ export class CollaborativeFilterRecommender implements Recommender {
     }
 
     this.userSimilarityMatrix = similarityMatrix;
-    console.log("✅ 用户相似度矩阵计算完成");
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?用户相似度矩阵计算完?)}
 
   /**
-   * 计算物品相似度矩阵
-   */
+   * 计算物品相似度矩?   */
   private async calculateItemSimilarities(): Promise<void> {
-    console.log("📦 计算物品相似度矩阵...");
-
-    // 收集所有物品ID
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('📦 计算物品相似度矩?..')// 收集所有物品ID
     const itemIds = new Set<string>();
-    this.userProfiles.forEach((profile) => {
+    this.userProfiles.forEach(profile => {
       profile.behaviorHistory.forEach((behavior: UserBehavior) => {
         itemIds.add(behavior.itemId);
       });
     });
 
-    // 计算物品相似度
-    const itemIdArray = Array.from(itemIds);
+    // 计算物品相似?    const itemIdArray = Array.from(itemIds);
     const similarityMatrix = new Map<string, Map<string, number>>();
 
     for (let i = 0; i < itemIdArray.length; i++) {
@@ -233,8 +211,7 @@ export class CollaborativeFilterRecommender implements Recommender {
           );
 
         if (similarity > 0) {
-          // 只保存有相似度的物品对
-          similarities.set(itemId2, similarity);
+          // 只保存有相似度的物品?          similarities.set(itemId2, similarity);
         }
       }
 
@@ -242,12 +219,10 @@ export class CollaborativeFilterRecommender implements Recommender {
     }
 
     this.itemSimilarityMatrix = similarityMatrix;
-    console.log(`✅ 物品相似度矩阵计算完成 (${itemIds.size} 个物品)`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?物品相似度矩阵计算完?(${itemIds.size} 个物?`)}
 
   /**
-   * 基于用户的推荐
-   */
+   * 基于用户的推?   */
   private async getUserBasedRecommendations(
     userId: string,
     count: number
@@ -260,8 +235,7 @@ export class CollaborativeFilterRecommender implements Recommender {
     // 找到相似用户
     const similarUsers = this.findSimilarUsers(userId);
 
-    // 收集相似用户喜欢但目标用户未接触的物品
-    const userItems = new Set(
+    // 收集相似用户喜欢但目标用户未接触的物?    const userItems = new Set(
       userProfile.behaviorHistory.map((b: UserBehavior) => b.itemId)
     );
 
@@ -301,9 +275,9 @@ export class CollaborativeFilterRecommender implements Recommender {
       recommendations.push({
         itemId,
         itemType: this.getItemType(itemId), // 需要实现此方法
-        score: avgScore * 10, // 调整到0-100范围
+        score: avgScore * 10, // 调整?-100范围
         confidence,
-        reason: "基于相似用户喜好推荐",
+        reason: '基于相似用户喜好推荐',
         rank: 0,
       });
     });
@@ -312,8 +286,7 @@ export class CollaborativeFilterRecommender implements Recommender {
   }
 
   /**
-   * 基于物品的推荐
-   */
+   * 基于物品的推?   */
   private async getItemBasedRecommendations(
     userId: string,
     count: number
@@ -331,8 +304,7 @@ export class CollaborativeFilterRecommender implements Recommender {
         (a: UserBehavior, b: UserBehavior) =>
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       )
-      .slice(0, 10); // 取最近10个行为
-
+      .slice(0, 10); // 取最?0个行?
     const itemScores = new Map<string, number>();
 
     recentBehaviors.forEach((behavior: UserBehavior) => {
@@ -354,7 +326,7 @@ export class CollaborativeFilterRecommender implements Recommender {
         itemType: this.getItemType(itemId),
         score: Math.min(100, score * 5), // 调整分数范围
         confidence: 0.8,
-        reason: "基于您浏览过的相似物品推荐",
+        reason: '基于您浏览过的相似物品推?,
         rank: 0,
       });
     });
@@ -374,11 +346,10 @@ export class CollaborativeFilterRecommender implements Recommender {
     const userProfile = await this.userProfileService.getUserProfile(userId);
     if (!userProfile) return recommendations;
 
-    return recommendations.map((rec) => {
+    return recommendations.map(rec => {
       let adjustedScore = rec.score;
 
-      // 基于用户偏好的调整
-      const itemProfile = this.itemProfiles.get(rec.itemId);
+      // 基于用户偏好的调?      const itemProfile = this.itemProfiles.get(rec.itemId);
       if (itemProfile) {
         // 类别偏好加权
         if (
@@ -392,7 +363,7 @@ export class CollaborativeFilterRecommender implements Recommender {
         // 品牌偏好加权
         if (
           userProfile.preferences.brands.includes(
-            itemProfile.basicInfo.brand || ""
+            itemProfile.basicInfo.brand || ''
           )
         ) {
           adjustedScore *= 1.1;
@@ -406,8 +377,7 @@ export class CollaborativeFilterRecommender implements Recommender {
             itemProfile.location.lat,
             itemProfile.location.lng
           );
-          // 距离越近分数越高（最多加20%）
-          const distanceBonus = Math.max(0, 1 - distance / 50) * 0.2;
+          // 距离越近分数越高（最多加20%�?          const distanceBonus = Math.max(0, 1 - distance / 50) * 0.2;
           adjustedScore *= 1 + distanceBonus;
         }
       }
@@ -420,8 +390,7 @@ export class CollaborativeFilterRecommender implements Recommender {
   }
 
   /**
-   * 合并和排名推荐
-   */
+   * 合并和排名推?   */
   private mergeAndRankRecommendations(
     recommendations: RecommendationItem[],
     count: number
@@ -429,11 +398,10 @@ export class CollaborativeFilterRecommender implements Recommender {
     // 按物品ID合并重复推荐
     const merged = new Map<string, RecommendationItem>();
 
-    recommendations.forEach((rec) => {
+    recommendations.forEach(rec => {
       const existing = merged.get(rec.itemId);
       if (existing) {
-        // 合并分数（取最高分）
-        merged.set(rec.itemId, {
+        // 合并分数（取最高分?        merged.set(rec.itemId, {
           ...rec,
           score: Math.max(existing.score, rec.score),
           confidence: Math.max(existing.confidence, rec.confidence),
@@ -443,8 +411,7 @@ export class CollaborativeFilterRecommender implements Recommender {
       }
     });
 
-    // 排序并截取指定数量
-    return Array.from(merged.values())
+    // 排序并截取指定数?    return Array.from(merged.values())
       .sort((a, b) => {
         // 主要按分数排序，次要按置信度排序
         if (b.score !== a.score) {
@@ -466,14 +433,14 @@ export class CollaborativeFilterRecommender implements Recommender {
     recommendations: RecommendationItem[],
     userId: string
   ): RecommendationItem[] {
-    return recommendations.map((rec) => {
+    return recommendations.map(rec => {
       let reason = rec.reason;
 
       // 根据推荐类型添加更具体的理由
       if (rec.score > 80) {
-        reason = `强烈推荐：${reason}`;
+        reason = `强烈推荐?{reason}`;
       } else if (rec.score > 60) {
-        reason = `推荐：${reason}`;
+        reason = `推荐?{reason}`;
       } else {
         reason = `可能感兴趣：${reason}`;
       }
@@ -495,7 +462,7 @@ export class CollaborativeFilterRecommender implements Recommender {
       itemType: RecommendationItemType.REPAIR_SHOP,
       score: 50 - i * 5,
       confidence: 0.5,
-      reason: "热门推荐",
+      reason: '热门推荐',
       rank: i + 1,
     }));
   }
@@ -541,9 +508,9 @@ export class CollaborativeFilterRecommender implements Recommender {
 
   private getItemType(itemId: string): RecommendationItemType {
     // 简化实现，实际应该根据物品ID前缀或数据库查询确定
-    if (itemId.startsWith("shop_")) {
+    if (itemId.startsWith('shop_')) {
       return RecommendationItemType.REPAIR_SHOP;
-    } else if (itemId.startsWith("part_")) {
+    } else if (itemId.startsWith('part_')) {
       return RecommendationItemType.PART;
     } else {
       return RecommendationItemType.REPAIR_SHOP; // 默认

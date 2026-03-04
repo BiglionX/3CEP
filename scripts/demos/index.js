@@ -15,7 +15,8 @@ class DemoRunner {
 
   discoverDemos() {
     const demos = {};
-    const demoFiles = fs.readdirSync(__dirname)
+    const demoFiles = fs
+      .readdirSync(__dirname)
       .filter(file => file.startsWith('demonstrate-') && file.endsWith('.js'))
       .map(file => path.basename(file, '.js'));
 
@@ -29,13 +30,17 @@ class DemoRunner {
   listDemos() {
     console.log('Available Demos:');
     console.log('=================');
-    
+
     Object.keys(this.demos).forEach((demoName, index) => {
-      console.log(`${index + 1}. ${demoName.replace('demonstrate-', '').replace(/-/g, ' ')}`);
+      console.log(
+        `${index + 1}. ${demoName.replace('demonstrate-', '').replace(/-/g, ' ')}`
+      );
     });
-    
+
     console.log('\nUsage: node scripts/demos/index.js <demo-name>');
-    console.log('Example: node scripts/demos/index.js demonstrate-realtime-processing');
+    console.log(
+      'Example: node scripts/demos/index.js demonstrate-realtime-processing'
+    );
   }
 
   async runDemo(demoName) {
@@ -45,15 +50,18 @@ class DemoRunner {
       process.exit(1);
     }
 
-    console.log(`🚀 Running demo: ${demoName.replace('demonstrate-', '').replace(/-/g, ' ')}\n`);
-    
+    console.log(
+      `🚀 Running demo: ${demoName.replace('demonstrate-', '').replace(/-/g, ' ')}\n`
+    );
+
     try {
       const demoModule = require(this.demos[demoName]);
-      
+
       // 查找演示函数
-      const demoFunctions = Object.keys(demoModule).filter(key => 
-        key.toLowerCase().includes('demonstrate') || 
-        key.toLowerCase().includes('demo')
+      const demoFunctions = Object.keys(demoModule).filter(
+        key =>
+          key.toLowerCase().includes('demonstrate') ||
+          key.toLowerCase().includes('demo')
       );
 
       if (demoFunctions.length > 0) {
@@ -77,7 +85,7 @@ class DemoRunner {
 
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
     new DemoRunner().listDemos();
     process.exit(0);
@@ -85,7 +93,7 @@ async function main() {
 
   const demoName = args[0];
   const runner = new DemoRunner();
-  
+
   await runner.runDemo(demoName);
 }
 

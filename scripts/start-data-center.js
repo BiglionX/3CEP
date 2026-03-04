@@ -14,10 +14,7 @@ try {
   }
 
   // 创建必要的目录
-  const dirs = [
-    'logs/trino',
-    'src/data-center/engine/trino-config/catalog'
-  ];
+  const dirs = ['logs/trino', 'src/data-center/engine/trino-config/catalog'];
 
   dirs.forEach(dir => {
     if (!fs.existsSync(dir)) {
@@ -29,7 +26,7 @@ try {
   // 复制环境变量文件（如果不存在）
   const envExample = '.env.datacenter.example';
   const envFile = '.env.datacenter';
-  
+
   if (!fs.existsSync(envFile) && fs.existsSync(envExample)) {
     fs.copyFileSync(envExample, envFile);
     console.log('📋 复制环境变量模板...');
@@ -38,14 +35,18 @@ try {
 
   // 启动Docker Compose服务
   console.log('🐳 启动Docker服务...');
-  execSync('docker-compose -f docker-compose.datacenter.yml up -d', { stdio: 'inherit' });
+  execSync('docker-compose -f docker-compose.datacenter.yml up -d', {
+    stdio: 'inherit',
+  });
 
   // 等待服务启动
   console.log('⏳ 等待服务启动...');
   setTimeout(() => {
     // 检查服务状态
     console.log('🔍 检查服务状态...');
-    execSync('docker-compose -f docker-compose.datacenter.yml ps', { stdio: 'inherit' });
+    execSync('docker-compose -f docker-compose.datacenter.yml ps', {
+      stdio: 'inherit',
+    });
 
     console.log('');
     console.log('✅ 数据中心服务启动完成！');
@@ -56,12 +57,13 @@ try {
     console.log('💡 使用说明:');
     console.log('1. 确保lionfix和supabase数据库已在本地运行');
     console.log('2. 编辑 .env.datacenter 配置正确的数据库连接信息');
-    console.log('3. 访问 http://localhost:3001/api/data-center?action=health 测试连接');
+    console.log(
+      '3. 访问 http://localhost:3001/api/data-center?action=health 测试连接'
+    );
     console.log('');
     console.log('🔧 停止服务: npm run data-center:stop');
     console.log('🔄 重启服务: npm run data-center:restart');
   }, 10000);
-
 } catch (error) {
   console.error('❌ 启动失败:', error.message);
   process.exit(1);

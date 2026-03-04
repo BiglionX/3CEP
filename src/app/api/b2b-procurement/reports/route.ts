@@ -1,12 +1,11 @@
-import { NextResponse } from "next/server";
-import { comparisonReportService } from "../../../../b2b-procurement-agent/services/comparison-report.service";
+﻿import { NextResponse } from 'next/server';
+import { comparisonReportService } from '../../../../b2b-procurement-agent/services/comparison-report.service';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { quotationRequestId } = body;
-    const userId = "test-user-id"; // 临时测试用
-
+    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
     const report = await comparisonReportService.generateComparisonReport(
       quotationRequestId,
       userId
@@ -17,7 +16,7 @@ export async function POST(request: Request) {
       data: report,
     });
   } catch (error) {
-    console.error("生成比价报告错误:", error);
+    console.error('鐢熸垚姣斾环鎶ュ憡閿欒:', error);
     return NextResponse.json(
       {
         success: false,
@@ -31,25 +30,26 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const quotationRequestId = searchParams.get("quotationRequestId");
+    const quotationRequestId = searchParams.get('quotationRequestId');
 
     if (!quotationRequestId) {
       return NextResponse.json(
-        { success: false, error: "缺少询价请求ID参数" },
+        { success: false, error: '缂哄皯璇环璇锋眰ID鍙傛暟' },
         { status: 400 }
       );
     }
 
-    const reports = await comparisonReportService.getReportsByQuotationRequest(
-      quotationRequestId
-    );
+    const reports =
+      await comparisonReportService.getReportsByQuotationRequest(
+        quotationRequestId
+      );
 
     return NextResponse.json({
       success: true,
       data: reports,
     });
   } catch (error) {
-    console.error("获取比价报告列表错误:", error);
+    console.error('鑾峰彇姣斾环鎶ュ憡鍒楄〃閿欒:', error);
     return NextResponse.json(
       {
         success: false,
@@ -59,3 +59,4 @@ export async function GET(request: Request) {
     );
   }
 }
+

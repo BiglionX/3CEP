@@ -1,14 +1,14 @@
-'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { 
-  Search, 
-  Filter, 
-  Plus, 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Search,
+  Filter,
+  Plus,
+  MoreHorizontal,
+  Eye,
+  Edit,
   Trash2,
   Download,
   Warehouse,
@@ -18,19 +18,25 @@ import {
   AlertCircle,
   CheckCircle,
   TrendingUp,
-  Box
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+  Box,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -38,62 +44,64 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 
 interface Warehouse {
-  id: string
-  name: string
-  location: string
-  capacity: number
-  currentStock: number
-  utilization: number
-  status: 'active' | 'maintenance' | 'full' | 'closed'
-  manager: string
-  contact: string
-  lastInventory: string
-  nextMaintenance: string
-  temperatureControlled: boolean
-  securityLevel: 'basic' | 'standard' | 'high'
+  id: string;
+  name: string;
+  location: string;
+  capacity: number;
+  currentStock: number;
+  utilization: number;
+  status: 'active' | 'maintenance' | 'full' | 'closed';
+  manager: string;
+  contact: string;
+  lastInventory: string;
+  nextMaintenance: string;
+  temperatureControlled: boolean;
+  securityLevel: 'basic' | 'standard' | 'high';
 }
 
 interface InventoryItem {
-  id: string
-  sku: string
-  name: string
-  category: string
-  warehouse: string
-  quantity: number
-  reserved: number
-  available: number
-  unit: string
-  lastUpdated: string
-  minStock: number
-  maxStock: number
-  status: 'normal' | 'low' | 'overstock' | 'outofstock'
+  id: string;
+  sku: string;
+  name: string;
+  category: string;
+  warehouse: string;
+  quantity: number;
+  reserved: number;
+  available: number;
+  unit: string;
+  lastUpdated: string;
+  minStock: number;
+  maxStock: number;
+  status: 'normal' | 'low' | 'overstock' | 'outofstock';
 }
 
 export default function WarehousePage() {
-  const router = useRouter()
-  const [warehouses, setWarehouses] = useState<Warehouse[]>([])
-  const [inventory, setInventory] = useState<InventoryItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'warehouses' | 'inventory'>('warehouses')
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [warehouseFilter, setWarehouseFilter] = useState('all')
+  const router = useRouter();
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'warehouses' | 'inventory'>(
+    'warehouses'
+  );
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [warehouseFilter, setWarehouseFilter] = useState('all');
 
   // 模拟数据
   useEffect(() => {
     const loadData = () => {
-      setLoading(true)
-      
+      setLoading(true);
+
       setTimeout(() => {
         // 仓库数据
         const mockWarehouses: Warehouse[] = [
           {
             id: '1',
-            name: '上海浦东保税仓',
-            location: '上海市浦东新区',
+            name: '上海浦东保税?,
+            location: '上海市浦东新?,
             capacity: 50000,
             currentStock: 35000,
             utilization: 70,
@@ -103,11 +111,11 @@ export default function WarehousePage() {
             lastInventory: '2026-02-25',
             nextMaintenance: '2026-05-15',
             temperatureControlled: true,
-            securityLevel: 'high'
+            securityLevel: 'high',
           },
           {
             id: '2',
-            name: '深圳前海出口仓',
+            name: '深圳前海出口?,
             location: '深圳市南山区',
             capacity: 30000,
             currentStock: 28500,
@@ -118,11 +126,11 @@ export default function WarehousePage() {
             lastInventory: '2026-02-24',
             nextMaintenance: '2026-04-20',
             temperatureControlled: false,
-            securityLevel: 'standard'
+            securityLevel: 'standard',
           },
           {
             id: '3',
-            name: '广州白云进口仓',
+            name: '广州白云进口?,
             location: '广州市白云区',
             capacity: 40000,
             currentStock: 15000,
@@ -133,12 +141,12 @@ export default function WarehousePage() {
             lastInventory: '2026-02-23',
             nextMaintenance: '2026-06-01',
             temperatureControlled: true,
-            securityLevel: 'high'
+            securityLevel: 'high',
           },
           {
             id: '4',
-            name: '天津滨海维修仓',
-            location: '天津市滨海新区',
+            name: '天津滨海维修?,
+            location: '天津市滨海新?,
             capacity: 15000,
             currentStock: 0,
             utilization: 0,
@@ -148,9 +156,9 @@ export default function WarehousePage() {
             lastInventory: '2026-02-01',
             nextMaintenance: '2026-03-15',
             temperatureControlled: false,
-            securityLevel: 'basic'
-          }
-        ]
+            securityLevel: 'basic',
+          },
+        ];
 
         // 库存数据
         const mockInventory: InventoryItem[] = [
@@ -159,184 +167,181 @@ export default function WarehousePage() {
             sku: 'SM-G998B',
             name: 'Galaxy S24 Ultra',
             category: '智能手机',
-            warehouse: '上海浦东保税仓',
+            warehouse: '上海浦东保税?,
             quantity: 5000,
             reserved: 1200,
             available: 3800,
-            unit: '台',
+            unit: '�?,
             lastUpdated: '2026-02-25 14:30',
             minStock: 1000,
             maxStock: 8000,
-            status: 'normal'
+            status: 'normal',
           },
           {
             id: '2',
             sku: 'IP-15PM-BLK',
             name: 'iPhone 15 Pro Max',
             category: '智能手机',
-            warehouse: '深圳前海出口仓',
+            warehouse: '深圳前海出口?,
             quantity: 3000,
             reserved: 2800,
             available: 200,
-            unit: '台',
+            unit: '�?,
             lastUpdated: '2026-02-24 16:45',
             minStock: 500,
             maxStock: 5000,
-            status: 'low'
+            status: 'low',
           },
           {
             id: '3',
             sku: 'HW-MT60P-BLK',
             name: '华为Mate 60 Pro',
             category: '智能手机',
-            warehouse: '广州白云进口仓',
+            warehouse: '广州白云进口?,
             quantity: 8000,
             reserved: 2000,
             available: 6000,
-            unit: '台',
+            unit: '�?,
             lastUpdated: '2026-02-23 11:20',
             minStock: 2000,
             maxStock: 12000,
-            status: 'normal'
+            status: 'normal',
           },
           {
             id: '4',
             sku: 'PS5-DISC-BLK',
-            name: 'PlayStation 5 光驱版',
-            category: '游戏机',
-            warehouse: '上海浦东保税仓',
+            name: 'PlayStation 5 光驱?,
+            category: '游戏?,
+            warehouse: '上海浦东保税?,
             quantity: 2500,
             reserved: 800,
             available: 1700,
-            unit: '台',
+            unit: '�?,
             lastUpdated: '2026-02-25 09:15',
             minStock: 500,
             maxStock: 4000,
-            status: 'normal'
+            status: 'normal',
           },
           {
             id: '5',
             sku: 'XM-14UL-BLK',
             name: '小米14 Ultra',
             category: '智能手机',
-            warehouse: '深圳前海出口仓',
+            warehouse: '深圳前海出口?,
             quantity: 15000,
             reserved: 14500,
             available: 500,
-            unit: '台',
+            unit: '�?,
             lastUpdated: '2026-02-24 13:30',
             minStock: 1000,
             maxStock: 20000,
-            status: 'low'
-          }
-        ]
-        
-        setWarehouses(mockWarehouses)
-        setInventory(mockInventory)
-        setLoading(false)
-      }, 800)
-    }
+            status: 'low',
+          },
+        ];
 
-    loadData()
-  }, [])
+        setWarehouses(mockWarehouses);
+        setInventory(mockInventory);
+        setLoading(false);
+      }, 800);
+    };
+
+    loadData();
+  }, []);
 
   // 筛选逻辑
   const filteredWarehouses = warehouses.filter(warehouse => {
-    const matchesSearch = 
+    const matchesSearch =
       warehouse.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       warehouse.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      warehouse.manager.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesStatus = statusFilter === 'all' || warehouse.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+      warehouse.manager.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === 'all' || warehouse.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const filteredInventory = inventory.filter(item => {
-    const matchesSearch = 
+    const matchesSearch =
       item.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesWarehouse = warehouseFilter === 'all' || item.warehouse === warehouseFilter
-    const matchesStatus = statusFilter === 'all' || item.status === statusFilter
-    return matchesSearch && matchesWarehouse && matchesStatus
-  })
+      item.category.toLowerCase().includes(searchTerm.toLowerCase());
 
-  // 状态颜色映射
-  const getWarehouseStatusColor = (status: string) => {
+    const matchesWarehouse =
+      warehouseFilter === 'all' || item.warehouse === warehouseFilter;
+    const matchesStatus =
+      statusFilter === 'all' || item.status === statusFilter;
+    return matchesSearch && matchesWarehouse && matchesStatus;
+  });
+
+  // 状态颜色映?  const getWarehouseStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       active: 'bg-green-100 text-green-800',
       maintenance: 'bg-yellow-100 text-yellow-800',
       full: 'bg-red-100 text-red-800',
-      closed: 'bg-gray-100 text-gray-800'
-    }
-    return colorMap[status] || 'bg-gray-100 text-gray-800'
-  }
+      closed: 'bg-gray-100 text-gray-800',
+    };
+    return colorMap[status] || 'bg-gray-100 text-gray-800';
+  };
 
   const getWarehouseStatusText = (status: string) => {
     const textMap: Record<string, string> = {
-      active: '运营中',
-      maintenance: '维护中',
-      full: '已满载',
-      closed: '已关闭'
-    }
-    return textMap[status] || status
-  }
+      active: '运营?,
+      maintenance: '维护?,
+      full: '已满?,
+      closed: '已关?,
+    };
+    return textMap[status] || status;
+  };
 
   const getInventoryStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       normal: 'bg-green-100 text-green-800',
       low: 'bg-yellow-100 text-yellow-800',
       overstock: 'bg-blue-100 text-blue-800',
-      outofstock: 'bg-red-100 text-red-800'
-    }
-    return colorMap[status] || 'bg-gray-100 text-gray-800'
-  }
+      outofstock: 'bg-red-100 text-red-800',
+    };
+    return colorMap[status] || 'bg-gray-100 text-gray-800';
+  };
 
   const getInventoryStatusText = (status: string) => {
     const textMap: Record<string, string> = {
       normal: '正常',
       low: '库存偏低',
       overstock: '库存过多',
-      outofstock: '缺货'
-    }
-    return textMap[status] || status
-  }
+      outofstock: '缺货',
+    };
+    return textMap[status] || status;
+  };
 
   const handleViewWarehouse = (warehouseId: string) => {
     // TODO: 实现查看详情功能
-    console.log('查看仓库详情:', warehouseId)
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看仓库详情:', warehouseId)};
 
   const handleViewInventory = (itemId: string) => {
     // TODO: 实现查看详情功能
-    console.log('查看库存详情:', itemId)
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看库存详情:', itemId)};
 
   const handleCreateWarehouse = () => {
     // TODO: 实现创建仓库功能
-    console.log('创建新仓库')
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('创建新仓?)};
 
   const handleAddInventory = () => {
     // TODO: 实现添加库存功能
-    console.log('添加库存')
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('添加库存')};
 
   const handleExport = () => {
     // TODO: 实现导出功能
-    console.log('导出数据')
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出数据')};
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载仓储数据中...</p>
+          <p className="mt-4 text-gray-600">加载仓储数据?..</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -345,16 +350,20 @@ export default function WarehousePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">仓储管理</h1>
-          <p className="mt-2 text-gray-600">
-            管理仓库设施和库存商品信息
-          </p>
+          <p className="mt-2 text-gray-600">管理仓库设施和库存商品信?/p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
             导出数据
           </Button>
-          <Button onClick={activeTab === 'warehouses' ? handleCreateWarehouse : handleAddInventory}>
+          <Button
+            onClick={
+              activeTab === 'warehouses'
+                ? handleCreateWarehouse
+                : handleAddInventory
+            }
+          >
             <Plus className="h-4 w-4 mr-2" />
             {activeTab === 'warehouses' ? '添加仓库' : '添加库存'}
           </Button>
@@ -371,8 +380,7 @@ export default function WarehousePage() {
           <CardContent>
             <div className="text-2xl font-bold">{warehouses.length}</div>
             <p className="text-xs text-muted-foreground">
-              运营中 {warehouses.filter(w => w.status === 'active').length} 个
-            </p>
+              运营?{warehouses.filter(w => w.status === 'active').length} �?            </p>
           </CardContent>
         </Card>
 
@@ -383,26 +391,33 @@ export default function WarehousePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {inventory.reduce((sum, item) => sum + item.quantity, 0).toLocaleString()}
+              {inventory
+                .reduce((sum, item) => sum + item.quantity, 0)
+                .toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              可用量 {inventory.reduce((sum, item) => sum + item.available, 0).toLocaleString()}
+              可用量{' '}
+              {inventory
+                .reduce((sum, item) => sum + item.available, 0)
+                .toLocaleString()}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">平均利用率</CardTitle>
+            <CardTitle className="text-sm font-medium">平均利用?/CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
-              {Math.round(warehouses.reduce((sum, w) => sum + w.utilization, 0) / warehouses.length)}%
+              {Math.round(
+                warehouses.reduce((sum, w) => sum + w.utilization, 0) /
+                  warehouses.length
+              )}
+              %
             </div>
-            <p className="text-xs text-muted-foreground">
-              仓库空间使用率
-            </p>
+            <p className="text-xs text-muted-foreground">仓库空间使用?/p>
           </CardContent>
         </Card>
 
@@ -413,16 +428,17 @@ export default function WarehousePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">
-              {inventory.filter(i => ['low', 'outofstock'].includes(i.status)).length}
+              {
+                inventory.filter(i => ['low', 'outofstock'].includes(i.status))
+                  .length
+              }
             </div>
-            <p className="text-xs text-muted-foreground">
-              需要关注的商品
-            </p>
+            <p className="text-xs text-muted-foreground">需要关注的商品</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* 标签页 */}
+      {/* 标签?*/}
       <div className="border-b">
         <nav className="flex space-x-8">
           <button
@@ -453,8 +469,7 @@ export default function WarehousePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            筛选条件
-          </CardTitle>
+            筛选条?          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -463,29 +478,29 @@ export default function WarehousePage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder={
-                    activeTab === 'warehouses' 
-                      ? '搜索仓库名称、位置或管理员...' 
+                    activeTab === 'warehouses'
+                      ? '搜索仓库名称、位置或管理?..'
                       : '搜索商品SKU、名称或分类...'
                   }
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
             </div>
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="状态筛选" />
+                <SelectValue placeholder="状态筛? />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状态</SelectItem>
+                <SelectItem value="all">全部状?/SelectItem>
                 {activeTab === 'warehouses' ? (
                   <>
-                    <SelectItem value="active">运营中</SelectItem>
-                    <SelectItem value="maintenance">维护中</SelectItem>
-                    <SelectItem value="full">已满载</SelectItem>
-                    <SelectItem value="closed">已关闭</SelectItem>
+                    <SelectItem value="active">运营?/SelectItem>
+                    <SelectItem value="maintenance">维护?/SelectItem>
+                    <SelectItem value="full">已满?/SelectItem>
+                    <SelectItem value="closed">已关?/SelectItem>
                   </>
                 ) : (
                   <>
@@ -499,15 +514,22 @@ export default function WarehousePage() {
             </Select>
 
             {activeTab === 'inventory' && (
-              <Select value={warehouseFilter} onValueChange={setWarehouseFilter}>
+              <Select
+                value={warehouseFilter}
+                onValueChange={setWarehouseFilter}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="仓库筛选" />
+                  <SelectValue placeholder="仓库筛? />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">全部仓库</SelectItem>
-                  {[...new Set(inventory.map(i => i.warehouse))].map(warehouse => (
-                    <SelectItem key={warehouse} value={warehouse}>{warehouse}</SelectItem>
-                  ))}
+                  {[...new Set(inventory.map(i => i.warehouse))].map(
+                    warehouse => (
+                      <SelectItem key={warehouse} value={warehouse}>
+                        {warehouse}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
             )}
@@ -521,7 +543,7 @@ export default function WarehousePage() {
           <CardHeader>
             <CardTitle>仓库列表</CardTitle>
             <CardDescription>
-              共找到 {filteredWarehouses.length} 个符合条件的仓库
+              共找?{filteredWarehouses.length} 个符合条件的仓库
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -529,10 +551,12 @@ export default function WarehousePage() {
               {filteredWarehouses.length === 0 ? (
                 <div className="col-span-full text-center py-12">
                   <Warehouse className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">暂无仓库数据</h3>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">
+                    暂无仓库数据
+                  </h3>
                   <p className="mt-1 text-sm text-gray-500">
                     {searchTerm || statusFilter !== 'all'
-                      ? '没有找到匹配的仓库'
+                      ? '没有找到匹配的仓?
                       : '开始添加第一个仓库吧'}
                   </p>
                   {!searchTerm && statusFilter === 'all' && (
@@ -545,28 +569,37 @@ export default function WarehousePage() {
                   )}
                 </div>
               ) : (
-                filteredWarehouses.map((warehouse) => (
-                  <Card key={warehouse.id} className="hover:shadow-md transition-shadow">
+                filteredWarehouses.map(warehouse => (
+                  <Card
+                    key={warehouse.id}
+                    className="hover:shadow-md transition-shadow"
+                  >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div>
-                          <CardTitle className="text-lg">{warehouse.name}</CardTitle>
+                          <CardTitle className="text-lg">
+                            {warehouse.name}
+                          </CardTitle>
                           <div className="flex items-center gap-2 mt-1">
                             <MapPin className="h-4 w-4 text-gray-400" />
-                            <span className="text-sm text-gray-600">{warehouse.location}</span>
+                            <span className="text-sm text-gray-600">
+                              {warehouse.location}
+                            </span>
                           </div>
                         </div>
-                        <Badge className={getWarehouseStatusColor(warehouse.status)}>
+                        <Badge
+                          className={getWarehouseStatusColor(warehouse.status)}
+                        >
                           {getWarehouseStatusText(warehouse.status)}
                         </Badge>
                       </div>
                     </CardHeader>
-                    
+
                     <CardContent className="space-y-4">
                       {/* 基本信息 */}
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">管理员:</span>
+                          <span className="text-gray-600">管理?</span>
                           <span>{warehouse.manager}</span>
                         </div>
                         <div className="flex justify-between text-sm">
@@ -575,28 +608,39 @@ export default function WarehousePage() {
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">温控:</span>
-                          <span>{warehouse.temperatureControlled ? '是' : '否'}</span>
+                          <span>
+                            {warehouse.temperatureControlled ? '�? : '�?}
+                          </span>
                         </div>
                       </div>
 
                       {/* 容量信息 */}
                       <div className="pt-2 border-t">
                         <div className="flex justify-between mb-2">
-                          <span className="text-sm text-gray-600">容量利用率</span>
-                          <span className="text-sm font-medium">{warehouse.utilization}%</span>
+                          <span className="text-sm text-gray-600">
+                            容量利用?                          </span>
+                          <span className="text-sm font-medium">
+                            {warehouse.utilization}%
+                          </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
+                          <div
                             className={`h-2 rounded-full ${
-                              warehouse.utilization > 90 ? 'bg-red-500' :
-                              warehouse.utilization > 70 ? 'bg-yellow-500' : 'bg-green-500'
+                              warehouse.utilization > 90
+                                ? 'bg-red-500'
+                                : warehouse.utilization > 70
+                                  ? 'bg-yellow-500'
+                                  : 'bg-green-500'
                             }`}
                             style={{ width: `${warehouse.utilization}%` }}
                           ></div>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500 mt-1">
-                          <span>{warehouse.currentStock.toLocaleString()} / {warehouse.capacity.toLocaleString()}</span>
-                          <span>最大容量</span>
+                          <span>
+                            {warehouse.currentStock.toLocaleString()} /{' '}
+                            {warehouse.capacity.toLocaleString()}
+                          </span>
+                          <span>最大容?/span>
                         </div>
                       </div>
 
@@ -614,9 +658,9 @@ export default function WarehousePage() {
 
                       {/* 操作按钮 */}
                       <div className="flex gap-2 pt-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           className="flex-1"
                           onClick={() => handleViewWarehouse(warehouse.id)}
                         >
@@ -640,7 +684,7 @@ export default function WarehousePage() {
           <CardHeader>
             <CardTitle>库存列表</CardTitle>
             <CardDescription>
-              共找到 {filteredInventory.length} 个符合条件的商品
+              共找?{filteredInventory.length} 个符合条件的商品
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -649,11 +693,11 @@ export default function WarehousePage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>商品信息</TableHead>
-                    <TableHead>所属仓库</TableHead>
-                    <TableHead>库存状态</TableHead>
+                    <TableHead>所属仓?/TableHead>
+                    <TableHead>库存状?/TableHead>
                     <TableHead>数量详情</TableHead>
                     <TableHead>库存水平</TableHead>
-                    <TableHead>最后更新</TableHead>
+                    <TableHead>最后更?/TableHead>
                     <TableHead>操作</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -662,61 +706,84 @@ export default function WarehousePage() {
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-12">
                         <Box className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">暂无库存数据</h3>
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">
+                          暂无库存数据
+                        </h3>
                         <p className="mt-1 text-sm text-gray-500">
-                          {searchTerm || statusFilter !== 'all' || warehouseFilter !== 'all'
-                            ? '没有找到匹配的商品'
+                          {searchTerm ||
+                          statusFilter !== 'all' ||
+                          warehouseFilter !== 'all'
+                            ? '没有找到匹配的商?
                             : '开始添加第一批库存吧'}
                         </p>
-                        {!searchTerm && statusFilter === 'all' && warehouseFilter === 'all' && (
-                          <div className="mt-6">
-                            <Button onClick={handleAddInventory}>
-                              <Plus className="h-4 w-4 mr-2" />
-                              添加库存
-                            </Button>
-                          </div>
-                        )}
+                        {!searchTerm &&
+                          statusFilter === 'all' &&
+                          warehouseFilter === 'all' && (
+                            <div className="mt-6">
+                              <Button onClick={handleAddInventory}>
+                                <Plus className="h-4 w-4 mr-2" />
+                                添加库存
+                              </Button>
+                            </div>
+                          )}
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredInventory.map((item) => (
+                    filteredInventory.map(item => (
                       <TableRow key={item.id} className="hover:bg-gray-50">
                         <TableCell>
                           <div className="flex flex-col">
-                            <div className="font-medium text-gray-900">{item.name}</div>
-                            <div className="text-sm text-gray-600">{item.sku}</div>
-                            <div className="text-xs text-gray-500 mt-1">{item.category}</div>
+                            <div className="font-medium text-gray-900">
+                              {item.name}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {item.sku}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {item.category}
+                            </div>
                           </div>
                         </TableCell>
-                        
+
                         <TableCell>
                           <div className="font-medium">{item.warehouse}</div>
                         </TableCell>
-                        
+
                         <TableCell>
-                          <Badge className={getInventoryStatusColor(item.status)}>
+                          <Badge
+                            className={getInventoryStatusColor(item.status)}
+                          >
                             {getInventoryStatusText(item.status)}
                           </Badge>
                         </TableCell>
-                        
+
                         <TableCell>
                           <div className="flex flex-col text-sm">
-                            <div>总量: {item.quantity} {item.unit}</div>
-                            <div className="text-gray-600">可用: {item.available} {item.unit}</div>
-                            <div className="text-gray-600">预留: {item.reserved} {item.unit}</div>
+                            <div>
+                              总量: {item.quantity} {item.unit}
+                            </div>
+                            <div className="text-gray-600">
+                              可用: {item.available} {item.unit}
+                            </div>
+                            <div className="text-gray-600">
+                              预留: {item.reserved} {item.unit}
+                            </div>
                           </div>
                         </TableCell>
-                        
+
                         <TableCell>
                           <div className="flex flex-col">
                             <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
-                              <div 
+                              <div
                                 className={`h-2 rounded-full ${
-                                  item.quantity < item.minStock ? 'bg-red-500' :
-                                  item.quantity > item.maxStock ? 'bg-blue-500' : 'bg-green-500'
+                                  item.quantity < item.minStock
+                                    ? 'bg-red-500'
+                                    : item.quantity > item.maxStock
+                                      ? 'bg-blue-500'
+                                      : 'bg-green-500'
                                 }`}
-                                style={{ 
-                                  width: `${Math.min(100, (item.quantity / item.maxStock) * 100)}%` 
+                                style={{
+                                  width: `${Math.min(100, (item.quantity / item.maxStock) * 100)}%`,
                                 }}
                               ></div>
                             </div>
@@ -725,15 +792,17 @@ export default function WarehousePage() {
                             </div>
                           </div>
                         </TableCell>
-                        
+
                         <TableCell>
-                          <div className="text-sm text-gray-600">{item.lastUpdated}</div>
+                          <div className="text-sm text-gray-600">
+                            {item.lastUpdated}
+                          </div>
                         </TableCell>
-                        
+
                         <TableCell>
                           <div className="flex gap-1">
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => handleViewInventory(item.id)}
                             >
@@ -757,5 +826,6 @@ export default function WarehousePage() {
         </Card>
       )}
     </div>
-  )
+  );
 }
+

@@ -1,22 +1,23 @@
-"use client";
+﻿'use client';
 
-import { useState } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  TrendingUp, 
-  Plus, 
-  Edit, 
-  Trash2, 
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  TrendingUp,
+  Plus,
+  Edit,
+  Trash2,
   Eye,
   Target,
   Users,
@@ -24,8 +25,8 @@ import {
   DollarSign,
   Clock,
   BarChart3,
-  X
-} from "lucide-react";
+  X,
+} from 'lucide-react';
 
 interface CrowdfundingProject {
   id: string;
@@ -77,28 +78,28 @@ export default function EnterpriseCrowdfundingManagement() {
         {
           id: 'r1',
           title: '早鸟优惠',
-          description: '限量100份，享受8折优惠',
+          description: '限量100份，享受8折优?,
           minimum_amount: 299,
           quantity_limit: 100,
           delivery_estimate: '2024-05-15',
-          claimed_count: 85
+          claimed_count: 85,
         },
         {
           id: 'r2',
-          title: '标准版',
-          description: '包含基础功能和一年免费服务',
+          title: '标准?,
+          description: '包含基础功能和一年免费服?,
           minimum_amount: 399,
           quantity_limit: 500,
           delivery_estimate: '2024-06-01',
-          claimed_count: 420
-        }
+          claimed_count: 420,
+        },
       ],
-      created_at: '2024-01-05T10:30:00Z'
+      created_at: '2024-01-05T10:30:00Z',
     },
     {
       id: '2',
       title: '便携式无线充电器Pro',
-      description: '超薄设计，支持多种设备快速充电',
+      description: '超薄设计，支持多种设备快速充?,
       product_model: 'Wireless-Charger-Pro',
       target_amount: 200000,
       current_amount: 180000,
@@ -114,22 +115,23 @@ export default function EnterpriseCrowdfundingManagement() {
         {
           id: 'r3',
           title: '首发特惠',
-          description: '前200名支持者专享价格',
+          description: '�?00名支持者专享价?,
           minimum_amount: 129,
           quantity_limit: 200,
           delivery_estimate: '2024-04-15',
-          claimed_count: 195
-        }
+          claimed_count: 195,
+        },
       ],
-      created_at: '2024-01-10T14:20:00Z'
-    }
+      created_at: '2024-01-10T14:20:00Z',
+    },
   ]);
-  
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<CrowdfundingProject | null>(null);
+  const [selectedProject, setSelectedProject] =
+    useState<CrowdfundingProject | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
-  
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -140,9 +142,9 @@ export default function EnterpriseCrowdfundingManagement() {
     start_date: '',
     end_date: '',
     delivery_date: '',
-    category: ''
+    category: '',
   });
-  
+
   const [rewards, setRewards] = useState<Reward[]>([
     {
       id: 'new1',
@@ -151,22 +153,28 @@ export default function EnterpriseCrowdfundingManagement() {
       minimum_amount: 0,
       quantity_limit: 0,
       delivery_estimate: '',
-      claimed_count: 0
-    }
+      claimed_count: 0,
+    },
   ]);
 
   const statusOptions = [
     { value: 'draft', label: '草稿', color: 'bg-gray-100 text-gray-800' },
-    { value: 'active', label: '进行中', color: 'bg-green-100 text-green-800' },
+    { value: 'active', label: '进行?, color: 'bg-green-100 text-green-800' },
     { value: 'successful', label: '成功', color: 'bg-blue-100 text-blue-800' },
     { value: 'failed', label: '失败', color: 'bg-red-100 text-red-800' },
-    { value: 'closed', label: '已关闭', color: 'bg-purple-100 text-purple-800' }
+    {
+      value: 'closed',
+      label: '已关?,
+      color: 'bg-purple-100 text-purple-800',
+    },
   ];
 
   const getStatusBadge = (status: string) => {
     const option = statusOptions.find(opt => opt.value === status);
     return option ? (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${option.color}`}>
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${option.color}`}
+      >
         {option.label}
       </span>
     ) : null;
@@ -183,45 +191,48 @@ export default function EnterpriseCrowdfundingManagement() {
       start_date: '',
       end_date: '',
       delivery_date: '',
-      category: ''
+      category: '',
     });
-    setRewards([{
-      id: 'new1',
-      title: '',
-      description: '',
-      minimum_amount: 0,
-      quantity_limit: 0,
-      delivery_estimate: '',
-      claimed_count: 0
-    }]);
+    setRewards([
+      {
+        id: 'new1',
+        title: '',
+        description: '',
+        minimum_amount: 0,
+        quantity_limit: 0,
+        delivery_estimate: '',
+        claimed_count: 0,
+      },
+    ]);
   };
 
   const createProject = () => {
     // 验证必填字段
     if (!formData.title || !formData.description || !formData.target_amount) {
-      alert('请填写所有必填字段');
+      alert('请填写所有必填字?);
       return;
     }
 
-    // 创建新项目
-    const newProject: CrowdfundingProject = {
+    // 创建新项?    const newProject: CrowdfundingProject = {
       id: (projects.length + 1).toString(),
       ...formData,
       target_amount: parseFloat(formData.target_amount),
       current_amount: 0,
       min_contribution: parseInt(formData.min_contribution),
-      max_contribution: formData.max_contribution ? parseInt(formData.max_contribution) : null,
+      max_contribution: formData.max_contribution
+        ? parseInt(formData.max_contribution)
+        : null,
       supporters_count: 0,
       status: 'draft',
       funding_progress: 0,
       rewards: rewards.filter(r => r.title && r.minimum_amount > 0),
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
 
     setProjects([...projects, newProject]);
     setShowCreateModal(false);
     resetForm();
-    alert('众筹项目创建成功！');
+    alert('众筹项目创建成功?);
   };
 
   const viewProjectDetails = (project: CrowdfundingProject) => {
@@ -230,15 +241,18 @@ export default function EnterpriseCrowdfundingManagement() {
   };
 
   const addReward = () => {
-    setRewards([...rewards, {
-      id: `new${rewards.length + 1}`,
-      title: '',
-      description: '',
-      minimum_amount: 0,
-      quantity_limit: 0,
-      delivery_estimate: '',
-      claimed_count: 0
-    }]);
+    setRewards([
+      ...rewards,
+      {
+        id: `new${rewards.length + 1}`,
+        title: '',
+        description: '',
+        minimum_amount: 0,
+        quantity_limit: 0,
+        delivery_estimate: '',
+        claimed_count: 0,
+      },
+    ]);
   };
 
   const updateReward = (index: number, field: keyof Reward, value: any) => {
@@ -271,7 +285,7 @@ export default function EnterpriseCrowdfundingManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 顶部操作栏 */}
+      {/* 顶部操作?*/}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">新品众筹管理</h2>
@@ -292,13 +306,13 @@ export default function EnterpriseCrowdfundingManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{projects.length}</div>
-            <p className="text-xs text-muted-foreground">所有众筹项目</p>
+            <p className="text-xs text-muted-foreground">所有众筹项?/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">筹集中</CardTitle>
+            <CardTitle className="text-sm font-medium">筹集?/CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -316,22 +330,24 @@ export default function EnterpriseCrowdfundingManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatCurrency(projects.reduce((sum, p) => sum + p.current_amount, 0))}
+              {formatCurrency(
+                projects.reduce((sum, p) => sum + p.current_amount, 0)
+              )}
             </div>
-            <p className="text-xs text-muted-foreground">总筹集金额</p>
+            <p className="text-xs text-muted-foreground">总筹集金?/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">支持者</CardTitle>
+            <CardTitle className="text-sm font-medium">支持?/CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {projects.reduce((sum, p) => sum + p.supporters_count, 0)}
             </div>
-            <p className="text-xs text-muted-foreground">总支持人次</p>
+            <p className="text-xs text-muted-foreground">总支持人?/p>
           </CardContent>
         </Card>
       </div>
@@ -349,35 +365,42 @@ export default function EnterpriseCrowdfundingManagement() {
                   <th className="text-left py-3 px-4 font-medium">项目名称</th>
                   <th className="text-left py-3 px-4 font-medium">产品型号</th>
                   <th className="text-left py-3 px-4 font-medium">筹资进度</th>
-                  <th className="text-left py-3 px-4 font-medium">支持者</th>
-                  <th className="text-left py-3 px-4 font-medium">状态</th>
+                  <th className="text-left py-3 px-4 font-medium">支持?/th>
+                  <th className="text-left py-3 px-4 font-medium">状?/th>
                   <th className="text-left py-3 px-4 font-medium">截止时间</th>
                   <th className="text-left py-3 px-4 font-medium">操作</th>
                 </tr>
               </thead>
               <tbody>
-                {projects.map((project) => (
+                {projects.map(project => (
                   <tr key={project.id} className="border-b hover:bg-gray-50">
                     <td className="py-4 px-4">
                       <div>
                         <div className="font-medium">{project.title}</div>
-                        <div className="text-sm text-gray-500 mt-1 line-clamp-2">{project.description}</div>
+                        <div className="text-sm text-gray-500 mt-1 line-clamp-2">
+                          {project.description}
+                        </div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
-                      <div className="font-mono text-sm">{project.product_model}</div>
+                      <div className="font-mono text-sm">
+                        {project.product_model}
+                      </div>
                     </td>
                     <td className="py-4 px-4">
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm font-medium">{project.funding_progress}%</span>
+                          <span className="text-sm font-medium">
+                            {project.funding_progress}%
+                          </span>
                           <span className="text-sm text-gray-500">
-                            {formatCurrency(project.current_amount)} / {formatCurrency(project.target_amount)}
+                            {formatCurrency(project.current_amount)} /{' '}
+                            {formatCurrency(project.target_amount)}
                           </span>
                         </div>
                         <div className="w-32 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full" 
+                          <div
+                            className="bg-blue-600 h-2 rounded-full"
                             style={{ width: `${project.funding_progress}%` }}
                           ></div>
                         </div>
@@ -385,8 +408,10 @@ export default function EnterpriseCrowdfundingManagement() {
                     </td>
                     <td className="py-4 px-4">
                       <div className="text-sm">
-                        <div className="font-medium">{project.supporters_count}</div>
-                        <div className="text-gray-500">人支持</div>
+                        <div className="font-medium">
+                          {project.supporters_count}
+                        </div>
+                        <div className="text-gray-500">人支?/div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
@@ -396,14 +421,13 @@ export default function EnterpriseCrowdfundingManagement() {
                       <div className="text-sm">
                         <div>{formatDate(project.end_date)}</div>
                         <div className="text-gray-500">
-                          剩余 {calculateDaysLeft(project.end_date)} 天
-                        </div>
+                          剩余 {calculateDaysLeft(project.end_date)} �?                        </div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex space-x-2">
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           onClick={() => viewProjectDetails(project)}
                         >
@@ -414,7 +438,11 @@ export default function EnterpriseCrowdfundingManagement() {
                           <Edit className="w-4 h-4 mr-1" />
                           编辑
                         </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
                           <Trash2 className="w-4 h-4 mr-1" />
                           删除
                         </Button>
@@ -429,8 +457,12 @@ export default function EnterpriseCrowdfundingManagement() {
           {projects.length === 0 && (
             <div className="text-center py-12">
               <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无众筹项目</h3>
-              <p className="text-gray-500 mb-4">发起第一个新品众筹项目来获得资金支持</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                暂无众筹项目
+              </h3>
+              <p className="text-gray-500 mb-4">
+                发起第一个新品众筹项目来获得资金支持
+              </p>
               <Button onClick={() => setShowCreateModal(true)}>
                 <Plus className="w-4 h-4 mr-2" />
                 发起众筹项目
@@ -447,7 +479,7 @@ export default function EnterpriseCrowdfundingManagement() {
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold">发起新品众筹</h3>
-                <button 
+                <button
                   onClick={() => {
                     setShowCreateModal(false);
                     resetForm();
@@ -465,8 +497,10 @@ export default function EnterpriseCrowdfundingManagement() {
                     <Input
                       id="title"
                       value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
-                      placeholder="请输入项目标题"
+                      onChange={e =>
+                        setFormData({ ...formData, title: e.target.value })
+                      }
+                      placeholder="请输入项目标?
                       required
                     />
                   </div>
@@ -476,8 +510,13 @@ export default function EnterpriseCrowdfundingManagement() {
                     <Input
                       id="product_model"
                       value={formData.product_model}
-                      onChange={(e) => setFormData({...formData, product_model: e.target.value})}
-                      placeholder="请输入产品型号"
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          product_model: e.target.value,
+                        })
+                      }
+                      placeholder="请输入产品型?
                       required
                     />
                   </div>
@@ -488,7 +527,9 @@ export default function EnterpriseCrowdfundingManagement() {
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={e =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                     placeholder="详细描述您的项目..."
                     rows={4}
                     required
@@ -502,43 +543,60 @@ export default function EnterpriseCrowdfundingManagement() {
                       id="target_amount"
                       type="number"
                       value={formData.target_amount}
-                      onChange={(e) => setFormData({...formData, target_amount: e.target.value})}
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          target_amount: e.target.value,
+                        })
+                      }
                       placeholder="目标筹资金额"
                       required
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="min_contribution">最低支持金额</Label>
+                    <Label htmlFor="min_contribution">最低支持金?/Label>
                     <Input
                       id="min_contribution"
                       type="number"
                       value={formData.min_contribution}
-                      onChange={(e) => setFormData({...formData, min_contribution: e.target.value})}
-                      placeholder="最低支持金额"
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          min_contribution: e.target.value,
+                        })
+                      }
+                      placeholder="最低支持金?
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="max_contribution">最高支持金额</Label>
+                    <Label htmlFor="max_contribution">最高支持金?/Label>
                     <Input
                       id="max_contribution"
                       type="number"
                       value={formData.max_contribution}
-                      onChange={(e) => setFormData({...formData, max_contribution: e.target.value})}
-                      placeholder="最高支持金额(可选)"
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          max_contribution: e.target.value,
+                        })
+                      }
+                      placeholder="最高支持金?可?"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <Label htmlFor="start_date">开始时间</Label>
+                    <Label htmlFor="start_date">开始时?/Label>
                     <Input
                       id="start_date"
                       type="date"
                       value={formData.start_date}
-                      onChange={(e) => setFormData({...formData, start_date: e.target.value})}
+                      onChange={e =>
+                        setFormData({ ...formData, start_date: e.target.value })
+                      }
                     />
                   </div>
 
@@ -548,7 +606,9 @@ export default function EnterpriseCrowdfundingManagement() {
                       id="end_date"
                       type="date"
                       value={formData.end_date}
-                      onChange={(e) => setFormData({...formData, end_date: e.target.value})}
+                      onChange={e =>
+                        setFormData({ ...formData, end_date: e.target.value })
+                      }
                     />
                   </div>
 
@@ -558,7 +618,12 @@ export default function EnterpriseCrowdfundingManagement() {
                       id="delivery_date"
                       type="date"
                       value={formData.delivery_date}
-                      onChange={(e) => setFormData({...formData, delivery_date: e.target.value})}
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          delivery_date: e.target.value,
+                        })
+                      }
                     />
                   </div>
                 </div>
@@ -574,16 +639,24 @@ export default function EnterpriseCrowdfundingManagement() {
                               <Label>回报标题</Label>
                               <Input
                                 value={reward.title}
-                                onChange={(e) => updateReward(index, 'title', e.target.value)}
+                                onChange={e =>
+                                  updateReward(index, 'title', e.target.value)
+                                }
                                 placeholder="如：早鸟优惠"
                               />
                             </div>
                             <div>
-                              <Label>最低支持金额</Label>
+                              <Label>最低支持金?/Label>
                               <Input
                                 type="number"
                                 value={reward.minimum_amount}
-                                onChange={(e) => updateReward(index, 'minimum_amount', parseInt(e.target.value) || 0)}
+                                onChange={e =>
+                                  updateReward(
+                                    index,
+                                    'minimum_amount',
+                                    parseInt(e.target.value) || 0
+                                  )
+                                }
                                 placeholder="金额"
                               />
                             </div>
@@ -593,8 +666,14 @@ export default function EnterpriseCrowdfundingManagement() {
                               <Label>回报描述</Label>
                               <Textarea
                                 value={reward.description}
-                                onChange={(e) => updateReward(index, 'description', e.target.value)}
-                                placeholder="详细描述此回报内容"
+                                onChange={e =>
+                                  updateReward(
+                                    index,
+                                    'description',
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="详细描述此回报内?
                                 rows={2}
                               />
                             </div>
@@ -603,8 +682,14 @@ export default function EnterpriseCrowdfundingManagement() {
                               <Input
                                 type="number"
                                 value={reward.quantity_limit}
-                                onChange={(e) => updateReward(index, 'quantity_limit', parseInt(e.target.value) || 0)}
-                                placeholder="0表示无限制"
+                                onChange={e =>
+                                  updateReward(
+                                    index,
+                                    'quantity_limit',
+                                    parseInt(e.target.value) || 0
+                                  )
+                                }
+                                placeholder="0表示无限?
                               />
                             </div>
                           </div>
@@ -623,8 +708,7 @@ export default function EnterpriseCrowdfundingManagement() {
                                 className="text-red-600 hover:text-red-700"
                                 onClick={() => removeReward(index)}
                               >
-                                删除此回报
-                              </Button>
+                                删除此回?                              </Button>
                             )}
                           </div>
                         </CardContent>
@@ -643,9 +727,7 @@ export default function EnterpriseCrowdfundingManagement() {
                   >
                     取消
                   </Button>
-                  <Button onClick={createProject}>
-                    发起众筹
-                  </Button>
+                  <Button onClick={createProject}>发起众筹</Button>
                 </div>
               </div>
             </div>
@@ -660,7 +742,7 @@ export default function EnterpriseCrowdfundingManagement() {
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold">项目详情</h3>
-                <button 
+                <button
                   onClick={() => {
                     setShowDetailsModal(false);
                     setSelectedProject(null);
@@ -680,27 +762,44 @@ export default function EnterpriseCrowdfundingManagement() {
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-sm text-gray-500">项目标题</Label>
+                        <Label className="text-sm text-gray-500">
+                          项目标题
+                        </Label>
                         <p className="font-medium">{selectedProject.title}</p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">产品型号</Label>
-                        <p className="font-mono">{selectedProject.product_model}</p>
+                        <Label className="text-sm text-gray-500">
+                          产品型号
+                        </Label>
+                        <p className="font-mono">
+                          {selectedProject.product_model}
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">目标金额</Label>
-                        <p className="font-medium text-green-600">{formatCurrency(selectedProject.target_amount)}</p>
+                        <Label className="text-sm text-gray-500">
+                          目标金额
+                        </Label>
+                        <p className="font-medium text-green-600">
+                          {formatCurrency(selectedProject.target_amount)}
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">当前筹资</Label>
-                        <p className="font-medium">{formatCurrency(selectedProject.current_amount)}</p>
+                        <Label className="text-sm text-gray-500">
+                          当前筹资
+                        </Label>
+                        <p className="font-medium">
+                          {formatCurrency(selectedProject.current_amount)}
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">支持者数量</Label>
-                        <p className="font-medium">{selectedProject.supporters_count} 人</p>
+                        <Label className="text-sm text-gray-500">
+                          支持者数?                        </Label>
+                        <p className="font-medium">
+                          {selectedProject.supporters_count} �?                        </p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">项目状态</Label>
+                        <Label className="text-sm text-gray-500">
+                          项目状?                        </Label>
                         <p>{getStatusBadge(selectedProject.status)}</p>
                       </div>
                     </div>
@@ -714,16 +813,23 @@ export default function EnterpriseCrowdfundingManagement() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {selectedProject.rewards.map((reward) => (
+                      {selectedProject.rewards.map(reward => (
                         <div key={reward.id} className="border rounded-lg p-4">
                           <div className="flex justify-between items-start">
                             <div>
                               <h4 className="font-medium">{reward.title}</h4>
-                              <p className="text-sm text-gray-600 mt-1">{reward.description}</p>
+                              <p className="text-sm text-gray-600 mt-1">
+                                {reward.description}
+                              </p>
                               <div className="flex space-x-4 mt-2 text-sm">
-                                <span>最低支持: {formatCurrency(reward.minimum_amount)}</span>
-                                <span>限额: {reward.quantity_limit || '无限制'}</span>
-                                <span>已认领: {reward.claimed_count}</span>
+                                <span>
+                                  最低支?{' '}
+                                  {formatCurrency(reward.minimum_amount)}
+                                </span>
+                                <span>
+                                  限额: {reward.quantity_limit || '无限?}
+                                </span>
+                                <span>已认? {reward.claimed_count}</span>
                               </div>
                             </div>
                             <div className="text-right">

@@ -13,19 +13,37 @@ console.log('🎯 终极修复：布局文件冲突问题\n');
 // 1. 检查当前布局文件状态
 console.log('1️⃣ 检查布局文件状态');
 
-const componentsLayoutPath = path.join(process.cwd(), 'src', 'components', 'admin', 'EnhancedAdminLayout.tsx');
-const modulesLayoutPath = path.join(process.cwd(), 'src', 'modules', 'common', 'components', 'admin', 'EnhancedAdminLayout.tsx');
+const componentsLayoutPath = path.join(
+  process.cwd(),
+  'src',
+  'components',
+  'admin',
+  'EnhancedAdminLayout.tsx'
+);
+const modulesLayoutPath = path.join(
+  process.cwd(),
+  'src',
+  'modules',
+  'common',
+  'components',
+  'admin',
+  'EnhancedAdminLayout.tsx'
+);
 
-let componentsExists = fs.existsSync(componentsLayoutPath);
-let modulesExists = fs.existsSync(modulesLayoutPath);
+const componentsExists = fs.existsSync(componentsLayoutPath);
+const modulesExists = fs.existsSync(modulesLayoutPath);
 
-console.log(`✅ src/components/admin/EnhancedAdminLayout.tsx: ${componentsExists ? '存在' : '不存在'}`);
-console.log(`❌ src/modules/common/components/admin/EnhancedAdminLayout.tsx: ${modulesExists ? '存在' : '不存在'}`);
+console.log(
+  `✅ src/components/admin/EnhancedAdminLayout.tsx: ${componentsExists ? '存在' : '不存在'}`
+);
+console.log(
+  `❌ src/modules/common/components/admin/EnhancedAdminLayout.tsx: ${modulesExists ? '存在' : '不存在'}`
+);
 
 // 2. 如果旧版本存在，删除它
 if (modulesExists) {
   console.log('\n2️⃣ 删除旧版布局文件...');
-  
+
   try {
     fs.unlinkSync(modulesLayoutPath);
     console.log('✅ 旧版 EnhancedAdminLayout.tsx 已删除');
@@ -38,10 +56,18 @@ if (modulesExists) {
 console.log('\n3️⃣ 验证布局文件使用情况');
 
 try {
-  const layoutContent = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'admin', 'layout.tsx'), 'utf8');
-  const importLine = layoutContent.split('\n').find(line => line.includes('EnhancedAdminLayout'));
-  
-  if (importLine && importLine.includes('@/components/admin/EnhancedAdminLayout')) {
+  const layoutContent = fs.readFileSync(
+    path.join(process.cwd(), 'src', 'app', 'admin', 'layout.tsx'),
+    'utf8'
+  );
+  const importLine = layoutContent
+    .split('\n')
+    .find(line => line.includes('EnhancedAdminLayout'));
+
+  if (
+    importLine &&
+    importLine.includes('@/components/admin/EnhancedAdminLayout')
+  ) {
     console.log('✅ 正确使用 src/components/admin/EnhancedAdminLayout.tsx');
   } else {
     console.log('❌ 布局文件导入路径不正确');
@@ -58,13 +84,17 @@ try {
   const nextDir = path.join(process.cwd(), '.next');
   if (fs.existsSync(nextDir)) {
     const exec = require('child_process').exec;
-    exec(`rmdir /s /q "${nextDir}"`, { shell: 'cmd.exe' }, (err, stdout, stderr) => {
-      if (err) {
-        console.log('⚠️  .next 目录删除失败:', err.message);
-      } else {
-        console.log('✅ .next 缓存已清理');
+    exec(
+      `rmdir /s /q "${nextDir}"`,
+      { shell: 'cmd.exe' },
+      (err, stdout, stderr) => {
+        if (err) {
+          console.log('⚠️  .next 目录删除失败:', err.message);
+        } else {
+          console.log('✅ .next 缓存已清理');
+        }
       }
-    });
+    );
   } else {
     console.log('✅ .next 目录不存在，无需清理');
   }
@@ -113,7 +143,11 @@ console.log('2. 确认右上角只有一个控件');
 console.log('3. 登录后验证状态切换');
 `;
 
-const validationScriptPath = path.join(process.cwd(), 'scripts', 'final-validation-fix.js');
+const validationScriptPath = path.join(
+  process.cwd(),
+  'scripts',
+  'final-validation-fix.js'
+);
 fs.writeFileSync(validationScriptPath, finalValidationContent);
 console.log('✅ 最终验证脚本已创建');
 

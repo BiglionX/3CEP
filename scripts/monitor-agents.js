@@ -14,11 +14,12 @@ class AgentsMonitor {
   constructor(options = {}) {
     this.agentsHost = options.host || process.env.AGENTS_HOST || 'localhost';
     this.agentsPort = options.port || process.env.AGENTS_PORT || 3001;
-    this.apiKey = options.apiKey || process.env.AGENTS_API_KEY || 'test-agents-api-key';
+    this.apiKey =
+      options.apiKey || process.env.AGENTS_API_KEY || 'test-agents-api-key';
     this.sampleSize = options.sampleSize || 100; // 采样数量
     this.timeout = options.timeout || 10000; // 请求超时时间
     this.outputDir = options.outputDir || './reports';
-    
+
     // 存储监控数据
     this.metrics = {
       timestamp: new Date().toISOString(),
@@ -27,7 +28,7 @@ class AgentsMonitor {
       failedRequests: 0,
       errorCodes: {},
       responseTimes: [],
-      agentPerformance: {}
+      agentPerformance: {},
     };
   }
 
@@ -61,7 +62,7 @@ class AgentsMonitor {
 
       console.log('\n🎉 监控完成!');
       console.log(`📄 报告已保存至: ${reportPath}`);
-      
+
       return report;
     } catch (error) {
       console.error('❌ 监控过程中发生错误:', error.message);
@@ -73,26 +74,29 @@ class AgentsMonitor {
    * 检查服务健康状态
    */
   async checkServiceHealth() {
-    return new Promise((resolve) => {
-      const req = http.request({
-        hostname: this.agentsHost,
-        port: this.agentsPort,
-        path: '/api/health',
-        method: 'GET',
-        timeout: 5000
-      }, (res) => {
-        const healthy = res.statusCode === 200;
-        resolve({
-          healthy: healthy,
-          statusCode: res.statusCode,
-          message: healthy ? '服务运行正常' : `HTTP ${res.statusCode}`
-        });
-      });
+    return new Promise(resolve => {
+      const req = http.request(
+        {
+          hostname: this.agentsHost,
+          port: this.agentsPort,
+          path: '/api/health',
+          method: 'GET',
+          timeout: 5000,
+        },
+        res => {
+          const healthy = res.statusCode === 200;
+          resolve({
+            healthy: healthy,
+            statusCode: res.statusCode,
+            message: healthy ? '服务运行正常' : `HTTP ${res.statusCode}`,
+          });
+        }
+      );
 
-      req.on('error', (error) => {
+      req.on('error', error => {
         resolve({
           healthy: false,
-          message: `连接失败: ${error.message}`
+          message: `连接失败: ${error.message}`,
         });
       });
 
@@ -100,7 +104,7 @@ class AgentsMonitor {
         req.destroy();
         resolve({
           healthy: false,
-          message: '连接超时'
+          message: '连接超时',
         });
       });
 
@@ -113,13 +117,15 @@ class AgentsMonitor {
    */
   async runPerformanceTests() {
     const testCases = this.generateTestCases();
-    
+
     console.log('🚀 开始执行性能测试...');
-    
+
     for (let i = 0; i < testCases.length; i++) {
       const testCase = testCases[i];
-      console.log(`[${i + 1}/${testCases.length}] 测试 ${testCase.agentName}...`);
-      
+      console.log(
+        `[${i + 1}/${testCases.length}] 测试 ${testCase.agentName}...`
+      );
+
       try {
         const result = await this.invokeAgent(testCase);
         this.recordResult(testCase.agentName, result);
@@ -138,11 +144,11 @@ class AgentsMonitor {
       { name: 'FCX智能推荐引擎', domain: '用户体验' },
       { name: '智能采购代理', domain: '供应链' },
       { name: '售后服务助手', domain: '售后服务' },
-      { name: '数据分析引擎', domain: '数据分析' }
+      { name: '数据分析引擎', domain: '数据分析' },
     ];
 
     const testCases = [];
-    
+
     // 为每个agent生成多个测试用例
     agents.forEach(agent => {
       for (let i = 0; i < Math.ceil(this.sampleSize / agents.length); i++) {
@@ -150,7 +156,7 @@ class AgentsMonitor {
           agentName: agent.name,
           domain: agent.domain,
           payload: this.generatePayload(agent.domain),
-          timeout: agent.domain === '设备识别' ? 5000 : 30000
+          timeout: agent.domain === '设备识别' ? 5000 : 30000,
         });
       }
     });
@@ -163,49 +169,51 @@ class AgentsMonitor {
    */
   generatePayload(domain) {
     const payloads = {
-      '设备识别': {
+      设备识别: {
         device_id: `DEVICE_${Date.now()}`,
         image_url: 'https://example.com/device.jpg',
         scan_context: {
           location: '测试地点',
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       },
-      '用户体验': {
+      用户体验: {
         user_id: `USER_${Date.now()}`,
         session_id: `SESSION_${Date.now()}`,
         action: 'browse_manuals',
         context: {
           device_type: 'mobile',
-          preferred_language: 'zh-CN'
-        }
+          preferred_language: 'zh-CN',
+        },
       },
-      '供应链': {
+      供应链: {
         procurement_request: {
-          items: [{
-            product_name: '测试产品',
-            quantity: Math.floor(Math.random() * 100) + 1,
-            specifications: '测试规格'
-          }],
-          delivery_address: '测试地址'
-        }
+          items: [
+            {
+              product_name: '测试产品',
+              quantity: Math.floor(Math.random() * 100) + 1,
+              specifications: '测试规格',
+            },
+          ],
+          delivery_address: '测试地址',
+        },
       },
-      '售后服务': {
+      售后服务: {
         device_serial: `SN_${Date.now()}`,
         issue_description: '设备故障测试',
         customer_info: {
           name: '测试客户',
-          phone: '13800138000'
-        }
+          phone: '13800138000',
+        },
       },
-      '数据分析': {
+      数据分析: {
         analysis_target: 'sales_trend',
         time_range: {
           start: '2026-01-01',
-          end: new Date().toISOString().split('T')[0]
+          end: new Date().toISOString().split('T')[0],
         },
-        dimensions: ['region', 'product_category']
-      }
+        dimensions: ['region', 'product_category'],
+      },
     };
 
     return payloads[domain] || { test_mode: true };
@@ -222,52 +230,55 @@ class AgentsMonitor {
         trace_id: `trace_${Date.now()}`,
         timeout: testCase.timeout,
         agent_name: testCase.agentName,
-        payload: testCase.payload
+        payload: testCase.payload,
       });
 
-      const req = http.request({
-        hostname: this.agentsHost,
-        port: this.agentsPort,
-        path: '/agents/invoke',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Length': Buffer.byteLength(postData)
+      const req = http.request(
+        {
+          hostname: this.agentsHost,
+          port: this.agentsPort,
+          path: '/agents/invoke',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.apiKey}`,
+            'Content-Length': Buffer.byteLength(postData),
+          },
+          timeout: this.timeout,
         },
-        timeout: this.timeout
-      }, (res) => {
-        let responseData = '';
-        
-        res.on('data', chunk => {
-          responseData += chunk;
-        });
-        
-        res.on('end', () => {
-          const duration = Date.now() - startTime;
-          
-          try {
-            const result = JSON.parse(responseData);
-            resolve({
-              success: res.statusCode === 200 && result.code === 200,
-              statusCode: res.statusCode,
-              errorCode: result.code,
-              duration: duration,
-              response: result
-            });
-          } catch (parseError) {
-            resolve({
-              success: false,
-              statusCode: res.statusCode,
-              errorCode: 'PARSE_ERROR',
-              duration: duration,
-              error: `响应解析失败: ${parseError.message}`
-            });
-          }
-        });
-      });
+        res => {
+          let responseData = '';
 
-      req.on('error', (error) => {
+          res.on('data', chunk => {
+            responseData += chunk;
+          });
+
+          res.on('end', () => {
+            const duration = Date.now() - startTime;
+
+            try {
+              const result = JSON.parse(responseData);
+              resolve({
+                success: res.statusCode === 200 && result.code === 200,
+                statusCode: res.statusCode,
+                errorCode: result.code,
+                duration: duration,
+                response: result,
+              });
+            } catch (parseError) {
+              resolve({
+                success: false,
+                statusCode: res.statusCode,
+                errorCode: 'PARSE_ERROR',
+                duration: duration,
+                error: `响应解析失败: ${parseError.message}`,
+              });
+            }
+          });
+        }
+      );
+
+      req.on('error', error => {
         const duration = Date.now() - startTime;
         reject(new Error(`请求失败 (${duration}ms): ${error.message}`));
       });
@@ -287,7 +298,7 @@ class AgentsMonitor {
    */
   recordResult(agentName, result) {
     this.metrics.totalRequests++;
-    
+
     if (result.success) {
       this.metrics.successfulRequests++;
     } else {
@@ -311,7 +322,7 @@ class AgentsMonitor {
         total: 0,
         successful: 0,
         failed: 0,
-        responseTimes: []
+        responseTimes: [],
       };
     }
 
@@ -345,7 +356,7 @@ class AgentsMonitor {
         total: 0,
         successful: 0,
         failed: 0,
-        responseTimes: []
+        responseTimes: [],
       };
     }
     this.metrics.agentPerformance[agentName].total++;
@@ -358,19 +369,21 @@ class AgentsMonitor {
   calculateMetrics() {
     const total = this.metrics.totalRequests;
     const successful = this.metrics.successfulRequests;
-    
+
     // 成功率
-    const successRate = total > 0 ? (successful / total * 100) : 0;
-    
+    const successRate = total > 0 ? (successful / total) * 100 : 0;
+
     // P95 延迟
     const sortedTimes = [...this.metrics.responseTimes].sort((a, b) => a - b);
     const p95Index = Math.floor(sortedTimes.length * 0.95);
     const p95Latency = sortedTimes[p95Index] || 0;
-    
+
     // 平均延迟
-    const avgLatency = sortedTimes.length > 0 ? 
-      sortedTimes.reduce((sum, time) => sum + time, 0) / sortedTimes.length : 0;
-    
+    const avgLatency =
+      sortedTimes.length > 0
+        ? sortedTimes.reduce((sum, time) => sum + time, 0) / sortedTimes.length
+        : 0;
+
     // 最大/最小延迟
     const maxLatency = Math.max(...sortedTimes) || 0;
     const minLatency = Math.min(...sortedTimes) || 0;
@@ -379,17 +392,21 @@ class AgentsMonitor {
     const agentMetrics = {};
     Object.keys(this.metrics.agentPerformance).forEach(agentName => {
       const perf = this.metrics.agentPerformance[agentName];
-      const agentSuccessRate = perf.total > 0 ? (perf.successful / perf.total * 100) : 0;
+      const agentSuccessRate =
+        perf.total > 0 ? (perf.successful / perf.total) * 100 : 0;
       const agentSortedTimes = [...perf.responseTimes].sort((a, b) => a - b);
       const agentP95Index = Math.floor(agentSortedTimes.length * 0.95);
-      
+
       agentMetrics[agentName] = {
         totalRequests: perf.total,
         successRate: agentSuccessRate,
         p95Latency: agentSortedTimes[agentP95Index] || 0,
-        avgLatency: agentSortedTimes.length > 0 ? 
-          agentSortedTimes.reduce((sum, time) => sum + time, 0) / agentSortedTimes.length : 0,
-        errorDistribution: this.calculateErrorDistribution(perf)
+        avgLatency:
+          agentSortedTimes.length > 0
+            ? agentSortedTimes.reduce((sum, time) => sum + time, 0) /
+              agentSortedTimes.length
+            : 0,
+        errorDistribution: this.calculateErrorDistribution(perf),
       };
     });
 
@@ -399,16 +416,18 @@ class AgentsMonitor {
         successfulRequests: successful,
         failedRequests: this.metrics.failedRequests,
         successRate: parseFloat(successRate.toFixed(2)),
-        errorRate: parseFloat(((total - successful) / total * 100).toFixed(2))
+        errorRate: parseFloat(
+          (((total - successful) / total) * 100).toFixed(2)
+        ),
       },
       latency: {
         p95: p95Latency,
         average: parseFloat(avgLatency.toFixed(2)),
         min: minLatency,
-        max: maxLatency
+        max: maxLatency,
       },
       errorCodes: this.metrics.errorCodes,
-      agentPerformance: agentMetrics
+      agentPerformance: agentMetrics,
     };
   }
 
@@ -419,7 +438,10 @@ class AgentsMonitor {
     // 这里可以根据具体需求实现更详细的错误分类
     return {
       totalErrors: performance.failed,
-      errorRate: performance.total > 0 ? (performance.failed / performance.total * 100) : 0
+      errorRate:
+        performance.total > 0
+          ? (performance.failed / performance.total) * 100
+          : 0,
     };
   }
 
@@ -429,24 +451,24 @@ class AgentsMonitor {
   generateReport(metrics) {
     const timestamp = new Date().toISOString();
     const dateStr = timestamp.split('T')[0].replace(/-/g, ''); // YYYYMMDD
-    
+
     return {
       reportId: `agents-metrics-${dateStr}-${Date.now()}`,
       generatedAt: timestamp,
       period: {
         start: this.metrics.timestamp,
-        end: new Date().toISOString()
+        end: new Date().toISOString(),
       },
       environment: process.env.NODE_ENV || 'development',
       target: {
         host: this.agentsHost,
-        port: this.agentsPort
+        port: this.agentsPort,
       },
       metrics: metrics,
       metadata: {
         sampleSize: this.sampleSize,
-        timeout: this.timeout
-      }
+        timeout: this.timeout,
+      },
     };
   }
 
@@ -481,7 +503,7 @@ class AgentsMonitor {
       totalRequests: this.metrics.totalRequests,
       successfulRequests: this.metrics.successfulRequests,
       failedRequests: this.metrics.failedRequests,
-      errorCodes: Object.keys(this.metrics.errorCodes)
+      errorCodes: Object.keys(this.metrics.errorCodes),
     };
   }
 }
@@ -492,7 +514,9 @@ if (require.main === module) {
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('\nAgents 监控脚本使用说明');
     console.log('========================');
-    console.log('用法: node scripts/monitor-agents.js [host] [port] [sampleSize] [timeout]');
+    console.log(
+      '用法: node scripts/monitor-agents.js [host] [port] [sampleSize] [timeout]'
+    );
     console.log('');
     console.log('参数:');
     console.log('  host       - Agents服务主机地址 (默认: localhost)');
@@ -516,18 +540,19 @@ if (require.main === module) {
     host: process.argv[2] || process.env.AGENTS_HOST,
     port: process.argv[3] || process.env.AGENTS_PORT,
     sampleSize: parseInt(process.argv[4]) || 100,
-    timeout: parseInt(process.argv[5]) || 10000
+    timeout: parseInt(process.argv[5]) || 10000,
   };
 
   const monitor = new AgentsMonitor(options);
-  
+
   console.log('⚙️  配置信息:');
   console.log(`   主机: ${options.host || 'localhost'}`);
   console.log(`   端口: ${options.port || 3001}`);
   console.log(`   采样数: ${options.sampleSize}`);
   console.log(`   超时: ${options.timeout}ms\n`);
-  
-  monitor.monitor()
+
+  monitor
+    .monitor()
     .then(report => {
       console.log('\n📋 监控报告摘要:');
       console.log('==================');
@@ -536,22 +561,24 @@ if (require.main === module) {
       console.log(`❌ 失败率: ${report.metrics.summary.errorRate}%`);
       console.log(`⚡ P95延迟: ${report.metrics.latency.p95}ms`);
       console.log(`⏱️  平均延迟: ${report.metrics.latency.average}ms`);
-      
+
       if (Object.keys(report.metrics.errorCodes).length > 0) {
         console.log('\n🚨 错误码分布:');
         Object.entries(report.metrics.errorCodes).forEach(([code, count]) => {
           console.log(`   ${code}: ${count} 次`);
         });
       }
-      
+
       console.log('\n🤖 各Agent性能:');
-      Object.entries(report.metrics.agentPerformance).forEach(([agentName, perf]) => {
-        console.log(`   ${agentName}:`);
-        console.log(`     成功率: ${perf.successRate}%`);
-        console.log(`     P95延迟: ${perf.p95Latency}ms`);
-        console.log(`     平均延迟: ${perf.avgLatency}ms`);
-      });
-      
+      Object.entries(report.metrics.agentPerformance).forEach(
+        ([agentName, perf]) => {
+          console.log(`   ${agentName}:`);
+          console.log(`     成功率: ${perf.successRate}%`);
+          console.log(`     P95延迟: ${perf.p95Latency}ms`);
+          console.log(`     平均延迟: ${perf.avgLatency}ms`);
+        }
+      );
+
       process.exit(0);
     })
     .catch(error => {

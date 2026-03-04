@@ -25,7 +25,7 @@ class DatabaseBackup {
     const {
       includeData = true,
       includeSchema = true,
-      compress = true
+      compress = true,
     } = options;
 
     await this.createBackupDir();
@@ -40,7 +40,7 @@ class DatabaseBackup {
 
     // 构建pg_dump命令参数
     const args = [];
-    
+
     if (includeSchema && includeData) {
       args.push('--verbose');
     } else if (includeSchema) {
@@ -51,8 +51,8 @@ class DatabaseBackup {
 
     args.push('--no-owner'); // 不包含对象所有权
     args.push('--no-privileges'); // 不包含权限
-    
-    dumpCommand += ' ' + args.join(' ');
+
+    dumpCommand += ` ${args.join(' ')}`;
 
     try {
       if (compress) {
@@ -78,9 +78,8 @@ class DatabaseBackup {
         filename,
         size: stats.size,
         sizeFormatted: `${sizeInMB} MB`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-
     } catch (error) {
       console.error('❌ 备份创建失败:', error.message);
       throw error;
@@ -91,26 +90,29 @@ class DatabaseBackup {
     try {
       await this.createBackupDir();
       const files = await fs.readdir(this.backupDir);
-      
+
       const backups = [];
       for (const file of files) {
-        if (file.startsWith('backup-') && (file.endsWith('.sql') || file.endsWith('.sql.gz'))) {
+        if (
+          file.startsWith('backup-') &&
+          (file.endsWith('.sql') || file.endsWith('.sql.gz'))
+        ) {
           const filepath = path.join(this.backupDir, file);
           const stats = await fs.stat(filepath);
-          
+
           backups.push({
             filename: file,
             filepath: filepath,
             size: stats.size,
             modified: stats.mtime,
-            created: stats.birthtime
+            created: stats.birthtime,
           });
         }
       }
 
       // 按创建时间排序
       backups.sort((a, b) => b.created - a.created);
-      
+
       return backups;
     } catch (error) {
       console.error('❌ 列出备份失败:', error.message);
@@ -127,7 +129,7 @@ class DatabaseBackup {
       cutoffDate.setDate(cutoffDate.getDate() - maxAgeDays);
 
       let deletedCount = 0;
-      
+
       // 删除超过指定天数的备份
       for (const backup of backups) {
         if (backup.created < cutoffDate) {
@@ -150,7 +152,6 @@ class DatabaseBackup {
 
       console.log(`✅ 清理完成，删除了 ${deletedCount} 个备份文件`);
       return deletedCount;
-
     } catch (error) {
       console.error('❌ 清理备份失败:', error.message);
       throw error;
@@ -158,8 +159,8 @@ class DatabaseBackup {
   }
 
   async restoreBackup(backupFile) {
-    const filepath = path.isAbsolute(backupFile) 
-      ? backupFile 
+    const filepath = path.isAbsolute(backupFile)
+      ? backupFile
       : path.join(this.backupDir, backupFile);
 
     console.log(`🔄 开始恢复备份: ${filepath}`);
@@ -179,10 +180,9 @@ class DatabaseBackup {
       }
 
       await execAsync(restoreCommand);
-      
+
       console.log(`✅ 备份恢复成功: ${filepath}`);
       return true;
-
     } catch (error) {
       console.error('❌ 备份恢复失败:', error.message);
       throw error;
@@ -192,14 +192,14 @@ class DatabaseBackup {
   async scheduleDailyBackup() {
     // 这里可以集成到定时任务系统
     console.log('📅 设置每日备份计划...');
-    
+
     // 示例：使用node-cron或其他调度库
     // const cron = require('node-cron');
     // cron.schedule('0 2 * * *', async () => {
     //   await this.createBackup();
     //   await this.cleanupOldBackups();
     // });
-    
+
     console.log('💡 请在生产环境中配置适当的定时任务系统');
   }
 }
@@ -207,7 +207,7 @@ class DatabaseBackup {
 // 如果直接运行此脚本
 if (require.main === module) {
   const databaseUrl = process.env.DATABASE_URL;
-  
+
   if (!databaseUrl) {
     console.error('❌ 请设置 DATABASE_URL 环境变量');
     process.exit(1);
@@ -216,10 +216,11 @@ if (require.main === module) {
   const backupManager = new DatabaseBackup(databaseUrl);
 
   const action = process.argv[2] || 'backup';
-  
+
   switch (action) {
     case 'backup':
-      backupManager.createBackup()
+      backupManager
+        .createBackup()
         .then(result => {
           console.log('🎉 备份任务完成');
           process.exit(0);
@@ -231,12 +232,15 @@ if (require.main === module) {
       break;
 
     case 'list':
-      backupManager.listBackups()
+      backupManager
+        .listBackups()
         .then(backups => {
           console.log('📋 备份列表:');
           backups.forEach((backup, index) => {
             console.log(`${index + 1}. ${backup.filename}`);
-            console.log(`   大小: ${(backup.size / (1024 * 1024)).toFixed(2)} MB`);
+            console.log(
+              `   大小: ${(backup.size / (1024 * 1024)).toFixed(2)} MB`
+            );
             console.log(`   创建时间: ${backup.created.toLocaleString()}`);
             console.log('');
           });
@@ -249,7 +253,8 @@ if (require.main === module) {
       break;
 
     case 'cleanup':
-      backupManager.cleanupOldBackups()
+      backupManager
+        .cleanupOldBackups()
         .then(deletedCount => {
           console.log(`🎉 清理完成，删除了 ${deletedCount} 个备份`);
           process.exit(0);

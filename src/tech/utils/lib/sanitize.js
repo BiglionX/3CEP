@@ -12,27 +12,27 @@ const SENSITIVE_FIELDS = {
   // 系统敏感信息
   system: ['password', 'api_key', 'secret_key', 'access_token'],
   // 商业机密
-  business: ['contract_terms', 'pricing_info', 'supplier_details']
+  business: ['contract_terms', 'pricing_info', 'supplier_details'],
 };
 
 // 脱敏规则配置
 const MASKING_RULES = {
   phone: {
     pattern: /(\d{3})\d{4}(\d{4})/,
-    mask: '$1****$2'
+    mask: '$1****$2',
   },
   email: {
     pattern: /^([^@]{2})[^@]*(@.*)$/,
-    mask: '$1***$2'
+    mask: '$1***$2',
   },
   id_card: {
     pattern: /(\d{6})\d{8}(\w{4})/,
-    mask: '$1********$2'
+    mask: '$1********$2',
   },
   bank_account: {
     pattern: /(\d{4})\d+(\d{4})/,
-    mask: '$1****$2'
-  }
+    mask: '$1****$2',
+  },
 };
 
 /**
@@ -50,37 +50,54 @@ function sanitizeData(data, userRole, userTenant, context = {}) {
 
   // 深拷贝数据
   const sanitizedData = JSON.parse(JSON.stringify(data));
-  
+
   // 根据角色确定可访问的敏感级别
   const accessibleLevels = getAccessibleSensitiveLevels(userRole);
-  
+
   // 递归处理数据
-  return sanitizeRecursive(sanitizedData, accessibleLevels, userTenant, context);
+  return sanitizeRecursive(
+    sanitizedData,
+    accessibleLevels,
+    userTenant,
+    context
+  );
 }
 
 /**
  * 递归脱敏处理
  */
-function sanitizeRecursive(obj, accessibleLevels, userTenant, context, path = '') {
+function sanitizeRecursive(
+  obj,
+  accessibleLevels,
+  userTenant,
+  context,
+  path = ''
+) {
   if (obj === null || obj === undefined) {
     return obj;
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item, index) => 
-      sanitizeRecursive(item, accessibleLevels, userTenant, context, `${path}[${index}]`)
+    return obj.map((item, index) =>
+      sanitizeRecursive(
+        item,
+        accessibleLevels,
+        userTenant,
+        context,
+        `${path}[${index}]`
+      )
     );
   }
 
   if (typeof obj === 'object') {
     const result = {};
-    
+
     for (const [key, value] of Object.entries(obj)) {
       const currentPath = path ? `${path}.${key}` : key;
-      
+
       // 检查字段敏感级别
       const fieldLevel = getFieldSensitivityLevel(key);
-      
+
       if (fieldLevel && !accessibleLevels.includes(fieldLevel)) {
         // 字段需要脱敏
         result[key] = maskFieldValue(key, value, userRole, context);
@@ -89,10 +106,16 @@ function sanitizeRecursive(obj, accessibleLevels, userTenant, context, path = ''
         continue;
       } else {
         // 递归处理嵌套对象
-        result[key] = sanitizeRecursive(value, accessibleLevels, userTenant, context, currentPath);
+        result[key] = sanitizeRecursive(
+          value,
+          accessibleLevels,
+          userTenant,
+          context,
+          currentPath
+        );
       }
     }
-    
+
     return result;
   }
 
@@ -104,13 +127,13 @@ function sanitizeRecursive(obj, accessibleLevels, userTenant, context, path = ''
  */
 function getAccessibleSensitiveLevels(role) {
   const levelMap = {
-    'admin': ['personal', 'financial', 'system', 'business'],
-    'ops': ['personal', 'financial', 'business'],
-    'partner': ['personal'],
-    'user': [],
-    'guest': []
+    admin: ['personal', 'financial', 'system', 'business'],
+    ops: ['personal', 'financial', 'business'],
+    partner: ['personal'],
+    user: [],
+    guest: [],
   };
-  
+
   return levelMap[role] || [];
 }
 
@@ -135,7 +158,7 @@ function maskFieldValue(fieldName, value, userRole, context) {
   }
 
   const stringValue = String(value);
-  
+
   // 查找对应的脱敏规则
   const rule = MASKING_RULES[fieldName.toLowerCase()];
   if (rule) {
@@ -148,9 +171,11 @@ function maskFieldValue(fieldName, value, userRole, context) {
   } else {
     const visibleChars = Math.min(2, Math.floor(stringValue.length * 0.3));
     const hiddenChars = stringValue.length - visibleChars * 2;
-    return stringValue.substring(0, visibleChars) + 
-           '*'.repeat(hiddenChars) + 
-           stringValue.substring(stringValue.length - visibleChars);
+    return (
+      stringValue.substring(0, visibleChars) +
+      '*'.repeat(hiddenChars) +
+      stringValue.substring(stringValue.length - visibleChars)
+    );
   }
 }
 
@@ -160,12 +185,12 @@ function maskFieldValue(fieldName, value, userRole, context) {
 function shouldFilterByTenant(fieldName, value, userTenant, context) {
   // 租户相关字段检查
   const tenantFields = ['tenant_id', 'organization_id', 'company_id'];
-  
+
   if (tenantFields.includes(fieldName.toLowerCase())) {
     // 如果是租户字段且与当前用户租户不匹配，则过滤
     return value !== userTenant;
   }
-  
+
   return false;
 }
 
@@ -174,7 +199,7 @@ function shouldFilterByTenant(fieldName, value, userTenant, context) {
  */
 function sanitizeWorkflowExecution(executionData, userRole, userTenant) {
   const sanitized = sanitizeData(executionData, userRole, userTenant, {
-    context: 'workflow_execution'
+    context: 'workflow_execution',
   });
 
   // 特殊处理工作流执行数据
@@ -182,7 +207,7 @@ function sanitizeWorkflowExecution(executionData, userRole, userTenant) {
     // 移除内部调试信息
     delete sanitized.execution.debug_info;
     delete sanitized.execution.internal_logs;
-    
+
     // 脱敏节点配置
     if (sanitized.execution.nodes) {
       sanitized.execution.nodes = sanitized.execution.nodes.map(node => ({
@@ -190,7 +215,7 @@ function sanitizeWorkflowExecution(executionData, userRole, userTenant) {
         name: node.name,
         type: node.type,
         // 移除敏感配置
-        parameters: sanitizeNodeParameters(node.parameters, userRole)
+        parameters: sanitizeNodeParameters(node.parameters, userRole),
       }));
     }
   }
@@ -229,21 +254,24 @@ function sanitizeNodeParameters(parameters, userRole) {
  */
 function sanitizeAgentDetails(agentData, userRole, userTenant) {
   return sanitizeData(agentData, userRole, userTenant, {
-    context: 'agent_details'
+    context: 'agent_details',
   });
 }
 
 /**
  * 批量脱敏处理
  */
-function sanitizeBatch(dataArray, userRole, userTenant, sanitizerFunc = sanitizeData) {
+function sanitizeBatch(
+  dataArray,
+  userRole,
+  userTenant,
+  sanitizerFunc = sanitizeData
+) {
   if (!Array.isArray(dataArray)) {
     return dataArray;
   }
 
-  return dataArray.map(item => 
-    sanitizerFunc(item, userRole, userTenant)
-  );
+  return dataArray.map(item => sanitizerFunc(item, userRole, userTenant));
 }
 
 module.exports = {
@@ -252,5 +280,5 @@ module.exports = {
   sanitizeAgentDetails,
   sanitizeBatch,
   SENSITIVE_FIELDS,
-  MASKING_RULES
+  MASKING_RULES,
 };

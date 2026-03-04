@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { parse } from "csv-parse/sync";
 import { v4 as uuidv4 } from "uuid";
 
-// 初始化Supabase客户端
+// 鍒濆鍖朣upabase瀹㈡埛?
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 上传CSV文件并解析
+// 涓婁紶CSV鏂囦欢骞惰В?
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -17,24 +17,24 @@ export async function POST(request: NextRequest) {
 
     if (!file) {
       return NextResponse.json(
-        { success: false, error: "请选择要上传的文件" },
+        { success: false, error: "璇烽€夋嫨瑕佷笂浼犵殑鏂囦欢" },
         { status: 400 }
       );
     }
 
-    // 检查文件类型
+    // 妫€鏌ユ枃浠剁被?
     if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
       return NextResponse.json(
-        { success: false, error: "只支持CSV格式文件" },
+        { success: false, error: "鍙敮鎸丆SV鏍煎紡鏂囦欢" },
         { status: 400 }
       );
     }
 
-    // 读取文件内容
+    // 璇诲彇鏂囦欢鍐呭
     const fileBuffer = await file.arrayBuffer();
     const fileContent = Buffer.from(fileBuffer).toString('utf-8');
 
-    // 解析CSV
+    // 瑙ｆ瀽CSV
     const records = parse(fileContent, {
       columns: true,
       skip_empty_lines: true,
@@ -43,13 +43,13 @@ export async function POST(request: NextRequest) {
 
     if (records.length === 0) {
       return NextResponse.json(
-        { success: false, error: "CSV文件为空或格式不正确" },
+        { success: false, error: "CSV鏂囦欢涓虹┖鎴栨牸寮忎笉姝ｇ‘" },
         { status: 400 }
       );
     }
 
-    // 验证必需字段
-    const requiredFields = ['产品型号', '产品类别', '品牌ID', '产品名称', '数量'];
+    // 楠岃瘉蹇呴渶瀛楁
+    const requiredFields = ['浜у搧鍨嬪彿', '浜у搧绫诲埆', '鍝佺墝ID', '浜у搧鍚嶇О', '鏁伴噺'];
     const firstRecord = records[0];
     const missingFields = requiredFields.filter(field => !(field in firstRecord));
 
@@ -57,40 +57,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           success: false, 
-          error: `缺少必需字段: ${missingFields.join(', ')}`,
+          error: `缂哄皯蹇呴渶瀛楁: ${missingFields.join(', ')}`,
           required_fields: requiredFields
         },
         { status: 400 }
       );
     }
 
-    // 处理每个记录
+    // 澶勭悊姣忎釜璁板綍
     const batchResults = [];
     let parsedCount = 0;
 
     for (const record of records) {
       try {
-        const productModel = record['产品型号']?.trim();
-        const productCategory = record['产品类别']?.trim();
-        const brandId = record['品牌ID']?.trim();
-        const productName = record['产品名称']?.trim();
-        const quantity = parseInt(record['数量']?.trim() || '0');
+        const productModel = record['浜у搧鍨嬪彿']?.trim();
+        const productCategory = record['浜у搧绫诲埆']?.trim();
+        const brandId = record['鍝佺墝ID']?.trim();
+        const productName = record['浜у搧鍚嶇О']?.trim();
+        const quantity = parseInt(record['鏁伴噺']?.trim() || '0');
         
-        // 可选字段
-        const format = record['格式']?.trim() || 'png';
-        const size = parseInt(record['尺寸']?.trim() || '300');
-        const errorCorrection = record['纠错等级']?.trim() || 'M';
+        // 鍙€夊瓧?
+        const format = record['鏍煎紡']?.trim() || 'png';
+        const size = parseInt(record['灏哄']?.trim() || '300');
+        const errorCorrection = record['绾犻敊绛夌骇']?.trim() || 'M';
 
-        // 验证必需字段
+        // 楠岃瘉蹇呴渶瀛楁
         if (!productModel || !productCategory || !brandId || !productName || isNaN(quantity) || quantity <= 0) {
-          console.warn("跳过无效记录:", record);
+          console.warn("璺宠繃鏃犳晥璁板綍:", record);
           continue;
         }
 
-        // 生成批次ID
+        // 鐢熸垚鎵规ID
         const batchId = `batch_${uuidv4().replace(/-/g, "")}_${Date.now()}`;
 
-        // 创建批次记录
+        // 鍒涘缓鎵规璁板綍
         const { data: batch, error: batchError } = await supabase
           .from("qr_batches")
           .insert({
@@ -106,16 +106,16 @@ export async function POST(request: NextRequest) {
               size,
               errorCorrection
             } as any
-          })
+          }) as any
           .select()
           .single();
 
         if (batchError) {
-          console.error("创建批次失败:", batchError);
+          console.error("鍒涘缓鎵规澶辫触:", batchError);
           continue;
         }
 
-        // 异步生成二维码
+        // 寮傛鐢熸垚浜岀淮?
         generateBatchCodes(batchId, {
           productModel,
           productCategory,
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
           quantity,
           config: { format, size, errorCorrection }
         }).catch(err => {
-          console.error("异步生成失败:", err);
+          console.error("寮傛鐢熸垚澶辫触:", err);
           supabase
             .from("qr_batches")
             .update({ status: "failed" } as any)
@@ -141,14 +141,14 @@ export async function POST(request: NextRequest) {
         parsedCount++;
 
       } catch (recordError) {
-        console.error("处理记录失败:", recordError);
+        console.error("澶勭悊璁板綍澶辫触:", recordError);
         continue;
       }
     }
 
     if (parsedCount === 0) {
       return NextResponse.json(
-        { success: false, error: "没有有效的记录可供处理" },
+        { success: false, error: "娌℃湁鏈夋晥鐨勮褰曞彲渚涘? },
         { status: 400 }
       );
     }
@@ -158,19 +158,19 @@ export async function POST(request: NextRequest) {
       parsedCount: parsedCount,
       batchCount: batchResults.length,
       batches: batchResults,
-      message: `成功创建 ${batchResults.length} 个批次，正在后台生成二维码`
+      message: `鎴愬姛鍒涘缓 ${batchResults.length} 涓壒娆★紝姝ｅ湪鍚庡彴鐢熸垚浜岀淮鐮乣
     });
 
   } catch (error) {
-    console.error("CSV上传处理失败:", error);
+    console.error("CSV涓婁紶澶勭悊澶辫触:", error);
     return NextResponse.json(
-      { success: false, error: "文件处理失败" },
+      { success: false, error: "鏂囦欢澶勭悊澶辫触" },
       { status: 500 }
     );
   }
 }
 
-// 异步生成批次二维码（复用之前的函数）
+// 寮傛鐢熸垚鎵规浜岀淮鐮侊紙澶嶇敤涔嬪墠鐨勫嚱鏁帮級
 async function generateBatchCodes(
   batchId: string,
   params: any
@@ -185,20 +185,20 @@ async function generateBatchCodes(
   } = params;
 
   try {
-    // 更新批次状态为处理中
+    // 鏇存柊鎵规鐘舵€佷负澶勭悊?
     await supabase
       .from("qr_batches")
       .update({ status: "processing" } as any)
       .eq("batch_id", batchId);
 
-    // 生成指定数量的二维码
+    // 鐢熸垚鎸囧畾鏁伴噺鐨勪簩缁寸爜
     const codes = [];
     for (let i = 1; i <= quantity; i++) {
       const serialNumber = i.toString().padStart(6, '0');
       const productId = `${productModel}_${serialNumber}`;
       const qrContent = `https://fx.cn/p/${productId}`;
       
-      // 生成二维码Base64
+      // 鐢熸垚浜岀淮鐮丅ase64
       const qrImageBase64 = generatePlaceholderQR(productId, qrContent);
 
       codes.push({
@@ -213,16 +213,16 @@ async function generateBatchCodes(
       });
     }
 
-    // 批量插入二维码记录
+    // 鎵归噺鎻掑叆浜岀淮鐮佽?
     const { error: insertError } = await supabase
       .from("qr_codes")
       .insert(codes);
 
     if (insertError) {
-      throw new Error(`插入二维码记录失败: ${insertError.message}`);
+      throw new Error(`鎻掑叆浜岀淮鐮佽褰曞け? ${insertError.message}`);
     }
 
-    // 更新批次状态为完成
+    // 鏇存柊鎵规鐘舵€佷负瀹屾垚
     await supabase
       .from("qr_batches")
       .update({ 
@@ -231,11 +231,11 @@ async function generateBatchCodes(
       } as any)
       .eq("batch_id", batchId);
 
-    console.log(`批次 ${batchId} 生成完成，共 ${quantity} 个二维码`);
+    console.log(`鎵规 ${batchId} 鐢熸垚瀹屾垚锛屽叡 ${quantity} 涓簩缁寸爜`);
 
   } catch (error) {
-    console.error(`批次 ${batchId} 生成失败:`, error);
-    // 更新批次状态为失败
+    console.error(`鎵规 ${batchId} 鐢熸垚澶辫触:`, error);
+    // 鏇存柊鎵规鐘舵€佷负澶辫触
     await supabase
       .from("qr_batches")
       .update({ status: "failed" } as any)
@@ -244,7 +244,7 @@ async function generateBatchCodes(
   }
 }
 
-// 生成占位二维码
+// 鐢熸垚鍗犱綅浜岀淮?
 function generatePlaceholderQR(productId: string, content: string): string {
   return `data:image/svg+xml;base64,${Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">

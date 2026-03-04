@@ -1,4 +1,5 @@
-// 通用类型定义文件
+﻿// 通用类型定义文件
+import * as React from 'react';
 
 // RBAC相关类型
 export interface RbacConfig {
@@ -56,7 +57,7 @@ export interface FaultType {
 }
 
 // 用户角色类型
-export type UserRole = 
+export type UserRole =
   | 'admin'
   | 'manager'
   | 'content_manager'

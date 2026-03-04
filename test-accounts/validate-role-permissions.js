@@ -14,7 +14,7 @@ const CONFIG = {
   testEnv: process.env.TEST_ENV || 'development',
   baseUrl: process.env.TEST_BASE_URL || 'http://localhost:3001',
   headless: process.env.HEADLESS !== 'false',
-  timeout: parseInt(process.env.TEST_TIMEOUT || '30000')
+  timeout: parseInt(process.env.TEST_TIMEOUT || '30000'),
 };
 
 // 读取测试配置
@@ -28,14 +28,14 @@ const testData = JSON.parse(
 async function testRolePermissions(roleKey, roleData) {
   console.log(`\n🧪 开始测试角色: ${roleData.role_info.name} (${roleKey})`);
   console.log('='.repeat(50));
-  
+
   const results = {
     role: roleKey,
     roleName: roleData.role_info.name,
     totalTests: 0,
     passedTests: 0,
     failedTests: 0,
-    details: []
+    details: [],
   };
 
   // 获取第一个测试账户
@@ -64,19 +64,22 @@ async function testRolePermissions(roleKey, roleData) {
 
     // 3. 边界权限测试
     console.log('\n3️⃣ 执行边界权限测试...');
-    const boundaryResults = await testBoundaryPermissions(roleKey, testAccount, roleData);
+    const boundaryResults = await testBoundaryPermissions(
+      roleKey,
+      testAccount,
+      roleData
+    );
     results.details.push(...boundaryResults.details);
     results.totalTests += boundaryResults.totalTests;
     results.passedTests += boundaryResults.passedTests;
     results.failedTests += boundaryResults.failedTests;
-
   } catch (error) {
     console.log(`❌ 测试执行失败: ${error.message}`);
     results.failedTests++;
     results.details.push({
       test: '整体测试执行',
       status: 'failed',
-      error: error.message
+      error: error.message,
     });
   }
 
@@ -85,7 +88,9 @@ async function testRolePermissions(roleKey, roleData) {
   console.log(`   总测试数: ${results.totalTests}`);
   console.log(`   通过: ${results.passedTests}`);
   console.log(`   失败: ${results.failedTests}`);
-  console.log(`   通过率: ${results.totalTests > 0 ? ((results.passedTests / results.totalTests) * 100).toFixed(1) : 0}%`);
+  console.log(
+    `   通过率: ${results.totalTests > 0 ? ((results.passedTests / results.totalTests) * 100).toFixed(1) : 0}%`
+  );
 
   return results;
 }
@@ -98,7 +103,7 @@ async function testApiPermissions(roleKey, account, roleData) {
     totalTests: 0,
     passedTests: 0,
     failedTests: 0,
-    details: []
+    details: [],
   };
 
   try {
@@ -109,8 +114,8 @@ async function testApiPermissions(roleKey, account, roleData) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: account.email,
-        password: account.password
-      })
+        password: account.password,
+      }),
     });
 
     results.totalTests++;
@@ -120,7 +125,7 @@ async function testApiPermissions(roleKey, account, roleData) {
       results.details.push({
         test: 'API登录认证',
         status: 'failed',
-        error: `HTTP ${loginResponse.status}: ${loginResponse.statusText}`
+        error: `HTTP ${loginResponse.status}: ${loginResponse.statusText}`,
       });
       return results;
     }
@@ -133,23 +138,26 @@ async function testApiPermissions(roleKey, account, roleData) {
     results.details.push({
       test: 'API登录认证',
       status: 'passed',
-      tokenObtained: !!token
+      tokenObtained: !!token,
     });
 
     // 2. 测试授权API访问
     console.log('   🧪 测试API权限...');
-    const authorizedApis = getAuthorizedApis(roleKey, account.expected_permissions);
-    
+    const authorizedApis = getAuthorizedApis(
+      roleKey,
+      account.expected_permissions
+    );
+
     for (const api of authorizedApis.slice(0, 5)) {
       results.totalTests++;
-      
+
       try {
         const response = await fetch(`${CONFIG.baseUrl}${api.endpoint}`, {
           method: api.method,
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         });
 
         // 期望200系列状态码表示成功
@@ -159,43 +167,48 @@ async function testApiPermissions(roleKey, account, roleData) {
           results.details.push({
             test: `API访问: ${api.method} ${api.endpoint}`,
             status: 'passed',
-            statusCode: response.status
+            statusCode: response.status,
           });
         } else if (response.status === 403 || response.status === 401) {
-          console.log(`   ⚠️  ${api.method} ${api.endpoint} - 权限拒绝 (这可能不正确)`);
+          console.log(
+            `   ⚠️  ${api.method} ${api.endpoint} - 权限拒绝 (这可能不正确)`
+          );
           results.failedTests++;
           results.details.push({
             test: `API访问: ${api.method} ${api.endpoint}`,
             status: 'failed',
             statusCode: response.status,
-            note: '权限被意外拒绝'
+            note: '权限被意外拒绝',
           });
         } else {
-          console.log(`   ⚠️  ${api.method} ${api.endpoint} - 异常状态 ${response.status}`);
+          console.log(
+            `   ⚠️  ${api.method} ${api.endpoint} - 异常状态 ${response.status}`
+          );
           results.details.push({
             test: `API访问: ${api.method} ${api.endpoint}`,
             status: 'warning',
-            statusCode: response.status
+            statusCode: response.status,
           });
         }
       } catch (error) {
-        console.log(`   ❌ ${api.method} ${api.endpoint} - 请求失败: ${error.message}`);
+        console.log(
+          `   ❌ ${api.method} ${api.endpoint} - 请求失败: ${error.message}`
+        );
         results.failedTests++;
         results.details.push({
           test: `API访问: ${api.method} ${api.endpoint}`,
           status: 'failed',
-          error: error.message
+          error: error.message,
         });
       }
     }
-
   } catch (error) {
     console.log(`   ❌ API测试异常: ${error.message}`);
     results.failedTests++;
     results.details.push({
       test: 'API权限测试',
       status: 'failed',
-      error: error.message
+      error: error.message,
     });
   }
 
@@ -210,17 +223,17 @@ async function testWebPermissions(roleKey, account, roleData) {
     totalTests: 0,
     passedTests: 0,
     failedTests: 0,
-    details: []
+    details: [],
   };
 
   // 这部分需要Playwright来执行，这里只是框架
   console.log('   🌐 Web界面测试需要Playwright环境');
-  
+
   results.totalTests++;
   results.details.push({
     test: 'Web界面权限测试框架',
     status: 'skipped',
-    note: '需要运行Playwright测试'
+    note: '需要运行Playwright测试',
   });
 
   return results;
@@ -234,21 +247,21 @@ async function testBoundaryPermissions(roleKey, account, roleData) {
     totalTests: 0,
     passedTests: 0,
     failedTests: 0,
-    details: []
+    details: [],
   };
 
   // 测试不应该有权限的API
   console.log('   🚫 测试权限边界...');
   const unauthorizedApis = getUnauthorizedApis(roleKey);
-  
+
   for (const api of unauthorizedApis.slice(0, 3)) {
     results.totalTests++;
-    
+
     try {
       // 不登录直接访问，应该被拒绝
       const response = await fetch(`${CONFIG.baseUrl}${api.endpoint}`, {
         method: api.method,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       // 401或403表示权限控制正常工作
@@ -259,16 +272,18 @@ async function testBoundaryPermissions(roleKey, account, roleData) {
           test: `边界权限: ${api.method} ${api.endpoint}`,
           status: 'passed',
           statusCode: response.status,
-          note: '权限控制正常'
+          note: '权限控制正常',
         });
       } else {
-        console.log(`   ⚠️  ${api.method} ${api.endpoint} - 未正确拒绝 (${response.status})`);
+        console.log(
+          `   ⚠️  ${api.method} ${api.endpoint} - 未正确拒绝 (${response.status})`
+        );
         results.failedTests++;
         results.details.push({
           test: `边界权限: ${api.method} ${api.endpoint}`,
           status: 'failed',
           statusCode: response.status,
-          note: '权限边界控制不足'
+          note: '权限边界控制不足',
         });
       }
     } catch (error) {
@@ -277,7 +292,7 @@ async function testBoundaryPermissions(roleKey, account, roleData) {
       results.details.push({
         test: `边界权限测试`,
         status: 'failed',
-        error: error.message
+        error: error.message,
       });
     }
   }
@@ -290,15 +305,15 @@ async function testBoundaryPermissions(roleKey, account, roleData) {
  */
 function getAuthorizedApis(roleKey, permissions) {
   const apis = [];
-  
+
   permissions.forEach(permission => {
     const [resource, action] = permission.split('_');
     const method = getHttpMethod(action);
     const endpoint = `/api/${resource}`;
-    
+
     apis.push({ endpoint, method, resource, action });
   });
-  
+
   return apis;
 }
 
@@ -308,21 +323,21 @@ function getAuthorizedApis(roleKey, permissions) {
 function getUnauthorizedApis(roleKey) {
   const allResources = ['users', 'content', 'shops', 'payments', 'settings'];
   const unauthorized = [];
-  
+
   // 简化处理：假设某些高权限API不应该被低级别角色访问
   const restrictedEndpoints = {
     viewer: ['/api/users', '/api/settings', '/api/payments'],
     warehouse_operator: ['/api/users', '/api/settings', '/api/content'],
-    procurement_specialist: ['/api/users', '/api/settings']
+    procurement_specialist: ['/api/users', '/api/settings'],
   };
-  
+
   const restricted = restrictedEndpoints[roleKey] || [];
-  
+
   restricted.forEach(endpoint => {
     unauthorized.push({ endpoint, method: 'DELETE' });
     unauthorized.push({ endpoint, method: 'POST' });
   });
-  
+
   return unauthorized;
 }
 
@@ -331,11 +346,11 @@ function getUnauthorizedApis(roleKey) {
  */
 function getHttpMethod(action) {
   const methodMap = {
-    'read': 'GET',
-    'create': 'POST',
-    'update': 'PUT',
-    'delete': 'DELETE',
-    'approve': 'PATCH'
+    read: 'GET',
+    create: 'POST',
+    update: 'PUT',
+    delete: 'DELETE',
+    approve: 'PATCH',
   };
   return methodMap[action] || 'GET';
 }
@@ -353,10 +368,10 @@ function generateTestReport(allResults) {
       totalTests: 0,
       passedTests: 0,
       failedTests: 0,
-      passRate: 0
+      passRate: 0,
     },
     roleResults: allResults,
-    recommendations: []
+    recommendations: [],
   };
 
   // 计算汇总统计
@@ -367,7 +382,10 @@ function generateTestReport(allResults) {
   });
 
   if (report.summary.totalTests > 0) {
-    report.summary.passRate = ((report.summary.passedTests / report.summary.totalTests) * 100).toFixed(2);
+    report.summary.passRate = (
+      (report.summary.passedTests / report.summary.totalTests) *
+      100
+    ).toFixed(2);
   }
 
   // 生成建议
@@ -377,12 +395,17 @@ function generateTestReport(allResults) {
 
   Object.entries(allResults).forEach(([roleKey, result]) => {
     if (result.failedTests > 0) {
-      report.recommendations.push(`角色 ${result.roleName} 存在 ${result.failedTests} 个失败测试，请检查相关权限配置`);
+      report.recommendations.push(
+        `角色 ${result.roleName} 存在 ${result.failedTests} 个失败测试，请检查相关权限配置`
+      );
     }
   });
 
   // 保存报告
-  const reportPath = path.join(__dirname, `role-permission-test-report-${Date.now()}.json`);
+  const reportPath = path.join(
+    __dirname,
+    `role-permission-test-report-${Date.now()}.json`
+  );
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 
   return { report, reportPath };
@@ -399,19 +422,19 @@ async function runAllRoleTests() {
   console.log(`超时设置: ${CONFIG.timeout}ms\n`);
 
   const allResults = {};
-  
+
   // 按顺序测试每个角色
   for (const [roleKey, roleData] of Object.entries(testData.roles)) {
     const roleResults = await testRolePermissions(roleKey, roleData);
     allResults[roleKey] = roleResults;
-    
+
     // 短暂延迟避免请求过于频繁
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
   // 生成最终报告
   const { report, reportPath } = generateTestReport(allResults);
-  
+
   // 输出最终结果
   console.log('\n🏆 最终测试报告');
   console.log('==================');
@@ -444,5 +467,5 @@ if (require.main === module) {
 module.exports = {
   testRolePermissions,
   runAllRoleTests,
-  generateTestReport
+  generateTestReport,
 };

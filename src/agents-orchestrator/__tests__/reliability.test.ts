@@ -1,6 +1,5 @@
 /**
- * Agents Orchestrator 可靠性模块单元测试
- */
+ * Agents Orchestrator 可靠性模块单元测? */
 
 import {
   ReliabilityHandler,
@@ -40,14 +39,14 @@ describe('ReliabilityHandler', () => {
       const request: AgentInvokeRequest = {
         idempotency_key: 'test_timeout_1',
         trace_id: 'trace_1',
-        timeout: 1, // 1秒
+        timeout: 1, // 1 秒
         agent_name: 'TestAgent',
         payload: {},
       };
 
       // 模拟一个长时间运行的处理器
       mockHandler.mockImplementation(async () => {
-        await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒延迟
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 2 秒延迟
         return { success: true };
       });
 
@@ -138,7 +137,7 @@ describe('ReliabilityHandler', () => {
         reliabilityHandler.executeWithReliability(request, mockHandler)
       ).rejects.toThrow('500 Internal Server Error');
 
-      expect(mockHandler).toHaveBeenCalledTimes(4); // 1次初始 + 3次重试
+      expect(mockHandler).toHaveBeenCalledTimes(4); // 1 次初始 + 3 次重试
     });
   });
 
@@ -334,7 +333,7 @@ describe('ReliabilityHandler', () => {
   });
 
   describe('配置管理测试', () => {
-    test('应该能够获取和更新配置', () => {
+    test('应该能够获取和更新配置', async () => {
       const initialConfig = reliabilityHandler.getConfig();
       expect(initialConfig.maxRetries).toBe(3);
 

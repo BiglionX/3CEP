@@ -39,32 +39,27 @@ export async function GET(
     // 获取工作流详情
     const { data: workflow, error } = await supabase
       .from('workflows')
-      .select(`
+      .select(
+        `
         *,
         executions:workflow_executions(*)
-      `)
+      `
+      )
       .eq('id', workflowId)
       .single();
 
     if (error) {
       console.error('获取工作流详情失败:', error);
-      return NextResponse.json(
-        { error: '工作流不存在' }, 
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '工作流不存在' }, { status: 404 });
     }
 
     return NextResponse.json({
       success: true,
-      data: workflow
+      data: workflow,
     });
-
   } catch (error: any) {
     console.error('工作流详情 API 错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
 
@@ -101,12 +96,14 @@ export async function PUT(
     // 更新工作流
     const updateData: any = {
       updated_by: user.id,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     };
 
     if (body.name !== undefined) updateData.name = body.name.trim();
-    if (body.description !== undefined) updateData.description = body.description?.trim() || null;
-    if (body.workflow_data !== undefined) updateData.workflow_data = body.workflow_data;
+    if (body.description !== undefined)
+      updateData.description = body?.trim() || null;
+    if (body.workflow_data !== undefined)
+      updateData.workflow_data = body.workflow_data;
     if (body.status !== undefined) updateData.status = body.status;
 
     const { data: workflow, error } = await supabase
@@ -119,7 +116,7 @@ export async function PUT(
     if (error) {
       console.error('更新工作流失败:', error);
       return NextResponse.json(
-        { error: '更新工作流失败', details: error.message }, 
+        { error: '更新工作流失败', details: error.message },
         { status: 500 }
       );
     }
@@ -131,15 +128,11 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       message: '工作流更新成功',
-      data: workflow
+      data: workflow,
     });
-
   } catch (error: any) {
     console.error('更新工作流错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
 
@@ -181,21 +174,17 @@ export async function DELETE(
     if (error) {
       console.error('删除工作流失败:', error);
       return NextResponse.json(
-        { error: '删除工作流失败', details: error.message }, 
+        { error: '删除工作流失败', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: '工作流删除成功'
+      message: '工作流删除成功',
     });
-
   } catch (error: any) {
     console.error('删除工作流错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }

@@ -206,20 +206,19 @@ if (!fs.existsSync(testDir)) {
   fs.mkdirSync(testDir, { recursive: true });
 }
 
-fs.writeFileSync(
-  path.join(testDir, 'page.tsx'),
-  simpleJumpTest
-);
+fs.writeFileSync(path.join(testDir, 'page.tsx'), simpleJumpTest);
 
-const bypassDir = path.join(process.cwd(), 'src', 'app', 'bypass-middleware-test');
+const bypassDir = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'bypass-middleware-test'
+);
 if (!fs.existsSync(bypassDir)) {
   fs.mkdirSync(bypassDir, { recursive: true });
 }
 
-fs.writeFileSync(
-  path.join(bypassDir, 'page.tsx'),
-  bypassMiddlewarePage
-);
+fs.writeFileSync(path.join(bypassDir, 'page.tsx'), bypassMiddlewarePage);
 
 console.log('✅ 创建了两个测试页面:');
 console.log('   1. /simple-jump-test - 简单跳转测试');

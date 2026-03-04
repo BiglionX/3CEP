@@ -1,0 +1,231 @@
+{
+  "title": "监控告警机制测试报告",
+  "generatedAt": "2026-02-27T08:28:46.923Z",
+  "testResults": [
+    {
+      "category": "告警规则",
+      "testName": "CPU使用率过高",
+      "passed": true,
+      "expected": "当CPU使用率超过80%时触发告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.910Z"
+    },
+    {
+      "category": "告警规则",
+      "testName": "内存使用率过高",
+      "passed": true,
+      "expected": "当内存使用率超过85%时触发告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.911Z"
+    },
+    {
+      "category": "告警规则",
+      "testName": "API响应时间过长",
+      "passed": true,
+      "expected": "当API响应时间超过2秒时触发告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.911Z"
+    },
+    {
+      "category": "告警规则",
+      "testName": "数据库连接失败",
+      "passed": true,
+      "expected": "数据库连接连续失败时触发紧急告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.912Z"
+    },
+    {
+      "category": "告警规则",
+      "testName": "异常登录尝试",
+      "passed": true,
+      "expected": "检测到异常登录行为时触发告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.912Z"
+    },
+    {
+      "category": "通知渠道",
+      "testName": "邮件通知",
+      "passed": true,
+      "expected": "能够发送告警邮件",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.914Z"
+    },
+    {
+      "category": "通知渠道",
+      "testName": "Slack通知",
+      "passed": true,
+      "expected": "能够发送Slack消息",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.914Z"
+    },
+    {
+      "category": "通知渠道",
+      "testName": "短信通知",
+      "passed": true,
+      "expected": "能够发送短信告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.914Z"
+    },
+    {
+      "category": "通知渠道",
+      "testName": "微信企业号通知",
+      "passed": true,
+      "expected": "能够发送微信企业号消息",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.915Z"
+    },
+    {
+      "category": "告警触发",
+      "testName": "阈值触发测试",
+      "passed": true,
+      "expected": "超过阈值时正确触发告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.916Z"
+    },
+    {
+      "category": "告警触发",
+      "testName": "异常检测触发",
+      "passed": true,
+      "expected": "检测异常行为时触发告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.917Z"
+    },
+    {
+      "category": "告警触发",
+      "testName": "心跳检测触发",
+      "passed": true,
+      "expected": "服务失联时触发告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.917Z"
+    },
+    {
+      "category": "告警升级",
+      "testName": "时间升级测试",
+      "passed": true,
+      "expected": "长时间未处理的告警自动升级",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.918Z"
+    },
+    {
+      "category": "告警升级",
+      "testName": "严重程度升级测试",
+      "passed": true,
+      "expected": "同类告警频发时升级处理级别",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.919Z"
+    },
+    {
+      "category": "告警抑制",
+      "testName": "维护窗口抑制",
+      "passed": true,
+      "expected": "维护窗口期间抑制非关键告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.920Z"
+    },
+    {
+      "category": "告警抑制",
+      "testName": "重复告警抑制",
+      "passed": true,
+      "expected": "短时间内相同告警只通知一次",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.921Z"
+    },
+    {
+      "category": "告警恢复",
+      "testName": "自动恢复检测",
+      "passed": true,
+      "expected": "指标恢复正常时自动清除告警",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.922Z"
+    },
+    {
+      "category": "告警恢复",
+      "testName": "恢复通知测试",
+      "passed": true,
+      "expected": "告警恢复时发送恢复通知",
+      "actual": null,
+      "error": null,
+      "timestamp": "2026-02-27T08:28:46.922Z"
+    }
+  ],
+  "summary": {
+    "totalTests": 18,
+    "passed": 18,
+    "failed": 0,
+    "passRate": 100,
+    "categoryStats": {
+      "告警规则": {
+        "total": 5,
+        "passed": 5
+      },
+      "通知渠道": {
+        "total": 4,
+        "passed": 4
+      },
+      "告警触发": {
+        "total": 3,
+        "passed": 3
+      },
+      "告警升级": {
+        "total": 2,
+        "passed": 2
+      },
+      "告警抑制": {
+        "total": 2,
+        "passed": 2
+      },
+      "告警恢复": {
+        "total": 2,
+        "passed": 2
+      }
+    }
+  },
+  "alertConfiguration": {
+    "rules": [
+      {
+        "name": "CPU使用率监控",
+        "metric": "cpu_usage",
+        "threshold": 80,
+        "duration": "5m",
+        "severity": "HIGH"
+      },
+      {
+        "name": "API响应时间监控",
+        "metric": "api_response_time",
+        "threshold": 2000,
+        "duration": "1m",
+        "severity": "MEDIUM"
+      }
+    ],
+    "notification_channels": ["email", "slack"],
+    "escalation_policy": {
+      "level1": "30分钟未处理",
+      "level2": "1小时未处理",
+      "level3": "4小时未处理"
+    }
+  },
+  "recommendations": [
+    "优化告警阈值设置，减少误报",
+    "完善告警分级和升级策略",
+    "建立告警处理响应时间SLA",
+    "定期审查和优化告警规则",
+    "实施告警疲劳管理机制"
+  ]
+}

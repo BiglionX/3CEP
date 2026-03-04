@@ -17,8 +17,7 @@ export class BillingEngine {
   }
 
   /**
-   * 初始化默认计费规则
-   */
+   * 初始化默认计费规?   */
   private initializeDefaultRules(): void {
     // AI诊断基础费用
     this.rules.set('diagnosis', {
@@ -29,19 +28,18 @@ export class BillingEngine {
       description: 'AI故障诊断基础费用',
       isActive: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
 
-    // 查看说明书费用
-    this.rules.set('manual_view', {
+    // 查看说明书费?    this.rules.set('manual_view', {
       id: 'rule-manual-view-001',
       serviceType: 'manual_view',
       costPerUnit: 10,
       unitType: 'per_request',
-      description: '查看说明书费用',
+      description: '查看说明书费?,
       isActive: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
 
     // 高级功能使用费用
@@ -53,22 +51,15 @@ export class BillingEngine {
       description: '高级功能使用费用',
       isActive: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
 
     // 设置阶梯定价
     this.tiers.set('diagnosis', [
-      { minUsage: 0, maxUsage: 10, pricePerUnit: 50 },      // 前10次，50 Token/次
-      { minUsage: 11, maxUsage: 50, pricePerUnit: 40 },     // 11-50次，40 Token/次
-      { minUsage: 51, maxUsage: 100, pricePerUnit: 30 },    // 51-100次，30 Token/次
-      { minUsage: 101, maxUsage: Infinity, pricePerUnit: 25 } // 100次以上，25 Token/次
-    ]);
+      { minUsage: 0, maxUsage: 10, pricePerUnit: 50 }, // �?0次，50 Token/�?      { minUsage: 11, maxUsage: 50, pricePerUnit: 40 }, // 11-50次，40 Token/�?      { minUsage: 51, maxUsage: 100, pricePerUnit: 30 }, // 51-100次，30 Token/�?      { minUsage: 101, maxUsage: Infinity, pricePerUnit: 25 }, // 100次以上，25 Token/�?    ]);
 
     this.tiers.set('manual_view', [
-      { minUsage: 0, maxUsage: 20, pricePerUnit: 10 },      // 前20次，10 Token/次
-      { minUsage: 21, maxUsage: 100, pricePerUnit: 8 },     // 21-100次，8 Token/次
-      { minUsage: 101, maxUsage: Infinity, pricePerUnit: 5 } // 100次以上，5 Token/次
-    ]);
+      { minUsage: 0, maxUsage: 20, pricePerUnit: 10 }, // �?0次，10 Token/�?      { minUsage: 21, maxUsage: 100, pricePerUnit: 8 }, // 21-100次，8 Token/�?      { minUsage: 101, maxUsage: Infinity, pricePerUnit: 5 }, // 100次以上，5 Token/�?    ]);
   }
 
   /**
@@ -77,7 +68,7 @@ export class BillingEngine {
   async calculateCost(serviceType: string, usage: number): Promise<number> {
     const rule = this.rules.get(serviceType);
     if (!rule) {
-      throw new Error(`未找到服务类型 ${serviceType} 的计费规则`);
+      throw new Error(`未找到服务类?${serviceType} 的计费规则`);
     }
 
     if (!rule.isActive) {
@@ -101,11 +92,13 @@ export class BillingEngine {
     let totalCost = 0;
     let remainingUsage = usage;
 
-    // 按阶梯计算费用
-    for (const tier of tiers) {
+    // 按阶梯计算费?    for (const tier of tiers) {
       if (remainingUsage <= 0) break;
 
-      const tierUsage = Math.min(remainingUsage, tier.maxUsage - tier.minUsage + 1);
+      const tierUsage = Math.min(
+        remainingUsage,
+        tier.maxUsage - tier.minUsage + 1
+      );
       totalCost += tierUsage * tier.pricePerUnit;
       remainingUsage -= tierUsage;
     }
@@ -116,13 +109,17 @@ export class BillingEngine {
   /**
    * 扣除Token
    */
-  async deductTokens(accountId: string, amount: number, description: string): Promise<boolean> {
+  async deductTokens(
+    accountId: string,
+    amount: number,
+    description: string
+  ): Promise<boolean> {
     try {
       // 这里应该调用Token账户服务扣除Token
       // 暂时返回模拟结果
-      console.log(`从账户 ${accountId} 扣除 ${amount} 个Token，用途：${description}`);
-      return Math.random() > 0.05; // 95%成功率模拟
-    } catch (error) {
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `从账?${accountId} 扣除 ${amount} 个Token，用途：${description}`
+      )return Math.random() > 0.05; // 95%成功率模?    } catch (error) {
       console.error('扣除Token失败:', error);
       return false;
     }
@@ -131,12 +128,17 @@ export class BillingEngine {
   /**
    * 退还Token
    */
-  async refundTokens(accountId: string, amount: number, reason: string): Promise<boolean> {
+  async refundTokens(
+    accountId: string,
+    amount: number,
+    reason: string
+  ): Promise<boolean> {
     try {
       // 这里应该调用Token账户服务退还Token
       // 暂时返回模拟结果
-      console.log(`向账户 ${accountId} 退还 ${amount} 个Token，原因：${reason}`);
-      return true;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `向账?${accountId} 退?${amount} 个Token，原因：${reason}`
+      )return true;
     } catch (error) {
       console.error('退还Token失败:', error);
       return false;
@@ -144,8 +146,7 @@ export class BillingEngine {
   }
 
   /**
-   * 获取服务类型的所有计费规则
-   */
+   * 获取服务类型的所有计费规?   */
   getServiceRules(serviceType: string): BillingRule | null {
     return this.rules.get(serviceType) || null;
   }
@@ -173,7 +174,7 @@ export class BillingEngine {
       const updatedRule = {
         ...existingRule,
         ...updates,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
       this.rules.set(serviceType, updatedRule);
     }
@@ -194,27 +195,30 @@ export class BillingEngine {
   }
 
   /**
-   * 预估费用（基于预计使用量）
-   */
-  async estimateCost(serviceType: string, estimatedUsage: number): Promise<{
+   * 预估费用（基于预计使用量?   */
+  async estimateCost(
+    serviceType: string,
+    estimatedUsage: number
+  ): Promise<{
     totalCost: number;
     breakdown: Array<{ range: string; usage: number; cost: number }>;
   }> {
     const rule = this.rules.get(serviceType);
     if (!rule) {
-      throw new Error(`未找到服务类型 ${serviceType} 的计费规则`);
+      throw new Error(`未找到服务类?${serviceType} 的计费规则`);
     }
 
     const serviceTiers = this.tiers.get(serviceType);
     if (!serviceTiers) {
-      // 无阶梯定价
-      return {
+      // 无阶梯定?      return {
         totalCost: rule.costPerUnit * estimatedUsage,
-        breakdown: [{
-          range: '全部用量',
-          usage: estimatedUsage,
-          cost: rule.costPerUnit * estimatedUsage
-        }]
+        breakdown: [
+          {
+            range: '全部用量',
+            usage: estimatedUsage,
+            cost: rule.costPerUnit * estimatedUsage,
+          },
+        ],
       };
     }
 
@@ -226,21 +230,27 @@ export class BillingEngine {
     for (const tier of serviceTiers) {
       if (remainingUsage <= 0) break;
 
-      const tierUsage = Math.min(remainingUsage, tier.maxUsage === Infinity ? remainingUsage : tier.maxUsage - tier.minUsage + 1);
+      const tierUsage = Math.min(
+        remainingUsage,
+        tier.maxUsage === Infinity
+          ? remainingUsage
+          : tier.maxUsage - tier.minUsage + 1
+      );
       const tierCost = tierUsage * tier.pricePerUnit;
-      
+
       totalCost += tierCost;
-      
-      const range = tier.maxUsage === Infinity 
-        ? `${tier.minUsage}+` 
-        : `${tier.minUsage}-${tier.maxUsage}`;
-      
+
+      const range =
+        tier.maxUsage === Infinity
+          ? `${tier.minUsage}+`
+          : `${tier.minUsage}-${tier.maxUsage}`;
+
       breakdown.push({
         range,
         usage: tierUsage,
-        cost: tierCost
+        cost: tierCost,
       });
-      
+
       remainingUsage -= tierUsage;
     }
 
@@ -248,23 +258,26 @@ export class BillingEngine {
   }
 
   /**
-   * 检查余额是否充足
-   */
-  async checkBalance(accountId: string, serviceType: string, usage: number): Promise<{
+   * 检查余额是否充?   */
+  async checkBalance(
+    accountId: string,
+    serviceType: string,
+    usage: number
+  ): Promise<{
     isSufficient: boolean;
     requiredTokens: number;
     currentBalance: number;
   }> {
     const requiredTokens = await this.calculateCost(serviceType, usage);
-    
+
     // 这里应该调用Token账户服务获取当前余额
     // 暂时使用模拟数据
     const currentBalance = 1000; // 模拟余额
-    
+
     return {
       isSufficient: currentBalance >= requiredTokens,
       requiredTokens,
-      currentBalance
+      currentBalance,
     };
   }
 }

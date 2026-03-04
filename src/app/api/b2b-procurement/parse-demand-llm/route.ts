@@ -1,5 +1,5 @@
-/**
- * 大模型API集成版B2B采购需求解析API端点
+﻿/**
+ * 澶фā鍨婣PI闆嗘垚鐗圔2B閲囪喘闇€姹傝В鏋怉PI绔偣
  */
 
 import { NextResponse } from 'next/server';
@@ -11,12 +11,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { description, companyId, requesterId } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!description || typeof description !== 'string') {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: '请提供有效的采购需求描述' 
+        {
+          success: false,
+          error: '璇锋彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿?,
         },
         { status: 400 }
       );
@@ -24,26 +24,25 @@ export async function POST(request: Request) {
 
     if (!companyId || !requesterId) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: '缺少必要的公司ID或请求者ID' 
+        {
+          success: false,
+          error: '缂哄皯蹇呰鐨勫叕鍙窱D鎴栬姹傝€匢D',
         },
         { status: 400 }
       );
     }
 
-    // 创建原始请求对象
+    // 鍒涘缓鍘熷璇锋眰瀵硅薄
     const rawRequest: RawProcurementRequest = {
       id: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       companyId,
       requesterId,
       rawDescription: description.trim(),
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
-    // 调用大模型解析服务
-    const parserService = new LargeModelProcurementService();
+    // 璋冪敤澶фā鍨嬭В鏋愭湇?    const parserService = new LargeModelProcurementService();
     const parsedRequest = await parserService.parseDemand(rawRequest);
 
     return NextResponse.json({
@@ -51,35 +50,38 @@ export async function POST(request: Request) {
       data: {
         rawRequest,
         parsedRequest,
-        enhancement: '大模型API集成架构',
-        modelUsed: 'DeepSeek + 通义千问',
-        confidenceLevel: parsedRequest.aiConfidence > 90 ? '优秀' : 
-                        parsedRequest.aiConfidence > 80 ? '良好' : '一般'
+        enhancement: '澶фā鍨婣PI闆嗘垚鏋舵瀯',
+        modelUsed: 'DeepSeek + 閫氫箟鍗冮棶',
+        confidenceLevel:
+          parsedRequest.aiConfidence > 90
+            ? '浼樼'
+            : parsedRequest.aiConfidence > 80
+              ? '鑹ソ'
+              : '涓€?,
       },
-      message: '采购需求解析成功（大模型版）'
+      message: '閲囪喘闇€姹傝В鏋愭垚鍔燂紙澶фā鍨嬬増?,
     });
-
   } catch (error) {
-    console.error('采购需求解析错误:', error);
-    
+    console.error('閲囪喘闇€姹傝В鏋愰敊?', error);
+
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '采购需求解析失败',
-        details: error instanceof Error ? error.message : '未知错误'
+      {
+        success: false,
+        error: '閲囪喘闇€姹傝В鏋愬け?,
+        details: error instanceof Error ? error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// GET方法用于健康检查
-export async function GET() {
+// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€?export async function GET() {
   return NextResponse.json({
     success: true,
-    message: '大模型API集成版B2B采购需求解析服务运行正常',
-    enhancement: '集成DeepSeek和通义千问双模型',
-    supportedModels: ['DeepSeek', '通义千问'],
-    timestamp: new Date().toISOString()
+    message: '澶фā鍨婣PI闆嗘垚鐗圔2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾?,
+    enhancement: '闆嗘垚DeepSeek鍜岄€氫箟鍗冮棶鍙屾ā?,
+    supportedModels: ['DeepSeek', '閫氫箟鍗冮棶'],
+    timestamp: new Date().toISOString(),
   });
 }
+

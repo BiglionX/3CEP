@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-02-26T13:13:04.364Z",
+  "summary": {
+    "totalTests": 11,
+    "passedTests": 9,
+    "failedTests": 2,
+    "averageResponseTime": 158.6,
+    "maxResponseTime": 232,
+    "minResponseTime": 90
+  },
+  "detailedResults": [
+    {
+      "name": "供应商画像创建",
+      "status": "passed",
+      "responseTime": 126,
+      "throughput": 7.936507936507937
+    },
+    {
+      "name": "供应商画像查询",
+      "status": "passed",
+      "responseTime": 127,
+      "throughput": 7.874015748031496
+    },
+    {
+      "name": "市场情报生成",
+      "status": "passed",
+      "responseTime": 232,
+      "throughput": 4.310344827586207
+    },
+    {
+      "name": "风险分析评估",
+      "status": "passed",
+      "responseTime": 90,
+      "throughput": 11.11111111111111
+    },
+    {
+      "name": "采购决策引擎",
+      "status": "passed",
+      "responseTime": 218,
+      "throughput": 4.587155963302752
+    },
+    {
+      "name": "并发10请求",
+      "status": "passed",
+      "responseTime": 23.2,
+      "throughput": 43.10344827586207
+    },
+    {
+      "name": "并发50请求",
+      "status": "passed",
+      "responseTime": 4.62,
+      "throughput": 216.45021645021646
+    },
+    {
+      "name": "并发100请求",
+      "status": "failed",
+      "responseTime": 0,
+      "throughput": 0,
+      "error": "Network timeout"
+    },
+    {
+      "name": "持续负载测试",
+      "status": "failed",
+      "responseTime": 158.20550847457628,
+      "throughput": 15.73123583522197,
+      "details": {
+        "totalRequests": 600,
+        "completedRequests": 472,
+        "failedRequests": 7,
+        "successRate": "78.67%",
+        "duration": "30004ms"
+      }
+    },
+    {
+      "name": "批量数据库操作(1000记录)",
+      "status": "passed",
+      "responseTime": 446,
+      "throughput": 2242.152466367713
+    },
+    {
+      "name": "内存使用测试",
+      "status": "passed",
+      "responseTime": 0,
+      "throughput": 0,
+      "details": {
+        "initialMemory": "4.22 MB",
+        "finalMemory": "12.58 MB",
+        "memoryIncrease": "8.36 MB"
+      }
+    }
+  ],
+  "performanceMetrics": {
+    "responseTime": {
+      "average": "158.60ms",
+      "max": "232ms",
+      "min": "90ms",
+      "slaCompliance": "PASS"
+    },
+    "throughput": {
+      "average": "281.95 req/sec",
+      "peak": "2242.15 req/sec"
+    },
+    "reliability": {
+      "successRate": "81.82%",
+      "uptime": "99.9%"
+    }
+  },
+  "recommendations": ["提高系统稳定性，成功率应达到95%以上"]
+}

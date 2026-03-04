@@ -1,11 +1,10 @@
 /**
- * 邮件服务 - 基于Nodemailer实现SMTP邮件发送
- * 支持模板渲染、批量发送、状态跟踪和重试机制
+ * 邮件服务 - 基于Nodemailer实现SMTP邮件发? * 支持模板渲染、批量发送、状态跟踪和重试机制
  */
 
-import { createClient } from "@supabase/supabase-js";
-import Handlebars from "handlebars";
-import nodemailer, { SentMessageInfo, Transporter } from "nodemailer";
+import { createClient } from '@supabase/supabase-js';
+import Handlebars from 'handlebars';
+import nodemailer, { SentMessageInfo, Transporter } from 'nodemailer';
 
 // 邮件配置接口
 export interface EmailConfig {
@@ -31,8 +30,7 @@ export interface EmailOptions {
   }>;
 }
 
-// 邮件发送结果
-export interface EmailSendResult {
+// 邮件发送结?export interface EmailSendResult {
   success: boolean;
   messageId?: string;
   error?: string;
@@ -60,10 +58,9 @@ export class EmailService {
 
   constructor(config: EmailConfig) {
     this.defaultFrom = config.fromAddress;
-    this.defaultFromName = config.fromName || "采购系统";
+    this.defaultFromName = config.fromName || '采购系统';
 
-    // 创建邮件传输器
-    this.transporter = nodemailer.createTransporter({
+    // 创建邮件传输?    this.transporter = nodemailer.createTransporter({
       host: config.smtpHost,
       port: config.smtpPort,
       secure: config.secure ?? config.smtpPort === 465,
@@ -76,10 +73,9 @@ export class EmailService {
       },
     });
 
-    // 初始化Supabase客户端（用于记录邮件日志）
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-      process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+    // 初始化Supabase客户端（用于记录邮件日志?    this.supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
     );
 
     // 验证连接配置
@@ -92,37 +88,33 @@ export class EmailService {
   private async verifyConnection(): Promise<void> {
     try {
       await this.transporter.verify();
-      console.log("✅ SMTP服务器连接验证成功");
-    } catch (error) {
-      console.error("❌ SMTP服务器连接验证失败:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?SMTP服务器连接验证成?)} catch (error) {
+      console.error('�?SMTP服务器连接验证失?', error);
       throw new Error(`邮件服务配置错误: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 发送单封邮件
-   */
+   * 发送单封邮?   */
   async sendEmail(options: EmailOptions): Promise<EmailSendResult> {
     try {
       const mailOptions = {
         from: `"${this.defaultFromName}" <${this.defaultFrom}>`,
-        to: Array.isArray(options.to) ? options.to.join(", ") : options.to,
+        to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
         subject: options.subject,
         html: options.html,
         text: options.text,
         attachments: options.attachments,
       };
 
-      const info: SentMessageInfo = await this.transporter.sendMail(
-        mailOptions
-      );
+      const info: SentMessageInfo =
+        await this.transporter.sendMail(mailOptions);
 
-      // 记录发送日志
-      await this.logEmail({
+      // 记录发送日?      await this.logEmail({
         to: mailOptions.to,
         subject: options.subject,
-        content: options.html || options.text || "",
-        status: "sent",
+        content: options.html || options.text || '',
+        status: 'sent',
         messageId: info.messageId,
       });
 
@@ -134,12 +126,11 @@ export class EmailService {
     } catch (error) {
       const errorMessage = (error as Error).message;
 
-      // 记录发送失败日志
-      await this.logEmail({
-        to: Array.isArray(options.to) ? options.to.join(", ") : options.to,
+      // 记录发送失败日?      await this.logEmail({
+        to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
         subject: options.subject,
-        content: options.html || options.text || "",
-        status: "failed",
+        content: options.html || options.text || '',
+        status: 'failed',
         error: errorMessage,
       });
 
@@ -152,8 +143,7 @@ export class EmailService {
   }
 
   /**
-   * 发送模板邮件
-   */
+   * 发送模板邮?   */
   async sendTemplateEmail(
     to: string,
     subject: string,
@@ -180,8 +170,7 @@ export class EmailService {
   }
 
   /**
-   * 批量发送邮件
-   */
+   * 批量发送邮?   */
   async sendBulkEmails(options: BulkEmailOptions): Promise<EmailSendResult[]> {
     const results: EmailSendResult[] = [];
     const maxRetries = options.maxRetries || 3;
@@ -231,24 +220,22 @@ export class EmailService {
 
         attempt++;
         if (attempt < maxRetries && !result.success) {
-          console.log(
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
             `📧 邮件发送失败，${
               retryDelay / 1000
             }秒后重试 (${attempt}/${maxRetries}):`,
             recipient.email
           );
-          await new Promise((resolve) => setTimeout(resolve, retryDelay));
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
       } while (attempt < maxRetries && !result.success);
 
       results.push(result);
 
-      // 记录发送进度
-      if (results.length % 10 === 0) {
-        console.log(
-          `📧 已发送 ${results.length}/${options.recipients.length} 封邮件`
-        );
-      }
+      // 记录发送进?      if (results.length % 10 === 0) {
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+          `📧 已发?${results.length}/${options.recipients.length} 封邮件`
+        )}
     }
 
     return results;
@@ -261,22 +248,19 @@ export class EmailService {
     to: string;
     subject: string;
     content: string;
-    status: "sent" | "failed";
+    status: 'sent' | 'failed';
     messageId?: string;
     error?: string;
   }): Promise<void> {
     try {
       // 这里应该插入到email_logs表中
-      // 暂时只打印到控制台
-      console.log(
-        `📧 邮件日志 - 状态: ${logData.status}, 收件人: ${logData.to}`
-      );
-
-      if (logData.error) {
-        console.error(`📧 邮件发送错误: ${logData.error}`);
+      // 暂时只打印到控制?      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `📧 邮件日志 - 状? ${logData.status}, 收件? ${logData.to}`
+      )if (logData.error) {
+        console.error(`📧 邮件发送错? ${logData.error}`);
       }
     } catch (error) {
-      console.error("📧 邮件日志记录失败:", error);
+      console.error('📧 邮件日志记录失败:', error);
     }
   }
 
@@ -288,7 +272,7 @@ export class EmailService {
       await this.transporter.verify();
       return true;
     } catch (error) {
-      console.error("📧 邮件服务连接测试失败:", error);
+      console.error('📧 邮件服务连接测试失败:', error);
       return false;
     }
   }
@@ -299,23 +283,21 @@ export class EmailService {
   async close(): Promise<void> {
     try {
       await this.transporter.close();
-      console.log("📧 邮件服务连接已关闭");
-    } catch (error) {
-      console.error("📧 关闭邮件服务连接时出错:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('📧 邮件服务连接已关?)} catch (error) {
+      console.error('📧 关闭邮件服务连接时出?', error);
     }
   }
 }
 
-// 默认邮件配置（从环境变量读取）
-export function getDefaultEmailConfig(): EmailConfig {
+// 默认邮件配置（从环境变量读取?export function getDefaultEmailConfig(): EmailConfig {
   return {
-    smtpHost: process.env.SMTP_HOST || "smtp.gmail.com",
-    smtpPort: parseInt(process.env.SMTP_PORT || "587"),
-    username: process.env.SMTP_USERNAME || "",
-    password: process.env.SMTP_PASSWORD || "",
-    fromAddress: process.env.SMTP_FROM_ADDRESS || "noreply@example.com",
-    fromName: process.env.SMTP_FROM_NAME || "采购系统",
-    secure: process.env.SMTP_SECURE === "true",
+    smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+    smtpPort: parseInt(process.env.SMTP_PORT || '587'),
+    username: process.env.SMTP_USERNAME || '',
+    password: process.env.SMTP_PASSWORD || '',
+    fromAddress: process.env.SMTP_FROM_ADDRESS || 'noreply@example.com',
+    fromName: process.env.SMTP_FROM_NAME || '采购系统',
+    secure: process.env.SMTP_SECURE === 'true',
   };
 }
 
@@ -331,17 +313,17 @@ export function getDefaultEmailService(): EmailService {
 }
 
 // Handlebars助手函数注册
-Handlebars.registerHelper("dateFormat", function (date: Date, format: string) {
-  if (!date) return "";
+Handlebars.registerHelper('dateFormat', function (date: Date, format: string) {
+  if (!date) return '';
   const d = new Date(date);
   const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
 
   switch (format) {
-    case "YYYY-MM-DD":
+    case 'YYYY-MM-DD':
       return `${year}-${month}-${day}`;
-    case "YYYY/MM/DD":
+    case 'YYYY/MM/DD':
       return `${year}/${month}/${day}`;
     default:
       return d.toLocaleDateString();
@@ -349,16 +331,16 @@ Handlebars.registerHelper("dateFormat", function (date: Date, format: string) {
 });
 
 Handlebars.registerHelper(
-  "currencyFormat",
-  function (amount: number, currency: string = "CNY") {
-    if (typeof amount !== "number") return amount;
-    return new Intl.NumberFormat("zh-CN", {
-      style: "currency",
+  'currencyFormat',
+  function (amount: number, currency: string = 'CNY') {
+    if (typeof amount !== 'number') return amount;
+    return new Intl.NumberFormat('zh-CN', {
+      style: 'currency',
       currency: currency,
     }).format(amount);
   }
 );
 
-Handlebars.registerHelper("eq", function (a: any, b: any) {
+Handlebars.registerHelper('eq', function (a: any, b: any) {
   return a === b;
 });

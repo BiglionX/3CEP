@@ -1,298 +1,508 @@
-// 性能监控和健康检查工具
-import { createClient } from '@supabase/supabase-js';
+// 全站性能监控核心引擎
+import { logger } from '../utils/logger';
 
-// 性能指标接口
-interface PerformanceMetrics {
-  pageLoadTime: number;
-  apiResponseTime: number;
-  firstContentfulPaint: number;
-  largestContentfulPaint: number;
-  cumulativeLayoutShift: number;
-  firstInputDelay: number;
-  timestamp: string;
-  userAgent: string;
-  url: string;
+// 监控指标类型
+export enum MetricType {
+  COUNTER = 'COUNTER', // 计数?  GAUGE = 'GAUGE', // 仪表?可增?
+  HISTOGRAM = 'HISTOGRAM', // 直方?  SUMMARY = 'SUMMARY', // 摘要统计
 }
 
-// 健康检查结果接口
-interface HealthCheckResult {
-  status: 'healthy' | 'degraded' | 'unhealthy';
-  services: {
-    database: boolean;
-    api: boolean;
-    n8n: boolean;
-    supabase: boolean;
-  };
-  metrics: {
-    uptime: number;
-    responseTime: number;
-    errorRate: number;
-  };
-  timestamp: string;
+// 监控指标定义
+export interface Metric {
+  name: string;
+  type: MetricType;
+  description: string;
+  labels?: Record<string, string>;
+  value: number;
+  timestamp: number;
 }
 
-// 性能监控类
+// 性能指标数据
+export interface PerformanceMetric {
+  // 响应时间相关
+  responseTime: number;
+  throughput: number;
+  errorRate: number;
+
+  // 资源使用相关
+  cpuUsage: number;
+  memoryUsage: number;
+  diskIO: number;
+  networkIO: number;
+
+  // 业务指标
+  activeUsers: number;
+  requestsPerSecond: number;
+  databaseConnections: number;
+
+  // 时间?  timestamp: number;
+}
+
+// 告警规则定义
+export interface AlertRule {
+  id: string;
+  name: string;
+  description: string;
+  metric: string;
+  operator: '>' | '<' | '>=' | '<=' | '==';
+  threshold: number;
+  duration: number; // 持续时间(�?
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  enabled: boolean;
+  notifications: string[]; // 通知渠道
+}
+
+// 告警事件
+export interface AlertEvent {
+  id: string;
+  ruleId: string;
+  metric: string;
+  currentValue: number;
+  threshold: number;
+  severity: string;
+  triggeredAt: number;
+  resolvedAt?: number;
+  status: 'TRIGGERED' | 'RESOLVED' | 'ACKNOWLEDGED';
+  annotations?: Record<string, any>;
+}
+
+// 监控配置
+export interface MonitoringConfig {
+  collectionInterval: number; // 数据收集间隔(毫秒)
+  retentionPeriod: number; // 数据保留时间(�?
+  alertEvaluationInterval: number; // 告警评估间隔(�?
+  sampleRate: number; // 采样?0-1)
+}
+
 export class PerformanceMonitor {
-  private static instance: PerformanceMonitor;
-  private metricsBuffer: PerformanceMetrics[] = [];
-  private readonly BUFFER_SIZE = 100;
+  private metrics: Map<string, Metric[]> = new Map();
+  private alertRules: AlertRule[] = [];
+  private alertEvents: AlertEvent[] = [];
+  private config: MonitoringConfig;
+  private collectionTimer: NodeJS.Timeout | null = null;
+  private alertTimer: NodeJS.Timeout | null = null;
 
-  private constructor() {}
-
-  public static getInstance(): PerformanceMonitor {
-    if (!PerformanceMonitor.instance) {
-      PerformanceMonitor.instance = new PerformanceMonitor();
-    }
-    return PerformanceMonitor.instance;
-  }
-
-  // 记录页面性能指标
-  public recordPageMetrics(metrics: Omit<PerformanceMetrics, 'timestamp' | 'userAgent' | 'url'>) {
-    const fullMetrics: PerformanceMetrics = {
-      ...metrics,
-      timestamp: new Date().toISOString(),
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'server-side',
-      url: typeof window !== 'undefined' ? window.location.href : 'server-side'
+  constructor(config?: Partial<MonitoringConfig>) {
+    this.config = {
+      collectionInterval: 10000, // 10�?      retentionPeriod: 7, // 7�?      alertEvaluationInterval: 30, // 30�?      sampleRate: 1.0, // 100%采样
+      ...config,
     };
 
-    this.metricsBuffer.push(fullMetrics);
-    
-    // 保持缓冲区大小
-    if (this.metricsBuffer.length > this.BUFFER_SIZE) {
-      this.metricsBuffer.shift();
-    }
-
-    // 异步发送到后端
-    this.sendMetrics(fullMetrics);
+    this.startCollection();
+    this.startAlertEvaluation();
   }
 
-  // 发送性能指标到后端
-  private async sendMetrics(metrics: PerformanceMetrics) {
-    try {
-      const response = await fetch('/api/analytics/performance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(metrics)
-      });
+  /**
+   * 记录指标数据
+   */
+  recordMetric(
+    name: string,
+    value: number,
+    type: MetricType = MetricType.GAUGE,
+    labels?: Record<string, string>
+  ): void {
+    // 应用采样?    if (Math.random() > this.config.sampleRate) {
+      return;
+    }
 
-      if (!response.ok) {
-        console.warn('性能指标发送失败:', response.statusText);
+    const metric: Metric = {
+      name,
+      type,
+      description: '',
+      labels,
+      value,
+      timestamp: Date.now(),
+    };
+
+    if (!this.metrics.has(name)) {
+      this.metrics.set(name, []);
+    }
+
+    const metricList = this.metrics.get(name)!;
+    metricList.push(metric);
+
+    // 保持数据在保留期?    this.cleanupOldMetrics(name);
+  }
+
+  /**
+   * 记录响应时间
+   */
+  recordResponseTime(
+    endpoint: string,
+    duration: number,
+    statusCode: number = 200
+  ): void {
+    this.recordMetric(
+      `http_response_time_${endpoint}`,
+      duration,
+      MetricType.HISTOGRAM,
+      {
+        endpoint,
+        status: statusCode.toString(),
       }
-    } catch (error) {
-      console.warn('性能指标发送异常:', error);
-    }
+    );
+
+    this.recordMetric(
+      `http_requests_total_${endpoint}`,
+      1,
+      MetricType.COUNTER,
+      {
+        endpoint,
+        status: statusCode.toString(),
+      }
+    );
   }
 
-  // 获取缓冲区指标
-  public getBufferedMetrics(): PerformanceMetrics[] {
-    return [...this.metricsBuffer];
-  }
-
-  // 清空缓冲区
-  public clearBuffer(): void {
-    this.metricsBuffer = [];
-  }
-}
-
-// 健康检查工具
-export class HealthChecker {
-  private static instance: HealthChecker;
-  private readonly CHECK_INTERVAL = 30000; // 30秒检查一次
-  private healthStatus: HealthCheckResult | null = null;
-
-  private constructor() {}
-
-  public static getInstance(): HealthChecker {
-    if (!HealthChecker.instance) {
-      HealthChecker.instance = new HealthChecker();
-    }
-    return HealthChecker.instance;
-  }
-
-  // 执行完整健康检查
-  public async performHealthCheck(): Promise<HealthCheckResult> {
-    const checks = await Promise.allSettled([
-      this.checkDatabase(),
-      this.checkApi(),
-      this.checkN8n(),
-      this.checkSupabase()
-    ]);
-
-    const serviceStatus = {
-      database: checks[0].status === 'fulfilled' && checks[0].value,
-      api: checks[1].status === 'fulfilled' && checks[1].value,
-      n8n: checks[2].status === 'fulfilled' && checks[2].value,
-      supabase: checks[3].status === 'fulfilled' && checks[3].value
-    };
-
-    const healthyServices = Object.values(serviceStatus).filter(Boolean).length;
-    const totalServices = Object.keys(serviceStatus).length;
-    
-    let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
-    if (healthyServices === 0) {
-      status = 'unhealthy';
-    } else if (healthyServices < totalServices) {
-      status = 'degraded';
-    }
-
-    const result: HealthCheckResult = {
-      status,
-      services: serviceStatus,
-      metrics: {
-        uptime: this.calculateUptime(),
-        responseTime: this.calculateAverageResponseTime(),
-        errorRate: this.calculateErrorRate()
-      },
-      timestamp: new Date().toISOString()
-    };
-
-    this.healthStatus = result;
-    return result;
-  }
-
-  // 检查数据库连接
-  private async checkDatabase(): Promise<boolean> {
-    try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
-
-      const { data, error } = await supabase
-        .from('leads')
-        .select('count')
-        .limit(1);
-
-      return !error;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  // 检查API服务
-  private async checkApi(): Promise<boolean> {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
-      const response = await fetch('/api/health', {
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      return response.ok;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  // 检查n8n服务
-  private async checkN8n(): Promise<boolean> {
-    try {
-      const n8nIntegration = await import('@/lib/n8n-integration');
-      const health = await n8nIntegration.checkN8nHealth();
-      return health.healthy;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  // 检查Supabase服务
-  private async checkSupabase(): Promise<boolean> {
-    try {
-      const response = await fetch('https://hrjqzbhqueleszkvnsen.supabase.co/rest/v1/', {
-        method: 'HEAD'
-      });
-      return response.ok;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  // 计算运行时间
-  private calculateUptime(): number {
-    // 简化的uptime计算，实际应该从服务器启动时间计算
-    return 99.9; // 模拟值
-  }
-
-  // 计算平均响应时间
-  private calculateAverageResponseTime(): number {
-    // 从性能监控获取平均响应时间
-    const monitor = PerformanceMonitor.getInstance();
-    const metrics = monitor.getBufferedMetrics();
-    if (metrics.length === 0) return 0;
-    
-    const avg = metrics.reduce((sum, m) => sum + m.apiResponseTime, 0) / metrics.length;
-    return Math.round(avg);
-  }
-
-  // 计算错误率
-  private calculateErrorRate(): number {
-    // 简化的错误率计算
-    return 0.1; // 模拟值
-  }
-
-  // 获取当前健康状态
-  public getCurrentHealth(): HealthCheckResult | null {
-    return this.healthStatus;
-  }
-
-  // 启动定期健康检查
-  public startPeriodicChecks(): void {
-    setInterval(async () => {
-      await this.performHealthCheck();
-    }, this.CHECK_INTERVAL);
-  }
-}
-
-// Web Vitals 监控
-export function initWebVitals() {
-  if (typeof window === 'undefined') return;
-  
-  const monitor = PerformanceMonitor.getInstance();
-  
-  // 监听页面加载完成
-  window.addEventListener('load', () => {
-    // 记录页面加载时间
-    const loadTime = performance.now();
-    monitor.recordPageMetrics({
-      pageLoadTime: loadTime,
-      apiResponseTime: 0,
-      firstContentfulPaint: 0,
-      largestContentfulPaint: 0,
-      cumulativeLayoutShift: 0,
-      firstInputDelay: 0
+  /**
+   * 记录错误
+   */
+  recordError(
+    type: string,
+    message: string,
+    context?: Record<string, any>
+  ): void {
+    this.recordMetric(`errors_total_${type}`, 1, MetricType.COUNTER, {
+      type,
+      message,
+      ...context,
     });
-  });
 
-  // 监听首次内容绘制
-  if ('performance' in window && 'getEntriesByType' in performance) {
-    new PerformanceObserver((list) => {
-      list.getEntries().forEach((entry) => {
-        if (entry.entryType === 'paint' && entry.name === 'first-contentful-paint') {
-          monitor.recordPageMetrics({
-            pageLoadTime: 0,
-            apiResponseTime: 0,
-            firstContentfulPaint: entry.startTime,
-            largestContentfulPaint: 0,
-            cumulativeLayoutShift: 0,
-            firstInputDelay: 0
-          });
+    logger.error(`Performance Monitor recorded error: ${type}`, {
+      message,
+      context,
+      timestamp: Date.now(),
+    });
+  }
+
+  /**
+   * 获取指标统计数据
+   */
+  getMetricStats(name: string, timeframe: number = 300000): any {
+    const metrics = this.metrics.get(name) || [];
+    const cutoffTime = Date.now() - timeframe;
+    const recentMetrics = metrics.filter(m => m.timestamp >= cutoffTime);
+
+    if (recentMetrics.length === 0) {
+      return null;
+    }
+
+    const values = recentMetrics.map(m => m.value);
+    const sum = values.reduce((a, b) => a + b, 0);
+    const avg = sum / values.length;
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+
+    return {
+      count: values.length,
+      sum,
+      avg,
+      min,
+      max,
+      latest: values[values.length - 1],
+    };
+  }
+
+  /**
+   * 添加告警规则
+   */
+  addAlertRule(rule: AlertRule): void {
+    this.alertRules.push(rule);
+    logger.info(`Added alert rule: ${rule.name}`, { ruleId: rule.id });
+  }
+
+  /**
+   * 评估告警规则
+   */
+  private evaluateAlerts(): void {
+    this.alertRules
+      .filter(rule => rule.enabled)
+      .forEach(rule => {
+        try {
+          const stats = this.getMetricStats(rule.metric);
+          if (!stats) return;
+
+          const currentValue = stats.latest;
+          const shouldTrigger = this.evaluateCondition(
+            currentValue,
+            rule.operator,
+            rule.threshold
+          );
+
+          if (shouldTrigger) {
+            this.triggerAlert(rule, currentValue);
+          } else {
+            this.resolveAlert(rule, currentValue);
+          }
+        } catch (error) {
+          logger.error(
+            `Error evaluating alert rule ${rule.id}`,
+            error as Error
+          );
         }
       });
-    }).observe({ entryTypes: ['paint'] });
+  }
+
+  /**
+   * 评估告警条件
+   */
+  private evaluateCondition(
+    value: number,
+    operator: string,
+    threshold: number
+  ): boolean {
+    switch (operator) {
+      case '>':
+        return value > threshold;
+      case '<':
+        return value < threshold;
+      case '>=':
+        return value >= threshold;
+      case '<=':
+        return value <= threshold;
+      case '==':
+        return value === threshold;
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * 触发告警
+   */
+  private triggerAlert(rule: AlertRule, currentValue: number): void {
+    const existingAlert = this.alertEvents.find(
+      event => event.ruleId === rule.id && event.status === 'TRIGGERED'
+    );
+
+    if (existingAlert) {
+      // 更新现有告警
+      existingAlert.currentValue = currentValue;
+      return;
+    }
+
+    // 创建新告?    const alertEvent: AlertEvent = {
+      id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      ruleId: rule.id,
+      metric: rule.metric,
+      currentValue,
+      threshold: rule.threshold,
+      severity: rule.severity,
+      triggeredAt: Date.now(),
+      status: 'TRIGGERED',
+    };
+
+    this.alertEvents.push(alertEvent);
+    this.sendNotifications(alertEvent, rule.notifications);
+
+    logger.warn(`Alert triggered: ${rule.name}`, {
+      alertId: alertEvent.id,
+      currentValue,
+      threshold: rule.threshold,
+      severity: rule.severity,
+    });
+  }
+
+  /**
+   * 解决告警
+   */
+  private resolveAlert(rule: AlertRule, currentValue: number): void {
+    const triggeredAlert = this.alertEvents.find(
+      event => event.ruleId === rule.id && event.status === 'TRIGGERED'
+    );
+
+    if (triggeredAlert) {
+      triggeredAlert.status = 'RESOLVED';
+      triggeredAlert.resolvedAt = Date.now();
+      triggeredAlert.currentValue = currentValue;
+
+      logger.info(`Alert resolved: ${rule.name}`, {
+        alertId: triggeredAlert.id,
+        duration: triggeredAlert.resolvedAt - triggeredAlert.triggeredAt,
+      });
+    }
+  }
+
+  /**
+   * 发送通知
+   */
+  private sendNotifications(alert: AlertEvent, channels: string[]): void {
+    channels.forEach(channel => {
+      try {
+        // 这里应该集成实际的通知服务
+        logger.info(`Sending notification via ${channel}`, {
+          alertId: alert.id,
+          severity: alert.severity,
+          metric: alert.metric,
+        });
+      } catch (error) {
+        logger.error(
+          `Failed to send notification via ${channel}`,
+          error as Error
+        );
+      }
+    });
+  }
+
+  /**
+   * 启动数据收集
+   */
+  private startCollection(): void {
+    this.collectionTimer = setInterval(() => {
+      this.collectSystemMetrics();
+    }, this.config.collectionInterval);
+  }
+
+  /**
+   * 收集系统指标
+   */
+  private collectSystemMetrics(): void {
+    try {
+      // 模拟系统指标收集
+      const timestamp = Date.now();
+
+      // CPU使用?(模拟数据)
+      this.recordMetric(
+        'system_cpu_usage',
+        Math.random() * 100,
+        MetricType.GAUGE
+      );
+
+      // 内存使用?(模拟数据)
+      this.recordMetric(
+        'system_memory_usage',
+        Math.random() * 100,
+        MetricType.GAUGE
+      );
+
+      // 磁盘IO (模拟数据)
+      this.recordMetric(
+        'system_disk_io',
+        Math.random() * 1000,
+        MetricType.GAUGE
+      );
+
+      // 网络IO (模拟数据)
+      this.recordMetric(
+        'system_network_io',
+        Math.random() * 10000,
+        MetricType.GAUGE
+      );
+    } catch (error) {
+      logger.error('Error collecting system metrics', error as Error);
+    }
+  }
+
+  /**
+   * 启动告警评估
+   */
+  private startAlertEvaluation(): void {
+    this.alertTimer = setInterval(() => {
+      this.evaluateAlerts();
+    }, this.config.alertEvaluationInterval * 1000);
+  }
+
+  /**
+   * 清理过期指标数据
+   */
+  private cleanupOldMetrics(metricName: string): void {
+    const metrics = this.metrics.get(metricName);
+    if (!metrics) return;
+
+    const cutoffTime =
+      Date.now() - this.config.retentionPeriod * 24 * 60 * 60 * 1000;
+    const filteredMetrics = metrics.filter(m => m.timestamp >= cutoffTime);
+
+    this.metrics.set(metricName, filteredMetrics);
+  }
+
+  /**
+   * 获取所有活跃告?   */
+  getActiveAlerts(): AlertEvent[] {
+    return this.alertEvents.filter(event => event.status === 'TRIGGERED');
+  }
+
+  /**
+   * 获取告警历史
+   */
+  getAlertHistory(limit: number = 100): AlertEvent[] {
+    return this.alertEvents
+      .sort((a, b) => b.triggeredAt - a.triggeredAt)
+      .slice(0, limit);
+  }
+
+  /**
+   * 获取性能快照
+   */
+  getPerformanceSnapshot(): PerformanceMetric {
+    return {
+      responseTime: this.getMetricStats('http_response_time')?.avg || 0,
+      throughput: this.getMetricStats('http_requests_total')?.count || 0,
+      errorRate:
+        ((this.getMetricStats('errors_total')?.count || 0) /
+          (this.getMetricStats('http_requests_total')?.count || 1)) *
+        100,
+      cpuUsage: this.getMetricStats('system_cpu_usage')?.latest || 0,
+      memoryUsage: this.getMetricStats('system_memory_usage')?.latest || 0,
+      diskIO: this.getMetricStats('system_disk_io')?.latest || 0,
+      networkIO: this.getMetricStats('system_network_io')?.latest || 0,
+      activeUsers: 0, // 需要从会话管理获取
+      requestsPerSecond: 0, // 需要计?      databaseConnections: 0, // 需要从数据库连接池获取
+      timestamp: Date.now(),
+    };
+  }
+
+  /**
+   * 停止监控
+   */
+  stop(): void {
+    if (this.collectionTimer) {
+      clearInterval(this.collectionTimer);
+      this.collectionTimer = null;
+    }
+
+    if (this.alertTimer) {
+      clearInterval(this.alertTimer);
+      this.alertTimer = null;
+    }
+
+    logger.info('Performance monitor stopped');
   }
 }
 
-// 导出单例实例
-export const performanceMonitor = PerformanceMonitor.getInstance();
-export const healthChecker = HealthChecker.getInstance();
+// 导出全局实例
+export const performanceMonitor = new PerformanceMonitor();
 
-// 默认导出
-export default {
-  performanceMonitor,
-  healthChecker,
-  initWebVitals
-};
+// 便捷的装饰器函数
+export function monitorPerformance(
+  target: any,
+  propertyKey: string,
+  descriptor: PropertyDescriptor
+) {
+  const originalMethod = descriptor.value;
+
+  descriptor.value = async function (...args: any[]) {
+    const startTime = Date.now();
+
+    try {
+      const result = await originalMethod.apply(this, args);
+      const duration = Date.now() - startTime;
+
+      performanceMonitor.recordResponseTime(propertyKey, duration);
+
+      return result;
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      performanceMonitor.recordResponseTime(propertyKey, duration, 500);
+      performanceMonitor.recordError(
+        'business_error',
+        (error as Error).message,
+        {
+          method: propertyKey,
+        }
+      );
+      throw error;
+    }
+  };
+
+  return descriptor;
+}

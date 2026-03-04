@@ -1,5 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
 // 初始化Supabase客户端
 const supabase = createClient(
@@ -8,7 +8,7 @@ const supabase = createClient(
 );
 
 // 导入mock数据版本
-import { GET_BY_ID as MOCK_GET_BY_ID } from "../mock-route";
+import { GET_BY_ID as MOCK_GET_BY_ID } from '../mock-route';
 
 // 如果数据库表不存在，则使用mock数据
 let useMock = false;
@@ -20,9 +20,9 @@ async function checkDatabaseConnection() {
       `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/repair_tutorials?select=*&limit=1`,
       {
         headers: {
-          apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+          apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
           Authorization: `Bearer ${
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
           }`,
         },
       }
@@ -50,35 +50,35 @@ export async function GET(
 
     // 验证ID格式
     if (!id) {
-      return NextResponse.json({ error: "缺少教程ID" }, { status: 400 });
+      return NextResponse.json({ error: '缺少教程ID' }, { status: 400 });
     }
 
     const { data, error } = await supabase
-      .from("repair_tutorials")
-      .select("*")
-      .eq("id", id)
-      .eq("status", "published")
+      .from('repair_tutorials')
+      .select('*')
+      .eq('id', id)
+      .eq('status', 'published')
       .single();
 
     if (error) {
-      if (error.code === "PGRST116") {
+      if (error.code === 'PGRST116') {
         return NextResponse.json(
-          { error: "教程不存在或未发布" },
+          { error: '教程不存在或未发布' },
           { status: 404 }
         );
       }
-      console.error("获取教程详情失败:", error);
+      console.error('获取教程详情失败:', error);
       return NextResponse.json(
-        { error: "获取教程详情失败", details: error.message },
+        { error: '获取教程详情失败', details: error.message },
         { status: 500 }
       );
     }
 
     // 增加浏览次数
     await supabase
-      .from("repair_tutorials")
+      .from('repair_tutorials')
       .update({ view_count: data.view_count + 1 } as any)
-      .eq("id", id);
+      .eq('id', id);
 
     return NextResponse.json({
       tutorial: {
@@ -87,8 +87,8 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("API错误:", error);
-    return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });
+    console.error('API错误:', error);
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
 
@@ -102,7 +102,7 @@ export async function PUT(
 
     // 验证ID格式
     if (!id) {
-      return NextResponse.json({ error: "缺少教程ID" }, { status: 400 });
+      return NextResponse.json({ error: '缺少教程ID' }, { status: 400 });
     }
 
     const tutorialData = await request.json();
@@ -119,30 +119,30 @@ export async function PUT(
     updateData.updated_at = new Date().toISOString();
 
     const { data, error } = await supabase
-      .from("repair_tutorials")
+      .from('repair_tutorials')
       .update(updateData)
-      .eq("id", id)
+      .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      if (error.code === "PGRST116") {
-        return NextResponse.json({ error: "教程不存在" }, { status: 404 });
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: '教程不存在' }, { status: 404 });
       }
-      console.error("更新教程失败:", error);
+      console.error('更新教程失败:', error);
       return NextResponse.json(
-        { error: "更新教程失败", details: error.message },
+        { error: '更新教程失败', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
-      message: "教程更新成功",
+      message: '教程更新成功',
       tutorial: data,
     });
   } catch (error) {
-    console.error("API错误:", error);
-    return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });
+    console.error('API错误:', error);
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
 
@@ -156,30 +156,30 @@ export async function DELETE(
 
     // 验证ID格式
     if (!id) {
-      return NextResponse.json({ error: "缺少教程ID" }, { status: 400 });
+      return NextResponse.json({ error: '缺少教程ID' }, { status: 400 });
     }
 
     const { error } = await supabase
-      .from("repair_tutorials")
+      .from('repair_tutorials')
       .delete()
-      .eq("id", id);
+      .eq('id', id);
 
     if (error) {
-      if (error.code === "PGRST116") {
-        return NextResponse.json({ error: "教程不存在" }, { status: 404 });
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: '教程不存在' }, { status: 404 });
       }
-      console.error("删除教程失败:", error);
+      console.error('删除教程失败:', error);
       return NextResponse.json(
-        { error: "删除教程失败", details: error.message },
+        { error: '删除教程失败', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
-      message: "教程删除成功",
+      message: '教程删除成功',
     });
   } catch (error) {
-    console.error("API错误:", error);
-    return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });
+    console.error('API错误:', error);
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }

@@ -1,0 +1,104 @@
+{
+  "title": "采购智能体用户验收测试报告",
+  "generatedAt": "2026-02-26T13:33:15.410Z",
+  "testResults": {
+    "modules": {
+      "采购经理创建智能采购需求": {
+        "pass": false,
+        "message": "系统未能生成有效的采购决策建议"
+      },
+      "供应商评估师查看智能画像": {
+        "pass": false,
+        "message": "无法获取供应商画像信息"
+      },
+      "风险管控人员监控供应商风险": {
+        "pass": false,
+        "message": "风险监控功能异常"
+      },
+      "决策支持人员获取采购建议": {
+        "pass": false,
+        "message": "未能生成有效的采购建议"
+      },
+      "完整采购决策流程": {
+        "pass": true,
+        "message": "完整采购工作流执行成功",
+        "details": [
+          {
+            "step": 1,
+            "name": "create_request",
+            "passed": true
+          },
+          {
+            "step": 2,
+            "name": "match_suppliers",
+            "passed": true
+          },
+          {
+            "step": 3,
+            "name": "assess_risks",
+            "passed": true
+          },
+          {
+            "step": 4,
+            "name": "make_decision",
+            "passed": true
+          },
+          {
+            "step": 5,
+            "name": "suggest_contract_terms",
+            "passed": true
+          }
+        ]
+      },
+      "供应商生命周期管理": {
+        "pass": false,
+        "message": "this.testSupplierLifecycleManagement is not a function"
+      },
+      "智能仪表板显示效果": {
+        "pass": true,
+        "message": "仪表板数据显示正常"
+      },
+      "供应商洞察面板": {
+        "pass": false,
+        "message": "this.testSupplierInsightsUsability is not a function"
+      },
+      "供应商评分准确性": {
+        "pass": false,
+        "message": "this.testSupplierScoringAccuracy is not a function"
+      },
+      "风险评估精确度": {
+        "pass": false,
+        "message": "this.testRiskAssessmentAccuracy is not a function"
+      },
+      "价格预测可靠性": {
+        "pass": false,
+        "message": "this.testPricePredictionReliability is not a function"
+      },
+      "页面加载时间": {
+        "pass": false,
+        "message": "this.testPageLoadPerformance is not a function"
+      },
+      "API响应时间": {
+        "pass": false,
+        "message": "this.testApiResponseTime is not a function"
+      },
+      "并发用户支持": {
+        "pass": false,
+        "message": "this.testConcurrentAccess is not a function"
+      }
+    },
+    "overall": {
+      "totalTests": 14,
+      "passedTests": 2,
+      "failedTests": 12,
+      "startTime": "2026-02-26T13:33:14.486Z",
+      "endTime": "2026-02-26T13:33:15.410Z"
+    }
+  },
+  "summary": {
+    "totalTests": 14,
+    "passedTests": 2,
+    "failedTests": 12,
+    "passRate": "14.29%"
+  }
+}

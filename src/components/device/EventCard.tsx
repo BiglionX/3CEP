@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   DEVICE_EVENT_TYPE_LABELS,
@@ -125,7 +125,7 @@ export default function EventCard({
               </span>
               {event.isVerified && (
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  已验证
+                  已验?{' '}
                 </span>
               )}
             </div>
@@ -162,7 +162,7 @@ export default function EventCard({
               </div>
             )}
 
-            {event.eventData?.cost && (
+            {event?.cost && (
               <div className="flex items-center text-xs text-green-600">
                 <svg
                   className="w-3.5 h-3.5 mr-1 flex-shrink-0"
@@ -181,7 +181,7 @@ export default function EventCard({
               </div>
             )}
 
-            {event.eventData?.technician && (
+            {event?.technician && (
               <div className="flex items-center text-xs text-gray-500">
                 <svg
                   className="w-3.5 h-3.5 mr-1 flex-shrink-0"
@@ -196,12 +196,12 @@ export default function EventCard({
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                <span>技师: {event.eventData.technician}</span>
+                <span>技? {event.eventData.technician}</span>
               </div>
             )}
           </div>
 
-          {/* 维修事件的查看详情提示 */}
+          {/* 维修事件的查看详情提?*/}
           {event.eventType === DeviceEventType.REPAIRED && (
             <div className="mt-2 pt-2 border-t border-gray-100">
               <div className="flex items-center text-xs text-orange-600">

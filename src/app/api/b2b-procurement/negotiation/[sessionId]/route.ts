@@ -1,5 +1,5 @@
-import { SmartNegotiationEngine } from "@/b2b-procurement-agent/services/smart-negotiation-engine.service";
-import { NextResponse } from "next/server";
+import { SmartNegotiationEngine } from '@/b2b-procurement-agent/services/smart-negotiation-engine.service';
+import { NextResponse } from 'next/server';
 
 const negotiationEngine = new SmartNegotiationEngine();
 
@@ -18,7 +18,7 @@ export async function GET(
       data: status,
     });
   } catch (error) {
-    console.error("获取议价状态错误:", error);
+    console.error('获取议价状态错误:', error);
     return NextResponse.json(
       {
         success: false,
@@ -54,7 +54,7 @@ export async function POST(
       );
     }
   } catch (error) {
-    console.error("接受最终报价错误:", error);
+    console.error('接受最终报价错误:', error);
     return NextResponse.json(
       {
         success: false,

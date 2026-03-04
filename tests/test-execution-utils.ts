@@ -8,8 +8,8 @@ import { Page } from '@playwright/test';
  * 带重试的异步操作
  */
 export async function withRetry<T>(
-  operation: () => Promise<T>, 
-  maxRetries: number = 3, 
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
   delay: number = 1000
 ): Promise<T> {
   let lastError: Error | null = null;
@@ -23,7 +23,9 @@ export async function withRetry<T>(
       return result;
     } catch (error) {
       lastError = error as Error;
-      console.log(`⚠️ 第 ${attempt}/${maxRetries} 次尝试失败: ${lastError.message}`);
+      console.log(
+        `⚠️ 第 ${attempt}/${maxRetries} 次尝试失败: ${lastError.message}`
+      );
 
       if (attempt < maxRetries) {
         const waitTime = delay * Math.pow(2, attempt - 1);
@@ -47,9 +49,12 @@ export async function withTimeout<T>(
 ): Promise<T> {
   return Promise.race([
     operation(),
-    new Promise<never>((_, reject) => 
-      setTimeout(() => reject(new Error(timeoutMessage || `操作超时 (${timeoutMs}ms)`)), timeoutMs)
-    )
+    new Promise<never>((_, reject) =>
+      setTimeout(
+        () => reject(new Error(timeoutMessage || `操作超时 (${timeoutMs}ms)`)),
+        timeoutMs
+      )
+    ),
   ]);
 }
 
@@ -69,7 +74,9 @@ export async function requireCondition(
 /**
  * 测试数据准备
  */
-export async function prepareTestData(setupFn: () => Promise<void>): Promise<void> {
+export async function prepareTestData(
+  setupFn: () => Promise<void>
+): Promise<void> {
   console.log('📋 准备测试数据...');
   await setupFn();
   console.log('✅ 测试数据准备完成');
@@ -78,7 +85,9 @@ export async function prepareTestData(setupFn: () => Promise<void>): Promise<voi
 /**
  * 测试环境清理
  */
-export async function cleanupTestEnvironment(cleanupFn: () => Promise<void>): Promise<void> {
+export async function cleanupTestEnvironment(
+  cleanupFn: () => Promise<void>
+): Promise<void> {
   console.log('🧹 清理测试环境...');
   await cleanupFn();
   console.log('✅ 测试环境清理完成');
@@ -134,11 +143,11 @@ export class DependencyChecker {
    * 等待依赖完成
    */
   static async waitForDependencies(
-    dependencyIds: string[], 
+    dependencyIds: string[],
     timeoutMs: number = 30000
   ): Promise<boolean> {
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < timeoutMs) {
       if (this.checkDependencies(dependencyIds)) {
         return true;
@@ -173,7 +182,7 @@ export class TestStepExecutor {
    */
   async execute(): Promise<{ success: boolean; failedSteps: string[] }> {
     const failedSteps: string[] = [];
-    
+
     for (const step of this.steps) {
       try {
         console.log(`▶️ 执行步骤: ${step.name}`);
@@ -182,7 +191,7 @@ export class TestStepExecutor {
       } catch (error) {
         console.log(`❌ 步骤失败: ${step.name} - ${(error as Error).message}`);
         failedSteps.push(step.name);
-        
+
         if (step.required) {
           console.log(`🛑 关键步骤失败，停止执行`);
           break;
@@ -191,8 +200,10 @@ export class TestStepExecutor {
     }
 
     const success = failedSteps.length === 0;
-    console.log(`${success ? '✅' : '❌'} 测试步骤执行${success ? '成功' : '失败'}`);
-    
+    console.log(
+      `${success ? '✅' : '❌'} 测试步骤执行${success ? '成功' : '失败'}`
+    );
+
     return { success, failedSteps };
   }
 }
@@ -201,7 +212,7 @@ export class TestStepExecutor {
 /*
 test('E2E-REPAIR-01: 完整维修流程测试', async ({ page }) => {
   const executor = new TestStepExecutor();
-  
+
   // 添加测试步骤
   executor.addStep('用户登录', async () => {
     await page.goto('/login');
@@ -209,27 +220,27 @@ test('E2E-REPAIR-01: 完整维修流程测试', async ({ page }) => {
     await page.fill('[data-testid="password"]', 'Test123!@#');
     await page.click('[data-testid="login-button"]');
   });
-  
+
   executor.addStep('设备扫码', async () => {
     await page.goto('/scan');
     // 模拟扫码操作
   });
-  
+
   executor.addStep('故障诊断', async () => {
     await page.selectOption('[data-testid="fault-type"]', 'screen_broken');
     await page.click('[data-testid="diagnose-button"]');
   });
-  
+
   // 执行所有步骤
   const result = await executor.execute();
-  
+
   // 标记依赖状态
   if (result.success) {
     DependencyChecker.markDependencyCompleted('REPAIR-01');
   } else {
     DependencyChecker.markDependencyFailed('REPAIR-01', result.failedSteps.join(', '));
   }
-  
+
   expect(result.success).toBeTruthy();
 });
 */

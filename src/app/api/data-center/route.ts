@@ -1,7 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { dataVirtualizationService, initializeDataCenter, trinoClientInstance } from '@/data-center/core/data-center-service';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import {
+  dataVirtualizationService,
+  initializeDataCenter,
+  trinoClientInstance,
+} from '@/data-center/core/data-center-service';
 
-// 初始化数据中心（如果尚未初始化）
+// 鍒濆鍖栨暟鎹腑蹇冿紙濡傛灉灏氭湭鍒濆鍖栵級
 let isInitialized = false;
 
 async function ensureInitialized() {
@@ -16,11 +20,11 @@ async function ensureInitialized() {
 
 export async function GET(request: NextRequest) {
   try {
-    // 确保数据中心已初始化
+    // 纭繚鏁版嵁涓績宸插垵濮嬪寲
     const initialized = await ensureInitialized();
     if (!initialized) {
       return NextResponse.json(
-        { error: '数据中心初始化失败' },
+        { error: '鏁版嵁涓績鍒濆鍖栧け? },
         { status: 500 }
       );
     }
@@ -34,30 +38,30 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'devices':
-        result = await dataVirtualizationService.getUnifiedDeviceInfo(deviceId || undefined);
+        result = await dataVirtualizationService.getUnifiedDeviceInfo(
+          deviceId || undefined
+        );
         break;
-        
+
       case 'parts-price':
         const partIds = partIdsParam ? partIdsParam.split(',') : undefined;
-        result = await dataVirtualizationService.getPartsPriceAggregation(partIds);
+        result =
+          await dataVirtualizationService.getPartsPriceAggregation(partIds);
         break;
-        
+
       case 'health':
         result = { status: 'healthy', timestamp: new Date().toISOString() };
         break;
-        
+
       default:
-        return NextResponse.json(
-          { error: '未知的操作类型' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
     }
 
     return NextResponse.json(result);
   } catch (error: any) {
-    console.error('数据中心API错误:', error);
+    console.error('鏁版嵁涓績API閿欒:', error);
     return NextResponse.json(
-      { error: error.message || '内部服务器错误' },
+      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊? },
       { status: 500 }
     );
   }
@@ -68,7 +72,7 @@ export async function POST(request: NextRequest) {
     const initialized = await ensureInitialized();
     if (!initialized) {
       return NextResponse.json(
-        { error: '数据中心初始化失败' },
+        { error: '鏁版嵁涓績鍒濆鍖栧け? },
         { status: 500 }
       );
     }
@@ -77,14 +81,10 @@ export async function POST(request: NextRequest) {
     const { query, catalog, schema } = body;
 
     if (!query) {
-      return NextResponse.json(
-        { error: '缺少查询参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缂哄皯鏌ヨ鍙傛暟' }, { status: 400 });
     }
 
-    // 注意：这里应该添加权限验证和查询安全检查
-    const result = await trinoClientInstance.executeQuery(
+    // 娉ㄦ剰锛氳繖閲屽簲璇ユ坊鍔犳潈闄愰獙璇佸拰鏌ヨ瀹夊叏妫€?    const result = await trinoClientInstance.executeQuery(
       query,
       catalog,
       schema
@@ -92,10 +92,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error: any) {
-    console.error('数据中心查询错误:', error);
+    console.error('鏁版嵁涓績鏌ヨ閿欒:', error);
     return NextResponse.json(
-      { error: error.message || '查询执行失败' },
+      { error: error.message || '鏌ヨ鎵ц澶辫触' },
       { status: 500 }
     );
   }
 }
+

@@ -1,12 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { fusionEngineV2Service, ValuationMethod } from '@/services/fusion-engine-v2.service';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import {
+  fusionEngineV2Service,
+  ValuationMethod,
+} from '@/services/fusion-engine-v2.service';
 import { DeviceProfile } from '@/lib/constants/lifecycle';
 import { DeviceCondition } from '@/lib/valuation/valuation-engine.service';
 
 /**
- * 估值API v2 - 智能融合版本
- * 根据置信度动态选择最优估值策略
- */
+ * 浼板€糀PI v2 - 鏅鸿兘铻嶅悎鐗堟湰
+ * 鏍规嵁缃俊搴﹀姩鎬侀€夋嫨鏈€浼樹及鍊肩瓥? */
 
 interface ValuationRequest {
   deviceQrcodeId?: string;
@@ -46,34 +48,43 @@ interface ValuationResponse {
 export async function POST(request: NextRequest) {
   try {
     const body: ValuationRequest = await request.json();
-    
-    // 参数验证
+
+    // 鍙傛暟楠岃瘉
     if (!body.deviceQrcodeId && !body.deviceProfile) {
-      return NextResponse.json({
-        success: false,
-        error: '必须提供 deviceQrcodeId 或 deviceProfile',
-        timestamp: new Date().toISOString()
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '蹇呴』鎻愪緵 deviceQrcodeId 锟?deviceProfile',
+          timestamp: new Date().toISOString(),
+        },
+        { status: 400 }
+      );
     }
 
-    // 获取设备档案
-    const deviceProfile = await getDeviceProfile(body.deviceQrcodeId, body.deviceProfile);
+    // 鑾峰彇璁惧妗ｆ
+    const deviceProfile = await getDeviceProfile(
+      body.deviceQrcodeId,
+      body.deviceProfile
+    );
     if (!deviceProfile) {
-      return NextResponse.json({
-        success: false,
-        error: '未找到指定的设备档案',
-        timestamp: new Date().toISOString()
-      }, { status: 404 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '鏈壘鍒版寚瀹氱殑璁惧妗ｆ',
+          timestamp: new Date().toISOString(),
+        },
+        { status: 404 }
+      );
     }
 
-    // 执行智能决策
+    // 鎵ц鏅鸿兘鍐崇瓥
     const decision = await fusionEngineV2Service.makeIntelligentDecision(
       deviceProfile,
       body.condition,
       body.marketPrice
     );
 
-    // 构建响应
+    // 鏋勫缓鍝嶅簲
     const response: ValuationResponse = {
       success: true,
       data: {
@@ -85,15 +96,15 @@ export async function POST(request: NextRequest) {
           id: deviceProfile.id,
           productModel: deviceProfile.productModel,
           brandName: deviceProfile.brandName || '',
-          productCategory: deviceProfile.productCategory || ''
+          productCategory: deviceProfile.productCategory || '',
         },
         rationale: decision.rationale,
-        metadata: decision.metadata
+        metadata: decision.metadata,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    // 添加详细信息（如果请求）
+    // 娣诲姞璇︾粏淇℃伅锛堝鏋滆姹傦級
     if (body.includeDetails) {
       response.data!.breakdown = await getDetailedBreakdown(
         deviceProfile,
@@ -102,20 +113,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 添加替代估值（如果请求）
-    if (body.includeAlternatives) {
+    // 娣诲姞鏇夸唬浼板€硷紙濡傛灉璇锋眰?    if (body.includeAlternatives) {
       response.data!.alternatives = decision.alternativeValues;
     }
 
     return NextResponse.json(response);
-
   } catch (error: any) {
-    console.error('估值API v2错误:', error);
-    return NextResponse.json({
-      success: false,
-      error: error.message || '内部服务器错误',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    console.error('浼板€糀PI v2閿欒:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -124,30 +136,38 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const deviceQrcodeId = searchParams.get('deviceQrcodeId');
     const includeDetails = searchParams.get('includeDetails') === 'true';
-    const includeAlternatives = searchParams.get('includeAlternatives') === 'true';
+    const includeAlternatives =
+      searchParams.get('includeAlternatives') === 'true';
 
     if (!deviceQrcodeId) {
-      return NextResponse.json({
-        success: false,
-        error: '缺少必需参数: deviceQrcodeId',
-        timestamp: new Date().toISOString()
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '缂哄皯蹇呴渶鍙傛暟: deviceQrcodeId',
+          timestamp: new Date().toISOString(),
+        },
+        { status: 400 }
+      );
     }
 
-    // 获取设备档案
+    // 鑾峰彇璁惧妗ｆ
     const deviceProfile = await getDeviceProfile(deviceQrcodeId);
     if (!deviceProfile) {
-      return NextResponse.json({
-        success: false,
-        error: '未找到指定的设备档案',
-        timestamp: new Date().toISOString()
-      }, { status: 404 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '鏈壘鍒版寚瀹氱殑璁惧妗ｆ',
+          timestamp: new Date().toISOString(),
+        },
+        { status: 404 }
+      );
     }
 
-    // 执行智能决策
-    const decision = await fusionEngineV2Service.makeIntelligentDecision(deviceProfile);
+    // 鎵ц鏅鸿兘鍐崇瓥
+    const decision =
+      await fusionEngineV2Service.makeIntelligentDecision(deviceProfile);
 
-    // 构建响应
+    // 鏋勫缓鍝嶅簲
     const response: ValuationResponse = {
       success: true,
       data: {
@@ -159,58 +179,61 @@ export async function GET(request: NextRequest) {
           id: deviceProfile.id,
           productModel: deviceProfile.productModel,
           brandName: deviceProfile.brandName || '',
-          productCategory: deviceProfile.productCategory || ''
+          productCategory: deviceProfile.productCategory || '',
         },
         rationale: decision.rationale,
-        metadata: decision.metadata
+        metadata: decision.metadata,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    // 添加详细信息（如果请求）
+    // 娣诲姞璇︾粏淇℃伅锛堝鏋滆姹傦級
     if (includeDetails) {
-      response.data!.breakdown = await getDetailedBreakdown(deviceProfile, undefined, decision);
+      response.data!.breakdown = await getDetailedBreakdown(
+        deviceProfile,
+        undefined,
+        decision
+      );
     }
 
-    // 添加替代估值（如果请求）
-    if (includeAlternatives) {
+    // 娣诲姞鏇夸唬浼板€硷紙濡傛灉璇锋眰?    if (includeAlternatives) {
       response.data!.alternatives = decision.alternativeValues;
     }
 
     return NextResponse.json(response);
-
   } catch (error: any) {
-    console.error('估值API v2 GET错误:', error);
-    return NextResponse.json({
-      success: false,
-      error: error.message || '内部服务器错误',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    console.error('浼板€糀PI v2 GET閿欒:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }
 
-// ==================== 辅助函数 ====================
+// ==================== 杈呭姪鍑芥暟 ====================
 
 /**
- * 获取设备档案
+ * 鑾峰彇璁惧妗ｆ
  */
 async function getDeviceProfile(
   deviceQrcodeId?: string,
   partialProfile?: Partial<DeviceProfile>
 ): Promise<DeviceProfile | null> {
-  // 如果提供了完整的设备档案，直接使用
-  if (partialProfile && partialProfile.id) {
+  // 濡傛灉鎻愪緵浜嗗畬鏁寸殑璁惧妗ｆ锛岀洿鎺ヤ娇?  if (partialProfile && partialProfile.id) {
     return partialProfile as DeviceProfile;
   }
 
-  // 否则通过二维码ID查询数据库
-  if (deviceQrcodeId) {
+  // 鍚﹀垯閫氳繃浜岀淮鐮両D鏌ヨ鏁版嵁?  if (deviceQrcodeId) {
     try {
-      // 这里应该调用实际的数据库查询服务
-      // 暂时返回模拟数据
+      // 杩欓噷搴旇璋冪敤瀹為檯鐨勬暟鎹簱鏌ヨ鏈嶅姟
+      // 鏆傛椂杩斿洖妯℃嫙鏁版嵁
       return mockDeviceProfile(deviceQrcodeId);
     } catch (error) {
-      console.error('获取设备档案失败:', error);
+      console.error('鑾峰彇璁惧妗ｆ澶辫触:', error);
       return null;
     }
   }
@@ -219,15 +242,14 @@ async function getDeviceProfile(
 }
 
 /**
- * 获取详细分解信息
+ * 鑾峰彇璇︾粏鍒嗚В淇℃伅
  */
 async function getDetailedBreakdown(
   deviceProfile: DeviceProfile,
   condition: DeviceCondition | undefined,
   decision: any
 ) {
-  // 这里可以调用具体的估值引擎获取详细分解
-  // 暂时返回基本结构
+  // 杩欓噷鍙互璋冪敤鍏蜂綋鐨勪及鍊煎紩鎿庤幏鍙栬缁嗗垎?  // 鏆傛椂杩斿洖鍩烘湰缁撴瀯
   return {
     originalPrice: 5000,
     depreciation: 1200,
@@ -235,21 +257,21 @@ async function getDetailedBreakdown(
     conditionAdjustment: 0.92,
     strategyDetails: {
       method: decision.method,
-      confidenceFactors: decision.metadata?.confidenceFactors || {},
-      weightDistribution: decision.metadata?.weights || {}
-    }
+      confidenceFactors: decision?.confidenceFactors || {},
+      weightDistribution: decision?.weights || {},
+    },
   };
 }
 
 /**
- * 模拟设备档案数据
+ * 妯℃嫙璁惧妗ｆ鏁版嵁
  */
 function mockDeviceProfile(qrcodeId: string): DeviceProfile {
   return {
     id: `device_${qrcodeId}`,
     qrcodeId: qrcodeId,
     productModel: 'iPhone 14 Pro',
-    productCategory: '智能手机',
+    productCategory: '鏅鸿兘鎵嬫満',
     brandName: 'Apple',
     manufacturingDate: new Date('2022-09-16'),
     currentStatus: 'active' as any,
@@ -259,9 +281,10 @@ function mockDeviceProfile(qrcodeId: string): DeviceProfile {
     specifications: {
       ram: '6GB',
       storage: '256GB',
-      processor: 'A16 Bionic'
+      processor: 'A16 Bionic',
     },
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   };
 }
+

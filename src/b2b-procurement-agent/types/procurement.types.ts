@@ -4,18 +4,18 @@
 
 // 输入类型枚举
 export enum ProcurementInputType {
-  TEXT = "text",
-  IMAGE = "image",
-  VOICE = "voice",
-  DOCUMENT = "document",
+  TEXT = 'text',
+  IMAGE = 'image',
+  VOICE = 'voice',
+  DOCUMENT = 'document',
 }
 
 // 输入类型中文映射
 export const PROCUREMENT_INPUT_TYPE_LABELS = {
-  [ProcurementInputType.TEXT]: "文本",
-  [ProcurementInputType.IMAGE]: "图片",
-  [ProcurementInputType.VOICE]: "语音",
-  [ProcurementInputType.DOCUMENT]: "文档",
+  [ProcurementInputType.TEXT]: '文本',
+  [ProcurementInputType.IMAGE]: '图片',
+  [ProcurementInputType.VOICE]: '语音',
+  [ProcurementInputType.DOCUMENT]: '文档',
 } as const;
 
 // 原始采购请求接口
@@ -24,25 +24,21 @@ export interface RawProcurementRequest {
   companyId: string;
   requesterId: string;
   rawDescription: string;
-  input: string; // 新增：输入内容
-  inputType: ProcurementInputType; // 新增：输入类型
-  createdAt: Date;
+  input: string; // 新增：输入内?  inputType: ProcurementInputType; // 新增：输入类?  createdAt: Date;
   updatedAt: Date;
 }
 
-// 解析后的采购需求接口
-export interface ParsedProcurementRequirement {
+// 解析后的采购需求接?export interface ParsedProcurementRequirement {
   requestId: string;
   items: ProcurementItem[];
   budget?: number;
   deadline?: Date;
-  priority: "low" | "medium" | "high";
+  priority: 'low' | 'medium' | 'high';
   deliveryAddress?: string;
   specialRequirements?: string[];
 }
 
-// 采购商品项接口
-export interface ProcurementItem {
+// 采购商品项接?export interface ProcurementItem {
   productId?: string;
   productName: string;
   quantity: number;
@@ -51,8 +47,7 @@ export interface ProcurementItem {
   estimatedPrice?: number;
 }
 
-// 大模型解析结果接口
-export interface ModelParsingResult {
+// 大模型解析结果接?export interface ModelParsingResult {
   success: boolean;
   parsedData?: ParsedProcurementRequirement;
   confidence: number;

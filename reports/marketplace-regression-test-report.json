@@ -1,0 +1,176 @@
+{
+  "timestamp": "2026-03-01T12:22:07.630Z",
+  "summary": {
+    "total": 33,
+    "passed": 33,
+    "failed": 0,
+    "passRate": "100.00"
+  },
+  "details": [
+    {
+      "name": "文件存在性 - src/app/marketplace/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/[id]/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/categories/[category]/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/cart/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/checkout/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/orders/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/tokens/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/developer/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/marketplace/enterprise/page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/api/marketplace/route.ts",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/api/marketplace/orders/route.ts",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/api/marketplace/tokens/route.ts",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "文件存在性 - src/app/api/marketplace/enterprise/route.ts",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "市场目录存在",
+      "passed": true,
+      "message": "目录存在"
+    },
+    {
+      "name": "子目录 [id]",
+      "passed": true,
+      "message": "目录存在"
+    },
+    {
+      "name": "子目录 categories",
+      "passed": true,
+      "message": "目录存在"
+    },
+    {
+      "name": "子目录 cart",
+      "passed": true,
+      "message": "目录存在"
+    },
+    {
+      "name": "文件 page.tsx",
+      "passed": true,
+      "message": "文件存在"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: MarketplacePage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: AgentDetailPage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: CategoryPage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: CartPage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: CheckoutPage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: OrdersPage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: TokensPage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: DeveloperPage"
+    },
+    {
+      "name": "组件导出 - page.tsx",
+      "passed": true,
+      "message": "导出组件: EnterprisePage"
+    },
+    {
+      "name": "API路由文件",
+      "passed": true,
+      "message": "API路由存在"
+    },
+    {
+      "name": "GET方法实现",
+      "passed": true,
+      "message": "GET方法已实现"
+    },
+    {
+      "name": "POST方法实现",
+      "passed": true,
+      "message": "POST方法已实现"
+    },
+    {
+      "name": "搜索功能",
+      "passed": true,
+      "message": "搜索功能已实现"
+    },
+    {
+      "name": "筛选功能",
+      "passed": true,
+      "message": "筛选功能已实现"
+    },
+    {
+      "name": "购物车状态管理",
+      "passed": true,
+      "message": "购物车状态已实现"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { AuthService } from '@/lib/auth-service';
+﻿import { AuthService } from '@/lib/auth-service';
 import { supabase } from '@/lib/supabase';
 
 export interface SystemConfig {
@@ -16,8 +16,7 @@ export interface SystemConfig {
 
 export class ConfigService {
   /**
-   * 获取指定配置项
-   * @param key 配置键名
+   * 获取指定配置?   * @param key 配置键名
    * @returns 配置项对象或null
    */
   static async getConfig(key: string): Promise<SystemConfig | null> {
@@ -39,9 +38,7 @@ export class ConfigService {
   /**
    * 获取配置值（带类型转换）
    * @param key 配置键名
-   * @param defaultValue 默认值
-   * @returns 配置值
-   */
+   * @param defaultValue 默认?   * @returns 配置?   */
   static async getConfigValue(
     key: string,
     defaultValue: any = null
@@ -66,10 +63,8 @@ export class ConfigService {
   }
 
   /**
-   * 更新配置项
-   * @param key 配置键名
-   * @param value 配置值
-   * @param description 配置描述（可选）
+   * 更新配置?   * @param key 配置键名
+   * @param value 配置?   * @param description 配置描述（可选）
    * @returns 是否更新成功
    */
   static async updateConfig(
@@ -103,8 +98,7 @@ export class ConfigService {
 
   /**
    * 创建新配置项
-   * @param config 配置项数据
-   * @returns 是否创建成功
+   * @param config 配置项数?   * @returns 是否创建成功
    */
   static async createConfig(config: {
     key: string;
@@ -145,8 +139,7 @@ export class ConfigService {
   /**
    * 获取所有配置项
    * @param category 分类筛选（可选）
-   * @returns 配置项列表
-   */
+   * @returns 配置项列?   */
   static async getAllConfigs(category?: string): Promise<SystemConfig[]> {
     try {
       let query = supabase
@@ -187,11 +180,11 @@ export class ConfigService {
           grouped[config.category] = [];
         }
         grouped[config.category].push(config);
-      });
+      }) as any;
 
       return grouped;
     } catch (error) {
-      console.error('按分类获取配置失败:', error);
+      console.error('按分类获取配置失?', error);
       return {};
     }
   }
@@ -223,8 +216,7 @@ export class ConfigService {
   /**
    * 批量更新配置
    * @param configs 配置键值对对象
-   * @returns 成功更新的数量
-   */
+   * @returns 成功更新的数?   */
   static async batchUpdateConfigs(
     configs: Record<string, any>
   ): Promise<number> {
@@ -241,9 +233,7 @@ export class ConfigService {
   }
 
   /**
-   * 获取系统状态配置
-   * @returns 系统状态相关配置
-   */
+   * 获取系统状态配?   * @returns 系统状态相关配?   */
   static async getSystemStatus(): Promise<{
     maintenance_mode: boolean;
     site_name: string;

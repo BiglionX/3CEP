@@ -78,6 +78,7 @@ npm run dev
 ## 📊 数据库表结构
 
 ### qr_batches (批次表)
+
 ```sql
 - id: UUID主键
 - batch_id: 批次唯一标识符
@@ -94,6 +95,7 @@ npm run dev
 ```
 
 ### qr_codes (二维码明细表)
+
 ```sql
 - id: UUID主键
 - batch_id: 所属批次ID
@@ -137,18 +139,20 @@ SM-S9280,smartphone,brand_samsung_001,Galaxy S24 Ultra,30,png,300,M
 ## 🔍 API接口说明
 
 ### 获取批次列表
+
 ```http
 GET /api/qrcode/batch
 ```
 
 ### 创建新批次
+
 ```http
 POST /api/qrcode/batch
 Content-Type: application/json
 
 {
   "productModel": "IPH15P-A2842",
-  "productCategory": "smartphone", 
+  "productCategory": "smartphone",
   "brandId": "brand_apple_001",
   "productName": "iPhone 15 Pro",
   "quantity": 50,
@@ -161,6 +165,7 @@ Content-Type: application/json
 ```
 
 ### CSV批量上传
+
 ```http
 POST /api/qrcode/batch/upload
 Content-Type: multipart/form-data
@@ -221,4 +226,5 @@ npm run dev
 如有问题请联系技术支持团队或查看相关文档。
 
 ---
-*最后更新: 2026-02-26*
+
+_最后更新: 2026-02-26_

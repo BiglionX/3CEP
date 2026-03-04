@@ -1,13 +1,11 @@
-import { NextResponse } from "next/server";
-import { quotationTemplateService } from "../../../../../b2b-procurement-agent/services/quotation-template.service";
+﻿import { NextResponse } from 'next/server';
+import { quotationTemplateService } from '../../../../../b2b-procurement-agent/services/quotation-template.service';
 
 export async function GET(request: Request) {
   try {
-    // 获取用户ID（实际应用中应该从认证token获取）
-    const userId = "test-user-id"; // 临时测试用
-
+    // 鑾峰彇鐢ㄦ埛ID锛堝疄闄呭簲鐢ㄤ腑搴旇浠庤璇乼oken鑾峰彇?    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
     const { searchParams } = new URL(request.url);
-    const activeOnly = searchParams.get("activeOnly") !== "false";
+    const activeOnly = searchParams.get('activeOnly') !== 'false';
 
     const templates = await quotationTemplateService.getTemplates(
       userId,
@@ -19,7 +17,7 @@ export async function GET(request: Request) {
       data: templates,
     });
   } catch (error) {
-    console.error("获取询价模板列表错误:", error);
+    console.error('鑾峰彇璇环妯℃澘鍒楄〃閿欒:', error);
     return NextResponse.json(
       {
         success: false,
@@ -33,8 +31,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const userId = "test-user-id"; // 临时测试用
-
+    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
     const template = await quotationTemplateService.createTemplate(
       body,
       userId
@@ -45,7 +42,7 @@ export async function POST(request: Request) {
       data: template,
     });
   } catch (error) {
-    console.error("创建询价模板错误:", error);
+    console.error('鍒涘缓璇环妯℃澘閿欒:', error);
     return NextResponse.json(
       {
         success: false,
@@ -55,3 +52,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

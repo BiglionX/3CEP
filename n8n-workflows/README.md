@@ -7,11 +7,13 @@
 ## 工作流文件说明
 
 ### 1. 基础工作流 (b2b-procurement-agent-workflow.json)
+
 - 简单的 Webhook 到 API 调用流程
 - 包含基本的请求转发和响应处理
 - 适用于快速测试和简单集成场景
 
 ### 2. 高级工作流 (b2b-procurement-advanced-workflow.json)
+
 - 包含完整的错误处理机制
 - 添加了请求元数据和日志记录
 - 支持条件分支和复杂响应处理
@@ -107,7 +109,7 @@ curl -X POST http://your-n8n-host:5678/webhook/b2b-procurement-advanced \
       "unit": "件"
     },
     {
-      "productName": "连接器B", 
+      "productName": "连接器B",
       "quantity": 50,
       "unit": "个"
     }
@@ -158,6 +160,7 @@ curl -X POST http://your-n8n-host:5678/webhook/b2b-procurement-advanced \
 建议在生产环境中添加以下安全措施：
 
 1. **API 密钥认证**
+
    ```json
    {
      "headers": {
@@ -183,6 +186,7 @@ N8N_API_KEY=your-secret-api-key
 ```
 
 然后在工作流中引用：
+
 ```
 {{ $env.N8N_API_BASE_URL }}
 {{ $env.N8N_API_KEY }}

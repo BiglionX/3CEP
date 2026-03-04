@@ -1,6 +1,5 @@
 /**
- * 谷仓科技WMS客户端实现
- * 实现与Goodcang WMS系统的API对接
+ * 谷仓科技WMS客户端实? * 实现与Goodcang WMS系统的API对接
  */
 
 import {
@@ -12,7 +11,7 @@ import {
   WMSResponse,
   WMSToken,
   WMS_CALLBACK_RESULT,
-} from "./wms-client.interface";
+} from './wms-client.interface';
 
 export class GoodcangWMSClient implements WMSClient {
   private config: WMSConfig;
@@ -35,13 +34,13 @@ export class GoodcangWMSClient implements WMSClient {
     const requestId = this.generateRequestId();
 
     try {
-      const response = await this.makeRequest("/api/v1/auth/token", {
-        method: "POST",
+      const response = await this.makeRequest('/api/v1/auth/token', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          grant_type: "client_credentials",
+          grant_type: 'client_credentials',
           client_id: this.config.clientId,
           client_secret: this.config.clientSecret,
         }),
@@ -53,7 +52,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `AUTH_ERROR_${response.status}`,
-            message: errorData.message || "认证失败",
+            message: errorData.message || '认证失败',
             details: errorData,
           },
           requestId,
@@ -82,8 +81,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -99,13 +98,13 @@ export class GoodcangWMSClient implements WMSClient {
     const requestId = this.generateRequestId();
 
     try {
-      const response = await this.makeRequest("/api/v1/auth/refresh", {
-        method: "POST",
+      const response = await this.makeRequest('/api/v1/auth/refresh', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          grant_type: "refresh_token",
+          grant_type: 'refresh_token',
           refresh_token: refreshToken,
           client_id: this.config.clientId,
           client_secret: this.config.clientSecret,
@@ -118,7 +117,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `REFRESH_ERROR_${response.status}`,
-            message: errorData.message || "令牌刷新失败",
+            message: errorData.message || '令牌刷新失败',
             details: errorData,
           },
           requestId,
@@ -147,8 +146,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -172,7 +171,7 @@ export class GoodcangWMSClient implements WMSClient {
       const response = await this.makeAuthenticatedRequest(
         `/api/v1/inventory/list?warehouse_code=${this.config.warehouseId}`,
         {
-          method: "GET",
+          method: 'GET',
         }
       );
 
@@ -182,7 +181,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `SYNC_ERROR_${response.status}`,
-            message: errorData.message || "库存同步失败",
+            message: errorData.message || '库存同步失败',
             details: errorData,
           },
           requestId,
@@ -215,8 +214,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -241,7 +240,7 @@ export class GoodcangWMSClient implements WMSClient {
         `/api/v1/inventory/detail?warehouse_code=${
           this.config.warehouseId
         }&sku=${encodeURIComponent(sku)}`,
-        { method: "GET" }
+        { method: 'GET' }
       );
 
       if (!response.ok) {
@@ -250,7 +249,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `QUERY_ERROR_${response.status}`,
-            message: errorData.message || "查询库存失败",
+            message: errorData.message || '查询库存失败',
             details: errorData,
           },
           requestId,
@@ -281,8 +280,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -309,7 +308,7 @@ export class GoodcangWMSClient implements WMSClient {
         warehouse_code: this.config.warehouseId,
         notice_number: notice.noticeNumber,
         expected_arrival: notice.expectedArrival.toISOString(),
-        items: notice.items.map((item) => ({
+        items: notice.items.map(item => ({
           sku: item.sku,
           quantity: item.quantity,
           unit_weight: item.unitWeight,
@@ -326,15 +325,15 @@ export class GoodcangWMSClient implements WMSClient {
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/wms/callback/inbound`,
         callback_token:
           this.config.callbackToken || this.generateCallbackToken(),
-        callback_events: ["status_changed", "received"],
+        callback_events: ['status_changed', 'received'],
       };
 
       const response = await this.makeAuthenticatedRequest(
-        "/api/v1/inbound/create",
+        '/api/v1/inbound/create',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestBody),
         }
@@ -346,7 +345,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `CREATE_NOTICE_ERROR_${response.status}`,
-            message: errorData.message || "创建入库预报失败",
+            message: errorData.message || '创建入库预报失败',
             details: errorData,
           },
           requestId,
@@ -365,8 +364,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -376,12 +375,11 @@ export class GoodcangWMSClient implements WMSClient {
   }
 
   /**
-   * 更新订单发货状态
-   */
+   * 更新订单发货状?   */
   async updateShipmentStatus(
     orderId: string,
     trackingNumber: string,
-    status: "shipped" | "delivered"
+    status: 'shipped' | 'delivered'
   ): Promise<WMSResponse<void>> {
     const authResult = await this.ensureAuthenticated();
     if (!authResult.success) {
@@ -399,11 +397,11 @@ export class GoodcangWMSClient implements WMSClient {
       };
 
       const response = await this.makeAuthenticatedRequest(
-        "/api/v1/orders/update-status",
+        '/api/v1/orders/update-status',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestBody),
         }
@@ -415,7 +413,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `UPDATE_STATUS_ERROR_${response.status}`,
-            message: errorData.message || "更新订单状态失败",
+            message: errorData.message || '更新订单状态失?,
             details: errorData,
           },
           requestId,
@@ -432,8 +430,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -457,7 +455,7 @@ export class GoodcangWMSClient implements WMSClient {
       const response = await this.makeAuthenticatedRequest(
         `/api/v1/orders/${orderId}`,
         {
-          method: "GET",
+          method: 'GET',
         }
       );
 
@@ -467,7 +465,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `ORDER_QUERY_ERROR_${response.status}`,
-            message: errorData.message || "查询订单失败",
+            message: errorData.message || '查询订单失败',
             details: errorData,
           },
           requestId,
@@ -513,8 +511,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -540,9 +538,9 @@ export class GoodcangWMSClient implements WMSClient {
 
     try {
       const response = await this.makeAuthenticatedRequest(
-        "/api/v1/warehouses/list",
+        '/api/v1/warehouses/list',
         {
-          method: "GET",
+          method: 'GET',
         }
       );
 
@@ -552,7 +550,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `WAREHOUSE_LIST_ERROR_${response.status}`,
-            message: errorData.message || "获取仓库列表失败",
+            message: errorData.message || '获取仓库列表失败',
             details: errorData,
           },
           requestId,
@@ -571,8 +569,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -608,7 +606,7 @@ export class GoodcangWMSClient implements WMSClient {
       const response = await this.makeAuthenticatedRequest(
         `/api/v1/stats/sync?warehouse_code=${this.config.warehouseId}`,
         {
-          method: "GET",
+          method: 'GET',
         }
       );
 
@@ -618,7 +616,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `STATS_ERROR_${response.status}`,
-            message: errorData.message || "获取同步统计失败",
+            message: errorData.message || '获取同步统计失败',
             details: errorData,
           },
           requestId,
@@ -642,8 +640,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -679,9 +677,9 @@ export class GoodcangWMSClient implements WMSClient {
   ): Promise<Response> {
     const headers = {
       ...options.headers,
-      Authorization: `Bearer ${this.token?.accessToken}`,
-      "X-Warehouse-ID": this.config.warehouseId,
-      "X-Request-ID": this.generateRequestId(),
+      Authorization: `Bearer ${this?.accessToken}`,
+      'X-Warehouse-ID': this.config.warehouseId,
+      'X-Request-ID': this.generateRequestId(),
     };
 
     return this.makeRequest(endpoint, {
@@ -691,8 +689,7 @@ export class GoodcangWMSClient implements WMSClient {
   }
 
   /**
-   * 发起基础请求（带重试机制）
-   */
+   * 发起基础请求（带重试机制?   */
   private async makeRequest(
     endpoint: string,
     options: RequestInit
@@ -721,14 +718,12 @@ export class GoodcangWMSClient implements WMSClient {
           return response;
         }
 
-        // 5xx错误，准备重试
-        if (attempt < (this.config.retryAttempts || 3)) {
+        // 5xx错误，准备重?        if (attempt < (this.config.retryAttempts || 3)) {
           const delay = (this.config.retryDelay || 1000) * Math.pow(2, attempt);
           await this.delay(delay);
         }
       } catch (error) {
-        // 网络错误，准备重试
-        if (attempt < (this.config.retryAttempts || 3)) {
+        // 网络错误，准备重?        if (attempt < (this.config.retryAttempts || 3)) {
           const delay = (this.config.retryDelay || 1000) * Math.pow(2, attempt);
           await this.delay(delay);
         } else {
@@ -737,12 +732,11 @@ export class GoodcangWMSClient implements WMSClient {
       }
     }
 
-    throw new Error("请求重试次数已达上限");
+    throw new Error('请求重试次数已达上限');
   }
 
   /**
-   * 设置令牌刷新定时器
-   */
+   * 设置令牌刷新定时?   */
   private setupTokenRefresh(expiresIn: number): void {
     if (this.tokenExpiryTimer) {
       clearTimeout(this.tokenExpiryTimer);
@@ -751,7 +745,7 @@ export class GoodcangWMSClient implements WMSClient {
     const refreshTime = expiresIn - Date.now() - 300000; // 提前5分钟刷新
     if (refreshTime > 0) {
       this.tokenExpiryTimer = setTimeout(async () => {
-        if (this.token?.refreshToken) {
+        if (this?.refreshToken) {
           await this.refreshToken(this.token.refreshToken);
         } else {
           await this.authenticate();
@@ -764,7 +758,7 @@ export class GoodcangWMSClient implements WMSClient {
    * 延迟函数
    */
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
@@ -778,8 +772,7 @@ export class GoodcangWMSClient implements WMSClient {
    * 生成回调令牌
    */
   private generateCallbackToken(): string {
-    // 生成安全的回调令牌
-    return require("crypto").randomBytes(32).toString("hex");
+    // 生成安全的回调令?    return require('crypto').randomBytes(32).toString('hex');
   }
 
   /**
@@ -801,15 +794,15 @@ export class GoodcangWMSClient implements WMSClient {
         warehouse_code: this.config.warehouseId,
         callback_url: callbackUrl,
         callback_token: callbackToken,
-        events: ["inbound_status", "inventory_change"],
+        events: ['inbound_status', 'inventory_change'],
       };
 
       const response = await this.makeAuthenticatedRequest(
-        "/api/v1/callback/config",
+        '/api/v1/callback/config',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestBody),
         }
@@ -821,7 +814,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `CALLBACK_CONFIG_ERROR_${response.status}`,
-            message: errorData.message || "配置回调失败",
+            message: errorData.message || '配置回调失败',
             details: errorData,
           },
           requestId,
@@ -838,8 +831,8 @@ export class GoodcangWMSClient implements WMSClient {
       return {
         success: false,
         error: {
-          code: "NETWORK_ERROR",
-          message: "网络请求失败",
+          code: 'NETWORK_ERROR',
+          message: '网络请求失败',
           details: (error as Error).message,
         },
         requestId,
@@ -856,22 +849,21 @@ export class GoodcangWMSClient implements WMSClient {
     signature: string
   ): Promise<boolean> {
     try {
-      const crypto = require("crypto");
+      const crypto = require('crypto');
       const secret = this.config.clientSecret;
 
-      // 生成期望的签名
-      const expectedSignature = crypto
-        .createHmac("sha256", secret)
+      // 生成期望的签?      const expectedSignature = crypto
+        .createHmac('sha256', secret)
         .update(JSON.stringify(data))
-        .digest("hex");
+        .digest('hex');
 
       // 比较签名（使用定时安全比较）
       return crypto.timingSafeEqual(
-        Buffer.from(signature, "hex"),
-        Buffer.from(expectedSignature, "hex")
+        Buffer.from(signature, 'hex'),
+        Buffer.from(expectedSignature, 'hex')
       );
     } catch (error) {
-      console.error("验证回调签名失败:", error);
+      console.error('验证回调签名失败:', error);
       return false;
     }
   }
@@ -892,14 +884,13 @@ export class GoodcangWMSClient implements WMSClient {
           return {
             success: false,
             processed: false,
-            error: "签名验证失败",
+            error: '签名验证失败',
             timestamp: new Date(),
           };
         }
       }
 
-      // 验证时间戳
-      const callbackTime = new Date(callbackData.timestamp);
+      // 验证时间?      const callbackTime = new Date(callbackData.timestamp);
       const currentTime = new Date();
       const timeDiff = Math.abs(currentTime.getTime() - callbackTime.getTime());
 
@@ -908,22 +899,20 @@ export class GoodcangWMSClient implements WMSClient {
         return {
           success: false,
           processed: false,
-          error: "时间戳过期",
+          error: '时间戳过?,
           timestamp: new Date(),
         };
       }
 
       // 处理回调数据
       // 这里应该调用实际的服务层来处理业务逻辑
-      console.log("处理入库预报回调:", callbackData);
-
-      return {
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('处理入库预报回调:', callbackData)return {
         success: true,
         processed: true,
         timestamp: new Date(),
       };
     } catch (error) {
-      console.error("处理入库预报回调失败:", error);
+      console.error('处理入库预报回调失败:', error);
       return {
         success: false,
         processed: false,

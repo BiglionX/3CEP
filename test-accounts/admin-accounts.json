@@ -5,11 +5,7 @@
     "name": "超级管理员",
     "createdAt": "2026-02-23T05:51:03.231Z",
     "purpose": "端到端测试专用账户",
-    "permissions": [
-      "admin",
-      "all_modules",
-      "user_management"
-    ],
+    "permissions": ["admin", "all_modules", "user_management"],
     "loginUrl": "http://localhost:3001/login?redirect=%2Fadmin"
   }
 }

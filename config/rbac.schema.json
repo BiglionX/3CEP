@@ -79,7 +79,23 @@
           "action": {
             "type": "string",
             "description": "操作类型",
-            "enum": ["read", "create", "update", "delete", "approve", "execute", "monitor", "manage", "export", "refund", "invoke", "debug", "replay", "rollback", "alerts"]
+            "enum": [
+              "read",
+              "create",
+              "update",
+              "delete",
+              "approve",
+              "execute",
+              "monitor",
+              "manage",
+              "export",
+              "refund",
+              "invoke",
+              "debug",
+              "replay",
+              "rollback",
+              "alerts"
+            ]
           }
         },
         "required": ["name", "description", "category", "resource", "action"],

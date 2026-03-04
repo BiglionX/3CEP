@@ -74,7 +74,7 @@ class InMemoryIdempotencyStore implements IdempotencyStore {
 }
 
 /**
- * 可靠性处理器类
+ * 可靠性处理器
  */
 export class ReliabilityHandler {
   private config: ReliabilityConfig;
@@ -233,7 +233,7 @@ export class ReliabilityHandler {
       }
     }
 
-    // 所有重试都失败了
+    // 所有重试都失败
     throw lastError;
   }
 
@@ -288,7 +288,7 @@ export class ReliabilityHandler {
       this.config.retryDelayMs * Math.pow(2, attempt - 1);
     const cappedDelay = Math.min(exponentialDelay, this.config.maxRetryDelayMs);
 
-    // 添加随机抖动（±25%）避免惊群效应
+    // 添加随机抖动（±5%）避免惊群效应
     const jitter = cappedDelay * 0.25 * (Math.random() - 0.5);
 
     return Math.max(cappedDelay + jitter, this.config.retryDelayMs);

@@ -1,4 +1,4 @@
-import { cacheManager, generateCacheKey } from '@/utils/cache-manager';
+﻿import { cacheManager, generateCacheKey } from '@/utils/cache-manager';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
@@ -7,7 +7,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 个性化推荐接口
+// 涓€у寲鎺ㄨ崘鎺ュ彛
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -17,20 +17,19 @@ export async function GET(request: Request) {
     const pageSize = parseInt(searchParams.get('page_size') || '10');
     const strategy = searchParams.get('strategy') || 'hybrid'; // hybrid, content, collaborative
 
-    // 验证参数
+    // 楠岃瘉鍙傛暟
     if (page < 1 || pageSize < 1 || pageSize > 50) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '参数无效',
+          message: '鍙傛暟鏃犳晥',
           data: null,
         },
         { status: 400 }
       );
     }
 
-    // 生成缓存键
-    const cacheKey = generateCacheKey(
+    // 鐢熸垚缂撳瓨?    const cacheKey = generateCacheKey(
       'recommendations',
       userId,
       deviceId,
@@ -39,10 +38,9 @@ export async function GET(request: Request) {
       pageSize
     );
 
-    // 尝试从缓存获取
-    const cachedResult = await cacheManager.get(cacheKey);
+    // 灏濊瘯浠庣紦瀛樿幏?    const cachedResult = await cacheManager.get(cacheKey);
     if (cachedResult) {
-      console.log(`📦 推荐缓存命中: ${userId}`);
+      console.log(`馃摝 鎺ㄨ崘缂撳瓨鍛戒腑: ${userId}`);
       return NextResponse.json({
         code: 0,
         message: 'ok',
@@ -52,10 +50,10 @@ export async function GET(request: Request) {
       });
     }
 
-    // 获取用户行为数据
+    // 鑾峰彇鐢ㄦ埛琛屼负鏁版嵁
     const userBehavior = await getUserBehavior(userId, deviceId);
 
-    // 根据不同策略生成推荐
+    // 鏍规嵁涓嶅悓绛栫暐鐢熸垚鎺ㄨ崘
     let recommendations = [];
 
     switch (strategy) {
@@ -81,12 +79,11 @@ export async function GET(request: Request) {
         break;
     }
 
-    // 分页处理
+    // 鍒嗛〉澶勭悊
     const offset = (page - 1) * pageSize;
     const paginatedResults = recommendations.slice(offset, offset + pageSize);
 
-    // 格式化返回数据
-    const result = {
+    // 鏍煎紡鍖栬繑鍥炴暟?    const result = {
       list: paginatedResults,
       total: recommendations.length,
       page,
@@ -100,8 +97,7 @@ export async function GET(request: Request) {
       },
     };
 
-    // 缓存结果（1小时）
-    await cacheManager.set(cacheKey, result, 3600);
+    // 缂撳瓨缁撴灉?灏忔椂?    await cacheManager.set(cacheKey, result, 3600);
 
     return NextResponse.json({
       code: 0,
@@ -111,11 +107,11 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('推荐系统错误:', error);
+    console.error('鎺ㄨ崘绯荤粺閿欒:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '推荐服务暂时不可用',
+        message: '鎺ㄨ崘鏈嶅姟鏆傛椂涓嶅彲?,
         data: null,
       },
       { status: 500 }
@@ -123,29 +119,28 @@ export async function GET(request: Request) {
   }
 }
 
-// 获取用户行为数据
+// 鑾峰彇鐢ㄦ埛琛屼负鏁版嵁
 async function getUserBehavior(userId: string, deviceId: string) {
   try {
-    // 获取用户的浏览历史
-    const { data: viewHistory, error: viewError } = await supabase
+    // 鑾峰彇鐢ㄦ埛鐨勬祻瑙堝巻?    const { data: viewHistory, error: viewError } = await supabase
       .from('user_interactions')
       .select('target_id, target_type, created_at, is_liked')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(100);
 
-    // 获取设备相关信息
+    // 鑾峰彇璁惧鐩稿叧淇℃伅
     const { data: deviceData, error: deviceError } = await supabase
       .from('user_devices')
       .select('device_model, brand, last_used_at')
       .eq('device_id', deviceId)
       .single();
 
-    // 计算兴趣分数
+    // 璁＄畻鍏磋叮鍒嗘暟
     const likedItems = viewHistory?.filter(item => item.is_liked) || [];
     const recentViews = viewHistory?.slice(0, 20) || [];
 
-    // 分析偏好类别
+    // 鍒嗘瀽鍋忓ソ绫诲埆
     const categoryCounts: Record<string, number> = {};
     recentViews.forEach(view => {
       const category = getCategoryFromTarget(view.target_type, view.target_id);
@@ -171,12 +166,12 @@ async function getUserBehavior(userId: string, deviceId: string) {
         recentViews.length > 10
           ? 'high'
           : recentViews.length > 5
-          ? 'medium'
-          : 'low',
+            ? 'medium'
+            : 'low',
       preferredCategories,
     };
   } catch (error) {
-    console.warn('获取用户行为数据失败:', error);
+    console.warn('鑾峰彇鐢ㄦ埛琛屼负鏁版嵁澶辫触:', error);
     return {
       userId,
       deviceId,
@@ -190,12 +185,11 @@ async function getUserBehavior(userId: string, deviceId: string) {
   }
 }
 
-// 基于内容的推荐
-async function getContentBasedRecommendations(behavior: any, deviceId: string) {
+// 鍩轰簬鍐呭鐨勬帹?async function getContentBasedRecommendations(behavior: any, deviceId: string) {
   try {
     const recommendations = [];
 
-    // 基于用户偏好类别推荐
+    // 鍩轰簬鐢ㄦ埛鍋忓ソ绫诲埆鎺ㄨ崘
     for (const category of behavior.preferredCategories) {
       const { data: categoryItems } = await supabase
         .from('articles')
@@ -218,14 +212,14 @@ async function getContentBasedRecommendations(behavior: any, deviceId: string) {
             like_count: item.like_count,
             view_count: item.view_count,
             score: calculateRelevanceScore(item, behavior, category),
-            reason: `基于您对"${category}"的兴趣推荐`,
+            reason: `鍩轰簬鎮ㄥ"${category}"鐨勫叴瓒ｆ帹鑽恅,
             created_at: item.created_at,
           }))
         );
       }
     }
 
-    // 基于设备型号推荐相关内容
+    // 鍩轰簬璁惧鍨嬪彿鎺ㄨ崘鐩稿叧鍐呭
     if (behavior.deviceInfo) {
       const deviceBrand = behavior.deviceInfo.brand;
       const { data: deviceArticles } = await supabase
@@ -248,31 +242,29 @@ async function getContentBasedRecommendations(behavior: any, deviceId: string) {
             cover_image: item.cover_image_url,
             like_count: item.like_count,
             view_count: item.view_count,
-            score: 80, // 设备相关性较高
-            reason: `与您的${deviceBrand}设备相关`,
+            score: 80, // 璁惧鐩稿叧鎬ц緝?            reason: `涓庢偍?{deviceBrand}璁惧鐩稿叧`,
             created_at: item.created_at,
           }))
         );
       }
     }
 
-    // 去重并按分数排序
+    // 鍘婚噸骞舵寜鍒嗘暟鎺掑簭
     const uniqueRecommendations = Array.from(
       new Map(recommendations.map(item => [item.id, item])).values()
     ).sort((a, b) => b.score - a.score);
 
     return uniqueRecommendations;
   } catch (error) {
-    console.warn('内容推荐失败:', error);
+    console.warn('鍐呭鎺ㄨ崘澶辫触:', error);
     return [];
   }
 }
 
-// 协同过滤推荐
+// 鍗忓悓杩囨护鎺ㄨ崘
 async function getCollaborativeRecommendations(userId: string, behavior: any) {
   try {
-    // 简化的协同过滤：找相似用户喜欢的内容
-    const similarUsers = await findSimilarUsers(userId, behavior);
+    // 绠€鍖栫殑鍗忓悓杩囨护锛氭壘鐩镐技鐢ㄦ埛鍠滄鐨勫唴?    const similarUsers = await findSimilarUsers(userId, behavior);
 
     const recommendations = [];
 
@@ -306,7 +298,7 @@ async function getCollaborativeRecommendations(userId: string, behavior: any) {
               like_count: article.like_count,
               view_count: article.view_count,
               score: 70 + similarUser.similarity * 20,
-              reason: `相似用户也喜欢这篇文章`,
+              reason: `鐩镐技鐢ㄦ埛涔熷枩娆㈣繖绡囨枃绔燻,
               created_at: article.created_at,
             }))
           );
@@ -316,29 +308,28 @@ async function getCollaborativeRecommendations(userId: string, behavior: any) {
 
     return recommendations.sort((a, b) => b.score - a.score).slice(0, 20);
   } catch (error) {
-    console.warn('协同过滤推荐失败:', error);
+    console.warn('鍗忓悓杩囨护鎺ㄨ崘澶辫触:', error);
     return [];
   }
 }
 
-// 混合推荐（结合多种策略）
+// 娣峰悎鎺ㄨ崘锛堢粨鍚堝绉嶇瓥鐣ワ級
 async function getHybridRecommendations(
   userId: string,
   behavior: any,
   deviceId: string
 ) {
   try {
-    // 获取各种策略的结果
-    const [contentRecs, collabRecs, popularRecs] = await Promise.all([
+    // 鑾峰彇鍚勭绛栫暐鐨勭粨?    const [contentRecs, collabRecs, popularRecs] = await Promise.all([
       getContentBasedRecommendations(behavior, deviceId),
       getCollaborativeRecommendations(userId, behavior),
       getPopularContent(),
     ]);
 
-    // 加权合并结果
+    // 鍔犳潈鍚堝苟缁撴灉
     const scoredRecommendations: Record<string, any> = {};
 
-    // 内容推荐权重：40%
+    // 鍐呭鎺ㄨ崘鏉冮噸?0%
     contentRecs.forEach(item => {
       scoredRecommendations[item.id] = {
         ...item,
@@ -346,7 +337,7 @@ async function getHybridRecommendations(
       };
     });
 
-    // 协同推荐权重：35%
+    // 鍗忓悓鎺ㄨ崘鏉冮噸?5%
     collabRecs.forEach(item => {
       if (scoredRecommendations[item.id]) {
         scoredRecommendations[item.id].hybridScore += (item.score || 0) * 0.35;
@@ -359,7 +350,7 @@ async function getHybridRecommendations(
       }
     });
 
-    // 热门内容权重：25%
+    // 鐑棬鍐呭鏉冮噸?5%
     popularRecs.forEach(item => {
       if (scoredRecommendations[item.id]) {
         scoredRecommendations[item.id].hybridScore += 70 * 0.25;
@@ -367,24 +358,24 @@ async function getHybridRecommendations(
         scoredRecommendations[item.id] = {
           ...item,
           hybridScore: 70 * 0.25,
-          reason: '热门推荐',
+          reason: '鐑棬鎺ㄨ崘',
         };
       }
     });
 
-    // 转换为数组并排序
+    // 杞崲涓烘暟缁勫苟鎺掑簭
     const finalRecommendations = Object.values(scoredRecommendations).sort(
       (a: any, b: any) => b.hybridScore - a.hybridScore
     );
 
     return finalRecommendations;
   } catch (error) {
-    console.warn('混合推荐失败:', error);
+    console.warn('娣峰悎鎺ㄨ崘澶辫触:', error);
     return [];
   }
 }
 
-// 获取热门内容
+// 鑾峰彇鐑棬鍐呭
 async function getPopularContent() {
   try {
     const { data: popularArticles } = await supabase
@@ -405,18 +396,18 @@ async function getPopularContent() {
       like_count: article.like_count,
       view_count: article.view_count,
       score: 70,
-      reason: '热门内容推荐',
+      reason: '鐑棬鍐呭鎺ㄨ崘',
       created_at: article.created_at,
     }));
   } catch (error) {
-    console.warn('获取热门内容失败:', error);
+    console.warn('鑾峰彇鐑棬鍐呭澶辫触:', error);
     return [];
   }
 }
 
-// 查找相似用户
+// 鏌ユ壘鐩镐技鐢ㄦ埛
 async function findSimilarUsers(userId: string, behavior: any) {
-  // 简化的相似度计算：基于共同喜好
+  // 绠€鍖栫殑鐩镐技搴﹁绠楋細鍩轰簬鍏卞悓鍠滃ソ
   return [
     { userId: 'user_similar_1', similarity: 0.8 },
     { userId: 'user_similar_2', similarity: 0.7 },
@@ -424,23 +415,19 @@ async function findSimilarUsers(userId: string, behavior: any) {
   ];
 }
 
-// 计算相关性分数
-function calculateRelevanceScore(item: any, behavior: any, category: string) {
-  let score = 50; // 基础分数
+// 璁＄畻鐩稿叧鎬у垎?function calculateRelevanceScore(item: any, behavior: any, category: string) {
+  let score = 50; // 鍩虹鍒嗘暟
 
-  // 基于点赞数
-  score += Math.min(30, item.like_count || 0);
+  // 鍩轰簬鐐硅禐?  score += Math.min(30, item.like_count || 0);
 
-  // 基于浏览量
-  score += Math.min(20, Math.floor((item.view_count || 0) / 100));
+  // 鍩轰簬娴忚?  score += Math.min(20, Math.floor((item.view_count || 0) / 100));
 
-  // 基于用户兴趣匹配
+  // 鍩轰簬鐢ㄦ埛鍏磋叮鍖归厤
   if (behavior.preferredCategories.includes(category)) {
     score += 20;
   }
 
-  // 基于时效性
-  const daysOld =
+  // 鍩轰簬鏃舵晥?  const daysOld =
     (Date.now() - new Date(item.created_at).getTime()) / (1000 * 60 * 60 * 24);
   if (daysOld < 7) score += 15;
   else if (daysOld < 30) score += 10;
@@ -448,14 +435,14 @@ function calculateRelevanceScore(item: any, behavior: any, category: string) {
   return Math.min(100, score);
 }
 
-// 从目标获取类别
-function getCategoryFromTarget(targetType: string, targetId: string) {
-  // 简化的类别映射
+// 浠庣洰鏍囪幏鍙栫被?function getCategoryFromTarget(targetType: string, targetId: string) {
+  // 绠€鍖栫殑绫诲埆鏄犲皠
   const categoryMap: Record<string, string> = {
-    article: '技术文章',
-    part: '配件推荐',
-    shop: '维修店铺',
-    hot_link: '热点资讯',
+    article: '鎶€鏈枃?,
+    part: '閰嶄欢鎺ㄨ崘',
+    shop: '缁翠慨搴楅摵',
+    hot_link: '鐑偣璧勮',
   };
-  return categoryMap[targetType] || '其他';
+  return categoryMap[targetType] || '鍏朵粬';
 }
+

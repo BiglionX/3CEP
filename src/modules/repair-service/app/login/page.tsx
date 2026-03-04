@@ -26,7 +26,7 @@ export default function RepairShopLoginPage() {
         router.push('/repair-shop/dashboard');
       }, 1500);
     } catch (err) {
-      setError('登录失败，请检查用户名和密码');
+      setError('登录失败，请检查用户名和密?);
       setIsLoading(false);
     }
   };
@@ -38,13 +38,13 @@ export default function RepairShopLoginPage() {
           <div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
             <Wrench className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">维修店管理系统</h1>
-          <p className="text-gray-600 mt-2">专业的设备维修服务管理平台</p>
+          <h1 className="text-2xl font-bold text-gray-900">维修店管理系?/h1>
+          <p className="text-gray-600 mt-2">专业的设备维修服务管理平?/p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>维修师登录</CardTitle>
+            <CardTitle>维修师登?/CardTitle>
             <CardDescription>
               输入您的账户信息访问维修店工作台
             </CardDescription>
@@ -59,7 +59,7 @@ export default function RepairShopLoginPage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="username">用户名</Label>
+                <Label htmlFor="username">用户?/Label>
                 <Input
                   id="username"
                   type="text"
@@ -75,7 +75,7 @@ export default function RepairShopLoginPage() {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="请输入密码"
+                    placeholder="请输入密?
                     required
                     className="w-full pr-10"
                   />
@@ -96,14 +96,14 @@ export default function RepairShopLoginPage() {
                     id="remember"
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
-                  <Label htmlFor="remember" className="text-sm">记住我</Label>
+                  <Label htmlFor="remember" className="text-sm">记住?/Label>
                 </div>
                 <button
                   type="button"
                   onClick={() => router.push('/repair-shop/forgot-password')}
                   className="text-sm text-blue-600 hover:text-blue-800"
                 >
-                  忘记密码？
+                  忘记密码?
                 </button>
               </div>
 
@@ -115,7 +115,7 @@ export default function RepairShopLoginPage() {
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    登录中...
+                    登录?..
                   </>
                 ) : (
                   '登录'
@@ -125,7 +125,7 @@ export default function RepairShopLoginPage() {
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-center text-sm text-gray-600">
-                还没有账户？{' '}
+                还没有账户{' '}
                 <button
                   onClick={() => router.push('/repair-shop/register')}
                   className="font-medium text-blue-600 hover:text-blue-800"
@@ -138,7 +138,7 @@ export default function RepairShopLoginPage() {
         </Card>
 
         <div className="mt-8 text-center text-sm text-gray-500">
-          <p>© 2026 FixCycle Technologies. 保留所有权利。</p>
+          <p>© 2026 FixCycle Technologies. 保留所有权利?/p>
         </div>
       </div>
     </div>

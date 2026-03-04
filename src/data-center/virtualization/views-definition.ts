@@ -6,14 +6,13 @@ export interface VirtualViewDefinition {
   description: string;
   sql: string;
   sourceCatalogs: string[];
-  refreshInterval?: number; // 刷新间隔（秒）
-  cacheEnabled: boolean;
+  refreshInterval?: number; // 刷新间隔（秒?  cacheEnabled: boolean;
 }
 
 // 设备信息统一视图
 export const DEVICE_INFO_VIEW: VirtualViewDefinition = {
   name: 'unified_device_info',
-  description: '统一设备信息视图，整合lionfix和本地设备数据',
+  description: '统一设备信息视图，整合lionfix和本地设备数?,
   sourceCatalogs: ['lionfix', 'fixcycle'],
   cacheEnabled: true,
   refreshInterval: 300, // 5分钟刷新
@@ -47,13 +46,13 @@ export const DEVICE_INFO_VIEW: VirtualViewDefinition = {
     FROM lionfix.devices lf_d
     LEFT JOIN fixcycle.devices fc_d ON lf_d.id = fc_d.lionfix_device_id
     WHERE lf_d.status = 'active'
-  `
+  `,
 };
 
 // 配件信息统一视图
 export const PART_INFO_VIEW: VirtualViewDefinition = {
   name: 'unified_part_info',
-  description: '统一配件信息视图，整合lionfix和本地配件数据',
+  description: '统一配件信息视图，整合lionfix和本地配件数?,
   sourceCatalogs: ['lionfix', 'fixcycle'],
   cacheEnabled: true,
   refreshInterval: 600, // 10分钟刷新
@@ -84,7 +83,7 @@ export const PART_INFO_VIEW: VirtualViewDefinition = {
     FROM lionfix.parts lf_p
     LEFT JOIN fixcycle.parts fc_p ON lf_p.id = fc_p.lionfix_part_id
     WHERE lf_p.status = 'active'
-  `
+  `,
 };
 
 // 价格聚合视图
@@ -134,7 +133,7 @@ export const PRICE_AGGREGATION_VIEW: VirtualViewDefinition = {
       APPROX_PERCENTILE(ap.price, 0.5) as median_price
     FROM all_prices ap
     GROUP BY ap.part_id
-  `
+  `,
 };
 
 // 用户行为分析视图
@@ -157,13 +156,13 @@ export const USER_BEHAVIOR_VIEW: VirtualViewDefinition = {
     FROM fixcycle.user_behaviors ub
     WHERE ub.created_at >= CURRENT_DATE - INTERVAL '90' DAY
     GROUP BY ub.user_id, ub.device_id, ub.part_id, ub.action_type
-  `
+  `,
 };
 
 // 维修记录分析视图
 export const REPAIR_ANALYSIS_VIEW: VirtualViewDefinition = {
   name: 'repair_analysis',
-  description: '维修记录分析视图，提供维修成功率和时效分析',
+  description: '维修记录分析视图，提供维修成功率和时效分?,
   sourceCatalogs: ['fixcycle'],
   cacheEnabled: true,
   refreshInterval: 7200, // 2小时刷新
@@ -185,13 +184,13 @@ export const REPAIR_ANALYSIS_VIEW: VirtualViewDefinition = {
     LEFT JOIN fixcycle.devices d ON rr.device_id = d.id
     WHERE rr.created_at >= CURRENT_DATE - INTERVAL '365' DAY
     GROUP BY rr.device_id, d.brand, d.model, d.category
-  `
+  `,
 };
 
 // 库存预警视图
 export const INVENTORY_ALERT_VIEW: VirtualViewDefinition = {
   name: 'inventory_alerts',
-  description: '库存预警视图，识别低库存和缺货配件',
+  description: '库存预警视图，识别低库存和缺货配?,
   sourceCatalogs: ['fixcycle'],
   cacheEnabled: true,
   refreshInterval: 1800, // 30分钟刷新
@@ -214,17 +213,16 @@ export const INVENTORY_ALERT_VIEW: VirtualViewDefinition = {
       ROUND((p.stock_quantity::DECIMAL / NULLIF(p.min_stock, 0)) * 100, 2) as stock_ratio_percent
     FROM fixcycle.parts p
     WHERE p.status = 'active'
-  `
+  `,
 };
 
-// 导出所有视图定义
-export const VIRTUAL_VIEWS = {
+// 导出所有视图定?export const VIRTUAL_VIEWS = {
   DEVICE_INFO_VIEW,
   PART_INFO_VIEW,
   PRICE_AGGREGATION_VIEW,
   USER_BEHAVIOR_VIEW,
   REPAIR_ANALYSIS_VIEW,
-  INVENTORY_ALERT_VIEW
+  INVENTORY_ALERT_VIEW,
 };
 
 // 视图管理服务
@@ -243,13 +241,11 @@ export class ViewManager {
     return this.views.get(name);
   }
 
-  // 获取所有视图
-  getAllViews(): VirtualViewDefinition[] {
+  // 获取所有视?  getAllViews(): VirtualViewDefinition[] {
     return Array.from(this.views.values());
   }
 
-  // 添加自定义视图
-  addView(view: VirtualViewDefinition): void {
+  // 添加自定义视?  addView(view: VirtualViewDefinition): void {
     this.views.set(view.name, view);
   }
 
@@ -258,8 +254,7 @@ export class ViewManager {
     return this.views.delete(name);
   }
 
-  // 检查视图是否存在
-  hasView(name: string): boolean {
+  // 检查视图是否存?  hasView(name: string): boolean {
     return this.views.has(name);
   }
 
@@ -268,8 +263,7 @@ export class ViewManager {
     const now = Date.now();
     return Array.from(this.views.values()).filter(view => {
       if (!view.refreshInterval) return false;
-      // 这里应该检查上次刷新时间，简化处理
-      return true;
+      // 这里应该检查上次刷新时间，简化处?      return true;
     });
   }
 }

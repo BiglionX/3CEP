@@ -13,7 +13,7 @@ graph TB
         UI[React 组件库]
         AUTH_UI[认证组件]
     end
-    
+
     subgraph "业务模块层"
         AUTH[认证授权模块]
         REPAIR[维修服务模块]
@@ -24,7 +24,7 @@ graph TB
         ADMIN[管理后台模块]
         COMMON[公共组件模块]
     end
-    
+
     subgraph "技术支撑层"
         API[API接口层]
         DB[数据库层]
@@ -32,14 +32,14 @@ graph TB
         UTILS[工具函数层]
         TYPES[类型定义层]
     end
-    
+
     subgraph "基础设施层"
         SUPABASE[Supabase服务]
         POSTGRES[PostgreSQL数据库]
         REDIS[Redis缓存]
         N8N[n8n工作流]
     end
-    
+
     FE --> AUTH
     FE --> REPAIR
     FE --> PARTS
@@ -47,7 +47,7 @@ graph TB
     FE --> DATA_CENTER
     FE --> FCX
     FE --> ADMIN
-    
+
     AUTH --> API
     REPAIR --> API
     PARTS --> API
@@ -55,12 +55,12 @@ graph TB
     DATA_CENTER --> API
     FCX --> API
     ADMIN --> API
-    
+
     API --> DB
     API --> MW
     API --> UTILS
     API --> TYPES
-    
+
     DB --> SUPABASE
     DB --> POSTGRES
     SUPABASE --> REDIS
@@ -141,6 +141,7 @@ graph TB
 ## 🔧 技术栈
 
 ### 前端技术
+
 - **框架**: Next.js 14 (App Router)
 - **语言**: TypeScript
 - **UI库**: React 18 + Tailwind CSS
@@ -148,6 +149,7 @@ graph TB
 - **状态管理**: React Context + Hooks
 
 ### 后端技术
+
 - **运行时**: Node.js 18+
 - **数据库**: PostgreSQL + Supabase
 - **缓存**: Redis
@@ -155,6 +157,7 @@ graph TB
 - **消息队列**: (计划中)
 
 ### 开发工具
+
 - **包管理**: npm
 - **构建工具**: Webpack + SWC
 - **测试框架**: Jest + Playwright
@@ -170,7 +173,7 @@ sequenceDiagram
     participant Auth
     participant API
     participant Database
-    
+
     Client->>Frontend: 用户请求
     Frontend->>Auth: 验证Token
     Auth-->>Frontend: 验证结果
@@ -199,5 +202,6 @@ sequenceDiagram
 - **审计日志**: 完整操作记录
 
 ---
+
 _最后更新: 2026年2月21日_
 _版本: v3.0_

@@ -1,5 +1,5 @@
-/**
- * B2B采购需求解析API端点
+﻿/**
+ * B2B閲囪喘闇€姹傝В鏋怉PI绔偣
  */
 
 import { NextResponse } from 'next/server';
@@ -11,12 +11,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { description, companyId, requesterId } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!description || typeof description !== 'string') {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: '请提供有效的采购需求描述' 
+        {
+          success: false,
+          error: '璇锋彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿?,
         },
         { status: 400 }
       );
@@ -24,25 +24,25 @@ export async function POST(request: Request) {
 
     if (!companyId || !requesterId) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: '缺少必要的公司ID或请求者ID' 
+        {
+          success: false,
+          error: '缂哄皯蹇呰鐨勫叕鍙窱D鎴栬姹傝€匢D',
         },
         { status: 400 }
       );
     }
 
-    // 创建原始请求对象
+    // 鍒涘缓鍘熷璇锋眰瀵硅薄
     const rawRequest: RawProcurementRequest = {
       id: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       companyId,
       requesterId,
       rawDescription: description.trim(),
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
-    // 调用解析服务
+    // 璋冪敤瑙ｆ瀽鏈嶅姟
     const parserService = new DemandParserService();
     const parsedRequest = await parserService.parseDemand(rawRequest);
 
@@ -50,30 +50,29 @@ export async function POST(request: Request) {
       success: true,
       data: {
         rawRequest,
-        parsedRequest
+        parsedRequest,
       },
-      message: '采购需求解析成功'
+      message: '閲囪喘闇€姹傝В鏋愭垚?,
     });
-
   } catch (error) {
-    console.error('采购需求解析错误:', error);
-    
+    console.error('閲囪喘闇€姹傝В鏋愰敊?', error);
+
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '采购需求解析失败',
-        details: error instanceof Error ? error.message : '未知错误'
+      {
+        success: false,
+        error: '閲囪喘闇€姹傝В鏋愬け?,
+        details: error instanceof Error ? error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// GET方法用于健康检查
-export async function GET() {
+// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€?export async function GET() {
   return NextResponse.json({
     success: true,
-    message: 'B2B采购需求解析服务运行正常',
-    timestamp: new Date().toISOString()
+    message: 'B2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾?,
+    timestamp: new Date().toISOString(),
   });
 }
+

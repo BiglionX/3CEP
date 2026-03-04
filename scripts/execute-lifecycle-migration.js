@@ -11,7 +11,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 async function executeLifecycleMigrations() {
   console.log('🔧 执行生命周期模块数据库迁移...\n');
-  
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -21,23 +21,31 @@ async function executeLifecycleMigrations() {
     // 执行设备生命周期事件表迁移
     console.log('📋 执行设备生命周期事件表迁移...');
     const lifecycleEventsMigration = fs.readFileSync(
-      path.join(__dirname, '..', 'supabase', 'migrations', '024_create_device_lifecycle_events.sql'),
+      path.join(
+        __dirname,
+        '..',
+        'supabase',
+        'migrations',
+        '024_create_device_lifecycle_events.sql'
+      ),
       'utf8'
     );
-    
+
     // 分割并执行SQL语句
     const lifecycleStatements = lifecycleEventsMigration
       .split(';')
       .map(stmt => stmt.trim())
       .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
-    
+
     for (let i = 0; i < lifecycleStatements.length; i++) {
       const statement = lifecycleStatements[i];
       if (statement) {
         try {
           console.log(`   执行语句 ${i + 1}/${lifecycleStatements.length}`);
           // 使用RPC函数执行SQL（如果存在的话）
-          const { error } = await supabase.rpc('execute_sql', { sql: statement });
+          const { error } = await supabase.rpc('execute_sql', {
+            sql: statement,
+          });
           if (error && !error.message.includes('already exists')) {
             console.warn(`   ⚠️  警告: ${error.message}`);
           }
@@ -54,21 +62,29 @@ async function executeLifecycleMigrations() {
     // 执行设备档案表迁移
     console.log('📋 执行设备档案表迁移...');
     const profilesMigration = fs.readFileSync(
-      path.join(__dirname, '..', 'supabase', 'migrations', '025_create_device_profiles.sql'),
+      path.join(
+        __dirname,
+        '..',
+        'supabase',
+        'migrations',
+        '025_create_device_profiles.sql'
+      ),
       'utf8'
     );
-    
+
     const profileStatements = profilesMigration
       .split(';')
       .map(stmt => stmt.trim())
       .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
-    
+
     for (let i = 0; i < profileStatements.length; i++) {
       const statement = profileStatements[i];
       if (statement) {
         try {
           console.log(`   执行语句 ${i + 1}/${profileStatements.length}`);
-          const { error } = await supabase.rpc('execute_sql', { sql: statement });
+          const { error } = await supabase.rpc('execute_sql', {
+            sql: statement,
+          });
           if (error && !error.message.includes('already exists')) {
             console.warn(`   ⚠️  警告: ${error.message}`);
           }
@@ -84,21 +100,29 @@ async function executeLifecycleMigrations() {
     // 执行触发器迁移
     console.log('📋 执行生命周期触发器迁移...');
     const triggersMigration = fs.readFileSync(
-      path.join(__dirname, '..', 'supabase', 'migrations', '026_create_lifecycle_triggers.sql'),
+      path.join(
+        __dirname,
+        '..',
+        'supabase',
+        'migrations',
+        '026_create_lifecycle_triggers.sql'
+      ),
       'utf8'
     );
-    
+
     const triggerStatements = triggersMigration
       .split(';')
       .map(stmt => stmt.trim())
       .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
-    
+
     for (let i = 0; i < triggerStatements.length; i++) {
       const statement = triggerStatements[i];
       if (statement) {
         try {
           console.log(`   执行语句 ${i + 1}/${triggerStatements.length}`);
-          const { error } = await supabase.rpc('execute_sql', { sql: statement });
+          const { error } = await supabase.rpc('execute_sql', {
+            sql: statement,
+          });
           if (error && !error.message.includes('already exists')) {
             console.warn(`   ⚠️  警告: ${error.message}`);
           }
@@ -118,12 +142,12 @@ async function executeLifecycleMigrations() {
         .from('device_lifecycle_events')
         .select('count', { count: 'exact' })
         .limit(1);
-      
+
       const { data: profilesTable, error: profilesError } = await supabase
         .from('device_profiles')
         .select('count', { count: 'exact' })
         .limit(1);
-      
+
       if (!eventsError && !profilesError) {
         console.log('✅ 所有表创建成功');
         console.log('   • device_lifecycle_events - 设备生命周期事件表');
@@ -140,7 +164,6 @@ async function executeLifecycleMigrations() {
     console.log('1. 重启开发服务器');
     console.log('2. 运行测试脚本验证功能');
     console.log('3. 访问扫码页面测试激活功能');
-
   } catch (error) {
     console.error('❌ 迁移执行失败:', error.message);
     process.exit(1);

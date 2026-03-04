@@ -13,7 +13,7 @@ const requiredFiles = [
   'src/app/api/qrcode/generate/route.ts',
   'supabase/migrations/018_create_qrcode_system.sql',
   'src/app/admin/qrcodes/page.tsx',
-  'docs/guides/qrcode-generation-service-guide.md'
+  'docs/guides/qrcode-generation-service-guide.md',
 ];
 
 let allFilesExist = true;
@@ -34,7 +34,7 @@ const dependencies = [
   { name: 'qrcode', package: 'qrcode' },
   { name: 'sharp', package: 'sharp' },
   { name: '@types/qrcode', package: '@types/qrcode' },
-  { name: '@types/sharp', package: '@types/sharp' }
+  { name: '@types/sharp', package: '@types/sharp' },
 ];
 
 let allDepsInstalled = true;
@@ -51,11 +51,14 @@ dependencies.forEach(dep => {
 // 3. 检查package.json配置
 console.log('\n📋 第三步：检查package.json配置...');
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const hasQRDependencies = packageJson.dependencies && 
-  packageJson.dependencies.qrcode && 
+const hasQRDependencies =
+  packageJson.dependencies &&
+  packageJson.dependencies.qrcode &&
   packageJson.dependencies.sharp;
 
-console.log(`   ${hasQRDependencies ? '✅' : '❌'} package.json中已配置二维码依赖`);
+console.log(
+  `   ${hasQRDependencies ? '✅' : '❌'} package.json中已配置二维码依赖`
+);
 
 // 4. 输出部署指导
 console.log('\n📋 第四步：部署指导');
@@ -114,7 +117,7 @@ const acceptanceCriteria = [
   '✅ 返回有效的Base64图片数据',
   '✅ 二维码ID唯一且格式正确',
   '✅ 数据正确存储到数据库',
-  '✅ 管理后台页面可正常使用'
+  '✅ 管理后台页面可正常使用',
 ];
 
 console.log('\n🎯 验收检查项:');

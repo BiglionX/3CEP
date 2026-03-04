@@ -9,7 +9,7 @@ console.log('🧪 数据质量检测服务测试开始...\n');
 console.log('1️⃣ 检查核心文件...');
 const qualityFiles = [
   'src/data-center/monitoring/data-quality-service.ts',
-  'src/app/api/data-quality/route.ts'
+  'src/app/api/data-quality/route.ts',
 ];
 
 qualityFiles.forEach(file => {
@@ -29,7 +29,7 @@ const checkTypes = [
   '✅ referential_integrity   - 引用完整性检查',
   '✅ business_rule_violation - 业务规则检查',
   '✅ schema_violation        - 模式验证',
-  '✅ uniqueness_violation    - 唯一性检查'
+  '✅ uniqueness_violation    - 唯一性检查',
 ];
 
 console.log('   📋 支持的检查类型:');
@@ -45,35 +45,35 @@ const defaultRules = [
     table: 'parts',
     column: 'part_name',
     type: 'missing_value',
-    threshold: '1.0%'
+    threshold: '1.0%',
   },
   {
     name: '价格范围合理性检查',
     table: 'parts',
     column: 'price',
     type: 'out_of_range',
-    threshold: '0.5%'
+    threshold: '0.5%',
   },
   {
     name: '用户邮箱格式检查',
     table: 'users',
     column: 'email',
     type: 'invalid_format',
-    threshold: '0.1%'
+    threshold: '0.1%',
   },
   {
     name: '订单号唯一性检查',
     table: 'orders',
     column: 'order_number',
     type: 'duplicate_record',
-    threshold: '0.0%'
+    threshold: '0.0%',
   },
   {
     name: '库存数据新鲜度检查',
     table: 'inventory',
     type: 'stale_data',
-    threshold: '5.0%'
-  }
+    threshold: '5.0%',
+  },
 ];
 
 console.log('   📋 预设检查规则:');
@@ -96,7 +96,7 @@ const coreFeatures = [
   '✅ 自动报告生成',
   '✅ 严重性分级管理',
   '✅ 配置参数化',
-  '✅ API接口完整'
+  '✅ API接口完整',
 ];
 
 console.log('   📋 核心功能特性:');
@@ -112,7 +112,7 @@ const apiEndpoints = [
   'GET /api/data-quality?action=results    - 获取检查结果',
   'GET /api/data-quality?action=tables     - 获取涉及表列表',
   'GET /api/data-quality?action=health     - 服务健康检查',
-  'POST /api/data-quality  - 执行检查/管理规则/配置服务'
+  'POST /api/data-quality  - 执行检查/管理规则/配置服务',
 ];
 
 console.log('   📋 可用API端点:');
@@ -128,7 +128,7 @@ const configOptions = [
   '✅ maxSampleSize         - 最大样本数',
   '✅ enableAutoFix         - 启用自动修复',
   '✅ autoFixThreshold      - 自动修复阈值',
-  '✅ notificationChannels  - 通知渠道'
+  '✅ notificationChannels  - 通知渠道',
 ];
 
 console.log('   📋 可配置参数:');

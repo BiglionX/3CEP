@@ -1,150 +1,144 @@
-/**
- * WMS入库预报回调处理API
- * 接收来自WMS系统的状态变更通知
- * WMS-203 入库预报管理功能
+﻿/**
+ * WMS鍏ュ簱棰勬姤鍥炶皟澶勭悊API
+ * 鎺ユ敹鏉ヨ嚜WMS绯荤粺鐨勭姸鎬佸彉鏇撮€氱煡
+ * WMS-203 鍏ュ簱棰勬姤绠＄悊鍔熻兘
  */
 
-import { WMSInboundNoticeCallback } from "@/lib/warehouse/wms-client.interface";
-import { InboundForecastService } from "@/supply-chain/services/inbound-forecast.service";
-import { NextResponse } from "next/server";
+import { WMSInboundNoticeCallback } from '@/lib/warehouse/wms-client.interface';
+import { InboundForecastService } from '@/supply-chain/services/inbound-forecast.service';
+import { NextResponse } from 'next/server';
 
 const forecastService = new InboundForecastService();
 
 /**
  * POST /api/wms/callback/inbound
- * 处理WMS入库预报回调
+ * 澶勭悊WMS鍏ュ簱棰勬姤鍥炶皟
  */
 export async function POST(request: Request) {
   try {
-    // 验证回调签名
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.warn("WMS回调: 缺少或无效的认证头");
-      return NextResponse.json({ error: "无效的认证" }, { status: 401 });
+    // 楠岃瘉鍥炶皟绛惧悕
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.warn('WMS鍥炶皟: 缂哄皯鎴栨棤鏁堢殑璁よ瘉?);
+      return NextResponse.json({ error: '鏃犳晥鐨勮? }, { status: 401 });
     }
 
-    // 验证回调令牌（简化处理，实际应使用更安全的方式）
+    // 楠岃瘉鍥炶皟浠ょ墝锛堢畝鍖栧鐞嗭紝瀹為檯搴斾娇鐢ㄦ洿瀹夊叏鐨勬柟寮忥級
     const token = authHeader.substring(7);
     if (!isValidCallbackToken(token)) {
-      console.warn("WMS回调: 无效的回调令牌");
-      return NextResponse.json({ error: "无效的回调令牌" }, { status: 401 });
+      console.warn('WMS鍥炶皟: 鏃犳晥鐨勫洖璋冧护?);
+      return NextResponse.json({ error: '鏃犳晥鐨勫洖璋冧护? }, { status: 401 });
     }
 
-    // 解析回调数据
+    // 瑙ｆ瀽鍥炶皟鏁版嵁
     const callbackData: WMSInboundNoticeCallback = await request.json();
 
-    // 基础数据验证
+    // 鍩虹鏁版嵁楠岃瘉
     const validationErrors = validateCallbackData(callbackData);
     if (validationErrors.length > 0) {
-      console.warn("WMS回调数据验证失败:", validationErrors);
+      console.warn('WMS鍥炶皟鏁版嵁楠岃瘉澶辫触:', validationErrors);
       return NextResponse.json(
         {
-          error: "回调数据验证失败",
+          error: '鍥炶皟鏁版嵁楠岃瘉澶辫触',
           details: validationErrors,
         },
         { status: 400 }
       );
     }
 
-    // 验证时间戳（防止重放攻击）
-    if (!isValidTimestamp(callbackData.timestamp)) {
-      console.warn("WMS回调: 时间戳无效或过期");
-      return NextResponse.json({ error: "时间戳无效" }, { status: 400 });
+    // 楠岃瘉鏃堕棿鎴筹紙闃叉閲嶆斁鏀诲嚮?    if (!isValidTimestamp(callbackData.timestamp)) {
+      console.warn('WMS鍥炶皟: 鏃堕棿鎴虫棤鏁堟垨杩囨湡');
+      return NextResponse.json({ error: '鏃堕棿鎴虫棤? }, { status: 400 });
     }
 
-    // 处理回调数据
+    // 澶勭悊鍥炶皟鏁版嵁
     await forecastService.handleWMSCallback(callbackData);
 
-    // 记录回调日志
-    console.log("WMS回调处理成功:", {
+    // 璁板綍鍥炶皟鏃ュ織
+    console.log('WMS鍥炶皟澶勭悊鎴愬姛:', {
       noticeId: callbackData.noticeId,
       status: callbackData.status,
       timestamp: callbackData.timestamp,
     });
 
-    // 返回成功响应
+    // 杩斿洖鎴愬姛鍝嶅簲
     return NextResponse.json({
       success: true,
-      message: "回调处理成功",
+      message: '鍥炶皟澶勭悊鎴愬姛',
       processedAt: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("处理WMS回调失败:", error);
+    console.error('澶勭悊WMS鍥炶皟澶辫触:', error);
 
-    // 返回错误响应但保持200状态码，避免WMS重复发送
-    return NextResponse.json(
+    // 杩斿洖閿欒鍝嶅簲浣嗕繚?00鐘舵€佺爜锛岄伩鍏峎MS閲嶅鍙?    return NextResponse.json(
       {
         success: false,
-        error: "回调处理失败",
+        error: '鍥炶皟澶勭悊澶辫触',
         details: (error as Error).message,
         processedAt: new Date().toISOString(),
       },
-      { status: 200 } // 即使处理失败也返回200，避免重试风暴
-    );
+      { status: 200 } // 鍗充娇澶勭悊澶辫触涔熻繑?00锛岄伩鍏嶉噸璇曢?    );
   }
 }
 
 /**
  * GET /api/wms/callback/inbound
- * 健康检查端点
- */
+ * 鍋ュ悍妫€鏌ョ? */
 export async function GET() {
   return NextResponse.json({
-    status: "ok",
-    service: "WMS Inbound Callback Handler",
+    status: 'ok',
+    service: 'WMS Inbound Callback Handler',
     timestamp: new Date().toISOString(),
   });
 }
 
 /**
- * 验证回调令牌
+ * 楠岃瘉鍥炶皟浠ょ墝
  */
 function isValidCallbackToken(token: string): boolean {
-  // 在生产环境中应该使用更复杂的验证机制
-  // 如JWT验证、数据库查询等
-  const validTokens = [
+  // 鍦ㄧ敓浜х幆澧冧腑搴旇浣跨敤鏇村鏉傜殑楠岃瘉鏈哄埗
+  // 濡侸WT楠岃瘉銆佹暟鎹簱鏌ヨ?  const validTokens = [
     process.env.WMS_CALLBACK_TOKEN,
-    "test-callback-token", // 开发环境测试用
+    'test-callback-token', // 寮€鍙戠幆澧冩祴璇曠敤
   ];
 
   return validTokens.includes(token);
 }
 
 /**
- * 验证回调数据
+ * 楠岃瘉鍥炶皟鏁版嵁
  */
 function validateCallbackData(data: WMSInboundNoticeCallback): string[] {
   const errors: string[] = [];
 
-  // 必填字段验证
+  // 蹇呭～瀛楁楠岃瘉
   if (!data.noticeId) {
-    errors.push("缺少预报单ID");
+    errors.push('缂哄皯棰勬姤鍗旾D');
   }
 
   if (!data.status) {
-    errors.push("缺少状态信息");
+    errors.push('缂哄皯鐘舵€佷俊?);
   } else {
-    const validStatuses = ["confirmed", "in_transit", "received", "cancelled"];
+    const validStatuses = ['confirmed', 'in_transit', 'received', 'cancelled'];
     if (!validStatuses.includes(data.status)) {
-      errors.push("无效的状态值");
+      errors.push('鏃犳晥鐨勭姸鎬?);
     }
   }
 
   if (!data.timestamp) {
-    errors.push("缺少时间戳");
+    errors.push('缂哄皯鏃堕棿?);
   }
 
-  // 收货项验证
-  if (data.receivedItems) {
+  // 鏀惰揣椤归獙?  if (data.receivedItems) {
     data.receivedItems.forEach((item, index) => {
       if (!item.sku) {
-        errors.push(`第${index + 1}个收货项缺少SKU`);
+        errors.push(`锟?{index + 1}涓敹璐ч」缂哄皯SKU`);
       }
       if (item.expectedQuantity === undefined || item.expectedQuantity < 0) {
-        errors.push(`第${index + 1}个收货项预期数量无效`);
+        errors.push(`锟?{index + 1}涓敹璐ч」棰勬湡鏁伴噺鏃犳晥`);
       }
       if (item.receivedQuantity === undefined || item.receivedQuantity < 0) {
-        errors.push(`第${index + 1}个收货项实际收货数量无效`);
+        errors.push(`锟?{index + 1}涓敹璐ч」瀹為檯鏀惰揣鏁伴噺鏃犳晥`);
       }
     });
   }
@@ -153,21 +147,19 @@ function validateCallbackData(data: WMSInboundNoticeCallback): string[] {
 }
 
 /**
- * 验证时间戳有效性
- */
+ * 楠岃瘉鏃堕棿鎴虫湁鏁? */
 function isValidTimestamp(timestamp: Date): boolean {
   const callbackTime = new Date(timestamp);
   const currentTime = new Date();
   const timeDiff = Math.abs(currentTime.getTime() - callbackTime.getTime());
 
-  // 时间差不能超过5分钟，防止重放攻击
-  const maxTimeDiff = 5 * 60 * 1000; // 5分钟
+  // 鏃堕棿宸笉鑳借秴?鍒嗛挓锛岄槻姝㈤噸鏀炬敾?  const maxTimeDiff = 5 * 60 * 1000; // 5鍒嗛挓
 
   return timeDiff <= maxTimeDiff;
 }
 
 /**
- * 记录回调处理日志
+ * 璁板綍鍥炶皟澶勭悊鏃ュ織
  */
 function logCallbackProcessing(
   data: WMSInboundNoticeCallback,
@@ -183,6 +175,6 @@ function logCallbackProcessing(
     processingTime: Date.now(),
   };
 
-  // 在生产环境中应该写入专门的日志系统
-  console.log("WMS回调处理日志:", JSON.stringify(logEntry));
+  // 鍦ㄧ敓浜х幆澧冧腑搴旇鍐欏叆涓撻棬鐨勬棩蹇楃郴?  console.log('WMS鍥炶皟澶勭悊鏃ュ織:', JSON.stringify(logEntry));
 }
+

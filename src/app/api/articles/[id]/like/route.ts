@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+);
 
 // 点赞文章
 export async function POST(
@@ -13,21 +13,18 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const articleId = params.id
-    const { action } = await request.json() // 'like' 或 'unlike'
+    const articleId = params.id;
+    const { action } = await request.json(); // 'like' 或 'unlike'
 
     // 验证用户认证
-    const cookieStore = await cookies()
-    const session = cookieStore.get('supabase-auth-token')
-    
+    const cookieStore = await cookies();
+    const session = cookieStore.get('supabase-auth-token');
+
     if (!session) {
-      return NextResponse.json(
-        { error: '请先登录' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: '请先登录' }, { status: 401 });
     }
 
-    const userId = JSON.parse(session.value).user.id
+    const userId = JSON.parse(session.value).user.id;
 
     if (action === 'like') {
       // 检查是否已点赞
@@ -36,13 +33,10 @@ export async function POST(
         .select('id')
         .eq('article_id', articleId)
         .eq('user_id', userId)
-        .single()
+        .single();
 
       if (existingLike) {
-        return NextResponse.json(
-          { error: '已点赞' },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: '已点赞' }, { status: 400 });
       }
 
       // 添加点赞记录
@@ -50,42 +44,41 @@ export async function POST(
         .from('article_likes')
         .insert({
           article_id: articleId,
-          user_id: userId
-        } as any)
+          user_id: userId,
+        } as any);
 
       if (insertError) {
-        console.error('点赞失败:', insertError)
+        console.error('点赞失败:', insertError);
         return NextResponse.json(
           { error: '点赞失败', details: insertError.message },
           { status: 500 }
-        )
+        );
       }
 
       // 更新文章点赞数
-      await supabase.rpc('increment_article_like', {
-        article_id: articleId
-      })
-
+      (await supabase.rpc('increment_article_like', {
+        article_id: articleId,
+      })) as any;
     } else if (action === 'unlike') {
       // 删除点赞记录
       const { error: deleteError } = await supabase
         .from('article_likes')
         .delete()
         .eq('article_id', articleId)
-        .eq('user_id', userId)
+        .eq('user_id', userId);
 
       if (deleteError) {
-        console.error('取消点赞失败:', deleteError)
+        console.error('取消点赞失败:', deleteError);
         return NextResponse.json(
           { error: '取消点赞失败', details: deleteError.message },
           { status: 500 }
-        )
+        );
       }
 
       // 更新文章点赞数
       await supabase.rpc('decrement_article_like', {
-        article_id: articleId
-      })
+        article_id: articleId,
+      });
     }
 
     // 获取最新的点赞数
@@ -93,20 +86,19 @@ export async function POST(
       .from('articles')
       .select('like_count')
       .eq('id', articleId)
-      .single()
+      .single();
 
     return NextResponse.json({
       success: true,
       like_count: article?.like_count || 0,
-      message: action === 'like' ? '点赞成功' : '取消点赞成功'
-    })
-
+      message: action === 'like' ? '点赞成功' : '取消点赞成功',
+    });
   } catch (error) {
-    console.error('点赞操作异常:', error)
+    console.error('点赞操作异常:', error);
     return NextResponse.json(
       { error: '服务器内部错误', details: (error as Error).message },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -116,20 +108,20 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const articleId = params.id
+    const articleId = params.id;
 
     // 验证用户认证
-    const cookieStore = await cookies()
-    const session = cookieStore.get('supabase-auth-token')
-    
+    const cookieStore = await cookies();
+    const session = cookieStore.get('supabase-auth-token');
+
     if (!session) {
       return NextResponse.json({
         success: true,
-        liked: false
-      })
+        liked: false,
+      });
     }
 
-    const userId = JSON.parse(session.value).user.id
+    const userId = JSON.parse(session.value).user.id;
 
     // 检查是否已点赞
     const { data: existingLike } = await supabase
@@ -137,18 +129,17 @@ export async function GET(
       .select('id')
       .eq('article_id', articleId)
       .eq('user_id', userId)
-      .single()
+      .single();
 
     return NextResponse.json({
       success: true,
-      liked: !!existingLike
-    })
-
+      liked: !!existingLike,
+    });
   } catch (error) {
-    console.error('检查点赞状态异常:', error)
+    console.error('检查点赞状态异常:', error);
     return NextResponse.json({
       success: true,
-      liked: false
-    })
+      liked: false,
+    });
   }
 }

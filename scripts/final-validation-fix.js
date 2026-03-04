@@ -1,4 +1,3 @@
-
 /**
  * 最终验证脚本 - 确认布局文件冲突已解决
  */
@@ -9,18 +8,39 @@ console.log('🔍 最终验证布局文件冲突修复...');
 const fs = require('fs');
 const path = require('path');
 
-const componentsLayout = path.join(process.cwd(), 'src', 'components', 'admin', 'EnhancedAdminLayout.tsx');
-const modulesLayout = path.join(process.cwd(), 'src', 'modules', 'common', 'components', 'admin', 'EnhancedAdminLayout.tsx');
+const componentsLayout = path.join(
+  process.cwd(),
+  'src',
+  'components',
+  'admin',
+  'EnhancedAdminLayout.tsx'
+);
+const modulesLayout = path.join(
+  process.cwd(),
+  'src',
+  'modules',
+  'common',
+  'components',
+  'admin',
+  'EnhancedAdminLayout.tsx'
+);
 
 console.log('检查文件存在性:');
-console.log('- components layout:', fs.existsSync(componentsLayout) ? '✅ 存在' : '❌ 不存在');
-console.log('- modules layout:', fs.existsSync(modulesLayout) ? '❌ 存在(应已删除)' : '✅ 不存在');
+console.log(
+  '- components layout:',
+  fs.existsSync(componentsLayout) ? '✅ 存在' : '❌ 不存在'
+);
+console.log(
+  '- modules layout:',
+  fs.existsSync(modulesLayout) ? '❌ 存在(应已删除)' : '✅ 不存在'
+);
 
 // 验证登录状态控件逻辑
 const content = fs.readFileSync(componentsLayout, 'utf8');
-const hasUnifiedLogin = content.includes('{userEmail ? (') && 
-                         content.includes('// 已登录状态') &&
-                         content.includes('// 未登录状态');
+const hasUnifiedLogin =
+  content.includes('{userEmail ? (') &&
+  content.includes('// 已登录状态') &&
+  content.includes('// 未登录状态');
 
 console.log('统一登录控件逻辑:', hasUnifiedLogin ? '✅ 完整' : '❌ 不完整');
 

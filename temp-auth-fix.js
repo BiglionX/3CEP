@@ -1,4 +1,3 @@
-
 // 临时认证修复脚本
 // 在浏览器Console中运行
 
@@ -11,10 +10,10 @@ localStorage.setItem('user-role', 'admin');
 
 // 设置临时用户信息
 const tempUser = {
-  id: 'temp-user-' + Date.now(),
+  id: `temp-user-${Date.now()}`,
   email: 'admin@temporary.local',
   roles: ['admin'],
-  is_admin: true
+  is_admin: true,
 };
 localStorage.setItem('temp-user-info', JSON.stringify(tempUser));
 

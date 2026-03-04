@@ -1,14 +1,14 @@
-'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { 
-  Search, 
-  Filter, 
-  Plus, 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Search,
+  Filter,
+  Plus,
+  MoreHorizontal,
+  Eye,
+  Edit,
   Trash2,
   Download,
   Ship,
@@ -19,19 +19,25 @@ import {
   AlertCircle,
   Truck,
   Anchor,
-  Plane
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+  Plane,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -39,45 +45,51 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 
 interface Shipment {
-  id: string
-  shipmentNumber: string
-  orderId: string
-  carrier: string
-  transportMode: 'sea' | 'air' | 'land' | 'rail'
-  origin: string
-  destination: string
-  status: 'pending' | 'confirmed' | 'in_transit' | 'customs' | 'delivered' | 'delayed'
-  plannedDeparture: string
-  actualDeparture: string
-  estimatedArrival: string
-  actualArrival: string
-  weight: number
-  volume: number
-  packages: number
-  trackingNumber: string
-  containerNumber?: string
-  vesselName?: string
-  flightNumber?: string
-  driverInfo?: string
+  id: string;
+  shipmentNumber: string;
+  orderId: string;
+  carrier: string;
+  transportMode: 'sea' | 'air' | 'land' | 'rail';
+  origin: string;
+  destination: string;
+  status:
+    | 'pending'
+    | 'confirmed'
+    | 'in_transit'
+    | 'customs'
+    | 'delivered'
+    | 'delayed';
+  plannedDeparture: string;
+  actualDeparture: string;
+  estimatedArrival: string;
+  actualArrival: string;
+  weight: number;
+  volume: number;
+  packages: number;
+  trackingNumber: string;
+  containerNumber?: string;
+  vesselName?: string;
+  flightNumber?: string;
+  driverInfo?: string;
 }
 
 export default function ShippingPage() {
-  const router = useRouter()
-  const [shipments, setShipments] = useState<Shipment[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [transportFilter, setTransportFilter] = useState('all')
-  const [carrierFilter, setCarrierFilter] = useState('all')
+  const router = useRouter();
+  const [shipments, setShipments] = useState<Shipment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [transportFilter, setTransportFilter] = useState('all');
+  const [carrierFilter, setCarrierFilter] = useState('all');
 
   // 模拟数据
   useEffect(() => {
     const loadShipments = () => {
-      setLoading(true)
-      
+      setLoading(true);
+
       setTimeout(() => {
         const mockShipments: Shipment[] = [
           {
@@ -97,7 +109,7 @@ export default function ShippingPage() {
             volume: 8.5,
             packages: 50,
             trackingNumber: 'DHL123456789CN',
-            flightNumber: 'KE1234'
+            flightNumber: 'KE1234',
           },
           {
             id: '2',
@@ -106,7 +118,7 @@ export default function ShippingPage() {
             carrier: 'FedEx International',
             transportMode: 'sea',
             origin: '深圳, 中国',
-            destination: '洛杉矶, 美国',
+            destination: '洛杉? 美国',
             status: 'confirmed',
             plannedDeparture: '2026-02-28 14:00',
             actualDeparture: '',
@@ -117,7 +129,7 @@ export default function ShippingPage() {
             packages: 200,
             trackingNumber: 'FXE987654321US',
             containerNumber: 'COSU1234567',
-            vesselName: 'MSC Europa'
+            vesselName: 'MSC Europa',
           },
           {
             id: '3',
@@ -136,7 +148,7 @@ export default function ShippingPage() {
             volume: 4.2,
             packages: 25,
             trackingNumber: 'UPS456789123CN',
-            driverInfo: '张师傅 - 138****1234'
+            driverInfo: '张师?- 138****1234',
           },
           {
             id: '4',
@@ -156,7 +168,7 @@ export default function ShippingPage() {
             packages: 450,
             trackingNumber: 'MSK789456123DE',
             containerNumber: 'MAEU2345678',
-            vesselName: 'Maersk Edinburgh'
+            vesselName: 'Maersk Edinburgh',
           },
           {
             id: '5',
@@ -175,102 +187,104 @@ export default function ShippingPage() {
             volume: 1.8,
             packages: 12,
             trackingNumber: 'CP888888888CN',
-            flightNumber: 'NH961'
-          }
-        ]
-        
-        setShipments(mockShipments)
-        setLoading(false)
-      }, 800)
-    }
+            flightNumber: 'NH961',
+          },
+        ];
 
-    loadShipments()
-  }, [])
+        setShipments(mockShipments);
+        setLoading(false);
+      }, 800);
+    };
+
+    loadShipments();
+  }, []);
 
   // 筛选逻辑
   const filteredShipments = shipments.filter(shipment => {
-    const matchesSearch = 
-      shipment.shipmentNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch =
+      shipment.shipmentNumber
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       shipment.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      shipment.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      shipment.carrier.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesStatus = statusFilter === 'all' || shipment.status === statusFilter
-    const matchesTransport = transportFilter === 'all' || shipment.transportMode === transportFilter
-    const matchesCarrier = carrierFilter === 'all' || shipment.carrier === carrierFilter
-    
-    return matchesSearch && matchesStatus && matchesTransport && matchesCarrier
-  })
+      shipment.trackingNumber
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      shipment.carrier.toLowerCase().includes(searchTerm.toLowerCase());
 
-  // 状态颜色映射
-  const getStatusColor = (status: string) => {
+    const matchesStatus =
+      statusFilter === 'all' || shipment.status === statusFilter;
+    const matchesTransport =
+      transportFilter === 'all' || shipment.transportMode === transportFilter;
+    const matchesCarrier =
+      carrierFilter === 'all' || shipment.carrier === carrierFilter;
+
+    return matchesSearch && matchesStatus && matchesTransport && matchesCarrier;
+  });
+
+  // 状态颜色映?  const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       pending: 'bg-gray-100 text-gray-800',
       confirmed: 'bg-blue-100 text-blue-800',
       in_transit: 'bg-purple-100 text-purple-800',
       customs: 'bg-yellow-100 text-yellow-800',
       delivered: 'bg-green-100 text-green-800',
-      delayed: 'bg-red-100 text-red-800'
-    }
-    return colorMap[status] || 'bg-gray-100 text-gray-800'
-  }
+      delayed: 'bg-red-100 text-red-800',
+    };
+    return colorMap[status] || 'bg-gray-100 text-gray-800';
+  };
 
   const getStatusText = (status: string) => {
     const textMap: Record<string, string> = {
-      pending: '待发货',
-      confirmed: '已确认',
-      in_transit: '运输中',
-      customs: '清关中',
+      pending: '待发?,
+      confirmed: '已确?,
+      in_transit: '运输?,
+      customs: '清关?,
       delivered: '已送达',
-      delayed: '延误'
-    }
-    return textMap[status] || status
-  }
+      delayed: '延误',
+    };
+    return textMap[status] || status;
+  };
 
   const getTransportIcon = (mode: string) => {
     const iconMap: Record<string, React.ReactNode> = {
       sea: <Anchor className="h-4 w-4" />,
       air: <Plane className="h-4 w-4" />,
       land: <Truck className="h-4 w-4" />,
-      rail: <Truck className="h-4 w-4" />
-    }
-    return iconMap[mode] || <Package className="h-4 w-4" />
-  }
+      rail: <Truck className="h-4 w-4" />,
+    };
+    return iconMap[mode] || <Package className="h-4 w-4" />;
+  };
 
   const getTransportText = (mode: string) => {
     const textMap: Record<string, string> = {
       sea: '海运',
       air: '空运',
       land: '陆运',
-      rail: '铁路'
-    }
-    return textMap[mode] || mode
-  }
+      rail: '铁路',
+    };
+    return textMap[mode] || mode;
+  };
 
   const handleViewShipment = (shipmentId: string) => {
     // TODO: 实现查看详情功能
-    console.log('查看发货详情:', shipmentId)
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看发货详情:', shipmentId)};
 
   const handleCreateShipment = () => {
-    // TODO: 实现创建发货单功能
-    console.log('创建发货单')
-  }
+    // TODO: 实现创建发货单功?    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('创建发货?)};
 
   const handleExport = () => {
     // TODO: 实现导出功能
-    console.log('导出发货数据')
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出发货数据')};
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载发货数据中...</p>
+          <p className="mt-4 text-gray-600">加载发货数据?..</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -280,8 +294,7 @@ export default function ShippingPage() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">发货管理</h1>
           <p className="mt-2 text-gray-600">
-            管理货物发货、运输安排和承运商协调
-          </p>
+            管理货物发货、运输安排和承运商协?          </p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={handleExport}>
@@ -290,8 +303,7 @@ export default function ShippingPage() {
           </Button>
           <Button onClick={handleCreateShipment}>
             <Plus className="h-4 w-4 mr-2" />
-            创建发货单
-          </Button>
+            创建发货?          </Button>
         </div>
       </div>
 
@@ -304,54 +316,46 @@ export default function ShippingPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{shipments.length}</div>
-            <p className="text-xs text-muted-foreground">
-              当前发货批次
-            </p>
+            <p className="text-xs text-muted-foreground">当前发货批次</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">运输中</CardTitle>
+            <CardTitle className="text-sm font-medium">运输?/CardTitle>
             <Truck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
               {shipments.filter(s => s.status === 'in_transit').length}
             </div>
-            <p className="text-xs text-muted-foreground">
-              正在运输的货物
-            </p>
+            <p className="text-xs text-muted-foreground">正在运输的货?/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待发货</CardTitle>
+            <CardTitle className="text-sm font-medium">待发?/CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
               {shipments.filter(s => s.status === 'pending').length}
             </div>
-            <p className="text-xs text-muted-foreground">
-              等待发货安排
-            </p>
+            <p className="text-xs text-muted-foreground">等待发货安排</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">清关中</CardTitle>
+            <CardTitle className="text-sm font-medium">清关?/CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">
               {shipments.filter(s => s.status === 'customs').length}
             </div>
-            <p className="text-xs text-muted-foreground">
-              海关清关处理
-            </p>
+            <p className="text-xs text-muted-foreground">海关清关处理</p>
           </CardContent>
         </Card>
 
@@ -362,14 +366,16 @@ export default function ShippingPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {shipments.filter(s => 
-                s.actualDeparture && 
-                new Date(s.actualDeparture).toDateString() === new Date().toDateString()
-              ).length}
+              {
+                shipments.filter(
+                  s =>
+                    s.actualDeparture &&
+                    new Date(s.actualDeparture).toDateString() ===
+                      new Date().toDateString()
+                ).length
+              }
             </div>
-            <p className="text-xs text-muted-foreground">
-              今天已发货批次
-            </p>
+            <p className="text-xs text-muted-foreground">今天已发货批?/p>
           </CardContent>
         </Card>
       </div>
@@ -379,8 +385,7 @@ export default function ShippingPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            筛选条件
-          </CardTitle>
+            筛选条?          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -390,22 +395,22 @@ export default function ShippingPage() {
                 <Input
                   placeholder="搜索发货单号、订单号或追踪号..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
             </div>
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="发货状态" />
+                <SelectValue placeholder="发货状? />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状态</SelectItem>
-                <SelectItem value="pending">待发货</SelectItem>
-                <SelectItem value="confirmed">已确认</SelectItem>
-                <SelectItem value="in_transit">运输中</SelectItem>
-                <SelectItem value="customs">清关中</SelectItem>
+                <SelectItem value="all">全部状?/SelectItem>
+                <SelectItem value="pending">待发?/SelectItem>
+                <SelectItem value="confirmed">已确?/SelectItem>
+                <SelectItem value="in_transit">运输?/SelectItem>
+                <SelectItem value="customs">清关?/SelectItem>
                 <SelectItem value="delivered">已送达</SelectItem>
                 <SelectItem value="delayed">延误</SelectItem>
               </SelectContent>
@@ -426,12 +431,14 @@ export default function ShippingPage() {
 
             <Select value={carrierFilter} onValueChange={setCarrierFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="承运商" />
+                <SelectValue placeholder="承运? />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部承运商</SelectItem>
+                <SelectItem value="all">全部承运?/SelectItem>
                 {[...new Set(shipments.map(s => s.carrier))].map(carrier => (
-                  <SelectItem key={carrier} value={carrier}>{carrier}</SelectItem>
+                  <SelectItem key={carrier} value={carrier}>
+                    {carrier}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -444,7 +451,7 @@ export default function ShippingPage() {
         <CardHeader>
           <CardTitle>发货列表</CardTitle>
           <CardDescription>
-            共找到 {filteredShipments.length} 个符合条件的发货记录
+            共找?{filteredShipments.length} 个符合条件的发货记录
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -457,7 +464,7 @@ export default function ShippingPage() {
                   <TableHead>运输详情</TableHead>
                   <TableHead>货物信息</TableHead>
                   <TableHead>时间安排</TableHead>
-                  <TableHead>状态</TableHead>
+                  <TableHead>状?/TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
@@ -466,36 +473,47 @@ export default function ShippingPage() {
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-12">
                       <Ship className="mx-auto h-12 w-12 text-gray-400" />
-                      <h3 className="mt-2 text-sm font-medium text-gray-900">暂无发货数据</h3>
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        暂无发货数据
+                      </h3>
                       <p className="mt-1 text-sm text-gray-500">
-                        {searchTerm || statusFilter !== 'all' || transportFilter !== 'all' || carrierFilter !== 'all'
-                          ? '没有找到匹配的发货记录'
+                        {searchTerm ||
+                        statusFilter !== 'all' ||
+                        transportFilter !== 'all' ||
+                        carrierFilter !== 'all'
+                          ? '没有找到匹配的发货记?
                           : '开始创建第一条发货记录吧'}
                       </p>
-                      {!searchTerm && statusFilter === 'all' && transportFilter === 'all' && carrierFilter === 'all' && (
-                        <div className="mt-6">
-                          <Button onClick={handleCreateShipment}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            创建发货单
-                          </Button>
-                        </div>
-                      )}
+                      {!searchTerm &&
+                        statusFilter === 'all' &&
+                        transportFilter === 'all' &&
+                        carrierFilter === 'all' && (
+                          <div className="mt-6">
+                            <Button onClick={handleCreateShipment}>
+                              <Plus className="h-4 w-4 mr-2" />
+                              创建发货?                            </Button>
+                          </div>
+                        )}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredShipments.map((shipment) => (
+                  filteredShipments.map(shipment => (
                     <TableRow key={shipment.id} className="hover:bg-gray-50">
                       <TableCell>
                         <div className="flex flex-col">
-                          <div className="font-medium text-gray-900">{shipment.shipmentNumber}</div>
-                          <div className="text-sm text-gray-600 mt-1">关联订单: {shipment.orderId}</div>
+                          <div className="font-medium text-gray-900">
+                            {shipment.shipmentNumber}
+                          </div>
+                          <div className="text-sm text-gray-600 mt-1">
+                            关联订单: {shipment.orderId}
+                          </div>
                           <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
                             <Package className="h-3 w-3" />
-                            追踪号: {shipment.trackingNumber}
+                            追踪? {shipment.trackingNumber}
                           </div>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex flex-col">
                           <div className="flex items-center gap-1 text-sm">
@@ -506,19 +524,24 @@ export default function ShippingPage() {
                             <MapPin className="h-3 w-3 text-green-500" />
                             <span>{shipment.destination}</span>
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">{shipment.carrier}</div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {shipment.carrier}
+                          </div>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex flex-col gap-1">
-                          <Badge variant="outline" className="flex items-center gap-1 w-fit">
+                          <Badge
+                            variant="outline"
+                            className="flex items-center gap-1 w-fit"
+                          >
                             {getTransportIcon(shipment.transportMode)}
                             {getTransportText(shipment.transportMode)}
                           </Badge>
                           {shipment.containerNumber && (
                             <div className="text-xs text-gray-600">
-                              集装箱: {shipment.containerNumber}
+                              集装? {shipment.containerNumber}
                             </div>
                           )}
                           {shipment.vesselName && (
@@ -538,15 +561,15 @@ export default function ShippingPage() {
                           )}
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex flex-col text-sm">
                           <div>重量: {shipment.weight} kg</div>
                           <div>体积: {shipment.volume} m³</div>
-                          <div>件数: {shipment.packages} 件</div>
+                          <div>件数: {shipment.packages} �?/div>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex flex-col text-sm">
                           <div className="flex items-center gap-1">
@@ -565,17 +588,17 @@ export default function ShippingPage() {
                           </div>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <Badge className={getStatusColor(shipment.status)}>
                           {getStatusText(shipment.status)}
                         </Badge>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleViewShipment(shipment.id)}
                           >
@@ -598,5 +621,6 @@ export default function ShippingPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
+

@@ -46,10 +46,7 @@ export class MonitoringService {
       return {
         active_users: activeUsers,
         pending_reviews: pendingReviews,
-        system_uptime: '99.9%', // 需要实际计算
-        api_response_time: 120, // 需要实际监控
-        error_rate: 0.1, // 需要实际计算
-        revenue_today: revenueToday,
+        system_uptime: '99.9%', // 需要实际计?        api_response_time: 120, // 需要实际监?        error_rate: 0.1, // 需要实际计?        revenue_today: revenueToday,
         cpu_usage: systemResources.cpu,
         memory_usage: systemResources.memory,
         disk_usage: systemResources.disk,
@@ -81,12 +78,10 @@ export class MonitoringService {
   }
 
   /**
-   * 获取待审核数量
-   */
+   * 获取待审核数?   */
   private static async getPendingReviewsCount(): Promise<number> {
     try {
-      // 检查不同表的待审核状态
-      const tablesToCheck = ['shops', 'articles', 'tutorials'];
+      // 检查不同表的待审核状?      const tablesToCheck = ['shops', 'articles', 'tutorials'];
       let totalCount = 0;
 
       for (const table of tablesToCheck) {
@@ -100,8 +95,7 @@ export class MonitoringService {
             totalCount += count;
           }
         } catch (error) {
-          // 表可能不存在，跳过
-          continue;
+          // 表可能不存在，跳?          continue;
         }
       }
 
@@ -138,21 +132,17 @@ export class MonitoringService {
   }
 
   /**
-   * 获取在线用户数（基于会话）
-   */
+   * 获取在线用户数（基于会话?   */
   private static async getOnlineUsersCount(): Promise<number> {
     try {
-      // 这里可以根据实际的会话管理方式调整
-      // 暂时返回活跃用户数作为替代
-      return await this.getActiveUsersCount();
+      // 这里可以根据实际的会话管理方式调?      // 暂时返回活跃用户数作为替?      return await this.getActiveUsersCount();
     } catch (error) {
       return 0;
     }
   }
 
   /**
-   * 获取近期活动数
-   */
+   * 获取近期活动?   */
   private static async getRecentActivitiesCount(): Promise<number> {
     try {
       const oneDayAgo = new Date(
@@ -179,8 +169,7 @@ export class MonitoringService {
     disk: number;
   }> {
     // 在实际部署中，这里应该集成真实的系统监控
-    // 可以使用 Prometheus、Node.js 内置监控或其他监控工具
-
+    // 可以使用 Prometheus、Node.js 内置监控或其他监控工?
     // 模拟数据 - 实际使用时替换为真实监控数据
     return {
       cpu: Math.floor(Math.random() * 30) + 40, // 40-70%
@@ -190,8 +179,7 @@ export class MonitoringService {
   }
 
   /**
-   * 获取默认指标值
-   */
+   * 获取默认指标?   */
   private static getDefaultMetrics(): SystemMetrics {
     return {
       active_users: 0,
@@ -211,9 +199,7 @@ export class MonitoringService {
   /**
    * 获取历史数据用于图表展示
    * @param metric 指标名称
-   * @param hours 小时数
-   * @returns 图表数据点
-   */
+   * @param hours 小时?   * @returns 图表数据?   */
   static async getHistoricalData(
     metric: keyof SystemMetrics,
     hours: number = 24
@@ -256,8 +242,7 @@ export class MonitoringService {
   }
 
   /**
-   * 获取系统健康状态
-   * @returns 健康状态评分 (0-100)
+   * 获取系统健康状?   * @returns 健康状态评?(0-100)
    */
   static async getSystemHealth(): Promise<number> {
     try {
@@ -266,25 +251,25 @@ export class MonitoringService {
       // 简单的健康评分算法
       let score = 100;
 
-      // CPU使用率影响 (-1分/1%超过80%)
+      // CPU使用率影?(-1�?1%超过80%)
       if (metrics.cpu_usage > 80) {
         score -= metrics.cpu_usage - 80;
       }
 
-      // 内存使用率影响 (-1分/1%超过85%)
+      // 内存使用率影?(-1�?1%超过85%)
       if (metrics.memory_usage > 85) {
         score -= metrics.memory_usage - 85;
       }
 
-      // 错误率影响 (-10分/1%错误率)
+      // 错误率影?(-10�?1%错误?
       score -= metrics.error_rate * 10;
 
-      // 待审核积压影响 (-5分/10个待审核)
+      // 待审核积压影?(-5�?10个待审核)
       score -= Math.floor(metrics.pending_reviews / 10) * 5;
 
       return Math.max(0, Math.min(100, Math.round(score)));
     } catch (error) {
-      console.error('计算系统健康状态失败:', error);
+      console.error('计算系统健康状态失?', error);
       return 0;
     }
   }
@@ -316,14 +301,13 @@ export class MonitoringService {
         },
       ];
 
-      // 可以根据实际监控数据动态生成警告
-      const metrics = await this.getSystemMetrics();
+      // 可以根据实际监控数据动态生成警?      const metrics = await this.getSystemMetrics();
 
       if (metrics.cpu_usage > 85) {
         alerts.push({
           id: '2',
           level: 'warning',
-          message: `CPU使用率过高: ${metrics.cpu_usage}%`,
+          message: `CPU使用率过? ${metrics.cpu_usage}%`,
           timestamp: new Date().toISOString(),
         });
       }
@@ -332,7 +316,7 @@ export class MonitoringService {
         alerts.push({
           id: '3',
           level: 'error',
-          message: `内存使用率过高: ${metrics.memory_usage}%`,
+          message: `内存使用率过? ${metrics.memory_usage}%`,
           timestamp: new Date().toISOString(),
         });
       }
@@ -341,7 +325,7 @@ export class MonitoringService {
         alerts.push({
           id: '4',
           level: 'warning',
-          message: `待审核任务积压: ${metrics.pending_reviews}个`,
+          message: `待审核任务积? ${metrics.pending_reviews}个`,
           timestamp: new Date().toISOString(),
         });
       }

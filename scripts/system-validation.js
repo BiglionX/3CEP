@@ -17,7 +17,7 @@ const modulesToTest = [
   { name: 'Next.js 配置', path: 'next.config.js' },
   { name: 'TypeScript 配置', path: 'tsconfig.json' },
   { name: '包配置', path: 'package.json' },
-  { name: 'Supabase 配置', path: 'supabase/config.toml' }
+  { name: 'Supabase 配置', path: 'supabase/config.toml' },
 ];
 
 let moduleChecks = 0;
@@ -45,14 +45,14 @@ const apiBase = path.join(__dirname, '..', 'src', 'app', 'api');
 
 function scanApiRoutes(basePath, prefix = '') {
   if (!fs.existsSync(basePath)) return [];
-  
+
   const items = fs.readdirSync(basePath);
   let routes = [];
-  
+
   items.forEach(item => {
     const fullPath = path.join(basePath, item);
     const stat = fs.statSync(fullPath);
-    
+
     if (stat.isDirectory()) {
       const subRoutes = scanApiRoutes(fullPath, `${prefix}/${item}`);
       routes = routes.concat(subRoutes);
@@ -60,7 +60,7 @@ function scanApiRoutes(basePath, prefix = '') {
       routes.push(`${prefix}`);
     }
   });
-  
+
   return routes;
 }
 
@@ -77,14 +77,19 @@ if (apiRoutes.length > 10) {
 console.log('\n💾 数据库迁移验证:');
 const migrationsDir = path.join(__dirname, '..', 'supabase', 'migrations');
 if (fs.existsSync(migrationsDir)) {
-  const migrations = fs.readdirSync(migrationsDir)
+  const migrations = fs
+    .readdirSync(migrationsDir)
     .filter(f => f.endsWith('.sql'))
     .sort();
-  
+
   console.log(`  ✅ ${migrations.length} 个迁移文件:`);
   migrations.forEach(migration => {
-    const content = fs.readFileSync(path.join(migrationsDir, migration), 'utf8');
-    const tableMatches = content.match(/CREATE TABLE IF NOT EXISTS (\w+)/gi) || [];
+    const content = fs.readFileSync(
+      path.join(migrationsDir, migration),
+      'utf8'
+    );
+    const tableMatches =
+      content.match(/CREATE TABLE IF NOT EXISTS (\w+)/gi) || [];
     console.log(`    - ${migration}: ${tableMatches.length} 个表`);
   });
 } else {
@@ -96,7 +101,7 @@ console.log('\n⚙️ 核心服务验证:');
 const serviceDirs = [
   { name: 'FCX系统', path: 'src/fcx-system/services' },
   { name: '供应链系统', path: 'src/supply-chain/services' },
-  { name: '数据中心', path: 'src/data-center/core' }
+  { name: '数据中心', path: 'src/data-center/core' },
 ];
 
 serviceDirs.forEach(service => {
@@ -113,7 +118,7 @@ serviceDirs.forEach(service => {
 console.log('\n🖥️ 前端组件验证:');
 const componentDirs = [
   { name: '管理后台组件', path: 'src/components/admin' },
-  { name: 'UI组件', path: 'src/components/ui' }
+  { name: 'UI组件', path: 'src/components/ui' },
 ];
 
 componentDirs.forEach(comp => {

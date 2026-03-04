@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+﻿import { supabase } from '@/lib/supabase';
 
 // 众筹项目接口定义
 export interface CrowdfundingProject {
@@ -14,7 +14,7 @@ export interface CrowdfundingProject {
   start_date: string;
   end_date: string;
   delivery_date: string | null;
-  status: "draft" | "active" | "success" | "failed" | "cancelled";
+  status: 'draft' | 'active' | 'success' | 'failed' | 'cancelled';
   cover_image_url: string | null;
   images: string[];
   video_url: string | null;
@@ -65,27 +65,25 @@ export interface ProjectUpdateData {
   tags?: string[];
   risk_info?: string;
   faq?: any;
-  status?: "draft" | "active" | "success" | "failed" | "cancelled";
+  status?: 'draft' | 'active' | 'success' | 'failed' | 'cancelled';
 }
 
 export class CrowdfundingProjectService {
-  // 获取所有活跃项目
-  static async getActiveProjects(page: number = 1, limit: number = 12) {
+  // 获取所有活跃项?  static async getActiveProjects(page: number = 1, limit: number = 12) {
     try {
       const offset = (page - 1) * limit;
 
       const { data, error, count } = await supabase
-        .from("crowdfunding_projects")
-        .select("*", { count: "exact" })
-        .in("status", ["active", "success"])
-        .order("created_at", { ascending: false })
+        .from('crowdfunding_projects')
+        .select('*', { count: 'exact' })
+        .in('status', ['active', 'success'])
+        .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
       if (error) throw error;
 
-      // 计算进度百分比
-      const projectsWithProgress =
-        data?.map((project) => ({
+      // 计算进度百分?      const projectsWithProgress =
+        data?.map(project => ({
           ...project,
           progress_percentage: Math.round(
             (project.current_amount / project.target_amount) * 100
@@ -100,7 +98,7 @@ export class CrowdfundingProjectService {
         totalPages: Math.ceil((count || 0) / limit),
       };
     } catch (error) {
-      console.error("获取活跃项目失败:", error);
+      console.error('获取活跃项目失败:', error);
       throw error;
     }
   }
@@ -115,17 +113,17 @@ export class CrowdfundingProjectService {
       const offset = (page - 1) * limit;
 
       const { data, error, count } = await supabase
-        .from("crowdfunding_projects")
-        .select("*", { count: "exact" })
-        .eq("category", category)
-        .in("status", ["active", "success"])
-        .order("created_at", { ascending: false })
+        .from('crowdfunding_projects')
+        .select('*', { count: 'exact' })
+        .eq('category', category)
+        .in('status', ['active', 'success'])
+        .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
       if (error) throw error;
 
       const projectsWithProgress =
-        data?.map((project) => ({
+        data?.map(project => ({
           ...project,
           progress_percentage: Math.round(
             (project.current_amount / project.target_amount) * 100
@@ -140,7 +138,7 @@ export class CrowdfundingProjectService {
         totalPages: Math.ceil((count || 0) / limit),
       };
     } catch (error) {
-      console.error("根据分类获取项目失败:", error);
+      console.error('根据分类获取项目失败:', error);
       throw error;
     }
   }
@@ -155,19 +153,19 @@ export class CrowdfundingProjectService {
       const offset = (page - 1) * limit;
 
       const { data, error, count } = await supabase
-        .from("crowdfunding_projects")
-        .select("*", { count: "exact" })
+        .from('crowdfunding_projects')
+        .select('*', { count: 'exact' })
         .or(
           `title.ilike.%${query}%,description.ilike.%${query}%,product_model.ilike.%${query}%`
         )
-        .in("status", ["active", "success"])
-        .order("created_at", { ascending: false })
+        .in('status', ['active', 'success'])
+        .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
       if (error) throw error;
 
       const projectsWithProgress =
-        data?.map((project) => ({
+        data?.map(project => ({
           ...project,
           progress_percentage: Math.round(
             (project.current_amount / project.target_amount) * 100
@@ -182,7 +180,7 @@ export class CrowdfundingProjectService {
         totalPages: Math.ceil((count || 0) / limit),
       };
     } catch (error) {
-      console.error("搜索项目失败:", error);
+      console.error('搜索项目失败:', error);
       throw error;
     }
   }
@@ -191,15 +189,14 @@ export class CrowdfundingProjectService {
   static async getProjectById(id: string) {
     try {
       const { data, error } = await supabase
-        .from("crowdfunding_projects")
-        .select("*")
-        .eq("id", id)
+        .from('crowdfunding_projects')
+        .select('*')
+        .eq('id', id)
         .single();
 
       if (error) throw error;
 
-      // 计算进度百分比
-      const projectWithProgress = {
+      // 计算进度百分?      const projectWithProgress = {
         ...data,
         progress_percentage: Math.round(
           (data.current_amount / data.target_amount) * 100
@@ -208,13 +205,12 @@ export class CrowdfundingProjectService {
 
       return projectWithProgress;
     } catch (error) {
-      console.error("获取项目详情失败:", error);
+      console.error('获取项目详情失败:', error);
       throw error;
     }
   }
 
-  // 获取用户创建的项目
-  static async getUserProjects(
+  // 获取用户创建的项?  static async getUserProjects(
     userId: string,
     page: number = 1,
     limit: number = 12
@@ -223,16 +219,16 @@ export class CrowdfundingProjectService {
       const offset = (page - 1) * limit;
 
       const { data, error, count } = await supabase
-        .from("crowdfunding_projects")
-        .select("*", { count: "exact" })
-        .eq("creator_id", userId)
-        .order("created_at", { ascending: false })
+        .from('crowdfunding_projects')
+        .select('*', { count: 'exact' })
+        .eq('creator_id', userId)
+        .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
       if (error) throw error;
 
       const projectsWithProgress =
-        data?.map((project) => ({
+        data?.map(project => ({
           ...project,
           progress_percentage: Math.round(
             (project.current_amount / project.target_amount) * 100
@@ -247,7 +243,7 @@ export class CrowdfundingProjectService {
         totalPages: Math.ceil((count || 0) / limit),
       };
     } catch (error) {
-      console.error("获取用户项目失败:", error);
+      console.error('获取用户项目失败:', error);
       throw error;
     }
   }
@@ -256,12 +252,12 @@ export class CrowdfundingProjectService {
   static async createProject(projectData: ProjectCreateData, userId: string) {
     try {
       const { data, error } = await supabase
-        .from("crowdfunding_projects")
+        .from('crowdfunding_projects')
         .insert({
           ...projectData,
           creator_id: userId,
           current_amount: 0,
-          status: "draft",
+          status: 'draft',
           old_models: projectData.old_models || [],
           tags: projectData.tags || [],
           images: projectData.images || [],
@@ -272,7 +268,7 @@ export class CrowdfundingProjectService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("创建项目失败:", error);
+      console.error('创建项目失败:', error);
       throw error;
     }
   }
@@ -287,64 +283,61 @@ export class CrowdfundingProjectService {
       // 验证用户权限
       const project = await this.getProjectById(id);
       if (project.creator_id !== userId) {
-        throw new Error("无权修改此项目");
+        throw new Error('无权修改此项?);
       }
 
-      // 只有草稿状态的项目才能被修改
-      if (project.status !== "draft") {
-        throw new Error("只有草稿状态的项目才能被修改");
+      // 只有草稿状态的项目才能被修?      if (project.status !== 'draft') {
+        throw new Error('只有草稿状态的项目才能被修?);
       }
 
       const { data, error } = await supabase
-        .from("crowdfunding_projects")
+        .from('crowdfunding_projects')
         .update({
           ...projectData,
           updated_at: new Date().toISOString(),
         } as any)
-        .eq("id", id)
+        .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("更新项目失败:", error);
+      console.error('更新项目失败:', error);
       throw error;
     }
   }
 
-  // 发布项目（从草稿变为活跃）
-  static async publishProject(id: string, userId: string) {
+  // 发布项目（从草稿变为活跃?  static async publishProject(id: string, userId: string) {
     try {
       const project = await this.getProjectById(id);
       if (project.creator_id !== userId) {
-        throw new Error("无权发布此项目");
+        throw new Error('无权发布此项?);
       }
 
-      if (project.status !== "draft") {
-        throw new Error("只有草稿状态的项目才能被发布");
+      if (project.status !== 'draft') {
+        throw new Error('只有草稿状态的项目才能被发?);
       }
 
-      // 验证项目数据完整性
-      if (!project.title || !project.description || !project.cover_image_url) {
-        throw new Error("项目信息不完整，请完善后再发布");
+      // 验证项目数据完整?      if (!project.title || !project.description || !project.cover_image_url) {
+        throw new Error('项目信息不完整，请完善后再发?);
       }
 
       const { data, error } = await supabase
-        .from("crowdfunding_projects")
+        .from('crowdfunding_projects')
         .update({
-          status: "active",
+          status: 'active',
           start_date: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         } as any)
-        .eq("id", id)
+        .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("发布项目失败:", error);
+      console.error('发布项目失败:', error);
       throw error;
     }
   }
@@ -354,23 +347,23 @@ export class CrowdfundingProjectService {
     try {
       const project = await this.getProjectById(id);
       if (project.creator_id !== userId) {
-        throw new Error("无权取消此项目");
+        throw new Error('无权取消此项?);
       }
 
       const { data, error } = await supabase
-        .from("crowdfunding_projects")
+        .from('crowdfunding_projects')
         .update({
-          status: "cancelled",
+          status: 'cancelled',
           updated_at: new Date().toISOString(),
         } as any)
-        .eq("id", id)
+        .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("取消项目失败:", error);
+      console.error('取消项目失败:', error);
       throw error;
     }
   }
@@ -378,14 +371,14 @@ export class CrowdfundingProjectService {
   // 获取项目统计信息
   static async getProjectStats(id: string) {
     try {
-      const { data, error } = await supabase.rpc("get_project_stats", {
+      const { data, error } = (await supabase.rpc('get_project_stats', {
         project_id: id,
-      });
+      })) as any;
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("获取项目统计失败:", error);
+      console.error('获取项目统计失败:', error);
       throw error;
     }
   }

@@ -7,10 +7,7 @@
       "name": "Start",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -42,10 +39,7 @@
       "name": "Set Input",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
@@ -78,10 +72,7 @@
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        650,
-        300
-      ],
+      "position": [650, 300],
       "credentials": {
         "httpHeaderAuth": {
           "id": "={{ $env.AGENTS_CREDENTIAL_ID }}",
@@ -117,10 +108,7 @@
       "name": "IF Status Check",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [
-        850,
-        300
-      ]
+      "position": [850, 300]
     },
     {
       "parameters": {
@@ -147,10 +135,7 @@
       "name": "Success Output",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1050,
-        200
-      ]
+      "position": [1050, 200]
     },
     {
       "parameters": {
@@ -176,10 +161,7 @@
       "name": "Retry Counter",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1050,
-        400
-      ]
+      "position": [1050, 400]
     },
     {
       "parameters": {
@@ -209,10 +191,7 @@
       "name": "IF Can Retry",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [
-        1250,
-        400
-      ]
+      "position": [1250, 400]
     },
     {
       "parameters": {
@@ -238,10 +217,7 @@
       "name": "Prepare Retry",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1450,
-        350
-      ]
+      "position": [1450, 350]
     },
     {
       "parameters": {
@@ -252,10 +228,7 @@
       "name": "Delay Before Retry",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [
-        1650,
-        350
-      ]
+      "position": [1650, 350]
     },
     {
       "parameters": {
@@ -288,10 +261,7 @@
       "name": "HTTP Request Retry",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        1850,
-        350
-      ],
+      "position": [1850, 350],
       "credentials": {
         "httpHeaderAuth": {
           "id": "={{ $env.AGENTS_CREDENTIAL_ID }}",
@@ -332,10 +302,7 @@
       "name": "Error Output",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1250,
-        550
-      ]
+      "position": [1250, 550]
     },
     {
       "parameters": {
@@ -361,10 +328,7 @@
       "name": "Send Notification",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        1450,
-        550
-      ]
+      "position": [1450, 550]
     }
   ],
   "connections": {

@@ -17,33 +17,33 @@ const migrationStages = [
   {
     name: '环境检查',
     script: 'environment-check.js',
-    description: '检查Node.js版本、依赖包等环境要求'
+    description: '检查Node.js版本、依赖包等环境要求',
   },
   {
     name: '备份创建',
     script: 'create-backups.js',
-    description: '为所有目标文件创建备份'
+    description: '为所有目标文件创建备份',
   },
   {
     name: '自动化迁移',
     script: 'automated-auth-migration.js',
-    description: '执行统一认证组件的自动化迁移'
+    description: '执行统一认证组件的自动化迁移',
   },
   {
     name: '迁移验证',
     script: 'validate-migration.js',
-    description: '验证迁移结果的正确性和完整性'
+    description: '验证迁移结果的正确性和完整性',
   },
   {
     name: '性能测试',
     script: 'performance-test.js',
-    description: '测试迁移后组件的性能表现'
+    description: '测试迁移后组件的性能表现',
   },
   {
     name: '生成报告',
     script: 'generate-final-report.js',
-    description: '生成最终的迁移报告和文档'
-  }
+    description: '生成最终的迁移报告和文档',
+  },
 ];
 
 // 工具函数
@@ -52,9 +52,9 @@ const utils = {
   async executeScript(scriptName, args = []) {
     return new Promise((resolve, reject) => {
       console.log(`\n▶️  执行: ${scriptName}`);
-      
+
       const scriptPath = path.join(__dirname, scriptName);
-      
+
       // 检查脚本是否存在
       if (!fs.existsSync(scriptPath)) {
         console.log(`⚠️  脚本不存在: ${scriptName}`);
@@ -64,10 +64,10 @@ const utils = {
 
       const child = spawn('node', [scriptPath, ...args], {
         stdio: ['inherit', 'inherit', 'inherit'],
-        cwd: process.cwd()
+        cwd: process.cwd(),
       });
 
-      child.on('close', (code) => {
+      child.on('close', code => {
         if (code === 0) {
           console.log(`✅ ${scriptName} 执行成功`);
           resolve({ success: true });
@@ -77,7 +77,7 @@ const utils = {
         }
       });
 
-      child.on('error', (error) => {
+      child.on('error', error => {
         console.log(`❌ ${scriptName} 执行出错: ${error.message}`);
         reject(error);
       });
@@ -90,9 +90,9 @@ const utils = {
       timestamp: new Date().toISOString(),
       status,
       details,
-      pid: process.pid
+      pid: process.pid,
     };
-    
+
     const statePath = path.join(process.cwd(), '.migration-state.json');
     fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   },
@@ -116,7 +116,7 @@ const utils = {
         console.log(`🧹 已清理临时文件: ${file}`);
       }
     });
-  }
+  },
 };
 
 // 主迁移流程控制器
@@ -125,7 +125,7 @@ class MigrationController {
     this.results = {
       stages: [],
       startTime: Date.now(),
-      errors: []
+      errors: [],
     };
   }
 
@@ -137,17 +137,17 @@ class MigrationController {
     console.log(`说明: ${stage.description}`);
 
     const startTime = Date.now();
-    
+
     try {
       const result = await utils.executeScript(stage.script);
       const duration = Date.now() - startTime;
-      
+
       const stageResult = {
         name: stage.name,
         script: stage.script,
         success: result.success,
         duration: `${(duration / 1000).toFixed(2)}s`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       if (!result.success) {
@@ -156,17 +156,16 @@ class MigrationController {
       }
 
       this.results.stages.push(stageResult);
-      
+
       // 更新状态文件
       utils.createMigrationState('running', {
         currentStage: stage.name,
         completedStages: this.results.stages.length,
         totalStages: migrationStages.length,
-        results: this.results
+        results: this.results,
       });
 
       return result.success;
-
     } catch (error) {
       const duration = Date.now() - startTime;
       const stageResult = {
@@ -175,16 +174,16 @@ class MigrationController {
         success: false,
         duration: `${(duration / 1000).toFixed(2)}s`,
         error: error.message,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       this.results.stages.push(stageResult);
       this.results.errors.push(stageResult);
-      
+
       utils.createMigrationState('error', {
         error: error.message,
         stage: stage.name,
-        results: this.results
+        results: this.results,
       });
 
       return false;
@@ -201,7 +200,7 @@ class MigrationController {
     // 依次执行每个阶段
     for (const stage of migrationStages) {
       const success = await this.executeStage(stage);
-      
+
       if (success) {
         successCount++;
       } else {
@@ -220,14 +219,14 @@ class MigrationController {
     return {
       totalStages: migrationStages.length,
       successCount,
-      hasCriticalFailure
+      hasCriticalFailure,
     };
   }
 
   // 生成最终报告
   async generateFinalReport(successCount, hasCriticalFailure) {
     const totalTime = Date.now() - this.results.startTime;
-    
+
     const finalReport = {
       migrationSummary: {
         totalStages: migrationStages.length,
@@ -236,7 +235,7 @@ class MigrationController {
         failureCount: this.results.stages.length - successCount,
         hasCriticalFailure,
         totalTime: `${(totalTime / 1000).toFixed(2)}s`,
-        successRate: `${((successCount / migrationStages.length) * 100).toFixed(1)}%`
+        successRate: `${((successCount / migrationStages.length) * 100).toFixed(1)}%`,
       },
       stageDetails: this.results.stages,
       errors: this.results.errors,
@@ -245,15 +244,20 @@ class MigrationController {
         nodeVersion: process.version,
         platform: process.platform,
         arch: process.arch,
-        cwd: process.cwd()
-      }
+        cwd: process.cwd(),
+      },
     };
 
     // 保存报告
-    const reportPath = path.join(process.cwd(), 'migration-complete-report.json');
+    const reportPath = path.join(
+      process.cwd(),
+      'migration-complete-report.json'
+    );
     fs.writeFileSync(reportPath, JSON.stringify(finalReport, null, 2));
-    
-    console.log(`\n📄 完整迁移报告已保存至: ${utils.getRelativePath(reportPath)}`);
+
+    console.log(
+      `\n📄 完整迁移报告已保存至: ${utils.getRelativePath(reportPath)}`
+    );
 
     // 控制台输出摘要
     this.printFinalSummary(finalReport);
@@ -266,7 +270,7 @@ class MigrationController {
     console.log('='.repeat(60));
 
     const summary = report.migrationSummary;
-    
+
     console.log(`\n📊 执行摘要:`);
     console.log(`   总阶段数: ${summary.totalStages}`);
     console.log(`   完成阶段: ${summary.completedStages}`);
@@ -317,10 +321,10 @@ class MigrationController {
 async function showInteractiveMenu() {
   const readline = require('readline').createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     console.log('请选择执行模式:');
     console.log('1. 🚀 全自动迁移 (推荐)');
     console.log('2. 🔧 手动选择阶段');
@@ -328,7 +332,7 @@ async function showInteractiveMenu() {
     console.log('4. 🧹 清理临时文件');
     console.log('5. ❌ 退出');
 
-    readline.question('\n请输入选项 (1-5): ', (answer) => {
+    readline.question('\n请输入选项 (1-5): ', answer => {
       readline.close();
       resolve(answer.trim());
     });
@@ -339,7 +343,7 @@ async function showInteractiveMenu() {
 async function manualStageSelection() {
   const readline = require('readline').createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
   console.log('\n可执行的迁移阶段:');
@@ -347,14 +351,16 @@ async function manualStageSelection() {
     console.log(`${index + 1}. ${stage.name} - ${stage.description}`);
   });
 
-  return new Promise((resolve) => {
-    readline.question('\n请输入要执行的阶段编号 (多个用逗号分隔): ', (answer) => {
+  return new Promise(resolve => {
+    readline.question('\n请输入要执行的阶段编号 (多个用逗号分隔): ', answer => {
       readline.close();
-      const selectedIndices = answer.split(',').map(n => parseInt(n.trim()) - 1);
+      const selectedIndices = answer
+        .split(',')
+        .map(n => parseInt(n.trim()) - 1);
       const selectedStages = selectedIndices
         .filter(i => i >= 0 && i < migrationStages.length)
         .map(i => migrationStages[i]);
-      
+
       resolve(selectedStages);
     });
   });
@@ -365,18 +371,18 @@ async function main() {
   try {
     // 检查是否提供了命令行参数
     const args = process.argv.slice(2);
-    
+
     if (args.length > 0) {
       // 命令行模式
       const mode = args[0];
-      
+
       switch (mode) {
         case 'auto':
           console.log('执行全自动迁移模式...\n');
           const controller = new MigrationController();
           await controller.executeFullMigration();
           break;
-          
+
         case 'status':
           const state = utils.readMigrationState();
           if (state) {
@@ -386,11 +392,11 @@ async function main() {
             console.log('未找到迁移状态信息');
           }
           break;
-          
+
         case 'cleanup':
           utils.cleanup();
           break;
-          
+
         default:
           console.log('未知参数，使用 interactive 模式');
           await interactiveMode();
@@ -399,7 +405,6 @@ async function main() {
       // 交互式模式
       await interactiveMode();
     }
-
   } catch (error) {
     console.error('\n❌ 执行过程中发生错误:', error.message);
     process.exit(1);
@@ -409,14 +414,14 @@ async function main() {
 // 交互式模式
 async function interactiveMode() {
   const choice = await showInteractiveMenu();
-  
+
   switch (choice) {
     case '1':
       console.log('\n🚀 启动全自动迁移...\n');
       const controller = new MigrationController();
       await controller.executeFullMigration();
       break;
-      
+
     case '2':
       const selectedStages = await manualStageSelection();
       if (selectedStages.length > 0) {
@@ -429,7 +434,7 @@ async function interactiveMode() {
         console.log('未选择任何阶段');
       }
       break;
-      
+
     case '3':
       const state = utils.readMigrationState();
       if (state) {
@@ -443,16 +448,16 @@ async function interactiveMode() {
         console.log('\n未找到迁移状态信息');
       }
       break;
-      
+
     case '4':
       utils.cleanup();
       console.log('\n临时文件清理完成');
       break;
-      
+
     case '5':
       console.log('\n👋 再见！');
       process.exit(0);
-      
+
     default:
       console.log('\n❌ 无效选项，请重新选择');
       await interactiveMode();
@@ -460,18 +465,18 @@ async function interactiveMode() {
 }
 
 // 工具函数扩展
-utils.getRelativePath = (absolutePath) => {
+utils.getRelativePath = absolutePath => {
   return path.relative(process.cwd(), absolutePath);
 };
 
 // 错误处理
-process.on('unhandledRejection', (error) => {
+process.on('unhandledRejection', error => {
   console.error('未处理的Promise拒绝:', error);
   utils.createMigrationState('crashed', { error: error.message });
   process.exit(1);
 });
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
   console.error('未捕获的异常:', error);
   utils.createMigrationState('crashed', { error: error.message });
   process.exit(1);

@@ -1,58 +1,47 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { createClient } from '@supabase/supabase-js'
+﻿import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+);
 
-// 创建草稿文章
+// 鍒涘缓鑽夌鏂囩珷
 export async function POST(request: Request) {
   try {
-    const {
-      linkId,
-      title,
-      content,
-      summary,
-      coverImageUrl,
-      tags,
-      category
-    } = await request.json()
+    const { linkId, title, content, summary, coverImageUrl, tags, category } =
+      await request.json();
 
-    // 验证必要参数
+    // 楠岃瘉蹇呰鍙傛暟
     if (!title || !content) {
       return NextResponse.json(
-        { error: '标题和内容不能为空' },
+        { error: '鏍囬鍜屽唴瀹逛笉鑳戒负? },
         { status: 400 }
-      )
+      );
     }
 
-    const cookieStore = await cookies()
-    const session = cookieStore.get('supabase-auth-token')
-    
+    const cookieStore = await cookies();
+    const session = cookieStore.get('supabase-auth-token');
+
     if (!session) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
 
-    const userId = JSON.parse(session.value).user.id
+    const userId = JSON.parse(session.value).user.id;
 
-    // 查找对应的分类
-    let categoryId = null
+    // 鏌ユ壘瀵瑰簲鐨勫垎?    let categoryId = null;
     if (category) {
       const { data: categoryData } = await supabase
         .from('article_categories')
         .select('id')
         .eq('name', category)
-        .single()
-      
-      categoryId = categoryData?.id || null
+        .single();
+
+      categoryId = categoryData?.id || null;
     }
 
-    // 创建草稿文章
+    // 鍒涘缓鑽夌鏂囩珷
     const { data: articleData, error: articleError } = await supabase
       .from('articles')
       .insert({
@@ -63,74 +52,72 @@ export async function POST(request: Request) {
         author_id: userId,
         status: 'draft',
         tags: tags || [],
-        category_id: categoryId
+        category_id: categoryId,
       } as any)
       .select()
-      .single()
+      .single();
 
     if (articleError) {
-      console.error('创建草稿失败:', articleError)
+      console.error('鍒涘缓鑽夌澶辫触:', articleError);
       return NextResponse.json(
-        { error: '创建草稿失败', details: articleError.message },
+        { error: '鍒涘缓鑽夌澶辫触', details: articleError.message },
         { status: 500 }
-      )
+      );
     }
 
-    // 如果有关联的链接，更新链接状态
-    if (linkId) {
+    // 濡傛灉鏈夊叧鑱旂殑閾炬帴锛屾洿鏂伴摼鎺ョ姸?    if (linkId) {
       await supabase
         .from('hot_link_pool')
         .update({
           status: 'promoted',
           article_id: articleData.id,
           reviewed_at: new Date().toISOString(),
-          reviewed_by: userId
+          reviewed_by: userId,
         } as any)
-        .eq('id', linkId)
+        .eq('id', linkId);
     }
 
     return NextResponse.json({
       success: true,
       articleId: articleData.id,
-      message: '草稿创建成功'
-    })
-
+      message: '鑽夌鍒涘缓鎴愬姛',
+    }) as any;
   } catch (error) {
-    console.error('创建草稿异常:', error)
+    console.error('鍒涘缓鑽夌寮傚父:', error);
     return NextResponse.json(
-      { error: '服务器内部错误', details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
       { status: 500 }
-    )
+    );
   }
 }
 
-// 获取文章分类列表
+// 鑾峰彇鏂囩珷鍒嗙被鍒楄〃
 export async function GET() {
   try {
     const { data: categories, error } = await supabase
       .from('article_categories')
       .select('id, name, slug')
       .eq('is_active', true)
-      .order('sort_order')
+      .order('sort_order');
 
     if (error) {
-      console.error('获取分类失败:', error)
+      console.error('鑾峰彇鍒嗙被澶辫触:', error);
       return NextResponse.json(
-        { error: '获取分类失败', details: error.message },
+        { error: '鑾峰彇鍒嗙被澶辫触', details: error.message },
         { status: 500 }
-      )
+      );
     }
 
     return NextResponse.json({
       success: true,
-      data: categories || []
-    })
-
+      data: categories || [],
+    });
   } catch (error) {
-    console.error('获取分类异常:', error)
+    console.error('鑾峰彇鍒嗙被寮傚父:', error);
     return NextResponse.json(
-      { error: '服务器内部错误', details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
       { status: 500 }
-    )
+    );
   }
 }
+

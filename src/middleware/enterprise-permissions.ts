@@ -1,5 +1,5 @@
 /**
- * 企业服务权限中间件
+ * 企业服务权限中间?
  * 专门处理企业服务门户的访问控制和权限验证
  */
 
@@ -22,7 +22,7 @@ const ENTERPRISE_ROUTES = {
     '/enterprise/settings'
   ],
   
-  // 管理员路径
+  // 管理员路?
   ADMIN_ONLY: [
     '/enterprise/admin',
     '/enterprise/admin/dashboard',
@@ -37,7 +37,7 @@ const ENTERPRISE_ROUTES = {
     '/enterprise/procurement/suppliers'
   ],
   
-  // 智能体相关路径
+  // 智能体相关路?
   AGENTS_ACCESS: [
     '/enterprise/agents/dashboard',
     '/enterprise/agents/workflows',
@@ -54,7 +54,7 @@ const ROLE_PERMISSIONS = {
 }
 
 /**
- * 检查用户是否对企业服务有访问权限
+ * 检查用户是否对企业服务有访问权?
  */
 export async function checkEnterpriseAccess(
   request: NextRequest,
@@ -62,7 +62,7 @@ export async function checkEnterpriseAccess(
 ): Promise<boolean> {
   const pathname = request.nextUrl.pathname
   
-  // 检查公共路径
+  // 检查公共路?
   if (ENTERPRISE_ROUTES.PUBLIC.some(route => pathname.startsWith(route))) {
     return true
   }
@@ -74,30 +74,30 @@ export async function checkEnterpriseAccess(
   
   // 检查管理员路径
   if (ENTERPRISE_ROUTES.ADMIN_ONLY.some(route => pathname.startsWith(route))) {
-    return currentUser?.roles?.includes('admin') || 
-           currentUser?.roles?.includes('enterprise_admin')
+    return currentUser??.includes('admin') || 
+           currentUser??.includes('enterprise_admin')
   }
   
-  // 检查采购相关路径
+  // 检查采购相关路?
   if (ENTERPRISE_ROUTES.PROCUREMENT_ACCESS.some(route => pathname.startsWith(route))) {
-    return currentUser?.roles?.includes('admin') ||
-           currentUser?.roles?.includes('enterprise_admin') ||
-           currentUser?.roles?.includes('procurement_manager') ||
-           currentUser?.roles?.includes('procurement_specialist')
+    return currentUser??.includes('admin') ||
+           currentUser??.includes('enterprise_admin') ||
+           currentUser??.includes('procurement_manager') ||
+           currentUser??.includes('procurement_specialist')
   }
   
   // 检查智能体相关路径
   if (ENTERPRISE_ROUTES.AGENTS_ACCESS.some(route => pathname.startsWith(route))) {
-    return currentUser?.roles?.includes('admin') ||
-           currentUser?.roles?.includes('enterprise_admin') ||
-           currentUser?.roles?.includes('agent_operator')
+    return currentUser??.includes('admin') ||
+           currentUser??.includes('enterprise_admin') ||
+           currentUser??.includes('agent_operator')
   }
   
   return false
 }
 
 /**
- * 获取用户在企业服务中的具体权限
+ * 获取用户在企业服务中的具体权?
  */
 export function getUserEnterprisePermissions(currentUser: any): string[] {
   if (!currentUser?.roles) return []
@@ -110,7 +110,7 @@ export function getUserEnterprisePermissions(currentUser: any): string[] {
     }
   })
   
-  // 管理员拥有所有权限
+  // 管理员拥有所有权?
   if (currentUser.roles.includes('admin') || currentUser.roles.includes('enterprise_admin')) {
     permissions.push('enterprise_full_access')
   }
@@ -124,11 +124,11 @@ export function getUserEnterprisePermissions(currentUser: any): string[] {
 export async function enterprisePermissionMiddleware(request: NextRequest) {
   const currentUser = await AuthService.getCurrentUser()
   
-  // 检查访问权限
+  // 检查访问权?
   const hasAccess = await checkEnterpriseAccess(request, currentUser)
   
   if (!hasAccess) {
-    // 记录未授权访问尝试
+    // 记录未授权访问尝?
     console.warn(`Unauthorized enterprise access attempt: ${request.nextUrl.pathname}`, {
       userId: currentUser?.id || 'anonymous',
       timestamp: new Date().toISOString()
@@ -137,14 +137,14 @@ export async function enterprisePermissionMiddleware(request: NextRequest) {
     // 返回403 Forbidden
     return NextResponse.json(
       { 
-        error: '访问被拒绝', 
+        error: '访问被拒?, 
         message: '您没有权限访问此企业服务页面' 
       }, 
       { status: 403 }
     )
   }
   
-  // 添加权限头信息
+  // 添加权限头信?
   const response = NextResponse.next()
   const permissions = getUserEnterprisePermissions(currentUser)
   
@@ -155,7 +155,7 @@ export async function enterprisePermissionMiddleware(request: NextRequest) {
 }
 
 /**
- * 企业服务API权限检查函数
+ * 企业服务API权限检查函?
  */
 export async function checkEnterpriseApiAccess(
   request: NextRequest,
@@ -179,5 +179,5 @@ export async function checkEnterpriseApiAccess(
   }
 }
 
-// 导出常量供其他模块使用
+// 导出常量供其他模块使?
 export { ENTERPRISE_ROUTES, ROLE_PERMISSIONS }

@@ -17,32 +17,32 @@ const seedScripts = [
     name: '初始数据播种',
     script: 'seed-initial-data.js',
     description: '基础用户、权限、配置数据',
-    required: true
+    required: true,
   },
   {
     name: '增强数据播种',
     script: 'seed-data-enhanced.js',
     description: '扩展的测试数据和示例数据',
-    required: false
+    required: false,
   },
   {
     name: '全球店铺数据',
     script: 'seed-global-shops.js',
     description: '全球维修店和供应商数据',
-    required: false
+    required: false,
   },
   {
     name: '扩展全球店铺',
     script: 'seed-global-shops-expanded.js',
     description: '更多全球店铺详细信息',
-    required: false
+    required: false,
   },
   {
     name: 'API数据播种',
     script: 'seed-data-api.js',
     description: '通过API接口播种数据',
-    required: false
-  }
+    required: false,
+  },
 ];
 
 // 检查参数来决定运行哪些脚本
@@ -65,22 +65,22 @@ if (args.includes('--minimal')) {
 console.log(`🎯 计划执行 ${selectedScripts.length} 个播种脚本\n`);
 
 let successfulSeeds = 0;
-let totalSeeds = selectedScripts.length;
+const totalSeeds = selectedScripts.length;
 
 // 运行每个种子脚本
 selectedScripts.forEach((seed, index) => {
   console.log(`[${index + 1}/${totalSeeds}] ${seed.name}`);
   console.log(`📝 ${seed.description}`);
   console.log('----------------------------------------');
-  
+
   try {
     const scriptPath = path.join(__dirname, seed.script);
     const result = spawnSync('node', [scriptPath], {
       cwd: __dirname,
       stdio: 'inherit',
-      timeout: 120000 // 2分钟超时
+      timeout: 120000, // 2分钟超时
     });
-    
+
     if (result.status === 0) {
       console.log(`✅ ${seed.name} 完成\n`);
       successfulSeeds++;
@@ -105,7 +105,9 @@ console.log('=====================================');
 console.log('🏆 数据播种汇总报告\n');
 
 const successRate = Math.round((successfulSeeds / totalSeeds) * 100);
-console.log(`📊 播种成功率: ${successfulSeeds}/${totalSeeds} (${successRate}%)`);
+console.log(
+  `📊 播种成功率: ${successfulSeeds}/${totalSeeds} (${successRate}%)`
+);
 
 if (successRate === 100) {
   console.log('🎉 所有数据播种成功完成！');

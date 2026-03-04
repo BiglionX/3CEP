@@ -1,4 +1,4 @@
-import { cacheManager, generateCacheKey } from '@/utils/cache-manager';
+﻿import { cacheManager, generateCacheKey } from '@/utils/cache-manager';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
@@ -7,8 +7,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 配件价格批量查询和实时更新
-export async function POST(request: Request) {
+// 閰嶄欢浠锋牸鎵归噺鏌ヨ鍜屽疄鏃舵洿?export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { part_ids, refresh = false } = body;
@@ -17,19 +16,19 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '缺少配件ID列表',
+          message: '缂哄皯閰嶄欢ID鍒楄〃',
           data: null,
         },
         { status: 400 }
       );
     }
 
-    // 限制批量查询数量
+    // 闄愬埗鎵归噺鏌ヨ鏁伴噺
     if (part_ids.length > 50) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '单次查询配件数量不能超过50个',
+          message: '鍗曟鏌ヨ閰嶄欢鏁伴噺涓嶈兘瓒呰繃50锟?,
           data: null,
         },
         { status: 400 }
@@ -38,19 +37,19 @@ export async function POST(request: Request) {
 
     const results = [];
 
-    // 批量查询配件价格
+    // 鎵归噺鏌ヨ閰嶄欢浠锋牸
     for (const partId of part_ids) {
       try {
         let priceData = null;
 
         if (refresh) {
-          // 强制刷新 - 调用爬虫服务
+          // 寮哄埗鍒锋柊 - 璋冪敤鐖櫕鏈嶅姟
           priceData = await fetchRealTimePrice(partId);
         } else {
-          // 优先使用缓存数据
+          // 浼樺厛浣跨敤缂撳瓨鏁版嵁
           priceData = await getCachedPrice(partId);
 
-          // 如果缓存过期或不存在，则获取实时数据
+          // 濡傛灉缂撳瓨杩囨湡鎴栦笉瀛樺湪锛屽垯鑾峰彇瀹炴椂鏁版嵁
           if (!priceData || isCacheExpired(priceData.updated_at)) {
             priceData = await fetchRealTimePrice(partId);
           }
@@ -61,11 +60,10 @@ export async function POST(request: Request) {
           ...priceData,
         });
       } catch (error) {
-        console.warn(`获取配件 ${partId} 价格失败:`, error);
-        // 返回默认数据而不是失败
-        results.push({
+        console.warn(`鑾峰彇閰嶄欢 ${partId} 浠锋牸澶辫触:`, error);
+        // 杩斿洖榛樿鏁版嵁鑰屼笉鏄け?        results.push({
           part_id: partId,
-          name: '未知配件',
+          name: '鏈煡閰嶄欢',
           current_price: 0,
           lowest_price: 0,
           prices: [],
@@ -83,11 +81,11 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('配件价格API错误:', error);
+    console.error('閰嶄欢浠锋牸API閿欒:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '服务器内部错误',
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         data: null,
       },
       { status: 500 }
@@ -95,20 +93,19 @@ export async function POST(request: Request) {
   }
 }
 
-// 获取缓存价格数据
+// 鑾峰彇缂撳瓨浠锋牸鏁版嵁
 async function getCachedPrice(partId: string) {
   try {
-    // 生成缓存键
-    const cacheKey = generateCacheKey('part_price', partId);
+    // 鐢熸垚缂撳瓨?    const cacheKey = generateCacheKey('part_price', partId);
 
-    // 尝试从Redis获取
+    // 灏濊瘯浠嶳edis鑾峰彇
     const cached = await cacheManager.get(cacheKey);
     if (cached) {
-      console.log(`📦 Redis缓存命中: ${partId}`);
+      console.log(`馃摝 Redis缂撳瓨鍛戒腑: ${partId}`);
       return cached;
     }
 
-    // 从数据库获取
+    // 浠庢暟鎹簱鑾峰彇
     const { data, error } = await supabase
       .from('part_prices_cache')
       .select('*')
@@ -128,20 +125,20 @@ async function getCachedPrice(partId: string) {
       updated_at: data.updated_at,
     };
 
-    // 存入Redis缓存
-    await cacheManager.set(cacheKey, result, 3600); // 1小时缓存
+    // 瀛樺叆Redis缂撳瓨
+    await cacheManager.set(cacheKey, result, 3600); // 1灏忔椂缂撳瓨
 
     return result;
   } catch (error) {
-    console.warn('获取缓存价格失败:', error);
+    console.warn('鑾峰彇缂撳瓨浠锋牸澶辫触:', error);
     return null;
   }
 }
 
-// 获取实时价格数据
+// 鑾峰彇瀹炴椂浠锋牸鏁版嵁
 async function fetchRealTimePrice(partId: string) {
   try {
-    // 获取配件基本信息
+    // 鑾峰彇閰嶄欢鍩烘湰淇℃伅
     const { data: partInfo, error: partError } = await supabase
       .from('parts')
       .select('name, brand, model')
@@ -149,16 +146,15 @@ async function fetchRealTimePrice(partId: string) {
       .single();
 
     if (partError || !partInfo) {
-      throw new Error('配件信息不存在');
+      throw new Error('閰嶄欢淇℃伅涓嶅瓨?);
     }
 
-    // 模拟从多个电商平台获取价格
-    const platforms = ['淘宝', '京东', '拼多多', '天猫'];
+    // 妯℃嫙浠庡涓數鍟嗗钩鍙拌幏鍙栦环?    const platforms = ['娣樺疂', '浜笢', '鎷煎?, '澶╃尗'];
     const prices = [];
     let lowestPrice = Infinity;
 
     for (const platform of platforms) {
-      // 模拟价格获取 - 实际应该调用真实的电商平台API
+      // 妯℃嫙浠锋牸鑾峰彇 - 瀹為檯搴旇璋冪敤鐪熷疄鐨勭數鍟嗗钩鍙癆PI
       const simulatedPrice = simulatePriceFetch(partInfo.name, platform);
 
       if (simulatedPrice > 0) {
@@ -168,8 +164,8 @@ async function fetchRealTimePrice(partId: string) {
           url: `https://${platform.toLowerCase()}.com/search?q=${encodeURIComponent(
             partInfo.name
           )}`,
-          seller: `${platform}官方旗舰店`,
-          is_authorized: platform === '天猫' || platform === '京东',
+          seller: `${platform}瀹樻柟鏃楄埌搴梎,
+          is_authorized: platform === '澶╃尗' || platform === '浜笢',
         });
 
         if (simulatedPrice < lowestPrice) {
@@ -178,7 +174,7 @@ async function fetchRealTimePrice(partId: string) {
       }
     }
 
-    // 排序价格（从低到高）
+    // 鎺掑簭浠锋牸锛堜粠浣庡埌楂橈級
     prices.sort((a, b) => a.price - b.price);
 
     const result = {
@@ -190,19 +186,19 @@ async function fetchRealTimePrice(partId: string) {
       updated_at: new Date().toISOString(),
     };
 
-    // 更新缓存
+    // 鏇存柊缂撳瓨
     await updatePriceCache(partId, partInfo.name, result);
 
     return result;
   } catch (error) {
-    console.error('获取实时价格失败:', error);
+    console.error('鑾峰彇瀹炴椂浠锋牸澶辫触:', error);
     throw error;
   }
 }
 
-// 模拟价格获取函数
+// 妯℃嫙浠锋牸鑾峰彇鍑芥暟
 function simulatePriceFetch(partName: string, platform: string): number {
-  // 基于配件名称生成模拟价格
+  // 鍩轰簬閰嶄欢鍚嶇О鐢熸垚妯℃嫙浠锋牸
   const basePrice =
     (Math.abs(
       partName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
@@ -210,30 +206,28 @@ function simulatePriceFetch(partName: string, platform: string): number {
       1000) +
     100;
 
-  // 不同平台的价格差异
-  const platformMultipliers = {
-    淘宝: 0.95,
-    京东: 1.05,
-    拼多多: 0.85,
-    天猫: 1.02,
+  // 涓嶅悓骞冲彴鐨勪环鏍煎樊?  const platformMultipliers = {
+    娣樺疂: 0.95,
+    浜笢: 1.05,
+    鎷煎? 0.85,
+    澶╃尗: 1.02,
   };
 
   const multiplier =
     platformMultipliers[platform as keyof typeof platformMultipliers] || 1;
-  const variation = (Math.random() - 0.5) * 0.2; // ±10% 波动
+  const variation = (Math.random() - 0.5) * 0.2; // 卤10% 娉㈠姩
 
   return Math.round(basePrice * multiplier * (1 + variation));
 }
 
-// 更新价格缓存
+// 鏇存柊浠锋牸缂撳瓨
 async function updatePriceCache(
   partId: string,
   partName: string,
   priceData: any
 ) {
   try {
-    // 更新数据库缓存
-    const { error } = await supabase.from('part_prices_cache').upsert(
+    // 鏇存柊鏁版嵁搴撶紦?    const { error } = await supabase.from('part_prices_cache').upsert(
       {
         part_id: partId,
         part_name: partName,
@@ -249,21 +243,21 @@ async function updatePriceCache(
     );
 
     if (error) {
-      console.warn('更新数据库价格缓存失败:', error);
+      console.warn('鏇存柊鏁版嵁搴撲环鏍肩紦瀛樺け?', error);
     }
 
-    // 更新Redis缓存
+    // 鏇存柊Redis缂撳瓨
     const cacheKey = generateCacheKey('part_price', partId);
     await cacheManager.set(cacheKey, priceData, 3600);
 
-    // 记录缓存更新日志
-    console.log(`💾 价格缓存已更新: ${partId}`);
+    // 璁板綍缂撳瓨鏇存柊鏃ュ織
+    console.log(`馃捑 浠锋牸缂撳瓨宸叉洿? ${partId}`);
   } catch (error) {
-    console.warn('更新价格缓存异常:', error);
+    console.warn('鏇存柊浠锋牸缂撳瓨寮傚父:', error);
   }
 }
 
-// 检查缓存是否过期 (1小时)
+// 妫€鏌ョ紦瀛樻槸鍚﹁繃?(1灏忔椂)
 function isCacheExpired(updatedAt: string): boolean {
   const updateTime = new Date(updatedAt).getTime();
   const currentTime = Date.now();
@@ -271,3 +265,4 @@ function isCacheExpired(updatedAt: string): boolean {
 
   return currentTime - updateTime > oneHour;
 }
+

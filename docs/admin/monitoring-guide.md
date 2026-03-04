@@ -523,31 +523,31 @@ node scripts/backup-database.js backup
 const ALERT_LEVELS = {
   INFO: {
     threshold: 0,
-    description: "信息性通知",
-    color: "blue",
-    notify_channels: ["slack"],
+    description: '信息性通知',
+    color: 'blue',
+    notify_channels: ['slack'],
     escalation_time: null,
   },
   WARNING: {
     threshold: 70,
-    description: "警告 - 需要关注",
-    color: "yellow",
-    notify_channels: ["slack", "email"],
-    escalation_time: "2h", // 2小时后升级
+    description: '警告 - 需要关注',
+    color: 'yellow',
+    notify_channels: ['slack', 'email'],
+    escalation_time: '2h', // 2小时后升级
   },
   CRITICAL: {
     threshold: 90,
-    description: "严重 - 需要立即处理",
-    color: "red",
-    notify_channels: ["slack", "email", "sms"],
-    escalation_time: "30m", // 30分钟后升级
+    description: '严重 - 需要立即处理',
+    color: 'red',
+    notify_channels: ['slack', 'email', 'sms'],
+    escalation_time: '30m', // 30分钟后升级
   },
   EMERGENCY: {
     threshold: 95,
-    description: "紧急 - 系统不可用",
-    color: "red",
-    notify_channels: ["slack", "email", "sms", "phone"],
-    escalation_time: "5m", // 5分钟后升级
+    description: '紧急 - 系统不可用',
+    color: 'red',
+    notify_channels: ['slack', 'email', 'sms', 'phone'],
+    escalation_time: '5m', // 5分钟后升级
   },
 };
 ```
@@ -559,28 +559,28 @@ const ALERT_LEVELS = {
 ```javascript
 const AVAILABILITY_RULES = {
   api_response_time: {
-    metric: "http_response_time_avg",
-    condition: ">",
+    metric: 'http_response_time_avg',
+    condition: '>',
     threshold: 2000, // 2秒
-    duration: "5m", // 持续5分钟
-    level: "WARNING",
-    description: "API平均响应时间超过阈值",
+    duration: '5m', // 持续5分钟
+    level: 'WARNING',
+    description: 'API平均响应时间超过阈值',
   },
   service_uptime: {
-    metric: "service_uptime_percent",
-    condition: "<",
+    metric: 'service_uptime_percent',
+    condition: '<',
     threshold: 99.5, // 99.5%
-    duration: "10m",
-    level: "CRITICAL",
-    description: "服务可用性低于标准",
+    duration: '10m',
+    level: 'CRITICAL',
+    description: '服务可用性低于标准',
   },
   error_rate: {
-    metric: "http_error_rate",
-    condition: ">",
+    metric: 'http_error_rate',
+    condition: '>',
     threshold: 5, // 5%错误率
-    duration: "2m",
-    level: "WARNING",
-    description: "HTTP错误率异常升高",
+    duration: '2m',
+    level: 'WARNING',
+    description: 'HTTP错误率异常升高',
   },
 };
 ```
@@ -590,36 +590,36 @@ const AVAILABILITY_RULES = {
 ```javascript
 const DATABASE_RULES = {
   db_connections: {
-    metric: "postgresql_active_connections",
-    condition: ">",
+    metric: 'postgresql_active_connections',
+    condition: '>',
     threshold: 80, // 连接数阈值
-    duration: "1m",
-    level: "WARNING",
-    description: "数据库连接数过高",
+    duration: '1m',
+    level: 'WARNING',
+    description: '数据库连接数过高',
   },
   slow_queries: {
-    metric: "postgresql_slow_queries_count",
-    condition: ">",
+    metric: 'postgresql_slow_queries_count',
+    condition: '>',
     threshold: 10, // 慢查询数量
-    duration: "5m",
-    level: "WARNING",
-    description: "慢查询数量异常",
+    duration: '5m',
+    level: 'WARNING',
+    description: '慢查询数量异常',
   },
   disk_space: {
-    metric: "disk_usage_percent",
-    condition: ">",
+    metric: 'disk_usage_percent',
+    condition: '>',
     threshold: 85, // 磁盘使用率
-    duration: "1m",
-    level: "CRITICAL",
-    description: "磁盘空间不足",
+    duration: '1m',
+    level: 'CRITICAL',
+    description: '磁盘空间不足',
   },
   replication_lag: {
-    metric: "postgresql_replication_lag_seconds",
-    condition: ">",
+    metric: 'postgresql_replication_lag_seconds',
+    condition: '>',
     threshold: 30, // 30秒延迟
-    duration: "1m",
-    level: "CRITICAL",
-    description: "数据库复制延迟过大",
+    duration: '1m',
+    level: 'CRITICAL',
+    description: '数据库复制延迟过大',
   },
 };
 ```
@@ -629,28 +629,28 @@ const DATABASE_RULES = {
 ```javascript
 const BUSINESS_RULES = {
   order_processing: {
-    metric: "orders_processed_per_minute",
-    condition: "<",
+    metric: 'orders_processed_per_minute',
+    condition: '<',
     threshold: 10, // 每分钟订单处理数
-    duration: "10m",
-    level: "WARNING",
-    description: "订单处理速度下降",
+    duration: '10m',
+    level: 'WARNING',
+    description: '订单处理速度下降',
   },
   payment_success: {
-    metric: "payment_success_rate",
-    condition: "<",
+    metric: 'payment_success_rate',
+    condition: '<',
     threshold: 95, // 支付成功率
-    duration: "5m",
-    level: "CRITICAL",
-    description: "支付成功率异常降低",
+    duration: '5m',
+    level: 'CRITICAL',
+    description: '支付成功率异常降低',
   },
   data_quality: {
-    metric: "data_quality_score",
-    condition: "<",
+    metric: 'data_quality_score',
+    condition: '<',
     threshold: 80, // 数据质量评分
-    duration: "15m",
-    level: "WARNING",
-    description: "数据质量评分偏低",
+    duration: '15m',
+    level: 'WARNING',
+    description: '数据质量评分偏低',
   },
 };
 ```
@@ -739,7 +739,7 @@ const BUSINESS_RULES = {
 #### 邮件发送脚本
 
 ```javascript
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 
 class EmailNotifier {
   constructor(config) {
@@ -774,11 +774,11 @@ class EmailNotifier {
   formatSubject(alert) {
     const levelEmoji =
       {
-        info: "ℹ️",
-        warning: "⚠️",
-        critical: "🚨",
-        emergency: "🆘",
-      }[alert.level] || "📢";
+        info: 'ℹ️',
+        warning: '⚠️',
+        critical: '🚨',
+        emergency: '🆘',
+      }[alert.level] || '📢';
 
     return `[${alert.level.toUpperCase()}] ${levelEmoji} ${alert.title}`;
   }
@@ -821,7 +821,7 @@ class EmailNotifier {
           )}</pre>
         </div>
         `
-            : ""
+            : ''
         }
       </div>
     `;
@@ -841,7 +841,7 @@ class SlackNotifier {
 
   async sendAlert(alert) {
     const payload = {
-      username: "FixCycle监控机器人",
+      username: 'FixCycle监控机器人',
       icon_emoji: this.getAlertEmoji(alert.level),
       attachments: [
         {
@@ -849,23 +849,23 @@ class SlackNotifier {
           title: alert.title,
           fields: [
             {
-              title: "告警级别",
+              title: '告警级别',
               value: alert.level.toUpperCase(),
               short: true,
             },
             {
-              title: "时间",
+              title: '时间',
               value: new Date(alert.timestamp).toLocaleString(),
               short: true,
             },
             {
-              title: "来源",
+              title: '来源',
               value: alert.source,
               short: true,
             },
           ],
           text: alert.message,
-          footer: "FixCycle监控系统",
+          footer: 'FixCycle监控系统',
           ts: Math.floor(Date.now() / 1000),
         },
       ],
@@ -873,7 +873,7 @@ class SlackNotifier {
 
     if (alert.metadata) {
       payload.attachments[0].fields.push({
-        title: "详细信息",
+        title: '详细信息',
         value: `\`\`\`${JSON.stringify(alert.metadata, null, 2)}\`\`\``,
         short: false,
       });
@@ -881,8 +881,8 @@ class SlackNotifier {
 
     try {
       const response = await fetch(this.webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
@@ -898,22 +898,22 @@ class SlackNotifier {
 
   getAlertEmoji(level) {
     const emojis = {
-      info: ":information_source:",
-      warning: ":warning:",
-      critical: ":rotating_light:",
-      emergency: ":fire:",
+      info: ':information_source:',
+      warning: ':warning:',
+      critical: ':rotating_light:',
+      emergency: ':fire:',
     };
-    return emojis[level] || ":bell:";
+    return emojis[level] || ':bell:';
   }
 
   getAlertColor(level) {
     const colors = {
-      info: "#439FE0",
-      warning: "#FFA500",
-      critical: "#E01E5A",
-      emergency: "#FF0000",
+      info: '#439FE0',
+      warning: '#FFA500',
+      critical: '#E01E5A',
+      emergency: '#FF0000',
     };
-    return colors[level] || "#666666";
+    return colors[level] || '#666666';
   }
 }
 ```
@@ -930,7 +930,7 @@ class WeChatNotifier {
 
   async sendAlert(alert) {
     const payload = {
-      msgtype: "markdown",
+      msgtype: 'markdown',
       markdown: {
         content: this.formatMarkdown(alert),
       },
@@ -938,8 +938,8 @@ class WeChatNotifier {
 
     try {
       const response = await fetch(this.webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
@@ -956,11 +956,11 @@ class WeChatNotifier {
   formatMarkdown(alert) {
     const levelEmoji =
       {
-        info: "ℹ️",
-        warning: "⚠️",
-        critical: "🚨",
-        emergency: "🆘",
-      }[alert.level] || "🔔";
+        info: 'ℹ️',
+        warning: '⚠️',
+        critical: '🚨',
+        emergency: '🆘',
+      }[alert.level] || '🔔';
 
     let content = `## ${levelEmoji} 系统告警通知\n`;
     content += `**标题:** ${alert.title}\n`;
@@ -999,12 +999,12 @@ class TelegramNotifier {
 
     try {
       const response = await fetch(`${this.apiUrl}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: this.chatId,
           text: message,
-          parse_mode: "HTML",
+          parse_mode: 'HTML',
         }),
       });
 
@@ -1021,11 +1021,11 @@ class TelegramNotifier {
   formatMessage(alert) {
     const levelEmoji =
       {
-        info: "ℹ️",
-        warning: "⚠️",
-        critical: "🚨",
-        emergency: "🆘",
-      }[alert.level] || "🔔";
+        info: 'ℹ️',
+        warning: '⚠️',
+        critical: '🚨',
+        emergency: '🆘',
+      }[alert.level] || '🔔';
 
     return (
       `<b>${levelEmoji} 系统告警</b>\n\n` +
@@ -1054,56 +1054,56 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: "fixcycle-app"
+  - job_name: 'fixcycle-app'
     static_configs:
-      - targets: ["localhost:3000"]
-    metrics_path: "/api/metrics"
+      - targets: ['localhost:3000']
+    metrics_path: '/api/metrics'
 
-  - job_name: "fixcycle-database"
+  - job_name: 'fixcycle-database'
     static_configs:
-      - targets: ["localhost:9187"] # PostgreSQL exporter
+      - targets: ['localhost:9187'] # PostgreSQL exporter
 
-  - job_name: "fixcycle-n8n"
+  - job_name: 'fixcycle-n8n'
     static_configs:
-      - targets: ["localhost:5678"]
-    metrics_path: "/metrics"
+      - targets: ['localhost:5678']
+    metrics_path: '/metrics'
 
 rule_files:
-  - "fixcycle-alerts.yml"
+  - 'fixcycle-alerts.yml'
 
 alerting:
   alertmanagers:
     - static_configs:
-        - targets: ["localhost:9093"]
+        - targets: ['localhost:9093']
 ```
 
 #### 自定义指标导出
 
 ```javascript
 // 在应用中暴露Prometheus指标
-const client = require("prom-client");
+const client = require('prom-client');
 
 // 创建指标
 const httpRequestDuration = new client.Histogram({
-  name: "http_request_duration_seconds",
-  help: "Duration of HTTP requests in seconds",
-  labelNames: ["method", "route", "status_code"],
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status_code'],
 });
 
 const activeConnections = new client.Gauge({
-  name: "active_database_connections",
-  help: "Number of active database connections",
+  name: 'active_database_connections',
+  help: 'Number of active database connections',
 });
 
 const orderProcessingRate = new client.Counter({
-  name: "orders_processed_total",
-  help: "Total number of orders processed",
+  name: 'orders_processed_total',
+  help: 'Total number of orders processed',
 });
 
 // 在中间件中记录指标
 app.use((req, res, next) => {
   const end = httpRequestDuration.startTimer();
-  res.on("finish", () => {
+  res.on('finish', () => {
     end({
       method: req.method,
       route: req.route ? req.route.path : req.path,
@@ -1215,7 +1215,7 @@ const THROUGHPUT_BENCHMARKS = {
 
 ```javascript
 // benchmark-runner.js
-const autocannon = require("autocannon");
+const autocannon = require('autocannon');
 
 async function runBenchmark(target, config) {
   const result = await autocannon({
@@ -1245,8 +1245,8 @@ async function runBenchmark(target, config) {
 
 // 执行基准测试
 const benchmarks = {
-  "api-endpoint": {
-    target: "http://localhost:3000/api/health",
+  'api-endpoint': {
+    target: 'http://localhost:3000/api/health',
     config: {
       connections: 100,
       duration: 60,

@@ -59,12 +59,7 @@
         "基础报表导出",
         "系统基本配置"
       ],
-      "restricted_from": [
-        "用户删除操作",
-        "内容完全删除",
-        "财务退款操作",
-        "高级系统配置"
-      ],
+      "restricted_from": ["用户删除操作", "内容完全删除", "财务退款操作", "高级系统配置"],
       "menu_items": [
         "仪表板",
         "用户管理",
@@ -95,30 +90,10 @@
     "content_manager": {
       "role_name": "内容管理员",
       "access_level": 70,
-      "can_access": [
-        "内容创作和编辑",
-        "内容审核和发布",
-        "内容分类管理",
-        "基础数据报表"
-      ],
-      "restricted_from": [
-        "用户管理",
-        "财务管理",
-        "系统配置",
-        "其他业务模块"
-      ],
-      "menu_items": [
-        "内容仪表板",
-        "文章管理",
-        "内容审核",
-        "分类管理",
-        "内容统计"
-      ],
-      "api_endpoints": [
-        "/api/content/*",
-        "/api/dashboard",
-        "/api/reports/read"
-      ]
+      "can_access": ["内容创作和编辑", "内容审核和发布", "内容分类管理", "基础数据报表"],
+      "restricted_from": ["用户管理", "财务管理", "系统配置", "其他业务模块"],
+      "menu_items": ["内容仪表板", "文章管理", "内容审核", "分类管理", "内容统计"],
+      "api_endpoints": ["/api/content/*", "/api/dashboard", "/api/reports/read"]
     },
     "shop_manager": {
       "role_name": "店铺管理员",
@@ -130,131 +105,40 @@
         "店铺评级管理",
         "基础报表查看"
       ],
-      "restricted_from": [
-        "用户个人信息管理",
-        "财务结算操作",
-        "内容管理",
-        "系统核心配置"
-      ],
-      "menu_items": [
-        "店铺仪表板",
-        "店铺列表",
-        "入驻审核",
-        "服务管理",
-        "店铺统计"
-      ],
-      "api_endpoints": [
-        "/api/shops/*",
-        "/api/dashboard",
-        "/api/reports/read"
-      ]
+      "restricted_from": ["用户个人信息管理", "财务结算操作", "内容管理", "系统核心配置"],
+      "menu_items": ["店铺仪表板", "店铺列表", "入驻审核", "服务管理", "店铺统计"],
+      "api_endpoints": ["/api/shops/*", "/api/dashboard", "/api/reports/read"]
     },
     "finance_manager": {
       "role_name": "财务管理员",
       "access_level": 75,
-      "can_access": [
-        "支付记录查看",
-        "退款申请处理",
-        "财务报表导出",
-        "收入统计分析"
-      ],
-      "restricted_from": [
-        "用户管理操作",
-        "内容编辑权限",
-        "店铺信息修改",
-        "系统配置变更"
-      ],
-      "menu_items": [
-        "财务仪表板",
-        "支付管理",
-        "退款处理",
-        "财务报表",
-        "收入分析"
-      ],
-      "api_endpoints": [
-        "/api/payments/*",
-        "/api/dashboard",
-        "/api/reports/export"
-      ]
+      "can_access": ["支付记录查看", "退款申请处理", "财务报表导出", "收入统计分析"],
+      "restricted_from": ["用户管理操作", "内容编辑权限", "店铺信息修改", "系统配置变更"],
+      "menu_items": ["财务仪表板", "支付管理", "退款处理", "财务报表", "收入分析"],
+      "api_endpoints": ["/api/payments/*", "/api/dashboard", "/api/reports/export"]
     },
     "procurement_specialist": {
       "role_name": "采购专员",
       "access_level": 60,
-      "can_access": [
-        "采购订单创建",
-        "供应商信息管理",
-        "采购流程审批",
-        "采购数据分析"
-      ],
-      "restricted_from": [
-        "财务结算权限",
-        "用户管理权限",
-        "系统配置权限",
-        "内容管理权限"
-      ],
-      "menu_items": [
-        "采购仪表板",
-        "采购订单",
-        "供应商管理",
-        "采购审批",
-        "采购分析"
-      ],
-      "api_endpoints": [
-        "/api/procurement/*",
-        "/api/dashboard",
-        "/api/reports/read"
-      ]
+      "can_access": ["采购订单创建", "供应商信息管理", "采购流程审批", "采购数据分析"],
+      "restricted_from": ["财务结算权限", "用户管理权限", "系统配置权限", "内容管理权限"],
+      "menu_items": ["采购仪表板", "采购订单", "供应商管理", "采购审批", "采购分析"],
+      "api_endpoints": ["/api/procurement/*", "/api/dashboard", "/api/reports/read"]
     },
     "warehouse_operator": {
       "role_name": "仓库操作员",
       "access_level": 50,
-      "can_access": [
-        "库存盘点操作",
-        "入库出库记录",
-        "库存预警处理",
-        "库存报表查看"
-      ],
-      "restricted_from": [
-        "采购决策权限",
-        "财务操作权限",
-        "用户管理权限",
-        "系统配置权限"
-      ],
-      "menu_items": [
-        "库存仪表板",
-        "库存查询",
-        "出入库操作",
-        "库存预警",
-        "库存报表"
-      ],
-      "api_endpoints": [
-        "/api/inventory/*",
-        "/api/dashboard",
-        "/api/reports/read"
-      ]
+      "can_access": ["库存盘点操作", "入库出库记录", "库存预警处理", "库存报表查看"],
+      "restricted_from": ["采购决策权限", "财务操作权限", "用户管理权限", "系统配置权限"],
+      "menu_items": ["库存仪表板", "库存查询", "出入库操作", "库存预警", "库存报表"],
+      "api_endpoints": ["/api/inventory/*", "/api/dashboard", "/api/reports/read"]
     },
     "agent_operator": {
       "role_name": "智能体操作员",
       "access_level": 55,
-      "can_access": [
-        "智能体任务执行",
-        "工作流监控",
-        "执行结果查看",
-        "异常处理调试"
-      ],
-      "restricted_from": [
-        "工作流配置权限",
-        "用户管理权限",
-        "财务操作权限",
-        "核心业务管理"
-      ],
-      "menu_items": [
-        "智能体仪表板",
-        "任务执行",
-        "工作流监控",
-        "执行历史",
-        "调试工具"
-      ],
+      "can_access": ["智能体任务执行", "工作流监控", "执行结果查看", "异常处理调试"],
+      "restricted_from": ["工作流配置权限", "用户管理权限", "财务操作权限", "核心业务管理"],
+      "menu_items": ["智能体仪表板", "任务执行", "工作流监控", "执行历史", "调试工具"],
       "api_endpoints": [
         "/api/agents/execute",
         "/api/agents/monitor",
@@ -267,26 +151,10 @@
     "viewer": {
       "role_name": "只读查看员",
       "access_level": 30,
-      "can_access": [
-        "仪表板数据查看",
-        "基础报表浏览",
-        "统计信息查阅"
-      ],
-      "restricted_from": [
-        "所有写入操作",
-        "敏感数据访问",
-        "系统配置查看",
-        "用户管理功能"
-      ],
-      "menu_items": [
-        "数据仪表板",
-        "基础报表",
-        "统计概览"
-      ],
-      "api_endpoints": [
-        "/api/dashboard",
-        "/api/reports/read"
-      ]
+      "can_access": ["仪表板数据查看", "基础报表浏览", "统计信息查阅"],
+      "restricted_from": ["所有写入操作", "敏感数据访问", "系统配置查看", "用户管理功能"],
+      "menu_items": ["数据仪表板", "基础报表", "统计概览"],
+      "api_endpoints": ["/api/dashboard", "/api/reports/read"]
     },
     "enterprise_admin": {
       "role_name": "企业服务管理员",
@@ -298,19 +166,8 @@
         "企业用户管理",
         "企业级报表查看"
       ],
-      "restricted_from": [
-        "主站用户管理",
-        "核心财务操作",
-        "系统底层配置"
-      ],
-      "menu_items": [
-        "企业仪表板",
-        "服务管理",
-        "智能体定制",
-        "采购服务",
-        "企业管理",
-        "企业报表"
-      ],
+      "restricted_from": ["主站用户管理", "核心财务操作", "系统底层配置"],
+      "menu_items": ["企业仪表板", "服务管理", "智能体定制", "采购服务", "企业管理", "企业报表"],
       "api_endpoints": [
         "/api/enterprise/*",
         "/api/dashboard",
@@ -321,25 +178,9 @@
     "procurement_manager": {
       "role_name": "采购经理",
       "access_level": 75,
-      "can_access": [
-        "企业采购需求管理",
-        "供应商合作管理",
-        "采购合同审批",
-        "采购成本分析"
-      ],
-      "restricted_from": [
-        "企业服务配置",
-        "用户权限管理",
-        "系统核心功能",
-        "财务结算操作"
-      ],
-      "menu_items": [
-        "采购仪表板",
-        "采购需求",
-        "供应商管理",
-        "合同审批",
-        "成本分析"
-      ],
+      "can_access": ["企业采购需求管理", "供应商合作管理", "采购合同审批", "采购成本分析"],
+      "restricted_from": ["企业服务配置", "用户权限管理", "系统核心功能", "财务结算操作"],
+      "menu_items": ["采购仪表板", "采购需求", "供应商管理", "合同审批", "成本分析"],
       "api_endpoints": [
         "/api/enterprise/procurement/*",
         "/api/procurement/read",
@@ -352,25 +193,9 @@
     "enterprise_user": {
       "role_name": "企业用户",
       "access_level": 40,
-      "can_access": [
-        "企业服务门户访问",
-        "智能体服务使用",
-        "采购需求提交",
-        "个人中心管理"
-      ],
-      "restricted_from": [
-        "管理功能",
-        "数据导出权限",
-        "系统配置",
-        "其他企业管理"
-      ],
-      "menu_items": [
-        "企业首页",
-        "智能体服务",
-        "采购服务",
-        "我的需求",
-        "个人中心"
-      ],
+      "can_access": ["企业服务门户访问", "智能体服务使用", "采购需求提交", "个人中心管理"],
+      "restricted_from": ["管理功能", "数据导出权限", "系统配置", "其他企业管理"],
+      "menu_items": ["企业首页", "智能体服务", "采购服务", "我的需求", "个人中心"],
       "api_endpoints": [
         "/api/enterprise/read",
         "/api/enterprise/agents/read",
@@ -429,12 +254,7 @@
         "procurement_create",
         "procurement_approve"
       ],
-      "must_not_have": [
-        "users_delete",
-        "content_delete",
-        "payments_refund",
-        "settings_update"
-      ]
+      "must_not_have": ["users_delete", "content_delete", "payments_refund", "settings_update"]
     },
     "content_manager": {
       "must_have": [
@@ -445,12 +265,7 @@
         "content_approve",
         "reports_read"
       ],
-      "must_not_have": [
-        "users_*",
-        "shops_*",
-        "payments_*",
-        "settings_*"
-      ]
+      "must_not_have": ["users_*", "shops_*", "payments_*", "settings_*"]
     }
   },
   "test_scenarios": {

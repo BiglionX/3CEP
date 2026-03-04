@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { parse } from "csv-parse/sync";
 import { v4 as uuidv4 } from "uuid";
 
-// 初始化Supabase客户端
+// 鍒濆鍖朣upabase瀹㈡埛?
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 获取批次列表
+// 鑾峰彇鎵规鍒楄〃
 export async function GET() {
   try {
     const { data, error } = await supabase
@@ -21,14 +21,14 @@ export async function GET() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("获取批次列表失败:", error);
+      console.error("鑾峰彇鎵规鍒楄〃澶辫触:", error);
       return NextResponse.json(
-        { success: false, error: "获取批次列表失败" },
+        { success: false, error: "鑾峰彇鎵规鍒楄〃澶辫触" },
         { status: 500 }
       );
     }
 
-    // 格式化返回数据
+    // 鏍煎紡鍖栬繑鍥炴暟?
     const batches = data?.map(batch => ({
       id: batch.id,
       batch_id: batch.batch_id,
@@ -48,15 +48,15 @@ export async function GET() {
     });
 
   } catch (error) {
-    console.error("获取批次列表异常:", error);
+    console.error("鑾峰彇鎵规鍒楄〃寮傚父:", error);
     return NextResponse.json(
-      { success: false, error: "服务器内部错误" },
+      { success: false, error: "鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
       { status: 500 }
     );
   }
 }
 
-// 创建新批次
+// 鍒涘缓鏂版壒?
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -71,18 +71,18 @@ export async function POST(request: NextRequest) {
       endDate
     } = body;
 
-    // 验证必要参数
+    // 楠岃瘉蹇呰鍙傛暟
     if (!productModel || !productCategory || !brandId || !productName || !quantity) {
       return NextResponse.json(
-        { success: false, error: "缺少必要参数" },
+        { success: false, error: "缂哄皯蹇呰鍙傛暟" },
         { status: 400 }
       );
     }
 
-    // 生成唯一批次ID
+    // 鐢熸垚鍞竴鎵规ID
     const batchId = `batch_${uuidv4().replace(/-/g, "")}_${Date.now()}`;
 
-    // 创建批次记录
+    // 鍒涘缓鎵规璁板綍
     const { data: batch, error: batchError } = await supabase
       .from("qr_batches")
       .insert({
@@ -100,19 +100,19 @@ export async function POST(request: NextRequest) {
         } as any,
         start_date: startDate,
         end_date: endDate
-      })
+      }) as any
       .select()
       .single();
 
     if (batchError) {
-      console.error("创建批次失败:", batchError);
+      console.error("鍒涘缓鎵规澶辫触:", batchError);
       return NextResponse.json(
-        { success: false, error: "创建批次失败" },
+        { success: false, error: "鍒涘缓鎵规澶辫触" },
         { status: 500 }
       );
     }
 
-    // 异步生成二维码（不阻塞响应）
+    // 寮傛鐢熸垚浜岀淮鐮侊紙涓嶉樆濉炲搷搴旓級
     generateBatchCodes(batchId, {
       productModel,
       productCategory,
@@ -123,8 +123,8 @@ export async function POST(request: NextRequest) {
       startDate,
       endDate
     }).catch(err => {
-      console.error("异步生成二维码失败:", err);
-      // 更新批次状态为失败
+      console.error("寮傛鐢熸垚浜岀淮鐮佸け?", err);
+      // 鏇存柊鎵规鐘舵€佷负澶辫触
       supabase
         .from("qr_batches")
         .update({ status: "failed" } as any)
@@ -135,20 +135,20 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         batch_id: batchId,
-        message: "批次创建成功，正在后台生成二维码"
+        message: "鎵规鍒涘缓鎴愬姛锛屾鍦ㄥ悗鍙扮敓鎴愪簩缁寸爜"
       }
     });
 
   } catch (error) {
-    console.error("创建批次异常:", error);
+    console.error("鍒涘缓鎵规寮傚父:", error);
     return NextResponse.json(
-      { success: false, error: "服务器内部错误" },
+      { success: false, error: "鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
       { status: 500 }
     );
   }
 }
 
-// 异步生成批次二维码
+// 寮傛鐢熸垚鎵规浜岀淮?
 async function generateBatchCodes(
   batchId: string,
   params: any
@@ -165,20 +165,20 @@ async function generateBatchCodes(
   } = params;
 
   try {
-    // 更新批次状态为处理中
+    // 鏇存柊鎵规鐘舵€佷负澶勭悊?
     await supabase
       .from("qr_batches")
       .update({ status: "processing" } as any)
       .eq("batch_id", batchId);
 
-    // 生成指定数量的二维码
+    // 鐢熸垚鎸囧畾鏁伴噺鐨勪簩缁寸爜
     const codes = [];
     for (let i = 1; i <= quantity; i++) {
       const serialNumber = i.toString().padStart(6, '0');
       const productId = `${productModel}_${serialNumber}`;
       const qrContent = `https://fx.cn/p/${productId}`;
       
-      // 生成二维码Base64（这里使用占位符，实际应该调用二维码生成服务）
+      // 鐢熸垚浜岀淮鐮丅ase64锛堣繖閲屼娇鐢ㄥ崰浣嶇锛屽疄闄呭簲璇ヨ皟鐢ㄤ簩缁寸爜鐢熸垚鏈嶅姟?
       const qrImageBase64 = generatePlaceholderQR(productId, qrContent);
 
       codes.push({
@@ -193,16 +193,16 @@ async function generateBatchCodes(
       });
     }
 
-    // 批量插入二维码记录
+    // 鎵归噺鎻掑叆浜岀淮鐮佽?
     const { error: insertError } = await supabase
       .from("qr_codes")
       .insert(codes);
 
     if (insertError) {
-      throw new Error(`插入二维码记录失败: ${insertError.message}`);
+      throw new Error(`鎻掑叆浜岀淮鐮佽褰曞け? ${insertError.message}`);
     }
 
-    // 更新批次状态为完成
+    // 鏇存柊鎵规鐘舵€佷负瀹屾垚
     await supabase
       .from("qr_batches")
       .update({ 
@@ -211,11 +211,11 @@ async function generateBatchCodes(
       } as any)
       .eq("batch_id", batchId);
 
-    console.log(`批次 ${batchId} 生成完成，共 ${quantity} 个二维码`);
+    console.log(`鎵规 ${batchId} 鐢熸垚瀹屾垚锛屽叡 ${quantity} 涓簩缁寸爜`);
 
   } catch (error) {
-    console.error(`批次 ${batchId} 生成失败:`, error);
-    // 更新批次状态为失败
+    console.error(`鎵规 ${batchId} 鐢熸垚澶辫触:`, error);
+    // 鏇存柊鎵规鐘舵€佷负澶辫触
     await supabase
       .from("qr_batches")
       .update({ status: "failed" } as any)
@@ -224,10 +224,10 @@ async function generateBatchCodes(
   }
 }
 
-// 生成占位二维码（实际应该使用二维码库）
+// 鐢熸垚鍗犱綅浜岀淮鐮侊紙瀹為檯搴旇浣跨敤浜岀淮鐮佸簱?
 function generatePlaceholderQR(productId: string, content: string): string {
-  // 这里应该使用真正的二维码生成库，如 qrcode 或 qr-image
-  // 目前返回一个简单的SVG占位符
+  // 杩欓噷搴旇浣跨敤鐪熸鐨勪簩缁寸爜鐢熸垚搴擄紝锟?qrcode 锟?qr-image
+  // 鐩墠杩斿洖涓€涓畝鍗曠殑SVG鍗犱綅?
   return `data:image/svg+xml;base64,${Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
       <rect width="200" height="200" fill="#ffffff"/>

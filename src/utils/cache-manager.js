@@ -1,6 +1,9 @@
 // Redis缓存集成配置和工具类
 const Redis = require('ioredis');
-const { cacheManager: memoryCache, generateCacheKey: memGenerateKey } = require('./memory-cache');
+const {
+  cacheManager: memoryCache,
+  generateCacheKey: memGenerateKey,
+} = require('./memory-cache');
 
 class CacheManager {
   constructor() {
@@ -15,28 +18,26 @@ class CacheManager {
     try {
       const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
       this.redis = new Redis(redisUrl, {
-        retryStrategy: (times) => {
+        retryStrategy: times => {
           // 重试策略：最多重试10次，每次间隔递增
           if (times > 10) return false;
           return Math.min(times * 50, 2000);
         },
         connectTimeout: 10000,
-        lazyConnect: true
+        lazyConnect: true,
       });
 
       this.redis.on('connect', () => {
-        console.log('✅ Redis连接成功');
-        this.isEnabled = true;
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('✅ Redis连接成功')this.isEnabled = true;
       });
 
-      this.redis.on('error', (error) => {
+      this.redis.on('error', error => {
         console.warn('⚠️  Redis连接错误:', error.message);
         this.isEnabled = false;
       });
 
       this.redis.on('close', () => {
-        console.log('🔒 Redis连接关闭');
-        this.isEnabled = false;
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔒 Redis连接关闭')this.isEnabled = false;
       });
 
       // 尝试连接
@@ -44,7 +45,6 @@ class CacheManager {
         console.warn('⚠️  Redis初始化失败:', err.message);
         this.isEnabled = false;
       });
-
     } catch (error) {
       console.warn('⚠️  Redis初始化异常:', error.message);
       this.isEnabled = false;
@@ -68,12 +68,12 @@ class CacheManager {
         return false;
       }
     }
-    
+
     // Redis不可用时使用内存缓存
     if (this.useMemoryFallback) {
       return memoryCache.set(key, value, ttl);
     }
-    
+
     return false;
   }
 
@@ -95,12 +95,12 @@ class CacheManager {
         return null;
       }
     }
-    
+
     // Redis不可用时使用内存缓存
     if (this.useMemoryFallback) {
       return memoryCache.get(key);
     }
-    
+
     return null;
   }
 
@@ -147,7 +147,7 @@ class CacheManager {
     try {
       const info = await this.redis.info();
       const dbSize = await this.redis.dbsize();
-      
+
       return {
         enabled: true,
         dbSize,
@@ -155,7 +155,7 @@ class CacheManager {
         connectedClients: this.extractInfoValue(info, 'connected_clients'),
         usedMemory: this.extractInfoValue(info, 'used_memory_human'),
         keyspaceHits: this.extractInfoValue(info, 'keyspace_hits'),
-        keyspaceMisses: this.extractInfoValue(info, 'keyspace_misses')
+        keyspaceMisses: this.extractInfoValue(info, 'keyspace_misses'),
       };
     } catch (error) {
       console.warn('获取Redis统计信息失败:', error.message);
@@ -189,26 +189,24 @@ const cacheManager = new CacheManager();
 // 导出工具函数
 module.exports = {
   cacheManager,
-  
+
   // 缓存装饰器函数
   withCache: (cacheKey, ttl = 3600) => {
     return async (fn, ...args) => {
       // 尝试从缓存获取
       const cachedResult = await cacheManager.get(cacheKey);
       if (cachedResult !== null) {
-        console.log(`📦 缓存命中: ${cacheKey}`);
-        return cachedResult;
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📦 缓存命中: ${cacheKey}`)return cachedResult;
       }
 
       // 执行原始函数
-      console.log(`🔄 缓存未命中，执行函数: ${cacheKey}`);
-      const result = await fn(...args);
-      
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🔄 缓存未命中，执行函数: ${cacheKey}`)const result = await fn(...args);
+
       // 缓存结果
       if (result !== null && result !== undefined) {
         await cacheManager.set(cacheKey, result, ttl);
       }
-      
+
       return result;
     };
   },
@@ -220,12 +218,12 @@ module.exports = {
   },
 
   // 清除相关缓存
-  invalidateRelatedCache: async (patterns) => {
+  invalidateRelatedCache: async patterns => {
     const results = [];
     for (const pattern of patterns) {
       const deletedCount = await cacheManager.delPattern(pattern);
       results.push({ pattern, deletedCount });
     }
     return results;
-  }
+  },
 };

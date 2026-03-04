@@ -1,4 +1,4 @@
-import MonitoringDashboard from '@/components/admin/MonitoringDashboard';
+﻿import MonitoringDashboard from '@/components/admin/MonitoringDashboard';
 
 export default function MonitoringPage() {
   return (
@@ -7,3 +7,4 @@ export default function MonitoringPage() {
     </div>
   );
 }
+

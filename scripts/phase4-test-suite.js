@@ -7,7 +7,7 @@ const BASE_URL = 'http://localhost:3001';
 
 async function testPhase4Features() {
   console.log('🚀 Phase 4 功能测试开始\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   let passedTests = 0;
   let totalTests = 0;
@@ -35,7 +35,7 @@ async function testPhase4Features() {
   await test('Dashboard API 安全性', async () => {
     const response = await fetch(`${BASE_URL}/api/dashboard/data`);
     const result = await response.json();
-    
+
     if (result.error === '用户未认证') {
       return { pass: true, message: 'Dashboard API 正确拒绝未认证访问' };
     }
@@ -46,7 +46,7 @@ async function testPhase4Features() {
   await test('工作流列表 API 安全性', async () => {
     const response = await fetch(`${BASE_URL}/api/workflows`);
     const result = await response.json();
-    
+
     if (result.error === '用户未认证') {
       return { pass: true, message: '工作流 API 正确拒绝未认证访问' };
     }
@@ -57,7 +57,7 @@ async function testPhase4Features() {
   await test('工作流详情 API 安全性', async () => {
     const response = await fetch(`${BASE_URL}/api/workflows/123`);
     const result = await response.json();
-    
+
     if (result.error === '用户未认证') {
       return { pass: true, message: '工作流详情 API 正确拒绝未认证访问' };
     }
@@ -69,10 +69,10 @@ async function testPhase4Features() {
     const response = await fetch(`${BASE_URL}/api/workflows/123/execute`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({})
+      body: JSON.stringify({}),
     });
     const result = await response.json();
-    
+
     if (result.error === '用户未认证') {
       return { pass: true, message: '工作流执行 API 正确拒绝未认证访问' };
     }
@@ -84,10 +84,10 @@ async function testPhase4Features() {
     const response = await fetch(`${BASE_URL}/api/workflows/123/execute`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({})
+      body: JSON.stringify({}),
     });
     const result = await response.json();
-    
+
     if (result.error === '用户未认证') {
       return { pass: true, message: '工作流回放 API 正确拒绝未认证访问' };
     }
@@ -129,14 +129,14 @@ async function testPhase4Features() {
     const requiredComponents = [
       'DashboardPage',
       'WorkflowsPage',
-      'TenantSwitcher'
+      'TenantSwitcher',
     ];
-    
+
     const allComponentsPresent = requiredComponents.length === 3;
     if (allComponentsPresent) {
-      return { 
-        pass: true, 
-        message: `前端组件完整，共 ${requiredComponents.length} 个核心组件` 
+      return {
+        pass: true,
+        message: `前端组件完整，共 ${requiredComponents.length} 个核心组件`,
       };
     }
     return { pass: false, message: '前端组件缺失' };
@@ -148,29 +148,29 @@ async function testPhase4Features() {
       '/api/dashboard/data',
       '/api/workflows',
       '/api/workflows/[id]',
-      '/api/workflows/[id]/execute'
+      '/api/workflows/[id]/execute',
     ];
-    
+
     const allEndpointsExist = requiredEndpoints.length === 4;
     if (allEndpointsExist) {
-      return { 
-        pass: true, 
-        message: `API 端点结构完整，共 ${requiredEndpoints.length} 个端点` 
+      return {
+        pass: true,
+        message: `API 端点结构完整，共 ${requiredEndpoints.length} 个端点`,
       };
     }
     return { pass: false, message: 'API 端点结构不完整' };
   });
 
   // 测试总结
-  console.log('\n' + '='.repeat(60));
+  console.log(`\n${'='.repeat(60)}`);
   console.log('📊 Phase 4 测试总结报告');
   console.log('='.repeat(60));
-  
+
   console.log(`总计测试: ${totalTests}`);
   console.log(`通过测试: ${passedTests}`);
   console.log(`失败测试: ${totalTests - passedTests}`);
   console.log(`通过率: ${((passedTests / totalTests) * 100).toFixed(1)}%`);
-  
+
   if (passedTests === totalTests) {
     console.log('\n🎉 所有测试通过！Phase 4 功能实现完整');
     console.log('\n📋 已完成功能清单:');
@@ -179,29 +179,31 @@ async function testPhase4Features() {
     console.log('✅ 完整的安全认证体系');
     console.log('✅ RBAC 权限系统集成');
     console.log('✅ 响应式前端设计');
-    
+
     console.log('\n🚀 准备就绪，可以开始第三个任务开发');
   } else {
     console.log('\n⚠️  部分测试未通过，请检查相关功能实现');
   }
-  
+
   console.log('\n💡 建议的下一步操作:');
   console.log('1. 在浏览器中访问 /dashboard 测试仪表板功能');
   console.log('2. 访问 /workflows 测试工作流管理功能');
   console.log('3. 使用 mock token 测试认证后的完整功能');
   console.log('4. 验证不同角色的界面差异化展示');
-  
+
   return {
     total: totalTests,
     passed: passedTests,
     failed: totalTests - passedTests,
-    successRate: (passedTests / totalTests) * 100
+    successRate: (passedTests / totalTests) * 100,
   };
 }
 
 // 运行测试
-testPhase4Features().then(results => {
-  console.log('\n🏁 Phase 4 测试执行完成');
-}).catch(error => {
-  console.error('❌ 测试执行异常:', error);
-});
+testPhase4Features()
+  .then(results => {
+    console.log('\n🏁 Phase 4 测试执行完成');
+  })
+  .catch(error => {
+    console.error('❌ 测试执行异常:', error);
+  });

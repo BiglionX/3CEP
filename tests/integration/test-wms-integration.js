@@ -30,28 +30,27 @@ class WMSSystemTester {
     try {
       // 1. 数据库连接测试
       await this.testDatabaseConnection();
-      
+
       // 2. WMS客户端测试
       await this.testWMSClient();
-      
+
       // 3. 连接管理测试
       await this.testConnectionManagement();
-      
+
       // 4. 库存映射测试
       await this.testInventoryMapping();
-      
+
       // 5. 定时同步测试
       await this.testScheduledSync();
-      
+
       // 6. 准确性监控测试
       await this.testAccuracyMonitoring();
-      
+
       // 7. API接口测试
       await this.testAPIEndpoints();
-      
+
       // 输出测试结果
       this.printTestResults();
-
     } catch (error) {
       console.error('❌ 测试执行失败:', error);
       this.addTestResult('整体测试', false, error.message);
@@ -64,7 +63,7 @@ class WMSSystemTester {
 
   async testDatabaseConnection() {
     console.log('1️⃣ 测试数据库连接...');
-    
+
     try {
       const { data, error } = await supabase
         .from('wms_connections')
@@ -76,7 +75,6 @@ class WMSSystemTester {
 
       this.addTestResult('数据库连接', true, '连接成功');
       console.log('✅ 数据库连接测试通过\n');
-
     } catch (error) {
       this.addTestResult('数据库连接', false, error.message);
       console.log('❌ 数据库连接测试失败\n');
@@ -85,7 +83,7 @@ class WMSSystemTester {
 
   async testWMSClient() {
     console.log('2️⃣ 测试WMS客户端功能...');
-    
+
     try {
       // 测试配置验证
       const mockConfig = {
@@ -93,7 +91,7 @@ class WMSSystemTester {
         baseUrl: 'https://api.mock-wms.com',
         clientId: 'test_client',
         clientSecret: 'test_secret',
-        warehouseId: 'TEST-001'
+        warehouseId: 'TEST-001',
       };
 
       // 测试连接添加（使用mock数据）
@@ -102,19 +100,21 @@ class WMSSystemTester {
           name: '测试连接',
           provider: 'goodcang',
           warehouseId: 'TEST-001',
-          isActive: true
+          isActive: true,
         },
         mockConfig
       );
 
       // 由于是mock测试，预期会失败，但我们验证逻辑是否正确
-      if (connectionResult.success || connectionResult.error?.code === 'CONNECTION_TEST_FAILED') {
+      if (
+        connectionResult.success ||
+        connectionResult.error?.code === 'CONNECTION_TEST_FAILED'
+      ) {
         this.addTestResult('WMS客户端', true, '客户端逻辑正常');
         console.log('✅ WMS客户端测试通过\n');
       } else {
         throw new Error(`意外的测试结果: ${JSON.stringify(connectionResult)}`);
       }
-
     } catch (error) {
       this.addTestResult('WMS客户端', false, error.message);
       console.log('❌ WMS客户端测试失败\n');
@@ -123,18 +123,25 @@ class WMSSystemTester {
 
   async testConnectionManagement() {
     console.log('3️⃣ 测试连接管理功能...');
-    
+
     try {
       // 获取连接列表
       const connections = wmsManager.getConnections();
-      this.addTestResult('连接列表获取', true, `获取到 ${connections.length} 个连接`);
+      this.addTestResult(
+        '连接列表获取',
+        true,
+        `获取到 ${connections.length} 个连接`
+      );
 
       // 测试连接状态统计
       const stats = wmsManager.getSyncStatistics();
-      this.addTestResult('连接状态统计', true, `统计信息: ${JSON.stringify(stats)}`);
+      this.addTestResult(
+        '连接状态统计',
+        true,
+        `统计信息: ${JSON.stringify(stats)}`
+      );
 
       console.log('✅ 连接管理测试通过\n');
-
     } catch (error) {
       this.addTestResult('连接管理', false, error.message);
       console.log('❌ 连接管理测试失败\n');
@@ -143,22 +150,33 @@ class WMSSystemTester {
 
   async testInventoryMapping() {
     console.log('4️⃣ 测试库存映射功能...');
-    
+
     try {
       // 测试库存统计数据获取
       const stats = await inventoryMapper.getInventoryStatistics();
-      this.addTestResult('库存统计', true, `当前库存: ${stats.totalItems} 个项目`);
+      this.addTestResult(
+        '库存统计',
+        true,
+        `当前库存: ${stats.totalItems} 个项目`
+      );
 
       // 测试低库存预警
       const alerts = await inventoryMapper.getLowInventoryAlerts(100); // 使用较高阈值
-      this.addTestResult('低库存预警', true, `发现 ${alerts.length} 个低库存项目`);
+      this.addTestResult(
+        '低库存预警',
+        true,
+        `发现 ${alerts.length} 个低库存项目`
+      );
 
       // 测试准确性报告
       const accuracy = await inventoryMapper.getInventoryAccuracyReport();
-      this.addTestResult('准确性报告', true, `库存准确率: ${accuracy.accuracyRate}%`);
+      this.addTestResult(
+        '准确性报告',
+        true,
+        `库存准确率: ${accuracy.accuracyRate}%`
+      );
 
       console.log('✅ 库存映射测试通过\n');
-
     } catch (error) {
       this.addTestResult('库存映射', false, error.message);
       console.log('❌ 库存映射测试失败\n');
@@ -167,18 +185,25 @@ class WMSSystemTester {
 
   async testScheduledSync() {
     console.log('5️⃣ 测试定时同步功能...');
-    
+
     try {
       // 测试调度器状态获取
       const status = wmsSyncScheduler.getStatus();
-      this.addTestResult('调度器状态', true, `调度器运行状态: ${status.isRunning}`);
+      this.addTestResult(
+        '调度器状态',
+        true,
+        `调度器运行状态: ${status.isRunning}`
+      );
 
       // 测试手动同步触发
       const manualResult = await wmsSyncScheduler.triggerManualSync();
-      this.addTestResult('手动同步', manualResult.success, manualResult.message);
+      this.addTestResult(
+        '手动同步',
+        manualResult.success,
+        manualResult.message
+      );
 
       console.log('✅ 定时同步测试通过\n');
-
     } catch (error) {
       this.addTestResult('定时同步', false, error.message);
       console.log('❌ 定时同步测试失败\n');
@@ -187,18 +212,25 @@ class WMSSystemTester {
 
   async testAccuracyMonitoring() {
     console.log('6️⃣ 测试准确性监控功能...');
-    
+
     try {
       // 测试监控器状态
       const monitorStatus = accuracyMonitor.getStatus();
-      this.addTestResult('监控器状态', true, `监控器运行状态: ${monitorStatus.isRunning}`);
+      this.addTestResult(
+        '监控器状态',
+        true,
+        `监控器运行状态: ${monitorStatus.isRunning}`
+      );
 
       // 测试手动准确性检查
       const report = await accuracyMonitor.triggerManualCheck();
-      this.addTestResult('手动检查', true, `准确率: ${report.accuracyRate.toFixed(2)}%`);
+      this.addTestResult(
+        '手动检查',
+        true,
+        `准确率: ${report.accuracyRate.toFixed(2)}%`
+      );
 
       console.log('✅ 准确性监控测试通过\n');
-
     } catch (error) {
       this.addTestResult('准确性监控', false, error.message);
       console.log('❌ 准确性监控测试失败\n');
@@ -207,20 +239,31 @@ class WMSSystemTester {
 
   async testAPIEndpoints() {
     console.log('7️⃣ 测试API接口功能...');
-    
+
     try {
       // 测试连接管理API
-      const connectionResponse = await fetch('http://localhost:3001/api/wms/connections');
+      const connectionResponse = await fetch(
+        'http://localhost:3001/api/wms/connections'
+      );
       const connectionData = await connectionResponse.json();
-      this.addTestResult('连接管理API', connectionResponse.ok, `状态码: ${connectionResponse.status}`);
+      this.addTestResult(
+        '连接管理API',
+        connectionResponse.ok,
+        `状态码: ${connectionResponse.status}`
+      );
 
       // 测试库存API
-      const inventoryResponse = await fetch('http://localhost:3001/api/wms/inventory?action=statistics');
+      const inventoryResponse = await fetch(
+        'http://localhost:3001/api/wms/inventory?action=statistics'
+      );
       const inventoryData = await inventoryResponse.json();
-      this.addTestResult('库存统计API', inventoryResponse.ok, `状态码: ${inventoryResponse.status}`);
+      this.addTestResult(
+        '库存统计API',
+        inventoryResponse.ok,
+        `状态码: ${inventoryResponse.status}`
+      );
 
       console.log('✅ API接口测试通过\n');
-
     } catch (error) {
       // API可能未运行，这在测试环境中是正常的
       this.addTestResult('API接口', true, `API测试跳过: ${error.message}`);
@@ -233,13 +276,13 @@ class WMSSystemTester {
       testName,
       success,
       message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 
   printTestResults() {
     console.log('\n📋 测试结果汇总:');
-    console.log('=' .repeat(50));
+    console.log('='.repeat(50));
 
     const passed = this.testResults.filter(r => r.success).length;
     const failed = this.testResults.filter(r => !r.success).length;
@@ -252,7 +295,7 @@ class WMSSystemTester {
       console.log('');
     });
 
-    console.log('=' .repeat(50));
+    console.log('='.repeat(50));
     console.log(`总计: ${total} 项测试`);
     console.log(`通过: ${passed} 项 ✅`);
     console.log(`失败: ${failed} 项 ❌`);
@@ -276,21 +319,26 @@ class WMSSystemTester {
         totalTests: total,
         passedTests: passed,
         failedTests: total - passed,
-        passRate: parseFloat(passRate)
+        passRate: parseFloat(passRate),
       },
       details: this.testResults,
       systemInfo: {
         nodeVersion: process.version,
         platform: process.platform,
-        architecture: process.arch
-      }
+        architecture: process.arch,
+      },
     };
 
     // 保存报告到文件
     const fs = require('fs');
     const path = require('path');
-    const reportPath = path.join(__dirname, '..', 'test-results', `wms-integration-test-${Date.now()}.json`);
-    
+    const reportPath = path.join(
+      __dirname,
+      '..',
+      'test-results',
+      `wms-integration-test-${Date.now()}.json`
+    );
+
     try {
       await fs.promises.mkdir(path.dirname(reportPath), { recursive: true });
       await fs.promises.writeFile(reportPath, JSON.stringify(report, null, 2));
@@ -306,8 +354,9 @@ class WMSSystemTester {
 // 如果直接运行此脚本
 if (require.main === module) {
   const tester = new WMSSystemTester();
-  
-  tester.runAllTests()
+
+  tester
+    .runAllTests()
     .then(() => tester.generateTestReport())
     .then(() => {
       console.log('\n🏁 WMS系统集成测试完成！');

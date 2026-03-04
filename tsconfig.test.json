@@ -6,8 +6,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "test-tenant-api-fix.ts",
-    "src/**/*"
-  ]
+  "include": ["test-tenant-api-fix.ts", "src/**/*"]
 }

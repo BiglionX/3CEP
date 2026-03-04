@@ -1,7 +1,6 @@
 /**
  * 角色感知的管理布局组件
- * 整合侧边栏、顶部栏和主要内容区域
- */
+ * 整合侧边栏、顶部栏和主要内容区? */
 
 'use client';
 
@@ -19,8 +18,7 @@ export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
   const { isAuthenticated, loading } = usePermission();
   const router = useRouter();
 
-  // 认证检查
-  useEffect(() => {
+  // 认证检?  useEffect(() => {
     if (!loading && !isAuthenticated) {
       router.push('/login?redirect=/admin');
     }
@@ -40,12 +38,12 @@ export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 角色感知侧边栏 */}
+      {/* 角色感知侧边?*/}
       <RoleAwareSidebar />
 
-      {/* 主内容区域 */}
+      {/* 主内容区?*/}
       <div className="lg:pl-64">
-        {/* 角色感知顶部栏 */}
+        {/* 角色感知顶部?*/}
         <RoleAwareTopbar />
 
         {/* 页面内容 */}

@@ -1,17 +1,17 @@
-'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { 
-  Building2, 
-  Users, 
-  MapPin, 
-  Phone, 
-  Mail, 
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Building2,
+  Users,
+  MapPin,
+  Phone,
+  Mail,
   Globe,
   Edit3,
   Save,
@@ -19,118 +19,118 @@ import {
   BadgeCheck,
   AlertCircle,
   Calendar,
-  FileText
-} from 'lucide-react'
+  FileText,
+} from 'lucide-react';
 
 interface BrandProfile {
-  id: string
-  companyName: string
-  businessLicense: string
-  legalRepresentative: string
-  industry: string
-  companySize: string
-  establishmentDate: string
-  registeredCapital: string
-  website: string
-  contactEmail: string
-  contactPhone: string
-  address: string
-  description: string
-  logo: string
-  certificationStatus: 'pending' | 'verified' | 'rejected'
-  certificationDate: string | null
+  id: string;
+  companyName: string;
+  businessLicense: string;
+  legalRepresentative: string;
+  industry: string;
+  companySize: string;
+  establishmentDate: string;
+  registeredCapital: string;
+  website: string;
+  contactEmail: string;
+  contactPhone: string;
+  address: string;
+  description: string;
+  logo: string;
+  certificationStatus: 'pending' | 'verified' | 'rejected';
+  certificationDate: string | null;
 }
 
 export default function BrandProfilePage() {
-  const [brand, setBrand] = useState<BrandProfile | null>(null)
-  const [originalBrand, setOriginalBrand] = useState<BrandProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [editing, setEditing] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [brand, setBrand] = useState<BrandProfile | null>(null);
+  const [originalBrand, setOriginalBrand] = useState<BrandProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    // 模拟获取品牌商数据
-    setTimeout(() => {
+    // 模拟获取品牌商数?    setTimeout(() => {
       const mockData: BrandProfile = {
         id: 'brand_123',
         companyName: '科技创新有限公司',
         businessLicense: '91110108MA01XXXXXX',
         legalRepresentative: '李明',
         industry: '电子信息',
-        companySize: '50-100人',
+        companySize: '50-100�?,
         establishmentDate: '2020-03-15',
         registeredCapital: '1000万人民币',
         website: 'https://www.techinnovate.com',
         contactEmail: 'contact@techinnovate.com',
         contactPhone: '010-12345678',
-        address: '北京市海淀区中关村大街1号',
-        description: '专注于智能硬件和物联网解决方案的高科技企业，致力于为客户提供创新的技术产品和服务。',
+        address: '北京市海淀区中关村大街1�?,
+        description:
+          '专注于智能硬件和物联网解决方案的高科技企业，致力于为客户提供创新的技术产品和服务?,
         logo: '',
         certificationStatus: 'verified',
-        certificationDate: '2024-01-10'
-      }
-      setBrand(mockData)
-      setOriginalBrand({ ...mockData })
-      setLoading(false)
-    }, 500)
-  }, [])
+        certificationDate: '2024-01-10',
+      };
+      setBrand(mockData);
+      setOriginalBrand({ ...mockData });
+      setLoading(false);
+    }, 500);
+  }, []);
 
   const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {}
-    
+    const newErrors: Record<string, string> = {};
+
     if (!brand?.companyName.trim()) {
-      newErrors.companyName = '公司名称不能为空'
+      newErrors.companyName = '公司名称不能为空';
     }
-    
+
     if (!brand?.businessLicense.trim()) {
-      newErrors.businessLicense = '营业执照号码不能为空'
+      newErrors.businessLicense = '营业执照号码不能为空';
     }
-    
+
     if (!brand?.legalRepresentative.trim()) {
-      newErrors.legalRepresentative = '法定代表人不能为空'
+      newErrors.legalRepresentative = '法定代表人不能为?;
     }
-    
+
     if (!brand?.contactEmail.trim()) {
-      newErrors.contactEmail = '联系邮箱不能为空'
+      newErrors.contactEmail = '联系邮箱不能为空';
     } else if (!/\S+@\S+\.\S+/.test(brand.contactEmail)) {
-      newErrors.contactEmail = '请输入有效的邮箱地址'
+      newErrors.contactEmail = '请输入有效的邮箱地址';
     }
-    
+
     if (!brand?.contactPhone.trim()) {
-      newErrors.contactPhone = '联系电话不能为空'
+      newErrors.contactPhone = '联系电话不能为空';
     }
-    
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSave = async () => {
     if (!brand || !validateForm()) {
-      alert('请检查表单填写是否正确')
-      return
+      alert('请检查表单填写是否正?);
+      return;
     }
 
-    setSaving(true)
+    setSaving(true);
     try {
       // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setOriginalBrand({ ...brand })
-      setEditing(false)
-      alert('品牌信息更新成功')
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setOriginalBrand({ ...brand });
+      setEditing(false);
+      alert('品牌信息更新成功');
     } catch (error) {
-      alert('更新失败，请稍后重试')
+      alert('更新失败，请稍后重试');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setBrand(originalBrand ? { ...originalBrand } : null)
-    setEditing(false)
-    setErrors({})
-    alert('已撤销更改')
-  }
+    setBrand(originalBrand ? { ...originalBrand } : null);
+    setEditing(false);
+    setErrors({});
+    alert('已撤销更改');
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -138,45 +138,42 @@ export default function BrandProfilePage() {
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <BadgeCheck className="w-3 h-3 mr-1" />
-            已认证
-          </span>
-        )
+            已认?          </span>
+        );
       case 'pending':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <AlertCircle className="w-3 h-3 mr-1" />
-            审核中
-          </span>
-        )
+            审核?          </span>
+        );
       case 'rejected':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
             <X className="w-3 h-3 mr-1" />
-            已拒绝
-          </span>
-        )
+            已拒?          </span>
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
-  if (!brand) return null
+  if (!brand) return null;
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按钮 */}
+      {/* 页面标题和操作按?*/}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">品牌商资料</h1>
-          <p className="text-gray-600 mt-1">管理您的企业信息和认证状态</p>
+          <h1 className="text-2xl font-bold text-gray-900">品牌商资?/h1>
+          <p className="text-gray-600 mt-1">管理您的企业信息和认证状?/p>
         </div>
         <div className="flex items-center space-x-3">
           {editing ? (
@@ -187,7 +184,7 @@ export default function BrandProfilePage() {
               </Button>
               <Button onClick={handleSave} disabled={saving}>
                 <Save className="w-4 h-4 mr-2" />
-                {saving ? '保存中...' : '保存'}
+                {saving ? '保存?..' : '保存'}
               </Button>
             </>
           ) : (
@@ -200,9 +197,9 @@ export default function BrandProfilePage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左侧：企业基本信息卡片 */}
+        {/* 左侧：企业基本信息卡?*/}
         <div className="lg:col-span-1 space-y-6">
-          {/* 企业Logo和认证状态 */}
+          {/* 企业Logo和认证状?*/}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -213,8 +210,8 @@ export default function BrandProfilePage() {
             <CardContent className="text-center">
               <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
                 {brand.logo ? (
-                  <img 
-                    src={brand.logo} 
+                  <img
+                    src={brand.logo}
                     alt={brand.companyName}
                     className="w-24 h-24 rounded-full object-cover"
                   />
@@ -222,14 +219,20 @@ export default function BrandProfilePage() {
                   <Building2 className="w-12 h-12 text-gray-400" />
                 )}
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">{brand.companyName}</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                {brand.companyName}
+              </h3>
               <p className="text-sm text-gray-600 mt-1">统一社会信用代码</p>
-              <p className="text-sm font-mono text-gray-800">{brand.businessLicense}</p>
-              
+              <p className="text-sm font-mono text-gray-800">
+                {brand.businessLicense}
+              </p>
+
               {brand.certificationDate && (
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <p className="text-xs text-gray-500">认证日期</p>
-                  <p className="text-sm text-gray-900">{brand.certificationDate}</p>
+                  <p className="text-sm text-gray-900">
+                    {brand.certificationDate}
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -261,7 +264,7 @@ export default function BrandProfilePage() {
           </Card>
         </div>
 
-        {/* 右侧：详细信息表单 */}
+        {/* 右侧：详细信息表?*/}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
@@ -275,7 +278,9 @@ export default function BrandProfilePage() {
                   <Input
                     id="companyName"
                     value={brand.companyName}
-                    onChange={(e) => setBrand({...brand, companyName: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, companyName: e.target.value })
+                    }
                     className={errors.companyName ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
@@ -293,7 +298,9 @@ export default function BrandProfilePage() {
                   <Input
                     id="businessLicense"
                     value={brand.businessLicense}
-                    onChange={(e) => setBrand({...brand, businessLicense: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, businessLicense: e.target.value })
+                    }
                     className={errors.businessLicense ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
@@ -305,14 +312,21 @@ export default function BrandProfilePage() {
                   )}
                 </div>
 
-                {/* 法定代表人 */}
+                {/* 法定代表?*/}
                 <div className="space-y-2">
-                  <Label htmlFor="legalRepresentative">法定代表人 *</Label>
+                  <Label htmlFor="legalRepresentative">法定代表?*</Label>
                   <Input
                     id="legalRepresentative"
                     value={brand.legalRepresentative}
-                    onChange={(e) => setBrand({...brand, legalRepresentative: e.target.value})}
-                    className={errors.legalRepresentative ? 'border-red-500' : ''}
+                    onChange={e =>
+                      setBrand({
+                        ...brand,
+                        legalRepresentative: e.target.value,
+                      })
+                    }
+                    className={
+                      errors.legalRepresentative ? 'border-red-500' : ''
+                    }
                     disabled={!editing}
                   />
                   {errors.legalRepresentative && (
@@ -323,22 +337,24 @@ export default function BrandProfilePage() {
                   )}
                 </div>
 
-                {/* 所属行业 */}
+                {/* 所属行?*/}
                 <div className="space-y-2">
-                  <Label htmlFor="industry">所属行业</Label>
+                  <Label htmlFor="industry">所属行?/Label>
                   <select
                     id="industry"
                     value={brand.industry}
-                    onChange={(e) => setBrand({...brand, industry: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, industry: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     disabled={!editing}
                   >
                     <option value="">请选择行业</option>
                     <option value="电子信息">电子信息</option>
-                    <option value="机械制造">机械制造</option>
+                    <option value="机械制?>机械制?/option>
                     <option value="生物医药">生物医药</option>
-                    <option value="新材料">新材料</option>
-                    <option value="新能源">新能源</option>
+                    <option value="新材?>新材?/option>
+                    <option value="新能?>新能?/option>
                     <option value="其他">其他</option>
                   </select>
                 </div>
@@ -349,16 +365,18 @@ export default function BrandProfilePage() {
                   <select
                     id="companySize"
                     value={brand.companySize}
-                    onChange={(e) => setBrand({...brand, companySize: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, companySize: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     disabled={!editing}
                   >
                     <option value="">请选择规模</option>
-                    <option value="1-10人">1-10人</option>
-                    <option value="10-50人">10-50人</option>
-                    <option value="50-100人">50-100人</option>
-                    <option value="100-500人">100-500人</option>
-                    <option value="500人以上">500人以上</option>
+                    <option value="1-10�?>1-10�?/option>
+                    <option value="10-50�?>10-50�?/option>
+                    <option value="50-100�?>50-100�?/option>
+                    <option value="100-500�?>100-500�?/option>
+                    <option value="500人以?>500人以?/option>
                   </select>
                 </div>
 
@@ -369,7 +387,9 @@ export default function BrandProfilePage() {
                     id="establishmentDate"
                     type="date"
                     value={brand.establishmentDate}
-                    onChange={(e) => setBrand({...brand, establishmentDate: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, establishmentDate: e.target.value })
+                    }
                     disabled={!editing}
                   />
                 </div>
@@ -380,7 +400,9 @@ export default function BrandProfilePage() {
                   <Input
                     id="registeredCapital"
                     value={brand.registeredCapital}
-                    onChange={(e) => setBrand({...brand, registeredCapital: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, registeredCapital: e.target.value })
+                    }
                     placeholder="如：1000万人民币"
                     disabled={!editing}
                   />
@@ -392,7 +414,9 @@ export default function BrandProfilePage() {
                   <Input
                     id="contactPhone"
                     value={brand.contactPhone}
-                    onChange={(e) => setBrand({...brand, contactPhone: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, contactPhone: e.target.value })
+                    }
                     className={errors.contactPhone ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
@@ -411,7 +435,9 @@ export default function BrandProfilePage() {
                     id="contactEmail"
                     type="email"
                     value={brand.contactEmail}
-                    onChange={(e) => setBrand({...brand, contactEmail: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, contactEmail: e.target.value })
+                    }
                     className={errors.contactEmail ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
@@ -430,7 +456,9 @@ export default function BrandProfilePage() {
                     id="website"
                     type="url"
                     value={brand.website}
-                    onChange={(e) => setBrand({...brand, website: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, website: e.target.value })
+                    }
                     placeholder="https://"
                     disabled={!editing}
                   />
@@ -442,20 +470,24 @@ export default function BrandProfilePage() {
                   <Input
                     id="address"
                     value={brand.address}
-                    onChange={(e) => setBrand({...brand, address: e.target.value})}
+                    onChange={e =>
+                      setBrand({ ...brand, address: e.target.value })
+                    }
                     placeholder="请输入详细地址"
                     disabled={!editing}
                   />
                 </div>
 
-                {/* 公司简介 */}
+                {/* 公司简?*/}
                 <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="description">公司简介</Label>
+                  <Label htmlFor="description">公司简?/Label>
                   <Textarea
                     id="description"
                     value={brand.description}
-                    onChange={(e) => setBrand({...brand, description: e.target.value})}
-                    placeholder="简单介绍一下您的公司..."
+                    onChange={e =>
+                      setBrand({ ...brand, description: e.target.value })
+                    }
+                    placeholder="简单介绍一下您的公?.."
                     rows={4}
                     disabled={!editing}
                   />
@@ -469,5 +501,6 @@ export default function BrandProfilePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
+

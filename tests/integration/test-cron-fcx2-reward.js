@@ -3,23 +3,34 @@
  * 用于测试和验证cron-fcx2-reward-distribution.js的功能
  */
 
-const { processOrderRewards, cleanupExpiredOptions, calculateOrderReward } = require('./cron-fcx2-reward-distribution.js');
+const {
+  processOrderRewards,
+  cleanupExpiredOptions,
+  calculateOrderReward,
+} = require('./cron-fcx2-reward-distribution.js');
 const { createClient } = require('@supabase/supabase-js');
 
 // 测试配置
 const TEST_CONFIG = {
-  SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hrjqzbhqueleszkvnsen.supabase.co',
-  SERVICE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyanF6YmxxdWVsZXN6a3Zuc2VuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMDQzOTk0NywiZXhwIjoyMDM2MDE1OTQ3fQ.YOUR_SERVICE_KEY_HERE'
+  SUPABASE_URL:
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    'https://hrjqzbhqueleszkvnsen.supabase.co',
+  SERVICE_KEY:
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyanF6YmxxdWVsZXN6a3Zuc2VuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMDQzOTk0NywiZXhwIjoyMDM2MDE1OTQ3fQ.YOUR_SERVICE_KEY_HERE',
 };
 
-const supabase = createClient(TEST_CONFIG.SUPABASE_URL, TEST_CONFIG.SERVICE_KEY);
+const supabase = createClient(
+  TEST_CONFIG.SUPABASE_URL,
+  TEST_CONFIG.SERVICE_KEY
+);
 
 /**
  * 测试奖励计算功能
  */
 async function testRewardCalculation() {
   console.log('🧪 开始测试奖励计算功能...\n');
-  
+
   // 模拟测试数据
   const testOrders = [
     {
@@ -28,7 +39,7 @@ async function testRewardCalculation() {
       repair_shop_id: 'test-shop-1',
       fcx_amount_locked: 1000,
       status: 'completed',
-      rating: 3.0
+      rating: 3.0,
     },
     {
       id: 'test-order-2',
@@ -36,7 +47,7 @@ async function testRewardCalculation() {
       repair_shop_id: 'test-shop-1',
       fcx_amount_locked: 1000,
       status: 'completed',
-      rating: 4.0
+      rating: 4.0,
     },
     {
       id: 'test-order-3',
@@ -44,8 +55,8 @@ async function testRewardCalculation() {
       repair_shop_id: 'test-shop-1',
       fcx_amount_locked: 1000,
       status: 'completed',
-      rating: 5.0
-    }
+      rating: 5.0,
+    },
   ];
 
   for (const order of testOrders) {
@@ -67,7 +78,7 @@ async function testRewardCalculation() {
  */
 async function testOptionCleanup() {
   console.log('🧹 开始测试期权清理功能...\n');
-  
+
   try {
     const cleanedCount = await cleanupExpiredOptions();
     console.log(`✅ 清理完成，处理了 ${cleanedCount} 个过期期权`);
@@ -81,7 +92,7 @@ async function testOptionCleanup() {
  */
 async function testFullProcess() {
   console.log('🚀 开始测试完整奖励发放流程...\n');
-  
+
   try {
     const result = await processOrderRewards();
     console.log('📊 执行结果:');
@@ -98,23 +109,26 @@ async function testFullProcess() {
  */
 async function prepareTestData() {
   console.log('📋 准备测试数据...\n');
-  
+
   try {
     // 创建测试店铺
     const { data: testShop, error: shopError } = await supabase
       .from('repair_shops')
-      .upsert({
-        id: 'test-shop-1',
-        name: '测试维修店',
-        contact_person: '测试联系人',
-        phone: '13800138000',
-        address: '测试地址',
-        city: '测试城市',
-        province: '测试省份',
-        alliance_level: 'silver',
-        fcx2_balance: 0,
-        is_alliance_member: true
-      }, { onConflict: 'id' });
+      .upsert(
+        {
+          id: 'test-shop-1',
+          name: '测试维修店',
+          contact_person: '测试联系人',
+          phone: '13800138000',
+          address: '测试地址',
+          city: '测试城市',
+          province: '测试省份',
+          alliance_level: 'silver',
+          fcx2_balance: 0,
+          is_alliance_member: true,
+        },
+        { onConflict: 'id' }
+      );
 
     if (shopError) {
       console.log(`⚠️  创建测试店铺失败: ${shopError.message}`);
@@ -133,7 +147,7 @@ async function prepareTestData() {
         status: 'completed',
         rating: 4.5,
         completed_at: new Date().toISOString(),
-        created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       },
       {
         id: 'test-order-complete-2',
@@ -144,8 +158,8 @@ async function prepareTestData() {
         status: 'completed',
         rating: 3.8,
         completed_at: new Date().toISOString(),
-        created_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()
-      }
+        created_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
+      },
     ];
 
     for (const order of testOrders) {
@@ -154,12 +168,13 @@ async function prepareTestData() {
         .upsert(order, { onConflict: 'id' });
 
       if (orderError) {
-        console.log(`⚠️  创建测试工单 ${order.order_number} 失败: ${orderError.message}`);
+        console.log(
+          `⚠️  创建测试工单 ${order.order_number} 失败: ${orderError.message}`
+        );
       } else {
         console.log(`✅ 测试工单 ${order.order_number} 创建完成`);
       }
     }
-
   } catch (error) {
     console.log(`❌ 准备测试数据失败: ${error.message}`);
   }
@@ -175,19 +190,18 @@ async function runTests() {
   try {
     // 1. 准备测试数据
     await prepareTestData();
-    
+
     // 2. 测试奖励计算
     await testRewardCalculation();
-    
+
     // 3. 测试期权清理
     await testOptionCleanup();
-    
+
     // 4. 测试完整流程（调试模式）
     console.log('🔧 运行调试模式完整测试...\n');
     await testFullProcess();
-    
+
     console.log('\n✅ 所有测试完成！');
-    
   } catch (error) {
     console.log(`❌ 测试过程中发生错误: ${error.message}`);
     process.exit(1);
@@ -203,5 +217,5 @@ module.exports = {
   testRewardCalculation,
   testOptionCleanup,
   testFullProcess,
-  prepareTestData
+  prepareTestData,
 };

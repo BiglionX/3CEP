@@ -1,16 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { enhancedManualsService, ManualDTO } from '@/services/enhanced-manuals.service';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import {
+  enhancedManualsService,
+  ManualDTO,
+} from '@/services/enhanced-manuals.service';
 import { createClient } from '@supabase/supabase-js';
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
 /**
- * 获取说明书列表
- * GET /api/manuals?productId=xxx&status=published,draft&userId=xxx
+ * 鑾峰彇璇存槑涔﹀垪? * GET /api/manuals?productId=xxx&status=published,draft&userId=xxx
  */
 export async function GET(request: NextRequest) {
   try {
@@ -25,23 +26,28 @@ export async function GET(request: NextRequest) {
 
     let manuals;
     if (productId) {
-      manuals = await enhancedManualsService.getProductManuals(productId, statuses);
+      manuals = await enhancedManualsService.getProductManuals(
+        productId,
+        statuses
+      );
     } else if (userId) {
       manuals = await enhancedManualsService.getUserManuals(userId, statuses);
     } else {
-      // 获取所有说明书（仅管理员）
+      // 鑾峰彇鎵€鏈夎鏄庝功锛堜粎绠＄悊鍛橈級
       const { data, error } = await supabase
         .from('product_manuals')
-        .select(`
+        .select(
+          `
           *,
           product:products(name, model, brand:brands(name)),
           creator:auth_users(email)
-        `)
+        `
+        )
         .order('created_at', { ascending: false })
         .range((page - 1) * limit, page * limit - 1);
 
       if (error) {
-        throw new Error(`获取说明书列表失败: ${error.message}`);
+        throw new Error(`鑾峰彇璇存槑涔﹀垪琛ㄥけ? ${error.message}`);
       }
 
       manuals = data;
@@ -53,16 +59,15 @@ export async function GET(request: NextRequest) {
       pagination: {
         page,
         limit,
-        total: manuals.length
-      }
+        total: manuals.length,
+      },
     });
-
   } catch (error) {
-    console.error('获取说明书列表错误:', error);
+    console.error('鑾峰彇璇存槑涔﹀垪琛ㄩ敊?', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '获取说明书列表失败' 
+      {
+        success: false,
+        error: (error as Error).message || '鑾峰彇璇存槑涔﹀垪琛ㄥけ?,
       },
       { status: 500 }
     );
@@ -70,21 +75,27 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * 创建新说明书
+ * 鍒涘缓鏂拌鏄庝功
  * POST /api/manuals
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
-    // 验证必要参数
-    const requiredFields = ['productId', 'title', 'content', 'languageCodes', 'createdBy'];
+
+    // 楠岃瘉蹇呰鍙傛暟
+    const requiredFields = [
+      'productId',
+      'title',
+      'content',
+      'languageCodes',
+      'createdBy',
+    ];
     for (const field of requiredFields) {
       if (!body[field]) {
         return NextResponse.json(
-          { 
-            success: false, 
-            error: `缺少必要参数: ${field}` 
+          {
+            success: false,
+            error: `缂哄皯蹇呰鍙傛暟: ${field}`,
           },
           { status: 400 }
         );
@@ -99,7 +110,7 @@ export async function POST(request: NextRequest) {
       coverImageUrl: body.coverImageUrl,
       videoUrl: body.videoUrl,
       versionNotes: body.versionNotes,
-      createdBy: body.createdBy
+      createdBy: body.createdBy,
     };
 
     const manual = await enhancedManualsService.createManual(manualDTO);
@@ -107,17 +118,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: manual,
-      message: '说明书创建成功'
+      message: '璇存槑涔﹀垱寤烘垚?,
     });
-
   } catch (error) {
-    console.error('创建说明书错误:', error);
+    console.error('鍒涘缓璇存槑涔﹂敊?', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '创建说明书失败' 
+      {
+        success: false,
+        error: (error as Error).message || '鍒涘缓璇存槑涔﹀け?,
       },
       { status: 400 }
     );
   }
 }
+

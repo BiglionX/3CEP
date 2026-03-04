@@ -13,7 +13,7 @@ class ConsolidatedTestReporter {
     this.reportsDir = path.join(process.cwd(), 'test-results');
     this.coverageDir = path.join(process.cwd(), 'coverage');
     this.outputDir = this.reportsDir;
-    
+
     // 确保输出目录存在
     if (!fs.existsSync(this.outputDir)) {
       fs.mkdirSync(this.outputDir, { recursive: true });
@@ -30,9 +30,9 @@ class ConsolidatedTestReporter {
       n8n: this.collectN8nReports(),
       perf: this.collectPerfReports(),
       security: this.collectSecurityReports(),
-      coverage: this.collectCoverageReports()
+      coverage: this.collectCoverageReports(),
     };
-    
+
     return reports;
   }
 
@@ -41,7 +41,7 @@ class ConsolidatedTestReporter {
    */
   collectJestReports() {
     const jestReports = [];
-    
+
     // 查找Jest JUnit报告
     const jestJUnitPath = path.join(this.reportsDir, 'jest-junit.xml');
     if (fs.existsSync(jestJUnitPath)) {
@@ -50,21 +50,26 @@ class ConsolidatedTestReporter {
         type: 'junit',
         path: jestJUnitPath,
         content: junitContent,
-        parsed: this.parseJUnitReport(junitContent)
+        parsed: this.parseJUnitReport(junitContent),
       });
     }
-    
+
     // 查找覆盖率报告
-    const coverageSummaryPath = path.join(this.coverageDir, 'coverage-summary.json');
+    const coverageSummaryPath = path.join(
+      this.coverageDir,
+      'coverage-summary.json'
+    );
     if (fs.existsSync(coverageSummaryPath)) {
-      const coverageData = JSON.parse(fs.readFileSync(coverageSummaryPath, 'utf8'));
+      const coverageData = JSON.parse(
+        fs.readFileSync(coverageSummaryPath, 'utf8')
+      );
       jestReports.push({
         type: 'coverage',
         path: coverageSummaryPath,
-        data: coverageData
+        data: coverageData,
       });
     }
-    
+
     return jestReports;
   }
 
@@ -73,7 +78,7 @@ class ConsolidatedTestReporter {
    */
   collectPlaywrightReports() {
     const playwrightReports = [];
-    
+
     // JUnit报告
     const pwJUnitPath = path.join(this.reportsDir, 'playwright-junit.xml');
     if (fs.existsSync(pwJUnitPath)) {
@@ -82,10 +87,10 @@ class ConsolidatedTestReporter {
         type: 'junit',
         path: pwJUnitPath,
         content: junitContent,
-        parsed: this.parseJUnitReport(junitContent)
+        parsed: this.parseJUnitReport(junitContent),
       });
     }
-    
+
     // JSON报告
     const pwJsonPath = path.join(this.reportsDir, 'playwright-results.json');
     if (fs.existsSync(pwJsonPath)) {
@@ -93,10 +98,10 @@ class ConsolidatedTestReporter {
       playwrightReports.push({
         type: 'json',
         path: pwJsonPath,
-        data: jsonData
+        data: jsonData,
       });
     }
-    
+
     return playwrightReports;
   }
 
@@ -105,22 +110,29 @@ class ConsolidatedTestReporter {
    */
   collectN8nReports() {
     const n8nReports = [];
-    
+
     // 查找n8n测试结果（通常是stdout输出）
-    const summaryReportPath = path.join(this.reportsDir, 'test-summary-report.json');
+    const summaryReportPath = path.join(
+      this.reportsDir,
+      'test-summary-report.json'
+    );
     if (fs.existsSync(summaryReportPath)) {
-      const summaryData = JSON.parse(fs.readFileSync(summaryReportPath, 'utf8'));
+      const summaryData = JSON.parse(
+        fs.readFileSync(summaryReportPath, 'utf8')
+      );
       if (summaryData.details) {
-        const n8nDetail = summaryData.details.find(detail => detail.name.includes('n8n'));
+        const n8nDetail = summaryData.details.find(detail =>
+          detail.name.includes('n8n')
+        );
         if (n8nDetail) {
           n8nReports.push({
             type: 'summary',
-            data: n8nDetail
+            data: n8nDetail,
           });
         }
       }
     }
-    
+
     return n8nReports;
   }
 
@@ -129,18 +141,21 @@ class ConsolidatedTestReporter {
    */
   collectPerfReports() {
     const perfReports = [];
-    
+
     // 查找性能测试的JSON输出
-    const perfReportPath = path.join(this.reportsDir, 'performance-report.json');
+    const perfReportPath = path.join(
+      this.reportsDir,
+      'performance-report.json'
+    );
     if (fs.existsSync(perfReportPath)) {
       const perfData = JSON.parse(fs.readFileSync(perfReportPath, 'utf8'));
       perfReports.push({
         type: 'json',
         path: perfReportPath,
-        data: perfData
+        data: perfData,
       });
     }
-    
+
     return perfReports;
   }
 
@@ -149,18 +164,23 @@ class ConsolidatedTestReporter {
    */
   collectSecurityReports() {
     const securityReports = [];
-    
+
     // 查找安全检查的JSON输出
-    const securityReportPath = path.join(this.reportsDir, 'security-report.json');
+    const securityReportPath = path.join(
+      this.reportsDir,
+      'security-report.json'
+    );
     if (fs.existsSync(securityReportPath)) {
-      const securityData = JSON.parse(fs.readFileSync(securityReportPath, 'utf8'));
+      const securityData = JSON.parse(
+        fs.readFileSync(securityReportPath, 'utf8')
+      );
       securityReports.push({
         type: 'json',
         path: securityReportPath,
-        data: securityData
+        data: securityData,
       });
     }
-    
+
     return securityReports;
   }
 
@@ -169,25 +189,25 @@ class ConsolidatedTestReporter {
    */
   collectCoverageReports() {
     const coverageReports = [];
-    
+
     // lcov报告
     const lcovPath = path.join(this.coverageDir, 'lcov.info');
     if (fs.existsSync(lcovPath)) {
       coverageReports.push({
         type: 'lcov',
-        path: lcovPath
+        path: lcovPath,
       });
     }
-    
+
     // HTML报告
     const htmlIndexPath = path.join(this.coverageDir, 'index.html');
     if (fs.existsSync(htmlIndexPath)) {
       coverageReports.push({
         type: 'html',
-        path: htmlIndexPath
+        path: htmlIndexPath,
       });
     }
-    
+
     return coverageReports;
   }
 
@@ -197,29 +217,29 @@ class ConsolidatedTestReporter {
   parseJUnitReport(xmlContent) {
     const parser = new (require('@xmldom/xmldom').DOMParser)();
     const doc = parser.parseFromString(xmlContent, 'text/xml');
-    
+
     const testSuites = doc.getElementsByTagName('testsuite');
     const results = [];
-    
+
     for (let i = 0; i < testSuites.length; i++) {
       const suite = testSuites[i];
       const testCases = suite.getElementsByTagName('testcase');
-      
+
       for (let j = 0; j < testCases.length; j++) {
         const testCase = testCases[j];
         const failure = testCase.getElementsByTagName('failure')[0];
         const skipped = testCase.getElementsByTagName('skipped')[0];
-        
+
         results.push({
           name: testCase.getAttribute('name'),
           classname: testCase.getAttribute('classname'),
           time: parseFloat(testCase.getAttribute('time') || 0),
-          status: failure ? 'failed' : (skipped ? 'skipped' : 'passed'),
-          failure: failure ? failure.textContent : null
+          status: failure ? 'failed' : skipped ? 'skipped' : 'passed',
+          failure: failure ? failure.textContent : null,
         });
       }
     }
-    
+
     return results;
   }
 
@@ -232,7 +252,7 @@ class ConsolidatedTestReporter {
       environment: {
         nodeVersion: process.version,
         platform: process.platform,
-        ci: process.env.CI === 'true'
+        ci: process.env.CI === 'true',
       },
       summary: {
         totalTests: 0,
@@ -240,59 +260,64 @@ class ConsolidatedTestReporter {
         failedTests: 0,
         skippedTests: 0,
         coverage: 0,
-        qualityScore: 0
+        qualityScore: 0,
       },
       details: {},
       qualityGates: {
         coverageThreshold: 80,
         passRateThreshold: 85,
-        criticalFailuresAllowed: 0
-      }
+        criticalFailuresAllowed: 0,
+      },
     };
 
     // 处理Jest报告
     if (reports.jest.length > 0) {
       const jestData = reports.jest.find(r => r.type === 'junit')?.parsed || [];
       const coverageData = reports.jest.find(r => r.type === 'coverage')?.data;
-      
+
       qualityReport.details.jest = {
         total: jestData.length,
         passed: jestData.filter(t => t.status === 'passed').length,
         failed: jestData.filter(t => t.status === 'failed').length,
-        skipped: jestData.filter(t => t.status === 'skipped').length
+        skipped: jestData.filter(t => t.status === 'skipped').length,
       };
-      
+
       qualityReport.summary.totalTests += qualityReport.details.jest.total;
       qualityReport.summary.passedTests += qualityReport.details.jest.passed;
       qualityReport.summary.failedTests += qualityReport.details.jest.failed;
       qualityReport.summary.skippedTests += qualityReport.details.jest.skipped;
-      
+
       // 覆盖率数据
       if (coverageData) {
-        const totalCoverage = (
-          coverageData.total.lines.pct +
-          coverageData.total.functions.pct +
-          coverageData.total.branches.pct
-        ) / 3;
+        const totalCoverage =
+          (coverageData.total.lines.pct +
+            coverageData.total.functions.pct +
+            coverageData.total.branches.pct) /
+          3;
         qualityReport.summary.coverage = Math.round(totalCoverage);
       }
     }
 
     // 处理Playwright报告
     if (reports.playwright.length > 0) {
-      const pwData = reports.playwright.find(r => r.type === 'junit')?.parsed || [];
-      
+      const pwData =
+        reports.playwright.find(r => r.type === 'junit')?.parsed || [];
+
       qualityReport.details.playwright = {
         total: pwData.length,
         passed: pwData.filter(t => t.status === 'passed').length,
         failed: pwData.filter(t => t.status === 'failed').length,
-        skipped: pwData.filter(t => t.status === 'skipped').length
+        skipped: pwData.filter(t => t.status === 'skipped').length,
       };
-      
-      qualityReport.summary.totalTests += qualityReport.details.playwright.total;
-      qualityReport.summary.passedTests += qualityReport.details.playwright.passed;
-      qualityReport.summary.failedTests += qualityReport.details.playwright.failed;
-      qualityReport.summary.skippedTests += qualityReport.details.playwright.skipped;
+
+      qualityReport.summary.totalTests +=
+        qualityReport.details.playwright.total;
+      qualityReport.summary.passedTests +=
+        qualityReport.details.playwright.passed;
+      qualityReport.summary.failedTests +=
+        qualityReport.details.playwright.failed;
+      qualityReport.summary.skippedTests +=
+        qualityReport.details.playwright.skipped;
     }
 
     // 处理n8n报告
@@ -303,9 +328,9 @@ class ConsolidatedTestReporter {
           status: n8nData.status,
           passed: n8nData.status === 'passed' ? 1 : 0,
           failed: n8nData.status === 'failed' ? 1 : 0,
-          total: 1
+          total: 1,
         };
-        
+
         qualityReport.summary.totalTests += 1;
         qualityReport.summary.passedTests += qualityReport.details.n8n.passed;
         qualityReport.summary.failedTests += qualityReport.details.n8n.failed;
@@ -313,16 +338,19 @@ class ConsolidatedTestReporter {
     }
 
     // 计算质量分数
-    const passRate = qualityReport.summary.totalTests > 0 
-      ? (qualityReport.summary.passedTests / qualityReport.summary.totalTests) * 100 
-      : 100;
-    
+    const passRate =
+      qualityReport.summary.totalTests > 0
+        ? (qualityReport.summary.passedTests /
+            qualityReport.summary.totalTests) *
+          100
+        : 100;
+
     const coverageScore = qualityReport.summary.coverage;
     const failurePenalty = Math.min(qualityReport.summary.failedTests * 5, 30);
-    
+
     qualityReport.summary.qualityScore = Math.max(
-      0, 
-      Math.round((passRate * 0.7 + coverageScore * 0.3 - failurePenalty))
+      0,
+      Math.round(passRate * 0.7 + coverageScore * 0.3 - failurePenalty)
     );
 
     return qualityReport;
@@ -332,10 +360,13 @@ class ConsolidatedTestReporter {
    * 生成HTML格式的综合报告
    */
   generateHTMLReport(qualityReport) {
-    const passRate = qualityReport.summary.totalTests > 0 
-      ? (qualityReport.summary.passedTests / qualityReport.summary.totalTests) * 100 
-      : 100;
-    
+    const passRate =
+      qualityReport.summary.totalTests > 0
+        ? (qualityReport.summary.passedTests /
+            qualityReport.summary.totalTests) *
+          100
+        : 100;
+
     const htmlContent = `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -429,8 +460,13 @@ class ConsolidatedTestReporter {
 
         <div class="quality-score">${qualityReport.summary.qualityScore}</div>
         <h2 style="text-align: center; color: #667eea;">
-            ${qualityReport.summary.qualityScore >= 80 ? '🟢 质量优秀' : 
-              qualityReport.summary.qualityScore >= 60 ? '🟡 质量合格' : '🔴 需要改进'}
+            ${
+              qualityReport.summary.qualityScore >= 80
+                ? '🟢 质量优秀'
+                : qualityReport.summary.qualityScore >= 60
+                  ? '🟡 质量合格'
+                  : '🔴 需要改进'
+            }
         </h2>
 
         <div class="metrics-grid">
@@ -468,8 +504,13 @@ class ConsolidatedTestReporter {
             </div>
             <div class="metric-card">
                 <div class="metric-title">🏆 质量分数</div>
-                <div class="metric-value ${qualityReport.summary.qualityScore >= 80 ? 'passed' : 
-                                         qualityReport.summary.qualityScore >= 60 ? 'warning' : 'failed'}">
+                <div class="metric-value ${
+                  qualityReport.summary.qualityScore >= 80
+                    ? 'passed'
+                    : qualityReport.summary.qualityScore >= 60
+                      ? 'warning'
+                      : 'failed'
+                }">
                     ${qualityReport.summary.qualityScore}/100
                 </div>
             </div>
@@ -500,7 +541,9 @@ class ConsolidatedTestReporter {
         <div class="details-section">
             <h3>📋 详细测试结果</h3>
             
-            ${Object.keys(qualityReport.details).map(type => `
+            ${Object.keys(qualityReport.details)
+              .map(
+                type => `
             <div class="test-type">
                 <h4>${this.getTypeDisplayName(type)}</h4>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;">
@@ -510,7 +553,9 @@ class ConsolidatedTestReporter {
                     <div style="color: #6c757d;"><strong>跳过:</strong> ${qualityReport.details[type].skipped || 0}</div>
                 </div>
             </div>
-            `).join('')}
+            `
+              )
+              .join('')}
         </div>
 
         <div class="details-section">
@@ -523,10 +568,13 @@ class ConsolidatedTestReporter {
 </body>
 </html>`;
 
-    const outputPath = path.join(this.outputDir, 'consolidated-quality-report.html');
+    const outputPath = path.join(
+      this.outputDir,
+      'consolidated-quality-report.html'
+    );
     fs.writeFileSync(outputPath, htmlContent);
     console.log(`📄 综合质量报告已生成: ${outputPath}`);
-    
+
     return outputPath;
   }
 
@@ -539,7 +587,7 @@ class ConsolidatedTestReporter {
       playwright: '端到端测试 (Playwright)',
       n8n: 'n8n工作流测试',
       perf: '性能测试',
-      security: '安全检查'
+      security: '安全检查',
     };
     return names[type] || type;
   }
@@ -549,9 +597,12 @@ class ConsolidatedTestReporter {
    */
   generateActionItems(qualityReport) {
     const items = [];
-    const passRate = qualityReport.summary.totalTests > 0 
-      ? (qualityReport.summary.passedTests / qualityReport.summary.totalTests) * 100 
-      : 100;
+    const passRate =
+      qualityReport.summary.totalTests > 0
+        ? (qualityReport.summary.passedTests /
+            qualityReport.summary.totalTests) *
+          100
+        : 100;
 
     if (qualityReport.summary.qualityScore >= 80) {
       items.push('<li>🎉 质量表现优秀，可以考虑部署到生产环境</li>');
@@ -581,7 +632,10 @@ class ConsolidatedTestReporter {
    * 生成JSON格式的综合报告
    */
   generateJSONReport(qualityReport) {
-    const outputPath = path.join(this.outputDir, 'consolidated-quality-report.json');
+    const outputPath = path.join(
+      this.outputDir,
+      'consolidated-quality-report.json'
+    );
     fs.writeFileSync(outputPath, JSON.stringify(qualityReport, null, 2));
     console.log(`📄 JSON格式报告已生成: ${outputPath}`);
     return outputPath;
@@ -592,40 +646,44 @@ class ConsolidatedTestReporter {
    */
   async generateReport() {
     console.log('📊 开始生成综合测试报告...');
-    
+
     try {
       // 收集所有报告
       const reports = this.collectReports();
-      
+
       // 生成质量门禁报告
       const qualityReport = this.generateQualityGateReport(reports);
-      
+
       // 生成各种格式的报告
       const htmlPath = this.generateHTMLReport(qualityReport);
       const jsonPath = this.generateJSONReport(qualityReport);
-      
+
       // 输出摘要
       console.log('\n✅ 综合报告生成完成!');
       console.log(`📊 质量分数: ${qualityReport.summary.qualityScore}/100`);
-      console.log(`📈 通过率: ${((qualityReport.summary.passedTests / qualityReport.summary.totalTests) * 100).toFixed(1)}%`);
-      console.log(`🎯 覆盖率: ${qualityReport.summary.coverage}%`);
-      
-      // 质量门禁检查
-      const gatesPassed = (
-        qualityReport.summary.coverage >= qualityReport.qualityGates.coverageThreshold &&
-        ((qualityReport.summary.passedTests / qualityReport.summary.totalTests) * 100) >= qualityReport.qualityGates.passRateThreshold &&
-        qualityReport.summary.failedTests <= qualityReport.qualityGates.criticalFailuresAllowed
+      console.log(
+        `📈 通过率: ${((qualityReport.summary.passedTests / qualityReport.summary.totalTests) * 100).toFixed(1)}%`
       );
-      
+      console.log(`🎯 覆盖率: ${qualityReport.summary.coverage}%`);
+
+      // 质量门禁检查
+      const gatesPassed =
+        qualityReport.summary.coverage >=
+          qualityReport.qualityGates.coverageThreshold &&
+        (qualityReport.summary.passedTests / qualityReport.summary.totalTests) *
+          100 >=
+          qualityReport.qualityGates.passRateThreshold &&
+        qualityReport.summary.failedTests <=
+          qualityReport.qualityGates.criticalFailuresAllowed;
+
       console.log(`\n⚖️ 质量门禁: ${gatesPassed ? '🟢 通过' : '🔴 未通过'}`);
-      
+
       return {
         qualityReport,
         htmlPath,
         jsonPath,
-        gatesPassed
+        gatesPassed,
       };
-      
     } catch (error) {
       console.error('❌ 生成报告时出错:', error);
       throw error;
@@ -636,7 +694,8 @@ class ConsolidatedTestReporter {
 // 如果直接运行此脚本
 if (require.main === module) {
   const reporter = new ConsolidatedTestReporter();
-  reporter.generateReport()
+  reporter
+    .generateReport()
     .then(result => {
       if (!result.gatesPassed) {
         console.log('\n⚠️  警告: 未通过质量门禁检查');

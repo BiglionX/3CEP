@@ -1,5 +1,5 @@
-/**
- * 角色差异化 Dashboard 页面
+﻿/**
+ * 角色差异?Dashboard 页面
  * 根据用户角色展示不同的功能模块和数据
  */
 
@@ -64,7 +64,7 @@ export default function DashboardPage() {
   // 暂时移除RBAC权限检查，避免AuthProvider依赖问题
   // const { hasPermission: checkPermission, roles: userRoles } = useRbacPermission();
 
-  // 使用简化的权限检查
+  // 使用简化的权限检?
   const checkPermission = (permission: string) => {
     // 临时允许所有权限，避免页面崩溃
     return true;
@@ -117,7 +117,7 @@ export default function DashboardPage() {
       const response = await fetch('/api/dashboard/data');
 
       if (!response.ok) {
-        throw new Error('获取仪表板数据失败');
+        throw new Error('获取仪表板数据失?);
       }
 
       const result = await response.json();
@@ -128,7 +128,7 @@ export default function DashboardPage() {
         throw new Error(result.error || '获取数据失败');
       }
     } catch (err: any) {
-      console.error('加载仪表板数据失败:', err);
+      console.error('加载仪表板数据失?', err);
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -137,15 +137,15 @@ export default function DashboardPage() {
 
   const getRoleDisplayName = (role: string): string => {
     const roleNames: Record<string, string> = {
-      admin: '超级管理员',
-      manager: '管理员',
-      content_manager: '内容管理员',
-      shop_manager: '店铺管理员',
-      finance_manager: '财务管理员',
+      admin: '超级管理?,
+      manager: '管理?,
+      content_manager: '内容管理?,
+      shop_manager: '店铺管理?,
+      finance_manager: '财务管理?,
       procurement_specialist: '采购专员',
-      warehouse_operator: '仓库操作员',
+      warehouse_operator: '仓库操作?,
       agent_operator: '智能体操作员',
-      viewer: '只读查看员',
+      viewer: '只读查看?,
       external_partner: '外部合作伙伴',
     };
     return roleNames[role] || role;
@@ -184,7 +184,7 @@ export default function DashboardPage() {
               {module.name}
             </h3>
             <p className="text-sm text-gray-500 mt-1">
-              {hasAccess ? '点击进入' : '无访问权限'}
+              {hasAccess ? '点击进入' : '无访问权?}
             </p>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function DashboardPage() {
   };
 
   const handleModuleClick = (moduleId: string) => {
-    // 根据模块ID导航到相应页面
+    // 根据模块ID导航到相应页?
     const moduleRoutes: Record<string, string> = {
       user_management: '/admin/users',
       content_management: '/content',
@@ -220,7 +220,7 @@ export default function DashboardPage() {
     const stats = dashboardData.statistics;
     const statCards = [];
 
-    // 根据不同角色显示不同的统计数据
+    // 根据不同角色显示不同的统计数?
     switch (dashboardData.userRole) {
       case 'admin':
         statCards.push(
@@ -243,7 +243,7 @@ export default function DashboardPage() {
             icon: FileText,
           },
           {
-            label: '待审核',
+            label: '待审?,
             value: stats.pendingReviews,
             change: '-3%',
             icon: FileCheck,
@@ -260,13 +260,13 @@ export default function DashboardPage() {
             icon: Users,
           },
           {
-            label: '待审核内容',
+            label: '待审核内?,
             value: stats.pendingContent,
             change: '-5',
             icon: FileCheck,
           },
           {
-            label: '待审批店铺',
+            label: '待审批店?,
             value: stats.pendingShops,
             change: '-1',
             icon: Store,
@@ -289,7 +289,7 @@ export default function DashboardPage() {
             icon: Files,
           },
           {
-            label: '已发布',
+            label: '已发?,
             value: stats.publishedContent,
             change: '+8',
             icon: FileText,
@@ -309,7 +309,7 @@ export default function DashboardPage() {
         );
         break;
 
-      // 其他角色的统计数据...
+      // 其他角色的统计数?..
       default:
         statCards.push({
           label: '欢迎使用',
@@ -347,11 +347,11 @@ export default function DashboardPage() {
   };
 
   const renderRecentActivities = () => {
-    if (!dashboardData?.recentActivities?.length) return null;
+    if (!dashboardData??.length) return null;
 
     return (
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">最近活动</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">最近活?/h3>
         <div className="space-y-4">
           {dashboardData.recentActivities.map((activity: any) => {
             const IconComponent = iconMap[activity.icon] || Activity;
@@ -414,7 +414,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">仪表板</h1>
+              <h1 className="text-2xl font-bold text-gray-900">仪表?/h1>
               <p className="text-gray-600 mt-1">
                 欢迎回来，{getRoleDisplayName(dashboardData?.userRole || '')}
               </p>
@@ -441,9 +441,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 最近活动 */}
+        {/* 最近活?*/}
         {renderRecentActivities()}
       </div>
     </div>
   );
 }
+

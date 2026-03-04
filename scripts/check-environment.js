@@ -6,12 +6,10 @@ console.log('⚙️  环境变量配置检查...\n');
 // 检查必需的环境变量
 const requiredEnvVars = [
   'NEXT_PUBLIC_SUPABASE_URL',
-  'SUPABASE_SERVICE_ROLE_KEY'
+  'SUPABASE_SERVICE_ROLE_KEY',
 ];
 
-const optionalEnvVars = [
-  'QR_CODE_BASE_URL'
-];
+const optionalEnvVars = ['QR_CODE_BASE_URL'];
 
 console.log('📋 必需环境变量:');
 let allRequiredPresent = true;

@@ -7,6 +7,7 @@
 ## 🏗️ 系统架构
 
 ### 技术栈
+
 - **前端框架**：Next.js 14 + TypeScript
 - **UI组件库**：Tailwind CSS + Shadcn UI
 - **状态管理**：React Hooks + Context API
@@ -15,6 +16,7 @@
 - **文件存储**：Supabase Storage
 
 ### 核心模块结构
+
 ```
 企业管理后台/
 ├── 仪表板模块 (/enterprise/admin/dashboard)
@@ -32,46 +34,52 @@
 ## 🔐 权限控制系统
 
 ### RBAC权限模型
+
 ```javascript
 // 企业专用权限配置
 const enterprisePermissions = {
   // 有奖问答管理权限
-  'enterprise_reward_qa_view': ['admin', 'manager', 'content_manager'],
-  'enterprise_reward_qa_create': ['admin', 'manager', 'content_manager'],
-  'enterprise_reward_qa_manage': ['admin', 'manager'],
-  'enterprise_reward_qa_approve': ['admin', 'manager'],
-  
+  enterprise_reward_qa_view: ['admin', 'manager', 'content_manager'],
+  enterprise_reward_qa_create: ['admin', 'manager', 'content_manager'],
+  enterprise_reward_qa_manage: ['admin', 'manager'],
+  enterprise_reward_qa_approve: ['admin', 'manager'],
+
   // 新品众筹管理权限
-  'enterprise_crowdfunding_view': ['admin', 'manager', 'procurement_specialist'],
-  'enterprise_crowdfunding_create': ['admin', 'manager', 'procurement_specialist'],
-  'enterprise_crowdfunding_manage': ['admin', 'manager'],
-  'enterprise_crowdfunding_approve': ['admin', 'manager'],
-  
+  enterprise_crowdfunding_view: ['admin', 'manager', 'procurement_specialist'],
+  enterprise_crowdfunding_create: [
+    'admin',
+    'manager',
+    'procurement_specialist',
+  ],
+  enterprise_crowdfunding_manage: ['admin', 'manager'],
+  enterprise_crowdfunding_approve: ['admin', 'manager'],
+
   // 企业资料管理权限
-  'enterprise_documents_view': ['admin', 'manager', 'content_manager'],
-  'enterprise_documents_upload': ['admin', 'manager', 'content_manager'],
-  'enterprise_documents_manage': ['admin', 'manager'],
-  'enterprise_documents_approve': ['admin', 'manager']
+  enterprise_documents_view: ['admin', 'manager', 'content_manager'],
+  enterprise_documents_upload: ['admin', 'manager', 'content_manager'],
+  enterprise_documents_manage: ['admin', 'manager'],
+  enterprise_documents_approve: ['admin', 'manager'],
 };
 ```
 
 ### 权限检查Hook
+
 ```typescript
 export function useEnterprisePermission() {
   const user = useUser();
   const { roles, isLoading } = user;
-  
+
   const hasPermission = (permission: string): boolean => {
     if (isLoading) return false;
     if (!user) return false;
-    
+
     // 超级管理员拥有所有权限
     if (roles.includes('admin')) return true;
-    
+
     // 检查具体权限
     return checkPermission(roles, permission);
   };
-  
+
   return { hasPermission, roles, isLoading };
 }
 ```
@@ -81,6 +89,7 @@ export function useEnterprisePermission() {
 ### 核心数据表
 
 #### 企业管理用户表
+
 ```sql
 CREATE TABLE enterprise_users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -100,6 +109,7 @@ CREATE TABLE enterprise_users (
 ```
 
 #### 企业团队成员表
+
 ```sql
 CREATE TABLE enterprise_team_members (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -115,6 +125,7 @@ CREATE TABLE enterprise_team_members (
 ```
 
 #### 企业操作日志表
+
 ```sql
 CREATE TABLE enterprise_audit_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -133,6 +144,7 @@ CREATE TABLE enterprise_audit_logs (
 ## 🎮 核心功能实现
 
 ### 1. 仪表板模块
+
 ```typescript
 interface DashboardStats {
   totalAgents: number;
@@ -165,6 +177,7 @@ const StatCard = ({ title, value, icon: Icon, change }: any) => (
 ```
 
 ### 2. 智能体管理
+
 ```typescript
 interface AgentTemplate {
   id: string;
@@ -198,6 +211,7 @@ const AgentCard = ({ agent }: { agent: AgentTemplate }) => (
 ```
 
 ### 3. 采购管理
+
 ```typescript
 interface PurchaseOrder {
   id: string;
@@ -248,6 +262,7 @@ const PurchaseOrderTable = ({ orders }: { orders: PurchaseOrder[] }) => (
 ## 📈 数据分析模块
 
 ### 业务指标监控
+
 ```typescript
 interface BusinessMetrics {
   serviceResponseTime: number; // 服务响应时间(小时)
@@ -282,6 +297,7 @@ const MetricChart = ({ metrics }: { metrics: BusinessMetrics }) => {
 ## 🔧 API接口设计
 
 ### 企业用户管理API
+
 ```typescript
 // 获取企业用户列表
 GET /api/enterprise/users
@@ -311,6 +327,7 @@ Request Body: {
 ```
 
 ### 团队管理API
+
 ```typescript
 // 获取团队成员列表
 GET /api/enterprise/team
@@ -337,18 +354,21 @@ Request Body: {
 ## 🛡️ 安全措施
 
 ### 认证与授权
+
 - JWT Token认证
 - Session超时控制
 - 多因素认证支持
 - IP地址白名单
 
 ### 数据保护
+
 - 敏感数据加密存储
 - 数据传输HTTPS加密
 - 定期安全审计
 - 漏洞扫描防护
 
 ### 访问控制
+
 - 基于角色的权限管理
 - 操作日志完整记录
 - 异常行为监控
@@ -357,6 +377,7 @@ Request Body: {
 ## 📋 部署配置
 
 ### 环境变量配置
+
 ```bash
 # 数据库配置
 DATABASE_URL=postgresql://user:password@host:port/database
@@ -376,6 +397,7 @@ SESSION_TIMEOUT=3600  # 1小时
 ```
 
 ### Docker部署配置
+
 ```dockerfile
 FROM node:18-alpine AS builder
 WORKDIR /app
@@ -398,6 +420,7 @@ CMD ["npm", "start"]
 ## 📊 监控与日志
 
 ### 系统监控指标
+
 - API响应时间
 - 数据库查询性能
 - 用户活跃度统计
@@ -405,12 +428,13 @@ CMD ["npm", "start"]
 - 系统资源使用率
 
 ### 日志级别配置
+
 ```typescript
 const logLevels = {
   error: 'error',
-  warn: 'warn', 
+  warn: 'warn',
   info: 'info',
-  debug: 'debug'
+  debug: 'debug',
 };
 
 const logger = {
@@ -428,7 +452,7 @@ const logger = {
     if (process.env.NODE_ENV === 'development') {
       console.debug(`[DEBUG] ${message}`, meta);
     }
-  }
+  },
 };
 ```
 

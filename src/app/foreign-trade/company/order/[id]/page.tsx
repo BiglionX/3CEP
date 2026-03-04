@@ -3,15 +3,21 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
-import { 
-  ArrowLeft, 
-  Globe, 
-  Ship, 
-  Calendar, 
-  DollarSign, 
+import {
+  ArrowLeft,
+  Globe,
+  Ship,
+  Calendar,
+  DollarSign,
   Package,
   Users,
   FileText,
@@ -20,7 +26,7 @@ import {
   Clock,
   MapPin,
   Phone,
-  Mail
+  Mail,
 } from 'lucide-react';
 
 interface OrderDetail {
@@ -42,7 +48,13 @@ interface OrderDetail {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status:
+    | 'pending'
+    | 'confirmed'
+    | 'processing'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled';
   timeline: TimelineEvent[];
   documents: Document[];
   logistics: LogisticsInfo;
@@ -89,7 +101,9 @@ export default function OrderDetailPage() {
   const orderId = params.id as string;
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeRole, setActiveRole] = useState<'importer' | 'exporter'>('importer');
+  const [activeRole, setActiveRole] = useState<'importer' | 'exporter'>(
+    'importer'
+  );
 
   const handleRoleChange = (role: 'importer' | 'exporter') => {
     setActiveRole(role);
@@ -105,17 +119,21 @@ export default function OrderDetailPage() {
       id: orderId,
       type: orderId.startsWith('PO') ? 'import' : 'export',
       partner: {
-        name: orderId.startsWith('PO') ? 'Samsung Electronics' : 'TechGlobal Ltd.',
+        name: orderId.startsWith('PO')
+          ? 'Samsung Electronics'
+          : 'TechGlobal Ltd.',
         country: orderId.startsWith('PO') ? '韩国' : '美国',
         contact: '张经理',
         email: 'zhang@samsung.com',
-        phone: '+82-2-1234-5678'
+        phone: '+82-2-1234-5678',
       },
       product: {
-        name: orderId.startsWith('PO') ? 'Galaxy S24 Ultra 手机' : '华为Mate 60 Pro',
+        name: orderId.startsWith('PO')
+          ? 'Galaxy S24 Ultra 手机'
+          : '华为Mate 60 Pro',
         sku: orderId.startsWith('PO') ? 'SM-S9280' : 'HUAWEI-MATE60-PRO',
         category: '智能手机',
-        specifications: '12GB RAM + 256GB Storage, Phantom Black'
+        specifications: '12GB RAM + 256GB Storage, Phantom Black',
       },
       quantity: 500,
       unitPrice: 7000,
@@ -127,29 +145,29 @@ export default function OrderDetailPage() {
           timestamp: '2026-02-20T09:15:00',
           status: '订单创建',
           description: '采购订单已创建并提交审批',
-          actor: '采购经理'
+          actor: '采购经理',
         },
         {
           id: '2',
           timestamp: '2026-02-20T14:30:00',
           status: '审批通过',
           description: '部门经理审批通过',
-          actor: '部门经理'
+          actor: '部门经理',
         },
         {
           id: '3',
           timestamp: '2026-02-21T10:00:00',
           status: '供应商确认',
           description: '供应商确认订单并安排生产',
-          actor: '供应商'
+          actor: '供应商',
         },
         {
           id: '4',
           timestamp: '2026-02-25T16:45:00',
           status: '生产中',
           description: '产品正在生产线制造',
-          actor: '生产部门'
-        }
+          actor: '生产部门',
+        },
       ],
       documents: [
         {
@@ -157,15 +175,15 @@ export default function OrderDetailPage() {
           name: '采购合同.pdf',
           type: 'contract',
           url: '#',
-          uploadedAt: '2026-02-20T09:15:00'
+          uploadedAt: '2026-02-20T09:15:00',
         },
         {
           id: '2',
           name: '技术规格书.docx',
           type: 'specification',
           url: '#',
-          uploadedAt: '2026-02-20T09:15:00'
-        }
+          uploadedAt: '2026-02-20T09:15:00',
+        },
       ],
       logistics: {
         trackingNumber: 'SGL20260220001',
@@ -174,15 +192,15 @@ export default function OrderDetailPage() {
         destination: orderId.startsWith('PO') ? '中国上海' : '美国洛杉矶',
         estimatedDelivery: '2026-03-15',
         currentLocation: '正在运输途中',
-        status: 'in_transit'
+        status: 'in_transit',
       },
       payment: {
         method: '信用证',
         status: 'partial',
         amount: 3500000,
         currency: 'CNY',
-        dueDate: '2026-03-10'
-      }
+        dueDate: '2026-03-10',
+      },
     };
 
     setTimeout(() => {
@@ -207,7 +225,9 @@ export default function OrderDetailPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">订单未找到</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            订单未找到
+          </h2>
           <p className="text-gray-600 mb-4">无法找到指定的订单信息</p>
           <Button onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -220,44 +240,44 @@ export default function OrderDetailPage() {
 
   const getStatusColor = (status: string) => {
     const statusColors: Record<string, string> = {
-      'pending': 'bg-yellow-100 text-yellow-800',
-      'confirmed': 'bg-blue-100 text-blue-800',
-      'processing': 'bg-purple-100 text-purple-800',
-      'shipped': 'bg-indigo-100 text-indigo-800',
-      'delivered': 'bg-green-100 text-green-800',
-      'cancelled': 'bg-red-100 text-red-800',
-      'partial': 'bg-orange-100 text-orange-800',
-      'paid': 'bg-green-100 text-green-800',
-      'refunded': 'bg-gray-100 text-gray-800'
+      pending: 'bg-yellow-100 text-yellow-800',
+      confirmed: 'bg-blue-100 text-blue-800',
+      processing: 'bg-purple-100 text-purple-800',
+      shipped: 'bg-indigo-100 text-indigo-800',
+      delivered: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800',
+      partial: 'bg-orange-100 text-orange-800',
+      paid: 'bg-green-100 text-green-800',
+      refunded: 'bg-gray-100 text-gray-800',
     };
     return statusColors[status] || 'bg-gray-100 text-gray-800';
   };
 
   const getLogisticsStatusText = (status: string) => {
     const statusText: Record<string, string> = {
-      'pending': '待发货',
-      'in_transit': '运输中',
-      'customs': '海关清关',
-      'delivered': '已送达'
+      pending: '待发货',
+      in_transit: '运输中',
+      customs: '海关清关',
+      delivered: '已送达',
     };
     return statusText[status] || status;
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <ForeignTradeSidebar 
-        activeRole={activeRole} 
-        onRoleChange={handleRoleChange} 
+      <ForeignTradeSidebar
+        activeRole={activeRole}
+        onRoleChange={handleRoleChange}
       />
-      
+
       <div className="flex-1 lg:ml-0">
         {/* 头部导航 */}
         <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   onClick={() => router.push('/foreign-trade/company')}
                   className="mr-4"
                 >
@@ -266,19 +286,28 @@ export default function OrderDetailPage() {
                 <div className="flex items-center">
                   <Globe className="h-8 w-8 text-blue-600" />
                   <div className="ml-2">
-                    <h1 className="text-xl font-bold text-gray-900">{order.id}</h1>
+                    <h1 className="text-xl font-bold text-gray-900">
+                      {order.id}
+                    </h1>
                     <p className="text-sm text-gray-600">
-                      {order.type === 'import' ? '进口采购订单' : '出口销售订单'}
+                      {order.type === 'import'
+                        ? '进口采购订单'
+                        : '出口销售订单'}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Badge className={getStatusColor(order.status)}>
-                  {order.status === 'pending' ? '待确认' :
-                   order.status === 'confirmed' ? '已确认' :
-                   order.status === 'processing' ? '处理中' :
-                   order.status === 'shipped' ? '已发货' : '已完成'}
+                  {order.status === 'pending'
+                    ? '待确认'
+                    : order.status === 'confirmed'
+                      ? '已确认'
+                      : order.status === 'processing'
+                        ? '处理中'
+                        : order.status === 'shipped'
+                          ? '已发货'
+                          : '已完成'}
                 </Badge>
                 <Button>操作</Button>
               </div>
@@ -300,27 +329,43 @@ export default function OrderDetailPage() {
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">产品名称</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      产品名称
+                    </h3>
                     <p className="text-gray-900">{order.product.name}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">产品编码</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      产品编码
+                    </h3>
                     <p className="text-gray-900">{order.product.sku}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">数量</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      数量
+                    </h3>
                     <p className="text-gray-900">{order.quantity} 台</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">单价</h3>
-                    <p className="text-gray-900">¥{order.unitPrice.toLocaleString()}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      单价
+                    </h3>
+                    <p className="text-gray-900">
+                      ¥{order.unitPrice.toLocaleString()}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">总金额</h3>
-                    <p className="text-xl font-bold text-green-600">¥{order.totalPrice.toLocaleString()}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      总金额
+                    </h3>
+                    <p className="text-xl font-bold text-green-600">
+                      ¥{order.totalPrice.toLocaleString()}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">分类</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      分类
+                    </h3>
                     <p className="text-gray-900">{order.product.category}</p>
                   </div>
                 </CardContent>
@@ -336,23 +381,33 @@ export default function OrderDetailPage() {
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">公司名称</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      公司名称
+                    </h3>
                     <p className="text-gray-900">{order.partner.name}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">所在国家</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      所在国家
+                    </h3>
                     <p className="text-gray-900">{order.partner.country}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">联系人</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      联系人
+                    </h3>
                     <p className="text-gray-900">{order.partner.contact}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">联系电话</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      联系电话
+                    </h3>
                     <p className="text-gray-900">{order.partner.phone}</p>
                   </div>
                   <div className="md:col-span-2">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">邮箱</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      邮箱
+                    </h3>
                     <p className="text-gray-900">{order.partner.email}</p>
                   </div>
                 </CardContent>
@@ -368,35 +423,57 @@ export default function OrderDetailPage() {
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">承运商</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      承运商
+                    </h3>
                     <p className="text-gray-900">{order.logistics.carrier}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">追踪号码</h3>
-                    <p className="text-gray-900 font-mono">{order.logistics.trackingNumber}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      追踪号码
+                    </h3>
+                    <p className="text-gray-900 font-mono">
+                      {order.logistics.trackingNumber}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">起运地</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      起运地
+                    </h3>
                     <p className="text-gray-900">{order.logistics.origin}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">目的地</h3>
-                    <p className="text-gray-900">{order.logistics.destination}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      目的地
+                    </h3>
+                    <p className="text-gray-900">
+                      {order.logistics.destination}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">当前状态</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      当前状态
+                    </h3>
                     <Badge className={getStatusColor(order.logistics.status)}>
                       {getLogisticsStatusText(order.logistics.status)}
                     </Badge>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">当前位置</h3>
-                    <p className="text-gray-900">{order.logistics.currentLocation}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      当前位置
+                    </h3>
+                    <p className="text-gray-900">
+                      {order.logistics.currentLocation}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">预计送达</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      预计送达
+                    </h3>
                     <p className="text-gray-900">
-                      {new Date(order.logistics.estimatedDelivery).toLocaleDateString('zh-CN')}
+                      {new Date(
+                        order.logistics.estimatedDelivery
+                      ).toLocaleDateString('zh-CN')}
                     </p>
                   </div>
                 </CardContent>
@@ -422,13 +499,21 @@ export default function OrderDetailPage() {
                         </div>
                         <div className="flex-1 pb-4">
                           <div className="flex items-center justify-between">
-                            <h3 className="font-medium text-gray-900">{event.status}</h3>
+                            <h3 className="font-medium text-gray-900">
+                              {event.status}
+                            </h3>
                             <span className="text-sm text-gray-500">
-                              {new Date(event.timestamp).toLocaleString('zh-CN')}
+                              {new Date(event.timestamp).toLocaleString(
+                                'zh-CN'
+                              )}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{event.description}</p>
-                          <p className="text-xs text-gray-500 mt-1">操作人: {event.actor}</p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {event.description}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            操作人: {event.actor}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -449,27 +534,42 @@ export default function OrderDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">支付方式</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      支付方式
+                    </h3>
                     <p className="text-gray-900">{order.payment.method}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">支付状态</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      支付状态
+                    </h3>
                     <Badge className={getStatusColor(order.payment.status)}>
-                      {order.payment.status === 'pending' ? '待支付' :
-                       order.payment.status === 'partial' ? '部分支付' :
-                       order.payment.status === 'paid' ? '已支付' : '已退款'}
+                      {order.payment.status === 'pending'
+                        ? '待支付'
+                        : order.payment.status === 'partial'
+                          ? '部分支付'
+                          : order.payment.status === 'paid'
+                            ? '已支付'
+                            : '已退款'}
                     </Badge>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">应付金额</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      应付金额
+                    </h3>
                     <p className="text-lg font-bold text-gray-900">
-                      ¥{order.payment.amount.toLocaleString()} {order.payment.currency}
+                      ¥{order.payment.amount.toLocaleString()}{' '}
+                      {order.payment.currency}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">截止日期</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      截止日期
+                    </h3>
                     <p className="text-gray-900">
-                      {new Date(order.payment.dueDate).toLocaleDateString('zh-CN')}
+                      {new Date(order.payment.dueDate).toLocaleDateString(
+                        'zh-CN'
+                      )}
                     </p>
                   </div>
                 </CardContent>
@@ -485,12 +585,19 @@ export default function OrderDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {order.documents.map((doc) => (
-                      <div key={doc.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    {order.documents.map(doc => (
+                      <div
+                        key={doc.id}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      >
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{doc.name}</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {doc.name}
+                          </p>
                           <p className="text-xs text-gray-500">
-                            {new Date(doc.uploadedAt).toLocaleDateString('zh-CN')}
+                            {new Date(doc.uploadedAt).toLocaleDateString(
+                              'zh-CN'
+                            )}
                           </p>
                         </div>
                         <Button variant="ghost" size="sm">

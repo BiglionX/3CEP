@@ -1,0 +1,81 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - 'procurement-alert-rules.yml'
+
+scrape_configs:
+  # 采购智能体应用监控
+  - job_name: 'procurement-intelligence'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/api/procurement-intelligence/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+      - source_labels: [job]
+        target_label: service
+        replacement: 'procurement-intelligence'
+
+  # 供应商画像服务
+  - job_name: 'supplier-profiling'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/api/procurement-intelligence/suppliers/metrics'
+    relabel_configs:
+      - target_label: service
+        replacement: 'supplier-profiling'
+
+  # 市场情报服务
+  - job_name: 'market-intelligence'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/api/procurement-intelligence/market/metrics'
+    relabel_configs:
+      - target_label: service
+        replacement: 'market-intelligence'
+
+  # 风险分析服务
+  - job_name: 'risk-analysis'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/api/procurement-intelligence/risk/metrics'
+    relabel_configs:
+      - target_label: service
+        replacement: 'risk-analysis'
+
+  # 决策引擎服务
+  - job_name: 'decision-engine'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/api/procurement-intelligence/decisions/metrics'
+    relabel_configs:
+      - target_label: service
+        replacement: 'decision-engine'
+
+  # 合同顾问服务
+  - job_name: 'contract-advisor'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/api/procurement-intelligence/contracts/metrics'
+    relabel_configs:
+      - target_label: service
+        replacement: 'contract-advisor'
+
+  # 采购分析服务
+  - job_name: 'procurement-analytics'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/api/procurement-intelligence/analytics/metrics'
+    relabel_configs:
+      - target_label: service
+        replacement: 'procurement-analytics'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - localhost:9093
+      scheme: http
+      timeout: 10s

@@ -1,5 +1,4 @@
-
-// Supabase类型增强声明
+﻿// Supabase类型增强声明
 declare module '*.svg' {
   const content: string;
   export default content;

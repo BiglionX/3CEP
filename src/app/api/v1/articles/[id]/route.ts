@@ -59,7 +59,7 @@ export async function GET(
     }
 
     // 获取关联配件的实时价格
-    const partIds = article.article_parts?.map((ap: any) => ap.parts.id) || [];
+    const partIds = article?.map((ap: any) => ap.parts.id) || [];
     let partPrices: any[] = [];
 
     if (partIds.length > 0) {

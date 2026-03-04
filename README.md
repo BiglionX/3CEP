@@ -64,9 +64,9 @@ npm run verify:minimal
 
 ### 预期验证结果
 
-✅ 环境变量配置正确  
-✅ 数据库连接正常  
-✅ 核心 API 接口可用  
+✅ 环境变量配置正确
+✅ 数据库连接正常
+✅ 核心 API 接口可用
 ✅ 基本业务流程通畅
 
 ---
@@ -75,34 +75,34 @@ npm run verify:minimal
 
 ### 环境配置问题
 
-**Q: 环境变量缺失怎么办？**  
+**Q: 环境变量缺失怎么办？**
 A: 运行 `npm run setup:env` 自动配置或手动复制 `.env.example` 到 `.env.local`
 
-**Q: Node.js 版本不兼容？**  
+**Q: Node.js 版本不兼容？**
 A: 推荐使用 Node.js 18+ 版本，可通过 `nvm install 18` 安装
 
 ### 启动问题
 
-**Q: 端口被占用怎么办？**  
+**Q: 端口被占用怎么办？**
 A: 修改 `.env.local` 中的 `PORT` 变量或停止占用进程
 
-**Q: 数据库连接失败？**  
+**Q: 数据库连接失败？**
 A: 检查 Supabase 配置和网络连接，运行 `npm run verify:database` 诊断
 
 ### 功能使用问题
 
-**Q: 如何添加新的维修店？**  
+**Q: 如何添加新的维修店？**
 A: 通过管理后台 `/admin/shops` 或调用相关 API 接口
 
-**Q: n8n 工作流如何配置？**  
+**Q: n8n 工作流如何配置？**
 A: 参考 `docs/deployment/n8n-workflow-deployment-guide.md`
 
 ### 性能优化
 
-**Q: 应用启动较慢？**  
+**Q: 应用启动较慢？**
 A: 使用 `npm run dev:fast` 启动开发服务器
 
-**Q: 数据库查询慢？**  
+**Q: 数据库查询慢？**
 A: 检查索引配置，参考 `docs/technical-docs/database-optimization.md`
 
 ---
@@ -113,7 +113,9 @@ A: 检查索引配置，参考 `docs/technical-docs/database-optimization.md`
 
 - 🛠️ **智能维修预约系统** - AI 驱动的预约匹配和调度
 - 🔄 **循环经济交易平台** - 废旧物品回收与再利用
-- 🤖 **B2B 采购智能体** - 自动化供应商匹配和谈判
+- 🤖 **B2B 采购智能体** - 智能化供应商匹配和谈判 (FixCycle 4.0)
+- 🌍 **国际贸易采购平台** - 跨境采购智能决策系统
+- 👥 **智能用户管理系统** - AI驱动的用户行为分析和个性化服务 ⭐ 新增
 - 📊 **数据分析仪表板** - 实时业务洞察和决策支持
 - 🔧 **维修教程系统** - 结构化维修知识库
 
@@ -130,6 +132,12 @@ A: 检查索引配置，参考 `docs/technical-docs/database-optimization.md`
 │   n8n 工作流    │    │   Redis 缓存    │    │   第三方集成    │
 │   自动化处理     │    │   性能优化       │    │   API服务       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │
+         ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐
+│国际贸易采购平台  │    │智能用户管理系统  │
+│智能决策引擎     │    │AI推荐与自动化    │
+└─────────────────┘    └─────────────────┘
 ```
 
 ---
@@ -164,7 +172,23 @@ src/
 ├── services/         # 业务服务层
 ├── lib/             # 工具库和配置
 ├── models/          # 数据模型定义
-└── hooks/           # React 自定义钩子
+├── hooks/           # React 自定义钩子
+├── b2b-procurement-agent/  # B2B采购智能体 (FixCycle 4.0)
+│   ├── services/     # 智能服务模块
+│   ├── models/       # 数据模型
+│   └── types/        # 类型定义
+├── modules/         # 功能模块
+│   └── procurement-intelligence/  # 采购智能升级模块
+│       ├── core/     # 核心引擎
+│       ├── services/ # 扩展服务
+│       └── ui-components/ # 前端组件
+└── admin/           # 管理后台模块
+    └── components/   # 管理组件
+        ├── UserStatsDashboard.tsx    # 用户统计面板
+        ├── AdvancedUserSearch.tsx    # 高级搜索组件
+        ├── OperationHistory.tsx      # 操作历史组件
+        ├── BehaviorAnalyticsPanel.tsx # 行为分析面板
+        └── SmartGroupingPanel.tsx    # 智能分组面板
 
 supabase/
 ├── migrations/      # 数据库迁移脚本
@@ -190,7 +214,15 @@ tests/              # 测试文件
 - [架构设计文档](./docs/technical-docs/architecture-design.md) - 系统架构详解
 - [API 接口文档](./OPENAPI_SPEC.yaml) - RESTful API 规范
 - [数据库设计](./docs/technical-docs/database-schema.md) - 数据模型和关系
+- [智能用户管理技术规范](./docs/technical-docs/user-management-optimization.md) - AI驱动的用户管理系统 ⭐ 新增
 - [智能体清单](./docs/technical-docs/agents-inventory.md) - 智能体清单与分级 ⭐ 新增
+- [采购智能体升级方案](./docs/modules/procurement-intelligence/upgrade-specification.md) - FixCycle 4.0 升级规范 ⭐ 新增
+
+### 🎯 使用指南
+
+- [智能用户管理快速参考](./docs/guides/user-management-quick-reference.md) - 用户管理操作指南 ⭐ 新增
+- [快速启动指南](./QUICK_START.md) - 5 分钟快速上手
+- [开发环境搭建](./docs/guides/development-setup.md) - 完整开发环境配置
 
 ### 🚀 部署运维
 

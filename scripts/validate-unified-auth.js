@@ -15,7 +15,7 @@ const requiredFiles = [
   'src/components/auth/UnifiedLogin.tsx',
   'src/components/auth/AuthControls.tsx',
   'src/hooks/use-unified-auth.ts',
-  'src/app/login/page.tsx'
+  'src/app/login/page.tsx',
 ];
 
 let allFilesExist = true;
@@ -31,8 +31,19 @@ requiredFiles.forEach(file => {
 // 检查组件导出
 console.log('\n🔌 组件导出检查:');
 const componentExports = [
-  { file: 'src/components/auth/UnifiedLogin.tsx', exports: ['UnifiedLogin', 'useUnifiedLogin'] },
-  { file: 'src/components/auth/AuthControls.tsx', exports: ['AuthControls', 'NavbarAuthControls', 'SidebarAuthControls', 'CompactAuthControls'] }
+  {
+    file: 'src/components/auth/UnifiedLogin.tsx',
+    exports: ['UnifiedLogin', 'useUnifiedLogin'],
+  },
+  {
+    file: 'src/components/auth/AuthControls.tsx',
+    exports: [
+      'AuthControls',
+      'NavbarAuthControls',
+      'SidebarAuthControls',
+      'CompactAuthControls',
+    ],
+  },
 ];
 
 componentExports.forEach(({ file, exports }) => {
@@ -40,7 +51,9 @@ componentExports.forEach(({ file, exports }) => {
   if (fs.existsSync(fullPath)) {
     const content = fs.readFileSync(fullPath, 'utf8');
     exports.forEach(exp => {
-      const hasExport = content.includes(`export function ${exp}`) || content.includes(`export const ${exp}`);
+      const hasExport =
+        content.includes(`export function ${exp}`) ||
+        content.includes(`export const ${exp}`);
       const status = hasExport ? '✅' : '❌';
       console.log(`  ${status} ${file} -> ${exp}`);
     });
@@ -52,7 +65,7 @@ console.log('\n🎣 Hook使用检查:');
 const hookUsages = [
   { file: 'src/app/login/page.tsx', hook: 'useUnifiedAuth' },
   { file: 'src/components/auth/UnifiedLogin.tsx', hook: 'useUnifiedAuth' },
-  { file: 'src/components/auth/AuthControls.tsx', hook: 'useUnifiedAuth' }
+  { file: 'src/components/auth/AuthControls.tsx', hook: 'useUnifiedAuth' },
 ];
 
 hookUsages.forEach(({ file, hook }) => {
@@ -68,8 +81,14 @@ hookUsages.forEach(({ file, hook }) => {
 // 检查导入路径
 console.log('\n🔗 导入路径检查:');
 const importChecks = [
-  { file: 'src/app/login/page.tsx', imports: ['UnifiedLogin', '@/components/auth/UnifiedLogin'] },
-  { file: 'src/components/layout/UnifiedNavbar.tsx', imports: ['NavbarAuthControls', '@/components/auth/AuthControls'] }
+  {
+    file: 'src/app/login/page.tsx',
+    imports: ['UnifiedLogin', '@/components/auth/UnifiedLogin'],
+  },
+  {
+    file: 'src/components/layout/UnifiedNavbar.tsx',
+    imports: ['NavbarAuthControls', '@/components/auth/AuthControls'],
+  },
 ];
 
 importChecks.forEach(({ file, imports }) => {
@@ -88,7 +107,7 @@ importChecks.forEach(({ file, imports }) => {
 console.log('\n📝 类型定义检查:');
 const typeFiles = [
   'src/components/auth/UnifiedLogin.tsx',
-  'src/components/auth/AuthControls.tsx'
+  'src/components/auth/AuthControls.tsx',
 ];
 
 typeFiles.forEach(file => {
@@ -107,18 +126,22 @@ const validationReport = {
   checks: {
     fileExistence: allFilesExist,
     componentExports: true, // 简化检查
-    hookIntegration: true,  // 简化检查
-    importPaths: true,      // 简化检查
-    typeDefinitions: true   // 简化检查
+    hookIntegration: true, // 简化检查
+    importPaths: true, // 简化检查
+    typeDefinitions: true, // 简化检查
   },
   summary: {
     totalChecks: 5,
     passed: allFilesExist ? 5 : 4,
-    failed: allFilesExist ? 0 : 1
-  }
+    failed: allFilesExist ? 0 : 1,
+  },
 };
 
-const reportPath = path.join(process.cwd(), 'test-results', 'unified-auth-validation-report.json');
+const reportPath = path.join(
+  process.cwd(),
+  'test-results',
+  'unified-auth-validation-report.json'
+);
 fs.writeFileSync(reportPath, JSON.stringify(validationReport, null, 2));
 
 console.log('\n📊 验证摘要:');

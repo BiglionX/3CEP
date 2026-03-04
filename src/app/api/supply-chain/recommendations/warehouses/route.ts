@@ -1,5 +1,5 @@
-/**
- * 仓库位置推荐API
+﻿/**
+ * 浠撳簱浣嶇疆鎺ㄨ崘API
  */
 
 import { NextResponse } from 'next/server';
@@ -9,19 +9,31 @@ import { WarehouseRecommendationRequest } from '@/supply-chain/models/recommenda
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { userLocation, productIds, quantities, deliveryTimePreference, budgetConstraint, optimizationGoal } = body;
+    const {
+      userLocation,
+      productIds,
+      quantities,
+      deliveryTimePreference,
+      budgetConstraint,
+      optimizationGoal,
+    } = body;
 
-    // 参数验证
-    if (!userLocation || !userLocation.coordinates || !productIds || !Array.isArray(productIds)) {
+    // 鍙傛暟楠岃瘉
+    if (
+      !userLocation ||
+      !userLocation.coordinates ||
+      !productIds ||
+      !Array.isArray(productIds)
+    ) {
       return NextResponse.json(
-        { error: '缺少必要参数: userLocation.coordinates, productIds' },
+        { error: '缂哄皯蹇呰鍙傛暟: userLocation.coordinates, productIds' },
         { status: 400 }
       );
     }
 
     if (productIds.length === 0) {
       return NextResponse.json(
-        { error: '产品ID列表不能为空' },
+        { error: '浜у搧ID鍒楄〃涓嶈兘涓虹┖' },
         { status: 400 }
       );
     }
@@ -32,29 +44,31 @@ export async function POST(request: Request) {
       quantities,
       deliveryTimePreference,
       budgetConstraint,
-      optimizationGoal
+      optimizationGoal,
     };
 
     const recommendationService = new RecommendationService();
-    const recommendations = await recommendationService.recommendWarehouses(recommendationRequest);
+    const recommendations = await recommendationService.recommendWarehouses(
+      recommendationRequest
+    );
 
     return NextResponse.json({
       success: true,
       data: {
         recommendations,
         count: recommendations.length,
-        request: recommendationRequest
-      }
+        request: recommendationRequest,
+      },
     });
-
   } catch (error) {
-    console.error('仓库推荐错误:', error);
+    console.error('浠撳簱鎺ㄨ崘閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '仓库推荐失败',
-        details: (error as Error).message 
+      {
+        error: '浠撳簱鎺ㄨ崘澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

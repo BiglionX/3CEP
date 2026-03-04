@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-03-03T13:01:22.503Z",
+  "summary": {
+    "eslint": "FAILED",
+    "prettier": "FAILED",
+    "typescript": "FAILED",
+    "ideConfig": "PASSED",
+    "projectStructure": "PASSED"
+  },
+  "issues": {
+    "eslintCircularDep": true,
+    "chineseEncodingChars": true,
+    "typescriptErrors": 2784,
+    "consoleLogs": 3060
+  },
+  "tools": {
+    "available": [
+      "test-code-quality.js",
+      "analyze-console-logs.js",
+      "cleanup-console-logs.js",
+      "fix-types.js",
+      "verify-ide-config.js"
+    ],
+    "recommended": ["Commitlint", "stylelint", "eslint-plugin-import"]
+  },
+  "priorityFixes": [
+    {
+      "level": "P0",
+      "task": "修复 ESLint 循环依赖",
+      "hours": 1
+    },
+    {
+      "level": "P0",
+      "task": "批量修复中文字符乱码",
+      "hours": 3
+    },
+    {
+      "level": "P1",
+      "task": "修复 TypeScript 类型错误",
+      "hours": 16
+    },
+    {
+      "level": "P1",
+      "task": "清理 console.log",
+      "hours": 2
+    }
+  ],
+  "reportFile": "reports/code-quality-audit-report.md"
+}

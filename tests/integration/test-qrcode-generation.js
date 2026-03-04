@@ -7,12 +7,7 @@ console.log('🧪 FixCycle 3.0 二维码生成服务完整测试开始...\n');
 
 // 1. 检查依赖安装
 console.log('1️⃣ 检查依赖安装...');
-const dependencies = [
-  'qrcode',
-  'sharp',
-  '@types/qrcode',
-  '@types/sharp'
-];
+const dependencies = ['qrcode', 'sharp', '@types/qrcode', '@types/sharp'];
 
 dependencies.forEach(dep => {
   try {
@@ -28,7 +23,7 @@ console.log('\n2️⃣ 检查文件结构...');
 const requiredFiles = [
   'src/services/qrcode.service.ts',
   'src/app/api/qrcode/generate/route.ts',
-  'supabase/migrations/018_create_qrcode_system.sql'
+  'supabase/migrations/018_create_qrcode_system.sql',
 ];
 
 requiredFiles.forEach(file => {
@@ -88,7 +83,9 @@ console.log('     }');
 console.log('   }');
 
 console.log('\n   🔹 查询二维码:');
-console.log('   GET /api/qrcode/generate?qrCodeId=qr_prod_apple_iphone15_001_xxxx');
+console.log(
+  '   GET /api/qrcode/generate?qrCodeId=qr_prod_apple_iphone15_001_xxxx'
+);
 console.log('   GET /api/qrcode/generate?productId=prod_apple_iphone15_001');
 
 // 4. 功能特性列表
@@ -103,7 +100,7 @@ const features = [
   '✅ 扫描统计跟踪',
   '✅ Base64格式直接返回',
   '✅ 详细的错误处理',
-  '✅ 生成日志记录'
+  '✅ 生成日志记录',
 ];
 
 console.log('   📋 已实现功能:');
@@ -115,8 +112,8 @@ features.forEach(feature => {
 console.log('\n5️⃣ 数据库表结构:');
 const tables = [
   'product_qrcodes - 产品二维码主表',
-  'qr_generation_logs - 生成日志表', 
-  'qr_scan_statistics - 扫描统计表'
+  'qr_generation_logs - 生成日志表',
+  'qr_scan_statistics - 扫描统计表',
 ];
 
 console.log('   📊 主要数据表:');
@@ -142,7 +139,7 @@ const checklist = [
   '✅ API路由配置',
   '✅ 环境变量配置',
   '✅ 权限策略设置',
-  '✅ 索引和触发器创建'
+  '✅ 索引和触发器创建',
 ];
 
 console.log('   📋 部署检查项:');

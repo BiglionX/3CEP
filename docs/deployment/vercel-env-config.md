@@ -108,21 +108,21 @@ vercel env add NEXT_PUBLIC_SUPABASE_URL production
 
 ```javascript
 // 使用Vercel API批量设置环境变量
-const vercelToken = "your_vercel_token";
+const vercelToken = 'your_vercel_token';
 
 async function setEnvironmentVariables(projectId, environment, variables) {
   for (const [key, value] of Object.entries(variables)) {
     await fetch(`https://api.vercel.com/v9/projects/${projectId}/env`, {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${vercelToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         key,
         value,
         target: [environment],
-        type: "encrypted",
+        type: 'encrypted',
       }),
     });
   }
@@ -132,13 +132,11 @@ async function setEnvironmentVariables(projectId, environment, variables) {
 ## 安全注意事项
 
 1. **敏感信息保护**:
-
    - `SUPABASE_SERVICE_ROLE_KEY` 等敏感密钥应加密存储
    - 不要在客户端暴露服务端密钥
    - 定期轮换密钥
 
 2. **环境隔离**:
-
    - 不同环境使用不同的密钥和配置
    - 避免跨环境共享敏感信息
    - 使用 Vercel 的环境目标功能

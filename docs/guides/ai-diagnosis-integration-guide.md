@@ -137,7 +137,7 @@ AI 诊断集成功能基于 B2B 采购智能体的大模型能力，为售后场
 ### React 组件集成
 
 ```tsx
-import { useState } from "react";
+import { useState } from 'react';
 
 interface DiagnosisResult {
   faultCauses: Array<{
@@ -163,17 +163,17 @@ export default function AIDiagnosisComponent() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/diagnosis/analyze", {
-        method: "POST",
+      const response = await fetch('/api/diagnosis/analyze', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           faultDescription,
           deviceInfo: {
-            brand: "Apple",
-            model: "iPhone 15 Pro",
-            category: "手机",
+            brand: 'Apple',
+            model: 'iPhone 15 Pro',
+            category: '手机',
           },
         }),
       });
@@ -184,7 +184,7 @@ export default function AIDiagnosisComponent() {
         setDiagnosisResult(result.data.diagnosisResult);
       }
     } catch (error) {
-      console.error("诊断请求失败:", error);
+      console.error('诊断请求失败:', error);
     } finally {
       setIsLoading(false);
     }
@@ -304,13 +304,11 @@ DIAGNOSIS_FALLBACK_ENABLED=true
 ### 常见问题
 
 1. **API 返回超时错误**
-
    - 检查大模型 API 服务状态
    - 确认网络连接正常
    - 调整超时配置参数
 
 2. **诊断结果格式错误**
-
    - 验证提示词模板配置
    - 检查大模型响应格式
    - 查看服务日志详情

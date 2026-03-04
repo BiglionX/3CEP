@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -6,17 +6,17 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 点赞/取消点赞接口
+// 鐐硅禐/鍙栨秷鐐硅禐鎺ュ彛
 export async function POST(request: Request) {
   try {
-    // 获取认证信息
+    // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '未授权访问',
+          message: '鏈巿鏉冭?,
           data: null,
         },
         { status: 401 }
@@ -24,18 +24,17 @@ export async function POST(request: Request) {
     }
 
     const token = authHeader.substring(7);
-    // 实际应用中需要验证JWT令牌
+    // 瀹為檯搴旂敤涓渶瑕侀獙璇丣WT浠ょ墝
 
-    // 获取请求体
-    const body = await request.json();
+    // 鑾峰彇璇锋眰?    const body = await request.json();
     const { target_id, target_type } = body;
 
-    // 验证参数
+    // 楠岃瘉鍙傛暟
     if (!target_id || !target_type) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '缺少必要参数',
+          message: '缂哄皯蹇呰鍙傛暟',
           data: null,
         },
         { status: 400 }
@@ -46,18 +45,16 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '不支持的目标类型',
+          message: '涓嶆敮鎸佺殑鐩爣绫诲瀷',
           data: null,
         },
         { status: 400 }
       );
     }
 
-    // 模拟用户ID - 实际应该从JWT中解析
-    const userId = 'user_123';
+    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇浠嶫WT涓В?    const userId = 'user_123';
 
-    // 检查是否已经点赞
-    const { data: existingLike, error: checkError } = await supabase
+    // 妫€鏌ユ槸鍚﹀凡缁忕偣?    const { data: existingLike, error: checkError } = await supabase
       .from('user_interactions')
       .select('id, is_liked')
       .eq('user_id', userId)
@@ -69,13 +66,12 @@ export async function POST(request: Request) {
     let isLiked = false;
 
     if (checkError && checkError.code !== 'PGRST116') {
-      // PGRST116表示未找到记录
-      console.error('检查点赞状态失败:', checkError);
-      // 继续执行，不中断流程
+      // PGRST116琛ㄧず鏈壘鍒拌?      console.error('妫€鏌ョ偣璧炵姸鎬佸け?', checkError);
+      // 缁х画鎵ц锛屼笉涓柇娴佺▼
     }
 
     if (existingLike) {
-      // 已有点赞记录，执行取消点赞或重新点赞
+      // 宸叉湁鐐硅禐璁板綍锛屾墽琛屽彇娑堢偣璧炴垨閲嶆柊鐐硅禐
       isLiked = !existingLike.is_liked;
 
       const { error: updateError } = await supabase
@@ -87,18 +83,18 @@ export async function POST(request: Request) {
         .eq('id', existingLike.id);
 
       if (updateError) {
-        console.error('更新点赞状态失败:', updateError);
+        console.error('鏇存柊鐐硅禐鐘舵€佸け?', updateError);
         return NextResponse.json(
           {
             code: 50001,
-            message: '操作失败',
+            message: '鎿嶄綔澶辫触',
             data: null,
           },
           { status: 500 }
         );
       }
     } else {
-      // 首次点赞
+      // 棣栨鐐硅禐
       isLiked = true;
 
       const { error: insertError } = await supabase
@@ -113,11 +109,11 @@ export async function POST(request: Request) {
         } as any);
 
       if (insertError) {
-        console.error('创建点赞记录失败:', insertError);
+        console.error('鍒涘缓鐐硅禐璁板綍澶辫触:', insertError);
         return NextResponse.json(
           {
             code: 50001,
-            message: '操作失败',
+            message: '鎿嶄綔澶辫触',
             data: null,
           },
           { status: 500 }
@@ -125,13 +121,12 @@ export async function POST(request: Request) {
       }
     }
 
-    // 更新目标对象的点赞数
+    // 鏇存柊鐩爣瀵硅薄鐨勭偣璧炴暟
     const targetTable =
       target_type === 'article' ? 'articles' : 'hot_link_pool';
     const likeField = target_type === 'article' ? 'like_count' : 'likes';
 
-    // 获取当前点赞数
-    const { data: targetData, error: targetError } = await supabase
+    // 鑾峰彇褰撳墠鐐硅禐?    const { data: targetData, error: targetError } = await supabase
       .from(targetTable)
       .select(likeField)
       .eq('id', target_id)
@@ -139,24 +134,22 @@ export async function POST(request: Request) {
 
     if (!targetError && targetData) {
       currentLikes = targetData[likeField] || 0;
-      // 根据操作类型调整点赞数
-      currentLikes = isLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+      // 鏍规嵁鎿嶄綔绫诲瀷璋冩暣鐐硅禐?      currentLikes = isLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1);
 
-      // 更新点赞数
-      await supabase
+      // 鏇存柊鐐硅禐?      await supabase
         .from(targetTable)
         .update({ [likeField]: currentLikes } as any)
         .eq('id', target_id);
     }
 
-    // 如果是热点链接且点赞数达到阈值，触发沉淀流程
+    // 濡傛灉鏄儹鐐归摼鎺ヤ笖鐐硅禐鏁拌揪鍒伴槇鍊硷紝瑙﹀彂娌夋穩娴佺▼
     if (target_type === 'hot_link' && isLiked && currentLikes >= 3) {
       try {
-        // 触发文章沉淀流程
+        // 瑙﹀彂鏂囩珷娌夋穩娴佺▼
         await triggerArticleCreation(target_id);
       } catch (error) {
-        console.warn('触发文章沉淀流程失败:', error);
-        // 不中断主流程
+        console.warn('瑙﹀彂鏂囩珷娌夋穩娴佺▼澶辫触:', error);
+        // 涓嶄腑鏂富娴佺▼
       }
     }
 
@@ -168,13 +161,13 @@ export async function POST(request: Request) {
         is_liked: isLiked,
       },
       timestamp: new Date().toISOString(),
-    });
+    }) as any;
   } catch (error) {
-    console.error('点赞API错误:', error);
+    console.error('鐐硅禐API閿欒:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '服务器内部错误',
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         data: null,
       },
       { status: 500 }
@@ -182,10 +175,10 @@ export async function POST(request: Request) {
   }
 }
 
-// 触发文章沉淀流程
+// 瑙﹀彂鏂囩珷娌夋穩娴佺▼
 async function triggerArticleCreation(hotLinkId: string) {
   try {
-    // 获取热点链接信息
+    // 鑾峰彇鐑偣閾炬帴淇℃伅
     const { data: hotLink, error } = await supabase
       .from('hot_link_pool')
       .select('*')
@@ -193,10 +186,10 @@ async function triggerArticleCreation(hotLinkId: string) {
       .single();
 
     if (error || !hotLink) {
-      throw new Error('获取热点链接失败');
+      throw new Error('鑾峰彇鐑偣閾炬帴澶辫触');
     }
 
-    // 创建文章草稿
+    // 鍒涘缓鏂囩珷鑽夌
     const { data: article, insertError } = await supabase
       .from('articles')
       .insert({
@@ -205,7 +198,7 @@ async function triggerArticleCreation(hotLinkId: string) {
 
 ${hotLink.description || ''}
 
-[原文链接](${hotLink.url})`,
+[鍘熸枃閾炬帴](${hotLink.url}) as any`,
         summary: hotLink.description || hotLink.title,
         source_url: hotLink.url,
         status: 'pending_review',
@@ -216,10 +209,10 @@ ${hotLink.description || ''}
       .single();
 
     if (insertError) {
-      throw new Error('创建文章失败');
+      throw new Error('鍒涘缓鏂囩珷澶辫触');
     }
 
-    // 更新热点链接关联的文章ID
+    // 鏇存柊鐑偣閾炬帴鍏宠仈鐨勬枃绔營D
     await supabase
       .from('hot_link_pool')
       .update({
@@ -229,10 +222,11 @@ ${hotLink.description || ''}
       .eq('id', hotLinkId);
 
     console.log(
-      `✅ 热点链接 ${hotLinkId} 已触发文章沉淀，文章ID: ${article.id}`
+      `锟?鐑偣閾炬帴 ${hotLinkId} 宸茶Е鍙戞枃绔犳矇娣€锛屾枃绔營D: ${article.id}`
     );
   } catch (error) {
-    console.error('文章沉淀流程失败:', error);
+    console.error('鏂囩珷娌夋穩娴佺▼澶辫触:', error);
     throw error;
   }
 }
+

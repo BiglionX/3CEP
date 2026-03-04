@@ -1,46 +1,73 @@
-'use client';
+﻿'use client';
 
-import { HelpLink, ContextualHelp, PageHelpNavigation, QuickHelpButton } from '@/components/ui/HelpLink';
+import {
+  HelpLink,
+  ContextualHelp,
+  PageHelpNavigation,
+  QuickHelpButton,
+} from '@/components/ui/HelpLink';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  User, 
-  Shield, 
-  BarChart3, 
+import {
+  User,
+  Shield,
+  BarChart3,
   Settings,
   Database,
-  Monitor
+  Monitor,
 } from 'lucide-react';
 
 export default function HelpDemoPage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">帮助系统演示</h1>
-      
-      {/* 页面级帮助导航 */}
+
+      {/* 页面级帮助导?*/}
       <PageHelpNavigation
         pageTitle="用户管理"
         sections={[
-          { id: 'user-management-guide', title: '用户管理指南', icon: <User className="w-4 h-4" /> },
-          { id: 'rbac-permissions-guide', title: '权限管理', icon: <Shield className="w-4 h-4" /> },
-          { id: 'data-center-user-guide', title: '数据中心', icon: <Database className="w-4 h-4" /> }
+          {
+            id: 'user-management-guide',
+            title: '用户管理指南',
+            icon: <User className="w-4 h-4" />,
+          },
+          {
+            id: 'rbac-permissions-guide',
+            title: '权限管理',
+            icon: <Shield className="w-4 h-4" />,
+          },
+          {
+            id: 'data-center-user-guide',
+            title: '数据中心',
+            icon: <Database className="w-4 h-4" />,
+          },
         ]}
       />
 
-      {/* 上下文帮助示例 */}
+      {/* 上下文帮助示?*/}
       <div className="mb-8">
         <ContextualHelp section="user-management" feature="用户列表" />
       </div>
 
-      {/* 不同变体的 HelpLink 示例 */}
+      {/* 不同变体?HelpLink 示例 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader>
             <CardTitle>内联帮助链接</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p>这是一个普通的文本段落，其中包含 <HelpLink href="/docs/guides/user-management-guide.md">用户管理帮助</HelpLink>。</p>
-            <p>你也可以为特定功能添加帮助：<HelpLink href="/docs/role-guides/admin.md" topic="权限分配">权限分配说明</HelpLink>。</p>
+            <p>
+              这是一个普通的文本段落，其中包含{' '}
+              <HelpLink href="/docs/guides/user-management-guide.md">
+                用户管理帮助
+              </HelpLink>
+              �?            </p>
+            <p>
+              你也可以为特定功能添加帮助：
+              <HelpLink href="/docs/role-guides/admin.md" topic="权限分配">
+                权限分配说明
+              </HelpLink>
+              �?            </p>
           </CardContent>
         </Card>
 
@@ -50,12 +77,17 @@ export default function HelpDemoPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-3">
-              <HelpLink href="/docs/guides/quick-start-guide.md" variant="button">
-                快速开始指南
-              </HelpLink>
-              <HelpLink href="/docs/technical-docs/architecture-design.md" variant="button" external>
-                技术架构文档
-              </HelpLink>
+              <HelpLink
+                href="/docs/guides/quick-start-guide.md"
+                variant="button"
+              >
+                快速开始指?              </HelpLink>
+              <HelpLink
+                href="/docs/technical-docs/architecture-design.md"
+                variant="button"
+                external
+              >
+                技术架构文?              </HelpLink>
             </div>
           </CardContent>
         </Card>
@@ -69,13 +101,13 @@ export default function HelpDemoPage() {
         <CardContent>
           <div className="flex items-center gap-4">
             <span>在工具栏中使用图标帮助：</span>
-            <HelpLink 
-              href="/docs/deployment/deployment-checklist.md" 
+            <HelpLink
+              href="/docs/deployment/deployment-checklist.md"
               variant="icon"
-              aria-label="部署检查清单帮助"
+              aria-label="部署检查清单帮?
             />
-            <HelpLink 
-              href="/docs/guides/backup-strategy-guide.md" 
+            <HelpLink
+              href="/docs/guides/backup-strategy-guide.md"
               variant="icon"
               aria-label="备份策略帮助"
             />
@@ -94,12 +126,18 @@ export default function HelpDemoPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <HelpLink href="/docs/guides/user-management-guide.md" variant="button" className="w-full">
+              <HelpLink
+                href="/docs/guides/user-management-guide.md"
+                variant="button"
+                className="w-full"
+              >
                 用户管理操作指南
               </HelpLink>
-              <HelpLink href="/docs/role-guides/admin.md#用户管理" variant="inline">
-                管理员权限说明
-              </HelpLink>
+              <HelpLink
+                href="/docs/role-guides/admin.md#用户管理"
+                variant="inline"
+              >
+                管理员权限说?              </HelpLink>
             </div>
           </CardContent>
         </Card>
@@ -113,10 +151,17 @@ export default function HelpDemoPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <HelpLink href="/docs/guides/rbac-permissions-guide.md" variant="button" className="w-full">
+              <HelpLink
+                href="/docs/guides/rbac-permissions-guide.md"
+                variant="button"
+                className="w-full"
+              >
                 RBAC权限配置指南
               </HelpLink>
-              <HelpLink href="/docs/role-guides/ops.md#权限管理" variant="inline">
+              <HelpLink
+                href="/docs/role-guides/ops.md#权限管理"
+                variant="inline"
+              >
                 运维权限说明
               </HelpLink>
             </div>
@@ -132,10 +177,16 @@ export default function HelpDemoPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <HelpLink href="/docs/role-guides/analyst.md" variant="button" className="w-full">
-                数据分析师操作手册
-              </HelpLink>
-              <HelpLink href="/docs/guides/data-center-user-guide.md" variant="inline">
+              <HelpLink
+                href="/docs/role-guides/analyst.md"
+                variant="button"
+                className="w-full"
+              >
+                数据分析师操作手?              </HelpLink>
+              <HelpLink
+                href="/docs/guides/data-center-user-guide.md"
+                variant="inline"
+              >
                 数据中心使用指南
               </HelpLink>
             </div>
@@ -143,8 +194,9 @@ export default function HelpDemoPage() {
         </Card>
       </div>
 
-      {/* 快速帮助按钮 */}
+      {/* 快速帮助按?*/}
       <QuickHelpButton />
     </div>
   );
 }
+

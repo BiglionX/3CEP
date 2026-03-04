@@ -74,7 +74,7 @@ export class FcxTransactionService implements IFcxTransactionService {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          return null; // 交易记录不存在
+          return null; // 交易记录不存?
         }
         throw new Error(`查询交易记录失败: ${error.message}`);
       }
@@ -122,9 +122,9 @@ export class FcxTransactionService implements IFcxTransactionService {
         query = query.lte('created_at', params.endDate.toISOString());
       }
 
-      // 排序和分页
+      // 排序和分?
       query = query
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }) as any
         .range(
           params.offset || 0, 
           (params.offset || 0) + (params.limit || 50) - 1
@@ -154,7 +154,7 @@ export class FcxTransactionService implements IFcxTransactionService {
   }
 
   /**
-   * 验证交易合法性
+   * 验证交易合法?
    */
   async validateTransaction(dto: FcxTransferDTO): Promise<boolean> {
     try {
@@ -163,7 +163,7 @@ export class FcxTransactionService implements IFcxTransactionService {
         return false;
       }
 
-      // 2. 验证发送方账户是否存在且状态正常
+      // 2. 验证发送方账户是否存在且状态正?
       if (dto.fromAccountId) {
         const { data: fromAccount, error: fromError } = await supabase
           .from('fcx_accounts')
@@ -175,19 +175,19 @@ export class FcxTransactionService implements IFcxTransactionService {
           return false;
         }
 
-        // 检查账户状态
+        // 检查账户状?
         if (fromAccount.status !== 'active') {
           return false;
         }
 
-        // 检查可用余额是否足够
+        // 检查可用余额是否足?
         const availableBalance = fromAccount.balance;
         if (availableBalance < dto.amount) {
           return false;
         }
       }
 
-      // 3. 验证接收方账户是否存在
+      // 3. 验证接收方账户是否存?
       if (dto.toAccountId) {
         const { data: toAccount, error: toError } = await supabase
           .from('fcx_accounts')
@@ -199,7 +199,7 @@ export class FcxTransactionService implements IFcxTransactionService {
           return false;
         }
 
-        // 检查账户状态
+        // 检查账户状?
         if (toAccount.status !== 'active') {
           return false;
         }
@@ -213,7 +213,7 @@ export class FcxTransactionService implements IFcxTransactionService {
 
       return true;
     } catch (error) {
-      console.error('验证交易合法性错误:', error);
+      console.error('验证交易合法性错?', error);
       return false;
     }
   }

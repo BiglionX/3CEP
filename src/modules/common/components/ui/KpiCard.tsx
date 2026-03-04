@@ -3,13 +3,13 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  TrendingUp, 
-  TrendingDown, 
+import {
+  TrendingUp,
+  TrendingDown,
   Minus,
   AlertCircle,
   CheckCircle,
-  Info
+  Info,
 } from 'lucide-react';
 
 interface KpiCardProps {
@@ -33,29 +33,37 @@ export function KpiCard({
   status = 'info',
   icon,
   description,
-  className = ''
+  className = '',
 }: KpiCardProps) {
   const getStatusColor = () => {
     switch (status) {
-      case 'success': return 'text-green-600';
-      case 'warning': return 'text-yellow-600';
-      case 'error': return 'text-red-600';
-      default: return 'text-blue-600';
+      case 'success':
+        return 'text-green-600';
+      case 'warning':
+        return 'text-yellow-600';
+      case 'error':
+        return 'text-red-600';
+      default:
+        return 'text-blue-600';
     }
   };
 
   const getStatusBg = () => {
     switch (status) {
-      case 'success': return 'bg-green-50';
-      case 'warning': return 'bg-yellow-50';
-      case 'error': return 'bg-red-50';
-      default: return 'bg-blue-50';
+      case 'success':
+        return 'bg-green-50';
+      case 'warning':
+        return 'bg-yellow-50';
+      case 'error':
+        return 'bg-red-50';
+      default:
+        return 'bg-blue-50';
     }
   };
 
   const getTrendIcon = () => {
     if (!trend) return null;
-    
+
     switch (trend) {
       case 'up':
         return <TrendingUp className="w-4 h-4 text-green-500" />;
@@ -91,11 +99,17 @@ export function KpiCard({
             <div className="flex items-center space-x-1">
               {getTrendIcon()}
               {trendValue !== undefined && (
-                <span className={`text-sm font-medium ${
-                  trendValue > 0 ? 'text-green-600' : 
-                  trendValue < 0 ? 'text-red-600' : 'text-gray-500'
-                }`}>
-                  {trendValue > 0 ? '+' : ''}{trendValue}%
+                <span
+                  className={`text-sm font-medium ${
+                    trendValue > 0
+                      ? 'text-green-600'
+                      : trendValue < 0
+                        ? 'text-red-600'
+                        : 'text-gray-500'
+                  }`}
+                >
+                  {trendValue > 0 ? '+' : ''}
+                  {trendValue}%
                 </span>
               )}
             </div>
@@ -123,15 +137,20 @@ interface AlertsListProps {
 export function AlertsList({
   alerts,
   onAlertClick,
-  className = ''
+  className = '',
 }: AlertsListProps) {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'critical':
+        return 'bg-red-100 text-red-800 border-red-200';
+      case 'high':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -188,7 +207,7 @@ export function AlertsList({
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {alerts.map((alert) => (
+          {alerts.map(alert => (
             <div
               key={alert.id}
               className={`p-4 rounded-lg border cursor-pointer transition-colors hover:bg-gray-50 ${
@@ -203,15 +222,11 @@ export function AlertsList({
                     <h4 className="text-sm font-medium text-gray-900">
                       {alert.title}
                     </h4>
-                    <Badge 
-                      className={getSeverityColor(alert.severity)}
-                    >
+                    <Badge className={getSeverityColor(alert.severity)}>
                       {alert.severity}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {alert.message}
-                  </p>
+                  <p className="text-sm text-gray-600 mt-1">{alert.message}</p>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-xs text-gray-500">
                       {formatTime(alert.timestamp)}

@@ -1,247 +1,70 @@
-import { createClient } from '@supabase/supabase-js'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import type { SupabaseClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { ApiInterceptor } from '@/permissions/core/api-interceptor';
 
-// 权限映射配置
-const PERMISSION_MAP: Record<string, { resource: string; action: string }> = {
-  '/admin/dashboard': { resource: 'dashboard', action: 'read' },
-  '/admin/users': { resource: 'users', action: 'read' },
-  '/admin/content': { resource: 'content', action: 'read' },
-  '/admin/shops': { resource: 'shops', action: 'read' },
-  '/admin/finance': { resource: 'payments', action: 'read' },
-  '/admin/settings': { resource: 'settings', action: 'read' },
-  '/admin/profile': { resource: 'profile', action: 'read' }
-}
+// 需要保护的API路径前缀
+const PROTECTED_PATHS = [
+  '/api/users',
+  '/api/shops',
+  '/api/payments',
+  '/api/reports',
+  '/api/admin',
+  '/api/settings',
+];
 
-// 角色权限配置
-const ROLE_PERMISSIONS: Record<string, string[]> = {
-  'admin': ['dashboard', 'users', 'content', 'shops', 'payments', 'settings', 'profile'],
-  'content_reviewer': ['dashboard', 'content'],
-  'shop_reviewer': ['dashboard', 'shops'],
-  'finance': ['dashboard', 'payments'],
-  'viewer': ['dashboard']
-}
+// 公开的API路径（无需认证?const PUBLIC_PATHS = [
+  '/api/auth/login',
+  '/api/auth/register',
+  '/api/health',
+  '/api/public',
+  '/api/search',
+];
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  
-  // 只对管理后台路径进行权限检查
-  if (!pathname.startsWith('/admin')) {
-    return NextResponse.next()
+  const interceptor = ApiInterceptor.getInstance();
+  const path = request.nextUrl.pathname;
+
+  // 检查是否需要拦?  const shouldIntercept = PROTECTED_PATHS.some(prefix =>
+    path.startsWith(prefix)
+  );
+  const isPublicPath = PUBLIC_PATHS.some(prefix => path.startsWith(prefix));
+
+  // 公开路径不拦?  if (isPublicPath) {
+    return NextResponse.next();
   }
 
-  // 创建Supabase客户端
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
+  // 非保护路径且非公开路径，可以选择性拦?  if (!shouldIntercept && !isPublicPath) {
+    // 可以根据配置决定是否拦截其他路径
+    return NextResponse.next();
+  }
 
   try {
-    // 优先检查Authorization header
-    const authHeader = request.headers.get('authorization');
-    let session = null;
-    
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.substring(7);
-      const { data, error } = await supabase.auth.getUser(token);
-      
-      if (!error && data.user) {
-        session = {
-          user: data.user
-        };
-      }
-    }
-    
-    // 如果没有有效的header token，尝试从cookie获取会话
-    if (!session) {
-      // 手动从cookie中提取会话信息
-      const cookieHeader = request.headers.get('cookie');
-      if (cookieHeader) {
-        // 查找Supabase auth cookie
-        const supabaseCookieName = `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1].split('.')[0]}-auth-token`;
-        const cookieMatch = cookieHeader.match(new RegExp(`${supabaseCookieName}=([^;]+)`));
-        
-        if (cookieMatch) {
-          try {
-            const cookieValue = decodeURIComponent(cookieMatch[1]);
-            const sessionData = JSON.parse(cookieValue);
-            
-            if (sessionData.access_token) {
-              const { data, error } = await supabase.auth.getUser(sessionData.access_token);
-              if (!error && data.user) {
-                session = {
-                  user: data.user
-                };
-              }
-            }
-          } catch (parseError: unknown) {
-            console.log('Cookie解析失败:', (parseError as Error).message);
-          }
-        }
-      }
-      
-      // 如果cookie解析失败，尝试默认getSession方法
-      if (!session) {
-        const { data: sessionData } = await supabase.auth.getSession();
-        session = sessionData.session;
-      }
-    }
-    
-    // 如果没有登录，重定向到登录页
-    if (!session) {
-      const redirectUrl = new URL('/login', request.url)
-      redirectUrl.searchParams.set('redirect', pathname)
-      return NextResponse.redirect(redirectUrl)
+    // 执行拦截检?    const interceptionResult = await interceptor.intercept(request);
+
+    // 如果拦截器返回响应，说明请求被阻?    if (interceptionResult) {
+      return interceptionResult;
     }
 
-    // 检查用户是否为管理员
-    const isAdmin = await checkAdminUser(session.user.id, supabase)
-    if (!isAdmin) {
-      console.log(`用户 ${session.user.id} 不是管理员，重定向到未授权页面`)
-      return NextResponse.redirect(new URL('/unauthorized', request.url))
-    }
-    
-    console.log(`管理员用户 ${session.user.id} 访问: ${pathname}`)
-
-    // 检查具体页面权限
-    const requiredPermission = getRequiredPermission(pathname)
-    const hasPermission = await checkUserPermission(
-      session.user.id, 
-      requiredPermission.resource, 
-      requiredPermission.action,
-      supabase
-    )
-
-    if (!hasPermission) {
-      return NextResponse.redirect(new URL('/unauthorized', request.url))
-    }
-
-    return NextResponse.next()
-    
+    // 请求通过，继续处?    return NextResponse.next();
   } catch (error) {
-    console.error('权限检查错误:', error)
-    return NextResponse.redirect(new URL('/login', request.url))
+    console.error('API拦截器中间件错误:', error);
+
+    // 发生错误时，为了安全起见，阻止请?    return NextResponse.json(
+      {
+        error: '内部服务器错?,
+        message: '请求处理过程中发生错?,
+      },
+      { status: 500 }
+    );
   }
 }
 
-// 检查用户是否为管理员
-async function checkAdminUser(userId: string, supabase: SupabaseClient): Promise<boolean> {
-  try {
-    // 首先检查用户元数据中的管理员标识（优先方案）
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
-    
-    if (!userError && userData?.user?.user_metadata?.isAdmin === true) {
-      console.log(`用户 ${userId} 通过元数据验证为管理员`);
-      return true;
-    }
-    
-    // 如果元数据检查失败，尝试检查数据库中的管理员记录（备用方案）
-    try {
-      const { data, error } = await supabase
-        .from('admin_users')
-        .select('is_active')
-        .eq('user_id', userId)
-        .eq('is_active', true)
-        .single()
-
-      if (!error && data !== null) {
-        console.log(`用户 ${userId} 通过数据库验证为管理员`);
-        return true;
-      }
-    } catch (dbError) {
-      // 数据库检查失败时，如果元数据检查也失败，则返回false
-      console.log(`用户 ${userId} 数据库检查失败，且元数据不是管理员`);
-    }
-    
-    console.log(`用户 ${userId} 不是管理员`);
-    return false;
-  } catch (error) {
-    console.error('检查管理员身份失败:', error)
-    return false
-  }
-}
-
-// 根据路径获取所需权限
-function getRequiredPermission(pathname: string): { resource: string; action: string } {
-  // 精确匹配
-  if (PERMISSION_MAP[pathname]) {
-    return PERMISSION_MAP[pathname]
-  }
-  
-  // 模糊匹配（处理动态路由）
-  const pathSegments = pathname.split('/').filter(Boolean)
-  if (pathSegments.length >= 2 && pathSegments[0] === 'admin') {
-    const resource = pathSegments[1]
-    return { resource, action: 'read' }
-  }
-  
-  // 默认权限
-  return { resource: 'dashboard', action: 'read' }
-}
-
-// 检查用户具体权限
-async function checkUserPermission(
-  userId: string, 
-  resource: string, 
-  action: string,
-  supabase: SupabaseClient
-): Promise<boolean> {
-  try {
-    // 首先检查用户元数据中的管理员标识（优先方案）
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
-    
-    if (!userError && userData?.user?.user_metadata?.isAdmin === true) {
-      console.log(`用户 ${userId} 是超级管理员，拥有全部权限`);
-      return true;
-    }
-    
-    // 如果元数据不是管理员，检查数据库中的管理员记录（备用方案）
-    try {
-      const { data: adminUserData, error: adminError } = await supabase
-        .from('admin_users')
-        .select('role')
-        .eq('user_id', userId)
-        .eq('is_active', true)
-        .single()
-
-      if (adminError || !adminUserData) {
-        console.log('用户未找到或非活跃管理员:', userId)
-        return false
-      }
-
-      const userRole = adminUserData.role
-      console.log(`用户 ${userId} 的角色: ${userRole}, 请求资源: ${resource}`)
-
-      // 管理员拥有所有权限
-      if (userRole === 'admin') {
-        console.log('超级管理员拥有全部权限')
-        return true
-      }
-
-      // 检查角色对应的资源权限
-      const allowedResources = ROLE_PERMISSIONS[userRole] || []
-      const hasResourceAccess = allowedResources.includes(resource)
-      
-      console.log(`角色 ${userRole} 允许访问的资源:`, allowedResources)
-      console.log(`资源访问权限检查结果: ${hasResourceAccess}`)
-      
-      return hasResourceAccess;
-    } catch (dbError) {
-      console.log(`用户 ${userId} 数据库权限检查失败`);
-      return false;
-    }
-    
-  } catch (error) {
-    console.error('权限检查失败:', error)
-    return false
-  }
-}
-
-// 配置中间件匹配器
+// 配置中间件匹配的路径
 export const config = {
   matcher: [
-    '/admin/:path*',
-    '/unauthorized'
-  ]
-}
+    /*
+     * 匹配所有API路由
+     */
+    '/api/:path*',
+  ],
+};

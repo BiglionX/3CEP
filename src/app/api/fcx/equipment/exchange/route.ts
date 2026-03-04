@@ -1,5 +1,5 @@
-/**
- * FCX兑换配件API路由
+﻿/**
+ * FCX鍏戞崲閰嶄欢API璺敱
  */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
@@ -9,31 +9,30 @@ import { FcxEquipmentService } from '@/fcx-system/services/fcx-equipment.service
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const body = await request.json();
     const { repairShopId, items, userLocation } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!repairShopId) {
       return NextResponse.json(
-        { success: false, error: '请提供维修店ID' },
+        { success: false, error: '璇锋彁渚涚淮淇簵ID' },
         { status: 400 }
       );
     }
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { success: false, error: '请提供有效的兑换商品列表' },
+        { success: false, error: '璇锋彁渚涙湁鏁堢殑鍏戞崲鍟嗗搧鍒楄〃' },
         { status: 400 }
       );
     }
 
-    // 验证每个商品项
-    for (const item of items) {
+    // 楠岃瘉姣忎釜鍟嗗搧?    for (const item of items) {
       if (!item.productId || !item.quantity || !item.fcxPrice) {
         return NextResponse.json(
-          { success: false, error: '商品信息不完整' },
+          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬? },
           { status: 400 }
         );
       }
@@ -43,33 +42,32 @@ export async function POST(request: Request) {
     const result = await fcxService.exchangeEquipment({
       repairShopId,
       items,
-      userLocation
+      userLocation,
     });
 
     if (result.success) {
       return NextResponse.json({
         success: true,
         data: result,
-        message: 'FCX兑换成功'
+        message: 'FCX鍏戞崲鎴愬姛',
       });
     } else {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: result.message,
-          data: result
+          data: result,
         },
         { status: 400 }
       );
     }
-
   } catch (error) {
-    console.error('FCX兑换错误:', error);
+    console.error('FCX鍏戞崲閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'FCX兑换失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: 'FCX鍏戞崲澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -78,15 +76,17 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
-    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 20;
+    const limit = searchParams.get('limit')
+      ? parseInt(searchParams.get('limit')!)
+      : 20;
 
     if (!userId) {
       return NextResponse.json(
-        { success: false, error: '请提供用户ID' },
+        { success: false, error: '璇锋彁渚涚敤鎴稩D' },
         { status: 400 }
       );
     }
@@ -97,18 +97,18 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       data: history,
-      count: history.length
+      count: history.length,
     });
-
   } catch (error) {
-    console.error('获取兑换历史错误:', error);
+    console.error('鑾峰彇鍏戞崲鍘嗗彶閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '获取兑换历史失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鑾峰彇鍏戞崲鍘嗗彶澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

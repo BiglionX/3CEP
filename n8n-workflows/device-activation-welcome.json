@@ -25,10 +25,7 @@
       "name": "监听设备激活事件",
       "type": "n8n-nodes-base.supabaseTrigger",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -45,10 +42,7 @@
       "name": "过滤首次激活",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
@@ -79,10 +73,7 @@
       "name": "准备欢迎消息数据",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        650,
-        250
-      ]
+      "position": [650, 250]
     },
     {
       "parameters": {
@@ -98,10 +89,7 @@
       "name": "发送企业微信欢迎消息",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        250
-      ],
+      "position": [850, 250],
       "credentials": {
         "wechatWebhookApi": "wechatWebhookCredentials"
       }
@@ -120,10 +108,7 @@
       "name": "发送欢迎邮件",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        400
-      ]
+      "position": [850, 400]
     },
     {
       "parameters": {
@@ -140,10 +125,7 @@
       "name": "记录通知日志",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [
-        1050,
-        300
-      ]
+      "position": [1050, 300]
     }
   ],
   "connections": {

@@ -2,9 +2,10 @@ const { createClient } = require('@supabase/supabase-js');
 
 async function initializeMarketingTables() {
   console.log('🚀 初始化营销数据表...\n');
-  
+
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hrjqzbhqueleszkvnsen.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      'https://hrjqzbhqueleszkvnsen.supabase.co',
     process.env.SUPABASE_SERVICE_ROLE_KEY || 'your_service_key_here'
   );
 
@@ -73,7 +74,7 @@ async function initializeMarketingTables() {
 
   try {
     // 由于Supabase REST API不能直接执行DDL，我们需要分步创建
-    
+
     // 1. 先尝试创建leads表
     console.log('📋 创建 leads 表...');
     const leadsSql = `
@@ -95,33 +96,35 @@ async function initializeMarketingTables() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `;
-    
+
     // 注意：这里我们只能通过Supabase控制台手动执行SQL
     console.log('请在Supabase控制台执行以下SQL:');
     console.log(marketingSchema);
-    
+
     // 2. 验证表是否创建成功
     console.log('\n🔍 验证表结构...');
-    
+
     const { error: leadsCheck } = await supabase
       .from('leads')
       .select('id')
       .limit(1);
-      
+
     if (leadsCheck && leadsCheck.code === '42P01') {
       console.log('❌ leads 表尚未创建，请先在Supabase控制台执行SQL');
       return;
     } else {
       console.log('✅ leads 表已存在');
     }
-    
+
     const { error: eventsCheck } = await supabase
       .from('marketing_events')
       .select('id')
       .limit(1);
-      
+
     if (eventsCheck && eventsCheck.code === '42P01') {
-      console.log('❌ marketing_events 表尚未创建，请先在Supabase控制台执行SQL');
+      console.log(
+        '❌ marketing_events 表尚未创建，请先在Supabase控制台执行SQL'
+      );
       return;
     } else {
       console.log('✅ marketing_events 表已存在');
@@ -129,7 +132,7 @@ async function initializeMarketingTables() {
 
     // 3. 插入测试数据
     console.log('\n🧪 插入测试数据...');
-    
+
     const { data: testData, error: insertError } = await supabase
       .from('leads')
       .insert({
@@ -140,7 +143,7 @@ async function initializeMarketingTables() {
         phone: '13800138000',
         use_case: '希望通过自动化提升客服效率',
         source: 'initialization_script',
-        status: 'new'
+        status: 'new',
       })
       .select();
 
@@ -155,7 +158,6 @@ async function initializeMarketingTables() {
     console.log('1. 如表未创建，请复制上方SQL到Supabase控制台执行');
     console.log('2. 重启开发服务器');
     console.log('3. 访问 /landing/overview 测试营销页面');
-
   } catch (error) {
     console.error('❌ 初始化过程出错:', error.message);
   }

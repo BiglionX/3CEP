@@ -1,0 +1,41 @@
+{
+  "name": "procyc-estimate-value",
+  "version": "1.0.0",
+  "description": "基于设备档案和市场数据的 3C 设备智能估价 ProCyc Skill",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "test": "jest",
+    "test:functional": "ts-node test-skill.ts",
+    "lint": "eslint src --ext .ts",
+    "validate": "procyc-skill validate",
+    "prepublishOnly": "npm run build && npm run test"
+  },
+  "keywords": [
+    "procyc",
+    "skill",
+    "estimation",
+    "valuation",
+    "pricing",
+    "3c-repair"
+  ],
+  "author": "ProCyc Core Team <core@procyc.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "@procyc/cli": "^1.0.0",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

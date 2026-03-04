@@ -31,7 +31,7 @@ class DatabaseMonitor {
       FROM pg_database 
       WHERE datname = current_database()
     `);
-    
+
     return result.rows[0];
   }
 
@@ -47,7 +47,7 @@ class DatabaseMonitor {
       WHERE schemaname = 'public'
       ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
     `);
-    
+
     return result.rows;
   }
 
@@ -61,7 +61,7 @@ class DatabaseMonitor {
       FROM pg_stat_activity 
       WHERE datname = current_database()
     `);
-    
+
     return result.rows[0];
   }
 
@@ -79,7 +79,7 @@ class DatabaseMonitor {
       ORDER BY total_time DESC
       LIMIT 10
     `);
-    
+
     return result.rows;
   }
 
@@ -97,21 +97,21 @@ class DatabaseMonitor {
       WHERE schemaname = 'public'
       ORDER BY idx_scan DESC NULLS LAST
     `);
-    
+
     return result.rows;
   }
 
   // 综合健康检查
   async healthCheck() {
     const checks = {};
-    
+
     try {
       checks.databaseSize = await this.monitorDatabaseSize();
       checks.tableSizes = await this.monitorTableSizes();
       checks.connections = await this.monitorConnections();
       checks.slowQueries = await this.monitorSlowQueries();
       checks.indexUsage = await this.monitorIndexUsage();
-      
+
       // 检查RLS状态
       const rlsCheck = await this.client.query(`
         SELECT tablename, relrowsecurity as rls_enabled
@@ -119,47 +119,54 @@ class DatabaseMonitor {
         WHERE schemaname = 'public'
       `);
       checks.rlsStatus = rlsCheck.rows;
-      
+
       return {
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        checks
+        checks,
       };
     } catch (error) {
       return {
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
-        error: error.message
+        error: error.message,
       };
     }
   }
 
   // 开始持续监控
-  async startMonitoring(interval = 30000) { // 默认30秒间隔
+  async startMonitoring(interval = 30000) {
+    // 默认30秒间隔
     this.monitoring = true;
-    
-    console.log(`🚀 开始数据库监控 (间隔: ${interval/1000}秒)`);
+
+    console.log(`🚀 开始数据库监控 (间隔: ${interval / 1000}秒)`);
 
     const monitorLoop = async () => {
       if (!this.monitoring) return;
-      
+
       try {
         const health = await this.healthCheck();
         console.log('\n📊 数据库健康状态报告');
         console.log('========================');
         console.log(`时间: ${health.timestamp}`);
         console.log(`状态: ${health.status.toUpperCase()}`);
-        
+
         if (health.status === 'healthy') {
           console.log(`数据库大小: ${health.checks.databaseSize.size}`);
-          console.log(`总连接数: ${health.checks.connections.total_connections}`);
-          console.log(`活跃连接: ${health.checks.connections.active_connections}`);
-          
+          console.log(
+            `总连接数: ${health.checks.connections.total_connections}`
+          );
+          console.log(
+            `活跃连接: ${health.checks.connections.active_connections}`
+          );
+
           // 显示最大的表
           const largestTables = health.checks.tableSizes.slice(0, 3);
           console.log('\n📈 最大的表:');
           largestTables.forEach(table => {
-            console.log(`  ${table.tablename}: ${table.size} (${table.row_count} 行)`);
+            console.log(
+              `  ${table.tablename}: ${table.size} (${table.row_count} 行)`
+            );
           });
         } else {
           console.error(`❌ 错误: ${health.error}`);
@@ -167,7 +174,7 @@ class DatabaseMonitor {
       } catch (error) {
         console.error('❌ 监控过程中发生错误:', error.message);
       }
-      
+
       // 安排下次监控
       setTimeout(monitorLoop, interval);
     };
@@ -186,14 +193,14 @@ class DatabaseMonitor {
 // 如果直接运行此脚本
 if (require.main === module) {
   const databaseUrl = process.env.DATABASE_URL;
-  
+
   if (!databaseUrl) {
     console.error('❌ 请设置 DATABASE_URL 环境变量');
     process.exit(1);
   }
 
   const monitor = new DatabaseMonitor(databaseUrl);
-  
+
   // 处理退出信号
   process.on('SIGINT', async () => {
     console.log('\n👋 收到退出信号，正在关闭监控...');
@@ -203,12 +210,15 @@ if (require.main === module) {
   });
 
   // 启动监控
-  monitor.connect().then(() => {
-    monitor.startMonitoring(30000); // 30秒间隔
-  }).catch(error => {
-    console.error('❌ 启动监控失败:', error.message);
-    process.exit(1);
-  });
+  monitor
+    .connect()
+    .then(() => {
+      monitor.startMonitoring(30000); // 30秒间隔
+    })
+    .catch(error => {
+      console.error('❌ 启动监控失败:', error.message);
+      process.exit(1);
+    });
 }
 
 module.exports = DatabaseMonitor;

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 众筹FCX支付服务
  * 处理众筹项目中的FCX支付逻辑
  */
@@ -78,7 +78,7 @@ export class CrowdfundingFcxPaymentService {
           fcxDeducted: 0,
           fiatNeeded: 0,
           fcxTransactionId: null,
-          message: 'FCX账户不存在',
+          message: 'FCX账户不存?,
           error: 'ACCOUNT_NOT_FOUND',
         };
       }
@@ -109,7 +109,7 @@ export class CrowdfundingFcxPaymentService {
           fcxDeducted: 0,
           fiatNeeded: 0,
           fcxTransactionId: null,
-          message: `FCX余额不足，当前余额: ${account.balance}`,
+          message: `FCX余额不足，当前余? ${account.balance}`,
           error: 'INSUFFICIENT_BALANCE',
         };
       }
@@ -126,7 +126,7 @@ export class CrowdfundingFcxPaymentService {
           fcxDeducted: 0,
           fiatNeeded: 0,
           fcxTransactionId: null,
-          message: `FCX支付超出限额，最大允许: ${maxFcxAllowed.toFixed(2)} FCX`,
+          message: `FCX支付超出限额，最大允? ${maxFcxAllowed.toFixed(2)} FCX`,
           error: 'EXCEEDS_LIMIT',
         };
       }
@@ -175,8 +175,7 @@ export class CrowdfundingFcxPaymentService {
   }
 
   /**
-   * 处理混合支付（FCX + 法币）
-   */
+   * 处理混合支付（FCX + 法币?   */
   static async processHybridPayment(
     request: FcxPaymentRequest
   ): Promise<HybridPaymentResult> {
@@ -212,8 +211,7 @@ export class CrowdfundingFcxPaymentService {
         await new Promise(resolve => setTimeout(resolve, 800));
       }
 
-      // 3. 更新支持记录为已支付状态
-      await this.markPledgeAsPaid(request.pledgeId, fiatTransactionId);
+      // 3. 更新支持记录为已支付状?      await this.markPledgeAsPaid(request.pledgeId, fiatTransactionId);
 
       return {
         success: true,
@@ -276,11 +274,8 @@ export class CrowdfundingFcxPaymentService {
     const fcxRate = FCX_PAYMENT_CONFIG.USD_TO_FCX_RATE;
     const maxFcxRatio = FCX_PAYMENT_CONFIG.MAX_FCX_RATIO;
 
-    // 计算最大可使用的FCX价值
-    const maxFcxUsable = Math.min(
-      userFcxBalance / fcxRate, // 用户FCX余额对应的价值
-      totalAmount * maxFcxRatio // 最大支付比例限制
-    );
+    // 计算最大可使用的FCX价?    const maxFcxUsable = Math.min(
+      userFcxBalance / fcxRate, // 用户FCX余额对应的价?      totalAmount * maxFcxRatio // 最大支付比例限?    );
 
     // 建议使用80%的可使用额度
     const suggestedFcx = maxFcxUsable * 0.8;
@@ -312,8 +307,7 @@ export class CrowdfundingFcxPaymentService {
       throw new Error('支持记录不存在或无权访问');
     }
 
-    // 检查状态
-    if (pledge.status !== 'pending') {
+    // 检查状?    if (pledge.status !== 'pending') {
       throw new Error('只允许对待处理状态的支持进行支付');
     }
 
@@ -366,8 +360,7 @@ export class CrowdfundingFcxPaymentService {
         throw new Error(`获取支持记录失败: ${pledgeError?.message}`);
       }
 
-      // 2. 更新支付状态
-      const { error: updateError } = await supabase
+      // 2. 更新支付状?      const { error: updateError } = await supabase
         .from('crowdfunding_pledges')
         .update({
           status: 'paid',
@@ -378,7 +371,7 @@ export class CrowdfundingFcxPaymentService {
         .eq('id', pledgeId);
 
       if (updateError) {
-        throw new Error(`更新支付状态失败: ${updateError.message}`);
+        throw new Error(`更新支付状态失? ${updateError.message}`);
       }
 
       // 3. 检查是否有旧机型关联并记录生命周期事件
@@ -386,7 +379,7 @@ export class CrowdfundingFcxPaymentService {
         await this.recordDeviceLifecycleEvent(pledge);
       }
     } catch (error) {
-      console.error('标记支付状态失败:', error);
+      console.error('标记支付状态失?', error);
       throw error;
     }
   }
@@ -399,8 +392,7 @@ export class CrowdfundingFcxPaymentService {
     try {
       const lifecycleService = new DeviceLifecycleService();
 
-      // 确定事件类型：如果有旧机型关联则为转移，否则可能为回收
-      const eventType = pledge.old_device_qrcode
+      // 确定事件类型：如果有旧机型关联则为转移，否则可能为回?      const eventType = pledge.old_device_qrcode
         ? DeviceEventType.TRANSFERRED
         : DeviceEventType.RECYCLED;
 
@@ -412,13 +404,13 @@ export class CrowdfundingFcxPaymentService {
         location: '众筹平台',
         technician: '系统自动',
         notes: `通过众筹项目 ${
-          pledge.crowdfunding_projects?.product_model || '新设备'
+          pledge?.product_model || '新设?
         } 进行${eventType === DeviceEventType.TRANSFERRED ? '转移' : '回收'}`,
         metadata: {
           pledgeId: pledge.id,
           projectId: pledge.project_id,
-          newDeviceModel: pledge.crowdfunding_projects?.product_model,
-          oldModels: pledge.crowdfunding_projects?.old_models || [],
+          newDeviceModel: pledge?.product_model,
+          oldModels: pledge?.old_models || [],
           amount: pledge.amount,
           paymentMethod: pledge.fcx_payment_amount ? 'fcx' : 'fiat',
           fcxAmount: pledge.fcx_payment_amount || 0,
@@ -426,14 +418,12 @@ export class CrowdfundingFcxPaymentService {
         },
       });
 
-      console.log(
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
         `已为设备 ${pledge.old_device_qrcode} 记录${
           eventType === DeviceEventType.TRANSFERRED ? '转移' : '回收'
         }事件`
-      );
-    } catch (error) {
+      )} catch (error) {
       console.error('记录设备生命周期事件失败:', error);
-      // 不抛出异常，避免影响主流程
-    }
+      // 不抛出异常，避免影响主流?    }
   }
 }

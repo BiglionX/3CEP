@@ -13,7 +13,7 @@ async function runTest() {
     console.log('1️⃣ 启动开发服务器...');
     const devProcess = spawn('npm', ['run', 'dev'], {
       cwd: process.cwd(),
-      stdio: 'pipe'
+      stdio: 'pipe',
     });
 
     // 等待服务器启动
@@ -30,44 +30,49 @@ async function runTest() {
         address: '深圳市南山区科技园',
         country: '中国',
         city: '深圳',
-        postalCode: '518000'
+        postalCode: '518000',
       },
       businessInfo: {
         businessLicense: '91440300123456789X',
         taxId: '91440300123456789X',
         establishedYear: 2015,
         employeeCount: 50,
-        businessScope: '电子产品研发、生产和销售'
+        businessScope: '电子产品研发、生产和销售',
       },
       products: [
         {
           categoryName: '手机配件',
-          productTypes: ['屏幕', '电池', '外壳']
-        }
+          productTypes: ['屏幕', '电池', '外壳'],
+        },
       ],
       documents: [
         {
           type: 'business_license',
           fileName: '营业执照.jpg',
-          fileUrl: 'https://example.com/license.jpg'
-        }
-      ]
+          fileUrl: 'https://example.com/license.jpg',
+        },
+      ],
     };
 
-    const applicationTest = await fetch('http://localhost:3001/api/supply-chain/suppliers/application', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(applicationData)
-    });
+    const applicationTest = await fetch(
+      'http://localhost:3001/api/supply-chain/suppliers/application',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(applicationData),
+      }
+    );
 
     const applicationResult = await applicationTest.json();
     console.log('✅ 供应商申请结果:', applicationResult);
 
     // 3. 测试待审核申请查询
     console.log('\n3️⃣ 测试待审核申请查询...');
-    const pendingTest = await fetch('http://localhost:3001/api/supply-chain/suppliers/pending?limit=10');
+    const pendingTest = await fetch(
+      'http://localhost:3001/api/supply-chain/suppliers/pending?limit=10'
+    );
     const pendingResult = await pendingTest.json();
     console.log('✅ 待审核申请结果:', pendingResult);
 
@@ -80,16 +85,21 @@ async function runTest() {
         reviewResult: 'approved',
         score: 85,
         comments: '资料齐全，符合入驻要求',
-        nextReviewDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+        nextReviewDate: new Date(
+          Date.now() + 365 * 24 * 60 * 60 * 1000
+        ).toISOString(),
       };
 
-      const reviewTest = await fetch('http://localhost:3001/api/supply-chain/suppliers/review', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(reviewData)
-      });
+      const reviewTest = await fetch(
+        'http://localhost:3001/api/supply-chain/suppliers/review',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(reviewData),
+        }
+      );
 
       const reviewResult = await reviewTest.json();
       console.log('✅ 供应商审核结果:', reviewResult);
@@ -97,41 +107,55 @@ async function runTest() {
 
     // 5. 测试供应商列表查询
     console.log('\n5️⃣ 测试供应商列表查询...');
-    const listTest = await fetch('http://localhost:3001/api/supply-chain/suppliers?status=approved&limit=10');
+    const listTest = await fetch(
+      'http://localhost:3001/api/supply-chain/suppliers?status=approved&limit=10'
+    );
     const listResult = await listTest.json();
     console.log('✅ 供应商列表结果:', listResult);
 
     // 6. 测试参数验证
     console.log('\n6️⃣ 测试参数验证...');
-    
+
     // 测试缺少必要参数
-    const invalidTest = await fetch('http://localhost:3001/api/supply-chain/suppliers/application', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        companyName: '测试公司' // 缺少必要字段
-      })
-    });
+    const invalidTest = await fetch(
+      'http://localhost:3001/api/supply-chain/suppliers/application',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          companyName: '测试公司', // 缺少必要字段
+        }),
+      }
+    );
     const invalidResult = await invalidTest.json();
-    console.log('✅ 参数验证结果:', invalidResult.error === '缺少必要参数: applicantName');
+    console.log(
+      '✅ 参数验证结果:',
+      invalidResult.error === '缺少必要参数: applicantName'
+    );
 
     // 测试无效审核分数
-    const invalidScoreTest = await fetch('http://localhost:3001/api/supply-chain/suppliers/review', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        supplierId: 'test-id',
-        reviewerId: 'admin-001',
-        reviewResult: 'approved',
-        score: 150 // 超出范围
-      })
-    });
+    const invalidScoreTest = await fetch(
+      'http://localhost:3001/api/supply-chain/suppliers/review',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          supplierId: 'test-id',
+          reviewerId: 'admin-001',
+          reviewResult: 'approved',
+          score: 150, // 超出范围
+        }),
+      }
+    );
     const invalidScoreResult = await invalidScoreTest.json();
-    console.log('✅ 分数验证结果:', invalidScoreResult.error === '审核分数必须在0-100之间');
+    console.log(
+      '✅ 分数验证结果:',
+      invalidScoreResult.error === '审核分数必须在0-100之间'
+    );
 
     console.log('\n🎉 供应商管理功能测试完成！');
     console.log('📊 测试总结:');
@@ -140,7 +164,6 @@ async function runTest() {
     console.log('- 供应商审核流程: 通过 ✓');
     console.log('- 供应商列表查询: 通过 ✓');
     console.log('- 参数验证功能: 通过 ✓');
-
   } catch (error) {
     console.error('❌ 测试过程中出现错误:', error.message);
   } finally {

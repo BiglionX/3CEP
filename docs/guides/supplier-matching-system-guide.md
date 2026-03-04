@@ -189,10 +189,10 @@ VECTOR_DB_TYPE=pinecone  # 或 weaviate
 
 ```javascript
 async function matchSuppliers(procurementRequest) {
-  const response = await fetch("/api/procurement/match-suppliers", {
-    method: "POST",
+  const response = await fetch('/api/procurement/match-suppliers', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       procurementRequest: procurementRequest,
@@ -204,15 +204,15 @@ async function matchSuppliers(procurementRequest) {
   const result = await response.json();
 
   if (result.success) {
-    console.log("匹配成功的供应商:");
+    console.log('匹配成功的供应商:');
     result.data.matches.forEach((match, index) => {
       console.log(
         `${index + 1}. ${match.supplierName} - 匹配度: ${match.matchScore}%`
       );
-      console.log(`   理由: ${match.matchingCriteria.join(", ")}`);
+      console.log(`   理由: ${match.matchingCriteria.join(', ')}`);
     });
   } else {
-    console.error("匹配失败:", result.error);
+    console.error('匹配失败:', result.error);
   }
 }
 
@@ -220,18 +220,18 @@ async function matchSuppliers(procurementRequest) {
 const request = {
   items: [
     {
-      productName: "工业传感器",
-      category: "传感器",
+      productName: '工业传感器',
+      category: '传感器',
       quantity: 500,
-      unit: "个",
+      unit: '个',
       estimatedUnitPrice: 150,
     },
   ],
-  urgency: "high",
+  urgency: 'high',
   budgetRange: {
     min: 60000,
     max: 80000,
-    currency: "CNY",
+    currency: 'CNY',
   },
 };
 
@@ -324,13 +324,11 @@ match_suppliers(request)
 ### 常见问题
 
 1. **向量数据库连接失败**
-
    - 检查 API Key 和环境配置
    - 确认网络连接正常
    - 验证索引是否存在
 
 2. **匹配准确率偏低**
-
    - 增加训练数据量
    - 调整评分权重
    - 优化向量嵌入模型
@@ -346,21 +344,19 @@ match_suppliers(request)
 
 ```javascript
 // 获取匹配日志
-const stats = await fetch("/api/procurement/match-suppliers?action=statistics");
+const stats = await fetch('/api/procurement/match-suppliers?action=statistics');
 const data = await stats.json();
-console.log("处理日志:", data.data.logs);
+console.log('处理日志:', data.data.logs);
 ```
 
 ## 后续优化建议
 
 1. **算法优化**
-
    - 引入深度学习模型提升向量质量
    - 增加在线学习能力
    - 实现个性化推荐
 
 2. **数据增强**
-
    - 增加历史交易数据
    - 补充供应商评价数据
    - 整合市场行情信息

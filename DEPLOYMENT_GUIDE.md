@@ -1,21 +1,26 @@
 # OpenQuote 链接库统一表部署指南
 
 ## 🎯 部署目标
+
 创建统一的 `unified_link_library` 表，整合现有的 `hot_links` 和 `hot_link_pool` 表功能，解决优先级管理问题。
 
 ## 📋 手动部署步骤
 
 ### 步骤1：登录Supabase控制台
+
 1. 访问 [Supabase控制台](https://app.supabase.com/)
 2. 登录您的账户
 3. 选择对应的项目
 
 ### 步骤2：进入SQL Editor
+
 1. 在左侧导航栏点击 "SQL Editor"
 2. 点击 "New query" 创建新查询
 
 ### 步骤3：执行SQL脚本
+
 复制以下文件的完整内容并粘贴到SQL Editor中：
+
 ```
 supabase/migrations/029_unified_link_library_final.sql
 ```
@@ -71,8 +76,8 @@ CREATE POLICY "Allow admin full access to links"
   ON unified_link_library FOR ALL
   USING (
     EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE admin_users.user_id = auth.uid() 
+      SELECT 1 FROM admin_users
+      WHERE admin_users.user_id = auth.uid()
       AND admin_users.is_active = true
     )
   );
@@ -97,10 +102,10 @@ INSERT INTO unified_link_library (
   url, title, description, source, category, sub_category,
   image_url, views, likes, share_count, scraped_at, created_at, status
 )
-SELECT 
+SELECT
   url, title, description, source, category, sub_category,
   image_url, views, likes, share_count, scraped_at, created_at,
-  CASE 
+  CASE
     WHEN status = 'active' THEN 'active'
     ELSE 'inactive'
   END as status
@@ -115,11 +120,11 @@ INSERT INTO unified_link_library (
   scraped_at, created_at, updated_at, status, review_status,
   reviewed_at, reviewed_by, rejection_reason, article_id
 )
-SELECT 
+SELECT
   url, title, description, source, category, sub_category,
   image_url, likes, views, share_count, ai_tags,
   scraped_at, created_at, updated_at,
-  CASE 
+  CASE
     WHEN status = 'promoted' THEN 'active'
     WHEN status = 'pending_review' THEN 'pending_review'
     WHEN status = 'rejected' THEN 'rejected'
@@ -132,8 +137,8 @@ WHERE url NOT IN (SELECT url FROM unified_link_library)
 ON CONFLICT (url) DO NOTHING;
 
 -- Step 9: Set initial priorities for existing links
-UPDATE unified_link_library 
-SET priority = CASE 
+UPDATE unified_link_library
+SET priority = CASE
   WHEN source = 'iFixit' THEN 100
   WHEN source = '官方' THEN 90
   WHEN source ILIKE '%知乎%' THEN 80
@@ -147,7 +152,7 @@ WHERE priority = 0;
 -- Step 10: Verify the deployment
 SELECT '=== Unified Link Library Table Created Successfully ===' as status;
 
-SELECT 
+SELECT
   COUNT(*) as total_links,
   COUNT(*) FILTER (WHERE status = 'active') as active_links,
   COUNT(*) FILTER (WHERE status = 'pending_review') as pending_links,
@@ -158,12 +163,14 @@ FROM unified_link_library;
 ```
 
 ### 步骤4：执行查询
+
 1. 点击 "RUN" 按钮执行SQL
 2. 等待执行完成（大约需要30秒到1分钟）
 3. 查看执行结果，应该显示类似以下的成功信息：
+
    ```
    === Unified Link Library Table Created Successfully ===
-   
+
    total_links | active_links | pending_links | high_priority_links
    ------------|--------------|---------------|--------------------
        44      |      37      |       7       |        12
@@ -178,6 +185,7 @@ node scripts/test-link-query.js
 ```
 
 预期输出应该显示：
+
 - ✅ unified_link_library 表存在
 - ✅ 查询功能正常工作
 - ✅ 返回按优先级排序的链接结果
@@ -185,6 +193,7 @@ node scripts/test-link-query.js
 ## 🌐 访问管理后台
 
 部署成功后，可以通过以下URL访问链接库管理后台：
+
 ```
 http://localhost:3001/admin/links/library
 ```
@@ -192,6 +201,7 @@ http://localhost:3001/admin/links/library
 ## 🔌 Dify集成配置
 
 在Dify工作流中配置HTTP请求节点：
+
 - **URL**: `http://your-domain/api/links/query`
 - **方法**: POST
 - **Headers**: `Content-Type: application/json`
@@ -200,6 +210,7 @@ http://localhost:3001/admin/links/library
 ## 🆘 常见问题解决
 
 如果遇到问题，请检查：
+
 1. 确保Supabase项目连接正常
 2. 确认有足够的数据库权限
 3. 检查是否有重复的表名冲突

@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -6,33 +6,30 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 获取用户画像 (移动端优化版本)
+// 鑾峰彇鐢ㄦ埛鐢诲儚 (绉诲姩绔紭鍖栫増?
 export async function GET(request: Request) {
   try {
-    // 获取认证信息
+    // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '未授权访问',
+          message: '鏈巿鏉冭?,
           data: null,
         },
         { status: 401 }
       );
     }
 
-    // 验证JWT令牌并获取用户信息
-    const token = authHeader.substring(7);
+    // 楠岃瘉JWT浠ょ墝骞惰幏鍙栫敤鎴蜂俊?    const token = authHeader.substring(7);
 
-    // 这里应该验证JWT令牌，简化实现直接使用mock数据
-    // 实际应用中需要调用认证服务验证token
+    // 杩欓噷搴旇楠岃瘉JWT浠ょ墝锛岀畝鍖栧疄鐜扮洿鎺ヤ娇鐢╩ock鏁版嵁
+    // 瀹為檯搴旂敤涓渶瑕佽皟鐢ㄨ璇佹湇鍔￠獙璇乼oken
 
-    // Mock用户数据 - 实际应该从认证服务获取
-    const mockUserId = 'user_123'; // 应该从token中解析
-
-    // 获取用户基本信息
+    // Mock鐢ㄦ埛鏁版嵁 - 瀹為檯搴旇浠庤璇佹湇鍔¤幏?    const mockUserId = 'user_123'; // 搴旇浠巘oken涓В?
+    // 鑾峰彇鐢ㄦ埛鍩烘湰淇℃伅
     const { data: user, error: userError } = await supabase
       .from('users')
       .select(
@@ -52,22 +49,21 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           code: 40401,
-          message: '用户不存在',
+          message: '鐢ㄦ埛涓嶅瓨?,
           data: null,
         },
         { status: 404 }
       );
     }
 
-    // 获取用户副角色信息
-    const { data: userRoles } = await supabase
+    // 鑾峰彇鐢ㄦ埛鍓鑹蹭俊?    const { data: userRoles } = await supabase
       .from('user_roles')
       .select('role_name')
       .eq('user_id', user.id);
 
     const subRoles = userRoles?.map((ur: any) => ur.role_name) || [];
 
-    // 获取用户常修设备偏好
+    // 鑾峰彇鐢ㄦ埛甯镐慨璁惧鍋忓ソ
     const { data: favoriteDevices } = await supabase
       .from('user_device_preferences')
       .select(
@@ -83,7 +79,7 @@ export async function GET(request: Request) {
       name: `${pref.devices.brand} ${pref.devices.model}`,
     }));
 
-    // 获取用户常购配件偏好
+    // 鑾峰彇鐢ㄦ埛甯歌喘閰嶄欢鍋忓ソ
     const { data: favoriteParts } = await supabase
       .from('user_part_preferences')
       .select(
@@ -99,8 +95,7 @@ export async function GET(request: Request) {
       name: `${pref.parts.brand} ${pref.parts.name}`,
     }));
 
-    // 获取用户收藏的店铺
-    const { data: favoriteShops } = await supabase
+    // 鑾峰彇鐢ㄦ埛鏀惰棌鐨勫簵?    const { data: favoriteShops } = await supabase
       .from('user_shop_favorites')
       .select(
         `
@@ -117,7 +112,7 @@ export async function GET(request: Request) {
       city: fav.repair_shops.city,
     }));
 
-    // 获取用户统计数据
+    // 鑾峰彇鐢ㄦ埛缁熻鏁版嵁
     const { data: userStats } = await supabase
       .from('user_statistics')
       .select('*')
@@ -132,7 +127,7 @@ export async function GET(request: Request) {
       total_likes: userStats?.total_likes_received || 0,
     };
 
-    // 获取用户积分信息
+    // 鑾峰彇鐢ㄦ埛绉垎淇℃伅
     const { data: pointBalance } = await supabase
       .from('user_points')
       .select('balance')
@@ -141,8 +136,7 @@ export async function GET(request: Request) {
 
     const points = pointBalance?.balance || 0;
 
-    // 格式化响应数据
-    const userProfile = {
+    // 鏍煎紡鍖栧搷搴旀暟?    const userProfile = {
       id: user.id,
       email: user.email,
       name: user.name,
@@ -155,8 +149,7 @@ export async function GET(request: Request) {
       stats,
       points,
       member_since: user.created_at,
-      last_active: new Date().toISOString(), // 实际应该从用户活动记录获取
-    };
+      last_active: new Date().toISOString(), // 瀹為檯搴旇浠庣敤鎴锋椿鍔ㄨ褰曡幏?    };
 
     return NextResponse.json({
       code: 0,
@@ -165,14 +158,15 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('获取用户画像失败:', error);
+    console.error('鑾峰彇鐢ㄦ埛鐢诲儚澶辫触:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '服务器内部错误',
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         data: null,
       },
       { status: 500 }
     );
   }
 }
+

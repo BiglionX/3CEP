@@ -9,7 +9,7 @@ function testDatabaseConnectionConfig() {
   console.log('📄 检查配置文件:');
   const configFiles = [
     'src/data-center/core/database-connection.ts',
-    '.env.datacenter.example'
+    '.env.datacenter.example',
   ];
 
   configFiles.forEach(file => {
@@ -21,50 +21,56 @@ function testDatabaseConnectionConfig() {
   console.log('\n⚙️ 检查环境变量要求:');
   const requiredEnvVars = [
     'LIONFIX_DB_HOST',
-    'LIONFIX_DB_PORT', 
+    'LIONFIX_DB_PORT',
     'LIONFIX_DB_NAME',
     'LIONFIX_DB_USER',
     'LIONFIX_DB_PASSWORD',
     'SUPABASE_DB_HOST',
     'SUPABASE_DB_PORT',
-    'SUPABASE_DB_NAME', 
+    'SUPABASE_DB_NAME',
     'SUPABASE_DB_USER',
-    'SUPABASE_DB_PASSWORD'
+    'SUPABASE_DB_PASSWORD',
   ];
 
   requiredEnvVars.forEach(envVar => {
     const isDefined = process.env[envVar] !== undefined;
-    console.log(`  ${isDefined ? '✅' : '⭕'} ${envVar} ${isDefined ? '(已定义)' : '(未定义)'}`);
+    console.log(
+      `  ${isDefined ? '✅' : '⭕'} ${envVar} ${isDefined ? '(已定义)' : '(未定义)'}`
+    );
   });
 
   // 3. 验证连接管理器逻辑
   console.log('\n🔧 验证连接管理器:');
   try {
     // 模拟连接管理器的基本结构检查
-    const connectionManagerCode = fs.readFileSync('src/data-center/core/database-connection.ts', 'utf8');
-    
+    const connectionManagerCode = fs.readFileSync(
+      'src/data-center/core/database-connection.ts',
+      'utf8'
+    );
+
     const hasRequiredMethods = [
       'registerDatabase',
-      'testConnection', 
+      'testConnection',
       'query',
-      'closeAll'
+      'closeAll',
     ].every(method => connectionManagerCode.includes(method));
-    
+
     console.log(`  ${hasRequiredMethods ? '✅' : '❌'} 包含必需的方法`);
-    
+
     const hasConnectionPooling = connectionManagerCode.includes('Pool');
     console.log(`  ${hasConnectionPooling ? '✅' : '❌'} 实现连接池`);
-    
+
     const hasErrorHandling = connectionManagerCode.includes('error');
     console.log(`  ${hasErrorHandling ? '✅' : '❌'} 包含错误处理`);
-
   } catch (error) {
     console.log(`  ❌ 检查连接管理器时出错: ${error.message}`);
   }
 
   // 4. 检查测试脚本
   console.log('\n🧪 检查测试脚本:');
-  const testScriptExists = fs.existsSync('scripts/test-database-connections.js');
+  const testScriptExists = fs.existsSync(
+    'scripts/test-database-connections.js'
+  );
   console.log(`  ${testScriptExists ? '✅' : '❌'} 数据库连接测试脚本`);
 
   // 5. 总结

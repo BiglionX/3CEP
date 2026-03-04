@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Button } from '@/components/ui/button';
 import { AuthService, type UserRole } from '@/lib/auth-service';
@@ -52,8 +52,7 @@ export default function EnhancedAdminLayout({
   const router = useRouter();
 
   useEffect(() => {
-    // 初始化暗黑模式
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    // 初始化暗黑模?    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     setDarkMode(savedDarkMode);
     if (savedDarkMode) {
       document.documentElement.classList.add('dark');
@@ -66,8 +65,12 @@ export default function EnhancedAdminLayout({
         const isAdmin = localStorage.getItem('is-admin');
         const storedRole = localStorage.getItem('user-role');
         const storedEmail = localStorage.getItem('user-email');
-        
-        if (tempAdmin === 'true' || isAdmin === 'true' || storedRole === 'admin') {
+
+        if (
+          tempAdmin === 'true' ||
+          isAdmin === 'true' ||
+          storedRole === 'admin'
+        ) {
           setUserRole('admin');
           setUserEmail(storedEmail || 'admin@fixcycle.com');
         } else {
@@ -109,7 +112,7 @@ export default function EnhancedAdminLayout({
 
   const navigationItems: NavigationItem[] = [
     {
-      name: '仪表板',
+      name: '仪表?,
       href: '/admin/dashboard',
       roles: [
         'admin',
@@ -151,13 +154,13 @@ export default function EnhancedAdminLayout({
       icon: <Store className="w-5 h-5" />,
       children: [
         {
-          name: '待审核店铺',
+          name: '待审核店?,
           href: '/admin/shops/pending',
           roles: ['admin', 'shop_reviewer'],
           icon: <Store className="w-4 h-4" />,
         },
         {
-          name: '已审核店铺',
+          name: '已审核店?,
           href: '/admin/shops',
           roles: ['admin', 'shop_reviewer'],
           icon: <Store className="w-4 h-4" />,
@@ -207,7 +210,7 @@ export default function EnhancedAdminLayout({
       icon: <Key className="w-5 h-5" />,
     },
     {
-      name: '自动化',
+      name: '自动?,
       href: '/admin/automation',
       roles: [
         'admin',
@@ -218,6 +221,22 @@ export default function EnhancedAdminLayout({
       ],
       icon: <Workflow className="w-5 h-5" />,
     },
+    {
+      name: '数据中心',
+      href: '/data-center',
+      roles: [
+        'admin',
+        'manager',
+        'content_manager',
+        'shop_manager',
+        'finance_manager',
+        'procurement_specialist',
+        'warehouse_operator',
+        'agent_operator',
+        'viewer',
+      ],
+      icon: <BarChart3 className="w-5 h-5" />,
+    },
   ];
 
   if (isLoading) {
@@ -225,7 +244,7 @@ export default function EnhancedAdminLayout({
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">加载中...</p>
+          <p className="mt-4 text-muted-foreground">加载?..</p>
         </div>
       </div>
     );
@@ -241,7 +260,7 @@ export default function EnhancedAdminLayout({
         />
       )}
 
-      {/* 固定侧边栏 */}
+      {/* 固定侧边?*/}
       <div
         className={cn(
           'fixed inset-y-0 left-0 z-50 w-64 bg-card border-r shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:h-screen',
@@ -293,13 +312,11 @@ export default function EnhancedAdminLayout({
               })}
           </ul>
         </nav>
-
-
       </div>
 
-      {/* 主内容区域 - 紧贴顶部导航栏下方 */}
+      {/* 主内容区?- 紧贴顶部导航栏下?*/}
       <div className="lg:pl-64">
-        {/* 顶部导航栏 */}
+        {/* 顶部导航?*/}
         <header className="bg-card border-b sticky top-0 z-50">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center">
@@ -312,9 +329,11 @@ export default function EnhancedAdminLayout({
                 <Menu className="w-5 h-5" />
               </Button>
               <h1 className="text-lg font-semibold text-foreground">
-                {navigationItems.find(item => item.href === pathname)?.name === '仪表板' 
-                  ? '仪表板' 
-                  : navigationItems.find(item => item.href === pathname)?.name || '管理后台'}
+                {navigationItems.find(item => item.href === pathname)?.name ===
+                '仪表?
+                  ? '仪表?
+                  : navigationItems.find(item => item.href === pathname)
+                      ?.name || '管理后台'}
               </h1>
             </div>
 
@@ -333,10 +352,10 @@ export default function EnhancedAdminLayout({
                   <Moon className="w-5 h-5" />
                 )}
               </Button>
-              
-              {/* 单一登录控件区域 - 确保状态互斥 */}
+
+              {/* 单一登录控件区域 - 确保状态互?*/}
               {userEmail ? (
-                // ✅ 已登录：显示用户信息
+                // �?已登录：显示用户信息
                 <div className="hidden md:flex items-center space-x-3 border-l border-border pl-4">
                   <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
                     <span className="text-primary-foreground text-sm font-medium">
@@ -361,12 +380,14 @@ export default function EnhancedAdminLayout({
                   </Button>
                 </div>
               ) : (
-                // ✅ 未登录：显示登录按钮
+                // �?未登录：显示登录按钮
                 <div className="hidden md:flex items-center space-x-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => router.push('/login?redirect=/admin/dashboard')}
+                    onClick={() =>
+                      router.push('/login?redirect=/admin/dashboard')
+                    }
                     className="h-8 text-sm"
                   >
                     登录
@@ -381,8 +402,8 @@ export default function EnhancedAdminLayout({
                   </Button>
                 </div>
               )}
-              
-              {/* 移动端控件 */}
+
+              {/* 移动端控?*/}
               <div className="md:hidden ml-2">
                 {userEmail ? (
                   <Button
@@ -407,8 +428,6 @@ export default function EnhancedAdminLayout({
             </div>
           </div>
         </header>
-
-
 
         {/* 页面内容 */}
         <main className="py-6 px-4 sm:px-6 lg:px-8">

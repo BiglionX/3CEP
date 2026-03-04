@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -16,20 +16,22 @@ export function AnalyticsWrapper() {
 
   useEffect(() => {
     const url = pathname + searchParams.toString();
-    
+
     // 页面浏览事件
     window.gtag('config', 'G-YOUR-GA4-MEASUREMENT-ID', {
       page_path: url,
     });
-    
+
     // 性能指标收集
     if ('performance' in window) {
-      const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      const perfData = performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming;
       if (perfData) {
         window.gtag('event', 'timing_complete', {
           name: 'page_load',
           value: Math.round(perfData.loadEventEnd - perfData.fetchStart),
-          event_category: 'performance'
+          event_category: 'performance',
         });
       }
     }

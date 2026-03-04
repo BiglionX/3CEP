@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-02-26T14:08:47.991Z",
+  "summary": {
+    "totalTests": 4,
+    "passedTests": 3,
+    "failedTests": 1,
+    "passRate": 75
+  },
+  "results": [
+    {
+      "name": "基础限流功能",
+      "success": false,
+      "details": {
+        "总请求数": 15,
+        "成功请求数": 15,
+        "被限流请求数": 0,
+        "限流触发率": "0.0%"
+      }
+    },
+    {
+      "name": "熔断器功能",
+      "success": true,
+      "details": {
+        "总请求数": 8,
+        "熔断器开启次数": 0,
+        "服务不可用次数": 5,
+        "熔断保护触发": "❌ 否"
+      }
+    },
+    {
+      "name": "端点特有限流",
+      "success": true,
+      "details": {
+        "测试端点数": 2,
+        "配置验证": "✅ 限流规则配置正确"
+      }
+    },
+    {
+      "name": "健康检查",
+      "success": true,
+      "details": {
+        "状态": "healthy",
+        "熔断器状态": "OPEN",
+        "失败计数": 3
+      }
+    }
+  ]
+}

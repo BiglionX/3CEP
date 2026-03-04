@@ -4,16 +4,16 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Server, 
-  Database, 
-  Wifi, 
+import {
+  Server,
+  Database,
+  Wifi,
   HardDrive,
   Activity,
   CheckCircle,
   XCircle,
   AlertTriangle,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 
 interface SystemHealthCardProps {
@@ -36,7 +36,7 @@ export function SystemHealthCard({
   metrics,
   lastUpdated,
   onRefresh,
-  className = ''
+  className = '',
 }: SystemHealthCardProps) {
   const getStatusConfig = () => {
     switch (status) {
@@ -45,28 +45,28 @@ export function SystemHealthCard({
           icon: <CheckCircle className="w-5 h-5 text-green-500" />,
           color: 'text-green-600',
           bgColor: 'bg-green-50',
-          borderColor: 'border-green-200'
+          borderColor: 'border-green-200',
         };
       case 'warning':
         return {
           icon: <AlertTriangle className="w-5 h-5 text-yellow-500" />,
           color: 'text-yellow-600',
           bgColor: 'bg-yellow-50',
-          borderColor: 'border-yellow-200'
+          borderColor: 'border-yellow-200',
         };
       case 'error':
         return {
           icon: <XCircle className="w-5 h-5 text-red-500" />,
           color: 'text-red-600',
           bgColor: 'bg-red-50',
-          borderColor: 'border-red-200'
+          borderColor: 'border-red-200',
         };
       default:
         return {
           icon: <Activity className="w-5 h-5 text-gray-500" />,
           color: 'text-gray-600',
           bgColor: 'bg-gray-50',
-          borderColor: 'border-gray-200'
+          borderColor: 'border-gray-200',
         };
     }
   };
@@ -82,10 +82,18 @@ export function SystemHealthCard({
             <span className="ml-2">{title}</span>
           </CardTitle>
           <div className="flex items-center space-x-2">
-            <Badge 
-              className={color.replace('text-', 'bg-').replace('-600', '-100') + ' ' + color}
+            <Badge
+              className={`${color
+                .replace('text-', 'bg-')
+                .replace('-600', '-100')} ${color}`}
             >
-              {status === 'healthy' ? '正常' : status === 'warning' ? '警告' : status === 'error' ? '错误' : '未知'}
+              {status === 'healthy'
+                ? '正常'
+                : status === 'warning'
+                  ? '警告'
+                  : status === 'error'
+                    ? '错误'
+                    : '未知'}
             </Badge>
             {onRefresh && (
               <Button
@@ -100,7 +108,7 @@ export function SystemHealthCard({
           </div>
         </div>
         <p className="text-xs text-gray-500">
-          最后更新: {new Date(lastUpdated).toLocaleString()}
+          最后更? {new Date(lastUpdated).toLocaleString()}
         </p>
       </CardHeader>
       <CardContent>
@@ -109,17 +117,25 @@ export function SystemHealthCard({
             <div key={index} className="bg-white p-3 rounded-lg border">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">{metric.name}</span>
-                <Badge 
-                  variant={metric.status === 'normal' ? 'default' : metric.status === 'warning' ? 'secondary' : 'destructive'}
+                <Badge
+                  variant={
+                    metric.status === 'normal'
+                      ? 'default'
+                      : metric.status === 'warning'
+                        ? 'secondary'
+                        : 'destructive'
+                  }
                   className="text-xs"
                 >
-                  {metric.status === 'normal' ? '正常' : metric.status === 'warning' ? '警告' : '严重'}
+                  {metric.status === 'normal'
+                    ? '正常'
+                    : metric.status === 'warning'
+                      ? '警告'
+                      : '严重'}
                 </Badge>
               </div>
               <div className="mt-1">
-                <span className="text-lg font-semibold">
-                  {metric.value}
-                </span>
+                <span className="text-lg font-semibold">{metric.value}</span>
                 {metric.unit && (
                   <span className="text-sm text-gray-500 ml-1">
                     {metric.unit}
@@ -151,7 +167,7 @@ export function BusinessKpiCard({
   title,
   kpis,
   period,
-  className = ''
+  className = '',
 }: BusinessKpiCardProps) {
   const calculateProgress = (current: number, target: number) => {
     return Math.min((current / target) * 100, 100);
@@ -159,9 +175,12 @@ export function BusinessKpiCard({
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'up': return 'text-green-600';
-      case 'down': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'up':
+        return 'text-green-600';
+      case 'down':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -182,11 +201,15 @@ export function BusinessKpiCard({
                   {kpi.name}
                 </span>
                 <div className="flex items-center space-x-2">
-                  <span className={`text-sm font-semibold ${getTrendColor(kpi.trend)}`}>
-                    {kpi.current.toLocaleString()}{kpi.unit}
+                  <span
+                    className={`text-sm font-semibold ${getTrendColor(kpi.trend)}`}
+                  >
+                    {kpi.current.toLocaleString()}
+                    {kpi.unit}
                   </span>
                   <span className="text-xs text-gray-500">
-                    / {kpi.target.toLocaleString()}{kpi.unit}
+                    / {kpi.target.toLocaleString()}
+                    {kpi.unit}
                   </span>
                 </div>
               </div>
@@ -196,15 +219,20 @@ export function BusinessKpiCard({
                     calculateProgress(kpi.current, kpi.target) >= 100
                       ? 'bg-green-500'
                       : calculateProgress(kpi.current, kpi.target) >= 80
-                      ? 'bg-blue-500'
-                      : 'bg-yellow-500'
+                        ? 'bg-blue-500'
+                        : 'bg-yellow-500'
                   }`}
-                  style={{ width: `${calculateProgress(kpi.current, kpi.target)}%` }}
+                  style={{
+                    width: `${calculateProgress(kpi.current, kpi.target)}%`,
+                  }}
                 ></div>
               </div>
               <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <span>0{kpi.unit}</span>
-                <span>{kpi.target.toLocaleString()}{kpi.unit}</span>
+                <span>
+                  {kpi.target.toLocaleString()}
+                  {kpi.unit}
+                </span>
               </div>
             </div>
           ))}

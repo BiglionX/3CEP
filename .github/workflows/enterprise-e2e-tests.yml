@@ -2,9 +2,9 @@ name: 企业用户端E2E测试
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   schedule:
     # 每天凌晨2点执行定时测试
     - cron: '0 2 * * *'
@@ -18,16 +18,16 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
-        
+
       - name: 设置Node.js环境
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-          
+
       - name: 安装依赖
         run: npm ci
-        
+
       - name: 缓存Playwright浏览器
         uses: actions/cache@v3
         with:
@@ -41,28 +41,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [
-          'enterprise-functional-tests',
-          'enterprise-permission-tests', 
-          'enterprise-api-tests',
-          'enterprise-mobile-tests'
-        ]
+        project:
+          [
+            'enterprise-functional-tests',
+            'enterprise-permission-tests',
+            'enterprise-api-tests',
+            'enterprise-mobile-tests',
+          ]
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
-        
+
       - name: 设置Node.js环境
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-          
+
       - name: 安装依赖
         run: npm ci
-        
+
       - name: 安装Playwright浏览器
         run: npx playwright install --with-deps chromium firefox webkit
-        
+
       - name: 启动测试服务
         run: |
           npm run dev &
@@ -70,14 +71,14 @@ jobs:
           timeout 60 bash -c 'until curl -s http://localhost:3001/health >/dev/null; do sleep 2; done' || exit 1
         env:
           PORT: 3001
-          
+
       - name: 执行企业E2E测试 - ${{ matrix.project }}
         run: npx playwright test --project=${{ matrix.project }}
         env:
           TEST_ENV: test
           CI: true
           HEADLESS: true
-          
+
       - name: 上传测试结果
         uses: actions/upload-artifact@v3
         if: always()
@@ -95,29 +96,29 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
-        
+
       - name: 设置Node.js环境
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-          
+
       - name: 安装依赖
         run: npm ci
-        
+
       - name: 启动服务
         run: |
           npm run dev &
           timeout 60 bash -c 'until curl -s http://localhost:3001/health >/dev/null; do sleep 2; done' || exit 1
         env:
           PORT: 3001
-          
+
       - name: 执行性能测试
         run: npx playwright test tests/e2e/enterprise/performance/ --project=enterprise-functional-tests
         env:
           TEST_ENV: test
           CI: true
-          
+
       - name: 上传性能测试结果
         uses: actions/upload-artifact@v3
         if: always()
@@ -133,29 +134,29 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
-        
+
       - name: 设置Node.js环境
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-          
+
       - name: 安装依赖
         run: npm ci
-        
+
       - name: 启动服务
         run: |
           npm run dev &
           timeout 60 bash -c 'until curl -s http://localhost:3001/health >/dev/null; do sleep 2; done' || exit 1
         env:
           PORT: 3001
-          
+
       - name: 执行安全测试
         run: npx playwright test tests/e2e/enterprise/security/ --project=enterprise-functional-tests
         env:
           TEST_ENV: test
           CI: true
-          
+
       - name: 上传安全测试结果
         uses: actions/upload-artifact@v3
         if: always()
@@ -172,21 +173,21 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
-        
+
       - name: 下载所有测试结果
         uses: actions/download-artifact@v3
         with:
           path: downloaded-results
-          
+
       - name: 安装依赖
         run: npm ci
-        
+
       - name: 生成综合测试报告
         run: |
           node scripts/generate-enterprise-test-report.js
         env:
           TEST_RESULTS_PATH: downloaded-results
-          
+
       - name: 检查质量门禁
         run: |
           # 检查测试通过率
@@ -195,15 +196,15 @@ jobs:
             const report = JSON.parse(fs.readFileSync('test-results/enterprise-e2e-report.json'));
             console.log(report.summary.passRate);
           ")
-          
+
           echo "测试通过率: $PASS_RATE%"
-          
+
           # 通过率必须≥95%
           if (( $(echo "$PASS_RATE < 95" | bc -l) )); then
             echo "❌ 测试通过率未达到质量门禁要求 (当前: $PASS_RATE%, 要求: 95%)"
             exit 1
           fi
-          
+
           # 检查安全漏洞
           HIGH_VULNS=$(node -e "
             const fs = require('fs');
@@ -215,16 +216,16 @@ jobs:
               console.log(0);
             }
           ")
-          
+
           echo "高危安全漏洞数: $HIGH_VULNS"
-          
+
           if [ "$HIGH_VULNS" -gt 0 ]; then
             echo "❌ 发现高危安全漏洞，不符合质量要求"
             exit 1
           fi
-          
+
           echo "✅ 所有质量门禁检查通过"
-          
+
       - name: 上传最终报告
         uses: actions/upload-artifact@v3
         with:
@@ -247,7 +248,7 @@ jobs:
           webhook_url: ${{ secrets.SLACK_WEBHOOK }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          
+
       - name: 发送企业微信通知
         if: failure()
         uses: chf007/action-wechat-work@master

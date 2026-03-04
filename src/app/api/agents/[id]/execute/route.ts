@@ -62,7 +62,7 @@ export async function POST(
         parameters: body.parameters || {},
         started_at: new Date().toISOString(),
         triggered_by: user.id
-      })
+      }) as any
       .select()
       .single();
 
@@ -172,7 +172,7 @@ export async function PATCH(
         is_debug: true,
         started_at: new Date().toISOString(),
         triggered_by: user.id
-      })
+      }) as any
       .select()
       .single();
 

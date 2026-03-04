@@ -57,7 +57,7 @@ export class AuditService {
    * 获取审计日志列表
    * @param page 页码
    * @param limit 每页数量
-   * @param filters 筛选条件
+   * @param filters 筛选条?
    * @returns 日志列表和总数
    */
   static async getAuditLogs(
@@ -74,10 +74,10 @@ export class AuditService {
     try {
       let query = supabase
         .from('audit_logs')
-        .select('*', { count: 'exact' })
+        .select('*', { count: 'exact' }) as any
         .order('created_at', { ascending: false });
 
-      // 应用筛选条件
+      // 应用筛选条?
       if (filters?.user_id) {
         query = query.eq('user_id', filters.user_id);
       }
@@ -120,10 +120,10 @@ export class AuditService {
   }
 
   /**
-   * 获取用户的最近活动
+   * 获取用户的最近活?
    * @param userId 用户ID
    * @param limit 限制数量
-   * @returns 最近活动列表
+   * @returns 最近活动列?
    */
   static async getRecentActivity(
     userId: string,
@@ -203,7 +203,7 @@ export class AuditService {
         return 0;
       }
 
-      return (data as any)?.data?.length || 0;
+      return (data as any)?.(data as any)?.length || 0;
     } catch (error) {
       console.error('清理过期日志异常:', error);
       return 0;
@@ -212,8 +212,8 @@ export class AuditService {
 
   /**
    * 导出审计日志为CSV格式
-   * @param filters 筛选条件
-   * @returns CSV字符串
+   * @param filters 筛选条?
+   * @returns CSV字符?
    */
   static async exportLogsAsCSV(filters?: any): Promise<string> {
     const result = await this.getAuditLogs(1, 10000, filters);
@@ -233,7 +233,7 @@ export class AuditService {
       '用户代理',
     ];
 
-    // CSV数据行
+    // CSV数据?
     const rows = result.logs.map(log => [
       log.created_at,
       log.user_email,

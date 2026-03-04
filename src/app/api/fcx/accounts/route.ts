@@ -1,6 +1,6 @@
-/**
- * FCX账户API路由
- * 处理账户创建、查询等操作
+﻿/**
+ * FCX璐︽埛API璺敱
+ * 澶勭悊璐︽埛鍒涘缓銆佹煡璇㈢瓑鎿嶄綔
  */
 
 import { NextResponse } from 'next/server';
@@ -12,10 +12,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { userId, accountType, initialBalance } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!userId || !accountType) {
       return NextResponse.json(
-        { error: '缺少必要参数: userId 和 accountType' },
+        { error: '缂哄皯蹇呰鍙傛暟: userId 锟?accountType' },
         { status: 400 }
       );
     }
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const dto: CreateFcxAccountDTO = {
       userId,
       accountType,
-      initialBalance
+      initialBalance,
     };
 
     const accountService = new FcxAccountService();
@@ -31,15 +31,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      data: account
+      data: account,
     });
-
   } catch (error) {
-    console.error('创建FCX账户错误:', error);
+    console.error('鍒涘缓FCX璐︽埛閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '创建账户失败',
-        details: (error as Error).message 
+      {
+        error: '鍒涘缓璐︽埛澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -52,35 +51,29 @@ export async function GET(request: Request) {
     const userId = searchParams.get('userId');
 
     if (!userId) {
-      return NextResponse.json(
-        { error: '缺少userId参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缂哄皯userId鍙傛暟' }, { status: 400 });
     }
 
     const accountService = new FcxAccountService();
     const account = await accountService.getAccountByUserId(userId);
 
     if (!account) {
-      return NextResponse.json(
-        { error: '账户不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '璐︽埛涓嶅瓨? }, { status: 404 });
     }
 
     return NextResponse.json({
       success: true,
-      data: account
+      data: account,
     });
-
   } catch (error) {
-    console.error('查询FCX账户错误:', error);
+    console.error('鏌ヨFCX璐︽埛閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '查询账户失败',
-        details: (error as Error).message 
+      {
+        error: '鏌ヨ璐︽埛澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Calendar, Clock, AlertCircle, CheckCircle } from 'lucide-react';
@@ -23,20 +23,21 @@ interface ScheduleFormProps {
   onSchedule?: (slot: TimeSlot) => void;
 }
 
-export default function ScheduleForm({ 
-  availableSlots, 
-  conflictingSlots, 
-  onSchedule 
+export default function ScheduleForm({
+  availableSlots,
+  conflictingSlots,
+  onSchedule,
 }: ScheduleFormProps) {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const checkConflict = (start: Date, end: Date): boolean => {
-    return conflictingSlots.some(conflict => 
-      isWithinInterval(start, { start: conflict.start, end: conflict.end }) ||
-      isWithinInterval(end, { start: conflict.start, end: conflict.end }) ||
-      (start < conflict.start && end > conflict.end)
+    return conflictingSlots.some(
+      conflict =>
+        isWithinInterval(start, { start: conflict.start, end: conflict.end }) ||
+        isWithinInterval(end, { start: conflict.start, end: conflict.end }) ||
+        (start < conflict.start && end > conflict.end)
     );
   };
 
@@ -47,10 +48,10 @@ export default function ScheduleForm({
     }
 
     const hasConflict = checkConflict(slot.start, slot.end);
-    
+
     if (hasConflict) {
-      setError('所选时间段与其他预约冲突');
-      toast.error('时间冲突，请选择其他时间段');
+      setError('所选时间段与其他预约冲?);
+      toast.error('时间冲突，请选择其他时间?);
       return;
     }
 
@@ -73,10 +74,9 @@ export default function ScheduleForm({
     try {
       // 模拟预约过程
       await new Promise(resolve => setTimeout(resolve, 800));
-      
+
       onSchedule?.(slot);
-      toast.success('预约成功！');
-      
+      toast.success('预约成功?);
     } catch (err) {
       setError('预约失败，请重试');
       toast.error('预约失败，请重试');
@@ -92,26 +92,32 @@ export default function ScheduleForm({
           <Calendar className="w-5 h-5" />
           选择预约时间
         </h2>
-        <p className="text-gray-600">请选择合适的时间段进行预约</p>
+        <p className="text-gray-600">请选择合适的时间段进行预?/p>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2" data-testid="conflict-error">
+        <div
+          className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2"
+          data-testid="conflict-error"
+        >
           <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
           <span className="text-red-700">{error}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-        {availableSlots.map((slot) => {
+        {availableSlots.map(slot => {
           const isBooked = slot.isBooked;
           const isSelected = selectedSlot === slot.id;
           const hasConflict = checkConflict(slot.start, slot.end);
-          
-          let slotStyle = "border-gray-200 hover:border-blue-300";
-          if (isBooked) slotStyle = "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed";
-          if (isSelected) slotStyle = "border-blue-500 bg-blue-50 ring-2 ring-blue-200";
-          if (hasConflict) slotStyle = "border-red-200 bg-red-50";
+
+          let slotStyle = 'border-gray-200 hover:border-blue-300';
+          if (isBooked)
+            slotStyle =
+              'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed';
+          if (isSelected)
+            slotStyle = 'border-blue-500 bg-blue-50 ring-2 ring-blue-200';
+          if (hasConflict) slotStyle = 'border-red-200 bg-red-50';
 
           return (
             <button
@@ -130,8 +136,7 @@ export default function ScheduleForm({
                 </div>
                 {isBooked && (
                   <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">
-                    已预订
-                  </span>
+                    已预?                  </span>
                 )}
                 {hasConflict && (
                   <span className="text-xs bg-red-200 text-red-600 px-2 py-1 rounded">
@@ -142,11 +147,9 @@ export default function ScheduleForm({
                   <CheckCircle className="w-5 h-5 text-blue-600" />
                 )}
               </div>
-              
+
               {!isBooked && !hasConflict && (
-                <div className="text-xs text-gray-500">
-                  可预约
-                </div>
+                <div className="text-xs text-gray-500">可预?/div>
               )}
             </button>
           );
@@ -163,13 +166,13 @@ export default function ScheduleForm({
           {isSubmitting ? (
             <>
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              预约中...
+              预约?..
             </>
           ) : (
             '确认预约'
           )}
         </button>
-        
+
         <button
           onClick={() => {
             setSelectedSlot(null);
@@ -184,7 +187,7 @@ export default function ScheduleForm({
       {selectedSlot && (
         <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-          <span className="text-green-700">已选择时间段，请确认预约</span>
+          <span className="text-green-700">已选择时间段，请确认预?/span>
         </div>
       )}
     </div>

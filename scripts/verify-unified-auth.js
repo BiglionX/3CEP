@@ -16,7 +16,7 @@ const createdFiles = [
   'src/hooks/use-unified-auth.ts',
   'src/app/unified-auth-test/page.tsx',
   'src/app/admin/dashboard/page.tsx',
-  'src/app/login/page.tsx'
+  'src/app/login/page.tsx',
 ];
 
 createdFiles.forEach(file => {
@@ -28,52 +28,57 @@ createdFiles.forEach(file => {
 // 2. 验证统一认证Hook功能
 console.log('\n2️⃣ 统一认证Hook验证');
 
-const hookPath = path.join(process.cwd(), 'src', 'hooks', 'use-unified-auth.ts');
+const hookPath = path.join(
+  process.cwd(),
+  'src',
+  'hooks',
+  'use-unified-auth.ts'
+);
 if (fs.existsSync(hookPath)) {
   const content = fs.readFileSync(hookPath, 'utf8');
-  
+
   const hookFeatures = [
     {
       name: 'useUnifiedAuth导出',
       pattern: 'export function useUnifiedAuth',
-      required: true
+      required: true,
     },
     {
       name: 'Supabase集成',
       pattern: 'supabase.auth.getSession',
-      required: true
+      required: true,
     },
     {
       name: '管理员权限检查',
       pattern: 'AuthService.isAdminUser',
-      required: true
+      required: true,
     },
     {
       name: 'localStorage备用方案',
       pattern: 'localStorage.getItem',
-      required: true
+      required: true,
     },
     {
       name: '登录功能',
       pattern: 'const login = async',
-      required: true
+      required: true,
     },
     {
       name: '登出功能',
       pattern: 'const logout = async',
-      required: true
+      required: true,
     },
     {
       name: '权限检查',
       pattern: 'hasPermission',
-      required: true
-    }
+      required: true,
+    },
   ];
-  
+
   console.log('Hook功能检查:');
   hookFeatures.forEach(feature => {
     const found = content.includes(feature.pattern);
-    const status = found ? '✅' : (feature.required ? '❌' : '⚠️');
+    const status = found ? '✅' : feature.required ? '❌' : '⚠️';
     console.log(`  ${status} ${feature.name}`);
   });
 }
@@ -81,32 +86,39 @@ if (fs.existsSync(hookPath)) {
 // 3. 验证页面集成
 console.log('\n3️⃣ 页面集成验证');
 
-const dashboardPath = path.join(process.cwd(), 'src', 'app', 'admin', 'dashboard', 'page.tsx');
+const dashboardPath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'admin',
+  'dashboard',
+  'page.tsx'
+);
 if (fs.existsSync(dashboardPath)) {
   const content = fs.readFileSync(dashboardPath, 'utf8');
-  
+
   const dashboardChecks = [
     {
       name: '导入useUnifiedAuth',
       pattern: "import { useUnifiedAuth } from '@/hooks/use-unified-auth'",
-      required: true
+      required: true,
     },
     {
       name: '使用认证Hook',
       pattern: 'const { isAuthenticated, is_admin } = useUnifiedAuth()',
-      required: true
+      required: true,
     },
     {
       name: '路由保护',
       pattern: 'useEffect(() => {',
-      required: true
-    }
+      required: true,
+    },
   ];
-  
+
   console.log('管理后台页面检查:');
   dashboardChecks.forEach(check => {
     const found = content.includes(check.pattern);
-    const status = found ? '✅' : (check.required ? '❌' : '⚠️');
+    const status = found ? '✅' : check.required ? '❌' : '⚠️';
     console.log(`  ${status} ${check.name}`);
   });
 }
@@ -114,29 +126,29 @@ if (fs.existsSync(dashboardPath)) {
 const loginPath = path.join(process.cwd(), 'src', 'app', 'login', 'page.tsx');
 if (fs.existsSync(loginPath)) {
   const content = fs.readFileSync(loginPath, 'utf8');
-  
+
   const loginChecks = [
     {
       name: '导入useUnifiedAuth',
       pattern: "import { useUnifiedAuth } from '@/hooks/use-unified-auth'",
-      required: true
+      required: true,
     },
     {
       name: '使用认证Hook',
       pattern: 'const { isAuthenticated, is_admin, login } = useUnifiedAuth()',
-      required: true
+      required: true,
     },
     {
       name: '统一登录处理',
       pattern: 'await login(email, password)',
-      required: true
-    }
+      required: true,
+    },
   ];
-  
+
   console.log('登录页面检查:');
   loginChecks.forEach(check => {
     const found = content.includes(check.pattern);
-    const status = found ? '✅' : (check.required ? '❌' : '⚠️');
+    const status = found ? '✅' : check.required ? '❌' : '⚠️';
     console.log(`  ${status} ${check.name}`);
   });
 }

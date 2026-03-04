@@ -26,7 +26,7 @@ interface TutorialStep {
   estimated_time: number;
   tips?: string[];
   warnings?: string[];
-  required_parts?: string[]; // 新增：该步骤所需的配件
+  required_parts?: string[]; // 新增：该步骤所需的配?
 }
 
 interface Tutorial {
@@ -80,27 +80,27 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
     setCompletedSteps(newCompletedSteps);
   };
 
-  // 上一步
+  // 上一?
   const goToPreviousStep = () => {
     if (currentStepIndex > 0) {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
 
-  // 下一步
+  // 下一?
   const goToNextStep = () => {
     markStepAsComplete(currentStepIndex);
     if (currentStepIndex < totalSteps - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
     } else {
-      // 最后一步完成
+      // 最后一步完?
       if (onComplete) {
         onComplete();
       }
     }
   };
 
-  // 跳转到指定步骤
+  // 跳转到指定步?
   const goToStep = (index: number) => {
     if (index >= 0 && index < totalSteps) {
       setCurrentStepIndex(index);
@@ -118,7 +118,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
         return `https://www.youtube.com/embed/${videoId}`;
       }
       
-      // B站
+      // B�?
       if (url.hostname.includes('bilibili.com')) {
         const videoId = url.pathname.split('/').pop()?.split('?')[0];
         return `https://player.bilibili.com/player.html?bvid=${videoId}&page=1`;
@@ -193,8 +193,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                     className="mt-1 inline-flex items-center px-3 py-1 bg-green-500 text-white text-sm rounded-md hover:bg-green-600 transition-colors"
                     onClick={() => {
                       // 可以在这里添加额外的追踪逻辑
-                      console.log('购买链接点击:', part);
-                    }}
+                      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('购买链接点击:', part)}}
                   >
                     <ShoppingBag className="w-4 h-4 mr-1" />
                     立即购买
@@ -210,7 +209,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                     {loadingLinks[stepId] ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                        加载中...
+                        加载?..
                       </>
                     ) : (
                       <>
@@ -240,14 +239,14 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
   const getPlatformIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
       case 'jd': return ' JD';
-      case 'taobao': return ' 淘';
-      case 'tmall': return ' 天';
+      case 'taobao': return ' �?;
+      case 'tmall': return ' �?;
       case 'amazon': return ' A';
-      default: return ' 购';
+      default: return ' �?;
     }
   };
 
-  // 渲染视频播放器
+  // 渲染视频播放?
   const renderVideoPlayer = (videoUrl: string) => {
     const embedUrl = getVideoEmbedUrl(videoUrl);
     
@@ -265,7 +264,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
     );
   };
 
-  // 渲染进度指示器
+  // 渲染进度指示?
   const renderProgressIndicator = () => (
     <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
       <div className="flex items-center space-x-2">
@@ -306,7 +305,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
           size="sm"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
-          上一步
+          上一?
         </Button>
         
         <div className="flex space-x-2">
@@ -321,7 +320,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
               }`}
-              aria-label={`第${index + 1}步: ${step.title}`}
+              aria-label={`�?{index + 1}�? ${step.title}`}
             >
               {index + 1}
             </button>
@@ -333,7 +332,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
           variant="default"
           size="sm"
         >
-          {currentStepIndex === totalSteps - 1 ? '完成教程' : '下一步'}
+          {currentStepIndex === totalSteps - 1 ? '完成教程' : '下一?}
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
@@ -343,11 +342,11 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
   // 渲染步骤内容
   const renderStepContent = () => (
     <div className="p-6">
-      {/* 步骤标题和基本信息 */}
+      {/* 步骤标题和基本信?*/}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-2xl font-bold text-gray-900">
-            第 {currentStepIndex + 1} 步: {currentStep.title}
+            �?{currentStepIndex + 1} �? {currentStep.title}
           </h2>
           <Badge variant="secondary">
             {currentStep.estimated_time}分钟
@@ -383,7 +382,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
         renderPurchaseButtons(currentStep.required_parts, currentStep.id)
       )}
 
-      {/* 提示和警告 */}
+      {/* 提示和警?*/}
       {(currentStep.tips || currentStep.warnings) && (
         <div className="space-y-4">
           {currentStep.tips && currentStep.tips.length > 0 && (
@@ -395,7 +394,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                   <ul className="text-blue-800 space-y-1">
                     {currentStep.tips.map((tip, index) => (
                       <li key={index} className="flex items-start">
-                        <span className="mr-2">•</span>
+                        <span className="mr-2">�?/span>
                         <span>{tip}</span>
                       </li>
                     ))}
@@ -414,7 +413,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                   <ul className="text-yellow-800 space-y-1">
                     {currentStep.warnings.map((warning, index) => (
                       <li key={index} className="flex items-start">
-                        <span className="mr-2">•</span>
+                        <span className="mr-2">�?/span>
                         <span>{warning}</span>
                       </li>
                     ))}
@@ -430,7 +429,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
 
   return (
     <div className="flex flex-col h-full">
-      {/* 进度指示器 */}
+      {/* 进度指示?*/}
       {renderProgressIndicator()}
       
       {/* 步骤内容 */}

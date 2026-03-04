@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -71,7 +71,7 @@ export default function BatchQRCodeManagementPage() {
     }
   };
 
-  // 创建新批次
+  // 创建新批?
   const createBatch = async () => {
     try {
       const response = await fetch("/api/qrcode/batch", {
@@ -98,7 +98,7 @@ export default function BatchQRCodeManagementPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("批次创建成功！");
+        alert("批次创建成功?);
         setShowCreateModal(false);
         fetchBatches();
         resetForm();
@@ -150,7 +150,7 @@ export default function BatchQRCodeManagementPage() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', '批量二维码模板.csv');
+    link.setAttribute('download', '批量二维码模?csv');
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -173,12 +173,12 @@ export default function BatchQRCodeManagementPage() {
     });
   };
 
-  // 获取状态标签
+  // 获取状态标?
   const getStatusBadge = (status: string) => {
     const statusMap = {
-      pending: { text: "待处理", color: "bg-yellow-100 text-yellow-800" },
-      processing: { text: "处理中", color: "bg-blue-100 text-blue-800" },
-      completed: { text: "已完成", color: "bg-green-100 text-green-800" },
+      pending: { text: "待处?, color: "bg-yellow-100 text-yellow-800" },
+      processing: { text: "处理?, color: "bg-blue-100 text-blue-800" },
+      completed: { text: "已完?, color: "bg-green-100 text-green-800" },
       failed: { text: "失败", color: "bg-red-100 text-red-800" }
     };
     
@@ -190,7 +190,7 @@ export default function BatchQRCodeManagementPage() {
     );
   };
 
-  // 获取进度条
+  // 获取进度?
   const getProgressBar = (batch: BatchQRCodeRecord) => {
     const progress = Math.round((batch.generated_count / batch.quantity) * 100);
     return (
@@ -212,7 +212,7 @@ export default function BatchQRCodeManagementPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载中...</p>
+          <p className="mt-4 text-gray-600">加载?..</p>
         </div>
       </div>
     );
@@ -236,7 +236,7 @@ export default function BatchQRCodeManagementPage() {
                   返回管理主页
                 </button>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900">批量二维码生成</h1>
+              <h1 className="text-3xl font-bold text-gray-900">批量二维码生?/h1>
               <p className="mt-2 text-gray-600">按产品型号批量生成专属二维码，每批锁定唯一产品型号</p>
             </div>
             <div className="flex space-x-3">
@@ -273,7 +273,7 @@ export default function BatchQRCodeManagementPage() {
                 <Package className="w-6 h-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">总批次</p>
+                <p className="text-sm font-medium text-gray-600">总批?/p>
                 <p className="text-2xl font-bold text-gray-900">{batches.length}</p>
               </div>
             </div>
@@ -285,7 +285,7 @@ export default function BatchQRCodeManagementPage() {
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">已完成</p>
+                <p className="text-sm font-medium text-gray-600">已完?/p>
                 <p className="text-2xl font-bold text-gray-900">
                   {batches.filter(b => b.status === 'completed').length}
                 </p>
@@ -299,7 +299,7 @@ export default function BatchQRCodeManagementPage() {
                 <Clock className="w-6 h-6 text-yellow-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">处理中</p>
+                <p className="text-sm font-medium text-gray-600">处理?/p>
                 <p className="text-2xl font-bold text-gray-900">
                   {batches.filter(b => b.status === 'processing').length}
                 </p>
@@ -313,7 +313,7 @@ export default function BatchQRCodeManagementPage() {
                 <QrCode className="w-6 h-6 text-purple-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">总二维码数</p>
+                <p className="text-sm font-medium text-gray-600">总二维码?/p>
                 <p className="text-2xl font-bold text-gray-900">
                   {batches.reduce((sum, b) => sum + b.generated_count, 0)}
                 </p>
@@ -371,7 +371,7 @@ export default function BatchQRCodeManagementPage() {
                       数量/进度
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      状态
+                      状?
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       时间
@@ -418,7 +418,7 @@ export default function BatchQRCodeManagementPage() {
                         <div>{new Date(batch.created_at).toLocaleDateString()}</div>
                         {batch.completed_at && (
                           <div className="text-xs text-gray-400">
-                            完成于 {new Date(batch.completed_at).toLocaleDateString()}
+                            完成?{new Date(batch.completed_at).toLocaleDateString()}
                           </div>
                         )}
                       </td>
@@ -431,7 +431,7 @@ export default function BatchQRCodeManagementPage() {
                         </button>
                         {batch.status === 'pending' && (
                           <button className="text-yellow-600 hover:text-yellow-900">
-                            开始处理
+                            开始处?
                           </button>
                         )}
                       </td>
@@ -470,8 +470,8 @@ export default function BatchQRCodeManagementPage() {
                     <div>
                       <h3 className="text-sm font-medium text-blue-800">重要说明</h3>
                       <p className="text-sm text-blue-700 mt-1">
-                        每个批次将锁定唯一的产品型号，确保该批次内所有二维码都指向同一产品型号。
-                        系统会自动生成连续的序列号以区分每个二维码。
+                        每个批次将锁定唯一的产品型号，确保该批次内所有二维码都指向同一产品型号?
+                        系统会自动生成连续的序列号以区分每个二维码?
                       </p>
                     </div>
                   </div>
@@ -487,7 +487,7 @@ export default function BatchQRCodeManagementPage() {
                       value={formData.productModel}
                       onChange={(e) => setFormData({ ...formData, productModel: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: IPH15P-A2842"
+                      placeholder="�? IPH15P-A2842"
                     />
                   </div>
 
@@ -500,7 +500,7 @@ export default function BatchQRCodeManagementPage() {
                       value={formData.productCategory}
                       onChange={(e) => setFormData({ ...formData, productCategory: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: smartphone"
+                      placeholder="�? smartphone"
                     />
                   </div>
 
@@ -513,7 +513,7 @@ export default function BatchQRCodeManagementPage() {
                       value={formData.brandId}
                       onChange={(e) => setFormData({ ...formData, brandId: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: brand_apple_001"
+                      placeholder="�? brand_apple_001"
                     />
                   </div>
 
@@ -526,7 +526,7 @@ export default function BatchQRCodeManagementPage() {
                       value={formData.productName}
                       onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: iPhone 15 Pro"
+                      placeholder="�? iPhone 15 Pro"
                     />
                   </div>
 
@@ -596,7 +596,7 @@ export default function BatchQRCodeManagementPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      生产开始日期
+                      生产开始日?
                     </label>
                     <input
                       type="date"
@@ -662,7 +662,7 @@ export default function BatchQRCodeManagementPage() {
               <div className="p-6">
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
                   <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-lg font-medium text-gray-900 mb-2">拖拽CSV文件到这里</p>
+                  <p className="text-lg font-medium text-gray-900 mb-2">拖拽CSV文件到这?/p>
                   <p className="text-gray-500 mb-4">或点击选择文件</p>
                   <input
                     type="file"
@@ -687,7 +687,7 @@ export default function BatchQRCodeManagementPage() {
                   <h3 className="font-medium text-gray-900 mb-2">CSV模板格式</h3>
                   <div className="text-sm text-gray-600 space-y-1">
                     <div><strong>必需字段:</strong> 产品型号, 产品类别, 品牌ID, 产品名称, 数量</div>
-                    <div><strong>可选字段:</strong> 格式, 尺寸, 纠错等级</div>
+                    <div><strong>可选字?</strong> 格式, 尺寸, 纠错等级</div>
                     <div><strong>示例:</strong> IPH15P-A2842, smartphone, brand_apple_001, iPhone 15 Pro, 50</div>
                   </div>
                 </div>

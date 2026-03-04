@@ -16,19 +16,44 @@
           "tenant_id": "main-tenant",
           "permissions": [
             "dashboard_read",
-            "users_read", "users_create", "users_update", "users_delete",
-            "content_read", "content_create", "content_update", "content_delete", "content_approve",
-            "shops_read", "shops_create", "shops_update", "shops_approve",
-            "payments_read", "payments_refund",
-            "reports_read", "reports_export",
-            "settings_read", "settings_update",
-            "procurement_read", "procurement_create", "procurement_approve",
-            "inventory_read", "inventory_update",
-            "agents_execute", "agents_monitor", "agents_invoke", "agents_debug",
-            "n8n_workflows_read", "n8n_workflows_manage", "n8n_workflows_replay", "n8n_workflows_rollback",
-            "tools_execute", "tools_manage",
-            "audit_read", "audit_export",
-            "monitoring_read", "monitoring_alerts"
+            "users_read",
+            "users_create",
+            "users_update",
+            "users_delete",
+            "content_read",
+            "content_create",
+            "content_update",
+            "content_delete",
+            "content_approve",
+            "shops_read",
+            "shops_create",
+            "shops_update",
+            "shops_approve",
+            "payments_read",
+            "payments_refund",
+            "reports_read",
+            "reports_export",
+            "settings_read",
+            "settings_update",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
+            "inventory_read",
+            "inventory_update",
+            "agents_execute",
+            "agents_monitor",
+            "agents_invoke",
+            "agents_debug",
+            "n8n_workflows_read",
+            "n8n_workflows_manage",
+            "n8n_workflows_replay",
+            "n8n_workflows_rollback",
+            "tools_execute",
+            "tools_manage",
+            "audit_read",
+            "audit_export",
+            "monitoring_read",
+            "monitoring_alerts"
           ],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/admin/dashboard",
@@ -60,14 +85,26 @@
           "tenant_id": "main-tenant",
           "permissions": [
             "dashboard_read",
-            "users_read", "users_create", "users_update",
-            "content_read", "content_create", "content_update", "content_approve",
-            "shops_read", "shops_create", "shops_update", "shops_approve",
+            "users_read",
+            "users_create",
+            "users_update",
+            "content_read",
+            "content_create",
+            "content_update",
+            "content_approve",
+            "shops_read",
+            "shops_create",
+            "shops_update",
+            "shops_approve",
             "payments_read",
-            "reports_read", "reports_export",
+            "reports_read",
+            "reports_export",
             "settings_read",
-            "procurement_read", "procurement_create", "procurement_approve",
-            "n8n_workflows_read", "n8n_workflows_replay",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
+            "n8n_workflows_read",
+            "n8n_workflows_replay",
             "audit_read",
             "monitoring_read"
           ],
@@ -98,19 +135,17 @@
           "tenant_id": "main-tenant",
           "permissions": [
             "dashboard_read",
-            "content_read", "content_create", "content_update", "content_approve",
+            "content_read",
+            "content_create",
+            "content_update",
+            "content_approve",
             "reports_read"
           ],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/admin/content",
             "api": "http://localhost:3001/api/auth/login"
           },
-          "test_scenarios": [
-            "文章内容审核",
-            "热点信息发布",
-            "内容分类管理",
-            "内容统计查看"
-          ]
+          "test_scenarios": ["文章内容审核", "热点信息发布", "内容分类管理", "内容统计查看"]
         }
       ]
     },
@@ -127,19 +162,17 @@
           "tenant_id": "main-tenant",
           "permissions": [
             "dashboard_read",
-            "shops_read", "shops_create", "shops_update", "shops_approve",
+            "shops_read",
+            "shops_create",
+            "shops_update",
+            "shops_approve",
             "reports_read"
           ],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/admin/shops",
             "api": "http://localhost:3001/api/auth/login"
           },
-          "test_scenarios": [
-            "维修店入驻审核",
-            "店铺信息管理",
-            "服务范围配置",
-            "店铺评级管理"
-          ]
+          "test_scenarios": ["维修店入驻审核", "店铺信息管理", "服务范围配置", "店铺评级管理"]
         }
       ]
     },
@@ -156,19 +189,16 @@
           "tenant_id": "main-tenant",
           "permissions": [
             "dashboard_read",
-            "payments_read", "payments_refund",
-            "reports_read", "reports_export"
+            "payments_read",
+            "payments_refund",
+            "reports_read",
+            "reports_export"
           ],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/admin/finance",
             "api": "http://localhost:3001/api/auth/login"
           },
-          "test_scenarios": [
-            "支付记录查看",
-            "退款申请处理",
-            "财务报表导出",
-            "收入统计分析"
-          ]
+          "test_scenarios": ["支付记录查看", "退款申请处理", "财务报表导出", "收入统计分析"]
         }
       ]
     },
@@ -185,19 +215,16 @@
           "tenant_id": "main-tenant",
           "permissions": [
             "dashboard_read",
-            "procurement_read", "procurement_create", "procurement_approve",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
             "reports_read"
           ],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/admin/procurement",
             "api": "http://localhost:3001/api/auth/login"
           },
-          "test_scenarios": [
-            "采购订单创建",
-            "供应商管理",
-            "采购流程审批",
-            "采购数据分析"
-          ]
+          "test_scenarios": ["采购订单创建", "供应商管理", "采购流程审批", "采购数据分析"]
         }
       ]
     },
@@ -212,21 +239,12 @@
           "password": "Warehouse123!",
           "name": "仓库管理员",
           "tenant_id": "main-tenant",
-          "permissions": [
-            "dashboard_read",
-            "inventory_read", "inventory_update",
-            "reports_read"
-          ],
+          "permissions": ["dashboard_read", "inventory_read", "inventory_update", "reports_read"],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/admin/inventory",
             "api": "http://localhost:3001/api/auth/login"
           },
-          "test_scenarios": [
-            "库存盘点操作",
-            "入库出库记录",
-            "库存预警处理",
-            "库存报表查看"
-          ]
+          "test_scenarios": ["库存盘点操作", "入库出库记录", "库存预警处理", "库存报表查看"]
         }
       ]
     },
@@ -243,19 +261,17 @@
           "tenant_id": "main-tenant",
           "permissions": [
             "dashboard_read",
-            "agents_execute", "agents_monitor", "agents_invoke", "agents_debug",
+            "agents_execute",
+            "agents_monitor",
+            "agents_invoke",
+            "agents_debug",
             "reports_read"
           ],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/admin/agents",
             "api": "http://localhost:3001/api/auth/login"
           },
-          "test_scenarios": [
-            "智能体任务执行",
-            "工作流监控",
-            "执行结果查看",
-            "异常处理调试"
-          ]
+          "test_scenarios": ["智能体任务执行", "工作流监控", "执行结果查看", "异常处理调试"]
         }
       ]
     },
@@ -270,19 +286,12 @@
           "password": "Viewer123!",
           "name": "数据查看员",
           "tenant_id": "main-tenant",
-          "permissions": [
-            "dashboard_read",
-            "reports_read"
-          ],
+          "permissions": ["dashboard_read", "reports_read"],
           "login_urls": {
             "web": "http://localhost:3001/login?redirect=/dashboard",
             "api": "http://localhost:3001/api/auth/login"
           },
-          "test_scenarios": [
-            "仪表板数据查看",
-            "基础报表浏览",
-            "统计信息查阅"
-          ]
+          "test_scenarios": ["仪表板数据查看", "基础报表浏览", "统计信息查阅"]
         }
       ]
     },
@@ -299,9 +308,12 @@
           "tenant_id": "enterprise-tenant",
           "permissions": [
             "dashboard_read",
-            "enterprise_read", "enterprise_manage",
-            "enterprise_agents_read", "enterprise_agents_manage",
-            "enterprise_procurement_read", "enterprise_procurement_manage",
+            "enterprise_read",
+            "enterprise_manage",
+            "enterprise_agents_read",
+            "enterprise_agents_manage",
+            "enterprise_procurement_read",
+            "enterprise_procurement_manage",
             "users_read",
             "reports_read",
             "audit_read"
@@ -333,20 +345,18 @@
           "permissions": [
             "dashboard_read",
             "enterprise_read",
-            "enterprise_procurement_read", "enterprise_procurement_manage",
-            "procurement_read", "procurement_create", "procurement_approve",
+            "enterprise_procurement_read",
+            "enterprise_procurement_manage",
+            "procurement_read",
+            "procurement_create",
+            "procurement_approve",
             "reports_read"
           ],
           "login_urls": {
             "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/procurement/dashboard",
             "api": "http://localhost:3003/api/enterprise/login"
           },
-          "test_scenarios": [
-            "企业采购需求管理",
-            "供应商合作管理",
-            "采购合同审批",
-            "采购成本分析"
-          ]
+          "test_scenarios": ["企业采购需求管理", "供应商合作管理", "采购合同审批", "采购成本分析"]
         }
       ]
     },
@@ -372,12 +382,7 @@
             "web": "http://localhost:3003/enterprise/login?redirect=/enterprise/dashboard",
             "api": "http://localhost:3003/api/enterprise/login"
           },
-          "test_scenarios": [
-            "企业服务门户访问",
-            "智能体服务使用",
-            "采购需求提交",
-            "个人中心管理"
-          ]
+          "test_scenarios": ["企业服务门户访问", "智能体服务使用", "采购需求提交", "个人中心管理"]
         }
       ]
     }

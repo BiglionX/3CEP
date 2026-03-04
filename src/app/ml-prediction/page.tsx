@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { MLPredictionDashboard } from '@/components/MLPredictionDashboard';
 
 export default function MLPredictionPage() {
@@ -8,3 +8,4 @@ export default function MLPredictionPage() {
     </div>
   );
 }
+

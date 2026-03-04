@@ -3,36 +3,32 @@
  */
 
 // 使用crypto模块生成UUID
-import { 
-  ORDER_CONSTANTS, 
-  FXC_EXCHANGE_RATES, 
-  LEVEL_THRESHOLDS 
+import {
+  ORDER_CONSTANTS,
+  FXC_EXCHANGE_RATES,
+  LEVEL_THRESHOLDS,
 } from './constants';
-import { 
-  AllianceLevel, 
-  FcxTransactionType, 
-  OrderStatus 
+import {
+  AllianceLevel,
+  FcxTransactionType,
+  OrderStatus,
 } from '../models/fcx-account.model';
 
 /**
  * 生成UUID
  */
 export function generateUUID(): string {
-  // 简单的UUID生成器（符合RFC4122版本4）
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+  // 简单的UUID生成器（符合RFC4122版本4�?  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
 
 /**
- * 生成唯一的工单编号
- */
+ * 生成唯一的工单编? */
 export function generateOrderNumber(): string {
-  const timestamp = Date.now().toString().slice(-6); // 取时间戳后6位
-  const random = Math.random().toString(36).substring(2, 6).toUpperCase(); // 4位随机字符
-  return `${ORDER_CONSTANTS.ORDER_NUMBER_PREFIX}${timestamp}${random}`;
+  const timestamp = Date.now().toString().slice(-6); // 取时间戳?�?  const random = Math.random().toString(36).substring(2, 6).toUpperCase(); // 4位随机字?  return `${ORDER_CONSTANTS.ORDER_NUMBER_PREFIX}${timestamp}${random}`;
 }
 
 /**
@@ -43,8 +39,7 @@ export function usdToFcx(usdAmount: number): number {
 }
 
 /**
- * FCX转换为美元
- */
+ * FCX转换为美? */
 export function fcxToUsd(fcxAmount: number): number {
   return parseFloat((fcxAmount * FXC_EXCHANGE_RATES.FCX_TO_USD).toFixed(2));
 }
@@ -60,7 +55,7 @@ export function determineAllianceLevel(fcx2Balance: number): AllianceLevel {
 }
 
 /**
- * 格式化FCX金额（保留8位小数）
+ * 格式化FCX金额（保?位小数）
  */
 export function formatFcxAmount(amount: number): string {
   return parseFloat(amount.toFixed(8)).toString();
@@ -82,11 +77,9 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * 验证手机号格式
- */
+ * 验证手机号格? */
 export function isValidPhone(phone: string): boolean {
-  const phoneRegex = /^1[3-9]\d{9}$/; // 简单的中国手机号验证
-  return phoneRegex.test(phone);
+  const phoneRegex = /^1[3-9]\d{9}$/; // 简单的中国手机号验?  return phoneRegex.test(phone);
 }
 
 /**
@@ -107,8 +100,10 @@ export function isValidRating(rating: number): boolean {
  * 计算两个日期之间的天数差
  */
 export function daysBetweenDates(startDate: Date, endDate: Date): number {
-  const oneDay = 24 * 60 * 60 * 1000; // 小时*分钟*秒*毫秒
-  return Math.round(Math.abs((endDate.getTime() - startDate.getTime()) / oneDay));
+  const oneDay = 24 * 60 * 60 * 1000; // 小时*分钟*�?毫秒
+  return Math.round(
+    Math.abs((endDate.getTime() - startDate.getTime()) / oneDay)
+  );
 }
 
 /**
@@ -118,15 +113,15 @@ export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
-  
+
   if (obj instanceof Date) {
     return new Date(obj.getTime()) as unknown as T;
   }
-  
+
   if (obj instanceof Array) {
     return obj.map(item => deepClone(item)) as unknown as T;
   }
-  
+
   if (typeof obj === 'object') {
     const clonedObj = {} as T;
     for (const key in obj) {
@@ -136,7 +131,7 @@ export function deepClone<T>(obj: T): T {
     }
     return clonedObj;
   }
-  
+
   return obj;
 }
 
@@ -148,13 +143,13 @@ export function debounce<T extends (...args: any[]) => any>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     const later = () => {
       clearTimeout(timeout);
       func(...args);
     };
-    
+
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
@@ -168,12 +163,12 @@ export function throttle<T extends (...args: any[]) => any>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }
@@ -201,10 +196,10 @@ export function safeJsonStringify(obj: any, defaultValue = '{}'): string {
 }
 
 /**
- * 生成随机字符串
- */
+ * 生成随机字符? */
 export function generateRandomString(length: number = 8): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const chars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -213,22 +208,19 @@ export function generateRandomString(length: number = 8): string {
 }
 
 /**
- * 检查对象是否为空
- */
+ * 检查对象是否为? */
 export function isEmptyObject(obj: Record<string, any>): boolean {
   return Object.keys(obj).length === 0;
 }
 
 /**
- * 获取当前时间戳
- */
+ * 获取当前时间? */
 export function getCurrentTimestamp(): number {
   return Math.floor(Date.now() / 1000);
 }
 
 /**
- * 格式化时间显示
- */
+ * 格式化时间显? */
 export function formatTime(date: Date): string {
   return date.toLocaleString('zh-CN', {
     year: 'numeric',
@@ -236,13 +228,12 @@ export function formatTime(date: Date): string {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit'
+    second: '2-digit',
   });
 }
 
 /**
- * 计算百分比
- */
+ * 计算百分? */
 export function calculatePercentage(part: number, total: number): number {
   if (total === 0) return 0;
   return parseFloat(((part / total) * 100).toFixed(2));

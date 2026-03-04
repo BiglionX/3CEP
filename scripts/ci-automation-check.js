@@ -18,28 +18,28 @@ const CHECK_STEPS = [
     command: 'npm',
     args: ['run', 'db:validate'],
     description: '验证迁移脚本语法和规范',
-    required: true
+    required: true,
   },
   {
     name: '数据库健康检查',
     script: 'db-health-check.js',
     description: '检查数据库连接和表结构',
-    required: true
+    required: true,
   },
   {
     name: '迁移状态检查',
     command: 'npm',
     args: ['run', 'db:status'],
     description: '检查当前迁移状态',
-    required: false
+    required: false,
   },
   {
     name: '种子数据验证',
     command: 'npm',
     args: ['run', 'seed', '--', '--minimal'],
     description: '验证种子数据初始化',
-    required: false
-  }
+    required: false,
+  },
 ];
 
 // 解析参数
@@ -63,7 +63,7 @@ if (quickMode) {
 console.log(`🎯 计划执行 ${selectedSteps.length} 个检查步骤\n`);
 
 let passedSteps = 0;
-let totalSteps = selectedSteps.length;
+const totalSteps = selectedSteps.length;
 const failedSteps = [];
 
 // 执行检查步骤
@@ -71,16 +71,16 @@ selectedSteps.forEach((step, index) => {
   console.log(`[${index + 1}/${totalSteps}] ${step.name}`);
   console.log(`📝 ${step.description}`);
   console.log('----------------------------------------');
-  
+
   try {
     let result;
-    
+
     if (step.command) {
       // 执行 npm 命令
       result = spawnSync(step.command, step.args, {
         cwd: path.join(__dirname, '..'),
         stdio: 'inherit',
-        timeout: 120000 // 2分钟超时
+        timeout: 120000, // 2分钟超时
       });
     } else if (step.script) {
       // 执行脚本文件
@@ -88,17 +88,17 @@ selectedSteps.forEach((step, index) => {
       result = spawnSync('node', [scriptPath], {
         cwd: __dirname,
         stdio: 'inherit',
-        timeout: 120000 // 2分钟超时
+        timeout: 120000, // 2分钟超时
       });
     }
-    
+
     if (result && result.status === 0) {
       console.log(`✅ ${step.name} 通过\n`);
       passedSteps++;
     } else {
       console.log(`❌ ${step.name} 失败\n`);
       failedSteps.push(step.name);
-      
+
       if (step.required) {
         console.log('🛑 必要检查失败，停止执行');
         process.exit(1);
@@ -107,7 +107,7 @@ selectedSteps.forEach((step, index) => {
   } catch (error) {
     console.log(`❌ ${step.name} 执行异常: ${error.message}\n`);
     failedSteps.push(step.name);
-    
+
     if (step.required) {
       console.log('🛑 必要检查异常，停止执行');
       process.exit(1);
@@ -161,8 +161,12 @@ if (passRate === 100) {
 }
 
 console.log('\n📋 CI/CD 集成建议:');
-console.log('• 在 PR 提交时自动运行: node scripts/ci-automation-check.js --quick');
-console.log('• 在部署前运行完整检查: node scripts/ci-automation-check.js --full');
+console.log(
+  '• 在 PR 提交时自动运行: node scripts/ci-automation-check.js --quick'
+);
+console.log(
+  '• 在部署前运行完整检查: node scripts/ci-automation-check.js --full'
+);
 console.log('• 结合 GitHub Actions 或其他 CI 工具使用');
 
 console.log('\n✨ 自动化检查完成！');

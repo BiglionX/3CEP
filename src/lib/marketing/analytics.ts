@@ -5,7 +5,10 @@ export async function trackEvent(
 ) {
   try {
     // 获取UTM参数
-    const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+    const urlParams =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search)
+        : new URLSearchParams();
     const utmSource = urlParams.get('utm_source');
     const utmMedium = urlParams.get('utm_medium');
     const utmCampaign = urlParams.get('utm_campaign');
@@ -19,7 +22,7 @@ export async function trackEvent(
       utm_medium: utmMedium,
       utm_campaign: utmCampaign,
       user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-      session_id: getSessionId()
+      session_id: getSessionId(),
     };
 
     // 发送到后端API
@@ -28,23 +31,24 @@ export async function trackEvent(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
-      console.error('埋点发送失败:', response.statusText);
+      console.error('埋点发送失?', response.statusText);
     }
   } catch (error) {
-    console.error('埋点发送异常:', error);
+    console.error('埋点发送异?', error);
   }
 }
 
 function getSessionId(): string {
   if (typeof window === 'undefined') return 'server-side';
-  
+
   let sessionId = sessionStorage.getItem('marketing_session_id');
   if (!sessionId) {
-    sessionId = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+    sessionId =
+      Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
     sessionStorage.setItem('marketing_session_id', sessionId);
   }
   return sessionId;

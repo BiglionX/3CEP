@@ -1,4 +1,3 @@
-
 // 测试管理员登录的前端代码示例
 const testAdminLogin = async () => {
   const response = await fetch('/api/auth/login', {
@@ -8,10 +7,10 @@ const testAdminLogin = async () => {
     },
     body: JSON.stringify({
       email: '1055603323@qq.com',
-      password: '12345678'
-    })
+      password: '12345678',
+    }),
   });
-  
+
   const result = await response.json();
   console.log('登录结果:', result);
   return result;

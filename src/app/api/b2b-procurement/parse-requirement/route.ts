@@ -1,26 +1,25 @@
-/**
- * B2B采购需求理解引擎API端点
- * 支持文本、图片、链接等多种输入类型的智能解析
- */
+﻿/**
+ * B2B閲囪喘闇€姹傜悊瑙ｅ紩鎿嶢PI绔偣
+ * 鏀寔鏂囨湰銆佸浘鐗囥€侀摼鎺ョ瓑澶氱杈撳叆绫诲瀷鐨勬櫤鑳借В? */
 
 import {
   InputType,
   RawProcurementRequest,
-} from "@/b2b-procurement-agent/models/procurement.model";
-import { RequirementUnderstandingService } from "@/b2b-procurement-agent/services/requirement-understanding.service";
-import { NextResponse } from "next/server";
+} from '@/b2b-procurement-agent/models/procurement.model';
+import { RequirementUnderstandingService } from '@/b2b-procurement-agent/services/requirement-understanding.service';
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { input, inputType = "auto", companyId, requesterId } = body;
+    const { input, inputType = 'auto', companyId, requesterId } = body;
 
-    // 参数验证
-    if (!input || typeof input !== "string") {
+    // 鍙傛暟楠岃瘉
+    if (!input || typeof input !== 'string') {
       return NextResponse.json(
         {
           success: false,
-          error: "请提供有效的采购需求输入",
+          error: '璇锋彁渚涙湁鏁堢殑閲囪喘闇€姹傝緭?,
         },
         { status: 400 }
       );
@@ -30,17 +29,16 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: "缺少必要的公司ID或请求者ID",
+          error: '缂哄皯蹇呰鐨勫叕鍙窱D鎴栬姹傝€匢D',
         },
         { status: 400 }
       );
     }
 
-    // 自动检测输入类型
-    const detectedInputType =
-      inputType === "auto" ? detectInputType(input) : (inputType as InputType);
+    // 鑷姩妫€娴嬭緭鍏ョ被?    const detectedInputType =
+      inputType === 'auto' ? detectInputType(input) : (inputType as InputType);
 
-    // 创建原始请求对象
+    // 鍒涘缓鍘熷璇锋眰瀵硅薄
     const rawRequest: RawProcurementRequest = {
       id: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       companyId,
@@ -51,7 +49,7 @@ export async function POST(request: Request) {
       updatedAt: new Date(),
     };
 
-    // 根据输入类型设置相应字段
+    // 鏍规嵁杈撳叆绫诲瀷璁剧疆鐩稿簲瀛楁
     switch (detectedInputType) {
       case InputType.IMAGE:
         rawRequest.imageUrl = input.trim();
@@ -64,8 +62,7 @@ export async function POST(request: Request) {
         break;
     }
 
-    // 调用需求理解服务
-    const understandingService = new RequirementUnderstandingService();
+    // 璋冪敤闇€姹傜悊瑙ｆ湇?    const understandingService = new RequirementUnderstandingService();
     const result = await understandingService.processRequest(rawRequest);
 
     return NextResponse.json({
@@ -81,55 +78,50 @@ export async function POST(request: Request) {
           processingTimeMs: result.processingTimeMs,
         },
       },
-      message: "采购需求解析成功",
+      message: '閲囪喘闇€姹傝В鏋愭垚?,
     });
   } catch (error) {
-    console.error("采购需求解析错误:", error);
+    console.error('閲囪喘闇€姹傝В鏋愰敊?', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: "采购需求解析失败",
-        details: error instanceof Error ? error.message : "未知错误",
+        error: '閲囪喘闇€姹傝В鏋愬け?,
+        details: error instanceof Error ? error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// GET方法用于健康检查
-export async function GET() {
+// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€?export async function GET() {
   return NextResponse.json({
     success: true,
-    message: "B2B采购需求理解引擎服务运行正常",
-    supportedInputTypes: ["text", "image", "link"],
+    message: 'B2B閲囪喘闇€姹傜悊瑙ｅ紩鎿庢湇鍔¤繍琛屾?,
+    supportedInputTypes: ['text', 'image', 'link'],
     features: [
-      "多模态输入支持",
-      "智能输入类型检测",
-      "大模型API集成",
-      "结构化需求输出",
+      '澶氭ā鎬佽緭鍏ユ敮?,
+      '鏅鸿兘杈撳叆绫诲瀷妫€?,
+      '澶фā鍨婣PI闆嗘垚',
+      '缁撴瀯鍖栭渶姹傝緭?,
     ],
     timestamp: new Date().toISOString(),
   });
 }
 
-// 辅助函数：自动检测输入类型
-function detectInputType(input: string): InputType {
+// 杈呭姪鍑芥暟锛氳嚜鍔ㄦ娴嬭緭鍏ョ被?function detectInputType(input: string): InputType {
   const trimmedInput = input.trim().toLowerCase();
 
-  // 检测是否为URL
+  // 妫€娴嬫槸鍚︿负URL
   const urlPattern =
     /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
   if (urlPattern.test(trimmedInput)) {
-    // 进一步判断是图片还是普通链接
-    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
-    const isImageUrl = imageExtensions.some((ext) =>
-      trimmedInput.includes(ext)
-    );
+    // 杩涗竴姝ュ垽鏂槸鍥剧墖杩樻槸鏅€氶摼?    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+    const isImageUrl = imageExtensions.some(ext => trimmedInput.includes(ext));
 
     return isImageUrl ? InputType.IMAGE : InputType.LINK;
   }
 
-  // 默认为文本输入
-  return InputType.TEXT;
+  // 榛樿涓烘枃鏈緭?  return InputType.TEXT;
 }
+

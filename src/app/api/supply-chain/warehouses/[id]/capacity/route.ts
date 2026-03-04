@@ -13,14 +13,12 @@ export async function GET(
     const { id: warehouseId } = params;
 
     if (!warehouseId) {
-      return NextResponse.json(
-        { error: '缺少仓库ID参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缺少仓库ID参数' }, { status: 400 });
     }
 
     const warehouseService = new WarehouseService();
-    const capacityPlan = await warehouseService.getWarehouseCapacityPlan(warehouseId);
+    const capacityPlan =
+      await warehouseService.getWarehouseCapacityPlan(warehouseId);
 
     if (!capacityPlan) {
       return NextResponse.json(
@@ -31,15 +29,14 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: capacityPlan
+      data: capacityPlan,
     });
-
   } catch (error) {
     console.error('查询仓库容量规划错误:', error);
     return NextResponse.json(
-      { 
+      {
         error: '查询容量规划失败',
-        details: (error as Error).message 
+        details: (error as Error).message,
       },
       { status: 500 }
     );

@@ -15,7 +15,7 @@ interface RouteParams {
 
 export async function GET(request: Request, { params }: RouteParams) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const purchaseOrderService = new PurchaseOrderService();
     const order = await purchaseOrderService.getPurchaseOrder(params.id);
@@ -29,16 +29,15 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     return NextResponse.json({
       success: true,
-      data: order
+      data: order,
     });
-
   } catch (error) {
     console.error('获取采购订单详情错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: '获取采购订单详情失败',
-        details: (error as Error).message 
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -47,7 +46,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 
 export async function PUT(request: Request, { params }: RouteParams) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const body = await request.json();
     const { status, remarks } = body;
@@ -60,21 +59,24 @@ export async function PUT(request: Request, { params }: RouteParams) {
     }
 
     const purchaseOrderService = new PurchaseOrderService();
-    const order = await purchaseOrderService.updateOrderStatus(params.id, status, remarks);
+    const order = await purchaseOrderService.updateOrderStatus(
+      params.id,
+      status,
+      remarks
+    );
 
     return NextResponse.json({
       success: true,
       data: order,
-      message: '订单状态更新成功'
+      message: '订单状态更新成功',
     });
-
   } catch (error) {
     console.error('更新采购订单状态错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: '更新订单状态失败',
-        details: (error as Error).message 
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -83,7 +85,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
 export async function DELETE(request: Request, { params }: RouteParams) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const body = await request.json();
     const { reason } = body;
@@ -101,16 +103,15 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     return NextResponse.json({
       success: true,
       data: order,
-      message: '订单取消成功'
+      message: '订单取消成功',
     });
-
   } catch (error) {
     console.error('取消采购订单错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: '取消订单失败',
-        details: (error as Error).message 
+        details: (error as Error).message,
       },
       { status: 500 }
     );

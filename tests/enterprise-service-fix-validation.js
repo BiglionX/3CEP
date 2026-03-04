@@ -12,40 +12,40 @@ const https = require('https');
 const CONFIG = {
   baseUrl: 'http://localhost:3003',
   timeout: 15000,
-  userAgent: 'Enterprise-Service-Fix-Validator/1.0'
+  userAgent: 'Enterprise-Service-Fix-Validator/1.0',
 };
 
 // 新增的API端点测试
 const NEW_API_ENDPOINTS = [
-  { 
-    name: '智能体列表接口', 
-    path: '/api/enterprise/agents', 
+  {
+    name: '智能体列表接口',
+    path: '/api/enterprise/agents',
     method: 'GET',
     category: '业务API',
-    authRequired: true
+    authRequired: true,
   },
-  { 
-    name: '创建智能体接口', 
-    path: '/api/enterprise/agents', 
+  {
+    name: '创建智能体接口',
+    path: '/api/enterprise/agents',
     method: 'POST',
     category: '业务API',
     authRequired: true,
     testData: {
       name: '测试智能体',
       description: '用于测试的AI助手',
-      configuration: { model: 'gpt-4', temperature: 0.7 }
-    }
+      configuration: { model: 'gpt-4', temperature: 0.7 },
+    },
   },
-  { 
-    name: '采购订单列表接口', 
-    path: '/api/enterprise/procurement/orders', 
+  {
+    name: '采购订单列表接口',
+    path: '/api/enterprise/procurement/orders',
     method: 'GET',
     category: '业务API',
-    authRequired: true
+    authRequired: true,
   },
-  { 
-    name: '创建采购订单接口', 
-    path: '/api/enterprise/procurement/orders', 
+  {
+    name: '创建采购订单接口',
+    path: '/api/enterprise/procurement/orders',
     method: 'POST',
     category: '业务API',
     authRequired: true,
@@ -53,9 +53,9 @@ const NEW_API_ENDPOINTS = [
       title: '测试采购订单',
       description: '用于测试的采购需求',
       items: 10,
-      priority: 'medium'
-    }
-  }
+      priority: 'medium',
+    },
+  },
 ];
 
 // 表单验证测试用例
@@ -68,8 +68,8 @@ const FORM_VALIDATION_TESTS = [
       { input: '10000', expected: true, description: '无符号数字应该通过' },
       { input: '¥100.50', expected: true, description: '带小数点应该通过' },
       { input: 'invalid', expected: false, description: '无效格式应该失败' },
-      { input: '¥-100', expected: false, description: '负数应该失败' }
-    ]
+      { input: '¥-100', expected: false, description: '负数应该失败' },
+    ],
   },
   {
     field: 'quantity',
@@ -78,22 +78,22 @@ const FORM_VALIDATION_TESTS = [
       { input: '100件', expected: true, description: '带单位应该通过' },
       { input: '10.5套', expected: true, description: '小数带单位应该通过' },
       { input: '0', expected: false, description: '零数量应该失败' },
-      { input: 'abc', expected: false, description: '非数字应该失败' }
-    ]
-  }
+      { input: 'abc', expected: false, description: '非数字应该失败' },
+    ],
+  },
 ];
 
 async function makeRequest(options) {
   return new Promise((resolve, reject) => {
-    const req = http.request(options, (res) => {
+    const req = http.request(options, res => {
       let data = '';
-      res.on('data', chunk => data += chunk);
+      res.on('data', chunk => (data += chunk));
       res.on('end', () => {
         resolve({
           statusCode: res.statusCode,
           headers: res.headers,
           body: data,
-          responseTime: Date.now() - options.startTime
+          responseTime: Date.now() - options.startTime,
         });
       });
     });
@@ -114,10 +114,10 @@ async function makeRequest(options) {
 
 async function testApiEndpoint(endpoint) {
   const startTime = Date.now();
-  
+
   try {
     const url = new URL(CONFIG.baseUrl + endpoint.path);
-    
+
     const options = {
       hostname: url.hostname,
       port: url.port || 80,
@@ -126,11 +126,13 @@ async function testApiEndpoint(endpoint) {
       headers: {
         'User-Agent': CONFIG.userAgent,
         'Content-Type': 'application/json',
-        ...(endpoint.authRequired ? {
-          'Cookie': 'sb-access-token=test-token' // 模拟认证token
-        } : {})
+        ...(endpoint.authRequired
+          ? {
+              Cookie: 'sb-access-token=test-token', // 模拟认证token
+            }
+          : {}),
       },
-      startTime
+      startTime,
     };
 
     if (endpoint.testData) {
@@ -138,7 +140,7 @@ async function testApiEndpoint(endpoint) {
     }
 
     const response = await makeRequest(options);
-    
+
     return {
       name: endpoint.name,
       path: endpoint.path,
@@ -146,9 +148,10 @@ async function testApiEndpoint(endpoint) {
       status: 'success',
       statusCode: response.statusCode,
       responseTime: response.responseTime,
-      expectedBehavior: endpoint.authRequired ? '401 Unauthorized (无有效token)' : '200 OK'
+      expectedBehavior: endpoint.authRequired
+        ? '401 Unauthorized (无有效token)'
+        : '200 OK',
     };
-
   } catch (error) {
     return {
       name: endpoint.name,
@@ -156,7 +159,7 @@ async function testApiEndpoint(endpoint) {
       method: endpoint.method,
       status: 'error',
       error: error.message,
-      responseTime: Date.now() - startTime
+      responseTime: Date.now() - startTime,
     };
   }
 }
@@ -164,34 +167,33 @@ async function testApiEndpoint(endpoint) {
 function testFormValidation() {
   console.log('\n📋 表单验证规则测试');
   console.log('----------------------------------------');
-  
+
   const validationResults = [];
-  
+
   // 动态导入验证规则（如果可能）
   try {
     // 这里模拟验证逻辑
     FORM_VALIDATION_TESTS.forEach(testSuite => {
       console.log(`\n测试字段: ${testSuite.field}`);
-      
+
       testSuite.testCases.forEach(testCase => {
         const passed = testCase.expected; // 简化的验证逻辑
         const status = passed ? '✅ 通过' : '❌ 失败';
-        
+
         console.log(`  ${status} ${testCase.description}: "${testCase.input}"`);
         validationResults.push({
           field: testSuite.field,
           input: testCase.input,
           expected: testCase.expected,
           actual: passed,
-          passed: passed === testCase.expected
+          passed: passed === testCase.expected,
         });
       });
     });
-    
   } catch (error) {
     console.log('⚠️  无法执行实际的表单验证测试');
   }
-  
+
   return validationResults;
 }
 
@@ -204,16 +206,20 @@ async function runValidationTests() {
   // 测试新增的API端点
   console.log('🔌 新增API端点测试');
   console.log('----------------------------------------');
-  
+
   const apiResults = [];
   for (const endpoint of NEW_API_ENDPOINTS) {
     const result = await testApiEndpoint(endpoint);
     apiResults.push(result);
-    
+
     const statusIcon = result.status === 'success' ? '✅' : '❌';
-    console.log(`${statusIcon} ${result.name} (${result.method} ${result.path})`);
-    console.log(`   状态码: ${result.statusCode || 'N/A'} | 响应时间: ${result.responseTime}ms`);
-    
+    console.log(
+      `${statusIcon} ${result.name} (${result.method} ${result.path})`
+    );
+    console.log(
+      `   状态码: ${result.statusCode || 'N/A'} | 响应时间: ${result.responseTime}ms`
+    );
+
     if (result.status === 'error') {
       console.log(`   错误: ${result.error}`);
     } else {
@@ -228,27 +234,35 @@ async function runValidationTests() {
   // 输出汇总报告
   console.log('\n📊 测试结果汇总');
   console.log('=======================================================');
-  
+
   const totalTests = apiResults.length + validationResults.length;
-  const passedTests = apiResults.filter(r => r.status === 'success').length + 
-                     validationResults.filter(r => r.passed).length;
+  const passedTests =
+    apiResults.filter(r => r.status === 'success').length +
+    validationResults.filter(r => r.passed).length;
   const failedTests = totalTests - passedTests;
-  
+
   console.log(`总测试数: ${totalTests}`);
-  console.log(`✅ 通过: ${passedTests} (${((passedTests/totalTests)*100).toFixed(1)}%)`);
-  console.log(`❌ 失败: ${failedTests} (${((failedTests/totalTests)*100).toFixed(1)}%)`);
-  
+  console.log(
+    `✅ 通过: ${passedTests} (${((passedTests / totalTests) * 100).toFixed(1)}%)`
+  );
+  console.log(
+    `❌ 失败: ${failedTests} (${((failedTests / totalTests) * 100).toFixed(1)}%)`
+  );
+
   console.log('\n📈 分类统计:');
   console.log(`API端点测试: ${apiResults.length} 个`);
   console.log(`表单验证测试: ${validationResults.length} 个`);
-  
+
   // 性能统计
-  const responseTimes = apiResults.filter(r => r.responseTime).map(r => r.responseTime);
+  const responseTimes = apiResults
+    .filter(r => r.responseTime)
+    .map(r => r.responseTime);
   if (responseTimes.length > 0) {
-    const avgTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+    const avgTime =
+      responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
     const maxTime = Math.max(...responseTimes);
     const minTime = Math.min(...responseTimes);
-    
+
     console.log('\n⚡ 性能统计:');
     console.log(`平均响应时间: ${avgTime.toFixed(2)}ms`);
     console.log(`最快响应时间: ${minTime}ms`);
@@ -274,8 +288,8 @@ async function runValidationTests() {
       total: totalTests,
       passed: passedTests,
       failed: failedTests,
-      passRate: ((passedTests/totalTests)*100).toFixed(2)
-    }
+      passRate: ((passedTests / totalTests) * 100).toFixed(2),
+    },
   };
 
   require('fs').writeFileSync(
@@ -283,7 +297,9 @@ async function runValidationTests() {
     JSON.stringify(report, null, 2)
   );
 
-  console.log('📋 详细测试报告已保存到: ./enterprise-service-fix-validation-report.json');
+  console.log(
+    '📋 详细测试报告已保存到: ./enterprise-service-fix-validation-report.json'
+  );
 }
 
 // 执行测试

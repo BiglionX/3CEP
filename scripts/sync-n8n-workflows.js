@@ -14,26 +14,26 @@ const CONFIG = {
   n8n: {
     baseUrl: process.env.N8N_BASE_URL || 'http://localhost:5678',
     apiToken: process.env.N8N_API_TOKEN || '',
-    timeout: 30000
+    timeout: 30000,
   },
   cache: {
     outputPath: path.join(__dirname, '..', 'data', 'workflows.json'),
-    ttl: 300000 // 5分钟缓存
+    ttl: 300000, // 5分钟缓存
   },
   filtering: {
     // 域白名单配置
-    domainWhitelist: process.env.WORKFLOW_DOMAIN_WHITELIST 
+    domainWhitelist: process.env.WORKFLOW_DOMAIN_WHITELIST
       ? process.env.WORKFLOW_DOMAIN_WHITELIST.split(',')
       : ['production', 'staging', 'development'],
-    
+
     // 角色白名单配置
     roleMappings: {
-      'admin': ['admin', 'ops', 'developer'],
-      'ops': ['ops', 'support'],
-      'partner': ['partner', 'external'],
-      'user': ['user', 'customer']
-    }
-  }
+      admin: ['admin', 'ops', 'developer'],
+      ops: ['ops', 'support'],
+      partner: ['partner', 'external'],
+      user: ['user', 'customer'],
+    },
+  },
 };
 
 /**
@@ -42,13 +42,13 @@ const CONFIG = {
 async function fetchN8nWorkflows() {
   try {
     console.log('🔄 正在从n8n获取工作流列表...');
-    
+
     const response = await axios.get(`${CONFIG.n8n.baseUrl}/api/workflows`, {
       headers: {
-        'Authorization': `Bearer ${CONFIG.n8n.apiToken}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${CONFIG.n8n.apiToken}`,
+        'Content-Type': 'application/json',
       },
-      timeout: CONFIG.n8n.timeout
+      timeout: CONFIG.n8n.timeout,
     });
 
     console.log(`✅ 成功获取 ${response.data.length} 个工作流`);
@@ -65,15 +65,19 @@ async function fetchN8nWorkflows() {
 function filterWorkflowsByDomain(workflows) {
   const filtered = workflows.filter(workflow => {
     const tags = workflow.tags || [];
-    const domains = tags.filter(tag => tag.startsWith('domain:')).map(tag => tag.split(':')[1]);
-    
+    const domains = tags
+      .filter(tag => tag.startsWith('domain:'))
+      .map(tag => tag.split(':')[1]);
+
     // 如果没有域标签，默认允许
     if (domains.length === 0) {
       return true;
     }
-    
+
     // 检查是否有白名单中的域
-    return domains.some(domain => CONFIG.filtering.domainWhitelist.includes(domain));
+    return domains.some(domain =>
+      CONFIG.filtering.domainWhitelist.includes(domain)
+    );
   });
 
   console.log(`📊 域过滤后剩余 ${filtered.length} 个工作流`);
@@ -85,16 +89,18 @@ function filterWorkflowsByDomain(workflows) {
  */
 function filterWorkflowsByRole(workflows, userRole) {
   const allowedRoles = CONFIG.filtering.roleMappings[userRole] || [userRole];
-  
+
   const filtered = workflows.filter(workflow => {
     const tags = workflow.tags || [];
-    const roleTags = tags.filter(tag => tag.startsWith('role:')).map(tag => tag.split(':')[1]);
-    
+    const roleTags = tags
+      .filter(tag => tag.startsWith('role:'))
+      .map(tag => tag.split(':')[1]);
+
     // 如果没有角色标签，默认允许所有角色
     if (roleTags.length === 0) {
       return true;
     }
-    
+
     // 检查用户角色是否在允许的角色列表中
     return roleTags.some(role => allowedRoles.includes(role));
   });
@@ -120,7 +126,7 @@ function enrichWorkflowMetadata(workflows) {
     description: workflow.meta?.description || '',
     category: workflow.meta?.category || 'general',
     lastExecuted: workflow.meta?.lastExecuted || null,
-    executionCount: workflow.meta?.executionCount || 0
+    executionCount: workflow.meta?.executionCount || 0,
   }));
 }
 
@@ -150,10 +156,10 @@ function generateCacheData(workflows) {
       generatedAt: new Date().toISOString(),
       workflowCount: workflows.length,
       domains: [...new Set(workflows.map(w => w.domain))],
-      version: '1.0.0'
+      version: '1.0.0',
     },
     workflows: workflows,
-    domains: groupWorkflowsByDomain(workflows)
+    domains: groupWorkflowsByDomain(workflows),
   };
 }
 
@@ -162,14 +168,14 @@ function generateCacheData(workflows) {
  */
 function groupWorkflowsByDomain(workflows) {
   const grouped = {};
-  
+
   workflows.forEach(workflow => {
     if (!grouped[workflow.domain]) {
       grouped[workflow.domain] = [];
     }
     grouped[workflow.domain].push(workflow);
   });
-  
+
   return grouped;
 }
 
@@ -182,7 +188,7 @@ function saveCacheFile(data) {
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
   }
-  
+
   fs.writeFileSync(CONFIG.cache.outputPath, JSON.stringify(data, null, 2));
   console.log(`💾 缓存文件已保存至: ${CONFIG.cache.outputPath}`);
 }
@@ -194,11 +200,14 @@ function validateCacheFile() {
   if (!fs.existsSync(CONFIG.cache.outputPath)) {
     return false;
   }
-  
+
   try {
-    const cacheData = JSON.parse(fs.readFileSync(CONFIG.cache.outputPath, 'utf8'));
-    const cacheAge = Date.now() - new Date(cacheData.metadata.generatedAt).getTime();
-    
+    const cacheData = JSON.parse(
+      fs.readFileSync(CONFIG.cache.outputPath, 'utf8')
+    );
+    const cacheAge =
+      Date.now() - new Date(cacheData.metadata.generatedAt).getTime();
+
     return cacheAge < CONFIG.cache.ttl;
   } catch (error) {
     console.warn('⚠️ 缓存文件损坏，需要重新生成');
@@ -211,7 +220,7 @@ function validateCacheFile() {
  */
 async function syncWorkflows() {
   console.log('🚀 开始同步n8n工作流...');
-  
+
   try {
     // 检查是否需要强制刷新或缓存已过期
     const forceRefresh = process.argv.includes('--force');
@@ -219,24 +228,23 @@ async function syncWorkflows() {
       console.log('✅ 缓存文件有效，跳过同步');
       return;
     }
-    
+
     // 获取工作流数据
     const workflows = await fetchN8nWorkflows();
-    
+
     // 过滤和丰富数据
     const filteredWorkflows = filterWorkflowsByDomain(workflows);
     const enrichedWorkflows = enrichWorkflowMetadata(filteredWorkflows);
-    
+
     // 生成缓存数据
     const cacheData = generateCacheData(enrichedWorkflows);
-    
+
     // 保存缓存文件
     saveCacheFile(cacheData);
-    
+
     console.log('🎉 工作流同步完成!');
     console.log(`📈 总计: ${enrichedWorkflows.length} 个工作流`);
     console.log(`🏢 域数量: ${Object.keys(cacheData.domains).length}`);
-    
   } catch (error) {
     console.error('❌ 工作流同步失败:', error.message);
     process.exit(1);
@@ -250,17 +258,19 @@ function getWorkflowsForRole(role) {
   if (!fs.existsSync(CONFIG.cache.outputPath)) {
     throw new Error('缓存文件不存在，请先运行同步');
   }
-  
-  const cacheData = JSON.parse(fs.readFileSync(CONFIG.cache.outputPath, 'utf8'));
+
+  const cacheData = JSON.parse(
+    fs.readFileSync(CONFIG.cache.outputPath, 'utf8')
+  );
   const roleFiltered = filterWorkflowsByRole(cacheData.workflows, role);
-  
+
   return roleFiltered;
 }
 
 // 命令行接口
 if (require.main === module) {
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--help') || args.includes('-h')) {
     console.log(`
 n8n工作流同步工具
@@ -280,7 +290,7 @@ n8n工作流同步工具
     `);
     process.exit(0);
   }
-  
+
   if (args.includes('--role')) {
     const roleIndex = args.indexOf('--role');
     if (roleIndex !== -1 && args[roleIndex + 1]) {
@@ -303,5 +313,5 @@ n8n工作流同步工具
 module.exports = {
   syncWorkflows,
   getWorkflowsForRole,
-  CONFIG
+  CONFIG,
 };

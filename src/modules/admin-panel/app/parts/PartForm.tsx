@@ -10,14 +10,14 @@ interface PartFormProps {
   onCancel: () => void;
 }
 
-const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
+const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => { // @ts-ignore
   const [formData, setFormData] = useState({
     name: '',
     category: '',
     brand: '',
     model: '',
     part_number: '',
-    unit: '个',
+    unit: '�?,
     description: '',
     image_url: '',
     stock_quantity: 0,
@@ -57,7 +57,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
     loadOptions();
   }, []);
 
-  // 如果是编辑模式，初始化表单数据
+  // 如果是编辑模式，初始化表单数?
   useEffect(() => {
     if (part) {
       setFormData({
@@ -66,7 +66,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
         brand: part.brand || '',
         model: part.model || '',
         part_number: part.part_number || '',
-        unit: part.unit || '个',
+        unit: part.unit || '�?,
         description: part.description || '',
         image_url: part.image_url || '',
         stock_quantity: part.stock_quantity || 0,
@@ -157,7 +157,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
               value={formData.name}
               onChange={handleChange}
               required
-              placeholder="请输入配件名称"
+              placeholder="请输入配件名?
             />
           </div>
           
@@ -175,10 +175,10 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
               <option value="">请选择分类</option>
               <option value="屏幕">屏幕</option>
               <option value="电池">电池</option>
-              <option value="摄像头">摄像头</option>
+              <option value="摄像?>摄像?/option>
               <option value="外壳">外壳</option>
               <option value="线材">线材</option>
-              <option value="充电器">充电器</option>
+              <option value="充电?>充电?/option>
               <option value="其他">其他</option>
             </select>
           </div>
@@ -191,7 +191,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
               name="brand"
               value={formData.brand}
               onChange={handleChange}
-              placeholder="请输入品牌"
+              placeholder="请输入品?
             />
           </div>
           
@@ -203,7 +203,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
               name="model"
               value={formData.model}
               onChange={handleChange}
-              placeholder="请输入型号"
+              placeholder="请输入型?
             />
           </div>
           
@@ -215,7 +215,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
               name="part_number"
               value={formData.part_number}
               onChange={handleChange}
-              placeholder="请输入型号编码"
+              placeholder="请输入型号编?
             />
           </div>
           
@@ -227,7 +227,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
               name="unit"
               value={formData.unit}
               onChange={handleChange}
-              placeholder="个/件/套"
+              placeholder="�?�?�?
             />
           </div>
         </div>
@@ -251,7 +251,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              最小库存预警
+              最小库存预?
             </label>
             <Input
               name="min_stock"
@@ -264,7 +264,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              最大库存
+              最大库?
             </label>
             <Input
               name="max_stock"
@@ -277,7 +277,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              状态
+              状?
             </label>
             <select
               name="status"
@@ -355,7 +355,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
           onChange={handleChange}
           rows={3}
           className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="请输入配件描述"
+          placeholder="请输入配件描?
         />
       </div>
       
@@ -365,7 +365,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => {
           取消
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? '保存中...' : (part ? '更新' : '创建')}
+          {loading ? '保存?..' : (part ? '更新' : '创建')}
         </Button>
       </div>
     </form>

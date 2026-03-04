@@ -1,24 +1,19 @@
-"use client";
+﻿'use client';
 
-import { useState, useEffect } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { 
-  HelpCircle, 
-  Plus, 
-  Edit, 
-  Trash2, 
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  HelpCircle,
+  Plus,
+  Edit,
+  Trash2,
   Eye,
   Trophy,
   Users,
   Calendar,
-  Award
-} from "lucide-react";
+  Award,
+} from 'lucide-react';
 
 interface Question {
   id: string;
@@ -43,7 +38,7 @@ export default function RewardQaManagementPage() {
     const mockQuestions: Question[] = [
       {
         id: '1',
-        title: '产品使用技巧问答',
+        title: '产品使用技巧问?,
         description: '关于产品使用最佳实践的有奖问答活动',
         reward_type: 'fcx',
         reward_amount: 100,
@@ -52,12 +47,12 @@ export default function RewardQaManagementPage() {
         max_participants: 100,
         current_participants: 45,
         status: 'active',
-        created_at: '2024-01-10T10:30:00Z'
+        created_at: '2024-01-10T10:30:00Z',
       },
       {
         id: '2',
         title: '新品功能了解问答',
-        description: '测试用户对新产品功能的了解程度',
+        description: '测试用户对新产品功能的了解程?,
         reward_type: 'both',
         reward_amount: 200,
         start_time: '2024-01-20T00:00:00Z',
@@ -65,10 +60,10 @@ export default function RewardQaManagementPage() {
         max_participants: 200,
         current_participants: 120,
         status: 'active',
-        created_at: '2024-01-15T14:20:00Z'
-      }
+        created_at: '2024-01-15T14:20:00Z',
+      },
     ];
-    
+
     setTimeout(() => {
       setQuestions(mockQuestions);
       setLoading(false);
@@ -78,14 +73,16 @@ export default function RewardQaManagementPage() {
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; color: string }> = {
       draft: { text: '草稿', color: 'bg-gray-100 text-gray-800' },
-      active: { text: '进行中', color: 'bg-green-100 text-green-800' },
-      ended: { text: '已结束', color: 'bg-blue-100 text-blue-800' },
-      closed: { text: '已关闭', color: 'bg-red-100 text-red-800' }
+      active: { text: '进行?, color: 'bg-green-100 text-green-800' },
+      ended: { text: '已结?, color: 'bg-blue-100 text-blue-800' },
+      closed: { text: '已关?, color: 'bg-red-100 text-red-800' },
     };
-    
+
     const config = statusMap[status] || statusMap.draft;
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
+      >
         {config.text}
       </span>
     );
@@ -95,12 +92,12 @@ export default function RewardQaManagementPage() {
     const typeMap: Record<string, { text: string; icon: any }> = {
       fcx: { text: 'FCX奖励', icon: Trophy },
       physical: { text: '实物奖励', icon: Award },
-      both: { text: '混合奖励', icon: Trophy }
+      both: { text: '混合奖励', icon: Trophy },
     };
-    
+
     const config = typeMap[type] || typeMap.fcx;
     const Icon = config.icon;
-    
+
     return (
       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
         <Icon className="w-3 h-3 mr-1" />
@@ -119,11 +116,11 @@ export default function RewardQaManagementPage() {
 
   return (
     <div className="p-6">
-      {/* 页面标题和操作按钮 */}
+      {/* 页面标题和操作按?*/}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">有奖问答管理</h1>
-          <p className="text-gray-600 mt-1">创建和管理企业有奖问答活动</p>
+          <p className="text-gray-600 mt-1">创建和管理企业有奖问答活?/p>
         </div>
         <Button className="bg-blue-600 hover:bg-blue-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -140,13 +137,13 @@ export default function RewardQaManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{questions.length}</div>
-            <p className="text-xs text-muted-foreground">所有问答活动</p>
+            <p className="text-xs text-muted-foreground">所有问答活?/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">进行中</CardTitle>
+            <CardTitle className="text-sm font-medium">进行?/CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -166,7 +163,7 @@ export default function RewardQaManagementPage() {
             <div className="text-2xl font-bold">
               {questions.reduce((sum, q) => sum + q.current_participants, 0)}
             </div>
-            <p className="text-xs text-muted-foreground">总参与人数</p>
+            <p className="text-xs text-muted-foreground">总参与人?/p>
           </CardContent>
         </Card>
 
@@ -177,7 +174,10 @@ export default function RewardQaManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {questions.reduce((sum, q) => sum + (q.reward_amount * q.current_participants), 0)}
+              {questions.reduce(
+                (sum, q) => sum + q.reward_amount * q.current_participants,
+                0
+              )}
             </div>
             <p className="text-xs text-muted-foreground">FCX总量</p>
           </CardContent>
@@ -198,17 +198,19 @@ export default function RewardQaManagementPage() {
                   <th className="text-left py-3 px-4 font-medium">奖励类型</th>
                   <th className="text-left py-3 px-4 font-medium">奖励金额</th>
                   <th className="text-left py-3 px-4 font-medium">参与情况</th>
-                  <th className="text-left py-3 px-4 font-medium">状态</th>
+                  <th className="text-left py-3 px-4 font-medium">状?/th>
                   <th className="text-left py-3 px-4 font-medium">时间</th>
                   <th className="text-left py-3 px-4 font-medium">操作</th>
                 </tr>
               </thead>
               <tbody>
-                {questions.map((question) => (
+                {questions.map(question => (
                   <tr key={question.id} className="border-b hover:bg-gray-50">
                     <td className="py-4 px-4">
                       <div>
-                        <div className="font-medium text-gray-900">{question.title}</div>
+                        <div className="font-medium text-gray-900">
+                          {question.title}
+                        </div>
                         <div className="text-sm text-gray-500 mt-1 line-clamp-2">
                           {question.description}
                         </div>
@@ -219,18 +221,22 @@ export default function RewardQaManagementPage() {
                     </td>
                     <td className="py-4 px-4">
                       <div className="font-medium text-gray-900">
-                        {question.reward_amount} {question.reward_type === 'fcx' ? 'FCX' : '积分'}
+                        {question.reward_amount}{' '}
+                        {question.reward_type === 'fcx' ? 'FCX' : '积分'}
                       </div>
                     </td>
                     <td className="py-4 px-4">
                       <div>
                         <div className="text-sm">
-                          {question.current_participants} / {question.max_participants}
+                          {question.current_participants} /{' '}
+                          {question.max_participants}
                         </div>
                         <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full" 
-                            style={{ width: `${(question.current_participants / question.max_participants) * 100}%` }}
+                          <div
+                            className="bg-blue-600 h-2 rounded-full"
+                            style={{
+                              width: `${(question.current_participants / question.max_participants) * 100}%`,
+                            }}
                           ></div>
                         </div>
                       </div>
@@ -240,8 +246,12 @@ export default function RewardQaManagementPage() {
                     </td>
                     <td className="py-4 px-4">
                       <div className="text-sm text-gray-500">
-                        <div>{new Date(question.start_time).toLocaleDateString()}</div>
-                        <div>至 {new Date(question.end_time).toLocaleDateString()}</div>
+                        <div>
+                          {new Date(question.start_time).toLocaleDateString()}
+                        </div>
+                        <div>
+                          �?{new Date(question.end_time).toLocaleDateString()}
+                        </div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
@@ -254,7 +264,11 @@ export default function RewardQaManagementPage() {
                           <Edit className="w-4 h-4 mr-1" />
                           编辑
                         </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
                           <Trash2 className="w-4 h-4 mr-1" />
                           删除
                         </Button>
@@ -265,12 +279,15 @@ export default function RewardQaManagementPage() {
               </tbody>
             </table>
           </div>
-          
+
           {questions.length === 0 && (
             <div className="text-center py-12">
               <HelpCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无问答活动</h3>
-              <p className="text-gray-500 mb-4">创建第一个有奖问答活动来提升用户参与度</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                暂无问答活动
+              </h3>
+              <p className="text-gray-500 mb-4">
+                创建第一个有奖问答活动来提升用户参与?              </p>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 创建问答活动
@@ -282,3 +299,4 @@ export default function RewardQaManagementPage() {
     </div>
   );
 }
+

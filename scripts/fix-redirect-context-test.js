@@ -15,21 +15,31 @@ console.log('现象: 测试显示"未检测到重定向参数"');
 console.log('原因: 测试逻辑可能存在问题\n');
 
 // 2. 检查测试页面
-const testPagePath = path.join(process.cwd(), 'src', 'app', 'login-optimization-test', 'page.tsx');
+const testPagePath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'login-optimization-test',
+  'page.tsx'
+);
 if (fs.existsSync(testPagePath)) {
   const content = fs.readFileSync(testPagePath, 'utf8');
-  
+
   console.log('🔍 当前测试逻辑分析:');
-  
+
   // 检查关键测试代码
-  const hasRedirectCheck = content.includes('window.location.search.includes(\'redirect=\')');
+  const hasRedirectCheck = content.includes(
+    "window.location.search.includes('redirect=')"
+  );
   const hasSearchParams = content.includes('useSearchParams()');
-  const hasRedirectState = content.includes('const redirect = searchParams.get(\'redirect\')');
-  
+  const hasRedirectState = content.includes(
+    "const redirect = searchParams.get('redirect')"
+  );
+
   console.log(`  重定向参数获取: ${hasSearchParams ? '✅' : '❌'}`);
   console.log(`  redirect状态定义: ${hasRedirectState ? '✅' : '❌'}`);
   console.log(`  URL搜索检查: ${hasRedirectCheck ? '✅' : '❌'}`);
-  
+
   // 分析可能的问题点
   console.log('\n⚠️  可能的问题点:');
   if (!hasSearchParams) {
@@ -49,16 +59,16 @@ console.log('\n2️⃣ 推荐修复方案');
 const fixRecommendations = [
   {
     title: '完善测试逻辑',
-    description: '改进重定向参数检测逻辑，增加更详细的调试信息'
+    description: '改进重定向参数检测逻辑，增加更详细的调试信息',
   },
   {
     title: '添加调试输出',
-    description: '在控制台输出详细的URL参数信息以便调试'
+    description: '在控制台输出详细的URL参数信息以便调试',
   },
   {
     title: '增强错误处理',
-    description: '提供更清晰的错误提示和解决方案'
-  }
+    description: '提供更清晰的错误提示和解决方案',
+  },
 ];
 
 fixRecommendations.forEach((fix, index) => {
@@ -236,20 +246,20 @@ console.log('\n4️⃣ 测试URL示例');
 const testUrls = [
   {
     url: 'http://localhost:3000/login-optimization-test',
-    description: '无redirect参数的测试'
+    description: '无redirect参数的测试',
   },
   {
     url: 'http://localhost:3000/login-optimization-test?redirect=/admin/dashboard',
-    description: '管理后台重定向测试'
+    description: '管理后台重定向测试',
   },
   {
     url: 'http://localhost:3000/login-optimization-test?redirect=/profile',
-    description: '用户个人页面重定向测试'
+    description: '用户个人页面重定向测试',
   },
   {
     url: 'http://localhost:3000/login-optimization-test?redirect=/brand/products',
-    description: '品牌商页面重定向测试'
-  }
+    description: '品牌商页面重定向测试',
+  },
 ];
 
 console.log('请使用以下URL进行测试:');

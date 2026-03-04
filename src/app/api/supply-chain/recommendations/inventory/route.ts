@@ -1,5 +1,5 @@
-/**
- * 库存优化建议API
+﻿/**
+ * 搴撳瓨浼樺寲寤鸿API
  */
 
 import { NextResponse } from 'next/server';
@@ -9,43 +9,52 @@ import { InventoryOptimizationRequest } from '@/supply-chain/models/recommendati
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { warehouseId, productIds, analysisPeriodDays, optimizationStrategy } = body;
+    const {
+      warehouseId,
+      productIds,
+      analysisPeriodDays,
+      optimizationStrategy,
+    } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!warehouseId) {
       return NextResponse.json(
-        { error: '缺少必要参数: warehouseId' },
+        { error: '缂哄皯蹇呰鍙傛暟: warehouseId' },
         { status: 400 }
       );
     }
 
     const recommendationRequest: InventoryOptimizationRequest = {
       warehouseId,
-      productIds: productIds && Array.isArray(productIds) ? productIds : undefined,
+      productIds:
+        productIds && Array.isArray(productIds) ? productIds : undefined,
       analysisPeriodDays: analysisPeriodDays || 90,
-      optimizationStrategy: optimizationStrategy || 'cost_optimization'
+      optimizationStrategy: optimizationStrategy || 'cost_optimization',
     };
 
     const recommendationService = new RecommendationService();
-    const suggestions = await recommendationService.getInventoryOptimizationSuggestions(recommendationRequest);
+    const suggestions =
+      await recommendationService.getInventoryOptimizationSuggestions(
+        recommendationRequest
+      );
 
     return NextResponse.json({
       success: true,
       data: {
         suggestions,
         count: suggestions.length,
-        request: recommendationRequest
-      }
+        request: recommendationRequest,
+      },
     });
-
   } catch (error) {
-    console.error('库存优化建议错误:', error);
+    console.error('搴撳瓨浼樺寲寤鸿閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '生成库存优化建议失败',
-        details: (error as Error).message 
+      {
+        error: '鐢熸垚搴撳瓨浼樺寲寤鸿澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

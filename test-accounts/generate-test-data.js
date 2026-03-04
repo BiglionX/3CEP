@@ -23,12 +23,12 @@ const permissionMap = JSON.parse(
  */
 function generateRoleTestData() {
   console.log('🔄 开始生成角色测试数据...\n');
-  
+
   const testData = {
     version: '1.0.0',
     generated_at: new Date().toISOString(),
     environments: roleAccounts.test_environments,
-    roles: {}
+    roles: {},
   };
 
   // 为每个角色生成测试数据
@@ -38,11 +38,11 @@ function generateRoleTestData() {
         key: roleKey,
         name: roleConfig.name,
         description: roleConfig.description,
-        level: roleConfig.level
+        level: roleConfig.level,
       },
       test_accounts: [],
       permissions: permissionMap.role_permission_mapping[roleKey] || {},
-      test_cases: []
+      test_cases: [],
     };
 
     // 处理每个测试账户
@@ -55,15 +55,15 @@ function generateRoleTestData() {
         tenant_id: account.tenant_id,
         login_credentials: {
           email: account.email,
-          password: account.password
+          password: account.password,
         },
         expected_permissions: account.permissions,
         login_urls: account.login_urls,
-        test_scenarios: account.test_scenarios
+        test_scenarios: account.test_scenarios,
       };
 
       roleData.test_accounts.push(accountData);
-      
+
       // 生成具体的测试用例
       const testCases = generateTestCases(roleKey, account, roleConfig);
       roleData.test_cases.push(...testCases);
@@ -75,7 +75,7 @@ function generateRoleTestData() {
   // 保存测试数据
   const outputPath = path.join(__dirname, 'generated-test-data.json');
   fs.writeFileSync(outputPath, JSON.stringify(testData, null, 2));
-  
+
   console.log(`✅ 测试数据已生成: ${outputPath}`);
   return testData;
 }
@@ -99,24 +99,24 @@ function generateTestCases(roleKey, account, roleConfig) {
       `输入邮箱: ${account.email}`,
       `输入密码: ${account.password}`,
       '点击登录按钮',
-      '验证登录成功并跳转到正确页面'
+      '验证登录成功并跳转到正确页面',
     ],
     expected_results: [
       '成功登录系统',
       `跳转到: ${account.login_urls.web.split('?redirect=')[1] || '/dashboard'}`,
       '显示用户姓名和角色信息',
-      '菜单项符合权限范围'
+      '菜单项符合权限范围',
     ],
     api_test: {
       endpoint: `${apiUrl}/auth/login`,
       method: 'POST',
       payload: {
         email: account.email,
-        password: account.password
+        password: account.password,
       },
       expected_status: 200,
-      expected_response_fields: ['success', 'user', 'token']
-    }
+      expected_response_fields: ['success', 'user', 'token'],
+    },
   });
 
   // 权限验证测试用例
@@ -131,14 +131,14 @@ function generateTestCases(roleKey, account, roleConfig) {
           `以${account.name}身份登录`,
           `尝试访问相关功能页面`,
           `执行相关操作`,
-          `验证权限控制`
+          `验证权限控制`,
         ],
         expected_results: [
           '能够正常访问授权功能',
           '界面元素显示正确',
           '操作按钮可用',
-          '数据展示符合权限范围'
-        ]
+          '数据展示符合权限范围',
+        ],
       });
     });
   }
@@ -155,12 +155,12 @@ function generateTestCases(roleKey, account, roleConfig) {
           endpoint: getApiEndpointFromPermission(permission, roleKey),
           method: getHttpMethodFromPermission(permission),
           headers: {
-            'Authorization': 'Bearer {{token}}',
-            'Content-Type': 'application/json'
+            Authorization: 'Bearer {{token}}',
+            'Content-Type': 'application/json',
           },
           expected_status: [200, 201],
-          expected_error_status: 403
-        }
+          expected_error_status: 403,
+        },
       });
     });
   }
@@ -174,21 +174,21 @@ function generateTestCases(roleKey, account, roleConfig) {
 function getApiEndpointFromPermission(permission, roleKey) {
   const resource = permission.split('_')[0];
   const baseUrl = roleAccounts.test_environments.development.api_url;
-  
+
   const endpointMap = {
-    'dashboard': `${baseUrl}/dashboard`,
-    'users': `${baseUrl}/users`,
-    'content': `${baseUrl}/content`,
-    'shops': `${baseUrl}/shops`,
-    'payments': `${baseUrl}/payments`,
-    'reports': `${baseUrl}/reports`,
-    'settings': `${baseUrl}/settings`,
-    'procurement': `${baseUrl}/procurement`,
-    'inventory': `${baseUrl}/inventory`,
-    'agents': `${baseUrl}/agents`,
-    'enterprise': roleKey.includes('enterprise') ? 
-      `${roleAccounts.test_environments.development.enterprise_api_url}/enterprise` : 
-      `${baseUrl}/enterprise`
+    dashboard: `${baseUrl}/dashboard`,
+    users: `${baseUrl}/users`,
+    content: `${baseUrl}/content`,
+    shops: `${baseUrl}/shops`,
+    payments: `${baseUrl}/payments`,
+    reports: `${baseUrl}/reports`,
+    settings: `${baseUrl}/settings`,
+    procurement: `${baseUrl}/procurement`,
+    inventory: `${baseUrl}/inventory`,
+    agents: `${baseUrl}/agents`,
+    enterprise: roleKey.includes('enterprise')
+      ? `${roleAccounts.test_environments.development.enterprise_api_url}/enterprise`
+      : `${baseUrl}/enterprise`,
   };
 
   return endpointMap[resource] || `${baseUrl}/${resource}`;
@@ -199,20 +199,20 @@ function getApiEndpointFromPermission(permission, roleKey) {
  */
 function getHttpMethodFromPermission(permission) {
   const action = permission.split('_')[1] || 'read';
-  
+
   const methodMap = {
-    'read': 'GET',
-    'create': 'POST',
-    'update': 'PUT',
-    'delete': 'DELETE',
-    'approve': 'PATCH',
-    'refund': 'POST',
-    'export': 'GET',
-    'manage': 'POST',
-    'execute': 'POST',
-    'monitor': 'GET',
-    'invoke': 'POST',
-    'debug': 'POST'
+    read: 'GET',
+    create: 'POST',
+    update: 'PUT',
+    delete: 'DELETE',
+    approve: 'PATCH',
+    refund: 'POST',
+    export: 'GET',
+    manage: 'POST',
+    execute: 'POST',
+    monitor: 'GET',
+    invoke: 'POST',
+    debug: 'POST',
   };
 
   return methodMap[action] || 'GET';
@@ -223,7 +223,7 @@ function getHttpMethodFromPermission(permission) {
  */
 function generatePlaywrightTests(testData) {
   console.log('\n🔄 生成Playwright测试脚本...');
-  
+
   const testDir = path.join(__dirname, '..', 'tests', 'e2e', 'roles');
   if (!fs.existsSync(testDir)) {
     fs.mkdirSync(testDir, { recursive: true });
@@ -234,7 +234,7 @@ function generatePlaywrightTests(testData) {
     const testContent = generateRoleTestFile(roleKey, roleData);
     const fileName = `role-${roleKey}-e2e.spec.ts`;
     const filePath = path.join(testDir, fileName);
-    
+
     fs.writeFileSync(filePath, testContent);
     console.log(`   📝 ${fileName}`);
   });
@@ -247,7 +247,7 @@ function generatePlaywrightTests(testData) {
  */
 function generateRoleTestFile(roleKey, roleData) {
   const account = roleData.test_accounts[0]; // 使用第一个账户
-  
+
   return `import { test, expect } from '@playwright/test';
 import { TEST_CONFIG } from '../../../e2e-config';
 
@@ -289,8 +289,10 @@ test.describe('${roleData.role_info.name}权限测试 (${roleKey.toUpperCase()})
     expect(roleDisplay.toLowerCase()).toContain('${roleKey}');
   });
 
-  ${
-    roleData.test_cases.slice(1, 4).map(testCase => `
+  ${roleData.test_cases
+    .slice(1, 4)
+    .map(
+      testCase => `
   /**
    * ${testCase.name}
    */
@@ -305,8 +307,9 @@ test.describe('${roleData.role_info.name}权限测试 (${roleKey.toUpperCase()})
     // TODO: 实现具体的测试逻辑
     // 根据权限范围验证可访问的功能
     console.log('执行${testCase.name}测试');
-  });`).join('')
-  }
+  });`
+    )
+    .join('')}
 });
 
 export const ROLE_${roleKey.toUpperCase()}_TEST_DATA = {
@@ -328,24 +331,23 @@ export const ROLE_${roleKey.toUpperCase()}_TEST_DATA = {
 function main() {
   console.log('🚀 FixCycle 角色测试数据生成器');
   console.log('=====================================\n');
-  
+
   try {
     // 生成测试数据
     const testData = generateRoleTestData();
-    
+
     // 生成测试脚本
     generatePlaywrightTests(testData);
-    
+
     // 生成使用文档
     generateDocumentation(testData);
-    
+
     console.log('\n🎉 所有测试数据和脚本生成完成！');
     console.log('\n📋 下一步操作:');
     console.log('1. 运行 npm run test:e2e:roles 测试所有角色权限');
     console.log('2. 检查生成的测试文件是否符合预期');
     console.log('3. 根据需要调整测试用例细节');
     console.log('4. 执行测试验证权限配置正确性');
-    
   } catch (error) {
     console.error('❌ 生成过程中出现错误:', error.message);
     process.exit(1);
@@ -357,7 +359,7 @@ function main() {
  */
 function generateDocumentation(testData) {
   console.log('\n🔄 生成使用文档...');
-  
+
   const docContent = `# 角色测试账户使用指南
 
 ## 概述
@@ -365,7 +367,9 @@ function generateDocumentation(testData) {
 
 ## 测试账户列表
 
-${Object.entries(testData.roles).map(([roleKey, roleData]) => `
+${Object.entries(testData.roles)
+  .map(
+    ([roleKey, roleData]) => `
 ### ${roleData.role_info.name} (${roleKey})
 - **描述**: ${roleData.role_info.description}
 - **权限等级**: ${roleData.role_info.level}
@@ -377,7 +381,9 @@ ${(roleData.permissions.can_access || []).map(item => `  - ${item}`).join('\n')}
 
 **限制访问**:
 ${(roleData.permissions.restricted_from || []).map(item => `  - ${item}`).join('\n')}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ## 测试环境配置
 
@@ -405,10 +411,17 @@ npx playwright test tests/e2e/roles/role-${Object.keys(testData.roles)[0]}-e2e.s
 
 ## 验证清单
 
-${Object.entries(testData.roles).map(([roleKey, roleData]) => `
+${Object.entries(testData.roles)
+  .map(
+    ([roleKey, roleData]) => `
 ### ${roleData.role_info.name}验证点
-${(roleData.test_cases || []).slice(0, 3).map(tc => `- [ ] ${tc.name}`).join('\n')}
-`).join('\n')}
+${(roleData.test_cases || [])
+  .slice(0, 3)
+  .map(tc => `- [ ] ${tc.name}`)
+  .join('\n')}
+`
+  )
+  .join('\n')}
 
 ## 安全注意事项
 
@@ -442,5 +455,5 @@ if (require.main === module) {
 module.exports = {
   generateRoleTestData,
   generatePlaywrightTests,
-  generateDocumentation
+  generateDocumentation,
 };

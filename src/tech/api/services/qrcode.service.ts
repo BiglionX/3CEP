@@ -1,23 +1,19 @@
-import { createClient } from "@supabase/supabase-js";
-import QRCode from "qrcode";
-import sharp from "sharp";
+import { createClient } from '@supabase/supabase-js';
+import QRCode from 'qrcode';
+import sharp from 'sharp';
 
-// 初始化Supabase客户端
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+// 初始化Supabase客户?const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
-// 二维码生成配置接口
-export interface QRCodeConfig {
-  format?: "png" | "svg";
+// 二维码生成配置接?export interface QRCodeConfig {
+  format?: 'png' | 'svg';
   size?: number;
-  errorCorrectionLevel?: "L" | "M" | "Q" | "H";
+  errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H';
   margin?: number;
   color?: {
-    dark?: string; // 前景色
-    light?: string; // 背景色
-  };
+    dark?: string; // 前景?    light?: string; // 背景?  };
 }
 
 // 产品信息接口
@@ -67,16 +63,14 @@ export class QRCodeService {
       // 生成唯一二维码ID
       const qrCodeId = this.generateUniqueQRCodeId(productInfo.productId);
 
-      // 构造二维码内容（产品页面URL）
-      const qrContent = this.buildQRContent(productInfo);
+      // 构造二维码内容（产品页面URL�?      const qrContent = this.buildQRContent(productInfo);
 
       // 合并默认配置
       const mergedConfig = this.mergeConfig(config);
 
-      // 生成二维码图片
-      let qrImageData: Buffer | string;
+      // 生成二维码图?      let qrImageData: Buffer | string;
 
-      if (mergedConfig.format === "svg") {
+      if (mergedConfig.format === 'svg') {
         qrImageData = await this.generateSVGQRCode(qrContent, mergedConfig);
       } else {
         qrImageData = await this.generatePNGQRCode(qrContent, mergedConfig);
@@ -103,14 +97,13 @@ export class QRCodeService {
         size: mergedConfig.size,
       };
     } catch (error) {
-      console.error("二维码生成失败:", error);
-      throw new Error(`二维码生成失败: ${(error as Error).message}`);
+      console.error('二维码生成失?', error);
+      throw new Error(`二维码生成失? ${(error as Error).message}`);
     }
   }
 
   /**
-   * 批量生成二维码
-   */
+   * 批量生成二维?   */
   async generateBatchQRCode(
     products: ProductInfo[],
     config: QRCodeConfig = {}
@@ -122,20 +115,18 @@ export class QRCodeService {
         const result = await this.generateQRCode(product, config);
         results.push(result);
       } catch (error) {
-        console.error(`产品 ${product.productId} 二维码生成失败:`, error);
-        // 继续处理下一个产品
-      }
+        console.error(`产品 ${product.productId} 二维码生成失?`, error);
+        // 继续处理下一个产?      }
     }
 
     return results;
   }
 
   /**
-   * 获取二维码信息
-   */
+   * 获取二维码信?   */
   async getQRCodeById(qrCodeId: string): Promise<any> {
     const { data, error } = await supabase
-      .from("product_qrcodes")
+      .from('product_qrcodes')
       .select(
         `
         *,
@@ -151,11 +142,11 @@ export class QRCodeService {
         )
       `
       )
-      .eq("qr_code_id", qrCodeId)
+      .eq('qr_code_id', qrCodeId)
       .single();
 
     if (error) {
-      throw new Error(`查询二维码失败: ${error.message}`);
+      throw new Error(`查询二维码失? ${error.message}`);
     }
 
     return data;
@@ -166,31 +157,30 @@ export class QRCodeService {
    */
   async getProductQRCodes(productId: string): Promise<any[]> {
     const { data, error } = await supabase
-      .from("product_qrcodes")
-      .select("*")
-      .eq("product_id", productId)
-      .order("created_at", { ascending: false });
+      .from('product_qrcodes')
+      .select('*')
+      .eq('product_id', productId)
+      .order('created_at', { ascending: false });
 
     if (error) {
-      throw new Error(`查询产品二维码失败: ${error.message}`);
+      throw new Error(`查询产品二维码失? ${error.message}`);
     }
 
     return data;
   }
 
   /**
-   * 更新二维码统计信息
-   */
+   * 更新二维码统计信?   */
   async updateScanStatistics(qrCodeId: string): Promise<void> {
     try {
       // 获取当前统计信息
       const { data: stats } = await supabase
-        .from("qr_scan_statistics")
-        .select("*")
-        .eq("qr_code_id", qrCodeId)
+        .from('qr_scan_statistics')
+        .select('*')
+        .eq('qr_code_id', qrCodeId)
         .single();
 
-      const today = new Date().toISOString().split("T")[0];
+      const today = new Date().toISOString().split('T')[0];
       let dailyStats = stats?.daily_stats || {};
 
       // 更新今日扫描次数
@@ -199,16 +189,15 @@ export class QRCodeService {
       if (stats) {
         // 更新现有记录
         await supabase
-          .from("qr_scan_statistics")
+          .from('qr_scan_statistics')
           .update({
             scan_count: stats.scan_count + 1,
             last_scan_time: new Date().toISOString(),
             daily_stats: dailyStats,
           } as any)
-          .eq("qr_code_id", qrCodeId);
+          .eq('qr_code_id', qrCodeId);
       } else {
-        // 创建新记录
-        await supabase.from("qr_scan_statistics").insert({
+        // 创建新记?        await supabase.from('qr_scan_statistics').insert({
           qr_code_id: qrCodeId,
           product_id: (await this.getQRCodeById(qrCodeId)).product_id,
           scan_count: 1,
@@ -217,7 +206,7 @@ export class QRCodeService {
         } as any);
       }
     } catch (error) {
-      console.error("更新扫描统计失败:", error);
+      console.error('更新扫描统计失败:', error);
     }
   }
 
@@ -235,7 +224,7 @@ export class QRCodeService {
    */
   private buildQRContent(productInfo: ProductInfo): string {
     // 生成产品详情页面URL
-    const baseUrl = process.env.QR_CODE_BASE_URL || "https://fx.cn";
+    const baseUrl = process.env.QR_CODE_BASE_URL || 'https://fx.cn';
     return `${baseUrl}/products/${productInfo.productId}`;
   }
 
@@ -246,13 +235,13 @@ export class QRCodeService {
     config: QRCodeConfig
   ): Required<QRCodeConfig> & { color: { dark: string; light: string } } {
     const defaults: Required<QRCodeConfig> = {
-      format: "png",
+      format: 'png',
       size: 300,
-      errorCorrectionLevel: "M",
+      errorCorrectionLevel: 'M',
       margin: 4,
       color: {
-        dark: "#000000",
-        light: "#FFFFFF",
+        dark: '#000000',
+        light: '#FFFFFF',
       },
     };
 
@@ -265,8 +254,8 @@ export class QRCodeService {
         config.errorCorrectionLevel || defaults.errorCorrectionLevel,
       margin: config.margin !== undefined ? config.margin : defaults.margin,
       color: {
-        dark: config.color?.dark || defaults.color.dark || '#000000',
-        light: config.color?.light || defaults.color.light || '#ffffff',
+        dark: config?.dark || defaults.color.dark || '#000000',
+        light: config?.light || defaults.color.light || '#ffffff',
       },
     };
 
@@ -274,30 +263,28 @@ export class QRCodeService {
   }
 
   /**
-   * 生成SVG格式二维码
-   */
+   * 生成SVG格式二维?   */
   private async generateSVGQRCode(
     content: string,
     config: any
   ): Promise<string> {
-    return await QRCode.toString(content, {
-      type: "svg",
+    return (await QRCode.toString(content, {
+      type: 'svg',
       errorCorrectionLevel: config.errorCorrectionLevel,
       margin: config.margin,
       color: config.color,
-    });
+    })) as any;
   }
 
   /**
-   * 生成PNG格式二维码
-   */
+   * 生成PNG格式二维?   */
   private async generatePNGQRCode(
     content: string,
     config: any
   ): Promise<Buffer> {
     // 先生成SVG
     const svgString = await QRCode.toString(content, {
-      type: "svg",
+      type: 'svg',
       errorCorrectionLevel: config.errorCorrectionLevel,
       margin: config.margin,
       color: config.color,
@@ -318,20 +305,18 @@ export class QRCodeService {
   private convertToBase64(data: Buffer | string, format: string): string {
     let buffer: Buffer;
 
-    if (typeof data === "string") {
-      // SVG字符串
-      buffer = Buffer.from(data);
-      return `data:image/svg+xml;base64,${buffer.toString("base64")}`;
+    if (typeof data === 'string') {
+      // SVG字符?      buffer = Buffer.from(data);
+      return `data:image/svg+xml;base64,${buffer.toString('base64')}`;
     } else {
       // PNG Buffer
       buffer = data;
-      return `data:image/png;base64,${buffer.toString("base64")}`;
+      return `data:image/png;base64,${buffer.toString('base64')}`;
     }
   }
 
   /**
-   * 保存二维码信息到数据库
-   */
+   * 保存二维码信息到数据?   */
   private async saveQRCodeToDatabase(
     qrCodeId: string,
     productId: string,
@@ -341,7 +326,7 @@ export class QRCodeService {
   ): Promise<any> {
     // 开始数据库事务
     const { data, error } = await supabase
-      .from("product_qrcodes")
+      .from('product_qrcodes')
       .insert({
         qr_code_id: qrCodeId,
         product_id: productId,
@@ -358,11 +343,11 @@ export class QRCodeService {
       .single();
 
     if (error) {
-      throw new Error(`保存二维码到数据库失败: ${error.message}`);
+      throw new Error(`保存二维码到数据库失? ${error.message}`);
     }
 
     // 同时创建扫描统计记录
-    await supabase.from("qr_scan_statistics").insert({
+    await supabase.from('qr_scan_statistics').insert({
       qr_code_id: data.id,
       product_id: productId,
       scan_count: 0,

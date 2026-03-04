@@ -1,12 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { 
-  HelpCircle, 
-  ExternalLink, 
-  BookOpen, 
+import {
+  HelpCircle,
+  ExternalLink,
+  BookOpen,
   FileText,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -30,13 +30,13 @@ export function HelpLink({
   size = 'md',
   className = '',
   external = false,
-  anchor
+  anchor,
 }: HelpLinkProps) {
   const helpHref = anchor ? `${href}#${anchor}` : href;
-  
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    
+
     if (external) {
       window.open(helpHref, '_blank', 'noopener,noreferrer');
     } else {
@@ -75,7 +75,7 @@ export function HelpLink({
     <button
       onClick={handleClick}
       className={`inline-flex items-center text-blue-600 hover:text-blue-800 hover:underline ${className}`}
-      aria-label={`查看关于${topic || '此功能'}的帮助`}
+      aria-label={`查看关于${topic || '此功?}的帮助`}
     >
       <HelpCircle className="w-4 h-4 mr-1" />
       {children || '帮助'}
@@ -86,7 +86,7 @@ export function HelpLink({
 export function ContextualHelp({
   section,
   feature,
-  className = ''
+  className = '',
 }: {
   section: string;
   feature: string;
@@ -98,28 +98,20 @@ export function ContextualHelp({
     'data-center': '/docs/guides/data-center-user-guide.md',
     'n8n-workflows': '/docs/technical-docs/n8n-integration-scenarios.md',
     'audit-logs': '/docs/role-guides/admin.md#审计日志管理',
-    'monitoring': '/docs/deployment/performance-monitoring-setup.md',
-    'backup': '/docs/guides/backup-strategy-guide.md'
+    monitoring: '/docs/deployment/performance-monitoring-setup.md',
+    backup: '/docs/guides/backup-strategy-guide.md',
   };
 
   const helpHref = helpPaths[section] || '/docs/guides/quick-start-guide.md';
 
   return (
     <div className={`flex items-center space-x-2 ${className}`}>
-      <HelpLink 
-        href={helpHref} 
-        variant="inline"
-        topic={feature}
-      >
+      <HelpLink href={helpHref} variant="inline" topic={feature}>
         <BookOpen className="w-4 h-4 mr-1" />
         {feature} 帮助
       </HelpLink>
       <span className="text-gray-400">|</span>
-      <HelpLink 
-        href="/docs/INDEX.md" 
-        variant="inline"
-        topic="文档中心"
-      >
+      <HelpLink href="/docs/INDEX.md" variant="inline" topic="文档中心">
         <FileText className="w-4 h-4 mr-1" />
         文档中心
       </HelpLink>
@@ -129,7 +121,7 @@ export function ContextualHelp({
 
 export function PageHelpNavigation({
   pageTitle,
-  sections
+  sections,
 }: {
   pageTitle: string;
   sections: Array<{ id: string; title: string; icon?: React.ReactNode }>;
@@ -148,19 +140,17 @@ export function PageHelpNavigation({
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
         >
-          <ChevronRight 
-            className={`w-4 h-4 transition-transform ${expanded ? 'rotate-90' : ''}`} 
+          <ChevronRight
+            className={`w-4 h-4 transition-transform ${expanded ? 'rotate-90' : ''}`}
           />
         </button>
       </div>
-      
+
       {expanded && (
         <div className="mt-3 pt-3 border-t">
-          <p className="text-sm text-gray-600 mb-3">
-            选择您需要帮助的主题：
-          </p>
+          <p className="text-sm text-gray-600 mb-3">选择您需要帮助的主题?/p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {sections.map((section) => (
+            {sections.map(section => (
               <HelpLink
                 key={section.id}
                 href={`/docs/guides/${section.id}.md`}
@@ -186,8 +176,8 @@ export function QuickHelpButton() {
     <div className="fixed bottom-6 right-6 z-50">
       {isOpen && (
         <div className="absolute bottom-16 right-0 mb-2 space-y-2">
-          <HelpLink 
-            href="/docs/INDEX.md" 
+          <HelpLink
+            href="/docs/INDEX.md"
             variant="button"
             size="sm"
             className="bg-white shadow-lg"
@@ -195,18 +185,17 @@ export function QuickHelpButton() {
             <FileText className="w-4 h-4 mr-2" />
             文档中心
           </HelpLink>
-          <HelpLink 
-            href="/docs/guides/quick-start-guide.md" 
+          <HelpLink
+            href="/docs/guides/quick-start-guide.md"
             variant="button"
             size="sm"
             className="bg-white shadow-lg"
           >
             <BookOpen className="w-4 h-4 mr-2" />
-            快速开始
-          </HelpLink>
+            快速开?          </HelpLink>
         </div>
       )}
-      
+
       <button
         className="h-14 w-14 rounded-full shadow-xl bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white"
         onClick={() => setIsOpen(!isOpen)}

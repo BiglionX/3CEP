@@ -4,11 +4,11 @@
   "description": "角色基础访问控制配置文件，定义系统中的角色、权限和映射关系",
   "version": "1.0.0",
   "last_updated": "2026-02-21",
-  
+
   "type": "object",
   "additionalProperties": false,
   "required": ["roles", "permissions", "role_permissions"],
-  
+
   "roles": {
     "admin": {
       "name": "超级管理员",
@@ -505,12 +505,7 @@
       "procurement_approve",
       "reports_read"
     ],
-    "warehouse_operator": [
-      "dashboard_read",
-      "inventory_read",
-      "inventory_update",
-      "reports_read"
-    ],
+    "warehouse_operator": ["dashboard_read", "inventory_read", "inventory_update", "reports_read"],
     "agent_operator": [
       "dashboard_read",
       "agents_execute",
@@ -519,13 +514,8 @@
       "agents_debug",
       "reports_read"
     ],
-    "viewer": [
-      "dashboard_read",
-      "reports_read"
-    ],
-    "external_partner": [
-      "dashboard_read"
-    ],
+    "viewer": ["dashboard_read", "reports_read"],
+    "external_partner": ["dashboard_read"],
     "enterprise_admin": [
       "dashboard_read",
       "enterprise_read",
@@ -561,14 +551,7 @@
     "enabled": true,
     "mode": "strict",
     "default_tenant_field": "tenant_id",
-    "resources_with_tenant": [
-      "users",
-      "content",
-      "shops",
-      "payments",
-      "procurement",
-      "inventory"
-    ]
+    "resources_with_tenant": ["users", "content", "shops", "payments", "procurement", "inventory"]
   },
 
   "audit_settings": {

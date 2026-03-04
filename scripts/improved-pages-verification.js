@@ -12,15 +12,31 @@ const https = require('https');
 const CONFIG = {
   baseUrl: 'http://localhost:3004',
   timeout: 8000,
-  userAgent: 'Improved-Pages-Verifier/1.0'
+  userAgent: 'Improved-Pages-Verifier/1.0',
 };
 
 // 本次改进的核心页面
 const IMPROVED_PAGES = [
-  { name: '帮助中心', path: '/help', expectedElements: ['帮助中心', '视频教程', '下载资源'] },
-  { name: '联系我们', path: '/contact', expectedElements: ['联系我们', '微信客服', '服务中心'] },
-  { name: '关于我们', path: '/about', expectedElements: ['关于我们', '企业文化', '社会责任'] },
-  { name: '用户中心', path: '/profile/dashboard', expectedElements: ['工作台', '个性化服务', '等级进度'] }
+  {
+    name: '帮助中心',
+    path: '/help',
+    expectedElements: ['帮助中心', '视频教程', '下载资源'],
+  },
+  {
+    name: '联系我们',
+    path: '/contact',
+    expectedElements: ['联系我们', '微信客服', '服务中心'],
+  },
+  {
+    name: '关于我们',
+    path: '/about',
+    expectedElements: ['关于我们', '企业文化', '社会责任'],
+  },
+  {
+    name: '用户中心',
+    path: '/profile/dashboard',
+    expectedElements: ['工作台', '个性化服务', '等级进度'],
+  },
 ];
 
 class ImprovedPagesVerifier {
@@ -29,7 +45,7 @@ class ImprovedPagesVerifier {
       total: 0,
       passed: 0,
       failed: 0,
-      details: []
+      details: [],
     };
   }
 
@@ -44,30 +60,31 @@ class ImprovedPagesVerifier {
         method: 'GET',
         headers: {
           'User-Agent': CONFIG.userAgent,
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+          Accept:
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         },
-        timeout: CONFIG.timeout
+        timeout: CONFIG.timeout,
       };
 
       const protocol = urlObj.protocol === 'https:' ? https : http;
-      
-      const req = protocol.request(options, (res) => {
+
+      const req = protocol.request(options, res => {
         let data = '';
-        
-        res.on('data', (chunk) => {
+
+        res.on('data', chunk => {
           data += chunk;
         });
-        
+
         res.on('end', () => {
           resolve({
             statusCode: res.statusCode,
             headers: res.headers,
-            body: data
+            body: data,
           });
         });
       });
 
-      req.on('error', (error) => {
+      req.on('error', error => {
         reject(error);
       });
 
@@ -85,16 +102,16 @@ class ImprovedPagesVerifier {
     const url = CONFIG.baseUrl + page.path;
     console.log(`🔍 测试: ${page.name}`);
     console.log(`   路径: ${page.path}`);
-    
+
     try {
       const response = await this.makeRequest(url);
-      
+
       if (response.statusCode === 200) {
         // 检查页面是否包含预期元素
-        const hasExpectedElements = page.expectedElements.every(element => 
+        const hasExpectedElements = page.expectedElements.every(element =>
           response.body.includes(element)
         );
-        
+
         if (hasExpectedElements) {
           console.log(`   ✅ 页面正常，包含所有预期元素`);
           this.results.passed++;
@@ -102,17 +119,19 @@ class ImprovedPagesVerifier {
             page: page.name,
             path: page.path,
             status: 'PASS',
-            message: '页面正常打开，包含预期内容'
+            message: '页面正常打开，包含预期内容',
           });
         } else {
           console.log(`   ⚠️  页面可访问但内容不完整`);
-          console.log(`   缺少元素: ${page.expectedElements.filter(el => !response.body.includes(el)).join(', ')}`);
+          console.log(
+            `   缺少元素: ${page.expectedElements.filter(el => !response.body.includes(el)).join(', ')}`
+          );
           this.results.failed++;
           this.results.details.push({
             page: page.name,
             path: page.path,
             status: 'CONTENT_MISSING',
-            message: '页面可访问但缺少预期内容元素'
+            message: '页面可访问但缺少预期内容元素',
           });
         }
       } else {
@@ -122,7 +141,7 @@ class ImprovedPagesVerifier {
           page: page.name,
           path: page.path,
           status: 'HTTP_ERROR',
-          message: `HTTP ${response.statusCode} 错误`
+          message: `HTTP ${response.statusCode} 错误`,
         });
       }
     } catch (error) {
@@ -132,10 +151,10 @@ class ImprovedPagesVerifier {
         page: page.name,
         path: page.path,
         status: 'REQUEST_FAILED',
-        message: error.message
+        message: error.message,
       });
     }
-    
+
     this.results.total++;
     console.log('');
   }
@@ -147,8 +166,11 @@ class ImprovedPagesVerifier {
     console.log('==================================================');
     console.log('');
 
-    const successRate = ((this.results.passed / this.results.total) * 100).toFixed(1);
-    
+    const successRate = (
+      (this.results.passed / this.results.total) *
+      100
+    ).toFixed(1);
+
     console.log(`📈 总体统计:`);
     console.log(`   测试页面: ${this.results.total}`);
     console.log(`   通过: ${this.results.passed}`);
@@ -160,7 +182,9 @@ class ImprovedPagesVerifier {
       console.log('📋 详细结果:');
       this.results.details.forEach(detail => {
         const statusIcon = detail.status === 'PASS' ? '✅' : '❌';
-        console.log(`   ${statusIcon} ${detail.page} (${detail.path}): ${detail.message}`);
+        console.log(
+          `   ${statusIcon} ${detail.page} (${detail.path}): ${detail.message}`
+        );
       });
       console.log('');
     }
@@ -172,9 +196,9 @@ class ImprovedPagesVerifier {
         total: this.results.total,
         passed: this.results.passed,
         failed: this.results.failed,
-        successRate: successRate
+        successRate: successRate,
       },
-      details: this.results.details
+      details: this.results.details,
     };
 
     require('fs').writeFileSync(
@@ -184,7 +208,7 @@ class ImprovedPagesVerifier {
 
     console.log('📄 详细报告已保存至: improved-pages-verification-report.json');
     console.log('');
-    
+
     return successRate >= 80;
   }
 
@@ -202,13 +226,13 @@ class ImprovedPagesVerifier {
 
     // 生成最终报告
     const isSuccess = this.generateReport();
-    
+
     if (isSuccess) {
       console.log('🎉 验证通过！改进页面功能正常');
     } else {
       console.log('⚠️  部分页面存在问题，需要进一步检查');
     }
-    
+
     return isSuccess;
   }
 }

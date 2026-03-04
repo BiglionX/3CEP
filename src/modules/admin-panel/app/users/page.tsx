@@ -56,7 +56,7 @@ export default function UsersPage() {
         setUsers(result.data);
         // 记录查询性能
         if (typeof window !== 'undefined' && window.performance) {
-          console.log(
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
             `[Performance] 用户列表加载耗时: ${(endTime - startTime).toFixed(
               2
             )}ms, 来自缓存: ${result.fromCache || false}`
@@ -143,16 +143,16 @@ export default function UsersPage() {
       case 'active':
         return { text: '正常', color: 'green' };
       case 'banned':
-        return { text: '已封禁', color: 'red' };
+        return { text: '已封?, color: 'red' };
       case 'suspended':
-        return { text: '已暂停', color: 'yellow' };
+        return { text: '已暂?, color: 'yellow' };
       default:
         return { text: '未知', color: 'gray' };
     }
   };
 
   const getRoleDisplay = (role: UserRole | null) => {
-    if (!role) return '未设置';
+    if (!role) return '未设?;
     return AuthService.getRoleDisplayName(role);
   };
 
@@ -160,8 +160,8 @@ export default function UsersPage() {
   const filteredUsers = users.filter(user => {
     const matchesSearch =
       !searchTerm ||
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.user_id?.toLowerCase().includes(searchTerm.toLowerCase());
+      user?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesRole = !selectedRole || user.role === selectedRole;
     const matchesStatus = !selectedStatus || user.status === selectedStatus;
@@ -179,7 +179,7 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按钮 */}
+      {/* 页面标题和操作按?*/}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">用户管理</h1>
@@ -189,11 +189,11 @@ export default function UsersPage() {
         </div>
       </div>
 
-      {/* 搜索和筛选区域 */}
+      {/* 搜索和筛选区?*/}
       <div className="bg-white rounded-lg shadow">
         <div className="p-4 border-b border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* 搜索框 */}
+            {/* 搜索?*/}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
@@ -217,7 +217,7 @@ export default function UsersPage() {
                 value={searchTerm}
                 onChange={e => {
                   setSearchTerm(e.target.value);
-                  // 防抖搜索 - 只在用户停止输入时触发
+                  // 防抖搜索 - 只在用户停止输入时触?
                   clearTimeout((window as any).searchTimeout);
                   (window as any).searchTimeout = setTimeout(() => {
                     loadUsers(false); // 搜索时不使用缓存
@@ -226,7 +226,7 @@ export default function UsersPage() {
               />
             </div>
 
-            {/* 角色筛选 */}
+            {/* 角色筛?*/}
             <select
               className="focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-3 border border-gray-300 rounded-md bg-white text-gray-900"
               value={selectedRole}
@@ -235,15 +235,15 @@ export default function UsersPage() {
                 loadUsers(); // 立即搜索
               }}
             >
-              <option value="">所有角色</option>
-              <option value="admin">超级管理员</option>
-              <option value="content_reviewer">内容审核员</option>
-              <option value="shop_reviewer">店铺审核员</option>
+              <option value="">所有角?/option>
+              <option value="admin">超级管理?/option>
+              <option value="content_reviewer">内容审核?/option>
+              <option value="shop_reviewer">店铺审核?/option>
               <option value="finance">财务人员</option>
-              <option value="viewer">查看者</option>
+              <option value="viewer">查看?/option>
             </select>
 
-            {/* 状态筛选 */}
+            {/* 状态筛?*/}
             <select
               className="focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-3 border border-gray-300 rounded-md bg-white text-gray-900"
               value={selectedStatus}
@@ -252,10 +252,10 @@ export default function UsersPage() {
                 loadUsers(); // 立即搜索
               }}
             >
-              <option value="">所有状态</option>
+              <option value="">所有状?/option>
               <option value="active">正常</option>
-              <option value="banned">已封禁</option>
-              <option value="suspended">已暂停</option>
+              <option value="banned">已封?/option>
+              <option value="suspended">已暂?/option>
             </select>
 
             {/* 搜索按钮 */}
@@ -290,10 +290,10 @@ export default function UsersPage() {
                   角色
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  子角色
+                  子角?
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  状态
+                  状?
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   注册时间
@@ -325,12 +325,12 @@ export default function UsersPage() {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {user.email || '无邮箱'}
+                          {user.email || '无邮?}
                         </div>
                         <div className="text-sm text-gray-500">
                           {user.user_id
                             ? `ID: ${user.user_id.substring(0, 8)}...`
-                            : '未关联用户'}
+                            : '未关联用?}
                         </div>
                       </div>
                     </div>
@@ -396,7 +396,7 @@ export default function UsersPage() {
                           if (confirm('确定要封禁此用户吗？')) {
                             handleUpdateUser(user.id, {
                               status: 'banned',
-                              banned_reason: '管理员手动封禁',
+                              banned_reason: '管理员手动封?,
                             });
                           }
                         }}
@@ -440,17 +440,17 @@ export default function UsersPage() {
         </div>
       </div>
 
-      {/* 批量操作工具栏 */}
+      {/* 批量操作工具?*/}
       {selectedUsers.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="text-sm text-blue-800">
-              已选择 {selectedUsers.length} 个用户
+              已选择 {selectedUsers.length} 个用?
             </div>
             <div className="flex space-x-2">
               <button
                 onClick={() => {
-                  const reason = prompt('请输入封禁原因:');
+                  const reason = prompt('请输入封禁原?');
                   if (reason !== null) {
                     handleBatchAction('ban', reason);
                   }
@@ -469,7 +469,7 @@ export default function UsersPage() {
                 onClick={() => handleBatchAction('activate')}
                 className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
               >
-                批量激活
+                批量激?
               </button>
               <button
                 onClick={() => setSelectedUsers([])}
@@ -532,7 +532,7 @@ function CreateUserModal({
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    添加管理员用户
+                    添加管理员用?
                   </h3>
                   <div className="mt-4 space-y-4">
                     <div>
@@ -567,11 +567,11 @@ function CreateUserModal({
                         value={role}
                         onChange={e => setRole(e.target.value as UserRole)}
                       >
-                        <option value="viewer">查看者</option>
-                        <option value="content_reviewer">内容审核员</option>
-                        <option value="shop_reviewer">店铺审核员</option>
+                        <option value="viewer">查看?/option>
+                        <option value="content_reviewer">内容审核?/option>
+                        <option value="shop_reviewer">店铺审核?/option>
                         <option value="finance">财务人员</option>
-                        <option value="admin">超级管理员</option>
+                        <option value="admin">超级管理?/option>
                       </select>
                     </div>
                   </div>
@@ -584,7 +584,7 @@ function CreateUserModal({
                 disabled={loading}
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
               >
-                {loading ? '创建中...' : '创建用户'}
+                {loading ? '创建?..' : '创建用户'}
               </button>
               <button
                 type="button"
@@ -613,7 +613,7 @@ function EditUserModal({
 }) {
   const [role, setRole] = useState<UserRole>(user.role || 'viewer');
   const [subRoles, setSubRoles] = useState<string>(
-    user.sub_roles?.join(',') || ''
+    user?.join(',') || ''
   );
   const [status, setStatus] = useState<string>(user.status || 'active');
   const [bannedReason, setBannedReason] = useState<string>(
@@ -663,7 +663,7 @@ function EditUserModal({
                     编辑用户
                   </h3>
                   <p className="mt-1 text-sm text-gray-500">
-                    {user.email || '无邮箱'} (
+                    {user.email || '无邮?} (
                     {user.user_id ? user.user_id.substring(0, 8) : '无ID'})
                   </p>
                   <div className="mt-4 space-y-4">
@@ -679,7 +679,7 @@ function EditUserModal({
                         id="edit-email"
                         disabled
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 text-gray-500"
-                        value={user.email || '未设置'}
+                        value={user.email || '未设?}
                       />
                     </div>
 
@@ -697,11 +697,11 @@ function EditUserModal({
                         value={role}
                         onChange={e => setRole(e.target.value as UserRole)}
                       >
-                        <option value="viewer">查看者</option>
-                        <option value="content_reviewer">内容审核员</option>
-                        <option value="shop_reviewer">店铺审核员</option>
+                        <option value="viewer">查看?/option>
+                        <option value="content_reviewer">内容审核?/option>
+                        <option value="shop_reviewer">店铺审核?/option>
                         <option value="finance">财务人员</option>
-                        <option value="admin">超级管理员</option>
+                        <option value="admin">超级管理?/option>
                       </select>
                     </div>
 
@@ -710,7 +710,7 @@ function EditUserModal({
                         htmlFor="edit-sub-roles"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        子角色（逗号分隔）
+                        子角色（逗号分隔?
                       </label>
                       <input
                         type="text"
@@ -718,7 +718,7 @@ function EditUserModal({
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         value={subRoles}
                         onChange={e => setSubRoles(e.target.value)}
-                        placeholder="如: shop_owner,content_creator"
+                        placeholder="�? shop_owner,content_creator"
                       />
                     </div>
 
@@ -727,7 +727,7 @@ function EditUserModal({
                         htmlFor="edit-status"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        用户状态
+                        用户状?
                       </label>
                       <select
                         id="edit-status"
@@ -737,8 +737,8 @@ function EditUserModal({
                         onChange={e => setStatus(e.target.value)}
                       >
                         <option value="active">正常</option>
-                        <option value="banned">已封禁</option>
-                        <option value="suspended">已暂停</option>
+                        <option value="banned">已封?/option>
+                        <option value="suspended">已暂?/option>
                       </select>
                     </div>
 
@@ -756,7 +756,7 @@ function EditUserModal({
                           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                           value={bannedReason}
                           onChange={e => setBannedReason(e.target.value)}
-                          placeholder="请输入封禁原因..."
+                          placeholder="请输入封禁原?.."
                         />
                       </div>
                     )}
@@ -770,7 +770,7 @@ function EditUserModal({
                 disabled={loading}
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
               >
-                {loading ? '保存中...' : '保存用户信息'}
+                {loading ? '保存?..' : '保存用户信息'}
               </button>
               <button
                 type="button"

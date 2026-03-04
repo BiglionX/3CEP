@@ -1,18 +1,13 @@
-"use client";
+﻿'use client';
 
-import { useState, useEffect } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { 
-  FileText, 
-  Plus, 
-  Edit, 
-  Trash2, 
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  FileText,
+  Plus,
+  Edit,
+  Trash2,
   Eye,
   Upload,
   Folder,
@@ -20,8 +15,8 @@ import {
   Calendar,
   CheckCircle,
   Clock,
-  AlertCircle
-} from "lucide-react";
+  AlertCircle,
+} from 'lucide-react';
 
 interface Document {
   id: string;
@@ -30,7 +25,12 @@ interface Document {
   file_name: string;
   file_size: number;
   file_type: string;
-  category: 'business_license' | 'qualification' | 'contract' | 'report' | 'other';
+  category:
+    | 'business_license'
+    | 'qualification'
+    | 'contract'
+    | 'report'
+    | 'other';
   status: 'pending' | 'approved' | 'rejected' | 'archived';
   version: string;
   uploaded_by: string;
@@ -56,10 +56,10 @@ export default function DocumentsManagementPage() {
         category: 'business_license',
         status: 'approved',
         version: 'v1.0',
-        uploaded_by: '张经理',
+        uploaded_by: '张经?,
         uploaded_at: '2024-01-15T10:30:00Z',
         reviewed_at: '2024-01-16T14:20:00Z',
-        reviewer: '李审核员'
+        reviewer: '李审核员',
       },
       {
         id: '2',
@@ -71,8 +71,8 @@ export default function DocumentsManagementPage() {
         category: 'qualification',
         status: 'pending',
         version: 'v1.0',
-        uploaded_by: '王主管',
-        uploaded_at: '2024-01-20T09:15:00Z'
+        uploaded_by: '王主?,
+        uploaded_at: '2024-01-20T09:15:00Z',
       },
       {
         id: '3',
@@ -84,13 +84,13 @@ export default function DocumentsManagementPage() {
         category: 'report',
         status: 'rejected',
         version: 'v1.0',
-        uploaded_by: '财务部',
+        uploaded_by: '财务?,
         uploaded_at: '2024-01-10T16:45:00Z',
         reviewed_at: '2024-01-12T11:30:00Z',
-        reviewer: '陈会计'
-      }
+        reviewer: '陈会?,
+      },
     ];
-    
+
     setTimeout(() => {
       setDocuments(mockDocuments);
       setLoading(false);
@@ -98,18 +98,39 @@ export default function DocumentsManagementPage() {
   }, []);
 
   const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, { text: string; color: string; icon: any }> = {
-      pending: { text: '待审核', color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-      approved: { text: '已批准', color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      rejected: { text: '已拒绝', color: 'bg-red-100 text-red-800', icon: AlertCircle },
-      archived: { text: '已归档', color: 'bg-gray-100 text-gray-800', icon: Folder }
+    const statusMap: Record<
+      string,
+      { text: string; color: string; icon: any }
+    > = {
+      pending: {
+        text: '待审?,
+        color: 'bg-yellow-100 text-yellow-800',
+        icon: Clock,
+      },
+      approved: {
+        text: '已批?,
+        color: 'bg-green-100 text-green-800',
+        icon: CheckCircle,
+      },
+      rejected: {
+        text: '已拒?,
+        color: 'bg-red-100 text-red-800',
+        icon: AlertCircle,
+      },
+      archived: {
+        text: '已归?,
+        color: 'bg-gray-100 text-gray-800',
+        icon: Folder,
+      },
     };
-    
+
     const config = statusMap[status] || statusMap.pending;
     const Icon = config.icon;
-    
+
     return (
-      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+      <span
+        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
+      >
         <Icon className="w-3 h-3 mr-1" />
         {config.text}
       </span>
@@ -118,16 +139,24 @@ export default function DocumentsManagementPage() {
 
   const getCategoryBadge = (category: string) => {
     const categoryMap: Record<string, { text: string; color: string }> = {
-      business_license: { text: '营业执照', color: 'bg-blue-100 text-blue-800' },
-      qualification: { text: '资质证书', color: 'bg-purple-100 text-purple-800' },
+      business_license: {
+        text: '营业执照',
+        color: 'bg-blue-100 text-blue-800',
+      },
+      qualification: {
+        text: '资质证书',
+        color: 'bg-purple-100 text-purple-800',
+      },
       contract: { text: '合同协议', color: 'bg-green-100 text-green-800' },
       report: { text: '报告文档', color: 'bg-orange-100 text-orange-800' },
-      other: { text: '其他', color: 'bg-gray-100 text-gray-800' }
+      other: { text: '其他', color: 'bg-gray-100 text-gray-800' },
     };
-    
+
     const config = categoryMap[category] || categoryMap.other;
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
+      >
         {config.text}
       </span>
     );
@@ -147,7 +176,7 @@ export default function DocumentsManagementPage() {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -161,11 +190,11 @@ export default function DocumentsManagementPage() {
 
   return (
     <div className="p-6">
-      {/* 页面标题和操作按钮 */}
+      {/* 页面标题和操作按?*/}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">企业资料管理</h1>
-          <p className="text-gray-600 mt-1">上传和管理企业相关资质文件</p>
+          <p className="text-gray-600 mt-1">上传和管理企业相关资质文?/p>
         </div>
         <Button className="bg-indigo-600 hover:bg-indigo-700">
           <Upload className="w-4 h-4 mr-2" />
@@ -182,13 +211,13 @@ export default function DocumentsManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{documents.length}</div>
-            <p className="text-xs text-muted-foreground">所有文档</p>
+            <p className="text-xs text-muted-foreground">所有文?/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待审核</CardTitle>
+            <CardTitle className="text-sm font-medium">待审?/CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -201,7 +230,7 @@ export default function DocumentsManagementPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">已批准</CardTitle>
+            <CardTitle className="text-sm font-medium">已批?/CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -219,9 +248,11 @@ export default function DocumentsManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatFileSize(documents.reduce((sum, d) => sum + d.file_size, 0))}
+              {formatFileSize(
+                documents.reduce((sum, d) => sum + d.file_size, 0)
+              )}
             </div>
-            <p className="text-xs text-muted-foreground">总文件大小</p>
+            <p className="text-xs text-muted-foreground">总文件大?/p>
           </CardContent>
         </Card>
       </div>
@@ -239,14 +270,14 @@ export default function DocumentsManagementPage() {
                   <th className="text-left py-3 px-4 font-medium">文件信息</th>
                   <th className="text-left py-3 px-4 font-medium">类别</th>
                   <th className="text-left py-3 px-4 font-medium">大小</th>
-                  <th className="text-left py-3 px-4 font-medium">状态</th>
-                  <th className="text-left py-3 px-4 font-medium">上传者</th>
+                  <th className="text-left py-3 px-4 font-medium">状?/th>
+                  <th className="text-left py-3 px-4 font-medium">上传?/th>
                   <th className="text-left py-3 px-4 font-medium">上传时间</th>
                   <th className="text-left py-3 px-4 font-medium">操作</th>
                 </tr>
               </thead>
               <tbody>
-                {documents.map((document) => (
+                {documents.map(document => (
                   <tr key={document.id} className="border-b hover:bg-gray-50">
                     <td className="py-4 px-4">
                       <div>
@@ -271,7 +302,9 @@ export default function DocumentsManagementPage() {
                     <td className="py-4 px-4">
                       <div className="text-sm">
                         <div>{formatFileSize(document.file_size)}</div>
-                        <div className="text-gray-500">{document.file_type}</div>
+                        <div className="text-gray-500">
+                          {document.file_type}
+                        </div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
@@ -279,10 +312,12 @@ export default function DocumentsManagementPage() {
                     </td>
                     <td className="py-4 px-4">
                       <div className="text-sm">
-                        <div className="font-medium">{document.uploaded_by}</div>
+                        <div className="font-medium">
+                          {document.uploaded_by}
+                        </div>
                         {document.reviewer && (
                           <div className="text-gray-500 text-xs mt-1">
-                            审核人: {document.reviewer}
+                            审核? {document.reviewer}
                           </div>
                         )}
                       </div>
@@ -307,7 +342,11 @@ export default function DocumentsManagementPage() {
                           <Edit className="w-4 h-4 mr-1" />
                           编辑
                         </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
                           <Trash2 className="w-4 h-4 mr-1" />
                           删除
                         </Button>
@@ -318,11 +357,13 @@ export default function DocumentsManagementPage() {
               </tbody>
             </table>
           </div>
-          
+
           {documents.length === 0 && (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无文件</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                暂无文件
+              </h3>
               <p className="text-gray-500 mb-4">上传企业相关资质文件进行管理</p>
               <Button className="bg-indigo-600 hover:bg-indigo-700">
                 <Upload className="w-4 h-4 mr-2" />
@@ -335,3 +376,4 @@ export default function DocumentsManagementPage() {
     </div>
   );
 }
+

@@ -66,22 +66,18 @@ export interface AggregatedMarketData {
   confidenceScore: number;
 }
 
-// 数据新鲜度计算相关
-export interface FreshnessConfig {
-  maxAgeDays: number;        // 最大有效天数
-  decayRate: number;         // 衰减速率 (每天减少的分数)
-  minFreshness: number;      // 最低新鲜度分数
+// 数据新鲜度计算相?export interface FreshnessConfig {
+  maxAgeDays: number; // 最大有效天?  decayRate: number; // 衰减速率 (每天减少的分?
+  minFreshness: number; // 最低新鲜度分数
 }
 
-// 默认新鲜度配置
-export const DEFAULT_FRESHNESS_CONFIG: FreshnessConfig = {
+// 默认新鲜度配?export const DEFAULT_FRESHNESS_CONFIG: FreshnessConfig = {
   maxAgeDays: 7,
   decayRate: 0.1,
-  minFreshness: 0.3
+  minFreshness: 0.3,
 };
 
-// 市场数据源接口
-export interface MarketDataSource {
+// 市场数据源接?export interface MarketDataSource {
   name: 'xianyu' | 'zhuan_turn';
   isEnabled: boolean;
   apiKey?: string;

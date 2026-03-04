@@ -1,27 +1,25 @@
-'use client'
+'use client';
 
-import { UnifiedLogin } from '@/components/auth/UnifiedLogin'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { UnifiedLogin } from '@/components/auth/UnifiedLogin';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const redirect = searchParams.get('redirect') || '/'
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const redirect = searchParams.get('redirect') || '/';
 
   const handleLoginSuccess = (user: any) => {
     // 登录成功处理逻辑
-    console.log('登录成功:', user)
-    
-    if (redirect?.startsWith('/admin') && !user?.is_admin) {
-      router.push('/unauthorized')
-      return
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('登录成功:', user)if (redirect?.startsWith('/admin') && !user?.is_admin) {
+      router.push('/unauthorized');
+      return;
     }
-    
-    router.push(redirect)
-  }
+
+    router.push(redirect);
+  };
 
   return (
-    <UnifiedLogin 
+    <UnifiedLogin
       isOpen={true}
       onClose={() => router.push('/')}
       onLoginSuccess={handleLoginSuccess}
@@ -29,5 +27,5 @@ export default function LoginPage() {
       mode="page"
       theme="default"
     />
-  )
+  );
 }

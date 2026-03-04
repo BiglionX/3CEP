@@ -1,7 +1,6 @@
 /**
- * 基于 RBAC 配置的权限检查 Hook
- * 与 config/rbac.json 完全绑定，提供统一的权限检查接口
- */
+ * 基于 RBAC 配置的权限检?Hook
+ * �?config/rbac.json 完全绑定，提供统一的权限检查接? */
 
 'use client';
 
@@ -18,21 +17,20 @@ async function loadRbacConfig() {
   if (cachedRbacConfig) {
     return cachedRbacConfig;
   }
-  
+
   try {
     const response = await fetch('/api/rbac/config');
     if (response.ok) {
       cachedRbacConfig = await response.json();
       return cachedRbacConfig;
     }
-    
-    // fallback 到本地配置文件
-    const configResponse = await fetch('/config/rbac.json');
+
+    // fallback 到本地配置文?    const configResponse = await fetch('/config/rbac.json');
     if (configResponse.ok) {
       cachedRbacConfig = await configResponse.json();
       return cachedRbacConfig;
     }
-    
+
     throw new Error('无法加载 RBAC 配置');
   } catch (error) {
     console.error('加载 RBAC 配置失败:', error);
@@ -41,7 +39,7 @@ async function loadRbacConfig() {
 }
 
 /**
- * RBAC 权限检查 Hook
+ * RBAC 权限检?Hook
  */
 export function useRbacPermission() {
   const { user, roles, isLoading } = useUser();
@@ -61,19 +59,17 @@ export function useRbacPermission() {
         setConfigLoading(false);
       }
     }
-    
+
     loadConfig();
   }, []);
 
   /**
-   * 检查用户是否具有指定权限
-   */
+   * 检查用户是否具有指定权?   */
   const hasPermission = (permission: string): boolean => {
     if (!user || !rbacConfig) return false;
-    
-    // 超级管理员拥有所有权限
-    if (roles.includes('admin')) return true;
-    
+
+    // 超级管理员拥有所有权?    if (roles.includes('admin')) return true;
+
     // 检查每个角色的权限
     for (const role of roles) {
       const rolePermissions = rbacConfig.role_permissions[role] || [];
@@ -81,20 +77,18 @@ export function useRbacPermission() {
         return true;
       }
     }
-    
+
     return false;
   };
 
   /**
-   * 检查用户是否具有任意一个指定权限
-   */
+   * 检查用户是否具有任意一个指定权?   */
   const hasAnyPermission = (permissions: string[]): boolean => {
     return permissions.some(permission => hasPermission(permission));
   };
 
   /**
-   * 检查用户是否具有所有指定权限
-   */
+   * 检查用户是否具有所有指定权?   */
   const hasAllPermissions = (permissions: string[]): boolean => {
     return permissions.every(permission => hasPermission(permission));
   };
@@ -104,17 +98,16 @@ export function useRbacPermission() {
    */
   const getAccessibleResources = (category?: string): string[] => {
     if (!rbacConfig) return [];
-    
+
     const accessibleResources = new Set<string>();
-    
-    // 超级管理员可以访问所有资源
-    if (roles.includes('admin')) {
-      return Object.keys(rbacConfig.permissions)
-        .map(key => rbacConfig.permissions[key].resource);
+
+    // 超级管理员可以访问所有资?    if (roles.includes('admin')) {
+      return Object.keys(rbacConfig.permissions).map(
+        key => rbacConfig.permissions[key].resource
+      );
     }
-    
-    // 收集用户所有角色的权限对应的资源
-    for (const role of roles) {
+
+    // 收集用户所有角色的权限对应的资?    for (const role of roles) {
       const permissions = rbacConfig.role_permissions[role] || [];
       for (const permKey of permissions) {
         const permission = rbacConfig.permissions[permKey];
@@ -123,7 +116,7 @@ export function useRbacPermission() {
         }
       }
     }
-    
+
     return Array.from(accessibleResources);
   };
 
@@ -144,34 +137,31 @@ export function useRbacPermission() {
   };
 
   /**
-   * 检查资源访问权限
-   */
+   * 检查资源访问权?   */
   const canAccessResource = (resource: string, action: string): boolean => {
     const permissionKey = `${resource}_${action}`;
     return hasPermission(permissionKey);
   };
 
   return {
-    // 状态
-    isLoading: isLoading || configLoading,
+    // 状?    isLoading: isLoading || configLoading,
     isConfigLoaded: !!rbacConfig,
-    
+
     // 用户信息
     user,
     roles,
-    
-    // 权限检查方法
-    hasPermission,
+
+    // 权限检查方?    hasPermission,
     hasAnyPermission,
     hasAllPermissions,
     canAccessResource,
-    
+
     // 资源访问
     getAccessibleResources,
-    
+
     // 配置信息
     getPermissionInfo,
     getRoleInfo,
-    rbacConfig
+    rbacConfig,
   };
 }

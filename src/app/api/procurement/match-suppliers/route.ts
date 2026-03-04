@@ -1,56 +1,53 @@
-/**
- * 供应商匹配API路由处理器
- * 提供 /api/procurement/match-suppliers 接口
+﻿/**
+ * 渚涘簲鍟嗗尮閰岮PI璺敱澶勭悊? * 鎻愪緵 /api/procurement/match-suppliers 鎺ュ彛
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import {
   InputType,
   ParsedProcurementRequest,
   ProcurementItem,
   ProcurementStatus,
   UrgencyLevel,
-} from "@/b2b-procurement-agent/models/procurement.model";
+} from '@/b2b-procurement-agent/models/procurement.model';
 import {
   DEFAULT_SCORING_WEIGHTS,
   MatchSuppliersRequest,
   VectorDbType,
-} from "@/b2b-procurement-agent/models/supplier-vector.model";
-import { MultiFactorScoringService } from "@/b2b-procurement-agent/services/multi-factor-scoring.service";
-import { SupplierMatchingService } from "@/b2b-procurement-agent/services/supplier-matching.service";
-import { VectorRetrievalService } from "@/b2b-procurement-agent/services/vector-retrieval.service";
+} from '@/b2b-procurement-agent/models/supplier-vector.model';
+import { MultiFactorScoringService } from '@/b2b-procurement-agent/services/multi-factor-scoring.service';
+import { SupplierMatchingService } from '@/b2b-procurement-agent/services/supplier-matching.service';
+import { VectorRetrievalService } from '@/b2b-procurement-agent/services/vector-retrieval.service';
 
-// 全局服务实例
+// 鍏ㄥ眬鏈嶅姟瀹炰緥
 let supplierMatchingService: SupplierMatchingService | null = null;
 
 /**
- * 初始化服务
- */
+ * 鍒濆鍖栨湇? */
 async function initializeServices(): Promise<void> {
   if (supplierMatchingService) return;
 
   try {
-    // 向量数据库配置
-    const vectorDbConfig = {
+    // 鍚戦噺鏁版嵁搴撻厤?    const vectorDbConfig = {
       type:
         (process.env.VECTOR_DB_TYPE as VectorDbType) || VectorDbType.PINECONE,
       apiKey:
-        process.env.PINECONE_API_KEY || process.env.WEAVIATE_API_KEY || "",
+        process.env.PINECONE_API_KEY || process.env.WEAVIATE_API_KEY || '',
       environment: process.env.PINECONE_ENVIRONMENT,
       host: process.env.WEAVIATE_HOST,
-      indexName: process.env.PINECONE_INDEX_NAME || "supplier-match-index",
-      dimension: 1536, // OpenAI Ada embeddings维度
-      metric: "cosine" as const,
+      indexName: process.env.PINECONE_INDEX_NAME || 'supplier-match-index',
+      dimension: 1536, // OpenAI Ada embeddings缁村害
+      metric: 'cosine' as const,
     };
 
-    // 嵌入模型配置
+    // 宓屽叆妯″瀷閰嶇疆
     const embeddingConfig = {
-      modelName: process.env.EMBEDDING_MODEL || "text-embedding-ada-002",
+      modelName: process.env.EMBEDDING_MODEL || 'text-embedding-ada-002',
       dimension: 1536,
       maxTokens: 8192,
     };
 
-    // 创建服务实例
+    // 鍒涘缓鏈嶅姟瀹炰緥
     const vectorService = new VectorRetrievalService(
       vectorDbConfig,
       embeddingConfig
@@ -62,40 +59,38 @@ async function initializeServices(): Promise<void> {
       scoringService
     );
 
-    // 初始化向量数据库
+    // 鍒濆鍖栧悜閲忔暟鎹簱
     await vectorService.initialize();
 
-    console.log("供应商匹配服务初始化成功");
+    console.log('渚涘簲鍟嗗尮閰嶆湇鍔″垵濮嬪寲鎴愬姛');
   } catch (error) {
-    console.error("供应商匹配服务初始化失败:", error);
+    console.error('渚涘簲鍟嗗尮閰嶆湇鍔″垵濮嬪寲澶辫触:', error);
     throw error;
   }
 }
 
 /**
  * POST /api/procurement/match-suppliers
- * 匹配供应商API端点
+ * 鍖归厤渚涘簲鍟咥PI绔偣
  */
 export async function POST(request: NextRequest) {
   try {
-    // 初始化服务
-    await initializeServices();
+    // 鍒濆鍖栨湇?    await initializeServices();
 
-    // 解析请求体
-    const requestBody = await request.json();
+    // 瑙ｆ瀽璇锋眰?    const requestBody = await request.json();
 
-    // 验证必需字段
+    // 楠岃瘉蹇呴渶瀛楁
     if (!requestBody.procurementRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "缺少采购需求参数",
+          error: '缂哄皯閲囪喘闇€姹傚弬?,
         },
         { status: 400 }
       );
     }
 
-    // 构建匹配请求
+    // 鏋勫缓鍖归厤璇锋眰
     const matchRequest: MatchSuppliersRequest = {
       requestId:
         requestBody.requestId ||
@@ -110,25 +105,25 @@ export async function POST(request: NextRequest) {
       excludeSuppliers: requestBody.excludeSuppliers || [],
     };
 
-    console.log(`收到供应商匹配请求: ${matchRequest.requestId}`);
+    console.log(`鏀跺埌渚涘簲鍟嗗尮閰嶈? ${matchRequest.requestId}`);
 
-    // 执行匹配
+    // 鎵ц鍖归厤
     const result = await supplierMatchingService!.matchSuppliers(matchRequest);
 
-    // 返回成功响应
+    // 杩斿洖鎴愬姛鍝嶅簲
     return NextResponse.json({
       success: true,
       data: result,
     });
   } catch (error: any) {
-    console.error("供应商匹配API错误:", error);
+    console.error('渚涘簲鍟嗗尮閰岮PI閿欒:', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "供应商匹配失败",
+        error: error.message || '渚涘簲鍟嗗尮閰嶅け?,
         details:
-          process.env.NODE_ENV === "development" ? error.stack : undefined,
+          process.env.NODE_ENV === 'development' ? error.stack : undefined,
       },
       { status: 500 }
     );
@@ -137,61 +132,60 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET /api/procurement/match-suppliers
- * 获取服务状态和统计信息
+ * 鑾峰彇鏈嶅姟鐘舵€佸拰缁熻淇℃伅
  */
 export async function GET(request: NextRequest) {
   try {
-    // 初始化服务（如果尚未初始化）
+    // 鍒濆鍖栨湇鍔★紙濡傛灉灏氭湭鍒濆鍖栵級
     await initializeServices();
 
-    // 获取查询参数
+    // 鑾峰彇鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
-    const action = searchParams.get("action");
+    const action = searchParams.get('action');
 
     switch (action) {
-      case "statistics":
-        // 返回服务统计信息
+      case 'statistics':
+        // 杩斿洖鏈嶅姟缁熻淇℃伅
         const statistics = supplierMatchingService!.getStatistics();
         return NextResponse.json({
           success: true,
           data: statistics,
         });
 
-      case "health":
-        // 健康检查
-        return NextResponse.json({
+      case 'health':
+        // 鍋ュ悍妫€?        return NextResponse.json({
           success: true,
           data: {
-            status: "healthy",
+            status: 'healthy',
             timestamp: new Date().toISOString(),
-            service: "supplier-matching",
+            service: 'supplier-matching',
           },
         });
 
       default:
-        // 返回API信息
+        // 杩斿洖API淇℃伅
         return NextResponse.json({
           success: true,
           data: {
-            name: "供应商智能匹配API",
-            version: "1.0.0",
+            name: '渚涘簲鍟嗘櫤鑳藉尮閰岮PI',
+            version: '1.0.0',
             endpoints: {
-              "POST /api/procurement/match-suppliers": "匹配供应商",
-              "GET /api/procurement/match-suppliers?action=statistics":
-                "获取统计信息",
-              "GET /api/procurement/match-suppliers?action=health": "健康检查",
+              'POST /api/procurement/match-suppliers': '鍖归厤渚涘簲?,
+              'GET /api/procurement/match-suppliers?action=statistics':
+                '鑾峰彇缁熻淇℃伅',
+              'GET /api/procurement/match-suppliers?action=health': '鍋ュ悍妫€?,
             },
-            description: "基于向量检索和多因子评分的智能供应商匹配系统",
+            description: '鍩轰簬鍚戦噺妫€绱㈠拰澶氬洜瀛愯瘎鍒嗙殑鏅鸿兘渚涘簲鍟嗗尮閰嶇郴?,
           },
         });
     }
   } catch (error: any) {
-    console.error("供应商匹配API状态检查错误:", error);
+    console.error('渚涘簲鍟嗗尮閰岮PI鐘舵€佹鏌ラ敊?', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "服务状态检查失败",
+        error: error.message || '鏈嶅姟鐘舵€佹鏌ュけ?,
       },
       { status: 500 }
     );
@@ -199,25 +193,24 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * 构建解析后的采购需求对象
- */
+ * 鏋勫缓瑙ｆ瀽鍚庣殑閲囪喘闇€姹傚? */
 function buildParsedProcurementRequest(
   rawRequest: any
 ): ParsedProcurementRequest {
-  // 验证必需字段
+  // 楠岃瘉蹇呴渶瀛楁
   if (!rawRequest.items || !Array.isArray(rawRequest.items)) {
-    throw new Error("采购需求必须包含items数组");
+    throw new Error('閲囪喘闇€姹傚繀椤诲寘鍚玦tems鏁扮粍');
   }
 
-  // 转换采购物品
+  // 杞崲閲囪喘鐗╁搧
   const items: ProcurementItem[] = rawRequest.items.map(
     (item: any, index: number) => ({
       id: item.id || `item_${index}`,
       productId: item.productId || `prod_${index}`,
-      productName: item.productName || `产品${index + 1}`,
-      category: item.category || "通用商品",
+      productName: item.productName || `浜у搧${index + 1}`,
+      category: item.category || '閫氱敤鍟嗗搧',
       quantity: item.quantity || 1,
-      unit: item.unit || "件",
+      unit: item.unit || '锟?,
       specifications: item.specifications,
       requiredQuality: item.requiredQuality,
       estimatedUnitPrice: item.estimatedUnitPrice,
@@ -225,12 +218,11 @@ function buildParsedProcurementRequest(
     })
   );
 
-  // 构建采购需求对象
-  const procurementRequest: ParsedProcurementRequest = {
+  // 鏋勫缓閲囪喘闇€姹傚?  const procurementRequest: ParsedProcurementRequest = {
     id: rawRequest.id || `pr_${Date.now()}`,
     rawRequestId: rawRequest.rawRequestId || `raw_${Date.now()}`,
-    companyId: rawRequest.companyId || "default_company",
-    requesterId: rawRequest.requesterId || "anonymous",
+    companyId: rawRequest.companyId || 'default_company',
+    requesterId: rawRequest.requesterId || 'anonymous',
     inputType: rawRequest.inputType || InputType.TEXT,
     items: items,
     urgency: rawRequest.urgency || UrgencyLevel.MEDIUM,
@@ -255,8 +247,7 @@ function buildParsedProcurementRequest(
 
 /**
  * PUT /api/procurement/match-suppliers/suppliers
- * 批量更新供应商向量索引
- */
+ * 鎵归噺鏇存柊渚涘簲鍟嗗悜閲忕储? */
 export async function PUT(request: NextRequest) {
   try {
     await initializeServices();
@@ -267,7 +258,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "必须提供供应商数组",
+          error: '蹇呴』鎻愪緵渚涘簲鍟嗘暟?,
         },
         { status: 400 }
       );
@@ -277,17 +268,18 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `成功更新 ${suppliers.length} 个供应商向量`,
+      message: `鎴愬姛鏇存柊 ${suppliers.length} 涓緵搴斿晢鍚戦噺`,
     });
   } catch (error: any) {
-    console.error("批量更新供应商向量失败:", error);
+    console.error('鎵归噺鏇存柊渚涘簲鍟嗗悜閲忓け?', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "批量更新失败",
+        error: error.message || '鎵归噺鏇存柊澶辫触',
       },
       { status: 500 }
     );
   }
 }
+

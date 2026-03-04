@@ -1,13 +1,12 @@
-
 /**
  * 统一认证服务
- * 解决多认证系统冲突问题
+ * 解决多认证系统冲突问?
  */
 
 import { supabase } from '@/lib/supabase';
 import { AuthService } from '@/lib/auth-service';
 
-// 统一的认证状态管理
+// 统一的认证状态管?
 class UnifiedAuthService {
   private static instance: UnifiedAuthService;
   private listeners: Array<(user: any, isAuthenticated: boolean) => void> = [];
@@ -21,12 +20,14 @@ class UnifiedAuthService {
     return UnifiedAuthService.instance;
   }
 
-  // 获取当前认证状态
+  // 获取当前认证状?
   async getCurrentUser() {
     try {
       // 优先检查Supabase会话
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       if (session?.user) {
         // 检查管理员权限
         const isAdmin = await AuthService.isAdminUser(session.user.id);
@@ -35,7 +36,7 @@ class UnifiedAuthService {
           isAuthenticated: true,
           is_admin: isAdmin,
           roles: isAdmin ? ['admin'] : ['viewer'],
-          error: null
+          error: null,
         };
       }
 
@@ -47,16 +48,15 @@ class UnifiedAuthService {
           return {
             user: {
               id: payload.userId,
-              email: payload.email
+              email: payload.email,
             },
             isAuthenticated: true,
-            is_admin: payload.roles?.includes('admin') || false,
+            is_admin: payload?.includes('admin') || false,
             roles: payload.roles || ['viewer'],
-            error: null
+            error: null,
           };
         } catch (error) {
-          console.log('JWT token解析失败');
-          localStorage.removeItem('jwt_token');
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('JWT token解析失败')localStorage.removeItem('jwt_token');
         }
       }
 
@@ -66,12 +66,12 @@ class UnifiedAuthService {
         return {
           user: {
             id: mockToken.userId,
-            email: 'mock@example.com'
+            email: 'mock@example.com',
           },
           isAuthenticated: true,
-          is_admin: mockToken.roles?.includes('admin') || false,
+          is_admin: mockToken?.includes('admin') || false,
           roles: mockToken.roles || ['viewer'],
-          error: null
+          error: null,
         };
       }
 
@@ -80,7 +80,7 @@ class UnifiedAuthService {
         isAuthenticated: false,
         is_admin: false,
         roles: [],
-        error: null
+        error: null,
       };
     } catch (error: unknown) {
       console.error('获取用户信息失败:', error);
@@ -89,12 +89,12 @@ class UnifiedAuthService {
         isAuthenticated: false,
         is_admin: false,
         roles: [],
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
 
-  // 监听认证状态变化
+  // 监听认证状态变?
   subscribe(listener: (user: any, isAuthenticated: boolean) => void) {
     this.listeners.push(listener);
     return () => {
@@ -115,8 +115,7 @@ class UnifiedAuthService {
         try {
           return JSON.parse(decodeURIComponent(cookieMatch[1]));
         } catch (error) {
-          console.log('Mock token解析失败');
-        }
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('Mock token解析失败')}
       }
     }
     return null;
@@ -127,7 +126,7 @@ class UnifiedAuthService {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
 
       if (error) throw error;
@@ -137,7 +136,7 @@ class UnifiedAuthService {
         user: data.user,
         isAuthenticated: true,
         is_admin: isAdmin,
-        roles: isAdmin ? ['admin'] : ['viewer']
+        roles: isAdmin ? ['admin'] : ['viewer'],
       };
 
       this.notifyListeners(data.user, true);
@@ -180,7 +179,7 @@ export function useUnifiedAuth() {
     is_admin: false,
     roles: [],
     isLoading: true,
-    error: null
+    error: null,
   });
 
   useEffect(() => {
@@ -189,7 +188,7 @@ export function useUnifiedAuth() {
         const state = await unifiedAuth.getCurrentUser();
         setAuthState({
           ...state,
-          isLoading: false
+          isLoading: false,
         });
       } catch (error: unknown) {
         setAuthState({
@@ -198,21 +197,21 @@ export function useUnifiedAuth() {
           is_admin: false,
           roles: [],
           isLoading: false,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     };
 
-    // 初始化认证状态
+    // 初始化认证状?
     initializeAuth();
 
-    // 监听认证状态变化
+    // 监听认证状态变?
     const unsubscribe = unifiedAuth.subscribe((user, isAuthenticated) => {
       setAuthState(prev => ({
         ...prev,
         user,
         isAuthenticated,
-        isLoading: false
+        isLoading: false,
       }));
     });
 
@@ -223,7 +222,11 @@ export function useUnifiedAuth() {
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
     const result = await unifiedAuth.login(email, password);
     if (!result.success) {
-      setAuthState(prev => ({ ...prev, isLoading: false, error: result.error }));
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: result.error,
+      }));
     }
     return result;
   };
@@ -232,14 +235,18 @@ export function useUnifiedAuth() {
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
     const result = await unifiedAuth.logout();
     if (!result.success) {
-      setAuthState(prev => ({ ...prev, isLoading: false, error: result.error }));
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: result.error,
+      }));
     }
     return result;
   };
 
   const hasPermission = (permission: string) => {
     if (authState.is_admin) return true;
-    // 这里可以添加更细粒度的权限检查
+    // 这里可以添加更细粒度的权限检?
     return false;
   };
 
@@ -247,6 +254,6 @@ export function useUnifiedAuth() {
     ...authState,
     login,
     logout,
-    hasPermission
+    hasPermission,
   };
 }

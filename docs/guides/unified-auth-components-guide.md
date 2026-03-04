@@ -9,6 +9,7 @@
 ### 1. UnifiedLogin 统一登录组件
 
 **功能特性**：
+
 - 支持模态框和页面两种模式
 - 响应式设计，适配移动端和桌面端
 - 内置表单验证和错误处理
@@ -25,19 +26,19 @@ import { UnifiedLogin } from '@/components/auth/UnifiedLogin'
 
 export default function MyComponent() {
   const [isLoginOpen, setIsLoginOpen] = useState(false)
-  
+
   const handleLoginSuccess = (user: any) => {
     console.log('登录成功:', user)
     // 执行登录成功后的业务逻辑
   }
-  
+
   return (
     <div>
       {/* 触发登录的按钮 */}
       <button onClick={() => setIsLoginOpen(true)}>
         打开登录
       </button>
-      
+
       {/* 统一登录组件 */}
       <UnifiedLogin
         isOpen={isLoginOpen}
@@ -54,6 +55,7 @@ export default function MyComponent() {
 ### 2. AuthControls 认证状态控件
 
 **功能特性**：
+
 - 自动显示登录/注册按钮或用户信息
 - 支持多种显示变体（导航栏、侧边栏、紧凑模式）
 - 内置用户菜单和登出功能
@@ -92,20 +94,22 @@ function Sidebar() {
 ### 1. 替换传统登录实现
 
 **之前的方式**：
+
 ```typescript
 // 传统的登录页面实现
-const [email, setEmail] = useState('')
-const [password, setPassword] = useState('')
-const [isLoading, setIsLoading] = useState(false)
-const [error, setError] = useState('')
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState('');
 
 const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
+  e.preventDefault();
   // 复杂的登录逻辑...
-}
+};
 ```
 
 **现在的推荐方式**：
+
 ```typescript
 // 使用统一登录组件
 import { UnifiedLogin } from '@/components/auth/UnifiedLogin'
@@ -115,7 +119,7 @@ export default function LoginPage() {
     // 简单的成功回调处理
     console.log('登录成功:', user)
   }
-  
+
   return (
     <UnifiedLogin
       isOpen={true}
@@ -130,6 +134,7 @@ export default function LoginPage() {
 ### 2. 更新导航组件
 
 **之前的方式**：
+
 ```typescript
 // 手动判断登录状态
 {isAuthenticated ? (
@@ -140,6 +145,7 @@ export default function LoginPage() {
 ```
 
 **现在的推荐方式**：
+
 ```typescript
 // 使用统一认证控件
 import { NavbarAuthControls } from '@/components/auth/AuthControls'
@@ -151,16 +157,19 @@ import { NavbarAuthControls } from '@/components/auth/AuthControls'
 ## 🛠️ 推广策略
 
 ### 1. 逐步替换原则
+
 - **第一阶段**：新页面强制使用统一组件
 - **第二阶段**：现有页面逐步迁移
 - **第三阶段**：删除旧的登录相关代码
 
 ### 2. 兼容性考虑
+
 - 统一组件向后兼容现有的认证Hook
 - 提供渐进式迁移路径
 - 保持现有功能不受影响
 
 ### 3. 性能优化
+
 - 统一组件采用懒加载策略
 - 减少重复代码和bundle大小
 - 优化渲染性能
@@ -168,12 +177,14 @@ import { NavbarAuthControls } from '@/components/auth/AuthControls'
 ## 📊 使用统计和监控
 
 ### 关键指标
+
 - 统一组件使用率
 - 登录成功率
 - 用户满意度
 - 页面加载性能
 
 ### 监控方案
+
 ```typescript
 // 添加使用统计
 useEffect(() => {
@@ -181,24 +192,28 @@ useEffect(() => {
     // 上报统一登录组件使用情况
     analytics.track('unified_login_used', {
       component: 'UnifiedLogin',
-      mode: 'modal'
-    })
+      mode: 'modal',
+    });
   }
-}, [isAuthenticated])
+}, [isAuthenticated]);
 ```
 
 ## 🔧 常见问题解答
 
 ### Q: 如何自定义登录组件的样式？
+
 A: 通过CSS类名覆盖或使用CSS变量进行定制
 
 ### Q: 统一组件支持国际化吗？
+
 A: 是的，支持通过props传入自定义文案
 
 ### Q: 如何处理第三方登录（如Google登录）？
+
 A: 统一登录组件预留了扩展接口，可通过props添加第三方登录选项
 
 ### Q: 组件的可访问性如何？
+
 A: 遵循WCAG标准，支持键盘导航和屏幕阅读器
 
 ## 🎯 最佳实践

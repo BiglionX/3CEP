@@ -282,15 +282,15 @@ curl -X POST "http://localhost:3000/api/data-center/monitoring" \
 const criticalRules = [
   {
     // 主键唯一性检查
-    checkType: "uniqueness_violation",
+    checkType: 'uniqueness_violation',
     threshold: 0.0, // 不允许任何重复
-    severity: "critical",
+    severity: 'critical',
   },
   {
     // 必填字段完整性检查
-    checkType: "missing_value",
+    checkType: 'missing_value',
     threshold: 0.1, // 空值率不超过0.1%
-    severity: "high",
+    severity: 'high',
   },
 ];
 
@@ -298,15 +298,15 @@ const criticalRules = [
 const mediumRules = [
   {
     // 业务规则检查
-    checkType: "business_rule_violation",
+    checkType: 'business_rule_violation',
     threshold: 1.0, // 违规率不超过1%
-    severity: "medium",
+    severity: 'medium',
   },
   {
     // 格式验证检查
-    checkType: "invalid_format",
+    checkType: 'invalid_format',
     threshold: 0.5, // 格式错误率不超过0.5%
-    severity: "medium",
+    severity: 'medium',
   },
 ];
 ```
@@ -317,19 +317,19 @@ const mediumRules = [
 // 推荐的时间安排
 const recommendedSchedule = {
   // 核心业务数据 - 高频检查
-  criticalData: "*/15 * * * *", // 每15分钟
+  criticalData: '*/15 * * * *', // 每15分钟
 
   // 重要业务数据 - 中频检查
-  importantData: "0 * * * *", // 每小时
+  importantData: '0 * * * *', // 每小时
 
   // 一般业务数据 - 低频检查
-  generalData: "0 2 * * *", // 每天凌晨2点
+  generalData: '0 2 * * *', // 每天凌晨2点
 
   // 详细报告生成
-  detailedReports: "0 3 * * 1", // 每周一凌晨3点
+  detailedReports: '0 3 * * 1', // 每周一凌晨3点
 
   // 月度汇总报告
-  monthlyReports: "0 4 1 * *", // 每月1日凌晨4点
+  monthlyReports: '0 4 1 * *', // 每月1日凌晨4点
 };
 ```
 
@@ -379,7 +379,7 @@ curl "http://localhost:3000/api/data-center/monitoring?action=stats"
 
 ```javascript
 // 在应用程序中集成数据质量检查
-import { dataQualityService } from "@/data-center/monitoring/data-quality-service";
+import { dataQualityService } from '@/data-center/monitoring/data-quality-service';
 
 class OrderService {
   async createOrder(orderData) {
@@ -387,7 +387,7 @@ class OrderService {
     const order = await this.saveOrder(orderData);
 
     // 数据质量检查
-    await dataQualityService.executeCheckRule("order_data_validation");
+    await dataQualityService.executeCheckRule('order_data_validation');
 
     return order;
   }
@@ -401,7 +401,7 @@ class OrderService {
 name: Data Quality Check
 on:
   schedule:
-    - cron: "0 2 * * *" # 每天凌晨2点执行
+    - cron: '0 2 * * *' # 每天凌晨2点执行
   workflow_dispatch: # 手动触发
 
 jobs:

@@ -1,6 +1,5 @@
-/**
- * 采购订单API路由 - 列表和创建
- */
+﻿/**
+ * 閲囪喘璁㈠崟API璺敱 - 鍒楄〃鍜屽垱? */
 import { NextResponse } from 'next/server';
 import { PurchaseOrderService } from '@/supply-chain/services/purchase-order.service';
 
@@ -10,8 +9,12 @@ export async function GET(request: Request) {
     const supplierId = searchParams.get('supplierId') || undefined;
     const warehouseId = searchParams.get('warehouseId') || undefined;
     const status = searchParams.get('status') || undefined;
-    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
-    const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : undefined;
+    const limit = searchParams.get('limit')
+      ? parseInt(searchParams.get('limit')!)
+      : undefined;
+    const offset = searchParams.get('offset')
+      ? parseInt(searchParams.get('offset')!)
+      : undefined;
 
     const purchaseOrderService = new PurchaseOrderService();
     const orders = await purchaseOrderService.listPurchaseOrders({
@@ -19,22 +22,21 @@ export async function GET(request: Request) {
       warehouseId,
       status,
       limit,
-      offset
+      offset,
     });
 
     return NextResponse.json({
       success: true,
       data: orders,
-      count: orders.length
+      count: orders.length,
     });
-
   } catch (error) {
-    console.error('查询采购订单列表错误:', error);
+    console.error('鏌ヨ閲囪喘璁㈠崟鍒楄〃閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '查询采购订单列表失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鏌ヨ閲囪喘璁㈠崟鍒楄〃澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -46,49 +48,56 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { items, warehouseId } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { success: false, error: '请提供有效的采购商品列表' },
+        { success: false, error: '璇锋彁渚涙湁鏁堢殑閲囪喘鍟嗗搧鍒楄〃' },
         { status: 400 }
       );
     }
 
     if (!warehouseId) {
       return NextResponse.json(
-        { success: false, error: '请选择目标仓库' },
+        { success: false, error: '璇烽€夋嫨鐩爣浠撳簱' },
         { status: 400 }
       );
     }
 
-    // 验证每个商品项
-    for (const item of items) {
-      if (!item.productId || !item.quantity || !item.supplierId || !item.unitPrice) {
+    // 楠岃瘉姣忎釜鍟嗗搧?    for (const item of items) {
+      if (
+        !item.productId ||
+        !item.quantity ||
+        !item.supplierId ||
+        !item.unitPrice
+      ) {
         return NextResponse.json(
-          { success: false, error: '商品信息不完整' },
+          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬? },
           { status: 400 }
         );
       }
     }
 
     const purchaseOrderService = new PurchaseOrderService();
-    const order = await purchaseOrderService.createPurchaseOrder(items, warehouseId);
+    const order = await purchaseOrderService.createPurchaseOrder(
+      items,
+      warehouseId
+    );
 
     return NextResponse.json({
       success: true,
       data: order,
-      message: '采购订单创建成功'
+      message: '閲囪喘璁㈠崟鍒涘缓鎴愬姛',
     });
-
   } catch (error) {
-    console.error('创建采购订单错误:', error);
+    console.error('鍒涘缓閲囪喘璁㈠崟閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '创建采购订单失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鍒涘缓閲囪喘璁㈠崟澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

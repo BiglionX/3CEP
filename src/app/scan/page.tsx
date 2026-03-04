@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -83,7 +83,7 @@ export default function ScanLandingPage() {
       const response = await fetch(`/api/products/${id}`);
       
       if (!response.ok) {
-        throw new Error('产品未找到');
+        throw new Error('产品未找?);
       }
       
       const data = await response.json();
@@ -95,7 +95,7 @@ export default function ScanLandingPage() {
     }
   };
 
-  // 从User-Agent检测设备信息
+  // 从User-Agent检测设备信?
   const detectDeviceFromUserAgent = () => {
     if (typeof window === 'undefined') return;
 
@@ -107,7 +107,7 @@ export default function ScanLandingPage() {
       confidence: 0
     };
 
-    // iOS设备检测
+    // iOS设备检?
     if (userAgent.includes('iphone')) {
       detectionResult.deviceType = 'smartphone';
       detectionResult.brand = 'Apple';
@@ -128,12 +128,12 @@ export default function ScanLandingPage() {
         }
       }
     }
-    // Android设备检测
+    // Android设备检?
     else if (userAgent.includes('android')) {
       detectionResult.deviceType = 'smartphone';
       detectionResult.confidence = 80;
       
-      // 品牌检测
+      // 品牌检?
       const androidBrands = [
         { brand: 'Samsung', identifiers: ['sm-', 'samsung'] },
         { brand: 'Huawei', identifiers: ['huawei', 'honor'] },
@@ -150,20 +150,20 @@ export default function ScanLandingPage() {
         }
       }
       
-      // 型号提取（简化版）
+      // 型号提取（简化版?
       const modelMatch = userAgent.match(/\(([^)]+)\)/);
       if (modelMatch && modelMatch[1]) {
         detectionResult.model = modelMatch[1].split(';')[0].trim();
       }
     }
-    // Windows设备检测
+    // Windows设备检?
     else if (userAgent.includes('windows')) {
       detectionResult.deviceType = 'computer';
       detectionResult.brand = 'PC';
       detectionResult.model = 'Windows PC';
       detectionResult.confidence = 70;
     }
-    // Mac设备检测
+    // Mac设备检?
     else if (userAgent.includes('macintosh')) {
       detectionResult.deviceType = 'computer';
       detectionResult.brand = 'Apple';
@@ -174,7 +174,7 @@ export default function ScanLandingPage() {
     setDetectedDevice(detectionResult);
   };
 
-  // 获取附近维修店
+  // 获取附近维修?
   const fetchNearbyShops = async () => {
     try {
       setShopsLoading(true);
@@ -244,7 +244,7 @@ export default function ScanLandingPage() {
     }
   };
 
-  // 跳转到诊断页面
+  // 跳转到诊断页?
   const goToDiagnosis = () => {
     if (product) {
       router.push(`/diagnosis/${product.id}`);
@@ -346,7 +346,7 @@ export default function ScanLandingPage() {
               </div>
             </div>
 
-            {/* 设备检测区域 */}
+            {/* 设备检测区?*/}
             <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 🎯 设备识别
@@ -360,7 +360,7 @@ export default function ScanLandingPage() {
                         检测到您的设备: <span className="text-blue-600">{detectedDevice.brand} {detectedDevice.model}</span>
                       </p>
                       <p className="text-sm text-gray-600">
-                        设备类型: {detectedDevice.deviceType} | 置信度: {detectedDevice.confidence}%
+                        设备类型: {detectedDevice.deviceType} | 置信? {detectedDevice.confidence}%
                       </p>
                     </div>
                     <div className="text-2xl">
@@ -382,7 +382,7 @@ export default function ScanLandingPage() {
                   { type: 'smartphone', brand: 'Apple', model: 'iPhone', icon: '🍎' },
                   { type: 'smartphone', brand: 'Samsung', model: 'Galaxy', icon: '📱' },
                   { type: 'computer', brand: 'Apple', model: 'Mac', icon: '💻' },
-                  { type: 'computer', brand: 'PC', model: 'Windows', icon: '🖥️' }
+                  { type: 'computer', brand: 'PC', model: 'Windows', icon: '🖥�? }
                 ].map((device) => (
                   <button
                     key={`${device.brand}-${device.model}`}
@@ -431,7 +431,7 @@ export default function ScanLandingPage() {
               
               {getCurrentLanguageManuals().length > 0 && (
                 <div className="mt-4 pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-2">当前语言可用说明书:</p>
+                  <p className="text-sm text-gray-600 mb-2">当前语言可用说明?</p>
                   <div className="flex flex-wrap gap-2">
                     {getCurrentLanguageManuals().map(manual => (
                       <span 
@@ -448,14 +448,14 @@ export default function ScanLandingPage() {
 
             {/* 功能选择区域 */}
             <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {/* 说明书功能 */}
+              {/* 说明书功?*/}
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="p-6">
                   <div className="flex items-center mb-4">
                     <div className="text-3xl mr-3">📖</div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-800">查看说明书</h3>
-                      <p className="text-gray-600">获取详细的产品使用指南</p>
+                      <h3 className="text-xl font-semibold text-gray-800">查看说明?/h3>
+                      <p className="text-gray-600">获取详细的产品使用指?/p>
                     </div>
                   </div>
                   
@@ -475,7 +475,7 @@ export default function ScanLandingPage() {
                   ) : (
                     <div className="mb-4">
                       <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">
-                        当前语言暂无说明书
+                        当前语言暂无说明?
                       </span>
                     </div>
                   )}
@@ -490,7 +490,7 @@ export default function ScanLandingPage() {
                     }`}
                   >
                     {detectedDevice 
-                      ? (getCurrentLanguageManuals().length > 0 ? '查看说明书' : '暂无说明书')
+                      ? (getCurrentLanguageManuals().length > 0 ? '查看说明? : '暂无说明?)
                       : '请先识别设备'}
                   </button>
                 </div>
@@ -531,19 +531,19 @@ export default function ScanLandingPage() {
                         : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    {detectedDevice ? '开始诊断' : '请先识别设备'}
+                    {detectedDevice ? '开始诊? : '请先识别设备'}
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* 附近维修店推荐 */}
+            {/* 附近维修店推?*/}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
                   <div className="text-3xl mr-3">🏪</div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-800">附近维修店推荐</h3>
+                    <h3 className="text-xl font-semibold text-gray-800">附近维修店推?/h3>
                     <p className="text-gray-600">为您找到附近的优质维修服务商</p>
                   </div>
                 </div>
@@ -591,11 +591,11 @@ export default function ScanLandingPage() {
                                   key={i}
                                   className={`text-lg ${i < Math.floor(shop.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
                                 >
-                                  ★
+                                  �?
                                 </span>
                               ))}
                               <span className="ml-2 text-sm text-gray-600">
-                                {shop.rating?.toFixed(1) || '暂无评分'} ({shop.review_count || 0}条评价)
+                                {shop?.toFixed(1) || '暂无评分'} ({shop.review_count || 0}条评?
                               </span>
                             </div>
                           </div>
@@ -612,7 +612,7 @@ export default function ScanLandingPage() {
                               ))}
                               {shop.services.length > 3 && (
                                 <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                                  +{shop.services.length - 3}项服务
+                                  +{shop.services.length - 3}项服?
                                 </span>
                               )}
                             </div>
@@ -628,14 +628,14 @@ export default function ScanLandingPage() {
                   
                   <div className="text-center pt-4 border-t border-gray-200">
                     <button className="text-blue-500 hover:text-blue-700 font-medium">
-                      查看更多维修店 →
+                      查看更多维修?�?
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="text-center py-12">
                   <div className="text-5xl mb-4">🏪</div>
-                  <h4 className="text-lg font-medium text-gray-800 mb-2">暂无附近维修店信息</h4>
+                  <h4 className="text-lg font-medium text-gray-800 mb-2">暂无附近维修店信?/h4>
                   <p className="text-gray-600 mb-4">您可以尝试手动搜索或扩大搜索范围</p>
                   <button 
                     onClick={fetchNearbyShops}

@@ -1,14 +1,12 @@
 /**
  * 输入类型检测器
- * 自动识别输入类型并路由到相应的处理服务
- */
+ * 自动识别输入类型并路由到相应的处理服? */
 
-import { InputType, RawProcurementRequest } from "../models/procurement.model";
-import { ImageProcessorService } from "./image-processor.service";
-import { LinkExtractorService } from "./link-extractor.service";
+import { InputType, RawProcurementRequest } from '../models/procurement.model';
+import { ImageProcessorService } from './image-processor.service';
+import { LinkExtractorService } from './link-extractor.service';
 
-// 输入检测结果
-interface InputDetectionResult {
+// 输入检测结?interface InputDetectionResult {
   inputType: InputType;
   confidence: number;
   detectedFeatures: string[];
@@ -32,31 +30,28 @@ export class InputDetectorService {
   }
 
   /**
-   * 检测输入类型并处理相应的内容
-   */
+   * 检测输入类型并处理相应的内?   */
   async detectAndProcess(rawRequest: RawProcurementRequest): Promise<{
     detectedType: InputType;
     confidence: number;
     processingResult: ProcessingResult;
     detectionSteps: string[];
   }> {
-    const detectionSteps: string[] = ["开始输入类型检测"];
+    const detectionSteps: string[] = ['开始输入类型检?];
 
     try {
-      // 1. 检测输入类型
-      detectionSteps.push("执行输入类型检测");
+      // 1. 检测输入类?      detectionSteps.push('执行输入类型检?);
       const detectionResult = await this.detectInputType(rawRequest);
       detectionSteps.push(
-        `检测结果: ${detectionResult.inputType} (置信度: ${detectionResult.confidence})`
+        `检测结? ${detectionResult.inputType} (置信? ${detectionResult.confidence})`
       );
 
-      // 2. 根据检测结果处理输入
-      detectionSteps.push("开始内容处理");
+      // 2. 根据检测结果处理输?      detectionSteps.push('开始内容处?);
       const processingResult = await this.processByType(
         rawRequest,
         detectionResult.inputType
       );
-      detectionSteps.push("内容处理完成");
+      detectionSteps.push('内容处理完成');
 
       return {
         detectedType: detectionResult.inputType,
@@ -65,50 +60,46 @@ export class InputDetectorService {
         detectionSteps,
       };
     } catch (error) {
-      console.error("输入检测和处理失败:", error);
+      console.error('输入检测和处理失败:', error);
       detectionSteps.push(
-        "处理失败: " + (error instanceof Error ? error.message : "未知错误")
+        '处理失败: ' + (error instanceof Error ? error.message : '未知错误')
       );
       throw error;
     }
   }
 
   /**
-   * 检测输入类型
-   */
+   * 检测输入类?   */
   private async detectInputType(
     rawRequest: RawProcurementRequest
   ): Promise<InputDetectionResult> {
     const input = rawRequest.input.trim().toLowerCase();
     const features: string[] = [];
-    let confidence = 0.5; // 基础置信度
-
-    // 1. URL模式检测
-    if (this.isUrl(input)) {
-      features.push("URL格式");
+    let confidence = 0.5; // 基础置信?
+    // 1. URL模式检?    if (this.isUrl(input)) {
+      features.push('URL格式');
 
       // 进一步判断URL类型
       if (this.isImageUrl(input)) {
-        features.push("图片URL");
+        features.push('图片URL');
         return {
           inputType: InputType.IMAGE,
           confidence: 0.95,
           detectedFeatures: features,
-          processingSteps: ["URL检测", "图片URL识别"],
+          processingSteps: ['URL检?, '图片URL识别'],
         };
       } else if (this.isWebUrl(input)) {
-        features.push("网页URL");
+        features.push('网页URL');
         return {
           inputType: InputType.LINK,
           confidence: 0.9,
           detectedFeatures: features,
-          processingSteps: ["URL检测", "网页URL识别"],
+          processingSteps: ['URL检?, '网页URL识别'],
         };
       }
     }
 
-    // 2. 文本特征检测
-    const textFeatures = this.analyzeTextFeatures(input);
+    // 2. 文本特征检?    const textFeatures = this.analyzeTextFeatures(input);
     features.push(...textFeatures.features);
     confidence = Math.max(confidence, textFeatures.confidence);
 
@@ -118,16 +109,15 @@ export class InputDetectorService {
         inputType: InputType.TEXT,
         confidence,
         detectedFeatures: features,
-        processingSteps: ["文本特征分析", "文本输入确认"],
+        processingSteps: ['文本特征分析', '文本输入确认'],
       };
     }
 
-    // 默认返回文本类型（最保守的选择）
-    return {
+    // 默认返回文本类型（最保守的选择?    return {
       inputType: InputType.TEXT,
       confidence: 0.6,
-      detectedFeatures: ["默认文本"],
-      processingSteps: ["默认文本类型"],
+      detectedFeatures: ['默认文本'],
+      processingSteps: ['默认文本类型'],
     };
   }
 
@@ -145,16 +135,16 @@ export class InputDetectorService {
    */
   private isImageUrl(url: string): boolean {
     const imageExtensions = [
-      ".jpg",
-      ".jpeg",
-      ".png",
-      ".gif",
-      ".bmp",
-      ".webp",
-      ".svg",
+      '.jpg',
+      '.jpeg',
+      '.png',
+      '.gif',
+      '.bmp',
+      '.webp',
+      '.svg',
     ];
     const lowerUrl = url.toLowerCase();
-    return imageExtensions.some((ext) => lowerUrl.includes(ext));
+    return imageExtensions.some(ext => lowerUrl.includes(ext));
   }
 
   /**
@@ -176,51 +166,49 @@ export class InputDetectorService {
     const features: string[] = [];
     let confidence = 0.5;
     const sentences = text
-      .split(/[。！？.!?]/)
-      .filter((s) => s.trim().length > 0);
+      .split(/[。！�?!?]/)
+      .filter(s => s.trim().length > 0);
 
     // 文本长度分析
     if (text.length > 5) {
-      features.push("有意义的文本长度");
+      features.push('有意义的文本长度');
       confidence += 0.1;
     }
 
     // 句子结构分析
     if (sentences.length > 0) {
-      features.push("句子结构");
+      features.push('句子结构');
       confidence += 0.1;
     }
 
-    // 采购相关词汇检测
-    const procurementKeywords = [
-      "采购",
-      "购买",
-      "需要",
-      "想要",
-      "求购",
-      "订购",
-      "buy",
-      "purchase",
-      "need",
-      "want",
-      "order",
+    // 采购相关词汇检?    const procurementKeywords = [
+      '采购',
+      '购买',
+      '需?,
+      '想要',
+      '求购',
+      '订购',
+      'buy',
+      'purchase',
+      'need',
+      'want',
+      'order',
     ];
 
-    const hasProcurementWords = procurementKeywords.some((keyword) =>
+    const hasProcurementWords = procurementKeywords.some(keyword =>
       text.toLowerCase().includes(keyword.toLowerCase())
     );
 
     if (hasProcurementWords) {
-      features.push("采购相关词汇");
+      features.push('采购相关词汇');
       confidence += 0.2;
     }
 
-    // 数字和量词检测
-    const hasNumbers = /\d/.test(text);
+    // 数字和量词检?    const hasNumbers = /\d/.test(text);
     const hasUnits = /[个台套件箱瓶]/.test(text);
 
     if (hasNumbers || hasUnits) {
-      features.push("数字或量词");
+      features.push('数字或量?);
       confidence += 0.1;
     }
 
@@ -257,7 +245,7 @@ export class InputDetectorService {
   private async processImageInput(
     rawRequest: RawProcurementRequest
   ): Promise<ProcessingResult> {
-    const processingSteps: string[] = ["开始图片处理"];
+    const processingSteps: string[] = ['开始图片处?];
 
     try {
       const result = await this.imageProcessor.processImageRequest(rawRequest);
@@ -273,10 +261,9 @@ export class InputDetectorService {
       };
     } catch (error) {
       processingSteps.push(
-        "图片处理失败: " + (error instanceof Error ? error.message : "未知错误")
+        '图片处理失败: ' + (error instanceof Error ? error.message : '未知错误')
       );
-      // 降级到文本处理
-      return await this.processTextInput(rawRequest, processingSteps);
+      // 降级到文本处?      return await this.processTextInput(rawRequest, processingSteps);
     }
   }
 
@@ -286,7 +273,7 @@ export class InputDetectorService {
   private async processLinkInput(
     rawRequest: RawProcurementRequest
   ): Promise<ProcessingResult> {
-    const processingSteps: string[] = ["开始链接处理"];
+    const processingSteps: string[] = ['开始链接处?];
 
     try {
       const result = await this.linkExtractor.processLinkRequest(rawRequest);
@@ -303,10 +290,9 @@ export class InputDetectorService {
       };
     } catch (error) {
       processingSteps.push(
-        "链接处理失败: " + (error instanceof Error ? error.message : "未知错误")
+        '链接处理失败: ' + (error instanceof Error ? error.message : '未知错误')
       );
-      // 降级到文本处理
-      return await this.processTextInput(rawRequest, processingSteps);
+      // 降级到文本处?      return await this.processTextInput(rawRequest, processingSteps);
     }
   }
 
@@ -317,10 +303,9 @@ export class InputDetectorService {
     rawRequest: RawProcurementRequest,
     baseSteps: string[] = []
   ): Promise<ProcessingResult> {
-    const processingSteps = [...baseSteps, "开始文本处理"];
+    const processingSteps = [...baseSteps, '开始文本处?];
 
-    // 对于文本输入，直接返回原始内容
-    processingSteps.push("文本内容准备完成");
+    // 对于文本输入，直接返回原始内?    processingSteps.push('文本内容准备完成');
 
     return {
       extractedContent: rawRequest.rawDescription || rawRequest.input,
@@ -329,8 +314,7 @@ export class InputDetectorService {
   }
 
   /**
-   * 验证输入的有效性
-   */
+   * 验证输入的有效?   */
   async validateInput(rawRequest: RawProcurementRequest): Promise<{
     isValid: boolean;
     errors: string[];
@@ -341,7 +325,7 @@ export class InputDetectorService {
 
     // 基本验证
     if (!rawRequest.input || rawRequest.input.trim().length === 0) {
-      errors.push("输入内容不能为空");
+      errors.push('输入内容不能为空');
     }
 
     // 根据输入类型进行特定验证
@@ -352,7 +336,7 @@ export class InputDetectorService {
             rawRequest.imageUrl
           );
           if (!isValidUrl) {
-            warnings.push("图片URL可能无效或无法访问");
+            warnings.push('图片URL可能无效或无法访?);
           }
         }
         break;
@@ -361,11 +345,11 @@ export class InputDetectorService {
         if (rawRequest.sourceUrl) {
           try {
             const url = new URL(rawRequest.sourceUrl);
-            if (!["http:", "https:"].includes(url.protocol)) {
-              warnings.push("链接协议不是HTTP/HTTPS");
+            if (!['http:', 'https:'].includes(url.protocol)) {
+              warnings.push('链接协议不是HTTP/HTTPS');
             }
           } catch {
-            warnings.push("链接格式可能不正确");
+            warnings.push('链接格式可能不正?);
           }
         }
         break;
@@ -375,7 +359,7 @@ export class InputDetectorService {
           rawRequest.rawDescription &&
           rawRequest.rawDescription.length > 5000
         ) {
-          warnings.push("文本内容较长，可能影响处理性能");
+          warnings.push('文本内容较长，可能影响处理性能');
         }
         break;
     }

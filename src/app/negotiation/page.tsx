@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   BarChart3,
@@ -69,7 +69,7 @@ export default function NegotiationPage() {
   const [supplierQuote, setSupplierQuote] = useState("");
   const [remarks, setRemarks] = useState("");
 
-  // 初始化数据
+  // 初始化数?
   useEffect(() => {
     loadActiveSessions();
     loadRecommendations();
@@ -90,7 +90,7 @@ export default function NegotiationPage() {
           currentRound: 2,
           maxRounds: 5,
           status: "negotiating",
-          startTime: new Date(Date.now() - 3600000), // 1小时前
+          startTime: new Date(Date.now() - 3600000), // 1小时?
         },
       ];
       setSessions(mockSessions);
@@ -116,7 +116,7 @@ export default function NegotiationPage() {
           ourInitialOffer: 12000,
           supplierQuote: 11500,
           ourCounterOffer: 11000,
-          strategyUsed: "价格敏感型策略",
+          strategyUsed: "价格敏感型策?,
           confidenceLevel: 85,
           remarks: "首轮议价",
         },
@@ -126,9 +126,9 @@ export default function NegotiationPage() {
           ourInitialOffer: 11000,
           supplierQuote: 11200,
           ourCounterOffer: 10800,
-          strategyUsed: "价格敏感型策略",
+          strategyUsed: "价格敏感型策?,
           confidenceLevel: 78,
-          remarks: "第二轮议价",
+          remarks: "第二轮议?,
         },
       ];
       setHistory(mockHistory);
@@ -137,7 +137,7 @@ export default function NegotiationPage() {
     }
   };
 
-  // 加载供应商推荐
+  // 加载供应商推?
   const loadRecommendations = async () => {
     try {
       // 模拟API调用
@@ -151,9 +151,9 @@ export default function NegotiationPage() {
           afterSalesRate: 4.6,
           priceCompetitiveness: 4.8,
           reasons: [
-            "经验丰富（45笔交易）",
+            "经验丰富?5笔交易）",
             "议价成功率高",
-            "平均折扣率高达12.5%",
+            "平均折扣率高?2.5%",
           ],
         },
         {
@@ -164,16 +164,16 @@ export default function NegotiationPage() {
           averageDiscountRate: 10.2,
           afterSalesRate: 4.3,
           priceCompetitiveness: 4.5,
-          reasons: ["售后服务评价优秀", "价格具有竞争力"],
+          reasons: ["售后服务评价优秀", "价格具有竞争?],
         },
       ];
       setRecommendations(mockRecommendations);
     } catch (error) {
-      console.error("加载供应商推荐失败:", error);
+      console.error("加载供应商推荐失?", error);
     }
   };
 
-  // 启动新议价
+  // 启动新议?
   const startNewNegotiation = async () => {
     try {
       setIsLoading(true);
@@ -194,7 +194,7 @@ export default function NegotiationPage() {
       setCurrentSession(newSession);
       setHistory([]);
     } catch (error) {
-      console.error("启动新议价失败:", error);
+      console.error("启动新议价失?", error);
     } finally {
       setIsLoading(false);
     }
@@ -217,8 +217,8 @@ export default function NegotiationPage() {
             ? history[history.length - 1].ourCounterOffer
             : currentSession.initialQuote,
         supplierQuote: quoteValue,
-        ourCounterOffer: quoteValue * 0.95, // 简单的95折还价
-        strategyUsed: "价格敏感型策略",
+        ourCounterOffer: quoteValue * 0.95, // 简单的95折还?
+        strategyUsed: "价格敏感型策?,
         confidenceLevel: 80,
         remarks,
       };
@@ -242,7 +242,7 @@ export default function NegotiationPage() {
     }
   };
 
-  // 接受最终报价
+  // 接受最终报?
   const acceptOffer = async () => {
     if (!currentSession || history.length === 0) return;
 
@@ -268,7 +268,7 @@ export default function NegotiationPage() {
     }
   };
 
-  // 渲染状态图标
+  // 渲染状态图?
   const renderStatusIcon = (status: string) => {
     switch (status) {
       case "success":
@@ -297,7 +297,7 @@ export default function NegotiationPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 左侧：议价控制面板 */}
+          {/* 左侧：议价控制面?*/}
           <div className="lg:col-span-2 space-y-6">
             {/* 当前议价会话 */}
             {currentSession && (
@@ -362,7 +362,7 @@ export default function NegotiationPage() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        供应商报价 (¥)
+                        供应商报?(¥)
                       </label>
                       <input
                         type="number"
@@ -381,7 +381,7 @@ export default function NegotiationPage() {
                         onChange={(e) => setRemarks(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         rows={2}
-                        placeholder="可选：添加本次议价的备注信息"
+                        placeholder="可选：添加本次议价的备注信?
                       />
                     </div>
                     <div className="flex space-x-3">
@@ -433,7 +433,7 @@ export default function NegotiationPage() {
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center">
                           <span className="font-medium text-gray-900">
-                            第 {round.round} 轮
+                            �?{round.round} �?
                           </span>
                           <span className="ml-3 text-sm text-gray-500">
                             {round.timestamp.toLocaleString("zh-CN")}
@@ -441,7 +441,7 @@ export default function NegotiationPage() {
                         </div>
                         <div className="flex items-center">
                           <span className="text-sm font-medium text-blue-600 mr-2">
-                            置信度: {round.confidenceLevel}%
+                            置信? {round.confidenceLevel}%
                           </span>
                           <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
                             {round.strategyUsed}
@@ -456,7 +456,7 @@ export default function NegotiationPage() {
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-500">供应商报价:</span>
+                          <span className="text-gray-500">供应商报?</span>
                           <span className="font-medium ml-2 text-orange-600">
                             ¥{round.supplierQuote.toLocaleString()}
                           </span>
@@ -482,13 +482,13 @@ export default function NegotiationPage() {
             </div>
           </div>
 
-          {/* 右侧：供应商推荐和统计 */}
+          {/* 右侧：供应商推荐和统?*/}
           <div className="space-y-6">
-            {/* 供应商推荐 */}
+            {/* 供应商推?*/}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  供应商推荐
+                  供应商推?
                 </h2>
                 <button
                   onClick={loadRecommendations}
@@ -509,7 +509,7 @@ export default function NegotiationPage() {
                         {supplier.supplierName}
                       </h3>
                       <span className="text-lg font-bold text-blue-600">
-                        {supplier.score}分
+                        {supplier.score}�?
                       </span>
                     </div>
                     <div className="text-sm text-gray-600 mb-3">
@@ -539,11 +539,11 @@ export default function NegotiationPage() {
               </h2>
               <div className="space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">总议价次数</span>
+                  <span className="text-gray-600">总议价次?/span>
                   <span className="font-medium">24</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">成功率</span>
+                  <span className="text-gray-600">成功?/span>
                   <span className="font-medium text-green-600">62.5%</span>
                 </div>
                 <div className="flex justify-between">
@@ -557,10 +557,10 @@ export default function NegotiationPage() {
               </div>
             </div>
 
-            {/* 快速操作 */}
+            {/* 快速操?*/}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                快速操作
+                快速操?
               </h2>
               <div className="space-y-3">
                 <button
@@ -573,14 +573,14 @@ export default function NegotiationPage() {
                   ) : (
                     <>
                       <Play className="h-5 w-5 mr-2" />
-                      启动新议价
+                      启动新议?
                     </>
                   )}
                 </button>
 
                 <button className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 flex items-center justify-center">
                   <Users className="h-5 w-5 mr-2" />
-                  查看所有会话
+                  查看所有会?
                 </button>
               </div>
             </div>
@@ -590,3 +590,4 @@ export default function NegotiationPage() {
     </div>
   );
 }
+

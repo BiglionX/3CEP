@@ -18,14 +18,14 @@ const criticalFiles = [
   'src/app/admin/layout.tsx',
   'src/app/admin/page.tsx',
   'src/app/admin/dashboard/page.tsx',
-  'src/app/api/auth/check-session/route.ts'
+  'src/app/api/auth/check-session/route.ts',
 ];
 
 criticalFiles.forEach(file => {
   const fullPath = path.join(process.cwd(), file);
   const exists = fs.existsSync(fullPath);
   console.log(`${exists ? '✅' : '❌'} ${file}`);
-  
+
   if (exists) {
     try {
       const stats = fs.statSync(fullPath);
@@ -39,33 +39,38 @@ criticalFiles.forEach(file => {
 // 2. 检查认证相关代码
 console.log('\n2️⃣ 认证逻辑检查');
 
-const permissionHookPath = path.join(process.cwd(), 'src', 'hooks', 'use-permission.tsx');
+const permissionHookPath = path.join(
+  process.cwd(),
+  'src',
+  'hooks',
+  'use-permission.tsx'
+);
 if (fs.existsSync(permissionHookPath)) {
   const content = fs.readFileSync(permissionHookPath, 'utf8');
-  
+
   console.log('usePermission hook 检查:');
-  
+
   const checks = [
     {
       name: 'Supabase认证检查',
-      pattern: 'fetch(\'/api/auth/check-session\'',
-      required: true
+      pattern: "fetch('/api/auth/check-session'",
+      required: true,
     },
     {
       name: '管理员角色识别',
-      pattern: 'sessionData.is_admin ? [\'admin\']',
-      required: true
+      pattern: "sessionData.is_admin ? ['admin']",
+      required: true,
     },
     {
       name: 'localStorage备用方案',
-      pattern: 'localStorage.getItem(\'jwt_token\'',
-      required: true
-    }
+      pattern: "localStorage.getItem('jwt_token'",
+      required: true,
+    },
   ];
-  
+
   checks.forEach(check => {
     const found = content.includes(check.pattern);
-    const status = found ? '✅' : (check.required ? '❌' : '⚠️');
+    const status = found ? '✅' : check.required ? '❌' : '⚠️';
     console.log(`  ${status} ${check.name}`);
   });
 }
@@ -73,33 +78,41 @@ if (fs.existsSync(permissionHookPath)) {
 // 3. 检查API路由
 console.log('\n3️⃣ API路由检查');
 
-const checkSessionPath = path.join(process.cwd(), 'src', 'app', 'api', 'auth', 'check-session', 'route.ts');
+const checkSessionPath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'api',
+  'auth',
+  'check-session',
+  'route.ts'
+);
 if (fs.existsSync(checkSessionPath)) {
   const content = fs.readFileSync(checkSessionPath, 'utf8');
-  
+
   console.log('check-session API检查:');
-  
+
   const apiChecks = [
     {
       name: '导出GET函数',
       pattern: 'export async function GET',
-      required: true
+      required: true,
     },
     {
       name: '返回认证状态',
       pattern: 'authenticated:',
-      required: true
+      required: true,
     },
     {
       name: '返回管理员标识',
       pattern: 'is_admin:',
-      required: true
-    }
+      required: true,
+    },
   ];
-  
+
   apiChecks.forEach(check => {
     const found = content.includes(check.pattern);
-    const status = found ? '✅' : (check.required ? '❌' : '⚠️');
+    const status = found ? '✅' : check.required ? '❌' : '⚠️';
     console.log(`  ${status} ${check.name}`);
   });
 }
@@ -376,10 +389,7 @@ if (!fs.existsSync(testDir)) {
   fs.mkdirSync(testDir, { recursive: true });
 }
 
-fs.writeFileSync(
-  path.join(testDir, 'page.tsx'),
-  ultimateTestPage
-);
+fs.writeFileSync(path.join(testDir, 'page.tsx'), ultimateTestPage);
 
 console.log('✅ 创建了终极诊断测试页面: /ultimate-diagnosis');
 

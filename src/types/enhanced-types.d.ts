@@ -1,12 +1,12 @@
+﻿// 增强的Supabase 类型声明
 
-// 增强的Supabase类型声明
 declare global {
   interface Window {
     Cypress?: any;
   }
 }
 
-// Supabase客户端增强类型
+// Supabase 客户端增强类
 interface EnhancedSupabaseClient {
   from: (table: string) => {
     select: (columns?: string) => Promise<any>;
@@ -207,5 +207,5 @@ export type {
   ApiConfig,
   ServiceError,
   HealthCheckResult,
-  LogEntry
+  LogEntry,
 };

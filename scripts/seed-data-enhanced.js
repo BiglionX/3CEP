@@ -3,34 +3,33 @@
 
 async function seedEnhancedData() {
   console.log('🌱 开始填充增强版初始数据...');
-  
+
   const supabaseUrl = 'https://hrjqzbhqueleszkvnsen.supabase.co';
   const serviceKey = 'your_service_role_key_here';
-  
+
   const headers = {
-    'apikey': serviceKey,
-    'Authorization': `Bearer ${serviceKey}`,
-    'Content-Type': 'application/json'
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    'Content-Type': 'application/json',
   };
 
   try {
     // 1. 填充设备型号数据 (目标: 500+条)
     await seedDevices(supabaseUrl, headers);
-    
+
     // 2. 填充故障类型数据 (扩展到50+种)
     await seedFaultTypes(supabaseUrl, headers);
-    
+
     // 3. 填充热点链接池数据 (扩展到30+条)
     await seedHotLinks(supabaseUrl, headers);
-    
+
     // 4. 填充维修店铺数据 (扩展到30+家)
     await seedRepairShops(supabaseUrl, headers);
-    
+
     // 5. 验证数据完整性
     await verifyDataIntegrity(supabaseUrl, headers);
-    
+
     console.log('\n🎉 增强版初始数据填充完成！');
-    
   } catch (error) {
     console.error('❌ 数据填充过程中发生错误:', error.message);
     console.error('详细错误:', error);
@@ -40,16 +39,68 @@ async function seedEnhancedData() {
 // 填充设备型号数据 (500+条)
 async function seedDevices(supabaseUrl, headers) {
   console.log('\n📱 填充设备型号数据 (目标: 500+条)...');
-  
+
   // 图片占位符URL模板
   const imageUrlTemplate = 'https://picsum.photos/300/400?random=';
-  
+
   // Apple设备 (120+条)
   const appleDevices = [];
-  const iphoneModels = ['15 Pro Max', '15 Pro', '15 Plus', '15', '14 Pro Max', '14 Pro', '14 Plus', '14', '13 Pro Max', '13 Pro', '13', '12 Pro Max', '12 Pro', '12', '11 Pro Max', '11 Pro', '11', 'XS Max', 'XS', 'XR', 'X', '8 Plus', '8', '7 Plus', '7', '6s Plus', '6s', '6 Plus', '6', 'SE (第3代)', 'SE (第2代)', 'SE'];
-  const ipadModels = ['Pro 12.9"', 'Pro 11"', 'Air 5', 'Air 4', '第9代', '第8代', 'mini 6', 'mini 5'];
-  const macModels = ['MacBook Air M2', 'MacBook Air M1', 'MacBook Pro 16"', 'MacBook Pro 14"', 'MacBook Pro 13"', 'iMac 24"', 'iMac 27"', 'Mac Studio', 'Mac Pro'];
-  
+  const iphoneModels = [
+    '15 Pro Max',
+    '15 Pro',
+    '15 Plus',
+    '15',
+    '14 Pro Max',
+    '14 Pro',
+    '14 Plus',
+    '14',
+    '13 Pro Max',
+    '13 Pro',
+    '13',
+    '12 Pro Max',
+    '12 Pro',
+    '12',
+    '11 Pro Max',
+    '11 Pro',
+    '11',
+    'XS Max',
+    'XS',
+    'XR',
+    'X',
+    '8 Plus',
+    '8',
+    '7 Plus',
+    '7',
+    '6s Plus',
+    '6s',
+    '6 Plus',
+    '6',
+    'SE (第3代)',
+    'SE (第2代)',
+    'SE',
+  ];
+  const ipadModels = [
+    'Pro 12.9"',
+    'Pro 11"',
+    'Air 5',
+    'Air 4',
+    '第9代',
+    '第8代',
+    'mini 6',
+    'mini 5',
+  ];
+  const macModels = [
+    'MacBook Air M2',
+    'MacBook Air M1',
+    'MacBook Pro 16"',
+    'MacBook Pro 14"',
+    'MacBook Pro 13"',
+    'iMac 24"',
+    'iMac 27"',
+    'Mac Studio',
+    'Mac Pro',
+  ];
+
   // 生成iPhone型号
   iphoneModels.forEach((model, index) => {
     appleDevices.push({
@@ -60,10 +111,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'iOS',
       image_url: `${imageUrlTemplate}${1000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${1000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${1000 + index}`,
     });
   });
-  
+
   // 生成iPad型号
   ipadModels.forEach((model, index) => {
     appleDevices.push({
@@ -74,10 +125,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '平板',
       os_type: 'iPadOS',
       image_url: `${imageUrlTemplate}${1100 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${1100 + index}`
+      thumbnail_url: `${imageUrlTemplate}${1100 + index}`,
     });
   });
-  
+
   // 生成Mac型号
   macModels.forEach((model, index) => {
     appleDevices.push({
@@ -88,16 +139,57 @@ async function seedDevices(supabaseUrl, headers) {
       category: '笔记本',
       os_type: 'macOS',
       image_url: `${imageUrlTemplate}${1200 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${1200 + index}`
+      thumbnail_url: `${imageUrlTemplate}${1200 + index}`,
     });
   });
-  
+
   // 华为设备 (100+条)
   const huaweiDevices = [];
-  const mateSeries = ['60 Pro+', '60 Pro', '60', '50 Pro+', '50 Pro', '50', '40 Pro+', '40 Pro', '40', '30 Pro+', '30 Pro', '30', '20 Pro', '20', '10 Pro', '10'];
-  const pSeries = ['60 Pro', '60', '50 Pro', '50', '40 Pro', '40', '30 Pro', '30', '20 Pro', '20', '10 Pro', '10'];
-  const novaSeries = ['11 Pro', '11', '10 Pro', '10', '9 Pro', '9', '8 Pro', '8', '7 Pro', '7'];
-  
+  const mateSeries = [
+    '60 Pro+',
+    '60 Pro',
+    '60',
+    '50 Pro+',
+    '50 Pro',
+    '50',
+    '40 Pro+',
+    '40 Pro',
+    '40',
+    '30 Pro+',
+    '30 Pro',
+    '30',
+    '20 Pro',
+    '20',
+    '10 Pro',
+    '10',
+  ];
+  const pSeries = [
+    '60 Pro',
+    '60',
+    '50 Pro',
+    '50',
+    '40 Pro',
+    '40',
+    '30 Pro',
+    '30',
+    '20 Pro',
+    '20',
+    '10 Pro',
+    '10',
+  ];
+  const novaSeries = [
+    '11 Pro',
+    '11',
+    '10 Pro',
+    '10',
+    '9 Pro',
+    '9',
+    '8 Pro',
+    '8',
+    '7 Pro',
+    '7',
+  ];
+
   mateSeries.forEach((model, index) => {
     huaweiDevices.push({
       brand: '华为',
@@ -107,10 +199,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'HarmonyOS',
       image_url: `${imageUrlTemplate}${2000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${2000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${2000 + index}`,
     });
   });
-  
+
   pSeries.forEach((model, index) => {
     huaweiDevices.push({
       brand: '华为',
@@ -120,10 +212,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'HarmonyOS',
       image_url: `${imageUrlTemplate}${2100 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${2100 + index}`
+      thumbnail_url: `${imageUrlTemplate}${2100 + index}`,
     });
   });
-  
+
   novaSeries.forEach((model, index) => {
     huaweiDevices.push({
       brand: '华为',
@@ -133,16 +225,53 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'HarmonyOS',
       image_url: `${imageUrlTemplate}${2200 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${2200 + index}`
+      thumbnail_url: `${imageUrlTemplate}${2200 + index}`,
     });
   });
-  
+
   // 小米设备 (100+条)
   const xiaomiDevices = [];
-  const miSeries = ['14 Ultra', '14 Pro', '14', '13 Ultra', '13 Pro', '13', '12 Pro', '12', '11 Pro', '11', '10 Pro', '10', '9 Pro', '9', '8 Pro', '8'];
-  const redmiSeries = ['Note 12 Pro', 'Note 12', 'Note 11 Pro', 'Note 11', 'Note 10 Pro', 'Note 10', '12C', '11C', '10A', '9A'];
-  const pocoSeries = ['F5 Pro', 'F5', 'F4 GT', 'F4', 'X4 Pro', 'X4', 'X3 Pro', 'X3'];
-  
+  const miSeries = [
+    '14 Ultra',
+    '14 Pro',
+    '14',
+    '13 Ultra',
+    '13 Pro',
+    '13',
+    '12 Pro',
+    '12',
+    '11 Pro',
+    '11',
+    '10 Pro',
+    '10',
+    '9 Pro',
+    '9',
+    '8 Pro',
+    '8',
+  ];
+  const redmiSeries = [
+    'Note 12 Pro',
+    'Note 12',
+    'Note 11 Pro',
+    'Note 11',
+    'Note 10 Pro',
+    'Note 10',
+    '12C',
+    '11C',
+    '10A',
+    '9A',
+  ];
+  const pocoSeries = [
+    'F5 Pro',
+    'F5',
+    'F4 GT',
+    'F4',
+    'X4 Pro',
+    'X4',
+    'X3 Pro',
+    'X3',
+  ];
+
   miSeries.forEach((model, index) => {
     xiaomiDevices.push({
       brand: '小米',
@@ -152,10 +281,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'MIUI',
       image_url: `${imageUrlTemplate}${3000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${3000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${3000 + index}`,
     });
   });
-  
+
   redmiSeries.forEach((model, index) => {
     xiaomiDevices.push({
       brand: 'Redmi',
@@ -165,10 +294,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'MIUI',
       image_url: `${imageUrlTemplate}${3100 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${3100 + index}`
+      thumbnail_url: `${imageUrlTemplate}${3100 + index}`,
     });
   });
-  
+
   pocoSeries.forEach((model, index) => {
     xiaomiDevices.push({
       brand: 'POCO',
@@ -178,17 +307,53 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'POCO',
       image_url: `${imageUrlTemplate}${3200 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${3200 + index}`
+      thumbnail_url: `${imageUrlTemplate}${3200 + index}`,
     });
   });
-  
+
   // 三星设备 (80+条)
   const samsungDevices = [];
-  const galaxyS = ['S24 Ultra', 'S24+', 'S24', 'S23 Ultra', 'S23+', 'S23', 'S22 Ultra', 'S22+', 'S22', 'S21 Ultra', 'S21+', 'S21'];
+  const galaxyS = [
+    'S24 Ultra',
+    'S24+',
+    'S24',
+    'S23 Ultra',
+    'S23+',
+    'S23',
+    'S22 Ultra',
+    'S22+',
+    'S22',
+    'S21 Ultra',
+    'S21+',
+    'S21',
+  ];
   const galaxyNote = ['20 Ultra', '20', '10+', '10', '9', '8', '7'];
-  const galaxyA = ['A54', 'A53', 'A52', 'A51', 'A34', 'A33', 'A32', 'A31', 'A24', 'A23', 'A22', 'A21'];
-  const galaxyTab = ['S9 Ultra', 'S9+', 'S9', 'S8 Ultra', 'S8+', 'S8', 'A9', 'A8', 'A7'];
-  
+  const galaxyA = [
+    'A54',
+    'A53',
+    'A52',
+    'A51',
+    'A34',
+    'A33',
+    'A32',
+    'A31',
+    'A24',
+    'A23',
+    'A22',
+    'A21',
+  ];
+  const galaxyTab = [
+    'S9 Ultra',
+    'S9+',
+    'S9',
+    'S8 Ultra',
+    'S8+',
+    'S8',
+    'A9',
+    'A8',
+    'A7',
+  ];
+
   [...galaxyS, ...galaxyNote].forEach((model, index) => {
     samsungDevices.push({
       brand: '三星',
@@ -198,10 +363,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'Android',
       image_url: `${imageUrlTemplate}${4000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${4000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${4000 + index}`,
     });
   });
-  
+
   galaxyA.forEach((model, index) => {
     samsungDevices.push({
       brand: '三星',
@@ -211,10 +376,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'Android',
       image_url: `${imageUrlTemplate}${4100 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${4100 + index}`
+      thumbnail_url: `${imageUrlTemplate}${4100 + index}`,
     });
   });
-  
+
   galaxyTab.forEach((model, index) => {
     samsungDevices.push({
       brand: '三星',
@@ -224,16 +389,38 @@ async function seedDevices(supabaseUrl, headers) {
       category: '平板',
       os_type: 'Android',
       image_url: `${imageUrlTemplate}${4200 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${4200 + index}`
+      thumbnail_url: `${imageUrlTemplate}${4200 + index}`,
     });
   });
-  
+
   // OPPO设备 (60+条)
   const oppoDevices = [];
-  const oppoFind = ['X7 Ultra', 'X7', 'X6 Pro', 'X6', 'X5 Pro', 'X5', 'X4 Pro', 'X4'];
-  const oppoReno = ['11 Pro', '11', '10 Pro', '10', '9 Pro', '9', '8 Pro', '8', '7 Pro', '7', '6 Pro', '6'];
+  const oppoFind = [
+    'X7 Ultra',
+    'X7',
+    'X6 Pro',
+    'X6',
+    'X5 Pro',
+    'X5',
+    'X4 Pro',
+    'X4',
+  ];
+  const oppoReno = [
+    '11 Pro',
+    '11',
+    '10 Pro',
+    '10',
+    '9 Pro',
+    '9',
+    '8 Pro',
+    '8',
+    '7 Pro',
+    '7',
+    '6 Pro',
+    '6',
+  ];
   const oppoA = ['11', '9', '7', '5', '3', '1'];
-  
+
   oppoFind.forEach((model, index) => {
     oppoDevices.push({
       brand: 'OPPO',
@@ -243,10 +430,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'ColorOS',
       image_url: `${imageUrlTemplate}${5000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${5000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${5000 + index}`,
     });
   });
-  
+
   oppoReno.forEach((model, index) => {
     oppoDevices.push({
       brand: 'OPPO',
@@ -256,10 +443,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'ColorOS',
       image_url: `${imageUrlTemplate}${5100 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${5100 + index}`
+      thumbnail_url: `${imageUrlTemplate}${5100 + index}`,
     });
   });
-  
+
   oppoA.forEach((model, index) => {
     oppoDevices.push({
       brand: 'OPPO',
@@ -269,16 +456,36 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'ColorOS',
       image_url: `${imageUrlTemplate}${5200 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${5200 + index}`
+      thumbnail_url: `${imageUrlTemplate}${5200 + index}`,
     });
   });
-  
+
   // vivo设备 (60+条)
   const vivoDevices = [];
-  const vivoX = ['100 Pro', '100', '90 Pro', '90', '80 Pro', '80', '70 Pro', '70', '60 Pro', '60'];
-  const vivoS = ['18 Pro', '18', '17 Pro', '17', '16 Pro', '16', '15 Pro', '15'];
+  const vivoX = [
+    '100 Pro',
+    '100',
+    '90 Pro',
+    '90',
+    '80 Pro',
+    '80',
+    '70 Pro',
+    '70',
+    '60 Pro',
+    '60',
+  ];
+  const vivoS = [
+    '18 Pro',
+    '18',
+    '17 Pro',
+    '17',
+    '16 Pro',
+    '16',
+    '15 Pro',
+    '15',
+  ];
   const vivoY = ['100', '90', '80', '70', '60', '50'];
-  
+
   vivoX.forEach((model, index) => {
     vivoDevices.push({
       brand: 'vivo',
@@ -288,10 +495,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'OriginOS',
       image_url: `${imageUrlTemplate}${6000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${6000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${6000 + index}`,
     });
   });
-  
+
   vivoS.forEach((model, index) => {
     vivoDevices.push({
       brand: 'vivo',
@@ -301,10 +508,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'OriginOS',
       image_url: `${imageUrlTemplate}${6100 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${6100 + index}`
+      thumbnail_url: `${imageUrlTemplate}${6100 + index}`,
     });
   });
-  
+
   vivoY.forEach((model, index) => {
     vivoDevices.push({
       brand: 'vivo',
@@ -314,14 +521,33 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'OriginOS',
       image_url: `${imageUrlTemplate}${6200 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${6200 + index}`
+      thumbnail_url: `${imageUrlTemplate}${6200 + index}`,
     });
   });
-  
+
   // 一加设备 (40+条)
   const oneplusDevices = [];
-  const oneplusModels = ['12', '11', '10 Pro', '10', '9 Pro', '9', '8 Pro', '8', '7 Pro', '7', '6T', '6', '5T', '5', '3T', '3', '2', '1'];
-  
+  const oneplusModels = [
+    '12',
+    '11',
+    '10 Pro',
+    '10',
+    '9 Pro',
+    '9',
+    '8 Pro',
+    '8',
+    '7 Pro',
+    '7',
+    '6T',
+    '6',
+    '5T',
+    '5',
+    '3T',
+    '3',
+    '2',
+    '1',
+  ];
+
   oneplusModels.forEach((model, index) => {
     oneplusDevices.push({
       brand: '一加',
@@ -331,14 +557,29 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'OxygenOS',
       image_url: `${imageUrlTemplate}${7000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${7000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${7000 + index}`,
     });
   });
-  
+
   // 魅族设备 (30+条)
   const meizuDevices = [];
-  const meizuModels = ['20 Pro', '20', '19 Pro', '19', '18s Pro', '18s', '18 Pro', '18', '17 Pro', '17', '16s Pro', '16s', '16 Pro', '16'];
-  
+  const meizuModels = [
+    '20 Pro',
+    '20',
+    '19 Pro',
+    '19',
+    '18s Pro',
+    '18s',
+    '18 Pro',
+    '18',
+    '17 Pro',
+    '17',
+    '16s Pro',
+    '16s',
+    '16 Pro',
+    '16',
+  ];
+
   meizuModels.forEach((model, index) => {
     meizuDevices.push({
       brand: '魅族',
@@ -348,15 +589,26 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'Flyme',
       image_url: `${imageUrlTemplate}${8000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${8000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${8000 + index}`,
     });
   });
-  
+
   // 荣耀设备 (40+条)
   const honorDevices = [];
   const honorMagic = ['6 Pro', '6', '5 Pro', '5', '4 Pro', '4'];
-  const honorNumbers = ['100 Pro', '100', '90 Pro', '90', '80 Pro', '80', '70 Pro', '70', '60 Pro', '60'];
-  
+  const honorNumbers = [
+    '100 Pro',
+    '100',
+    '90 Pro',
+    '90',
+    '80 Pro',
+    '80',
+    '70 Pro',
+    '70',
+    '60 Pro',
+    '60',
+  ];
+
   honorMagic.forEach((model, index) => {
     honorDevices.push({
       brand: '荣耀',
@@ -366,10 +618,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'Magic UI',
       image_url: `${imageUrlTemplate}${9000 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${9000 + index}`
+      thumbnail_url: `${imageUrlTemplate}${9000 + index}`,
     });
   });
-  
+
   honorNumbers.forEach((model, index) => {
     honorDevices.push({
       brand: '荣耀',
@@ -379,10 +631,10 @@ async function seedDevices(supabaseUrl, headers) {
       category: '手机',
       os_type: 'Magic UI',
       image_url: `${imageUrlTemplate}${9100 + index}`,
-      thumbnail_url: `${imageUrlTemplate}${9100 + index}`
+      thumbnail_url: `${imageUrlTemplate}${9100 + index}`,
     });
   });
-  
+
   // 收集所有设备
   const allDevices = [
     ...appleDevices,
@@ -393,116 +645,625 @@ async function seedDevices(supabaseUrl, headers) {
     ...vivoDevices,
     ...oneplusDevices,
     ...meizuDevices,
-    ...honorDevices
+    ...honorDevices,
   ];
-  
+
   console.log(`📊 准备插入 ${allDevices.length} 条设备数据`);
-  
+
   // 批量插入设备数据
   let successCount = 0;
-  for (let i = 0; i < allDevices.length; i += 20) { // 每批20条
+  for (let i = 0; i < allDevices.length; i += 20) {
+    // 每批20条
     const batch = allDevices.slice(i, i + 20);
-    const promises = batch.map(device => 
+    const promises = batch.map(device =>
       fetch(`${supabaseUrl}/rest/v1/devices`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify(device)
-      }).then(res => res.status === 201 || res.status === 409 ? 1 : 0)
+        body: JSON.stringify(device),
+      }).then(res => (res.status === 201 || res.status === 409 ? 1 : 0))
     );
-    
+
     try {
       const results = await Promise.all(promises);
       successCount += results.reduce((sum, val) => sum + val, 0);
-      console.log(`📦 已处理 ${Math.min(i + 20, allDevices.length)}/${allDevices.length} 条设备数据`);
+      console.log(
+        `📦 已处理 ${Math.min(i + 20, allDevices.length)}/${allDevices.length} 条设备数据`
+      );
     } catch (err) {
-      console.log(`⚠️ 批次 ${i}-${i+19} 处理出错，跳过`);
+      console.log(`⚠️ 批次 ${i}-${i + 19} 处理出错，跳过`);
     }
   }
-  
-  console.log(`✅ 设备型号数据填充完成 (${successCount}/${allDevices.length} 条成功)`);
+
+  console.log(
+    `✅ 设备型号数据填充完成 (${successCount}/${allDevices.length} 条成功)`
+  );
 }
 
 // 填充故障类型数据 (50+种)
 async function seedFaultTypes(supabaseUrl, headers) {
   console.log('\n🔧 填充故障类型数据...');
-  
+
   const faultTypes = [
     // 屏幕类 (15种)
-    { name: '屏幕完全碎裂', category: '屏幕', sub_category: '物理损坏', description: '屏幕玻璃完全破碎，无法正常使用', difficulty_level: 4, estimated_time: 60, image_url: 'https://picsum.photos/200/150?random=100' },
-    { name: '屏幕局部裂痕', category: '屏幕', sub_category: '物理损坏', description: '屏幕表面有裂痕但功能正常', difficulty_level: 3, estimated_time: 45, image_url: 'https://picsum.photos/200/150?random=101' },
-    { name: '屏幕黑屏', category: '屏幕', sub_category: '显示异常', description: '屏幕完全无显示，背光正常', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=102' },
-    { name: '屏幕白屏', category: '屏幕', sub_category: '显示异常', description: '屏幕显示纯白色无图像', difficulty_level: 4, estimated_time: 50, image_url: 'https://picsum.photos/200/150?random=103' },
-    { name: '屏幕花屏', category: '屏幕', sub_category: '显示异常', description: '屏幕显示彩色条纹或噪点', difficulty_level: 4, estimated_time: 60, image_url: 'https://picsum.photos/200/150?random=104' },
-    { name: '屏幕闪烁', category: '屏幕', sub_category: '显示异常', description: '屏幕间歇性闪烁或抖动', difficulty_level: 3, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=105' },
-    { name: '触摸无响应', category: '屏幕', sub_category: '触控故障', description: '触摸屏完全无法响应操作', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=106' },
-    { name: '触摸漂移', category: '屏幕', sub_category: '触控故障', description: '触摸位置与实际点击位置不符', difficulty_level: 3, estimated_time: 45, image_url: 'https://picsum.photos/200/150?random=107' },
-    { name: '多点触控失效', category: '屏幕', sub_category: '触控故障', description: '无法进行多指手势操作', difficulty_level: 3, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=108' },
-    { name: '屏幕亮度异常', category: '屏幕', sub_category: '背光问题', description: '屏幕过暗或过亮无法调节', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=109' },
-    { name: '自动亮度失效', category: '屏幕', sub_category: '背光问题', description: '自动亮度调节功能失效', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=110' },
-    { name: '屏幕漏光', category: '屏幕', sub_category: '显示质量', description: '屏幕边缘有光线泄漏现象', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=111' },
-    { name: '色彩偏差', category: '屏幕', sub_category: '显示质量', description: '屏幕色彩显示不准确', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=112' },
-    { name: '屏幕老化', category: '屏幕', sub_category: '老化问题', description: '长期使用导致屏幕老化发黄', difficulty_level: 2, estimated_time: 50, image_url: 'https://picsum.photos/200/150?random=113' },
-    { name: '屏幕烧屏', category: '屏幕', sub_category: '老化问题', description: 'OLED屏幕出现永久性残影', difficulty_level: 4, estimated_time: 70, image_url: 'https://picsum.photos/200/150?random=114' },
-    
+    {
+      name: '屏幕完全碎裂',
+      category: '屏幕',
+      sub_category: '物理损坏',
+      description: '屏幕玻璃完全破碎，无法正常使用',
+      difficulty_level: 4,
+      estimated_time: 60,
+      image_url: 'https://picsum.photos/200/150?random=100',
+    },
+    {
+      name: '屏幕局部裂痕',
+      category: '屏幕',
+      sub_category: '物理损坏',
+      description: '屏幕表面有裂痕但功能正常',
+      difficulty_level: 3,
+      estimated_time: 45,
+      image_url: 'https://picsum.photos/200/150?random=101',
+    },
+    {
+      name: '屏幕黑屏',
+      category: '屏幕',
+      sub_category: '显示异常',
+      description: '屏幕完全无显示，背光正常',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=102',
+    },
+    {
+      name: '屏幕白屏',
+      category: '屏幕',
+      sub_category: '显示异常',
+      description: '屏幕显示纯白色无图像',
+      difficulty_level: 4,
+      estimated_time: 50,
+      image_url: 'https://picsum.photos/200/150?random=103',
+    },
+    {
+      name: '屏幕花屏',
+      category: '屏幕',
+      sub_category: '显示异常',
+      description: '屏幕显示彩色条纹或噪点',
+      difficulty_level: 4,
+      estimated_time: 60,
+      image_url: 'https://picsum.photos/200/150?random=104',
+    },
+    {
+      name: '屏幕闪烁',
+      category: '屏幕',
+      sub_category: '显示异常',
+      description: '屏幕间歇性闪烁或抖动',
+      difficulty_level: 3,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=105',
+    },
+    {
+      name: '触摸无响应',
+      category: '屏幕',
+      sub_category: '触控故障',
+      description: '触摸屏完全无法响应操作',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=106',
+    },
+    {
+      name: '触摸漂移',
+      category: '屏幕',
+      sub_category: '触控故障',
+      description: '触摸位置与实际点击位置不符',
+      difficulty_level: 3,
+      estimated_time: 45,
+      image_url: 'https://picsum.photos/200/150?random=107',
+    },
+    {
+      name: '多点触控失效',
+      category: '屏幕',
+      sub_category: '触控故障',
+      description: '无法进行多指手势操作',
+      difficulty_level: 3,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=108',
+    },
+    {
+      name: '屏幕亮度异常',
+      category: '屏幕',
+      sub_category: '背光问题',
+      description: '屏幕过暗或过亮无法调节',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=109',
+    },
+    {
+      name: '自动亮度失效',
+      category: '屏幕',
+      sub_category: '背光问题',
+      description: '自动亮度调节功能失效',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=110',
+    },
+    {
+      name: '屏幕漏光',
+      category: '屏幕',
+      sub_category: '显示质量',
+      description: '屏幕边缘有光线泄漏现象',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=111',
+    },
+    {
+      name: '色彩偏差',
+      category: '屏幕',
+      sub_category: '显示质量',
+      description: '屏幕色彩显示不准确',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=112',
+    },
+    {
+      name: '屏幕老化',
+      category: '屏幕',
+      sub_category: '老化问题',
+      description: '长期使用导致屏幕老化发黄',
+      difficulty_level: 2,
+      estimated_time: 50,
+      image_url: 'https://picsum.photos/200/150?random=113',
+    },
+    {
+      name: '屏幕烧屏',
+      category: '屏幕',
+      sub_category: '老化问题',
+      description: 'OLED屏幕出现永久性残影',
+      difficulty_level: 4,
+      estimated_time: 70,
+      image_url: 'https://picsum.photos/200/150?random=114',
+    },
+
     // 电池类 (12种)
-    { name: '电池鼓包', category: '电池', sub_category: '物理损坏', description: '电池内部膨胀变形', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=200' },
-    { name: '电池漏液', category: '电池', sub_category: '物理损坏', description: '电池电解液泄漏', difficulty_level: 4, estimated_time: 45, image_url: 'https://picsum.photos/200/150?random=201' },
-    { name: '续航严重下降', category: '电池', sub_category: '性能衰退', description: '电池容量大幅减少', difficulty_level: 1, estimated_time: 20, image_url: 'https://picsum.photos/200/150?random=202' },
-    { name: '待机耗电快', category: '电池', sub_category: '性能衰退', description: '待机状态下电量消耗过快', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=203' },
-    { name: '无法充电', category: '电池', sub_category: '充电故障', description: '完全无法进行充电', difficulty_level: 3, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=204' },
-    { name: '充电速度慢', category: '电池', sub_category: '充电故障', description: '充电速度明显变慢', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=205' },
-    { name: '充电自动断开', category: '电池', sub_category: '充电故障', description: '充电过程中频繁断开', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=206' },
-    { name: '充电发热严重', category: '电池', sub_category: '温度异常', description: '充电时设备异常发热', difficulty_level: 3, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=207' },
-    { name: '使用中发热', category: '电池', sub_category: '温度异常', description: '正常使用时设备过热', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=208' },
-    { name: '电池识别错误', category: '电池', sub_category: '系统问题', description: '系统无法正确识别电池', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=209' },
-    { name: '电池校准异常', category: '电池', sub_category: '系统问题', description: '电池电量显示不准确', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=210' },
-    { name: '无线充电失效', category: '电池', sub_category: '无线功能', description: '无线充电功能无法使用', difficulty_level: 3, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=211' },
-    
+    {
+      name: '电池鼓包',
+      category: '电池',
+      sub_category: '物理损坏',
+      description: '电池内部膨胀变形',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=200',
+    },
+    {
+      name: '电池漏液',
+      category: '电池',
+      sub_category: '物理损坏',
+      description: '电池电解液泄漏',
+      difficulty_level: 4,
+      estimated_time: 45,
+      image_url: 'https://picsum.photos/200/150?random=201',
+    },
+    {
+      name: '续航严重下降',
+      category: '电池',
+      sub_category: '性能衰退',
+      description: '电池容量大幅减少',
+      difficulty_level: 1,
+      estimated_time: 20,
+      image_url: 'https://picsum.photos/200/150?random=202',
+    },
+    {
+      name: '待机耗电快',
+      category: '电池',
+      sub_category: '性能衰退',
+      description: '待机状态下电量消耗过快',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=203',
+    },
+    {
+      name: '无法充电',
+      category: '电池',
+      sub_category: '充电故障',
+      description: '完全无法进行充电',
+      difficulty_level: 3,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=204',
+    },
+    {
+      name: '充电速度慢',
+      category: '电池',
+      sub_category: '充电故障',
+      description: '充电速度明显变慢',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=205',
+    },
+    {
+      name: '充电自动断开',
+      category: '电池',
+      sub_category: '充电故障',
+      description: '充电过程中频繁断开',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=206',
+    },
+    {
+      name: '充电发热严重',
+      category: '电池',
+      sub_category: '温度异常',
+      description: '充电时设备异常发热',
+      difficulty_level: 3,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=207',
+    },
+    {
+      name: '使用中发热',
+      category: '电池',
+      sub_category: '温度异常',
+      description: '正常使用时设备过热',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=208',
+    },
+    {
+      name: '电池识别错误',
+      category: '电池',
+      sub_category: '系统问题',
+      description: '系统无法正确识别电池',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=209',
+    },
+    {
+      name: '电池校准异常',
+      category: '电池',
+      sub_category: '系统问题',
+      description: '电池电量显示不准确',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=210',
+    },
+    {
+      name: '无线充电失效',
+      category: '电池',
+      sub_category: '无线功能',
+      description: '无线充电功能无法使用',
+      difficulty_level: 3,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=211',
+    },
+
     // 进水类 (8种)
-    { name: '轻微进水', category: '进水', sub_category: '轻度受损', description: '少量液体溅入设备', difficulty_level: 2, estimated_time: 120, image_url: 'https://picsum.photos/200/150?random=300' },
-    { name: '中度进水', category: '进水', sub_category: '中度受损', description: '较多液体渗入内部', difficulty_level: 3, estimated_time: 180, image_url: 'https://picsum.photos/200/150?random=301' },
-    { name: '严重进水', category: '进水', sub_category: '重度受损', description: '完全浸入液体中', difficulty_level: 4, estimated_time: 240, image_url: 'https://picsum.photos/200/150?random=302' },
-    { name: '进水后无法开机', category: '进水', sub_category: '系统故障', description: '进水导致设备无法启动', difficulty_level: 4, estimated_time: 200, image_url: 'https://picsum.photos/200/150?random=303' },
-    { name: '进水后按键失灵', category: '进水', sub_category: '按键故障', description: '进水造成按键无法使用', difficulty_level: 3, estimated_time: 90, image_url: 'https://picsum.photos/200/150?random=304' },
-    { name: '进水后充电异常', category: '进水', sub_category: '充电故障', description: '进水影响充电功能', difficulty_level: 3, estimated_time: 120, image_url: 'https://picsum.photos/200/150?random=305' },
-    { name: '进水后屏幕异常', category: '进水', sub_category: '显示故障', description: '进水导致屏幕显示问题', difficulty_level: 4, estimated_time: 150, image_url: 'https://picsum.photos/200/150?random=306' },
-    { name: '进水后扬声器无声', category: '进水', sub_category: '音频故障', description: '进水造成音频组件损坏', difficulty_level: 3, estimated_time: 100, image_url: 'https://picsum.photos/200/150?random=307' },
-    
+    {
+      name: '轻微进水',
+      category: '进水',
+      sub_category: '轻度受损',
+      description: '少量液体溅入设备',
+      difficulty_level: 2,
+      estimated_time: 120,
+      image_url: 'https://picsum.photos/200/150?random=300',
+    },
+    {
+      name: '中度进水',
+      category: '进水',
+      sub_category: '中度受损',
+      description: '较多液体渗入内部',
+      difficulty_level: 3,
+      estimated_time: 180,
+      image_url: 'https://picsum.photos/200/150?random=301',
+    },
+    {
+      name: '严重进水',
+      category: '进水',
+      sub_category: '重度受损',
+      description: '完全浸入液体中',
+      difficulty_level: 4,
+      estimated_time: 240,
+      image_url: 'https://picsum.photos/200/150?random=302',
+    },
+    {
+      name: '进水后无法开机',
+      category: '进水',
+      sub_category: '系统故障',
+      description: '进水导致设备无法启动',
+      difficulty_level: 4,
+      estimated_time: 200,
+      image_url: 'https://picsum.photos/200/150?random=303',
+    },
+    {
+      name: '进水后按键失灵',
+      category: '进水',
+      sub_category: '按键故障',
+      description: '进水造成按键无法使用',
+      difficulty_level: 3,
+      estimated_time: 90,
+      image_url: 'https://picsum.photos/200/150?random=304',
+    },
+    {
+      name: '进水后充电异常',
+      category: '进水',
+      sub_category: '充电故障',
+      description: '进水影响充电功能',
+      difficulty_level: 3,
+      estimated_time: 120,
+      image_url: 'https://picsum.photos/200/150?random=305',
+    },
+    {
+      name: '进水后屏幕异常',
+      category: '进水',
+      sub_category: '显示故障',
+      description: '进水导致屏幕显示问题',
+      difficulty_level: 4,
+      estimated_time: 150,
+      image_url: 'https://picsum.photos/200/150?random=306',
+    },
+    {
+      name: '进水后扬声器无声',
+      category: '进水',
+      sub_category: '音频故障',
+      description: '进水造成音频组件损坏',
+      difficulty_level: 3,
+      estimated_time: 100,
+      image_url: 'https://picsum.photos/200/150?random=307',
+    },
+
     // 摄像头类 (10种)
-    { name: '摄像头无法启动', category: '摄像头', sub_category: '启动故障', description: '相机应用无法打开', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=400' },
-    { name: '拍照模糊', category: '摄像头', sub_category: '成像问题', description: '拍摄照片模糊不清', difficulty_level: 3, estimated_time: 50, image_url: 'https://picsum.photos/200/150?random=401' },
-    { name: '照片有色差', category: '摄像头', sub_category: '成像问题', description: '照片颜色显示异常', difficulty_level: 3, estimated_time: 45, image_url: 'https://picsum.photos/200/150?random=402' },
-    { name: '夜间拍照噪点多', category: '摄像头', sub_category: '成像问题', description: '弱光环境下噪点过多', difficulty_level: 3, estimated_time: 55, image_url: 'https://picsum.photos/200/150?random=403' },
-    { name: '闪光灯不亮', category: '摄像头', sub_category: '闪光灯故障', description: '闪光灯无法正常工作', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=404' },
-    { name: '前置摄像头黑屏', category: '摄像头', sub_category: '显示故障', description: '前置摄像头无画面显示', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=405' },
-    { name: '后置摄像头失焦', category: '摄像头', sub_category: '对焦问题', description: '后置摄像头无法正确对焦', difficulty_level: 4, estimated_time: 60, image_url: 'https://picsum.photos/200/150?random=406' },
-    { name: '摄像头有划痕', category: '摄像头', sub_category: '物理损伤', description: '摄像头镜片表面有划痕', difficulty_level: 1, estimated_time: 20, image_url: 'https://picsum.photos/200/150?random=407' },
-    { name: '摄像头进灰尘', category: '摄像头', sub_category: '污染问题', description: '摄像头内部进入灰尘', difficulty_level: 3, estimated_time: 45, image_url: 'https://picsum.photos/200/150?random=408' },
-    { name: '视频录制异常', category: '摄像头', sub_category: '录像问题', description: '视频录制功能异常', difficulty_level: 3, estimated_time: 50, image_url: 'https://picsum.photos/200/150?random=409' },
-    
+    {
+      name: '摄像头无法启动',
+      category: '摄像头',
+      sub_category: '启动故障',
+      description: '相机应用无法打开',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=400',
+    },
+    {
+      name: '拍照模糊',
+      category: '摄像头',
+      sub_category: '成像问题',
+      description: '拍摄照片模糊不清',
+      difficulty_level: 3,
+      estimated_time: 50,
+      image_url: 'https://picsum.photos/200/150?random=401',
+    },
+    {
+      name: '照片有色差',
+      category: '摄像头',
+      sub_category: '成像问题',
+      description: '照片颜色显示异常',
+      difficulty_level: 3,
+      estimated_time: 45,
+      image_url: 'https://picsum.photos/200/150?random=402',
+    },
+    {
+      name: '夜间拍照噪点多',
+      category: '摄像头',
+      sub_category: '成像问题',
+      description: '弱光环境下噪点过多',
+      difficulty_level: 3,
+      estimated_time: 55,
+      image_url: 'https://picsum.photos/200/150?random=403',
+    },
+    {
+      name: '闪光灯不亮',
+      category: '摄像头',
+      sub_category: '闪光灯故障',
+      description: '闪光灯无法正常工作',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=404',
+    },
+    {
+      name: '前置摄像头黑屏',
+      category: '摄像头',
+      sub_category: '显示故障',
+      description: '前置摄像头无画面显示',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=405',
+    },
+    {
+      name: '后置摄像头失焦',
+      category: '摄像头',
+      sub_category: '对焦问题',
+      description: '后置摄像头无法正确对焦',
+      difficulty_level: 4,
+      estimated_time: 60,
+      image_url: 'https://picsum.photos/200/150?random=406',
+    },
+    {
+      name: '摄像头有划痕',
+      category: '摄像头',
+      sub_category: '物理损伤',
+      description: '摄像头镜片表面有划痕',
+      difficulty_level: 1,
+      estimated_time: 20,
+      image_url: 'https://picsum.photos/200/150?random=407',
+    },
+    {
+      name: '摄像头进灰尘',
+      category: '摄像头',
+      sub_category: '污染问题',
+      description: '摄像头内部进入灰尘',
+      difficulty_level: 3,
+      estimated_time: 45,
+      image_url: 'https://picsum.photos/200/150?random=408',
+    },
+    {
+      name: '视频录制异常',
+      category: '摄像头',
+      sub_category: '录像问题',
+      description: '视频录制功能异常',
+      difficulty_level: 3,
+      estimated_time: 50,
+      image_url: 'https://picsum.photos/200/150?random=409',
+    },
+
     // 音频类 (8种)
-    { name: '外放无声', category: '音频', sub_category: '扬声器故障', description: '外放声音完全消失', difficulty_level: 2, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=500' },
-    { name: '外放声音小', category: '音频', sub_category: '扬声器故障', description: '外放音量明显偏小', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=501' },
-    { name: '听筒无声', category: '音频', sub_category: '听筒故障', description: '通话时听不到对方声音', difficulty_level: 3, estimated_time: 45, image_url: 'https://picsum.photos/200/150?random=502' },
-    { name: '听筒声音小', category: '音频', sub_category: '听筒故障', description: '听筒音量过小', difficulty_level: 2, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=503' },
-    { name: '麦克风无声', category: '音频', sub_category: '录音故障', description: '对方听不到你的声音', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=504' },
-    { name: '录音有杂音', category: '音频', sub_category: '录音故障', description: '录音时有背景噪音', difficulty_level: 3, estimated_time: 50, image_url: 'https://picsum.photos/200/150?random=505' },
-    { name: '耳机插孔松动', category: '音频', sub_category: '接口问题', description: '耳机插孔接触不良', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=506' },
-    { name: '蓝牙音频连接失败', category: '音频', sub_category: '蓝牙问题', description: '蓝牙音频设备连接异常', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=507' },
-    
+    {
+      name: '外放无声',
+      category: '音频',
+      sub_category: '扬声器故障',
+      description: '外放声音完全消失',
+      difficulty_level: 2,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=500',
+    },
+    {
+      name: '外放声音小',
+      category: '音频',
+      sub_category: '扬声器故障',
+      description: '外放音量明显偏小',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=501',
+    },
+    {
+      name: '听筒无声',
+      category: '音频',
+      sub_category: '听筒故障',
+      description: '通话时听不到对方声音',
+      difficulty_level: 3,
+      estimated_time: 45,
+      image_url: 'https://picsum.photos/200/150?random=502',
+    },
+    {
+      name: '听筒声音小',
+      category: '音频',
+      sub_category: '听筒故障',
+      description: '听筒音量过小',
+      difficulty_level: 2,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=503',
+    },
+    {
+      name: '麦克风无声',
+      category: '音频',
+      sub_category: '录音故障',
+      description: '对方听不到你的声音',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=504',
+    },
+    {
+      name: '录音有杂音',
+      category: '音频',
+      sub_category: '录音故障',
+      description: '录音时有背景噪音',
+      difficulty_level: 3,
+      estimated_time: 50,
+      image_url: 'https://picsum.photos/200/150?random=505',
+    },
+    {
+      name: '耳机插孔松动',
+      category: '音频',
+      sub_category: '接口问题',
+      description: '耳机插孔接触不良',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=506',
+    },
+    {
+      name: '蓝牙音频连接失败',
+      category: '音频',
+      sub_category: '蓝牙问题',
+      description: '蓝牙音频设备连接异常',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=507',
+    },
+
     // 网络类 (5种)
-    { name: 'WiFi连接不稳定', category: '网络', sub_category: 'WiFi问题', description: 'WiFi信号经常断开', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=600' },
-    { name: '无法搜索到WiFi', category: '网络', sub_category: 'WiFi问题', description: '无法发现可用WiFi网络', difficulty_level: 3, estimated_time: 40, image_url: 'https://picsum.photos/200/150?random=601' },
-    { name: '移动网络无信号', category: '网络', sub_category: '蜂窝网络', description: 'SIM卡无信号显示', difficulty_level: 3, estimated_time: 45, image_url: 'https://picsum.photos/200/150?random=602' },
-    { name: '蓝牙配对失败', category: '网络', sub_category: '蓝牙问题', description: '蓝牙设备配对不成功', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=603' },
-    { name: 'NFC功能失效', category: '网络', sub_category: '近场通信', description: 'NFC支付等功能无法使用', difficulty_level: 2, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=604' },
-    
+    {
+      name: 'WiFi连接不稳定',
+      category: '网络',
+      sub_category: 'WiFi问题',
+      description: 'WiFi信号经常断开',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=600',
+    },
+    {
+      name: '无法搜索到WiFi',
+      category: '网络',
+      sub_category: 'WiFi问题',
+      description: '无法发现可用WiFi网络',
+      difficulty_level: 3,
+      estimated_time: 40,
+      image_url: 'https://picsum.photos/200/150?random=601',
+    },
+    {
+      name: '移动网络无信号',
+      category: '网络',
+      sub_category: '蜂窝网络',
+      description: 'SIM卡无信号显示',
+      difficulty_level: 3,
+      estimated_time: 45,
+      image_url: 'https://picsum.photos/200/150?random=602',
+    },
+    {
+      name: '蓝牙配对失败',
+      category: '网络',
+      sub_category: '蓝牙问题',
+      description: '蓝牙设备配对不成功',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=603',
+    },
+    {
+      name: 'NFC功能失效',
+      category: '网络',
+      sub_category: '近场通信',
+      description: 'NFC支付等功能无法使用',
+      difficulty_level: 2,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=604',
+    },
+
     // 按键类 (5种)
-    { name: '电源键卡死', category: '按键', sub_category: '物理按键', description: '电源键无法正常按下或弹起', difficulty_level: 2, estimated_time: 20, image_url: 'https://picsum.photos/200/150?random=700' },
-    { name: '音量键失灵', category: '按键', sub_category: '物理按键', description: '音量调节按键无反应', difficulty_level: 2, estimated_time: 25, image_url: 'https://picsum.photos/200/150?random=701' },
-    { name: 'Home键无响应', category: '按键', sub_category: '导航按键', description: 'Home键点击无效果', difficulty_level: 3, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=702' },
-    { name: '指纹识别失效', category: '按键', sub_category: '生物识别', description: '指纹解锁功能无法使用', difficulty_level: 3, estimated_time: 35, image_url: 'https://picsum.photos/200/150?random=703' },
-    { name: '面部识别失败', category: '按键', sub_category: '生物识别', description: '面部解锁功能异常', difficulty_level: 3, estimated_time: 30, image_url: 'https://picsum.photos/200/150?random=704' }
+    {
+      name: '电源键卡死',
+      category: '按键',
+      sub_category: '物理按键',
+      description: '电源键无法正常按下或弹起',
+      difficulty_level: 2,
+      estimated_time: 20,
+      image_url: 'https://picsum.photos/200/150?random=700',
+    },
+    {
+      name: '音量键失灵',
+      category: '按键',
+      sub_category: '物理按键',
+      description: '音量调节按键无反应',
+      difficulty_level: 2,
+      estimated_time: 25,
+      image_url: 'https://picsum.photos/200/150?random=701',
+    },
+    {
+      name: 'Home键无响应',
+      category: '按键',
+      sub_category: '导航按键',
+      description: 'Home键点击无效果',
+      difficulty_level: 3,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=702',
+    },
+    {
+      name: '指纹识别失效',
+      category: '按键',
+      sub_category: '生物识别',
+      description: '指纹解锁功能无法使用',
+      difficulty_level: 3,
+      estimated_time: 35,
+      image_url: 'https://picsum.photos/200/150?random=703',
+    },
+    {
+      name: '面部识别失败',
+      category: '按键',
+      sub_category: '生物识别',
+      description: '面部解锁功能异常',
+      difficulty_level: 3,
+      estimated_time: 30,
+      image_url: 'https://picsum.photos/200/150?random=704',
+    },
   ];
 
   let successCount = 0;
@@ -511,9 +1272,9 @@ async function seedFaultTypes(supabaseUrl, headers) {
       const response = await fetch(`${supabaseUrl}/rest/v1/fault_types`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify(fault)
+        body: JSON.stringify(fault),
       });
-      
+
       if (response.status === 201 || response.status === 409) {
         successCount++;
       }
@@ -521,24 +1282,27 @@ async function seedFaultTypes(supabaseUrl, headers) {
       // 忽略错误
     }
   }
-  
-  console.log(`✅ 故障类型数据填充完成 (${successCount}/${faultTypes.length} 种)`);
+
+  console.log(
+    `✅ 故障类型数据填充完成 (${successCount}/${faultTypes.length} 种)`
+  );
 }
 
 // 填充热点链接池数据 (30+条)
 async function seedHotLinks(supabaseUrl, headers) {
   console.log('\n🔗 填充热点链接池数据...');
-  
+
   const hotLinks = [
     // 维修教程类
     {
       url: 'https://www.zhihu.com/question/445678901',
       title: 'iPhone 14 Pro屏幕更换完整教程',
-      description: '从拆机到安装的详细iPhone屏幕维修指南，包含工具准备和注意事项',
+      description:
+        '从拆机到安装的详细iPhone屏幕维修指南，包含工具准备和注意事项',
       source: '知乎',
       category: '维修教程',
       sub_category: '屏幕维修',
-      image_url: 'https://picsum.photos/400/200?random=800'
+      image_url: 'https://picsum.photos/400/200?random=800',
     },
     {
       url: 'https://www.zhihu.com/question/556789012',
@@ -547,7 +1311,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '知乎',
       category: '维修教程',
       sub_category: '电池维修',
-      image_url: 'https://picsum.photos/400/200?random=801'
+      image_url: 'https://picsum.photos/400/200?random=801',
     },
     {
       url: 'https://www.bilibili.com/video/BV1A24y1r7K8',
@@ -556,7 +1320,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '哔哩哔哩',
       category: '视频教程',
       sub_category: '拆机教学',
-      image_url: 'https://picsum.photos/400/200?random=802'
+      image_url: 'https://picsum.photos/400/200?random=802',
     },
     {
       url: 'https://www.bilibili.com/video/BV1B34y1r8M9',
@@ -565,7 +1329,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '哔哩哔哩',
       category: '视频教程',
       sub_category: '应急处理',
-      image_url: 'https://picsum.photos/400/200?random=803'
+      image_url: 'https://picsum.photos/400/200?random=803',
     },
     {
       url: 'https://jingyan.baidu.com/article/abcdef123456',
@@ -574,7 +1338,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '百度经验',
       category: '技术分析',
       sub_category: '系统优化',
-      image_url: 'https://picsum.photos/400/200?random=804'
+      image_url: 'https://picsum.photos/400/200?random=804',
     },
     {
       url: 'https://jingyan.baidu.com/article/123456abcdef',
@@ -583,9 +1347,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '百度经验',
       category: '检测指南',
       sub_category: '电池检测',
-      image_url: 'https://picsum.photos/400/200?random=805'
+      image_url: 'https://picsum.photos/400/200?random=805',
     },
-    
+
     // 技术文档类
     {
       url: 'https://www.ifixit.com/Guide/iPhone+15+Pro+Screen+Replacement/157342',
@@ -594,7 +1358,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'iFixit',
       category: '官方指南',
       sub_category: '屏幕维修',
-      image_url: 'https://picsum.photos/400/200?random=806'
+      image_url: 'https://picsum.photos/400/200?random=806',
     },
     {
       url: 'https://www.ifixit.com/Guide/Huawei+Mate+60+Battery+Replacement/158432',
@@ -603,7 +1367,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'iFixit',
       category: '官方指南',
       sub_category: '电池维修',
-      image_url: 'https://picsum.photos/400/200?random=807'
+      image_url: 'https://picsum.photos/400/200?random=807',
     },
     {
       url: 'https://www.xda-developers.com/android-phone-repair-guide/',
@@ -612,7 +1376,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'XDA Developers',
       category: '技术文档',
       sub_category: '综合维修',
-      image_url: 'https://picsum.photos/400/200?random=808'
+      image_url: 'https://picsum.photos/400/200?random=808',
     },
     {
       url: 'https://developer.android.com/guide/topics/manufacture/repair',
@@ -621,9 +1385,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'Android Developers',
       category: '官方文档',
       sub_category: '技术规范',
-      image_url: 'https://picsum.photos/400/200?random=809'
+      image_url: 'https://picsum.photos/400/200?random=809',
     },
-    
+
     // 工具推荐类
     {
       url: 'https://www.smzdm.com/p/123456789',
@@ -632,7 +1396,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '什么值得买',
       category: '工具推荐',
       sub_category: '工具选购',
-      image_url: 'https://picsum.photos/400/200?random=810'
+      image_url: 'https://picsum.photos/400/200?random=810',
     },
     {
       url: 'https://www.smzdm.com/p/987654321',
@@ -641,7 +1405,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '什么值得买',
       category: '工具推荐',
       sub_category: '套装评测',
-      image_url: 'https://picsum.photos/400/200?random=811'
+      image_url: 'https://picsum.photos/400/200?random=811',
     },
     {
       url: 'https://detail.tmall.com/item.htm?id=123456789',
@@ -650,7 +1414,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '天猫',
       category: '商品推荐',
       sub_category: '螺丝刀',
-      image_url: 'https://picsum.photos/400/200?random=812'
+      image_url: 'https://picsum.photos/400/200?random=812',
     },
     {
       url: 'https://item.jd.com/987654321.html',
@@ -659,9 +1423,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '京东',
       category: '商品推荐',
       sub_category: '拆机工具',
-      image_url: 'https://picsum.photos/400/200?random=813'
+      image_url: 'https://picsum.photos/400/200?random=813',
     },
-    
+
     // 店铺推荐类
     {
       url: 'https://www.dianping.com/shop/123456789',
@@ -670,7 +1434,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '大众点评',
       category: '店铺推荐',
       sub_category: '维修街区',
-      image_url: 'https://picsum.photos/400/200?random=814'
+      image_url: 'https://picsum.photos/400/200?random=814',
     },
     {
       url: 'https://www.dianping.com/shop/987654321',
@@ -679,9 +1443,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '大众点评',
       category: '店铺推荐',
       sub_category: '商业区',
-      image_url: 'https://picsum.photos/400/200?random=815'
+      image_url: 'https://picsum.photos/400/200?random=815',
     },
-    
+
     // 新闻资讯类
     {
       url: 'https://tech.sina.com.cn/mobile/n/c/2024-01-15/doc-imxxxxxxx.shtml',
@@ -690,7 +1454,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '新浪科技',
       category: '行业资讯',
       sub_category: '市场分析',
-      image_url: 'https://picsum.photos/400/200?random=816'
+      image_url: 'https://picsum.photos/400/200?random=816',
     },
     {
       url: 'https://www.ithome.com/0/754/123.htm',
@@ -699,7 +1463,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'IT之家',
       category: '厂商动态',
       sub_category: '政策更新',
-      image_url: 'https://picsum.photos/400/200?random=817'
+      image_url: 'https://picsum.photos/400/200?random=817',
     },
     {
       url: 'https://www.ccidnet.com/news/123456789',
@@ -708,9 +1472,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '赛迪网',
       category: '技术前沿',
       sub_category: '国产创新',
-      image_url: 'https://picsum.photos/400/200?random=818'
+      image_url: 'https://picsum.photos/400/200?random=818',
     },
-    
+
     // DIY经验类
     {
       url: 'https://tieba.baidu.com/p/1234567890',
@@ -719,7 +1483,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '百度贴吧',
       category: '用户分享',
       sub_category: '省钱经验',
-      image_url: 'https://picsum.photos/400/200?random=819'
+      image_url: 'https://picsum.photos/400/200?random=819',
     },
     {
       url: 'https://tieba.baidu.com/p/0987654321',
@@ -728,18 +1492,19 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '百度贴吧',
       category: '问题讨论',
       sub_category: '降频问题',
-      image_url: 'https://picsum.photos/400/200?random=820'
+      image_url: 'https://picsum.photos/400/200?random=820',
     },
-    
+
     // 视频平台原创
     {
       url: 'https://www.youtube.com/watch?v=123456789abc',
       title: 'Professional Phone Repair Tools Review 2024',
-      description: 'Comprehensive review of professional mobile repair tools and equipment',
+      description:
+        'Comprehensive review of professional mobile repair tools and equipment',
       source: 'YouTube',
       category: '海外教程',
       sub_category: '工具评测',
-      image_url: 'https://picsum.photos/400/200?random=821'
+      image_url: 'https://picsum.photos/400/200?random=821',
     },
     {
       url: 'https://www.youtube.com/watch?v=zyxwvu98765',
@@ -748,9 +1513,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'YouTube',
       category: '海外教程',
       sub_category: '进水处理',
-      image_url: 'https://picsum.photos/400/200?random=822'
+      image_url: 'https://picsum.photos/400/200?random=822',
     },
-    
+
     // 技术博客
     {
       url: 'https://sspai.com/post/123456',
@@ -759,7 +1524,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '少数派',
       category: '技术博客',
       sub_category: '安全防护',
-      image_url: 'https://picsum.photos/400/200?random=823'
+      image_url: 'https://picsum.photos/400/200?random=823',
     },
     {
       url: 'https://sspai.com/post/789012',
@@ -768,9 +1533,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '少数派',
       category: '技术博客',
       sub_category: '经营指导',
-      image_url: 'https://picsum.photos/400/200?random=824'
+      image_url: 'https://picsum.photos/400/200?random=824',
     },
-    
+
     // 社区精华
     {
       url: 'https://www.chiphell.com/thread-1234567-1-1.html',
@@ -779,7 +1544,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'Chiphell',
       category: '技术社区',
       sub_category: '芯片维修',
-      image_url: 'https://picsum.photos/400/200?random=825'
+      image_url: 'https://picsum.photos/400/200?random=825',
     },
     {
       url: 'https://www.chiphell.com/thread-7654321-1-1.html',
@@ -788,9 +1553,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'Chiphell',
       category: '技术社区',
       sub_category: '设备选购',
-      image_url: 'https://picsum.photos/400/200?random=826'
+      image_url: 'https://picsum.photos/400/200?random=826',
     },
-    
+
     // 官方支持
     {
       url: 'https://support.apple.com/zh-cn/HT201412',
@@ -799,7 +1564,7 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: 'Apple Support',
       category: '官方支持',
       sub_category: '电池服务',
-      image_url: 'https://picsum.photos/400/200?random=827'
+      image_url: 'https://picsum.photos/400/200?random=827',
     },
     {
       url: 'https://consumer.huawei.com/cn/support/content/zh-cn/12345678/',
@@ -808,9 +1573,9 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '华为消费者服务',
       category: '官方支持',
       sub_category: '保修政策',
-      image_url: 'https://picsum.photos/400/200?random=828'
+      image_url: 'https://picsum.photos/400/200?random=828',
     },
-    
+
     // 行业报告
     {
       url: 'https://www.ccidconsulting.com/report/12345',
@@ -819,8 +1584,8 @@ async function seedHotLinks(supabaseUrl, headers) {
       source: '赛迪顾问',
       category: '行业报告',
       sub_category: '市场研究',
-      image_url: 'https://picsum.photos/400/200?random=829'
-    }
+      image_url: 'https://picsum.photos/400/200?random=829',
+    },
   ];
 
   let successCount = 0;
@@ -829,39 +1594,44 @@ async function seedHotLinks(supabaseUrl, headers) {
       const response = await fetch(`${supabaseUrl}/rest/v1/hot_links`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify(link)
+        body: JSON.stringify(link),
       });
-      
+
       if (response.status === 201 || response.status === 409) {
         successCount++;
       } else if (response.status === 409) {
         // 更新已有记录
-        await fetch(`${supabaseUrl}/rest/v1/hot_links?url=eq.${encodeURIComponent(link.url)}`, {
-          method: 'PATCH',
-          headers: headers,
-          body: JSON.stringify({
-            title: link.title,
-            description: link.description,
-            source: link.source,
-            category: link.category,
-            sub_category: link.sub_category,
-            image_url: link.image_url
-          })
-        });
+        await fetch(
+          `${supabaseUrl}/rest/v1/hot_links?url=eq.${encodeURIComponent(link.url)}`,
+          {
+            method: 'PATCH',
+            headers: headers,
+            body: JSON.stringify({
+              title: link.title,
+              description: link.description,
+              source: link.source,
+              category: link.category,
+              sub_category: link.sub_category,
+              image_url: link.image_url,
+            }),
+          }
+        );
         successCount++;
       }
     } catch (err) {
       // 忽略错误
     }
   }
-  
-  console.log(`✅ 热点链接池数据填充完成 (${successCount}/${hotLinks.length} 条)`);
+
+  console.log(
+    `✅ 热点链接池数据填充完成 (${successCount}/${hotLinks.length} 条)`
+  );
 }
 
 // 填充维修店铺数据 (30+家)
 async function seedRepairShops(supabaseUrl, headers) {
   console.log('\n🏪 填充维修店铺数据...');
-  
+
   // 生成店铺slug的辅助函数
   function generateSlug(name) {
     return name
@@ -870,7 +1640,7 @@ async function seedRepairShops(supabaseUrl, headers) {
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   }
-  
+
   const repairShops = [
     // 一线城市官方授权店
     {
@@ -887,13 +1657,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=900',
       cover_image_url: 'https://picsum.photos/600/300?random=901',
       business_license: '91110105MA01XXXXXX',
-      services: JSON.stringify(['iPhone维修', 'iPad维修', 'Mac维修', 'Apple Watch维修', '数据恢复', '系统升级']),
-      specialties: JSON.stringify(['原厂配件', '官方认证', '快速维修', '预约服务']),
+      services: JSON.stringify([
+        'iPhone维修',
+        'iPad维修',
+        'Mac维修',
+        'Apple Watch维修',
+        '数据恢复',
+        '系统升级',
+      ]),
+      specialties: JSON.stringify([
+        '原厂配件',
+        '官方认证',
+        '快速维修',
+        '预约服务',
+      ]),
       rating: 4.8,
       review_count: 1256,
       service_count: 25,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
     {
       name: '华为授权服务中心(上海陆家嘴店)',
@@ -909,13 +1691,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=902',
       cover_image_url: 'https://picsum.photos/600/300?random=903',
       business_license: '91310115MA02XXXXXX',
-      services: JSON.stringify(['华为手机维修', '平板维修', '笔记本维修', '配件更换', '系统优化', '数据迁移']),
-      specialties: JSON.stringify(['HarmonyOS优化', '多屏协同', '快修服务', '上门取送']),
+      services: JSON.stringify([
+        '华为手机维修',
+        '平板维修',
+        '笔记本维修',
+        '配件更换',
+        '系统优化',
+        '数据迁移',
+      ]),
+      specialties: JSON.stringify([
+        'HarmonyOS优化',
+        '多屏协同',
+        '快修服务',
+        '上门取送',
+      ]),
       rating: 4.6,
       review_count: 892,
       service_count: 22,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
     {
       name: '小米之家维修服务站(广州天河店)',
@@ -931,13 +1725,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=904',
       cover_image_url: 'https://picsum.photos/600/300?random=905',
       business_license: '91440101MA03XXXXXX',
-      services: JSON.stringify(['小米手机维修', '智能家居维修', '电池更换', '屏幕修复', '系统刷机', '配件销售']),
-      specialties: JSON.stringify(['MIUI优化', '智能家居联动', '性价比维修', '学生优惠']),
+      services: JSON.stringify([
+        '小米手机维修',
+        '智能家居维修',
+        '电池更换',
+        '屏幕修复',
+        '系统刷机',
+        '配件销售',
+      ]),
+      specialties: JSON.stringify([
+        'MIUI优化',
+        '智能家居联动',
+        '性价比维修',
+        '学生优惠',
+      ]),
       rating: 4.5,
       review_count: 634,
       service_count: 18,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
     {
       name: '三星官方服务中心(深圳南山店)',
@@ -953,15 +1759,27 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=906',
       cover_image_url: 'https://picsum.photos/600/300?random=907',
       business_license: '91440300MA04XXXXXX',
-      services: JSON.stringify(['三星手机维修', '平板维修', '手表维修', '快速检测', '系统升级', '数据备份']),
-      specialties: JSON.stringify(['AMOLED屏幕', 'One UI优化', '快修服务', '企业客户']),
+      services: JSON.stringify([
+        '三星手机维修',
+        '平板维修',
+        '手表维修',
+        '快速检测',
+        '系统升级',
+        '数据备份',
+      ]),
+      specialties: JSON.stringify([
+        'AMOLED屏幕',
+        'One UI优化',
+        '快修服务',
+        '企业客户',
+      ]),
       rating: 4.7,
       review_count: 756,
       service_count: 20,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 新一线城市授权店
     {
       name: 'OPPO官方售后服务点(杭州西湖店)',
@@ -977,13 +1795,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=908',
       cover_image_url: 'https://picsum.photos/600/300?random=909',
       business_license: '91330101MA05XXXXXX',
-      services: JSON.stringify(['OPPO手机维修', '配件销售', '软件升级', '清洁保养', '贴膜服务', '回收置换']),
-      specialties: JSON.stringify(['ColorOS优化', 'VOOC闪充', '拍照优化', '青年用户']),
+      services: JSON.stringify([
+        'OPPO手机维修',
+        '配件销售',
+        '软件升级',
+        '清洁保养',
+        '贴膜服务',
+        '回收置换',
+      ]),
+      specialties: JSON.stringify([
+        'ColorOS优化',
+        'VOOC闪充',
+        '拍照优化',
+        '青年用户',
+      ]),
       rating: 4.4,
       review_count: 423,
       service_count: 16,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
     {
       name: 'vivo官方客户服务中心(成都高新区店)',
@@ -999,13 +1829,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=910',
       cover_image_url: 'https://picsum.photos/600/300?random=911',
       business_license: '91510101MA06XXXXXX',
-      services: JSON.stringify(['vivo手机维修', '系统优化', '外观修复', '技术支持', '配件更换', '延保服务']),
-      specialties: JSON.stringify(['OriginOS优化', '拍照算法', '游戏优化', '西南地区']),
+      services: JSON.stringify([
+        'vivo手机维修',
+        '系统优化',
+        '外观修复',
+        '技术支持',
+        '配件更换',
+        '延保服务',
+      ]),
+      specialties: JSON.stringify([
+        'OriginOS优化',
+        '拍照算法',
+        '游戏优化',
+        '西南地区',
+      ]),
       rating: 4.3,
       review_count: 389,
       service_count: 15,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
     {
       name: '一加授权维修中心(南京鼓楼店)',
@@ -1021,13 +1863,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=912',
       cover_image_url: 'https://picsum.photos/600/300?random=913',
       business_license: '91320101MA07XXXXXX',
-      services: JSON.stringify(['一加手机维修', '高端定制', '性能调优', '专业检测', '系统刷机', '配件升级']),
-      specialties: JSON.stringify(['氢OS优化', '性能调校', '极客服务', '发烧友专属']),
+      services: JSON.stringify([
+        '一加手机维修',
+        '高端定制',
+        '性能调优',
+        '专业检测',
+        '系统刷机',
+        '配件升级',
+      ]),
+      specialties: JSON.stringify([
+        '氢OS优化',
+        '性能调校',
+        '极客服务',
+        '发烧友专属',
+      ]),
       rating: 4.6,
       review_count: 298,
       service_count: 14,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
     {
       name: '魅族官方服务中心(武汉江汉店)',
@@ -1043,15 +1897,27 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=914',
       cover_image_url: 'https://picsum.photos/600/300?random=915',
       business_license: '91420101MA08XXXXXX',
-      services: JSON.stringify(['魅族手机维修', 'Flyme系统', '硬件升级', '售后咨询', '配件销售', '以旧换新']),
-      specialties: JSON.stringify(['Flyme优化', 'mBack体验', '文艺青年', '个性化定制']),
+      services: JSON.stringify([
+        '魅族手机维修',
+        'Flyme系统',
+        '硬件升级',
+        '售后咨询',
+        '配件销售',
+        '以旧换新',
+      ]),
+      specialties: JSON.stringify([
+        'Flyme优化',
+        'mBack体验',
+        '文艺青年',
+        '个性化定制',
+      ]),
       rating: 4.2,
       review_count: 267,
       service_count: 13,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 二线城市重点店
     {
       name: '荣耀官方授权店(西安雁塔店)',
@@ -1063,17 +1929,29 @@ async function seedRepairShops(supabaseUrl, headers) {
       province: '陕西省',
       postal_code: '710075',
       latitude: 34.2237,
-      longitude: 108.9480,
+      longitude: 108.948,
       logo_url: 'https://picsum.photos/200/200?random=916',
       cover_image_url: 'https://picsum.photos/600/300?random=917',
       business_license: '91610101MA09XXXXXX',
-      services: JSON.stringify(['荣耀手机维修', '智慧生活', '快修服务', '配件供应', '系统升级', '数据迁移']),
-      specialties: JSON.stringify(['Magic UI优化', '智慧分屏', '高校服务', '西北地区']),
+      services: JSON.stringify([
+        '荣耀手机维修',
+        '智慧生活',
+        '快修服务',
+        '配件供应',
+        '系统升级',
+        '数据迁移',
+      ]),
+      specialties: JSON.stringify([
+        'Magic UI优化',
+        '智慧分屏',
+        '高校服务',
+        '西北地区',
+      ]),
       rating: 4.5,
       review_count: 345,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
     {
       name: '真我realme服务中心(重庆渝中店)',
@@ -1089,15 +1967,27 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=918',
       cover_image_url: 'https://picsum.photos/600/300?random=919',
       business_license: '91500101MA10XXXXXX',
-      services: JSON.stringify(['realme手机维修', '年轻化服务', '潮流设计', '快速响应', '配件更换', '系统优化']),
-      specialties: JSON.stringify(['realme UI优化', '性能释放', '潮玩文化', '年轻用户']),
+      services: JSON.stringify([
+        'realme手机维修',
+        '年轻化服务',
+        '潮流设计',
+        '快速响应',
+        '配件更换',
+        '系统优化',
+      ]),
+      specialties: JSON.stringify([
+        'realme UI优化',
+        '性能释放',
+        '潮玩文化',
+        '年轻用户',
+      ]),
       rating: 4.1,
       review_count: 189,
       service_count: 12,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 第三方连锁品牌
     {
       name: '百邦手机维修连锁(北京中关村旗舰店)',
@@ -1113,13 +2003,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=920',
       cover_image_url: 'https://picsum.photos/600/300?random=921',
       business_license: '91110108MA11XXXXXX',
-      services: JSON.stringify(['多品牌维修', '数据恢复', '主板维修', '疑难杂症', '上门服务', '紧急救援']),
-      specialties: JSON.stringify(['全品牌覆盖', '技术实力强', '价格透明', '质保承诺']),
+      services: JSON.stringify([
+        '多品牌维修',
+        '数据恢复',
+        '主板维修',
+        '疑难杂症',
+        '上门服务',
+        '紧急救援',
+      ]),
+      specialties: JSON.stringify([
+        '全品牌覆盖',
+        '技术实力强',
+        '价格透明',
+        '质保承诺',
+      ]),
       rating: 4.7,
       review_count: 1567,
       service_count: 30,
       certification_level: 4,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '神舟电脑维修中心(上海徐汇店)',
@@ -1135,15 +2037,27 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=922',
       cover_image_url: 'https://picsum.photos/600/300?random=923',
       business_license: '91310104MA12XXXXXX',
-      services: JSON.stringify(['快速维修', '上门服务', '紧急救援', '配件批发', '企业服务', '培训指导']),
-      specialties: JSON.stringify(['24小时服务', '上门取送', '企业客户', '技术培训']),
+      services: JSON.stringify([
+        '快速维修',
+        '上门服务',
+        '紧急救援',
+        '配件批发',
+        '企业服务',
+        '培训指导',
+      ]),
+      specialties: JSON.stringify([
+        '24小时服务',
+        '上门取送',
+        '企业客户',
+        '技术培训',
+      ]),
       rating: 4.3,
       review_count: 876,
       service_count: 25,
       certification_level: 3,
-      is_verified: false
+      is_verified: false,
     },
-    
+
     // 更多第三方店铺
     {
       name: '爱锋派手机维修(广州天河店)',
@@ -1159,13 +2073,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=924',
       cover_image_url: 'https://picsum.photos/600/300?random=925',
       business_license: '91440101MA13XXXXXX',
-      services: JSON.stringify(['苹果专修', '华为专修', '小米专修', '数据恢复', '屏幕总成', '电池更换']),
-      specialties: JSON.stringify(['原装配件', '技术精湛', '价格公道', '回头客多']),
+      services: JSON.stringify([
+        '苹果专修',
+        '华为专修',
+        '小米专修',
+        '数据恢复',
+        '屏幕总成',
+        '电池更换',
+      ]),
+      specialties: JSON.stringify([
+        '原装配件',
+        '技术精湛',
+        '价格公道',
+        '回头客多',
+      ]),
       rating: 4.6,
       review_count: 654,
       service_count: 22,
       certification_level: 4,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '优速通手机快修(深圳南山店)',
@@ -1181,13 +2107,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=926',
       cover_image_url: 'https://picsum.photos/600/300?random=927',
       business_license: '91440300MA14XXXXXX',
-      services: JSON.stringify(['1小时快修', '当天取机', '免费检测', '配件零售', '系统重装', '清理保养']),
-      specialties: JSON.stringify(['极速维修', '立等可取', '透明报价', '学生优惠']),
+      services: JSON.stringify([
+        '1小时快修',
+        '当天取机',
+        '免费检测',
+        '配件零售',
+        '系统重装',
+        '清理保养',
+      ]),
+      specialties: JSON.stringify([
+        '极速维修',
+        '立等可取',
+        '透明报价',
+        '学生优惠',
+      ]),
       rating: 4.4,
       review_count: 789,
       service_count: 20,
       certification_level: 3,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '修连帮手机维修(杭州西湖店)',
@@ -1203,13 +2141,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=928',
       cover_image_url: 'https://picsum.photos/600/300?random=929',
       business_license: '91330101MA15XXXXXX',
-      services: JSON.stringify(['苹果维修', '安卓维修', '数据恢复', '刷机越狱', '配件更换', '技术咨询']),
-      specialties: JSON.stringify(['技术实力强', '服务态度好', '价格合理', '口碑良好']),
+      services: JSON.stringify([
+        '苹果维修',
+        '安卓维修',
+        '数据恢复',
+        '刷机越狱',
+        '配件更换',
+        '技术咨询',
+      ]),
+      specialties: JSON.stringify([
+        '技术实力强',
+        '服务态度好',
+        '价格合理',
+        '口碑良好',
+      ]),
       rating: 4.5,
       review_count: 567,
       service_count: 18,
       certification_level: 4,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '极速修手机快修(成都锦江店)',
@@ -1225,13 +2175,20 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=930',
       cover_image_url: 'https://picsum.photos/600/300?random=931',
       business_license: '91510101MA16XXXXXX',
-      services: JSON.stringify(['半小时快修', '免费检测', '配件直销', '上门服务', '企业团购', '会员优惠']),
+      services: JSON.stringify([
+        '半小时快修',
+        '免费检测',
+        '配件直销',
+        '上门服务',
+        '企业团购',
+        '会员优惠',
+      ]),
       specialties: JSON.stringify(['速度快', '价格低', '服务好', '配件全']),
       rating: 4.2,
       review_count: 445,
       service_count: 16,
       certification_level: 3,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '换修连手机维修(南京鼓楼店)',
@@ -1247,13 +2204,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=932',
       cover_image_url: 'https://picsum.photos/600/300?random=933',
       business_license: '91320101MA17XXXXXX',
-      services: JSON.stringify(['换屏换壳', '换电池', '换摄像头', '换充电口', '换听筒', '换扬声器']),
-      specialties: JSON.stringify(['专注换新', '配件丰富', '技术熟练', '价格实惠']),
+      services: JSON.stringify([
+        '换屏换壳',
+        '换电池',
+        '换摄像头',
+        '换充电口',
+        '换听筒',
+        '换扬声器',
+      ]),
+      specialties: JSON.stringify([
+        '专注换新',
+        '配件丰富',
+        '技术熟练',
+        '价格实惠',
+      ]),
       rating: 4.3,
       review_count: 334,
       service_count: 14,
       certification_level: 3,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '快易修手机维修(武汉江汉店)',
@@ -1269,13 +2238,20 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=934',
       cover_image_url: 'https://picsum.photos/600/300?random=935',
       business_license: '91420101MA18XXXXXX',
-      services: JSON.stringify(['快修服务', '配件更换', '系统升级', '数据迁移', '清洁保养', '技术培训']),
+      services: JSON.stringify([
+        '快修服务',
+        '配件更换',
+        '系统升级',
+        '数据迁移',
+        '清洁保养',
+        '技术培训',
+      ]),
       specialties: JSON.stringify(['效率高', '技术好', '服务佳', '信誉好']),
       rating: 4.1,
       review_count: 289,
       service_count: 15,
       certification_level: 3,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '智联修手机维修(西安雁塔店)',
@@ -1291,13 +2267,20 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=936',
       cover_image_url: 'https://picsum.photos/600/300?random=937',
       business_license: '91610101MA19XXXXXX',
-      services: JSON.stringify(['智能维修', '联网诊断', '远程协助', '上门服务', '企业合作', '技术交流']),
+      services: JSON.stringify([
+        '智能维修',
+        '联网诊断',
+        '远程协助',
+        '上门服务',
+        '企业合作',
+        '技术交流',
+      ]),
       specialties: JSON.stringify(['智能化', '网络化', '专业化', '现代化']),
       rating: 4.4,
       review_count: 412,
       service_count: 17,
       certification_level: 4,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '云修手机维修(重庆渝中店)',
@@ -1313,13 +2296,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=938',
       cover_image_url: 'https://picsum.photos/600/300?random=939',
       business_license: '91500101MA20XXXXXX',
-      services: JSON.stringify(['云端诊断', '远程维修', '数据云备份', '智能推荐', '个性服务', '会员体系']),
-      specialties: JSON.stringify(['云端技术', '数据安全', '个性定制', '会员专享']),
+      services: JSON.stringify([
+        '云端诊断',
+        '远程维修',
+        '数据云备份',
+        '智能推荐',
+        '个性服务',
+        '会员体系',
+      ]),
+      specialties: JSON.stringify([
+        '云端技术',
+        '数据安全',
+        '个性定制',
+        '会员专享',
+      ]),
       rating: 4.0,
       review_count: 198,
       service_count: 13,
       certification_level: 3,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '精诚修手机维修(天津和平店)',
@@ -1335,13 +2330,25 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=940',
       cover_image_url: 'https://picsum.photos/600/300?random=941',
       business_license: '91120101MA21XXXXXX',
-      services: JSON.stringify(['精工维修', '诚信服务', '品质保证', '售后无忧', '技术培训', '设备租赁']),
-      specialties: JSON.stringify(['工艺精良', '诚实守信', '品质至上', '服务周到']),
+      services: JSON.stringify([
+        '精工维修',
+        '诚信服务',
+        '品质保证',
+        '售后无忧',
+        '技术培训',
+        '设备租赁',
+      ]),
+      specialties: JSON.stringify([
+        '工艺精良',
+        '诚实守信',
+        '品质至上',
+        '服务周到',
+      ]),
       rating: 4.5,
       review_count: 367,
       service_count: 16,
       certification_level: 4,
-      is_verified: false
+      is_verified: false,
     },
     {
       name: '匠心修手机维修(苏州工业园区店)',
@@ -1357,14 +2364,26 @@ async function seedRepairShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=942',
       cover_image_url: 'https://picsum.photos/600/300?random=943',
       business_license: '91320501MA22XXXXXX',
-      services: JSON.stringify(['匠心工艺', '精品维修', '艺术设计', '文化传承', '定制服务', '收藏保养']),
-      specialties: JSON.stringify(['工匠精神', '精益求精', '文化底蕴', '艺术品位']),
+      services: JSON.stringify([
+        '匠心工艺',
+        '精品维修',
+        '艺术设计',
+        '文化传承',
+        '定制服务',
+        '收藏保养',
+      ]),
+      specialties: JSON.stringify([
+        '工匠精神',
+        '精益求精',
+        '文化底蕴',
+        '艺术品位',
+      ]),
       rating: 4.6,
       review_count: 278,
       service_count: 14,
       certification_level: 4,
-      is_verified: false
-    }
+      is_verified: false,
+    },
   ];
 
   let successCount = 0;
@@ -1373,9 +2392,9 @@ async function seedRepairShops(supabaseUrl, headers) {
       const response = await fetch(`${supabaseUrl}/rest/v1/repair_shops`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify(shop)
+        body: JSON.stringify(shop),
       });
-      
+
       if (response.status === 201 || response.status === 409) {
         successCount++;
       }
@@ -1383,42 +2402,52 @@ async function seedRepairShops(supabaseUrl, headers) {
       // 忽略错误
     }
   }
-  
-  console.log(`✅ 维修店铺数据填充完成 (${successCount}/${repairShops.length} 家)`);
+
+  console.log(
+    `✅ 维修店铺数据填充完成 (${successCount}/${repairShops.length} 家)`
+  );
 }
 
 // 验证数据完整性
 async function verifyDataIntegrity(supabaseUrl, headers) {
   console.log('\n🔍 验证数据完整性...');
-  
+
   const tables = [
     { name: 'devices', minCount: 500, displayName: '设备型号' },
     { name: 'fault_types', minCount: 50, displayName: '故障类型' },
     { name: 'hot_links', minCount: 30, displayName: '热点链接' },
     { name: 'parts', minCount: 50, displayName: '配件库' },
-    { name: 'repair_shops', minCount: 30, displayName: '维修店铺' }
+    { name: 'repair_shops', minCount: 30, displayName: '维修店铺' },
   ];
-  
+
   for (const table of tables) {
     try {
-      const response = await fetch(`${supabaseUrl}/rest/v1/${table.name}?select=*&limit=1`, {
-        headers: headers
-      });
-      
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/${table.name}?select=*&limit=1`,
+        {
+          headers: headers,
+        }
+      );
+
       if (response.ok) {
         // 获取总数
-        const countResponse = await fetch(`${supabaseUrl}/rest/v1/${table.name}?select=count`, {
-          headers: {
-            ...headers,
-            'Prefer': 'count=exact'
+        const countResponse = await fetch(
+          `${supabaseUrl}/rest/v1/${table.name}?select=count`,
+          {
+            headers: {
+              ...headers,
+              Prefer: 'count=exact',
+            },
           }
-        });
-        
+        );
+
         if (countResponse.ok) {
           const countData = await countResponse.json();
           const count = Array.isArray(countData) ? countData.length : 0;
           const status = count >= table.minCount ? '✅' : '⚠️';
-          console.log(`${status} ${table.displayName}: ${count} 条记录 (最低要求: ${table.minCount})`);
+          console.log(
+            `${status} ${table.displayName}: ${count} 条记录 (最低要求: ${table.minCount})`
+          );
         } else {
           console.log(`❓ ${table.displayName}: 无法获取计数`);
         }

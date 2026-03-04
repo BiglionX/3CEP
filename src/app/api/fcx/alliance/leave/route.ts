@@ -1,7 +1,6 @@
-/**
- * 维修店退出联盟API
- * 处理店铺退出FCX联盟和解除质押
- */
+﻿/**
+ * 缁翠慨搴楅€€鍑鸿仈鐩烝PI
+ * 澶勭悊搴楅摵閫€鍑篎CX鑱旂洘鍜岃В闄よ川? */
 
 import { NextResponse } from 'next/server';
 import { AllianceService } from '@/fcx-system';
@@ -11,10 +10,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { shopId } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!shopId) {
       return NextResponse.json(
-        { error: '缺少必要参数: shopId' },
+        { error: '缂哄皯蹇呰鍙傛暟: shopId' },
         { status: 400 }
       );
     }
@@ -26,18 +25,18 @@ export async function POST(request: Request) {
       success: true,
       data: {
         shop: updatedShop,
-        message: '成功退出FCX联盟'
-      }
+        message: '鎴愬姛閫€鍑篎CX鑱旂洘',
+      },
     });
-
   } catch (error) {
-    console.error('维修店退出联盟错误:', error);
+    console.error('缁翠慨搴楅€€鍑鸿仈鐩熼敊?', error);
     return NextResponse.json(
-      { 
-        error: '退出处理失败',
-        details: (error as Error).message 
+      {
+        error: '閫€鍑哄鐞嗗け?,
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

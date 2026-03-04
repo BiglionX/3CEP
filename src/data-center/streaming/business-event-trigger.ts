@@ -1,7 +1,10 @@
-// 业务事件触发器
-// 在关键业务操作中自动发布实时事件
+// 业务事件触发?// 在关键业务操作中自动发布实时事件
 
-import { enhancedRealTimeService, EnhancedEventType, EventPriority } from './enhanced-realtime-service';
+import {
+  enhancedRealTimeService,
+  EnhancedEventType,
+  EventPriority,
+} from './enhanced-realtime-service';
 
 // 业务实体接口
 export interface BusinessEntity {
@@ -184,7 +187,7 @@ export interface BulkDataImportPayload {
 // 业务事件触发器类
 export class BusinessEventTrigger {
   private static instance: BusinessEventTrigger;
-  
+
   private constructor() {}
 
   static getInstance(): BusinessEventTrigger {
@@ -196,211 +199,232 @@ export class BusinessEventTrigger {
 
   // 价格更新事件
   async triggerPriceUpdate(payload: PriceUpdatePayload): Promise<string> {
-    const priority = Math.abs(payload.changePercent) > 20 ? EventPriority.HIGH : EventPriority.NORMAL;
-    
+    const priority =
+      Math.abs(payload.changePercent) > 20
+        ? EventPriority.HIGH
+        : EventPriority.NORMAL;
+
     return await enhancedRealTimeService.publishEvent({
       type: 'price_update',
       payload,
       source: 'pricing_service',
-      priority
+      priority,
     });
   }
 
   // 库存变更事件
-  async triggerInventoryChange(payload: InventoryChangePayload): Promise<string> {
+  async triggerInventoryChange(
+    payload: InventoryChangePayload
+  ): Promise<string> {
     let priority = EventPriority.NORMAL;
-    
+
     // 库存预警逻辑
     if (payload.newQuantity <= payload.minStock) {
       priority = EventPriority.HIGH;
     } else if (payload.newQuantity === 0) {
       priority = EventPriority.CRITICAL;
     }
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'inventory_change',
       payload,
       source: 'inventory_service',
-      priority
+      priority,
     });
   }
 
-  // 订单状态变更事件
-  async triggerOrderStatusChange(payload: OrderStatusChangePayload): Promise<string> {
+  // 订单状态变更事?  async triggerOrderStatusChange(
+    payload: OrderStatusChangePayload
+  ): Promise<string> {
     let priority = EventPriority.NORMAL;
-    
-    // 关键状态变更使用高优先级
-    const criticalStatuses = ['cancelled', 'refunded', 'disputed'];
+
+    // 关键状态变更使用高优先?    const criticalStatuses = ['cancelled', 'refunded', 'disputed'];
     if (criticalStatuses.includes(payload.newStatus)) {
       priority = EventPriority.HIGH;
     }
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'order_status_change',
       payload,
       source: 'order_service',
-      priority
+      priority,
     });
   }
 
   // 用户行为事件
   async triggerUserAction(payload: UserActionPayload): Promise<string> {
-    const priority = payload.actionType === 'login_failure' ? EventPriority.HIGH : EventPriority.LOW;
-    
+    const priority =
+      payload.actionType === 'login_failure'
+        ? EventPriority.HIGH
+        : EventPriority.LOW;
+
     return await enhancedRealTimeService.publishEvent({
       type: 'user_action',
       payload,
       source: 'user_service',
-      priority
+      priority,
     });
   }
 
   // 系统告警事件
   async triggerSystemAlert(payload: SystemAlertPayload): Promise<string> {
     const priorityMap: Record<string, EventPriority> = {
-      'low': EventPriority.LOW,
-      'medium': EventPriority.NORMAL,
-      'high': EventPriority.HIGH,
-      'critical': EventPriority.CRITICAL
+      low: EventPriority.LOW,
+      medium: EventPriority.NORMAL,
+      high: EventPriority.HIGH,
+      critical: EventPriority.CRITICAL,
     };
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'system_alert',
       payload,
       source: payload.source,
-      priority: priorityMap[payload.severity] || EventPriority.NORMAL
+      priority: priorityMap[payload.severity] || EventPriority.NORMAL,
     });
   }
 
   // 数据质量问题事件
-  async triggerDataQualityIssue(payload: DataQualityIssuePayload): Promise<string> {
+  async triggerDataQualityIssue(
+    payload: DataQualityIssuePayload
+  ): Promise<string> {
     const priorityMap: Record<string, EventPriority> = {
-      'low': EventPriority.LOW,
-      'medium': EventPriority.NORMAL,
-      'high': EventPriority.HIGH,
-      'critical': EventPriority.CRITICAL
+      low: EventPriority.LOW,
+      medium: EventPriority.NORMAL,
+      high: EventPriority.HIGH,
+      critical: EventPriority.CRITICAL,
     };
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'data_quality_issue',
       payload,
       source: 'data_quality_service',
-      priority: priorityMap[payload.severity] || EventPriority.NORMAL
+      priority: priorityMap[payload.severity] || EventPriority.NORMAL,
     });
   }
 
   // 供应商通知事件
-  async triggerSupplierNotification(payload: SupplierNotificationPayload): Promise<string> {
+  async triggerSupplierNotification(
+    payload: SupplierNotificationPayload
+  ): Promise<string> {
     const priorityMap: Record<string, EventPriority> = {
-      'low': EventPriority.LOW,
-      'normal': EventPriority.NORMAL,
-      'high': EventPriority.HIGH,
-      'urgent': EventPriority.CRITICAL
+      low: EventPriority.LOW,
+      normal: EventPriority.NORMAL,
+      high: EventPriority.HIGH,
+      urgent: EventPriority.CRITICAL,
     };
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'supplier_notification',
       payload,
       source: 'supplier_service',
-      priority: priorityMap[payload.priority] || EventPriority.NORMAL
+      priority: priorityMap[payload.priority] || EventPriority.NORMAL,
     });
   }
 
   // 维护告警事件
-  async triggerMaintenanceAlert(payload: MaintenanceAlertPayload): Promise<string> {
+  async triggerMaintenanceAlert(
+    payload: MaintenanceAlertPayload
+  ): Promise<string> {
     const priorityMap: Record<string, EventPriority> = {
-      'info': EventPriority.LOW,
-      'warning': EventPriority.HIGH,
-      'critical': EventPriority.CRITICAL
+      info: EventPriority.LOW,
+      warning: EventPriority.HIGH,
+      critical: EventPriority.CRITICAL,
     };
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'maintenance_alert',
       payload,
       source: 'maintenance_service',
-      priority: priorityMap[payload.level] || EventPriority.NORMAL
+      priority: priorityMap[payload.level] || EventPriority.NORMAL,
     });
   }
 
   // 性能指标事件
-  async triggerPerformanceMetric(payload: PerformanceMetricPayload): Promise<string> {
+  async triggerPerformanceMetric(
+    payload: PerformanceMetricPayload
+  ): Promise<string> {
     let priority = EventPriority.LOW;
-    
-    // 性能异常检测
-    if (payload.threshold && payload.value > payload.threshold) {
+
+    // 性能异常检?    if (payload.threshold && payload.value > payload.threshold) {
       priority = EventPriority.HIGH;
     }
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'performance_metric',
       payload,
       source: payload.source,
-      priority
+      priority,
     });
   }
 
   // 安全事件
   async triggerSecurityEvent(payload: SecurityEventPayload): Promise<string> {
     const priorityMap: Record<string, EventPriority> = {
-      'low': EventPriority.LOW,
-      'medium': EventPriority.NORMAL,
-      'high': EventPriority.HIGH,
-      'critical': EventPriority.CRITICAL
+      low: EventPriority.LOW,
+      medium: EventPriority.NORMAL,
+      high: EventPriority.HIGH,
+      critical: EventPriority.CRITICAL,
     };
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'security_event',
       payload,
       source: 'security_service',
-      priority: priorityMap[payload.severity] || EventPriority.NORMAL
+      priority: priorityMap[payload.severity] || EventPriority.NORMAL,
     });
   }
 
   // 批量操作事件
   async triggerBatchOperation(payload: BatchOperationPayload): Promise<string> {
-    const successRate = payload.totalCount > 0 ? payload.successCount / payload.totalCount : 1;
+    const successRate =
+      payload.totalCount > 0 ? payload.successCount / payload.totalCount : 1;
     let priority = EventPriority.NORMAL;
-    
+
     if (successRate < 0.8 || payload.failureCount > 0) {
       priority = EventPriority.HIGH;
     }
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'batch_operation',
       payload,
       source: 'batch_processor',
-      priority
+      priority,
     });
   }
 
   // 事务提交事件
-  async triggerTransactionCommit(payload: TransactionCommitPayload): Promise<string> {
+  async triggerTransactionCommit(
+    payload: TransactionCommitPayload
+  ): Promise<string> {
     return await enhancedRealTimeService.publishEvent({
       type: 'transaction_commit',
       payload,
       source: 'transaction_manager',
-      priority: EventPriority.NORMAL
+      priority: EventPriority.NORMAL,
     });
   }
 
   // 批量数据导入事件
   async triggerBulkDataImport(payload: BulkDataImportPayload): Promise<string> {
     let priority = EventPriority.NORMAL;
-    
+
     if (payload.status === 'failed') {
       priority = EventPriority.HIGH;
     } else if (payload.errorRecords > 0) {
-      const errorRate = payload.totalRecords > 0 ? payload.errorRecords / payload.totalRecords : 0;
+      const errorRate =
+        payload.totalRecords > 0
+          ? payload.errorRecords / payload.totalRecords
+          : 0;
       if (errorRate > 0.1) {
         priority = EventPriority.HIGH;
       }
     }
-    
+
     return await enhancedRealTimeService.publishEvent({
       type: 'bulk_data_import',
       payload,
       source: 'data_import_service',
-      priority
+      priority,
     });
   }
 
@@ -415,7 +439,7 @@ export class BusinessEventTrigger {
       type: eventType,
       payload,
       source,
-      priority
+      priority,
     });
   }
 }
@@ -423,24 +447,31 @@ export class BusinessEventTrigger {
 // 装饰器：自动触发事件
 export function AutoTriggerEvent(
   eventType: EnhancedEventType,
-  getSource: (target: any, propertyKey: string, descriptor: PropertyDescriptor) => string = () => 'unknown_service'
+  getSource: (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) => string = () => 'unknown_service'
 ) {
-  return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
     const originalMethod = descriptor.value;
-    
-    descriptor.value = async function(...args: any[]) {
+
+    descriptor.value = async function (...args: any[]) {
       const result = await originalMethod.apply(this, args);
-      
-      // 根据方法名和参数构造事件负载
-      const payload = {
+
+      // 根据方法名和参数构造事件负?      const payload = {
         methodName: propertyKey,
         args: args,
         result: result,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-      
+
       const source = getSource(this, propertyKey, descriptor);
-      
+
       try {
         await BusinessEventTrigger.getInstance().triggerEvent(
           eventType,
@@ -449,12 +480,12 @@ export function AutoTriggerEvent(
           EventPriority.NORMAL
         );
       } catch (error) {
-        console.error(`❌ 自动事件触发失败:`, error);
+        console.error(`�?自动事件触发失败:`, error);
       }
-      
+
       return result;
     };
-    
+
     return descriptor;
   };
 }

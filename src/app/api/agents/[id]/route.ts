@@ -39,32 +39,27 @@ export async function GET(
     // 获取智能体详情
     const { data: agent, error } = await supabase
       .from('agents')
-      .select(`
+      .select(
+        `
         *,
         executions:agent_executions(*)
-      `)
+      `
+      )
       .eq('id', agentId)
       .single();
 
     if (error) {
       console.error('获取智能体详情失败:', error);
-      return NextResponse.json(
-        { error: '智能体不存在' }, 
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '智能体不存在' }, { status: 404 });
     }
 
     return NextResponse.json({
       success: true,
-      data: agent
+      data: agent,
     });
-
   } catch (error: any) {
     console.error('智能体详情 API 错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
 
@@ -101,12 +96,14 @@ export async function PUT(
     // 更新智能体
     const updateData: any = {
       updated_by: user.id,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     };
 
     if (body.name !== undefined) updateData.name = body.name.trim();
-    if (body.description !== undefined) updateData.description = body.description?.trim() || null;
-    if (body.configuration !== undefined) updateData.configuration = body.configuration;
+    if (body.description !== undefined)
+      updateData.description = body?.trim() || null;
+    if (body.configuration !== undefined)
+      updateData.configuration = body.configuration;
     if (body.status !== undefined) updateData.status = body.status;
 
     const { data: agent, error } = await supabase
@@ -119,7 +116,7 @@ export async function PUT(
     if (error) {
       console.error('更新智能体失败:', error);
       return NextResponse.json(
-        { error: '更新智能体失败', details: error.message }, 
+        { error: '更新智能体失败', details: error.message },
         { status: 500 }
       );
     }
@@ -131,15 +128,11 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       message: '智能体更新成功',
-      data: agent
+      data: agent,
     });
-
   } catch (error: any) {
     console.error('更新智能体错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
 
@@ -173,29 +166,22 @@ export async function DELETE(
     const agentId = params.id;
 
     // 删除智能体
-    const { error } = await supabase
-      .from('agents')
-      .delete()
-      .eq('id', agentId);
+    const { error } = await supabase.from('agents').delete().eq('id', agentId);
 
     if (error) {
       console.error('删除智能体失败:', error);
       return NextResponse.json(
-        { error: '删除智能体失败', details: error.message }, 
+        { error: '删除智能体失败', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: '智能体删除成功'
+      message: '智能体删除成功',
     });
-
   } catch (error: any) {
     console.error('删除智能体错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }

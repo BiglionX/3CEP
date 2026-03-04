@@ -3,21 +3,24 @@
  * 处理期权发放、查询、兑换等核心功能
  */
 
-import { 
+import {
   Fcx2Option,
   Fcx2OptionStatus,
-  RepairOrder
+  RepairOrder,
 } from '../models/fcx-account.model';
 import { IFcx2OptionService } from './interfaces';
 import { supabase } from '@/lib/supabase';
 import { generateUUID } from '../utils/helpers';
 
 export class Fcx2OptionService implements IFcx2OptionService {
-  
   /**
    * 发放FCX2期权奖励
    */
-  async grantOption(shopId: string, amount: number, orderId?: string): Promise<Fcx2Option> {
+  async grantOption(
+    shopId: string,
+    amount: number,
+    orderId?: string
+  ): Promise<Fcx2Option> {
     try {
       // 1. 验证参数
       if (amount <= 0) {
@@ -47,7 +50,9 @@ export class Fcx2OptionService implements IFcx2OptionService {
         earned_from_order_id: orderId || null,
         status: Fcx2OptionStatus.ACTIVE,
         created_at: new Date().toISOString(),
-        expires_at: new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000).toISOString() // 2年后过期
+        expires_at: new Date(
+          Date.now() + 2 * 365 * 24 * 60 * 60 * 1000
+        ).toISOString(), // 2年后过期
       };
 
       const { data, error } = await supabase
@@ -72,20 +77,18 @@ export class Fcx2OptionService implements IFcx2OptionService {
       }
 
       const newBalance = (currentShop?.fcx2_balance || 0) + amount;
-      
+
       const { error: updateError } = await supabase
         .from('repair_shops')
         .update({ fcx2_balance: newBalance } as any)
         .eq('id', shopId);
 
       if (updateError) {
-        // 如果更新失败，回滚期权记录
-        await supabase.from('fcx2_options').delete().eq('id', data.id);
+        // 如果更新失败，回滚期权记?        await supabase.from('fcx2_options').delete().eq('id', data.id);
         throw new Error(`更新FCX2余额失败: ${updateError.message}`);
       }
 
-      // 5. 如果有关联工单，更新工单的期权发放状态
-      if (orderId) {
+      // 5. 如果有关联工单，更新工单的期权发放状?      if (orderId) {
         await supabase
           .from('repair_orders')
           .update({ fcx2_option_granted: true } as any)
@@ -93,7 +96,6 @@ export class Fcx2OptionService implements IFcx2OptionService {
       }
 
       return this.mapToFcx2Option(data);
-
     } catch (error) {
       console.error('发放FCX2期权错误:', error);
       throw error;
@@ -105,8 +107,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
    */
   async getShopFcx2Balance(shopId: string): Promise<number> {
     try {
-      // 1. 获取有效的期权总额（未兑换且未过期）
-      const { data: activeOptions, error: optionsError } = await supabase
+      // 1. 获取有效的期权总额（未兑换且未过期?      const { data: activeOptions, error: optionsError } = await supabase
         .from('fcx2_options')
         .select('amount')
         .eq('repair_shop_id', shopId)
@@ -117,11 +118,10 @@ export class Fcx2OptionService implements IFcx2OptionService {
         throw new Error(`查询期权记录失败: ${optionsError.message}`);
       }
 
-      // 2. 计算总余额
-      const totalBalance = activeOptions?.reduce((sum, option) => sum + option.amount, 0) || 0;
+      // 2. 计算总余?      const totalBalance =
+        activeOptions?.reduce((sum, option) => sum + option.amount, 0) || 0;
 
       return totalBalance;
-
     } catch (error) {
       console.error('获取FCX2余额错误:', error);
       throw error;
@@ -138,14 +138,14 @@ export class Fcx2OptionService implements IFcx2OptionService {
         throw new Error('兑换金额必须大于0');
       }
 
-      // 2. 检查可用余额
-      const availableBalance = await this.getShopFcx2Balance(shopId);
+      // 2. 检查可用余?      const availableBalance = await this.getShopFcx2Balance(shopId);
       if (availableBalance < amount) {
-        throw new Error(`FCX2余额不足，当前余额: ${availableBalance}, 需要: ${amount}`);
+        throw new Error(
+          `FCX2余额不足，当前余? ${availableBalance}, 需? ${amount}`
+        );
       }
 
-      // 3. 获取可兑换的期权记录（按创建时间排序，优先兑换最早的）
-      const { data: redeemableOptions, error: optionsError } = await supabase
+      // 3. 获取可兑换的期权记录（按创建时间排序，优先兑换最早的?      const { data: redeemableOptions, error: optionsError } = await supabase
         .from('fcx2_options')
         .select('id, amount')
         .eq('repair_shop_id', shopId)
@@ -154,15 +154,14 @@ export class Fcx2OptionService implements IFcx2OptionService {
         .order('created_at', { ascending: true });
 
       if (optionsError) {
-        throw new Error(`查询可兑换期权失败: ${optionsError.message}`);
+        throw new Error(`查询可兑换期权失? ${optionsError.message}`);
       }
 
       if (!redeemableOptions || redeemableOptions.length === 0) {
         throw new Error('没有可兑换的期权');
       }
 
-      // 4. 按顺序兑换期权直到满足金额要求
-      let remainingAmount = amount;
+      // 4. 按顺序兑换期权直到满足金额要?      let remainingAmount = amount;
       const optionsToRedeem: Array<{ id: string; amount: number }> = [];
 
       for (const option of redeemableOptions) {
@@ -171,19 +170,18 @@ export class Fcx2OptionService implements IFcx2OptionService {
         const redeemAmount = Math.min(option.amount, remainingAmount);
         optionsToRedeem.push({
           id: option.id,
-          amount: redeemAmount
+          amount: redeemAmount,
         });
 
         remainingAmount -= redeemAmount;
       }
 
-      // 5. 更新期权状态为已兑换
-      for (const option of optionsToRedeem) {
+      // 5. 更新期权状态为已兑?      for (const option of optionsToRedeem) {
         await supabase
           .from('fcx2_options')
           .update({
             status: Fcx2OptionStatus.REDEEMED,
-            redeemed_at: new Date().toISOString()
+            redeemed_at: new Date().toISOString(),
           } as any)
           .eq('id', option.id);
       }
@@ -200,7 +198,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
       }
 
       const newBalance = Math.max(0, (currentShop?.fcx2_balance || 0) - amount);
-      
+
       const { error: updateError } = await supabase
         .from('repair_shops')
         .update({ fcx2_balance: newBalance } as any)
@@ -209,7 +207,6 @@ export class Fcx2OptionService implements IFcx2OptionService {
       if (updateError) {
         throw new Error(`更新FCX2余额失败: ${updateError.message}`);
       }
-
     } catch (error) {
       console.error('兑换FCX2期权错误:', error);
       throw error;
@@ -223,10 +220,12 @@ export class Fcx2OptionService implements IFcx2OptionService {
     try {
       const { data, error } = await supabase
         .from('fcx2_options')
-        .select(`
+        .select(
+          `
           *,
           repair_orders!inner(order_number, fault_description, rating)
-        `)
+        `
+        )
         .eq('repair_shop_id', shopId)
         .order('created_at', { ascending: false });
 
@@ -235,7 +234,6 @@ export class Fcx2OptionService implements IFcx2OptionService {
       }
 
       return data.map(this.mapToFcx2Option);
-
     } catch (error) {
       console.error('查询店铺期权记录错误:', error);
       throw error;
@@ -258,8 +256,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
         throw new Error(`清理过期期权失败: ${error.message}`);
       }
 
-      return (data as any)?.data?.length || 0;
-
+      return (data as any)?.(data as any)?.length || 0;
     } catch (error) {
       console.error('清理过期期权错误:', error);
       throw error;
@@ -277,7 +274,7 @@ export class Fcx2OptionService implements IFcx2OptionService {
       earnedFromOrderId: data.earned_from_order_id,
       status: data.status as Fcx2OptionStatus,
       createdAt: new Date(data.created_at),
-      expiresAt: new Date(data.expires_at)
+      expiresAt: new Date(data.expires_at),
     };
   }
 }

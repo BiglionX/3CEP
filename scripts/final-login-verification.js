@@ -16,7 +16,7 @@ const criticalFiles = [
   'src/app/api/auth/login/route.ts',
   'src/app/login/page.tsx',
   'src/components/GoogleLoginButton.tsx',
-  '.env.local'
+  '.env.local',
 ];
 
 criticalFiles.forEach(file => {
@@ -30,7 +30,7 @@ console.log('\n2️⃣ 语法验证');
 
 const filesToCheck = [
   'src/app/api/auth/login/route.ts',
-  'src/app/login/page.tsx'
+  'src/app/login/page.tsx',
 ];
 
 filesToCheck.forEach(file => {
@@ -39,9 +39,13 @@ filesToCheck.forEach(file => {
     try {
       const content = fs.readFileSync(fullPath, 'utf8');
       // 简单的语法检查
-      const hasUnmatchedBraces = (content.match(/{/g) || []).length !== (content.match(/}/g) || []).length;
-      const hasUnmatchedParentheses = (content.match(/\(/g) || []).length !== (content.match(/\)/g) || []).length;
-      
+      const hasUnmatchedBraces =
+        (content.match(/{/g) || []).length !==
+        (content.match(/}/g) || []).length;
+      const hasUnmatchedParentheses =
+        (content.match(/\(/g) || []).length !==
+        (content.match(/\)/g) || []).length;
+
       if (hasUnmatchedBraces || hasUnmatchedParentheses) {
         console.log(`❌ ${file} - 可能存在语法错误`);
       } else {

@@ -7,7 +7,7 @@ function testQueryOptimizer() {
   console.log('📄 检查优化器文件:');
   const optimizerFiles = [
     'src/data-center/optimizer/query-optimizer.ts',
-    'src/app/api/data-center/optimizer/route.ts'
+    'src/app/api/data-center/optimizer/route.ts',
   ];
 
   optimizerFiles.forEach(file => {
@@ -18,8 +18,11 @@ function testQueryOptimizer() {
   // 2. 验证优化器核心功能
   console.log('\n⚡ 验证优化器核心功能:');
   try {
-    const optimizerContent = fs.readFileSync('src/data-center/optimizer/query-optimizer.ts', 'utf8');
-    
+    const optimizerContent = fs.readFileSync(
+      'src/data-center/optimizer/query-optimizer.ts',
+      'utf8'
+    );
+
     const requiredClasses = ['QueryOptimizer', 'QueryPlanGenerator'];
     requiredClasses.forEach(className => {
       const exists = optimizerContent.includes(`class ${className}`);
@@ -28,9 +31,9 @@ function testQueryOptimizer() {
 
     const optimizationRules = [
       'predicate_pushdown',
-      'column_pruning', 
+      'column_pruning',
       'join_reordering',
-      'limit_pushdown'
+      'limit_pushdown',
     ];
 
     optimizationRules.forEach(rule => {
@@ -41,14 +44,13 @@ function testQueryOptimizer() {
     const requiredMethods = [
       'optimizeQueryPlan',
       'generateExecutionAdvice',
-      'recordQueryStats'
+      'recordQueryStats',
     ];
 
     requiredMethods.forEach(method => {
       const exists = optimizerContent.includes(method);
       console.log(`  ${exists ? '✅' : '❌'} ${method} 方法`);
     });
-
   } catch (error) {
     console.log(`  ❌ 检查优化器时出错: ${error.message}`);
   }
@@ -56,37 +58,45 @@ function testQueryOptimizer() {
   // 3. 验证API端点
   console.log('\n🌐 验证API端点:');
   try {
-    const apiContent = fs.readFileSync('src/app/api/data-center/optimizer/route.ts', 'utf8');
-    
-    const apiActions = ['analyze', 'performance', 'rules', 'optimize', 'record-stats'];
+    const apiContent = fs.readFileSync(
+      'src/app/api/data-center/optimizer/route.ts',
+      'utf8'
+    );
+
+    const apiActions = [
+      'analyze',
+      'performance',
+      'rules',
+      'optimize',
+      'record-stats',
+    ];
     apiActions.forEach(action => {
       const exists = apiContent.includes(action);
       console.log(`  ${exists ? '✅' : '❌'} ${action} 操作`);
     });
-
   } catch (error) {
     console.log(`  ❌ 检查API端点时出错: ${error.message}`);
   }
 
   // 4. 模拟查询优化测试
   console.log('\n🔍 模拟查询优化测试:');
-  
+
   const sampleQueries = [
     {
       name: '简单SELECT查询',
-      sql: 'SELECT * FROM devices WHERE brand = \'Apple\'',
-      expectedOptimizations: ['predicate_pushdown', 'column_pruning']
+      sql: "SELECT * FROM devices WHERE brand = 'Apple'",
+      expectedOptimizations: ['predicate_pushdown', 'column_pruning'],
     },
     {
       name: 'JOIN查询',
       sql: 'SELECT d.*, p.* FROM devices d JOIN parts p ON d.id = p.device_id',
-      expectedOptimizations: ['join_reordering']
+      expectedOptimizations: ['join_reordering'],
     },
     {
       name: '带LIMIT的排序查询',
       sql: 'SELECT * FROM parts ORDER BY price DESC LIMIT 10',
-      expectedOptimizations: ['limit_pushdown']
-    }
+      expectedOptimizations: ['limit_pushdown'],
+    },
   ];
 
   sampleQueries.forEach(query => {
@@ -97,12 +107,12 @@ function testQueryOptimizer() {
 
   // 5. 性能优化效果预估
   console.log('\n📈 性能优化效果预估:');
-  
+
   const optimizationBenefits = {
-    'predicate_pushdown': '减少30%数据扫描量',
-    'column_pruning': '减少20%IO操作',
-    'join_reordering': '提升25%JOIN性能', 
-    'limit_pushdown': '减少40%排序开销'
+    predicate_pushdown: '减少30%数据扫描量',
+    column_pruning: '减少20%IO操作',
+    join_reordering: '提升25%JOIN性能',
+    limit_pushdown: '减少40%排序开销',
   };
 
   Object.entries(optimizationBenefits).forEach(([rule, benefit]) => {
@@ -111,12 +121,12 @@ function testQueryOptimizer() {
 
   // 6. 检查集成情况
   console.log('\n🔗 检查系统集成:');
-  
+
   const integrationPoints = [
     '查询计划生成器集成',
     '优化规则引擎集成',
     '性能统计收集集成',
-    '执行建议生成集成'
+    '执行建议生成集成',
   ];
 
   integrationPoints.forEach(point => {

@@ -57,9 +57,9 @@ export function CreateInboundForecastForm({
   // 模拟仓库数据
   const warehouses = [
     { id: "us-lax-001", name: "美国洛杉矶仓" },
-    { id: "uk-lon-001", name: "英国伦敦仓" },
-    { id: "de-fra-001", name: "德国法兰克福仓" },
-    { id: "cn-sh-001", name: "中国上海仓" },
+    { id: "uk-lon-001", name: "英国伦敦? },
+    { id: "de-fra-001", name: "德国法兰克福? },
+    { id: "cn-sh-001", name: "中国上海? },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,12 +114,12 @@ export function CreateInboundForecastForm({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "创建预报单失败");
+        throw new Error(errorData.error || "创建预报单失?);
       }
 
       const result = await response.json();
 
-      toast.success("预报单创建成功", {
+      toast.success("预报单创建成?, {
         description: `预报单号: ${result.data.forecastNumber}`,
       });
 
@@ -131,7 +131,7 @@ export function CreateInboundForecastForm({
       // 重置表单
       resetForm();
     } catch (error) {
-      console.error("创建预报单失败:", error);
+      console.error("创建预报单失?", error);
       toast.error("创建失败", {
         description: (error as Error).message,
       });
@@ -151,7 +151,7 @@ export function CreateInboundForecastForm({
     if (!formData.supplierName) {
       errors.supplierName = "请输入供应商名称";
     } else if (formData.supplierName.length < 2) {
-      errors.supplierName = "供应商名称至少2个字符";
+      errors.supplierName = "供应商名称至?个字?;
     }
 
     if (!formData.supplierContact) {
@@ -171,12 +171,12 @@ export function CreateInboundForecastForm({
       }
     }
 
-    // 商品项验证
+    // 商品项验?
     const validItems = items.filter(
       (item) => item.sku && item.forecastedQuantity > 0
     );
     if (validItems.length === 0) {
-      errors.items = "至少需要添加一个有效的商品项";
+      errors.items = "至少需要添加一个有效的商品?;
     }
 
     validItems.forEach((item, index) => {
@@ -189,7 +189,7 @@ export function CreateInboundForecastForm({
       }
 
       if (item.unitWeight !== undefined && item.unitWeight < 0) {
-        errors[`item_${index}_weight`] = "单位重量不能为负数";
+        errors[`item_${index}_weight`] = "单位重量不能为负?;
       }
 
       if (
@@ -246,7 +246,7 @@ export function CreateInboundForecastForm({
     newItems[index] = { ...newItems[index], [field]: value };
     setItems(newItems);
 
-    // 清除对应字段的错误
+    // 清除对应字段的错?
     setErrors((prev) => {
       const newErrors = { ...prev };
       delete newErrors[`item_${index}_${field}`];
@@ -257,7 +257,7 @@ export function CreateInboundForecastForm({
   const updateFormData = (field: keyof typeof formData, value: string) => {
     setFormData({ ...formData, [field]: value });
 
-    // 清除对应字段的错误
+    // 清除对应字段的错?
     setErrors((prev) => {
       const newErrors = { ...prev };
       delete newErrors[field];
@@ -268,7 +268,7 @@ export function CreateInboundForecastForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>创建入库预报单</CardTitle>
+        <CardTitle>创建入库预报?/CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -317,15 +317,15 @@ export function CreateInboundForecastForm({
             </div>
           </div>
 
-          {/* 供应商信息 */}
+          {/* 供应商信?*/}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium">供应商信息</h3>
+              <h3 className="text-lg font-medium">供应商信?/h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="supplierName">供应商名称 *</Label>
+                <Label htmlFor="supplierName">供应商名?*</Label>
                 <Input
                   id="supplierName"
                   value={formData.supplierName}
@@ -343,7 +343,7 @@ export function CreateInboundForecastForm({
               </div>
 
               <div>
-                <Label htmlFor="supplierContact">联系人 *</Label>
+                <Label htmlFor="supplierContact">联系?*</Label>
                 <Input
                   id="supplierContact"
                   value={formData.supplierContact}
@@ -500,7 +500,7 @@ export function CreateInboundForecastForm({
                   item.height) && (
                   <div className="mt-3 pt-3 border-t grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                      <Label>长(cm)</Label>
+                      <Label>�?cm)</Label>
                       <Input
                         type="number"
                         step="0.1"
@@ -520,7 +520,7 @@ export function CreateInboundForecastForm({
                       />
                     </div>
                     <div>
-                      <Label>宽(cm)</Label>
+                      <Label>�?cm)</Label>
                       <Input
                         type="number"
                         step="0.1"
@@ -540,7 +540,7 @@ export function CreateInboundForecastForm({
                       />
                     </div>
                     <div>
-                      <Label>高(cm)</Label>
+                      <Label>�?cm)</Label>
                       <Input
                         type="number"
                         step="0.1"
@@ -582,7 +582,7 @@ export function CreateInboundForecastForm({
               value={formData.remarks}
               onChange={(e) => updateFormData("remarks", e.target.value)}
               rows={3}
-              placeholder="请输入备注信息"
+              placeholder="请输入备注信?
             />
           </div>
 
@@ -597,7 +597,7 @@ export function CreateInboundForecastForm({
               取消
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "创建中..." : "创建预报单"}
+              {loading ? "创建?.." : "创建预报?}
             </Button>
           </div>
         </form>

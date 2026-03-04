@@ -101,7 +101,7 @@ jobs:
             echo "::error::❌ 审计日志未生成"
             exit 1
           fi
-          
+
           # 检查日志格式
           log_files=$(find ./logs -name "*.ndjson" -o -name "*.json" | head -5)
           for log_file in $log_files; do
@@ -114,7 +114,7 @@ jobs:
               fi
             fi
           done
-          
+
           echo "✅ 审计日志验证通过"
 
       - name: Upload audit test results
@@ -156,14 +156,14 @@ jobs:
             "[a-zA-Z0-9]{32}[ \t]*=[ \t]*['\"][a-zA-Z0-9]{32,}['\"]"
             "secret.*[a-zA-Z0-9]{16,}"
           )
-          
+
           for pattern in "${secret_patterns[@]}"; do
             if grep -r -E "$pattern" --exclude-dir=node_modules --exclude-dir=.git .; then
               echo "::error::❌ 发现潜在的硬编码密钥"
               exit 1
             fi
           done
-          
+
           echo "✅ 密钥扫描通过"
 
   # 权限配置验证
@@ -185,13 +185,13 @@ jobs:
             echo "::error::❌ RBAC 配置文件缺失"
             exit 1
           fi
-          
+
           # 验证 JSON 格式
           if ! jq empty config/rbac.json 2>/dev/null; then
             echo "::error::❌ RBAC 配置文件格式错误"
             exit 1
           fi
-          
+
           # 检查必需的角色定义
           required_roles=("admin" "ops" "engineer" "consumer" "shop_owner")
           for role in "${required_roles[@]}"; do
@@ -200,7 +200,7 @@ jobs:
               exit 1
             fi
           done
-          
+
           echo "✅ RBAC 配置验证通过"
 
   # 质量门禁检查
@@ -213,30 +213,30 @@ jobs:
         run: |
           # 检查所有前置任务的状态
           failed_jobs=0
-          
+
           # 权限控制测试
           if [[ "${{ needs.permission-controls.result }}" != "success" ]]; then
             echo "::error::❌ 权限控制测试未通过"
             ((failed_jobs++))
           fi
-          
+
           # 审计日志测试
           if [[ "${{ needs.audit-logging.result }}" != "success" ]]; then
             echo "::error::❌ 审计日志测试未通过"
             ((failed_jobs++))
           fi
-          
+
           # 安全扫描
           if [[ "${{ needs.security-scan.result }}" != "success" ]]; then
             echo "::warning::⚠️ 安全扫描发现问题"
           fi
-          
+
           # RBAC 验证
           if [[ "${{ needs.rbac-validation.result }}" != "success" ]]; then
             echo "::error::❌ RBAC 配置验证未通过"
             ((failed_jobs++))
           fi
-          
+
           # 如果有任何关键测试失败，阻止合并
           if [ $failed_jobs -gt 0 ]; then
             echo "::error::❌ 质量门禁未通过，共 $failed_jobs 项测试失败"
@@ -282,12 +282,12 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.issue.number
             });
-            
+
             const status = '${{ needs.quality-gate.result }}' === 'success' ? 'success' : 'failure';
             const description = status === 'success' 
               ? '✅ 安全门禁检查通过' 
               : '❌ 安全门禁检查未通过，请查看详细日志';
-            
+
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,

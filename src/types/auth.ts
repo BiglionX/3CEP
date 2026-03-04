@@ -1,6 +1,6 @@
-export type UserRole = 
+﻿export type UserRole =
   | 'admin'
-  | 'manager' 
+  | 'manager'
   | 'content_manager'
   | 'shop_manager'
   | 'finance_manager'

@@ -3,11 +3,10 @@
  * 负责将WMS系统数据映射到本地数据库
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { WMSInventoryItem } from "./wms-client.interface";
+import { createClient } from '@supabase/supabase-js';
+import { WMSInventoryItem } from './wms-client.interface';
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 初始化Supabase客户?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -30,8 +29,8 @@ export interface InventoryMapping {
 export interface SyncRecord {
   id: string;
   connectionId: string;
-  syncType: "full" | "incremental" | "manual";
-  status: "started" | "completed" | "failed";
+  syncType: 'full' | 'incremental' | 'manual';
+  status: 'started' | 'completed' | 'failed';
   itemsCount: number;
   successCount: number;
   errorCount: number;
@@ -42,8 +41,7 @@ export interface SyncRecord {
 
 export class InventoryMapper {
   /**
-   * 更新或创建库存映射记录
-   */
+   * 更新或创建库存映射记?   */
   async upsertInventoryMapping(
     connectionId: string,
     wmsItem: WMSInventoryItem,
@@ -52,13 +50,13 @@ export class InventoryMapper {
     try {
       // 检查是否已存在映射
       const { data: existingMapping, error: selectError } = await supabase
-        .from("wms_inventory_mapping")
-        .select("id")
-        .eq("connection_id", connectionId)
-        .eq("wms_sku", wmsItem.sku)
+        .from('wms_inventory_mapping')
+        .select('id')
+        .eq('connection_id', connectionId)
+        .eq('wms_sku', wmsItem.sku)
         .single();
 
-      if (selectError && selectError.code !== "PGRST116") {
+      if (selectError && selectError.code !== 'PGRST116') {
         return {
           success: false,
           error: `查询现有映射失败: ${selectError.message}`,
@@ -83,10 +81,10 @@ export class InventoryMapper {
       if (existingMapping) {
         // 更新现有记录
         const { data, error } = await supabase
-          .from("wms_inventory_mapping")
+          .from('wms_inventory_mapping')
           .update(mappingData)
-          .eq("id", existingMapping.id)
-          .select("id")
+          .eq('id', existingMapping.id)
+          .select('id')
           .single();
 
         if (error) {
@@ -97,11 +95,10 @@ export class InventoryMapper {
         }
         result = data;
       } else {
-        // 创建新记录
-        const { data, error } = await supabase
-          .from("wms_inventory_mapping")
+        // 创建新记?        const { data, error } = await supabase
+          .from('wms_inventory_mapping')
           .insert(mappingData)
-          .select("id")
+          .select('id')
           .single();
 
         if (error) {
@@ -120,7 +117,7 @@ export class InventoryMapper {
     } catch (error) {
       return {
         success: false,
-        error: `处理库存映射时发生错误: ${(error as Error).message}`,
+        error: `处理库存映射时发生错? ${(error as Error).message}`,
       };
     }
   }
@@ -136,14 +133,13 @@ export class InventoryMapper {
     const errors: string[] = [];
     let processed = 0;
 
-    // 按批次处理，避免一次性处理过多数据
-    const batchSize = 50;
+    // 按批次处理，避免一次性处理过多数?    const batchSize = 50;
     for (let i = 0; i < wmsItems.length; i += batchSize) {
       const batch = wmsItems.slice(i, i + batchSize);
 
       try {
         const batchResults = await Promise.all(
-          batch.map(async (item) => {
+          batch.map(async item => {
             const localProductId = localProductMap?.get(item.sku);
             const result = await this.upsertInventoryMapping(
               connectionId,
@@ -163,7 +159,7 @@ export class InventoryMapper {
 
         // 添加小延迟避免数据库压力过大
         if (i + batchSize < wmsItems.length) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise(resolve => setTimeout(resolve, 100));
         }
       } catch (error) {
         errors.push(`批次处理失败: ${(error as Error).message}`);
@@ -195,7 +191,7 @@ export class InventoryMapper {
     reason: string
   ): Promise<boolean> {
     try {
-      const { error } = await supabase.from("wms_inventory_history").insert({
+      const { error } = await supabase.from('wms_inventory_history').insert({
         mapping_id: mappingId,
         quantity_before: before.quantity,
         quantity_after: after.quantity,
@@ -208,7 +204,7 @@ export class InventoryMapper {
 
       return !error;
     } catch (error) {
-      console.error("记录库存变动历史失败:", error);
+      console.error('记录库存变动历史失败:', error);
       return false;
     }
   }
@@ -217,11 +213,11 @@ export class InventoryMapper {
    * 创建同步记录
    */
   async createSyncRecord(
-    record: Omit<SyncRecord, "id" | "startTime">
+    record: Omit<SyncRecord, 'id' | 'startTime'>
   ): Promise<string | null> {
     try {
       const { data, error } = await supabase
-        .from("wms_sync_records")
+        .from('wms_sync_records')
         .insert({
           connection_id: record.connectionId,
           sync_type: record.syncType,
@@ -232,17 +228,17 @@ export class InventoryMapper {
           error_details: record.errorDetails,
           start_time: new Date().toISOString(),
         } as any)
-        .select("id")
+        .select('id')
         .single();
 
       if (error) {
-        console.error("创建同步记录失败:", error);
+        console.error('创建同步记录失败:', error);
         return null;
       }
 
       return data.id;
     } catch (error) {
-      console.error("创建同步记录异常:", error);
+      console.error('创建同步记录异常:', error);
       return null;
     }
   }
@@ -253,7 +249,7 @@ export class InventoryMapper {
   async updateSyncRecord(
     recordId: string,
     updates: Partial<
-      Omit<SyncRecord, "id" | "connectionId" | "syncType" | "startTime">
+      Omit<SyncRecord, 'id' | 'connectionId' | 'syncType' | 'startTime'>
     >
   ): Promise<boolean> {
     try {
@@ -266,49 +262,53 @@ export class InventoryMapper {
       }
 
       const { error } = await supabase
-        .from("wms_sync_records")
+        .from('wms_sync_records')
         .update(updateData)
-        .eq("id", recordId);
+        .eq('id', recordId);
 
       return !error;
     } catch (error) {
-      console.error("更新同步记录失败:", error);
+      console.error('更新同步记录失败:', error);
       return false;
     }
   }
 
   /**
-   * 获取连接的库存映射
-   */
+   * 获取连接的库存映?   */
   async getConnectionInventory(
     connectionId: string
   ): Promise<InventoryMapping[]> {
     try {
       const { data, error } = await supabase
-        .from("wms_inventory_mapping")
-        .select("*")
-        .eq("connection_id", connectionId);
+        .from('wms_inventory_mapping')
+        .select('*')
+        .eq('connection_id', connectionId);
 
       if (error) {
         throw new Error(`查询库存映射失败: ${error.message}`);
       }
 
-      return data.map((item) => ({
-        id: item.id,
-        connectionId: item.connection_id,
-        wmsSku: item.wms_sku,
-        localProductId: item.local_product_id,
-        productName: item.product_name,
-        quantity: item.quantity,
-        availableQuantity: item.available_quantity,
-        reservedQuantity: item.reserved_quantity,
-        location: item.location,
-        batchNumber: item.batch_number,
-        expiryDate: item.expiry_date ? new Date(item.expiry_date) : undefined,
-        lastUpdated: new Date(item.last_updated),
-      }));
+      return data.map(
+        item =>
+          ({
+            id: item.id,
+            connectionId: item.connection_id,
+            wmsSku: item.wms_sku,
+            localProductId: item.local_product_id,
+            productName: item.product_name,
+            quantity: item.quantity,
+            availableQuantity: item.available_quantity,
+            reservedQuantity: item.reserved_quantity,
+            location: item.location,
+            batchNumber: item.batch_number,
+            expiryDate: item.expiry_date
+              ? new Date(item.expiry_date)
+              : undefined,
+            lastUpdated: new Date(item.last_updated),
+          }) as any
+      );
     } catch (error) {
-      console.error("获取连接库存失败:", error);
+      console.error('获取连接库存失败:', error);
       return [];
     }
   }
@@ -325,13 +325,13 @@ export class InventoryMapper {
   }> {
     try {
       let query = supabase
-        .from("wms_inventory_mapping")
+        .from('wms_inventory_mapping')
         .select(
-          "quantity, available_quantity, reserved_quantity, last_updated"
+          'quantity, available_quantity, reserved_quantity, last_updated'
         );
 
       if (connectionId) {
-        query = query.eq("connection_id", connectionId);
+        query = query.eq('connection_id', connectionId);
       }
 
       const { data, error } = await query;
@@ -365,7 +365,7 @@ export class InventoryMapper {
 
       return stats;
     } catch (error) {
-      console.error("获取库存统计失败:", error);
+      console.error('获取库存统计失败:', error);
       return {
         totalItems: 0,
         totalQuantity: 0,
@@ -376,8 +376,7 @@ export class InventoryMapper {
   }
 
   /**
-   * 获取低库存预警
-   */
+   * 获取低库存预?   */
   async getLowInventoryAlerts(threshold: number = 10): Promise<
     Array<{
       connectionId: string;
@@ -390,15 +389,15 @@ export class InventoryMapper {
   > {
     try {
       const { data, error } = await supabase
-        .from("wms_current_inventory")
-        .select("*")
-        .lt("available_quantity", threshold);
+        .from('wms_current_inventory')
+        .select('*')
+        .lt('available_quantity', threshold);
 
       if (error) {
-        throw new Error(`查询低库存预警失败: ${error.message}`);
+        throw new Error(`查询低库存预警失? ${error.message}`);
       }
 
-      return data.map((item) => ({
+      return data.map(item => ({
         connectionId: item.connection_id,
         warehouseName: item.warehouse_name,
         sku: item.wms_sku,
@@ -407,14 +406,13 @@ export class InventoryMapper {
         availableQuantity: item.available_quantity,
       }));
     } catch (error) {
-      console.error("获取低库存预警失败:", error);
+      console.error('获取低库存预警失?', error);
       return [];
     }
   }
 
   /**
-   * 获取库存准确性报告
-   */
+   * 获取库存准确性报?   */
   async getInventoryAccuracyReport(connectionId?: string): Promise<{
     accuracyRate: number;
     totalItems: number;
@@ -424,12 +422,10 @@ export class InventoryMapper {
   }> {
     try {
       // 这里可以根据业务需求实现更复杂的准确性计算逻辑
-      // 比如对比WMS数据和实际盘点数据
-
+      // 比如对比WMS数据和实际盘点数?
       const stats = await this.getInventoryStatistics(connectionId);
 
-      // 简化的准确性计算（假设所有数据都是准确的）
-      const accuracyRate = stats.totalItems > 0 ? 100 : 0;
+      // 简化的准确性计算（假设所有数据都是准确的?      const accuracyRate = stats.totalItems > 0 ? 100 : 0;
 
       return {
         accuracyRate,
@@ -439,7 +435,7 @@ export class InventoryMapper {
         averageDiscrepancy: 0,
       };
     } catch (error) {
-      console.error("获取库存准确性报告失败:", error);
+      console.error('获取库存准确性报告失?', error);
       return {
         accuracyRate: 0,
         totalItems: 0,
@@ -451,26 +447,25 @@ export class InventoryMapper {
   }
 
   /**
-   * 清理过期的历史记录
-   */
+   * 清理过期的历史记?   */
   async cleanupHistoryRecords(daysToKeep: number = 90): Promise<number> {
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
 
       const { data, error } = await supabase
-        .from("wms_inventory_history")
+        .from('wms_inventory_history')
         .delete()
-        .lt("changed_at", cutoffDate.toISOString())
-        .select("count");
+        .lt('changed_at', cutoffDate.toISOString())
+        .select('count');
 
       if (error) {
         throw new Error(`清理历史记录失败: ${error.message}`);
       }
 
-      return (data as any)?.data?.length || 0;
+      return (data as any)?.(data as any)?.length || 0;
     } catch (error) {
-      console.error("清理历史记录异常:", error);
+      console.error('清理历史记录异常:', error);
       return 0;
     }
   }

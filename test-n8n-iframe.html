@@ -1,134 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>n8n iframe 嵌入测试</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .test-section {
-            margin: 30px 0;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .iframe-container {
-            width: 100%;
-            height: 600px;
-            border: 2px solid #007acc;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .status {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        .instructions {
-            background-color: #e9ecef;
-            padding: 15px;
-            border-left: 4px solid #007acc;
-            margin: 20px 0;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      .test-section {
+        margin: 30px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .iframe-container {
+        width: 100%;
+        height: 600px;
+        border: 2px solid #007acc;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      .instructions {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-left: 4px solid #007acc;
+        margin: 20px 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>🔧 n8n iframe 嵌入测试页面</h1>
-        
-        <div class="instructions">
-            <h3>📋 测试说明：</h3>
-            <ol>
-                <li>确保 n8n 服务已经启动并配置了 iframe 嵌入支持</li>
-                <li>检查下方的 iframe 是否能正常加载 n8n 界面</li>
-                <li>观察浏览器控制台是否有跨域错误</li>
-                <li>尝试在 iframe 内进行一些基本操作</li>
-            </ol>
-        </div>
+      <h1>🔧 n8n iframe 嵌入测试页面</h1>
 
-        <div class="test-section">
-            <h2>🧪 iframe 嵌入测试</h2>
-            <div class="status info">
-                正在尝试加载 n8n 界面到 iframe 中...
-            </div>
-            <div class="iframe-container">
-                <iframe 
-                    src="https://n8n.yourdomain.com" 
-                    title="n8n 工作流平台"
-                    onload="handleIframeLoad()"
-                    onerror="handleIframeError()">
-                </iframe>
-            </div>
-        </div>
+      <div class="instructions">
+        <h3>📋 测试说明：</h3>
+        <ol>
+          <li>确保 n8n 服务已经启动并配置了 iframe 嵌入支持</li>
+          <li>检查下方的 iframe 是否能正常加载 n8n 界面</li>
+          <li>观察浏览器控制台是否有跨域错误</li>
+          <li>尝试在 iframe 内进行一些基本操作</li>
+        </ol>
+      </div>
 
-        <div class="test-section">
-            <h2>📊 测试结果</h2>
-            <div id="test-results">
-                <div class="status warning">等待测试结果...</div>
-            </div>
+      <div class="test-section">
+        <h2>🧪 iframe 嵌入测试</h2>
+        <div class="status info">正在尝试加载 n8n 界面到 iframe 中...</div>
+        <div class="iframe-container">
+          <iframe
+            src="https://n8n.yourdomain.com"
+            title="n8n 工作流平台"
+            onload="handleIframeLoad()"
+            onerror="handleIframeError()"
+          >
+          </iframe>
         </div>
+      </div>
 
-        <div class="test-section">
-            <h2>⚙️ 配置信息</h2>
-            <div class="status info">
-                <strong>当前配置：</strong><br>
-                - N8N 地址: https://n8n.yourdomain.com<br>
-                - SameSite 策略: none<br>
-                - Secure Cookie: true<br>
-                - CORS 允许来源: your-admin-domain.com, localhost:3000
-            </div>
+      <div class="test-section">
+        <h2>📊 测试结果</h2>
+        <div id="test-results">
+          <div class="status warning">等待测试结果...</div>
         </div>
+      </div>
+
+      <div class="test-section">
+        <h2>⚙️ 配置信息</h2>
+        <div class="status info">
+          <strong>当前配置：</strong><br />
+          - N8N 地址: https://n8n.yourdomain.com<br />
+          - SameSite 策略: none<br />
+          - Secure Cookie: true<br />
+          - CORS 允许来源: your-admin-domain.com, localhost:3000
+        </div>
+      </div>
     </div>
 
     <script>
-        let testStartTime = Date.now();
-        
-        function handleIframeLoad() {
-            const loadTime = Date.now() - testStartTime;
-            const resultsDiv = document.getElementById('test-results');
-            
-            resultsDiv.innerHTML = `
+      let testStartTime = Date.now();
+
+      function handleIframeLoad() {
+        const loadTime = Date.now() - testStartTime;
+        const resultsDiv = document.getElementById('test-results');
+
+        resultsDiv.innerHTML = `
                 <div class="status success">
                     ✅ iframe 加载成功！<br>
                     加载耗时: ${loadTime}ms<br>
@@ -138,11 +137,11 @@
                     💡 提示：如果 iframe 内容显示正常且可以交互，说明配置成功
                 </div>
             `;
-        }
+      }
 
-        function handleIframeError() {
-            const resultsDiv = document.getElementById('test-results');
-            resultsDiv.innerHTML = `
+      function handleIframeError() {
+        const resultsDiv = document.getElementById('test-results');
+        resultsDiv.innerHTML = `
                 <div class="status error">
                     ❌ iframe 加载失败！<br>
                     可能原因：<br>
@@ -152,31 +151,31 @@
                     - SSL 证书问题
                 </div>
             `;
-        }
+      }
 
-        // 页面加载完成后开始测试
-        window.addEventListener('load', function() {
-            console.log('开始测试 n8n iframe 嵌入...');
-            testStartTime = Date.now();
-            
-            // 5秒后如果没有加载成功，显示超时提示
-            setTimeout(function() {
-                const resultsDiv = document.getElementById('test-results');
-                if (resultsDiv.querySelector('.warning')) {
-                    resultsDiv.innerHTML = `
+      // 页面加载完成后开始测试
+      window.addEventListener('load', function () {
+        console.log('开始测试 n8n iframe 嵌入...');
+        testStartTime = Date.now();
+
+        // 5秒后如果没有加载成功，显示超时提示
+        setTimeout(function () {
+          const resultsDiv = document.getElementById('test-results');
+          if (resultsDiv.querySelector('.warning')) {
+            resultsDiv.innerHTML = `
                         <div class="status warning">
                             ⚠️ 加载超时<br>
                             iframe 仍在尝试加载中，请检查网络连接和 n8n 服务状态
                         </div>
                     `;
-                }
-            }, 5000);
-        });
+          }
+        }, 5000);
+      });
 
-        // 监听跨域错误
-        window.addEventListener('message', function(event) {
-            console.log('收到跨域消息:', event);
-        });
+      // 监听跨域错误
+      window.addEventListener('message', function (event) {
+        console.log('收到跨域消息:', event);
+      });
     </script>
-</body>
+  </body>
 </html>

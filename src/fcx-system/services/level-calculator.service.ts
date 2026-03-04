@@ -6,7 +6,7 @@ import {
 } from '../models/fcx-account.model';
 import { LEVEL_THRESHOLDS } from '../utils/constants';
 
-// 初始化Supabase客户端
+// 初始化Supabase客户?
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -16,8 +16,8 @@ const supabase = createClient<Database>(
  * 等级计算权重配置
  */
 interface LevelCalculationWeights {
-  rating: number;        // 好评率权重
-  completionRate: number; // 完成率权重
+  rating: number;        // 好评率权?
+  completionRate: number; // 完成率权?
   orderCount: number;    // 订单数量权重
   serviceQuality: number; // 服务质量权重
   fcx2Balance: number;   // FCX2余额权重
@@ -30,12 +30,12 @@ interface UserBehaviorMetrics {
   shopId: string;
   rating: number;           // 平均评分 (0-5)
   totalOrders: number;      // 总订单数
-  completedOrders: number;  // 完成订单数
-  cancelledOrders: number;  // 取消订单数
-  disputeOrders: number;    // 争议订单数
+  completedOrders: number;  // 完成订单?
+  cancelledOrders: number;  // 取消订单?
+  disputeOrders: number;    // 争议订单?
   fcx2Balance: number;      // FCX2余额
   joinDays: number;         // 加入天数
-  lastActiveDays: number;   // 最后活跃天数
+  lastActiveDays: number;   // 最后活跃天?
 }
 
 /**
@@ -61,7 +61,7 @@ export class LevelCalculatorService {
   };
 
   /**
-   * 计算用户的综合等级分数
+   * 计算用户的综合等级分?
    */
   async calculateUserLevelScore(shopId: string): Promise<LevelCalculationResult> {
     try {
@@ -82,7 +82,7 @@ export class LevelCalculatorService {
         orderCountScore * LevelCalculatorService.WEIGHTS.orderCount +
         qualityScore * LevelCalculatorService.WEIGHTS.serviceQuality +
         balanceScore * LevelCalculatorService.WEIGHTS.fcx2Balance
-      ) * 100; // 转换为0-100分制
+      ) * 100; // 转换?-100分制
       
       // 4. 确定等级
       const newLevel = this.determineLevel(totalScore);
@@ -117,7 +117,7 @@ export class LevelCalculatorService {
     errors: Array<{ shopId: string; error: string }>;
   }> {
     try {
-      // 获取所有联盟成员
+      // 获取所有联盟成?
       const { data: shops, error } = await supabase
         .from('repair_shops')
         .select('id, name, alliance_level')
@@ -135,7 +135,7 @@ export class LevelCalculatorService {
       let levelChanged = 0;
       const errors: Array<{ shopId: string; error: string }> = [];
 
-      // 并行处理所有用户
+      // 并行处理所有用?
       const promises = shopList.map(async (shop: any) => {
         try {
           const result = await this.calculateUserLevelScore(shop.id);
@@ -193,7 +193,7 @@ export class LevelCalculatorService {
         .single() as any;
 
       if (shopError || !shop) {
-        throw new Error(`获取店铺信息失败: ${shopError?.message || '店铺不存在'}`);
+        throw new Error(`获取店铺信息失败: ${shopError?.message || '店铺不存?}`);
       }
 
       // 统计订单情况
@@ -213,7 +213,7 @@ export class LevelCalculatorService {
       const cancelledOrders = orderList.filter((o: any) => o.status === 'cancelled').length;
       const disputeOrders = orderList.filter((o: any) => o.status === 'disputed').length;
 
-      // 计算加入天数和最后活跃天数
+      // 计算加入天数和最后活跃天?
       const joinDate = new Date(shop.created_at);
       const lastActiveDate = shop.updated_at ? new Date(shop.updated_at) : new Date();
       const currentDate = new Date();
@@ -229,7 +229,7 @@ export class LevelCalculatorService {
         cancelledOrders,
         disputeOrders,
         fcx2Balance: shop.fcx2_balance || 0,
-        joinDays: Math.max(1, joinDays), // 至少1天
+        joinDays: Math.max(1, joinDays), // 至少1�?
         lastActiveDays
       };
 
@@ -243,13 +243,13 @@ export class LevelCalculatorService {
    * 计算评分得分 (0-1)
    */
   private calculateRatingScore(rating: number): number {
-    // 3.0分以下为0分，5.0分为满分，线性映射
+    // 3.0分以下为0分，5.0分为满分，线性映?
     if (rating < 3.0) return 0;
     return (rating - 3.0) / 2.0;
   }
 
   /**
-   * 计算完成率得分 (0-1)
+   * 计算完成率得?(0-1)
    */
   private calculateCompletionScore(metrics: UserBehaviorMetrics): number {
     const { completedOrders, cancelledOrders, disputeOrders } = metrics;
@@ -257,7 +257,7 @@ export class LevelCalculatorService {
     
     if (totalRelevantOrders === 0) return 0;
     
-    // 完成率 = 完成订单 / (完成 + 取消 + 争议)
+    // 完成?= 完成订单 / (完成 + 取消 + 争议)
     const completionRate = completedOrders / totalRelevantOrders;
     return completionRate;
   }
@@ -266,9 +266,9 @@ export class LevelCalculatorService {
    * 计算订单数量得分 (0-1)
    */
   private calculateOrderCountScore(completedOrders: number): number {
-    // 使用对数函数平滑增长，避免初期过快后期停滞
+    // 使用对数函数平滑增长，避免初期过快后期停?
     if (completedOrders <= 0) return 0;
-    const normalizedCount = Math.log(completedOrders + 1) / Math.log(100); // 以100为基准
+    const normalizedCount = Math.log(completedOrders + 1) / Math.log(100); // �?00为基?
     return Math.min(1, normalizedCount);
   }
 
@@ -280,7 +280,7 @@ export class LevelCalculatorService {
     
     if (totalOrders === 0) return 0;
     
-    // 质量得分 = 1 - (取消率 + 争议率)
+    // 质量得分 = 1 - (取消?+ 争议?
     const cancelRate = cancelledOrders / totalOrders;
     const disputeRate = disputeOrders / totalOrders;
     const qualityScore = 1 - (cancelRate + disputeRate);
@@ -292,9 +292,9 @@ export class LevelCalculatorService {
    * 计算余额得分 (0-1)
    */
   private calculateBalanceScore(fcx2Balance: number): number {
-    // 使用对数函数，避免大户垄断
+    // 使用对数函数，避免大户垄?
     if (fcx2Balance <= 0) return 0;
-    const normalizedBalance = Math.log(fcx2Balance + 1) / Math.log(50000); // 以50000为基准
+    const normalizedBalance = Math.log(fcx2Balance + 1) / Math.log(50000); // �?0000为基?
     return Math.min(1, normalizedBalance);
   }
 
@@ -337,7 +337,7 @@ export class LevelCalculatorService {
    */
   private async updateUserLevel(shopId: string, newLevel: AllianceLevel): Promise<void> {
     try {
-      // 暂时禁用更新操作，避免类型问题
+      // 暂时禁用更新操作，避免类型问?
       // const { error } = await supabase
       //   .from('repair_shops')
       //   .update({ 
@@ -366,7 +366,7 @@ export class LevelCalculatorService {
     score: number
   ): Promise<void> {
     try {
-      // 暂时不记录日志，避免表不存在的问题
+      // 暂时不记录日志，避免表不存在的问?
       // const { error } = await supabase
       //   .from('level_change_logs')
       //   .insert({
@@ -397,13 +397,13 @@ export class LevelCalculatorService {
     
     // 评分建议
     if (metrics.rating < 4.0) {
-      recommendations.push('提高服务质量，争取获得更多好评');
+      recommendations.push('提高服务质量，争取获得更多好?);
     }
     
-    // 完成率建议
+    // 完成率建?
     const completionRate = metrics.completedOrders / Math.max(1, metrics.completedOrders + metrics.cancelledOrders + metrics.disputeOrders);
     if (completionRate < 0.8) {
-      recommendations.push('提高订单完成率，减少取消和争议订单');
+      recommendations.push('提高订单完成率，减少取消和争议订?);
     }
     
     // 订单数量建议
@@ -411,7 +411,7 @@ export class LevelCalculatorService {
       recommendations.push('增加接单量，积累更多服务经验');
     }
     
-    // 活跃度建议
+    // 活跃度建?
     if (metrics.lastActiveDays > 30) {
       recommendations.push('保持活跃接单，提高平台参与度');
     }
@@ -422,16 +422,16 @@ export class LevelCalculatorService {
         recommendations.push('努力达到白银级，享受更多平台权益');
         break;
       case AllianceLevel.SILVER:
-        recommendations.push('向黄金级迈进，获得更多优质订单推荐');
+        recommendations.push('向黄金级迈进，获得更多优质订单推?);
         break;
       case AllianceLevel.GOLD:
-        recommendations.push('冲击钻石级，成为平台顶级服务商');
+        recommendations.push('冲击钻石级，成为平台顶级服务?);
         break;
       case AllianceLevel.DIAMOND:
         recommendations.push('保持钻石级地位，维护优质服务口碑');
         break;
     }
     
-    return recommendations.slice(0, 3); // 最多返回3条建议
+    return recommendations.slice(0, 3); // 最多返?条建?
   }
 }

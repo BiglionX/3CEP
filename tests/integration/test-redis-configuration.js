@@ -7,9 +7,12 @@
 async function runRedisTests() {
   try {
     // 导入必要的模块
-    const { redisClient, redisPool, RedisConnectionPool } = await import('../src/data-center/core/data-center-service');
-    const { redisHealthMonitor } = await import('../src/data-center/core/redis-health-monitor');
-    const { monitoringService } = await import('../src/data-center/monitoring/monitoring-service');
+    const { redisClient, redisPool, RedisConnectionPool } =
+      await import('../src/data-center/core/data-center-service');
+    const { redisHealthMonitor } =
+      await import('../src/data-center/core/redis-health-monitor');
+    const { monitoringService } =
+      await import('../src/data-center/monitoring/monitoring-service');
 
     console.log('🧪 开始Redis配置和连接测试...\n');
 
@@ -31,7 +34,7 @@ async function runRedisTests() {
         ['set', 'test:key1', 'value1'],
         ['set', 'test:key2', 'value2'],
         ['get', 'test:key1'],
-        ['get', 'test:key2']
+        ['get', 'test:key2'],
       ];
 
       const results = await pool.pipeline(testCommands);
@@ -57,10 +60,10 @@ async function runRedisTests() {
     // 测试4: 监控指标记录
     console.log('\n4️⃣ 测试监控指标记录...');
     try {
-      monitoringService.recordMetric('redis_test_metric', 95.5, { 
-        test: 'connection_pool' 
+      monitoringService.recordMetric('redis_test_metric', 95.5, {
+        test: 'connection_pool',
       });
-      
+
       const recentMetrics = monitoringService.getMetrics('redis_test_metric');
       console.log(`   ✅ 监控指标记录成功`);
       console.log(`   📊 最近指标数: ${recentMetrics.length}`);
@@ -73,37 +76,43 @@ async function runRedisTests() {
     try {
       const testIterations = 1000;
       const startTime = Date.now();
-      
+
       // 批量SET操作
       const setCommands = [];
       for (let i = 0; i < testIterations; i++) {
         setCommands.push(['set', `perf:test:${i}`, `value_${i}`]);
       }
-      
+
       await redisPool.pipeline(setCommands);
-      
+
       // 批量GET操作
       const getCommands = [];
       for (let i = 0; i < testIterations; i++) {
         getCommands.push(['get', `perf:test:${i}`]);
       }
-      
+
       const getResults = await redisPool.pipeline(getCommands);
       const endTime = Date.now();
-      
+
       const totalTime = endTime - startTime;
-      const opsPerSecond = Math.round((testIterations * 2) / (totalTime / 1000));
-      
+      const opsPerSecond = Math.round(
+        (testIterations * 2) / (totalTime / 1000)
+      );
+
       console.log(`   ✅ 性能基准测试完成:`);
       console.log(`     总操作数: ${testIterations * 2}`);
       console.log(`     总耗时: ${totalTime}ms`);
       console.log(`     QPS: ${opsPerSecond}`);
-      console.log(`     平均延迟: ${(totalTime / (testIterations * 2)).toFixed(2)}ms`);
-      
+      console.log(
+        `     平均延迟: ${(totalTime / (testIterations * 2)).toFixed(2)}ms`
+      );
+
       // 记录性能指标
       monitoringService.recordMetric('redis_benchmark_qps', opsPerSecond);
-      monitoringService.recordMetric('redis_benchmark_avg_latency', totalTime / (testIterations * 2));
-      
+      monitoringService.recordMetric(
+        'redis_benchmark_avg_latency',
+        totalTime / (testIterations * 2)
+      );
     } catch (error) {
       console.log(`   ❌ 性能基准测试失败: ${error.message}`);
     }
@@ -124,10 +133,10 @@ async function runRedisTests() {
     try {
       redisHealthMonitor.startMonitoring(10000); // 10秒检查一次用于测试
       console.log('   ✅ 健康监控已启动');
-      
+
       // 运行几秒钟观察
       await new Promise(resolve => setTimeout(resolve, 15000));
-      
+
       redisHealthMonitor.stopMonitoring();
       console.log('   ✅ 健康监控已停止');
     } catch (error) {
@@ -159,7 +168,6 @@ async function runRedisTests() {
     console.log('✅ 错误处理机制有效');
 
     return true;
-
   } catch (error) {
     console.error('\n❌ Redis测试执行失败:', error);
     return false;
@@ -168,12 +176,14 @@ async function runRedisTests() {
 
 // 运行测试
 if (require.main === module) {
-  runRedisTests().then(success => {
-    process.exit(success ? 0 : 1);
-  }).catch(error => {
-    console.error('测试脚本执行异常:', error);
-    process.exit(1);
-  });
+  runRedisTests()
+    .then(success => {
+      process.exit(success ? 0 : 1);
+    })
+    .catch(error => {
+      console.error('测试脚本执行异常:', error);
+      process.exit(1);
+    });
 }
 
 module.exports = { runRedisTests };

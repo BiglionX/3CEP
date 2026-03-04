@@ -1,21 +1,21 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { 
-  Globe, 
-  Home, 
-  ShoppingCart, 
-  Building, 
-  Users, 
-  FileText, 
-  BarChart3, 
+import {
+  Globe,
+  Home,
+  ShoppingCart,
+  Building,
+  Users,
+  FileText,
+  BarChart3,
   Settings,
   ChevronDown,
   Menu,
-  X
+  X,
 } from 'lucide-react';
 
 interface MenuItem {
@@ -32,22 +32,27 @@ interface ForeignTradeSidebarProps {
   onRoleChange: (role: 'importer' | 'exporter') => void;
 }
 
-export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSidebarProps) {
+export function ForeignTradeSidebar({
+  activeRole,
+  onRoleChange,
+}: ForeignTradeSidebarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const menuItems: MenuItem[] = [
     {
       id: 'dashboard',
-      title: '仪表板',
+      title: '仪表?,
       href: '/foreign-trade/company',
       icon: Home,
-      activePaths: ['/foreign-trade/company']
+      activePaths: ['/foreign-trade/company'],
     },
     {
       id: 'orders',
-      title: activeRole === 'importer' ? '采购订单' : '销售订单',
+      title: activeRole === 'importer' ? '采购订单' : '销售订?,
       href: '',
       icon: activeRole === 'importer' ? ShoppingCart : Building,
       activePaths: [],
@@ -57,23 +62,23 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
           title: '订单列表',
           href: '/foreign-trade/company/orders',
           icon: FileText,
-          activePaths: ['/foreign-trade/company/orders']
+          activePaths: ['/foreign-trade/company/orders'],
         },
         {
           id: 'order-create',
-          title: activeRole === 'importer' ? '创建采购单' : '创建销售单',
+          title: activeRole === 'importer' ? '创建采购? : '创建销售单',
           href: '/foreign-trade/company/orders/create',
           icon: FileText,
-          activePaths: ['/foreign-trade/company/orders/create']
+          activePaths: ['/foreign-trade/company/orders/create'],
         },
         {
           id: 'order-tracking',
           title: '订单跟踪',
           href: '/foreign-trade/company/orders/tracking',
           icon: FileText,
-          activePaths: ['/foreign-trade/company/orders/tracking']
-        }
-      ]
+          activePaths: ['/foreign-trade/company/orders/tracking'],
+        },
+      ],
     },
     {
       id: 'partners',
@@ -84,26 +89,26 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
       children: [
         {
           id: 'suppliers',
-          title: '供应商管理',
+          title: '供应商管?,
           href: '/foreign-trade/company/partners/suppliers',
           icon: Users,
-          activePaths: ['/foreign-trade/company/partners/suppliers']
+          activePaths: ['/foreign-trade/company/partners/suppliers'],
         },
         {
           id: 'customers',
           title: '客户管理',
           href: '/foreign-trade/company/partners/customers',
           icon: Users,
-          activePaths: ['/foreign-trade/company/partners/customers']
+          activePaths: ['/foreign-trade/company/partners/customers'],
         },
         {
           id: 'contracts',
           title: '合同管理',
           href: '/foreign-trade/company/partners/contracts',
           icon: FileText,
-          activePaths: ['/foreign-trade/company/partners/contracts']
-        }
-      ]
+          activePaths: ['/foreign-trade/company/partners/contracts'],
+        },
+      ],
     },
     {
       id: 'logistics',
@@ -117,38 +122,38 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
           title: '发货管理',
           href: '/foreign-trade/company/logistics/shipping',
           icon: Globe,
-          activePaths: ['/foreign-trade/company/logistics/shipping']
+          activePaths: ['/foreign-trade/company/logistics/shipping'],
         },
         {
           id: 'tracking',
           title: '物流跟踪',
           href: '/foreign-trade/company/logistics/tracking',
           icon: Globe,
-          activePaths: ['/foreign-trade/company/logistics/tracking']
+          activePaths: ['/foreign-trade/company/logistics/tracking'],
         },
         {
           id: 'customs',
           title: '报关清关',
           href: '/foreign-trade/company/logistics/customs',
           icon: Globe,
-          activePaths: ['/foreign-trade/company/logistics/customs']
-        }
-      ]
+          activePaths: ['/foreign-trade/company/logistics/customs'],
+        },
+      ],
     },
     {
       id: 'analytics',
       title: '业务分析',
       href: '/foreign-trade/company/analytics',
       icon: BarChart3,
-      activePaths: ['/foreign-trade/company/analytics']
+      activePaths: ['/foreign-trade/company/analytics'],
     },
     {
       id: 'settings',
       title: '系统设置',
       href: '/foreign-trade/company/settings',
       icon: Settings,
-      activePaths: ['/foreign-trade/company/settings']
-    }
+      activePaths: ['/foreign-trade/company/settings'],
+    },
   ];
 
   const isActive = (item: MenuItem) => {
@@ -158,7 +163,7 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
   const toggleMenu = (menuId: string) => {
     setExpandedMenus(prev => ({
       ...prev,
-      [menuId]: !prev[menuId]
+      [menuId]: !prev[menuId],
     }));
   };
 
@@ -166,7 +171,7 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
     const hasChildren = item.children && item.children.length > 0;
     const isExpanded = expandedMenus[item.id];
     const active = isActive(item);
-    
+
     return (
       <div key={item.id}>
         {hasChildren ? (
@@ -174,8 +179,8 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
             <button
               onClick={() => toggleMenu(item.id)}
               className={`w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium transition-colors ${
-                active 
-                  ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500' 
+                active
+                  ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500'
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
               style={{ paddingLeft: `${level * 16 + 16}px` }}
@@ -184,25 +189,26 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
                 <item.icon className="h-5 w-5 mr-3" />
                 {item.title}
               </div>
-              <ChevronDown 
-                className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
               />
             </button>
-            
+
             {isExpanded && (
               <div className="bg-gray-50">
-                {item.children?.map(child => renderMenuItem(child, level + 1))}
+                {item?.map(child => renderMenuItem(child, level + 1))}
               </div>
             )}
           </>
         ) : (
           <Link href={item.href}>
-            <div className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
-              active 
-                ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500' 
-                : 'text-gray-700 hover:bg-gray-50'
-            }`}
-            style={{ paddingLeft: `${level * 16 + 16}px` }}
+            <div
+              className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
+                active
+                  ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+              style={{ paddingLeft: `${level * 16 + 16}px` }}
             >
               <item.icon className="h-5 w-5 mr-3" />
               {item.title}
@@ -215,7 +221,7 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
 
   return (
     <>
-      {/* 移动端菜单按钮 */}
+      {/* 移动端菜单按?*/}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
           variant="outline"
@@ -227,24 +233,30 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
         </Button>
       </div>
 
-      {/* 侧边栏 */}
-      <div className={`
+      {/* 侧边?*/}
+      <div
+        className={`
         fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+      `}
+      >
         <div className="flex flex-col h-full">
-          {/* Logo 和角色切换 */}
+          {/* Logo 和角色切?*/}
           <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Globe className="h-8 w-8 text-blue-600" />
-                <span className="ml-2 text-lg font-bold text-gray-900">外贸管理</span>
+                <span className="ml-2 text-lg font-bold text-gray-900">
+                  外贸管理
+                </span>
               </div>
             </div>
-            
-            {/* 角色切换器 */}
+
+            {/* 角色切换?*/}
             <div className="space-y-2">
-              <div className="text-xs text-gray-500 uppercase tracking-wide">业务模式</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wide">
+                业务模式
+              </div>
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant={activeRole === 'importer' ? 'default' : 'outline'}
@@ -252,16 +264,14 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
                   onClick={() => onRoleChange('importer')}
                   className="text-xs"
                 >
-                  进口商
-                </Button>
+                  进口?                </Button>
                 <Button
                   variant={activeRole === 'exporter' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => onRoleChange('exporter')}
                   className="text-xs"
                 >
-                  出口商
-                </Button>
+                  出口?                </Button>
               </div>
             </div>
           </div>
@@ -288,7 +298,7 @@ export function ForeignTradeSidebar({ activeRole, onRoleChange }: ForeignTradeSi
 
       {/* 遮罩层（移动端） */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         />

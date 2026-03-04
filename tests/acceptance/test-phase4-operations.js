@@ -8,7 +8,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001';
 async function runValidationTests() {
   console.log('🔍 第四阶段集成与运维验收测试');
   console.log('=====================================\n');
-  
+
   let passedTests = 0;
   let totalTests = 0;
 
@@ -20,7 +20,9 @@ async function runValidationTests() {
     if (response.ok) {
       const result = await response.json();
       console.log('   ✅ 系统健康检查通过');
-      console.log(`   📊 系统运行时间: ${Math.floor(result.uptime/3600)}小时`);
+      console.log(
+        `   📊 系统运行时间: ${Math.floor(result.uptime / 3600)}小时`
+      );
       passedTests++;
     } else {
       console.log('   ❌ 系统健康检查失败');
@@ -35,19 +37,19 @@ async function runValidationTests() {
   try {
     const response = await fetch(`${BASE_URL}/api/monitoring/metrics`);
     const contentType = response.headers.get('content-type');
-    
+
     if (contentType && contentType.includes('text/plain')) {
       const metricsText = await response.text();
       console.log('   ✅ 监控指标API接口正常');
       console.log(`   📊 返回 ${metricsText.split('\n').length} 行指标数据`);
-      
+
       // 检查关键指标是否存在
       const hasKeyMetrics = [
         'valuation_requests_total',
         'valuation_success_total',
-        'http_request_duration_seconds'
+        'http_request_duration_seconds',
       ].every(metric => metricsText.includes(metric));
-      
+
       if (hasKeyMetrics) {
         console.log('   ✅ 关键监控指标存在');
         passedTests++;
@@ -74,7 +76,7 @@ async function runValidationTests() {
     } else {
       console.log('   ❌ 估值日志管理页面路由异常');
     }
-    
+
     // 测试统计页面
     const statsPageResponse = await fetch(`${BASE_URL}/admin/valuation/stats`);
     if (statsPageResponse.status === 200 || statsPageResponse.status === 404) {
@@ -94,13 +96,13 @@ async function runValidationTests() {
   try {
     const fs = require('fs');
     const path = require('path');
-    
+
     const configFiles = [
       'config/monitoring/prometheus.yml',
       'config/monitoring/alert-rules.yml',
-      'config/monitoring/grafana-dashboard.json'
+      'config/monitoring/grafana-dashboard.json',
     ];
-    
+
     let configPassed = 0;
     for (const configFile of configFiles) {
       const fullPath = path.join(__dirname, '../../', configFile);
@@ -111,13 +113,15 @@ async function runValidationTests() {
         }
       }
     }
-    
+
     if (configPassed === configFiles.length) {
       console.log('   ✅ 所有监控配置文件完整');
       console.log(`   📁 已创建 ${configFiles.length} 个配置文件`);
       passedTests++;
     } else {
-      console.log(`   ⚠️  部分配置文件缺失 (${configPassed}/${configFiles.length})`);
+      console.log(
+        `   ⚠️  部分配置文件缺失 (${configPassed}/${configFiles.length})`
+      );
     }
   } catch (error) {
     console.log('   ❌ 配置文件检查失败:', error.message);
@@ -129,13 +133,13 @@ async function runValidationTests() {
   try {
     const fs = require('fs');
     const path = require('path');
-    
+
     const apiFiles = [
       'src/app/api/admin/valuation/logs/route.ts',
       'src/app/api/admin/valuation/stats/route.ts',
-      'src/app/api/monitoring/metrics/route.ts'
+      'src/app/api/monitoring/metrics/route.ts',
     ];
-    
+
     let apiPassed = 0;
     for (const apiFile of apiFiles) {
       const fullPath = path.join(__dirname, '../../', apiFile);
@@ -146,25 +150,27 @@ async function runValidationTests() {
         }
       }
     }
-    
+
     if (apiPassed === apiFiles.length) {
       console.log('   ✅ 所有API接口文件完整');
       console.log(`   📁 已实现 ${apiFiles.length} 个API接口`);
       passedTests++;
     } else {
-      console.log(`   ⚠️  部分API接口文件缺失 (${apiPassed}/${apiFiles.length})`);
+      console.log(
+        `   ⚠️  部分API接口文件缺失 (${apiPassed}/${apiFiles.length})`
+      );
     }
   } catch (error) {
     console.log('   ❌ API接口检查失败:', error.message);
   }
 
   // 输出测试总结
-  console.log('\n' + '='.repeat(50));
+  console.log(`\n${'='.repeat(50)}`);
   console.log('📊 第四阶段验收测试总结');
   console.log('='.repeat(50));
   console.log(`✅ 通过测试: ${passedTests}/${totalTests}`);
-  console.log(`📈 通过率: ${((passedTests/totalTests)*100).toFixed(1)}%`);
-  
+  console.log(`📈 通过率: ${((passedTests / totalTests) * 100).toFixed(1)}%`);
+
   if (passedTests === totalTests) {
     console.log('\n🎉 恭喜！第四阶段所有功能验收通过！');
     console.log('\n📋 功能清单:');
@@ -175,24 +181,26 @@ async function runValidationTests() {
   } else {
     console.log('\n⚠️  部分测试未通过，请检查相关功能实现');
   }
-  
+
   console.log('\n🔧 建议的后续操作:');
   console.log('   1. 部署Prometheus和Grafana监控系统');
   console.log('   2. 配置告警通知渠道（邮件、钉钉等）');
   console.log('   3. 完善管理后台UI组件和权限控制');
   console.log('   4. 建立定期的数据备份和清理机制');
-  
+
   return passedTests === totalTests;
 }
 
 // 执行测试
 if (require.main === module) {
-  runValidationTests().then(success => {
-    process.exit(success ? 0 : 1);
-  }).catch(error => {
-    console.error('测试执行失败:', error);
-    process.exit(1);
-  });
+  runValidationTests()
+    .then(success => {
+      process.exit(success ? 0 : 1);
+    })
+    .catch(error => {
+      console.error('测试执行失败:', error);
+      process.exit(1);
+    });
 }
 
 module.exports = { runValidationTests };

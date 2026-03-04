@@ -678,11 +678,11 @@ VACUUM FULL parts;
 
 ```javascript
 // 启用缓存
-const redis = require("redis");
+const redis = require('redis');
 const client = redis.createClient();
 
 // 实施请求限流
-const rateLimit = require("express-rate-limit");
+const rateLimit = require('express-rate-limit');
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15分钟

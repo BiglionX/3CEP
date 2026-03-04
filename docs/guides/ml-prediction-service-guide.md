@@ -11,6 +11,7 @@
 ## 功能特性
 
 ### 核心功能
+
 - 🔮 **需求预测**: 基于历史销售数据预测未来需求
 - 💰 **价格预测**: 分析历史价格趋势预测未来价格走势
 - 🔄 **批量预测**: 支持多个产品的并发预测
@@ -18,6 +19,7 @@
 - 🛡️ **错误处理**: 完善的异常处理和降级机制
 
 ### 技术特点
+
 - **大模型集成**: 支持DeepSeek、通义千问等主流大语言模型
 - **智能提示词**: 自动生成优化的预测提示词模板
 - **数据预处理**: 自动清洗和标准化历史数据
@@ -75,6 +77,7 @@ npx supabase migration up
 ```
 
 或者手动执行SQL文件：
+
 ```sql
 -- 执行 supabase/migrations/021_create_ml_prediction_tables.sql
 ```
@@ -93,6 +96,7 @@ npm start
 ## API接口说明
 
 ### 基础信息
+
 - **基础URL**: `http://localhost:3001/api/ml-prediction`
 - **认证**: 通过Supabase认证
 - **格式**: JSON
@@ -104,6 +108,7 @@ npm start
 **Action**: `predict-demand`
 
 #### 请求参数
+
 ```json
 {
   "action": "predict-demand",
@@ -118,6 +123,7 @@ npm start
 ```
 
 #### 响应示例
+
 ```json
 {
   "success": true,
@@ -153,6 +159,7 @@ npm start
 **Action**: `predict-price`
 
 #### 请求参数
+
 ```json
 {
   "action": "predict-price",
@@ -167,6 +174,7 @@ npm start
 ```
 
 #### 响应示例
+
 ```json
 {
   "success": true,
@@ -203,6 +211,7 @@ npm start
 **Action**: `batch-predict`
 
 #### 请求参数
+
 ```json
 {
   "action": "batch-predict",
@@ -225,6 +234,7 @@ npm start
 ```
 
 #### 响应示例
+
 ```json
 {
   "success": true,
@@ -233,14 +243,22 @@ npm start
       {
         "index": 0,
         "success": true,
-        "data": { /* 需求预测结果 */ },
-        "metadata": { /* 请求元数据 */ }
+        "data": {
+          /* 需求预测结果 */
+        },
+        "metadata": {
+          /* 请求元数据 */
+        }
       },
       {
         "index": 1,
         "success": true,
-        "data": { /* 价格预测结果 */ },
-        "metadata": { /* 请求元数据 */ }
+        "data": {
+          /* 价格预测结果 */
+        },
+        "metadata": {
+          /* 请求元数据 */
+        }
       }
     ],
     "summary": {
@@ -259,6 +277,7 @@ npm start
 **Endpoint**: `GET /api/ml-prediction?action=status`
 
 #### 响应示例
+
 ```json
 {
   "success": true,
@@ -282,15 +301,16 @@ npm start
 
 ### 常见错误码
 
-| 错误码 | HTTP状态 | 说明 |
-|--------|----------|------|
-| MODEL_API_ERROR | 500 | 大模型API调用失败 |
-| DATA_COLLECTION_ERROR | 500 | 数据收集失败 |
-| PROMPT_GENERATION_ERROR | 500 | 提示词生成失败 |
-| RESULT_PARSING_ERROR | 500 | 结果解析失败 |
-| STORAGE_ERROR | 500 | 存储失败 |
+| 错误码                  | HTTP状态 | 说明              |
+| ----------------------- | -------- | ----------------- |
+| MODEL_API_ERROR         | 500      | 大模型API调用失败 |
+| DATA_COLLECTION_ERROR   | 500      | 数据收集失败      |
+| PROMPT_GENERATION_ERROR | 500      | 提示词生成失败    |
+| RESULT_PARSING_ERROR    | 500      | 结果解析失败      |
+| STORAGE_ERROR           | 500      | 存储失败          |
 
 ### 错误响应格式
+
 ```json
 {
   "error": "具体的错误信息",
@@ -301,11 +321,13 @@ npm start
 ## 性能指标
 
 ### 响应时间基准
+
 - **需求预测**: < 3秒（平均）
 - **价格预测**: < 2秒（平均）
 - **批量预测**: < 10秒（5个并发）
 
 ### 准确率目标
+
 - **需求预测准确率**: ≥ 80%
 - **价格预测准确率**: ≥ 75%
 - **置信区间覆盖率**: ≥ 90%
@@ -313,13 +335,16 @@ npm start
 ## 监控和日志
 
 ### 日志级别
+
 - **DEBUG**: 调试信息
 - **INFO**: 常规操作信息
 - **WARN**: 警告信息
 - **ERROR**: 错误信息
 
 ### 性能监控
+
 系统自动收集以下指标：
+
 - 预测请求数量
 - 成功率统计
 - 平均响应时间
@@ -328,6 +353,7 @@ npm start
 ## 最佳实践
 
 ### 1. 数据准备
+
 ```javascript
 // 确保有足够的历史数据
 const minHistoricalDays = 30; // 建议至少30天历史数据
@@ -335,23 +361,25 @@ const optimalHistoricalDays = 90; // 最佳90天历史数据
 ```
 
 ### 2. 参数调优
+
 ```javascript
 // 需求预测推荐配置
 const demandOptions = {
   horizonDays: 30, // 预测周期
   seasonalFactors: ['工作日/周末', '季节性'], // 季节性因素
-  confidenceLevel: 0.95 // 置信水平
+  confidenceLevel: 0.95, // 置信水平
 };
 
 // 价格预测推荐配置
 const priceOptions = {
   horizonDays: 30,
   marketConditions: '稳定市场',
-  competitorAnalysis: true
+  competitorAnalysis: true,
 };
 ```
 
 ### 3. 错误处理
+
 ```javascript
 try {
   const result = await mlPredictionService.predictDemand(
@@ -375,22 +403,28 @@ try {
 ## 故障排除
 
 ### 1. 模型API连接失败
+
 **问题**: 无法连接到大语言模型API  
 **解决方案**:
+
 - 检查API密钥配置
 - 验证网络连接
 - 确认API配额充足
 
 ### 2. 数据不足错误
+
 **问题**: 历史数据不足以进行预测  
 **解决方案**:
+
 - 延长历史数据收集周期
 - 使用模拟数据进行测试
 - 调整最小数据要求
 
 ### 3. 预测结果异常
+
 **问题**: 预测结果明显不合理  
 **解决方案**:
+
 - 检查输入数据质量
 - 验证提示词模板
 - 分析模型输出格式
@@ -398,6 +432,7 @@ try {
 ## 版本更新日志
 
 ### v1.0.0 (2026-02-19)
+
 - ✅ 初始版本发布
 - ✅ 需求预测功能
 - ✅ 价格预测功能
@@ -408,9 +443,11 @@ try {
 ## 技术支持
 
 如有问题，请联系：
+
 - **技术支持邮箱**: support@company.com
 - **文档更新**: 查看最新版本文档
 - **GitHub Issues**: 提交问题和建议
 
 ---
-*本文档由ML预测服务自动生成，最后更新于2026年2月19日*
+
+_本文档由ML预测服务自动生成，最后更新于2026年2月19日_

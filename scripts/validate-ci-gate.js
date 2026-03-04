@@ -16,26 +16,32 @@ console.log('1. 检查 CI 配置文件中的 agents 测试集成...');
 const ciFiles = [
   '.github/workflows/test-suite.yml',
   '.github/workflows/ci-cd.yml',
-  '.github/workflows/enhanced-ci-cd.yml'
+  '.github/workflows/enhanced-ci-cd.yml',
 ];
 
 let agentsTestFound = false;
 ciFiles.forEach(file => {
   if (fs.existsSync(file)) {
     const content = fs.readFileSync(file, 'utf8');
-    const hasAgentsTest = content.includes('test:agents') || 
-                         content.includes('agents integration') ||
-                         content.includes('AGENTS_HOST');
-    
-    console.log(`   ${file}: ${hasAgentsTest ? '✅ 包含agents测试' : '❌ 未包含agents测试'}`);
-    
+    const hasAgentsTest =
+      content.includes('test:agents') ||
+      content.includes('agents integration') ||
+      content.includes('AGENTS_HOST');
+
+    console.log(
+      `   ${file}: ${hasAgentsTest ? '✅ 包含agents测试' : '❌ 未包含agents测试'}`
+    );
+
     if (hasAgentsTest) {
       agentsTestFound = true;
-      
+
       // 检查是否有服务器启动和停止逻辑
-      const hasServerLogic = content.includes('deploy-simple/server.js') &&
-                            content.includes('SERVER_PID');
-      console.log(`     服务器管理: ${hasServerLogic ? '✅ 配置完整' : '⚠️  需要完善'}`);
+      const hasServerLogic =
+        content.includes('deploy-simple/server.js') &&
+        content.includes('SERVER_PID');
+      console.log(
+        `     服务器管理: ${hasServerLogic ? '✅ 配置完整' : '⚠️  需要完善'}`
+      );
     }
   }
 });
@@ -47,28 +53,41 @@ if (fs.existsSync(branchProtectionFile)) {
   try {
     const config = JSON.parse(fs.readFileSync(branchProtectionFile, 'utf8'));
     console.log('   ✅ Branch protection rules 文件存在');
-    
+
     // 检查main分支配置
-    const mainRule = config.branchProtectionRules?.find(rule => rule.pattern === 'main');
+    const mainRule = config.branchProtectionRules?.find(
+      rule => rule.pattern === 'main'
+    );
     if (mainRule) {
       console.log('   main分支配置:');
-      console.log(`     - 状态检查: ${mainRule.requiresStatusChecks ? '✅ 启用' : '❌ 未启用'}`);
-      console.log(`     - 严格检查: ${mainRule.requiresStrictStatusChecks ? '✅ 启用' : '❌ 未启用'}`);
-      console.log(`     - 代码审查: ${mainRule.requiresCodeOwnerReviews ? '✅ 启用' : '❌ 未启用'}`);
-      console.log(`     - 审查人数: ${mainRule.requiredApprovingReviewCount}人`);
+      console.log(
+        `     - 状态检查: ${mainRule.requiresStatusChecks ? '✅ 启用' : '❌ 未启用'}`
+      );
+      console.log(
+        `     - 严格检查: ${mainRule.requiresStrictStatusChecks ? '✅ 启用' : '❌ 未启用'}`
+      );
+      console.log(
+        `     - 代码审查: ${mainRule.requiresCodeOwnerReviews ? '✅ 启用' : '❌ 未启用'}`
+      );
+      console.log(
+        `     - 审查人数: ${mainRule.requiredApprovingReviewCount}人`
+      );
     }
-    
+
     // 检查必需的状态检查上下文
     const requiredContexts = config.requiredStatusChecks?.contexts || [];
-    const hasTestSuiteContexts = requiredContexts.some(ctx => ctx.includes('test-suite'));
-    const hasAgentsRelatedContexts = requiredContexts.some(ctx => 
-      ctx.includes('agents') || ctx.includes('comprehensive-tests')
+    const hasTestSuiteContexts = requiredContexts.some(ctx =>
+      ctx.includes('test-suite')
     );
-    
+    const hasAgentsRelatedContexts = requiredContexts.some(
+      ctx => ctx.includes('agents') || ctx.includes('comprehensive-tests')
+    );
+
     console.log(`   必需状态检查上下文: ${requiredContexts.length}个`);
     console.log(`   - 包含test-suite: ${hasTestSuiteContexts ? '✅' : '❌'}`);
-    console.log(`   - 包含agents相关: ${hasAgentsRelatedContexts ? '✅' : '⚠️'}`);
-    
+    console.log(
+      `   - 包含agents相关: ${hasAgentsRelatedContexts ? '✅' : '⚠️'}`
+    );
   } catch (error) {
     console.log('   ❌ Branch protection rules 文件格式错误:', error.message);
   }
@@ -80,13 +99,14 @@ if (fs.existsSync(branchProtectionFile)) {
 console.log('\n3. 检查 package.json 测试脚本...');
 try {
   const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-  
-  const hasTestAgents = packageJson.scripts && packageJson.scripts['test:agents'];
+
+  const hasTestAgents =
+    packageJson.scripts && packageJson.scripts['test:agents'];
   const hasTestAll = packageJson.scripts && packageJson.scripts['test:all'];
-  
+
   console.log(`   test:agents 脚本: ${hasTestAgents ? '✅ 存在' : '❌ 缺失'}`);
   console.log(`   test:all 脚本: ${hasTestAll ? '✅ 存在' : '❌ 缺失'}`);
-  
+
   if (hasTestAgents) {
     console.log(`     命令: ${packageJson.scripts['test:agents']}`);
   }
@@ -99,14 +119,18 @@ console.log('\n4. 检查 agents 测试脚本文件...');
 const agentsTestScript = 'scripts/test-agents-integration.js';
 if (fs.existsSync(agentsTestScript)) {
   const stats = fs.statSync(agentsTestScript);
-  console.log(`   ✅ ${agentsTestScript} 存在 (${Math.round(stats.size/1024)}KB)`);
-  
+  console.log(
+    `   ✅ ${agentsTestScript} 存在 (${Math.round(stats.size / 1024)}KB)`
+  );
+
   // 简单检查脚本内容
   const content = fs.readFileSync(agentsTestScript, 'utf8');
   const hasHttp = content.includes('http');
-  const hasTestCases = content.includes('testCase') || content.includes('test(');
-  const hasCiFlag = content.includes('CI') || content.includes('process.env.CI');
-  
+  const hasTestCases =
+    content.includes('testCase') || content.includes('test(');
+  const hasCiFlag =
+    content.includes('CI') || content.includes('process.env.CI');
+
   console.log(`     HTTP请求支持: ${hasHttp ? '✅' : '❌'}`);
   console.log(`     测试用例: ${hasTestCases ? '✅' : '❌'}`);
   console.log(`     CI环境适配: ${hasCiFlag ? '✅' : '⚠️'}`);
@@ -120,22 +144,34 @@ const requiredEnvVars = ['AGENTS_HOST', 'AGENTS_PORT', 'AGENTS_API_KEY'];
 console.log('   必需环境变量在CI配置中:');
 requiredEnvVars.forEach(envVar => {
   // 在test-suite.yml中查找环境变量设置
-  const testSuiteContent = fs.readFileSync('.github/workflows/test-suite.yml', 'utf8');
+  const testSuiteContent = fs.readFileSync(
+    '.github/workflows/test-suite.yml',
+    'utf8'
+  );
   const isConfigured = testSuiteContent.includes(envVar);
   console.log(`     ${envVar}: ${isConfigured ? '✅ 已配置' : '❌ 未配置'}`);
 });
 
 // 最终总结
-console.log('\n' + '='.repeat(60));
+console.log(`\n${'='.repeat(60)}`);
 console.log('📊 CI门禁配置验证结果:');
 console.log('='.repeat(60));
 
 const checks = [
-  { name: 'CI配置文件中的agents测试', status: agentsTestFound ? '✅ 通过' : '❌ 未完成' },
-  { name: 'Branch Protection Rules配置', status: fs.existsSync(branchProtectionFile) ? '✅ 通过' : '❌ 未完成' },
+  {
+    name: 'CI配置文件中的agents测试',
+    status: agentsTestFound ? '✅ 通过' : '❌ 未完成',
+  },
+  {
+    name: 'Branch Protection Rules配置',
+    status: fs.existsSync(branchProtectionFile) ? '✅ 通过' : '❌ 未完成',
+  },
   { name: 'package.json测试脚本', status: '✅ 通过' },
-  { name: 'agents测试脚本文件', status: fs.existsSync(agentsTestScript) ? '✅ 通过' : '❌ 缺失' },
-  { name: 'CI环境变量配置', status: '✅ 通过' }
+  {
+    name: 'agents测试脚本文件',
+    status: fs.existsSync(agentsTestScript) ? '✅ 通过' : '❌ 缺失',
+  },
+  { name: 'CI环境变量配置', status: '✅ 通过' },
 ];
 
 checks.forEach(check => {

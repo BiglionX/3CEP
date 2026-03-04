@@ -37,10 +37,17 @@ function getLogFileName(date = new Date()) {
  * @param {String} traceId - 追踪ID
  * @param {Object} metadata - 元数据
  */
-async function audit(action, actor, resource, changes = null, traceId = null, metadata = {}) {
+async function audit(
+  action,
+  actor,
+  resource,
+  changes = null,
+  traceId = null,
+  metadata = {}
+) {
   try {
     ensureLogDirectory();
-    
+
     const logEntry = {
       timestamp: new Date().toISOString(),
       action: action,
@@ -48,7 +55,7 @@ async function audit(action, actor, resource, changes = null, traceId = null, me
         id: actor.id,
         type: actor.type || 'user',
         roles: actor.roles || [],
-        tenant_id: actor.tenant_id || null
+        tenant_id: actor.tenant_id || null,
       },
       resource: resource,
       changes: changes,
@@ -57,26 +64,24 @@ async function audit(action, actor, resource, changes = null, traceId = null, me
         ip: metadata.ip || null,
         user_agent: metadata.userAgent || null,
         session_id: metadata.sessionId || null,
-        ...metadata
-      }
+        ...metadata,
+      },
     };
-    
+
     const logFilePath = getLogFileName();
-    const logLine = JSON.stringify(logEntry) + '\n';
-    
+    const logLine = `${JSON.stringify(logEntry)  }\n`;
+
     // 异步写入日志文件
     return new Promise((resolve, reject) => {
-      fs.appendFile(logFilePath, logLine, 'utf8', (err) => {
+      fs.appendFile(logFilePath, logLine, 'utf8', err => {
         if (err) {
           console.error('❌ 审计日志写入失败:', err);
           reject(err);
         } else {
-          console.log(`📝 审计日志已记录: ${action} on ${resource}`);
-          resolve(logEntry);
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📝 审计日志已记录: ${action} on ${resource}`)resolve(logEntry);
         }
       });
     });
-    
   } catch (error) {
     console.error('❌ 审计日志记录异常:', error);
     throw error;
@@ -88,8 +93,15 @@ async function audit(action, actor, resource, changes = null, traceId = null, me
  * @param {Array} auditEntries - 审计条目数组
  */
 async function auditBatch(auditEntries) {
-  const promises = auditEntries.map(entry => 
-    audit(entry.action, entry.actor, entry.resource, entry.changes, entry.traceId, entry.metadata)
+  const promises = auditEntries.map(entry =>
+    audit(
+      entry.action,
+      entry.actor,
+      entry.resource,
+      entry.changes,
+      entry.traceId,
+      entry.metadata
+    )
   );
   return Promise.all(promises);
 }
@@ -104,40 +116,48 @@ async function auditBatch(auditEntries) {
 async function queryAuditLogs(filters = {}, startDate = null, endDate = null) {
   try {
     const logs = [];
-    const currentDate = startDate || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // 默认最近7天
+    const currentDate =
+      startDate || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // 默认最近7天
     const endDateObj = endDate || new Date();
-    
+
     // 遍历日期范围内的日志文件
-    for (let date = new Date(currentDate); date <= endDateObj; date.setDate(date.getDate() + 1)) {
+    for (
+      let date = new Date(currentDate);
+      date <= endDateObj;
+      date.setDate(date.getDate() + 1)
+    ) {
       const logFilePath = getLogFileName(date);
-      
+
       if (fs.existsSync(logFilePath)) {
         const fileContent = fs.readFileSync(logFilePath, 'utf8');
         const lines = fileContent.split('\n').filter(line => line.trim());
-        
+
         lines.forEach(line => {
           try {
             const logEntry = JSON.parse(line);
-            
+
             // 应用过滤条件
             let matches = true;
-            
+
             if (filters.action && logEntry.action !== filters.action) {
               matches = false;
             }
-            
+
             if (filters.actorId && logEntry.actor.id !== filters.actorId) {
               matches = false;
             }
-            
+
             if (filters.resource && logEntry.resource !== filters.resource) {
               matches = false;
             }
-            
-            if (filters.tenantId && logEntry.actor.tenant_id !== filters.tenantId) {
+
+            if (
+              filters.tenantId &&
+              logEntry.actor.tenant_id !== filters.tenantId
+            ) {
               matches = false;
             }
-            
+
             if (matches) {
               logs.push(logEntry);
             }
@@ -147,10 +167,9 @@ async function queryAuditLogs(filters = {}, startDate = null, endDate = null) {
         });
       }
     }
-    
+
     // 按时间排序（最新的在前）
     return logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    
   } catch (error) {
     console.error('❌ 查询审计日志失败:', error);
     throw error;
@@ -165,34 +184,32 @@ async function cleanupExpiredLogs(retentionDays = LOG_RETENTION_DAYS) {
   try {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
-    
+
     const files = fs.readdirSync(AUDIT_LOG_PATH);
     const expiredFiles = files.filter(file => {
       if (file.startsWith('audit-') && file.endsWith('.ndjson')) {
         const datePart = file.substring(6, 14); // 提取 YYYYMMDD
         const fileDate = new Date(
-          parseInt(datePart.substring(0, 4)),  // 年
-          parseInt(datePart.substring(4, 6)) - 1,  // 月（0-indexed）
-          parseInt(datePart.substring(6, 8))   // 日
+          parseInt(datePart.substring(0, 4)), // 年
+          parseInt(datePart.substring(4, 6)) - 1, // 月（0-indexed）
+          parseInt(datePart.substring(6, 8)) // 日
         );
         return fileDate < cutoffDate;
       }
       return false;
     });
-    
+
     const deletedCount = expiredFiles.length;
-    
+
     expiredFiles.forEach(file => {
       const filePath = path.join(AUDIT_LOG_PATH, file);
       fs.unlinkSync(filePath);
-      console.log(`🗑️ 已删除过期审计日志: ${file}`);
-    });
-    
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🗑️ 已删除过期审计日志: ${file}`)});
+
     return {
       deleted_count: deletedCount,
-      cutoff_date: cutoffDate.toISOString()
+      cutoff_date: cutoffDate.toISOString(),
     };
-    
   } catch (error) {
     console.error('❌ 清理过期审计日志失败:', error);
     throw error;
@@ -208,32 +225,32 @@ async function cleanupExpiredLogs(retentionDays = LOG_RETENTION_DAYS) {
 async function getAuditStats(startDate = null, endDate = null) {
   try {
     const logs = await queryAuditLogs({}, startDate, endDate);
-    
+
     const stats = {
       total_entries: logs.length,
       by_action: {},
       by_resource: {},
       by_actor: {},
-      by_date: {}
+      by_date: {},
     };
-    
+
     logs.forEach(log => {
       // 按操作类型统计
       stats.by_action[log.action] = (stats.by_action[log.action] || 0) + 1;
-      
+
       // 按资源统计
-      stats.by_resource[log.resource] = (stats.by_resource[log.resource] || 0) + 1;
-      
+      stats.by_resource[log.resource] =
+        (stats.by_resource[log.resource] || 0) + 1;
+
       // 按操作者统计
       stats.by_actor[log.actor.id] = (stats.by_actor[log.actor.id] || 0) + 1;
-      
+
       // 按日期统计
       const date = log.timestamp.split('T')[0];
       stats.by_date[date] = (stats.by_date[date] || 0) + 1;
     });
-    
+
     return stats;
-    
   } catch (error) {
     console.error('❌ 获取审计统计失败:', error);
     throw error;
@@ -248,48 +265,55 @@ function auditMiddleware(options = {}) {
   const {
     excludePaths = [],
     includeActions = ['create', 'update', 'delete', 'approve', 'reject'],
-    logSuccessOnly = false
+    logSuccessOnly = false,
   } = options;
-  
-  return function(req, res, next) {
+
+  return function (req, res, next) {
     // 检查是否需要跳过审计
     if (excludePaths.some(path => req.path.startsWith(path))) {
       return next();
     }
-    
+
     const startTime = Date.now();
     const originalSend = res.send;
-    
+
     // 重写 res.send 方法来捕获响应
-    res.send = function(body) {
+    res.send = function (body) {
       const duration = Date.now() - startTime;
-      
+
       // 只有在需要审计的操作上记录日志
       const method = req.method.toLowerCase();
-      const shouldAudit = includeActions.some(action => 
-        method === action || req.path.includes(action)
+      const shouldAudit = includeActions.some(
+        action => method === action || req.path.includes(action)
       );
-      
+
       if (shouldAudit && (!logSuccessOnly || res.statusCode < 400)) {
-        const actor = req.user ? {
-          id: req.user.id,
-          type: 'user',
-          roles: req.user.roles || [],
-          tenant_id: req.user.tenant_id || null
-        } : {
-          id: 'anonymous',
-          type: 'system'
-        };
-        
+        const actor = req.user
+          ? {
+              id: req.user.id,
+              type: 'user',
+              roles: req.user.roles || [],
+              tenant_id: req.user.tenant_id || null,
+            }
+          : {
+              id: 'anonymous',
+              type: 'system',
+            };
+
         const changes = {
           method: req.method,
           url: req.url,
           status_code: res.statusCode,
           duration_ms: duration,
-          request_body: req.body ? JSON.stringify(req.body).substring(0, 1000) : null,
-          response_body: typeof body === 'string' ? body.substring(0, 1000) : JSON.stringify(body || '').substring(0, 1000)
+          request_body: req.body
+            ? JSON.stringify(req.body).substring(0, 1000)
+            : null,
+          response_body:
+            typeof body === 'string'
+              ? body.substring(0, 1000)
+              : JSON.stringify(body || '').substring(0, 1000),
         };
-        
+
         audit(
           `${method}_${req.path.split('/').pop()}`,
           actor,
@@ -299,17 +323,17 @@ function auditMiddleware(options = {}) {
           {
             ip: req.ip || req.connection.remoteAddress,
             user_agent: req.get('User-Agent'),
-            session_id: req.sessionID
+            session_id: req.sessionID,
           }
         ).catch(err => {
           console.error('❌ 审计日志记录失败:', err);
         });
       }
-      
+
       // 调用原始的 send 方法
       originalSend.call(this, body);
     };
-    
+
     next();
   };
 }
@@ -325,8 +349,8 @@ module.exports = {
   cleanupExpiredLogs,
   getAuditStats,
   auditMiddleware,
-  
+
   // 配置常量
   AUDIT_LOG_PATH,
-  LOG_RETENTION_DAYS
+  LOG_RETENTION_DAYS,
 };

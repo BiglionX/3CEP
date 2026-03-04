@@ -13,10 +13,7 @@ export async function GET(
     const { accountId } = params;
 
     if (!accountId) {
-      return NextResponse.json(
-        { error: '缺少accountId参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缺少accountId参数' }, { status: 400 });
     }
 
     const accountService = new FcxAccountService();
@@ -24,15 +21,14 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: balance
+      data: balance,
     });
-
   } catch (error) {
     console.error('查询账户余额错误:', error);
     return NextResponse.json(
-      { 
+      {
         error: '查询余额失败',
-        details: (error as Error).message 
+        details: (error as Error).message,
       },
       { status: 500 }
     );

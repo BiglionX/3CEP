@@ -3,23 +3,22 @@
  * 提供账户创建、余额查询、转账等核心功能
  */
 
-import { 
-  FcxAccount, 
-  FcxTransaction, 
-  CreateFcxAccountDTO, 
-  FcxTransferDTO, 
+import {
+  FcxAccount,
+  FcxTransaction,
+  CreateFcxAccountDTO,
+  FcxTransferDTO,
   AccountBalance,
   TransactionQueryParams,
   FcxAccountStatus,
   FcxTransactionType,
-  FcxTransactionStatus
+  FcxTransactionStatus,
 } from '../models/fcx-account.model';
 import { IFcxAccountService } from './interfaces';
 import { supabase } from '@/lib/supabase';
 import { generateUUID } from '../utils/helpers';
 
 export class FcxAccountService implements IFcxAccountService {
-  
   /**
    * 创建FCX账户
    */
@@ -38,7 +37,7 @@ export class FcxAccountService implements IFcxAccountService {
           account_type: dto.accountType,
           status: FcxAccountStatus.ACTIVE,
           created_at: now,
-          updated_at: now
+          updated_at: now,
         } as any)
         .select()
         .single();
@@ -55,7 +54,7 @@ export class FcxAccountService implements IFcxAccountService {
         accountType: data.account_type,
         status: data.status,
         createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at)
+        updatedAt: new Date(data.updated_at),
       };
     } catch (error) {
       console.error('FCX账户创建错误:', error);
@@ -76,8 +75,7 @@ export class FcxAccountService implements IFcxAccountService {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          return null; // 账户不存在
-        }
+          return null; // 账户不存?        }
         throw new Error(`查询账户失败: ${error.message}`);
       }
 
@@ -89,7 +87,7 @@ export class FcxAccountService implements IFcxAccountService {
         accountType: data.account_type,
         status: data.status,
         createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at)
+        updatedAt: new Date(data.updated_at),
       };
     } catch (error) {
       console.error('获取账户信息错误:', error);
@@ -110,8 +108,7 @@ export class FcxAccountService implements IFcxAccountService {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          return null; // 账户不存在
-        }
+          return null; // 账户不存?        }
         throw new Error(`查询用户账户失败: ${error.message}`);
       }
 
@@ -123,7 +120,7 @@ export class FcxAccountService implements IFcxAccountService {
         accountType: data.account_type,
         status: data.status,
         createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at)
+        updatedAt: new Date(data.updated_at),
       };
     } catch (error) {
       console.error('根据用户ID获取账户错误:', error);
@@ -137,9 +134,9 @@ export class FcxAccountService implements IFcxAccountService {
   async getBalance(accountId: string): Promise<AccountBalance> {
     try {
       const account = await this.getAccount(accountId);
-      
+
       if (!account) {
-        throw new Error('账户不存在');
+        throw new Error('账户不存?);
       }
 
       const totalBalance = account.balance + account.frozenBalance;
@@ -149,7 +146,7 @@ export class FcxAccountService implements IFcxAccountService {
         availableBalance: account.balance,
         frozenBalance: account.frozenBalance,
         totalBalance,
-        accountType: account.accountType
+        accountType: account.accountType,
       };
     } catch (error) {
       console.error('查询余额错误:', error);
@@ -168,14 +165,15 @@ export class FcxAccountService implements IFcxAccountService {
       }
 
       // 开始数据库事务
-      const { data: transactionData, error: transactionError } = await supabase.rpc('transfer_fcx', {
-        p_from_account_id: dto.fromAccountId,
-        p_to_account_id: dto.toAccountId,
-        p_amount: dto.amount,
-        p_transaction_type: dto.transactionType,
-        p_reference_id: dto.referenceId || null,
-        p_memo: dto.memo || null
-      });
+      const { data: transactionData, error: transactionError } =
+        (await supabase.rpc('transfer_fcx', {
+          p_from_account_id: dto.fromAccountId,
+          p_to_account_id: dto.toAccountId,
+          p_amount: dto.amount,
+          p_transaction_type: dto.transactionType,
+          p_reference_id: dto.referenceId || null,
+          p_memo: dto.memo || null,
+        })) as any;
 
       if (transactionError) {
         throw new Error(`转账失败: ${transactionError.message}`);
@@ -201,7 +199,7 @@ export class FcxAccountService implements IFcxAccountService {
 
       const { error } = await supabase.rpc('freeze_fcx_funds', {
         p_account_id: accountId,
-        p_amount: amount
+        p_amount: amount,
       });
 
       if (error) {
@@ -224,7 +222,7 @@ export class FcxAccountService implements IFcxAccountService {
 
       const { error } = await supabase.rpc('unfreeze_fcx_funds', {
         p_account_id: accountId,
-        p_amount: amount
+        p_amount: amount,
       });
 
       if (error) {
@@ -237,23 +235,25 @@ export class FcxAccountService implements IFcxAccountService {
   }
 
   /**
-   * 更新账户状态
-   */
-  async updateAccountStatus(accountId: string, status: FcxAccountStatus): Promise<void> {
+   * 更新账户状?   */
+  async updateAccountStatus(
+    accountId: string,
+    status: FcxAccountStatus
+  ): Promise<void> {
     try {
       const { error } = await supabase
         .from('fcx_accounts')
-        .update({ 
+        .update({
           status,
-          updated_at: new Date()
+          updated_at: new Date(),
         } as any)
         .eq('id', accountId);
 
       if (error) {
-        throw new Error(`更新账户状态失败: ${error.message}`);
+        throw new Error(`更新账户状态失? ${error.message}`);
       }
     } catch (error) {
-      console.error('更新账户状态错误:', error);
+      console.error('更新账户状态错?', error);
       throw error;
     }
   }
@@ -261,15 +261,17 @@ export class FcxAccountService implements IFcxAccountService {
   /**
    * 获取账户交易历史
    */
-  async getTransactionHistory(params: TransactionQueryParams): Promise<FcxTransaction[]> {
+  async getTransactionHistory(
+    params: TransactionQueryParams
+  ): Promise<FcxTransaction[]> {
     try {
-      let query = supabase
-        .from('fcx_transactions')
-        .select('*');
+      let query = supabase.from('fcx_transactions').select('*');
 
       // 添加查询条件
       if (params.accountId) {
-        query = query.or(`from_account_id.eq.${params.accountId},to_account_id.eq.${params.accountId}`);
+        query = query.or(
+          `from_account_id.eq.${params.accountId},to_account_id.eq.${params.accountId}`
+        );
       }
 
       if (params.transactionType) {
@@ -284,11 +286,10 @@ export class FcxAccountService implements IFcxAccountService {
         query = query.lte('created_at', params.endDate.toISOString());
       }
 
-      // 排序和分页
-      query = query
+      // 排序和分?      query = query
         .order('created_at', { ascending: false })
         .range(
-          params.offset || 0, 
+          params.offset || 0,
           (params.offset || 0) + (params.limit || 50) - 1
         );
 
@@ -307,7 +308,7 @@ export class FcxAccountService implements IFcxAccountService {
         referenceId: item.reference_id,
         memo: item.memo,
         status: item.status,
-        createdAt: new Date(item.created_at)
+        createdAt: new Date(item.created_at),
       }));
     } catch (error) {
       console.error('获取交易历史错误:', error);
@@ -318,7 +319,9 @@ export class FcxAccountService implements IFcxAccountService {
   /**
    * 内部方法：根据ID获取交易记录
    */
-  private async getTransactionById(transactionId: string): Promise<FcxTransaction> {
+  private async getTransactionById(
+    transactionId: string
+  ): Promise<FcxTransaction> {
     const { data, error } = await supabase
       .from('fcx_transactions')
       .select('*')
@@ -338,7 +341,7 @@ export class FcxAccountService implements IFcxAccountService {
       referenceId: data.reference_id,
       memo: data.memo,
       status: data.status,
-      createdAt: new Date(data.created_at)
+      createdAt: new Date(data.created_at),
     };
   }
 }

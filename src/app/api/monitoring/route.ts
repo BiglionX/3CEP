@@ -1,223 +1,319 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { monitoringService } from '@/data-center/monitoring/monitoring-service';
-import { dashboardService } from '@/data-center/monitoring/dashboard-service';
+﻿/**
+ * 鐩戞帶API璺敱
+ * FixCycle 6.0 鐩戞帶绯荤粺鎺ュ彛
+ */
 
-// GET请求处理
+import { NextRequest, NextResponse } from 'next/server';
+import { monitoringService } from '@/lib/monitoring-service';
+import { MetricThreshold, AlertEvent } from '@/types/monitoring.types';
+import { logger } from '@/utils/logger';
+
+// GET /api/monitoring - 鑾峰彇鐩戞帶鏁版嵁
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const action = searchParams.get('action') || 'dashboard';
-    
+    const action = searchParams.get('action') || 'snapshot';
+
     switch (action) {
-      case 'dashboard':
-        const forceRefresh = searchParams.get('refresh') === 'true';
-        const dashboardData = await dashboardService.getDashboardData(forceRefresh);
-        return NextResponse.json(dashboardData);
-        
-      case 'metrics':
-        const metricName = searchParams.get('name');
-        const limit = parseInt(searchParams.get('limit') || '100');
-        const metrics = monitoringService.getMetrics(metricName || undefined, limit);
+      case 'snapshot':
+        // 鑾峰彇瀹炴椂鐩戞帶蹇収
+        const snapshot = monitoringService.getPerformanceSnapshot();
         return NextResponse.json({
-          metrics,
-          count: metrics.length,
-          timestamp: new Date().toISOString()
+          success: true,
+          data: snapshot,
+          timestamp: new Date().toISOString(),
         });
-        
-      case 'alerts':
-        const alertStatus = searchParams.get('status') || 'active';
-        let alerts;
-        
-        if (alertStatus === 'active') {
-          alerts = monitoringService.getActiveAlerts();
-        } else if (alertStatus === 'history') {
-          const historyLimit = parseInt(searchParams.get('limit') || '50');
-          alerts = monitoringService.getAlertHistory(historyLimit);
-        } else {
+
+      case 'metrics':
+        // 鑾峰彇鐗瑰畾鎸囨爣鍘嗗彶鏁版嵁
+        const metricName = searchParams.get('name');
+        const hours = parseInt(searchParams.get('hours') || '24');
+
+        if (!metricName) {
           return NextResponse.json(
-            { error: '无效的告警状态参数' },
+            { success: false, error: '鎸囨爣鍚嶇О涓嶈兘涓虹┖' },
             { status: 400 }
           );
         }
-        
+
+        const history = monitoringService.getMetricHistory(metricName, hours);
         return NextResponse.json({
+          success: true,
+          metric: metricName,
+          data: history,
+          count: history.length,
+          timestamp: new Date().toISOString(),
+        });
+
+      case 'alerts':
+        // 鑾峰彇鍛婅淇℃伅
+        const alertStatus = searchParams.get('status') || 'active';
+        let alerts: AlertEvent[];
+
+        if (alertStatus === 'active') {
+          alerts = monitoringService.getActiveAlerts();
+        } else {
+          // 鍙互鎵╁睍鏀寔鍘嗗彶鍛婅鏌ヨ
+          alerts = [];
+        }
+
+        return NextResponse.json({
+          success: true,
           alerts,
           count: alerts.length,
           status: alertStatus,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
-        
+
       case 'rules':
-        const rules = Array.from(monitoringService.alertRules.values());
+        // 鑾峰彇鍛婅瑙勫垯閰嶇疆
         return NextResponse.json({
-          rules,
-          count: rules.length,
-          timestamp: new Date().toISOString()
+          success: true,
+          message: '鍛婅瑙勫垯閰嶇疆鎺ュ彛寰呭疄?,
+          timestamp: new Date().toISOString(),
         });
-        
-      case 'quality':
-        const qualityReport = monitoringService.getDataQualityReport();
-        return NextResponse.json(qualityReport);
-        
-      case 'stats':
-        const stats = monitoringService.getMonitoringStats();
-        return NextResponse.json(stats);
-        
+
       case 'health':
-        // 系统健康检查
-        return NextResponse.json({
+        // 绯荤粺鍋ュ悍妫€?        return NextResponse.json({
+          success: true,
           status: 'healthy',
           service: 'monitoring',
           timestamp: new Date().toISOString(),
-          uptime: process.uptime()
+          uptime: process.uptime(),
         });
-        
+
       default:
         return NextResponse.json(
-          { error: '未知的操作类型' },
+          { success: false, error: '鏈煡鐨勬搷浣滅被? },
           { status: 400 }
         );
     }
-    
   } catch (error: any) {
-    console.error('监控API错误:', error);
+    logger.error('鐩戞帶API閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        success: false,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
   }
 }
 
-// POST请求处理
-export async function POST(request: NextRequest) {
+// POST /api/monitoring - 鎻愪氦鐩戞帶鏁版嵁鎴栭厤缃憡璀﹁?export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { action, ...params } = body;
-    
+    const { action, data } = body;
+
     switch (action) {
-      case 'record-metric':
-        const { name, value, tags } = params.metric || {};
-        if (!name || value === undefined) {
+      case 'record_metric':
+        // 璁板綍鎸囨爣鏁版嵁
+        if (!data || !data.name || data.value === undefined) {
           return NextResponse.json(
-            { error: '缺少必要的指标参数' },
+            { success: false, error: '缂哄皯蹇呰鐨勬寚鏍囨暟? },
             { status: 400 }
           );
         }
-        
-        monitoringService.recordMetric(name, value, tags);
+
+        const {
+          name,
+          value,
+          type = 'gauge',
+          description = '',
+          unit = '',
+          labels,
+        } = data;
+
+        switch (type) {
+          case 'counter':
+            monitoringService.recordCounterMetric(
+              name,
+              value,
+              description,
+              unit,
+              labels
+            );
+            break;
+          case 'histogram':
+            monitoringService.recordHistogramMetric(
+              name,
+              value,
+              description,
+              unit,
+              labels
+            );
+            break;
+          case 'gauge':
+          default:
+            monitoringService.recordGaugeMetric(
+              name,
+              value,
+              description,
+              unit,
+              labels
+            );
+            break;
+        }
+
         return NextResponse.json({
-          message: '指标记录成功',
-          metric: { name, value, tags },
-          timestamp: new Date().toISOString()
+          success: true,
+          message: '鎸囨爣鏁版嵁璁板綍鎴愬姛',
+          timestamp: new Date().toISOString(),
         });
-        
-      case 'add-alert-rule':
-        const rule = params.rule;
-        if (!rule) {
+
+      case 'add_alert_rule':
+        // 娣诲姞鍛婅瑙勫垯
+        if (!data) {
           return NextResponse.json(
-            { error: '缺少告警规则参数' },
+            { success: false, error: '鍛婅瑙勫垯鏁版嵁涓嶈兘涓虹┖' },
             { status: 400 }
           );
         }
-        
-        const newRule = {
-          id: rule.id || `rule_${Date.now()}`,
-          name: rule.name,
-          metric: rule.metric,
-          condition: rule.condition || 'above',
-          threshold: rule.threshold,
-          duration: rule.duration || 300,
-          severity: rule.severity || 'warning',
-          enabled: rule.enabled !== false,
-          notifications: rule.notifications || ['console'],
-          description: rule.description
+
+        const rule: MetricThreshold = {
+          metric_name: data.metric_name,
+          warning_threshold: data.warning_threshold,
+          critical_threshold: data.critical_threshold,
+          operator: data.operator || '>',
+          severity: data.severity || 'warning',
+          enabled: data.enabled !== false,
+          description: data.description || '',
         };
-        
-        monitoringService.addAlertRule(newRule);
+
+        monitoringService.addAlertRule(rule);
+
         return NextResponse.json({
-          message: '告警规则添加成功',
-          rule: newRule,
-          timestamp: new Date().toISOString()
+          success: true,
+          message: '鍛婅瑙勫垯娣诲姞鎴愬姛',
+          rule: rule,
+          timestamp: new Date().toISOString(),
         });
-        
-      case 'configure-notifications':
-        const config = params.config;
-        if (!config) {
-          return NextResponse.json(
-            { error: '缺少通知配置参数' },
-            { status: 400 }
-          );
-        }
-        
-        monitoringService.configureNotifications(config);
-        return NextResponse.json({
-          message: '通知配置更新成功',
-          timestamp: new Date().toISOString()
-        });
-        
-      case 'acknowledge-alert':
-        const { alertId } = params;
+
+      case 'acknowledge_alert':
+        // 纭鍛婅
+        const alertId = data?.alert_id;
         if (!alertId) {
           return NextResponse.json(
-            { error: '缺少告警ID参数' },
+            { success: false, error: '鍛婅ID涓嶈兘涓虹┖' },
             { status: 400 }
           );
         }
-        
-        // 这里应该实现告警确认逻辑
+
+        // 杩欓噷鍙互瀹炵幇鍛婅纭閫昏緫
+        logger.info(`Alert acknowledged: ${alertId}`);
+
         return NextResponse.json({
-          message: `告警 ${alertId} 已确认`,
-          timestamp: new Date().toISOString()
+          success: true,
+          message: '鍛婅宸茬‘?,
+          alert_id: alertId,
+          timestamp: new Date().toISOString(),
         });
-        
-      case 'test-notification':
-        const { channel, message } = params;
-        if (!channel) {
-          return NextResponse.json(
-            { error: '缺少通知渠道参数' },
-            { status: 400 }
-          );
-        }
-        
-        // 发送测试通知
-        const testAlert = {
-          id: `test_${Date.now()}`,
-          ruleId: 'test_rule',
-          ruleName: '测试告警',
-          metric: 'test_metric',
-          currentValue: 999,
-          threshold: 100,
-          severity: 'warning' as const,
-          triggeredAt: new Date().toISOString(),
-          status: 'triggered' as const
-        };
-        
-        // 这里应该调用具体的发送方法
-        console.log(`🧪 测试${channel}通知: ${message || '测试消息'}`);
-        
-        return NextResponse.json({
-          message: `${channel}测试通知已发送`,
-          timestamp: new Date().toISOString()
-        });
-        
+
       default:
         return NextResponse.json(
-          { error: '未知的操作类型' },
+          { success: false, error: '鏈煡鐨勬搷浣滅被? },
           { status: 400 }
         );
     }
-    
   } catch (error: any) {
-    console.error('监控API错误:', error);
+    logger.error('鐩戞帶API POST閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        success: false,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
   }
 }
+
+// PUT /api/monitoring - 鏇存柊鐩戞帶閰嶇疆
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { action, config } = body;
+
+    switch (action) {
+      case 'update_config':
+        // 鏇存柊鐩戞帶閰嶇疆
+        if (!config) {
+          return NextResponse.json(
+            { success: false, error: '閰嶇疆鏁版嵁涓嶈兘涓虹┖' },
+            { status: 400 }
+          );
+        }
+
+        // 杩欓噷鍙互瀹炵幇閰嶇疆鏇存柊閫昏緫
+        logger.info('Monitoring config updated:', config);
+
+        return NextResponse.json({
+          success: true,
+          message: '鐩戞帶閰嶇疆鏇存柊鎴愬姛',
+          timestamp: new Date().toISOString(),
+        });
+
+      default:
+        return NextResponse.json(
+          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { status: 400 }
+        );
+    }
+  } catch (error: any) {
+    logger.error('鐩戞帶API PUT閿欒:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/monitoring - 鍒犻櫎鐩戞帶鏁版嵁鎴栬?export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get('action');
+    const id = searchParams.get('id');
+
+    switch (action) {
+      case 'delete_alert_rule':
+        if (!id) {
+          return NextResponse.json(
+            { success: false, error: '瑙勫垯ID涓嶈兘涓虹┖' },
+            { status: 400 }
+          );
+        }
+
+        // 杩欓噷鍙互瀹炵幇鍒犻櫎鍛婅瑙勫垯鐨勯€昏緫
+        logger.info(`Alert rule deleted: ${id}`);
+
+        return NextResponse.json({
+          success: true,
+          message: '鍛婅瑙勫垯鍒犻櫎鎴愬姛',
+          rule_id: id,
+          timestamp: new Date().toISOString(),
+        });
+
+      default:
+        return NextResponse.json(
+          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { status: 400 }
+        );
+    }
+  } catch (error: any) {
+    logger.error('鐩戞帶API DELETE閿欒:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
+  }
+}
+

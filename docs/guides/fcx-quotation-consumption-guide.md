@@ -7,6 +7,7 @@
 ## 功能特性
 
 ### 1. 智能消耗计算
+
 - **基础费用**: 每次询价收取10 FCX基础费用
 - **供应商费用**: 超过3个供应商后，每个额外供应商收取2 FCX
 - **商品项费用**: 超过5个商品项后，每个额外商品项收取1 FCX
@@ -14,10 +15,12 @@
 - **批量折扣**: 批量询价享受20%折扣
 
 ### 2. 每日限额控制
+
 - **询价次数**: 每日最多50次询价
 - **FCX消耗**: 每日FCX消耗上限500 FCX
 
 ### 3. 实时余额检查
+
 - 询价前自动检查用户FCX余额
 - 提供详细的费用明细和预估
 - 余额不足时给出明确提示
@@ -38,14 +41,15 @@ const response = await fetch('/api/b2b-procurement/smart-agent', {
     orderId: '历史订单ID',
     userId: '当前用户ID',
     useHistoricalSuppliersOnly: true, // 仅使用历史供应商
-    modifications: [ // 订单修改（可选）
+    modifications: [
+      // 订单修改（可选）
       {
         type: 'add', // add/remove/modify
         productName: '新产品',
         quantity: 100,
-        unit: '件'
-      }
-    ]
+        unit: '件',
+      },
+    ],
   }),
 });
 ```
@@ -88,12 +92,13 @@ const response = await fetch('/api/b2b-procurement/smart-agent', {
   body: JSON.stringify({
     action: 'execute_quotation',
     quotationPlan: quotationPlanObject,
-    userId: '当前用户ID'
+    userId: '当前用户ID',
   }),
 });
 ```
 
 执行成功后返回：
+
 ```json
 {
   "success": true,
@@ -111,20 +116,23 @@ const response = await fetch('/api/b2b-procurement/smart-agent', {
 ## 消耗规则详解
 
 ### 基础规则
-| 项目 | 规则 | 费用 |
-|------|------|------|
-| 基础询价 | 每次必收 | 10 FCX |
+
+| 项目       | 规则                         | 费用     |
+| ---------- | ---------------------------- | -------- |
+| 基础询价   | 每次必收                     | 10 FCX   |
 | 供应商数量 | 前3个免费，超出部分每个2 FCX | 2 FCX/个 |
 | 商品项数量 | 前5项免费，超出部分每个1 FCX | 1 FCX/项 |
 
 ### 特殊功能费用
-| 功能 | 费用 | 说明 |
-|------|------|------|
-| 加急询价 | 20 FCX | 优先处理 |
+
+| 功能       | 费用   | 说明               |
+| ---------- | ------ | ------------------ |
+| 加急询价   | 20 FCX | 优先处理           |
 | 自定义模板 | 15 FCX | 使用自定义询价模板 |
-| 自动跟进 | 5 FCX | 自动发送跟进邮件 |
+| 自动跟进   | 5 FCX  | 自动发送跟进邮件   |
 
 ### 批量优惠
+
 - **条件**: 同时向5个以上供应商询价
 - **优惠**: 总费用享受20%折扣
 - **示例**: 原价100 FCX → 折后80 FCX
@@ -132,11 +140,13 @@ const response = await fetch('/api/b2b-procurement/smart-agent', {
 ## 前端组件使用
 
 ### 1. 引入组件
+
 ```tsx
 import { SmartProcurementAgent } from '@/components/b2b-procurement/SmartProcurementAgent';
 ```
 
 ### 2. 基本用法
+
 ```tsx
 export default function ProcurementPage() {
   return (
@@ -148,6 +158,7 @@ export default function ProcurementPage() {
 ```
 
 ### 3. 组件功能
+
 - 历史订单选择
 - 智能询价计划生成
 - FCX消耗实时预估
@@ -157,6 +168,7 @@ export default function ProcurementPage() {
 ## API接口说明
 
 ### 智能采购代理API
+
 **Endpoint**: `/api/b2b-procurement/smart-agent`
 
 #### 支持的操作
@@ -181,16 +193,19 @@ export default function ProcurementPage() {
 ## 最佳实践
 
 ### 1. 合理规划询价
+
 - 优先使用历史供应商，降低供应商费用
 - 合理分组商品项，避免超量收费
 - 批量询价时充分利用折扣优惠
 
 ### 2. 控制询价频率
+
 - 避免频繁的小额询价
 - 合理安排询价时间，充分利用每日限额
 - 重要询价考虑使用加急功能
 
 ### 3. 监控消耗情况
+
 - 定期检查FCX余额
 - 关注每日消耗统计
 - 根据业务需求调整询价策略
@@ -211,7 +226,9 @@ export default function ProcurementPage() {
    - 验证修改参数格式
 
 ### 联系支持
+
 如有其他问题，请联系技术支持团队。
 
 ---
-*本文档最后更新: 2024年2月*
+
+_本文档最后更新: 2024年2月_

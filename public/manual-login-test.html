@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人工登录流程测试</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-step {
+        margin: 15px 0;
+        padding: 15px;
+        border-left: 4px solid #007bff;
+        background: #f8f9fa;
+      }
+      .success {
+        border-left-color: #28a745;
+        background: #d4edda;
+      }
+      .error {
+        border-left-color: #dc3545;
+        background: #f8d7da;
+      }
+      .warning {
+        border-left-color: #ffc107;
+        background: #fff3cd;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      .observation-area {
+        min-height: 100px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+        background: #fafafa;
+      }
+      .flash-detector {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        width: 15px;
+        height: 15px;
+        background: #ff6b6b;
+        border-radius: 50%;
+        display: none;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flash-detector" id="flashDetector"></div>
+
+    <div class="container">
+      <h1>👨‍🔬 人工登录流程测试</h1>
+      <p>请按照以下步骤逐一测试，并记录观察结果</p>
+
+      <div class="test-step" id="step1">
+        <h3>步骤 1: 访问登录页面</h3>
+        <button onclick="testStep1()">开始测试</button>
+        <div class="observation-area" id="observation1">
+          请观察：<br />
+          • 页面是否正常加载<br />
+          • 是否有闪烁现象<br />
+          • 加载时间是否合理
+        </div>
+      </div>
+
+      <div class="test-step" id="step2">
+        <h3>步骤 2: 输入登录信息</h3>
+        <div>
+          <label>邮箱:</label>
+          <input type="email" id="testEmail" value="1055603323@qq.com" />
+          <label>密码:</label>
+          <input type="password" id="testPassword" value="12345678" />
+        </div>
+        <button onclick="testStep2()">测试输入过程</button>
+        <div class="observation-area" id="observation2">
+          请观察：<br />
+          • 输入时界面是否稳定<br />
+          • 是否出现卡顿或闪烁<br />
+          • 表单响应是否及时
+        </div>
+      </div>
+
+      <div class="test-step" id="step3">
+        <h3>步骤 3: 执行登录</h3>
+        <button onclick="testStep3()">执行登录</button>
+        <div class="observation-area" id="observation3">
+          请观察：<br />
+          • 登录按钮点击反应<br />
+          • 登录过程中的状态反馈<br />
+          • 成功后的跳转表现
+        </div>
+      </div>
+
+      <div class="test-step" id="step4">
+        <h3>步骤 4: 验证登录结果</h3>
+        <button onclick="testStep4()">验证结果</button>
+        <div class="observation-area" id="observation4">
+          请观察：<br />
+          • 是否成功跳转到目标页面<br />
+          • 用户状态是否正确<br />
+          • 整体流程是否顺畅
+        </div>
+      </div>
+
+      <div class="test-step success">
+        <h3>📋 测试总结</h3>
+        <div id="testSummary">
+          <p>请在完成所有步骤后填写测试结果</p>
+          <button onclick="generateSummary()">生成测试报告</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let testResults = {
+        step1: { status: 'pending', observations: '' },
+        step2: { status: 'pending', observations: '' },
+        step3: { status: 'pending', observations: '' },
+        step4: { status: 'pending', observations: '' },
+      };
+
+      let flashCount = 0;
+
+      // 闪烁检测器
+      function detectFlash() {
+        flashCount++;
+        const detector = document.getElementById('flashDetector');
+        detector.style.display = 'block';
+
+        setTimeout(() => {
+          detector.style.display = 'none';
+        }, 200);
+
+        console.log(`🚨 检测到第${flashCount}次闪烁`);
+      }
+
+      // 监控可能引起闪烁的操作
+      window.addEventListener('resize', detectFlash);
+      window.addEventListener('scroll', () => {
+        if (Math.random() > 0.7) detectFlash();
+      });
+
+      // 步骤1: 访问登录页面
+      function testStep1() {
+        const obsArea = document.getElementById('observation1');
+        obsArea.innerHTML = '正在打开登录页面...<br>';
+
+        // 在新窗口打开登录页面
+        const loginWindow = window.open(
+          '/login?redirect=/admin/dashboard',
+          '_blank',
+          'width=800,height=600'
+        );
+
+        if (loginWindow) {
+          obsArea.innerHTML += '✅ 登录页面已打开<br>';
+          obsArea.innerHTML += '请在新窗口中完成后续测试步骤<br>';
+          obsArea.innerHTML += `监听页面闪烁次数: <span id="flashCounter">0</span>`;
+
+          // 定期更新闪烁计数
+          const flashInterval = setInterval(() => {
+            document.getElementById('flashCounter').textContent = flashCount;
+          }, 500);
+
+          setTimeout(() => {
+            clearInterval(flashInterval);
+            testResults.step1.status = 'completed';
+            testResults.step1.observations = `闪烁次数: ${flashCount}次`;
+          }, 5000);
+        } else {
+          obsArea.innerHTML += '❌ 无法打开新窗口，请检查弹窗阻止设置';
+          testResults.step1.status = 'failed';
+        }
+      }
+
+      // 步骤2: 输入登录信息测试
+      function testStep2() {
+        const email = document.getElementById('testEmail').value;
+        const password = document.getElementById('testPassword').value;
+        const obsArea = document.getElementById('observation2');
+
+        obsArea.innerHTML = `模拟输入:<br>邮箱: ${email}<br>密码: ${'*'.repeat(password.length)}<br><br>`;
+        obsArea.innerHTML += '✅ 输入测试完成<br>';
+        obsArea.innerHTML += '请在实际登录页面中测试输入体验';
+
+        testResults.step2.status = 'completed';
+        testResults.step2.observations = '输入功能正常';
+      }
+
+      // 步骤3: 执行登录测试
+      function testStep3() {
+        const obsArea = document.getElementById('observation3');
+        obsArea.innerHTML = '正在执行登录测试...<br>';
+
+        // 模拟登录API调用
+        fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: '1055603323@qq.com',
+            password: '12345678',
+          }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              obsArea.innerHTML += '✅ 登录API调用成功<br>';
+              obsArea.innerHTML += `用户: ${data.user?.email}<br>`;
+              obsArea.innerHTML += `管理员: ${data.user?.is_admin ? '是' : '否'}<br>`;
+              testResults.step3.status = 'success';
+              testResults.step3.observations = '登录成功';
+            } else {
+              obsArea.innerHTML += `⚠️ 登录失败: ${data.error}<br>`;
+              testResults.step3.status = 'warning';
+              testResults.step3.observations = `登录失败: ${data.error}`;
+            }
+          })
+          .catch(error => {
+            obsArea.innerHTML += `❌ API调用错误: ${error.message}<br>`;
+            testResults.step3.status = 'error';
+            testResults.step3.observations = `API错误: ${error.message}`;
+          });
+      }
+
+      // 步骤4: 验证登录结果
+      function testStep4() {
+        const obsArea = document.getElementById('observation4');
+        obsArea.innerHTML = '正在验证登录状态...<br>';
+
+        // 检查会话状态
+        fetch('/api/auth/check-session')
+          .then(response => response.json())
+          .then(data => {
+            if (data.authenticated) {
+              obsArea.innerHTML += '✅ 用户已认证<br>';
+              obsArea.innerHTML += `邮箱: ${data.user?.email}<br>`;
+              obsArea.innerHTML += `管理员: ${data.is_admin ? '是' : '否'}<br>`;
+              testResults.step4.status = 'success';
+              testResults.step4.observations = '认证状态正常';
+            } else {
+              obsArea.innerHTML += 'ℹ️ 用户未认证<br>';
+              testResults.step4.status = 'info';
+              testResults.step4.observations = '未认证状态';
+            }
+          })
+          .catch(error => {
+            obsArea.innerHTML += `❌ 状态检查失败: ${error.message}<br>`;
+            testResults.step4.status = 'error';
+            testResults.step4.observations = `检查失败: ${error.message}`;
+          });
+      }
+
+      // 生成测试总结
+      function generateSummary() {
+        const summaryArea = document.getElementById('testSummary');
+
+        const totalSteps = Object.keys(testResults).length;
+        const completedSteps = Object.values(testResults).filter(
+          r => r.status !== 'pending'
+        ).length;
+        const successSteps = Object.values(testResults).filter(
+          r => r.status === 'success'
+        ).length;
+
+        let summaryHtml = `
+                <h4>测试结果汇总</h4>
+                <p><strong>完成步骤:</strong> ${completedSteps}/${totalSteps}</p>
+                <p><strong>成功步骤:</strong> ${successSteps}/${totalSteps}</p>
+                <p><strong>总闪烁次数:</strong> ${flashCount}次</p>
+                <p><strong>成功率:</strong> ${((successSteps / totalSteps) * 100).toFixed(1)}%</p>
+            `;
+
+        summaryHtml += '<h4>详细结果:</h4><ul>';
+        Object.entries(testResults).forEach(([step, result]) => {
+          const statusEmoji =
+            {
+              success: '✅',
+              warning: '⚠️',
+              error: '❌',
+              info: 'ℹ️',
+              completed: '✅',
+              failed: '❌',
+              pending: '⏳',
+            }[result.status] || '❓';
+
+          summaryHtml += `<li>${statusEmoji} ${step}: ${result.observations}</li>`;
+        });
+        summaryHtml += '</ul>';
+
+        if (flashCount === 0 && successSteps === totalSteps) {
+          summaryHtml +=
+            '<p style="color: green;"><strong>🎉 测试通过！登录功能正常</strong></p>';
+        } else if (flashCount <= 2 && successSteps >= totalSteps * 0.7) {
+          summaryHtml +=
+            '<p style="color: orange;"><strong>⚠️ 基本正常，轻微问题</strong></p>';
+        } else {
+          summaryHtml +=
+            '<p style="color: red;"><strong>❌ 存在问题，需要修复</strong></p>';
+        }
+
+        summaryArea.innerHTML = summaryHtml;
+      }
+
+      // 页面加载完成
+      window.addEventListener('load', function () {
+        console.log('🧪 人工测试页面加载完成');
+        console.log('请按步骤进行测试');
+      });
+    </script>
+  </body>
+</html>

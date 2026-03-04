@@ -1,14 +1,15 @@
-import { supabase } from '@/lib/supabase';
+﻿import { supabase } from '@/lib/supabase';
 import { DeviceProfileService } from '@/services/device-profile.service';
-import { ValuationEngineService, DeviceCondition } from '@/lib/valuation/valuation-engine.service';
+import {
+  ValuationEngineService,
+  DeviceCondition,
+} from '@/lib/valuation/valuation-engine.service';
 
 /**
- * 旧机型升级推荐服务
- * 基于用户历史购买和扫码记录，推荐合适的升级机型
+ * 旧机型升级推荐服? * 基于用户历史购买和扫码记录，推荐合适的升级机型
  */
 
-// 推荐项接口
-export interface UpgradeRecommendation {
+// 推荐项接?export interface UpgradeRecommendation {
   oldModel: string;
   newModel: string;
   brand: string;
@@ -56,14 +57,17 @@ export interface ModelUpgradeMapping {
 
 export class UpgradeRecommendationService {
   private valuationService: ValuationEngineService;
-  
+
   constructor() {
     this.valuationService = ValuationEngineService.getInstance();
   }
   /**
    * 获取用户设备历史记录
    */
-  async getUserDeviceHistory(userId: string, limit: number = 10): Promise<UserDevice[]> {
+  async getUserDeviceHistory(
+    userId: string,
+    limit: number = 10
+  ): Promise<UserDevice[]> {
     try {
       const { data, error } = await supabase
         .from('user_device_history')
@@ -75,20 +79,22 @@ export class UpgradeRecommendationService {
 
       if (error) throw error;
 
-      return data?.map(record => ({
-        id: record.id,
-        userId: record.user_id,
-        brand: record.brand,
-        model: record.model,
-        category: record.category,
-        purchaseDate: record.purchase_date,
-        purchasePrice: record.purchase_price,
-        conditionRating: record.condition_rating,
-        usageDurationMonths: record.usage_duration_months,
-        sourceType: record.source_type,
-        isCurrent: record.is_current,
-        createdAt: record.created_at
-      })) || [];
+      return (
+        data?.map(record => ({
+          id: record.id,
+          userId: record.user_id,
+          brand: record.brand,
+          model: record.model,
+          category: record.category,
+          purchaseDate: record.purchase_date,
+          purchasePrice: record.purchase_price,
+          conditionRating: record.condition_rating,
+          usageDurationMonths: record.usage_duration_months,
+          sourceType: record.source_type,
+          isCurrent: record.is_current,
+          createdAt: record.created_at,
+        })) || []
+      );
     } catch (error) {
       console.error('获取用户设备历史失败:', error);
       throw error;
@@ -100,10 +106,10 @@ export class UpgradeRecommendationService {
    */
   async extractDevicesFromScanRecords(userId: string): Promise<void> {
     try {
-      // 查询用户的扫描记录
-      const { data: scanRecords, error: scanError } = await supabase
+      // 查询用户的扫描记?      const { data: scanRecords, error: scanError } = await supabase
         .from('scan_records')
-        .select(`
+        .select(
+          `
           id,
           product_id,
           scan_time,
@@ -114,19 +120,18 @@ export class UpgradeRecommendationService {
             category,
             brands (name)
           )
-        `)
+        `
+        )
         .order('scan_time', { ascending: false })
         .limit(50);
 
       if (scanError) throw scanError;
 
-      // 处理扫描记录，提取设备信息
-      if (scanRecords) {
+      // 处理扫描记录，提取设备信?      if (scanRecords) {
         for (const record of scanRecords) {
           const product = record.products as any;
           if (product && product.brands) {
-            // 检查是否已存在该设备记录
-            const { data: existingDevice } = await supabase
+            // 检查是否已存在该设备记?            const { data: existingDevice } = await supabase
               .from('user_device_history')
               .select('id')
               .eq('user_id', userId)
@@ -134,28 +139,27 @@ export class UpgradeRecommendationService {
               .eq('model', product.model)
               .maybeSingle();
 
-            // 如果不存在，则创建设备记录
-            if (!existingDevice) {
-              await supabase
-                .from('user_device_history')
-                .insert({
-                  user_id: userId,
-                  device_id: product.id,
-                  brand: product.brands.name,
-                  model: product.model,
-                  category: product.category,
-                  source_type: 'scan',
-                  source_id: record.id,
-                  is_current: true,
-                  condition_rating: 7, // 默认评分
-                  usage_duration_months: this.estimateUsageDuration(record.scan_time)
-                } as any);
+            // 如果不存在，则创建设备记?            if (!existingDevice) {
+              await supabase.from('user_device_history').insert({
+                user_id: userId,
+                device_id: product.id,
+                brand: product.brands.name,
+                model: product.model,
+                category: product.category,
+                source_type: 'scan',
+                source_id: record.id,
+                is_current: true,
+                condition_rating: 7, // 默认评分
+                usage_duration_months: this.estimateUsageDuration(
+                  record.scan_time
+                ),
+              } as any);
             }
           }
         }
       }
     } catch (error) {
-      console.error('从扫描记录提取设备信息失败:', error);
+      console.error('从扫描记录提取设备信息失?', error);
     }
   }
 
@@ -165,33 +169,44 @@ export class UpgradeRecommendationService {
   private estimateUsageDuration(scanTime: string): number {
     const scanDate = new Date(scanTime);
     const currentDate = new Date();
-    const diffMonths = Math.floor((currentDate.getTime() - scanDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
-    // 假设设备在扫描前已经使用了6个月到2年不等
-    return Math.max(6, Math.min(diffMonths + Math.floor(Math.random() * 18), 24));
+    const diffMonths = Math.floor(
+      (currentDate.getTime() - scanDate.getTime()) / (1000 * 60 * 60 * 24 * 30)
+    );
+    // 假设设备在扫描前已经使用?个月?年不?    return Math.max(
+      6,
+      Math.min(diffMonths + Math.floor(Math.random() * 18), 24)
+    );
   }
 
   /**
    * 生成升级推荐
    */
-  async generateRecommendations(userId: string, limit: number = 5): Promise<UpgradeRecommendation[]> {
+  async generateRecommendations(
+    userId: string,
+    limit: number = 5
+  ): Promise<UpgradeRecommendation[]> {
     try {
-      // 首先确保有设备历史数据
-      await this.extractDevicesFromScanRecords(userId);
-      
+      // 首先确保有设备历史数?      await this.extractDevicesFromScanRecords(userId);
+
       // 获取用户设备历史
       const devices = await this.getUserDeviceHistory(userId, 10);
       if (devices.length === 0) {
-        return []; // 没有设备历史，无法推荐
-      }
+        return []; // 没有设备历史，无法推?      }
 
       const recommendations: UpgradeRecommendation[] = [];
 
       // 为每个设备查找可能的升级选项
       for (const device of devices) {
-        const mappings = await this.findUpgradeMappings(device.brand, device.model);
-        
+        const mappings = await this.findUpgradeMappings(
+          device.brand,
+          device.model
+        );
+
         for (const mapping of mappings) {
-          const recommendation = await this.calculateRecommendation(device, mapping);
+          const recommendation = await this.calculateRecommendation(
+            device,
+            mapping
+          );
           if (recommendation) {
             recommendations.push(recommendation);
           }
@@ -209,34 +224,38 @@ export class UpgradeRecommendationService {
   }
 
   /**
-   * 查找特定机型的升级映射
-   */
-  private async findUpgradeMappings(brand: string, oldModel: string): Promise<ModelUpgradeMapping[]> {
+   * 查找特定机型的升级映?   */
+  private async findUpgradeMappings(
+    brand: string,
+    oldModel: string
+  ): Promise<ModelUpgradeMapping[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = (await supabase
         .from('model_upgrade_mappings')
         .select('*')
         .eq('brand', brand)
         .eq('old_model', oldModel)
         .eq('is_active', true)
-        .order('priority', { ascending: true });
+        .order('priority', { ascending: true })) as any;
 
       if (error) throw error;
 
-      return data?.map(mapping => ({
-        id: mapping.id,
-        oldModel: mapping.old_model,
-        newModel: mapping.new_model,
-        brand: mapping.brand,
-        category: mapping.category,
-        upgradeDiscountRate: mapping.upgrade_discount_rate,
-        minTradeValue: mapping.min_trade_value,
-        maxTradeValue: mapping.max_trade_value,
-        compatibilityScore: mapping.compatibility_score,
-        upgradeReason: mapping.upgrade_reason,
-        priority: mapping.priority,
-        isActive: mapping.is_active
-      })) || [];
+      return (
+        data?.map(mapping => ({
+          id: mapping.id,
+          oldModel: mapping.old_model,
+          newModel: mapping.new_model,
+          brand: mapping.brand,
+          category: mapping.category,
+          upgradeDiscountRate: mapping.upgrade_discount_rate,
+          minTradeValue: mapping.min_trade_value,
+          maxTradeValue: mapping.max_trade_value,
+          compatibilityScore: mapping.compatibility_score,
+          upgradeReason: mapping.upgrade_reason,
+          priority: mapping.priority,
+          isActive: mapping.is_active,
+        })) || []
+      );
     } catch (error) {
       console.error('查找升级映射失败:', error);
       return [];
@@ -247,72 +266,71 @@ export class UpgradeRecommendationService {
    * 计算具体的推荐项（集成真实估值引擎）
    */
   private async calculateRecommendation(
-    device: UserDevice, 
+    device: UserDevice,
     mapping: ModelUpgradeMapping
   ): Promise<UpgradeRecommendation | null> {
     try {
-      // 获取设备二维码ID（如果有的话）
-      const deviceQrcodeId = await this.getDeviceQrcodeId(device);
-      
+      // 获取设备二维码ID（如果有的话?      const deviceQrcodeId = await this.getDeviceQrcodeId(device);
+
       let predictedTradeValue: number;
-      
+
       if (deviceQrcodeId) {
-        // 使用真实估值引擎计算价值
-        try {
-          // 构造设备档案对象
-          const mockDeviceProfile = {
+        // 使用真实估值引擎计算价?        try {
+          // 构造设备档案对?          const mockDeviceProfile = {
             id: device.id,
             qrcodeId: deviceQrcodeId,
             productModel: device.model,
-            productCategory: device.category || '未分类',
+            productCategory: device.category || '未分?,
             brandName: device.brand || '未知品牌',
-            manufacturingDate: this.estimateManufactureDate(device.purchaseDate || new Date().toISOString()),
+            manufacturingDate: this.estimateManufactureDate(
+              device.purchaseDate || new Date().toISOString()
+            ),
             currentStatus: 'active',
             totalRepairCount: 0,
             totalPartReplacementCount: 0,
             totalTransferCount: 0,
             specifications: this.estimateSpecifications(device),
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
           } as any;
-          
-          // 构造成色状态
-          const condition: DeviceCondition = this.estimateDeviceCondition(device);
-          
-          // 计算真实估值
-          const valuationResult = await this.valuationService.calculateBaseValue(
-            mockDeviceProfile,
-            condition,
-            device.purchasePrice
-          );
-          
+
+          // 构造成色状?          const condition: DeviceCondition =
+            this.estimateDeviceCondition(device);
+
+          // 计算真实估?          const valuationResult =
+            await this.valuationService.calculateBaseValue(
+              mockDeviceProfile,
+              condition,
+              device.purchasePrice
+            );
+
           predictedTradeValue = valuationResult.finalValue;
-          
         } catch (valuationError) {
-          console.warn('估值计算失败，使用预估价值:', valuationError);
+          console.warn('估值计算失败，使用预估价?', valuationError);
           // 回退到原来的预估方法
           predictedTradeValue = this.estimateFallbackValue(device, mapping);
         }
       } else {
-        // 没有二维码ID，使用预估价值
-        predictedTradeValue = this.estimateFallbackValue(device, mapping);
+        // 没有二维码ID，使用预估价?        predictedTradeValue = this.estimateFallbackValue(device, mapping);
       }
-      
+
       // 计算折扣金额
       const discountAmount = predictedTradeValue * mapping.upgradeDiscountRate;
-      
+
       // 计算推荐得分
       const compatibilityScore = mapping.compatibilityScore / 100;
-      const priorityScore = 1 - (mapping.priority / 10);
+      const priorityScore = 1 - mapping.priority / 10;
       const conditionScore = (device.conditionRating || 7) / 10;
-      const usageScore = device.usageDurationMonths 
-        ? (device.usageDurationMonths > 24 ? 0.9 : 0.6)
+      const usageScore = device.usageDurationMonths
+        ? device.usageDurationMonths > 24
+          ? 0.9
+          : 0.6
         : 0.7;
-      
-      const recommendationScore = 
-        compatibilityScore * 0.4 + 
-        priorityScore * 0.3 + 
-        conditionScore * 0.2 + 
+
+      const recommendationScore =
+        compatibilityScore * 0.4 +
+        priorityScore * 0.3 +
+        conditionScore * 0.2 +
         usageScore * 0.1;
 
       return {
@@ -325,18 +343,20 @@ export class UpgradeRecommendationService {
         discountRate: mapping.upgradeDiscountRate,
         recommendationScore: Number(recommendationScore.toFixed(4)),
         recommendationReason: mapping.upgradeReason,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7天后过期
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7天后过期
       };
     } catch (error) {
-      console.error('计算推荐项失败:', error);
+      console.error('计算推荐项失?', error);
       return null;
     }
   }
 
   /**
-   * 获取缓存的推荐结果
-   */
-  async getCachedRecommendations(userId: string, limit: number = 5): Promise<UpgradeRecommendation[]> {
+   * 获取缓存的推荐结?   */
+  async getCachedRecommendations(
+    userId: string,
+    limit: number = 5
+  ): Promise<UpgradeRecommendation[]> {
     try {
       const { data, error } = await supabase
         .from('upgrade_recommendations')
@@ -350,19 +370,21 @@ export class UpgradeRecommendationService {
 
       if (error) throw error;
 
-      return data?.map(record => ({
-        oldModel: record.old_model,
-        newModel: record.new_model,
-        brand: record.brand,
-        category: '', // 需要额外查询
-        predictedTradeValue: record.predicted_trade_value,
-        discountAmount: record.discount_amount,
-        discountRate: record.discount_rate,
-        recommendationScore: record.recommendation_score,
-        recommendationReason: record.recommendation_reason,
-        expiresAt: record.expires_at,
-        isNew: new Date(record.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000) // 24小时内为新推荐
-      })) || [];
+      return (
+        data?.map(record => ({
+          oldModel: record.old_model,
+          newModel: record.new_model,
+          brand: record.brand,
+          category: '', // 需要额外查?          predictedTradeValue: record.predicted_trade_value,
+          discountAmount: record.discount_amount,
+          discountRate: record.discount_rate,
+          recommendationScore: record.recommendation_score,
+          recommendationReason: record.recommendation_reason,
+          expiresAt: record.expires_at,
+          isNew:
+            new Date(record.created_at) >
+            new Date(Date.now() - 24 * 60 * 60 * 1000), // 24小时内为新推?        })) || []
+      );
     } catch (error) {
       console.error('获取缓存推荐失败:', error);
       return [];
@@ -372,7 +394,11 @@ export class UpgradeRecommendationService {
   /**
    * 记录推荐点击
    */
-  async recordRecommendationClick(userId: string, oldModel: string, newModel: string): Promise<void> {
+  async recordRecommendationClick(
+    userId: string,
+    oldModel: string,
+    newModel: string
+  ): Promise<void> {
     try {
       const { error } = await supabase
         .from('upgrade_recommendations')
@@ -391,16 +417,16 @@ export class UpgradeRecommendationService {
    * 记录推荐转化（用户下单）
    */
   async recordRecommendationConversion(
-    userId: string, 
-    oldModel: string, 
+    userId: string,
+    oldModel: string,
     newModel: string
   ): Promise<void> {
     try {
       const { error } = await supabase
         .from('upgrade_recommendations')
-        .update({ 
+        .update({
           converted: true,
-          conversion_date: new Date().toISOString()
+          conversion_date: new Date().toISOString(),
         } as any)
         .eq('user_id', userId)
         .eq('old_model', oldModel)
@@ -415,22 +441,23 @@ export class UpgradeRecommendationService {
   /**
    * 添加用户手动设备记录
    */
-  async addUserDevice(userId: string, deviceData: Omit<UserDevice, 'id' | 'userId' | 'createdAt'>): Promise<void> {
+  async addUserDevice(
+    userId: string,
+    deviceData: Omit<UserDevice, 'id' | 'userId' | 'createdAt'>
+  ): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('user_device_history')
-        .insert({
-          user_id: userId,
-          brand: deviceData.brand,
-          model: deviceData.model,
-          category: deviceData.category,
-          purchase_date: deviceData.purchaseDate,
-          purchase_price: deviceData.purchasePrice,
-          condition_rating: deviceData.conditionRating,
-          usage_duration_months: deviceData.usageDurationMonths,
-          source_type: deviceData.sourceType,
-          is_current: deviceData.isCurrent
-        } as any);
+      const { error } = await supabase.from('user_device_history').insert({
+        user_id: userId,
+        brand: deviceData.brand,
+        model: deviceData.model,
+        category: deviceData.category,
+        purchase_date: deviceData.purchaseDate,
+        purchase_price: deviceData.purchasePrice,
+        condition_rating: deviceData.conditionRating,
+        usage_duration_months: deviceData.usageDurationMonths,
+        source_type: deviceData.sourceType,
+        is_current: deviceData.isCurrent,
+      } as any);
 
       if (error) throw error;
     } catch (error) {
@@ -438,43 +465,39 @@ export class UpgradeRecommendationService {
       throw error;
     }
   }
-  
+
   /**
    * 获取设备二维码ID（模拟实现）
    */
   private async getDeviceQrcodeId(device: UserDevice): Promise<string | null> {
     // 在实际实现中，这里应该查询数据库获取设备对应的二维码ID
-    // 目前返回null表示没有二维码关联
-    return null;
+    // 目前返回null表示没有二维码关?    return null;
   }
-  
+
   /**
-   * 估算设备制造日期
-   */
+   * 估算设备制造日?   */
   private estimateManufactureDate(purchaseDate: string): string {
     const purchase = new Date(purchaseDate);
-    // 假设设备在购买前3-6个月制造
-    const manufactureDate = new Date(purchase);
+    // 假设设备在购买前3-6个月制?    const manufactureDate = new Date(purchase);
     manufactureDate.setMonth(manufactureDate.getMonth() - 4);
     return manufactureDate.toISOString().split('T')[0];
   }
-  
+
   /**
    * 估算设备规格
    */
   private estimateSpecifications(device: UserDevice): Record<string, any> {
     const model = device.model.toLowerCase();
     const specs: Record<string, any> = {};
-    
-    // 基于型号的简单规格推测
-    if (model.includes('iphone')) {
+
+    // 基于型号的简单规格推?    if (model.includes('iphone')) {
       specs.ram = '6GB';
       specs.storage = '128GB';
       specs.processor = 'A系列芯片';
     } else if (model.includes('galaxy') || model.includes('samsung')) {
       specs.ram = '8GB';
       specs.storage = '128GB';
-      specs.processor = '骁龙处理器';
+      specs.processor = '骁龙处理?;
     } else if (model.includes('macbook')) {
       specs.ram = '16GB';
       specs.storage = '512GB';
@@ -483,21 +506,20 @@ export class UpgradeRecommendationService {
       specs.ram = '8GB';
       specs.storage = '256GB';
     }
-    
+
     return specs;
   }
-  
+
   /**
-   * 估算设备成色状态
-   */
+   * 估算设备成色状?   */
   private estimateDeviceCondition(device: UserDevice): DeviceCondition {
     const conditionRating = device.conditionRating || 7;
-    
+
     let screen: DeviceCondition['screen'] = 'minor_scratches';
     let battery: DeviceCondition['battery'] = 'good';
     let body: DeviceCondition['body'] = 'light_wear';
     let functionality: DeviceCondition['functionality'] = 'perfect';
-    
+
     if (conditionRating >= 9) {
       screen = 'perfect';
       battery = 'excellent';
@@ -516,26 +538,25 @@ export class UpgradeRecommendationService {
       body = 'heavy_wear';
       functionality = 'minor_issues';
     }
-    
+
     return { screen, battery, body, functionality };
   }
-  
+
   /**
-   * 回退的价值估算方法
-   */
-  private estimateFallbackValue(device: UserDevice, mapping: ModelUpgradeMapping): number {
-    // 计算预估回收价值
-    const baseValue = mapping.minTradeValue + 
-      (mapping.maxTradeValue - mapping.minTradeValue) * 0.5; // 基础价值
-    
-    // 根据设备状况调整价值
-    const conditionFactor = (device.conditionRating || 7) / 10;
-    
-    // 根据使用时长调整价值
-    const usageFactor = device.usageDurationMonths 
+   * 回退的价值估算方?   */
+  private estimateFallbackValue(
+    device: UserDevice,
+    mapping: ModelUpgradeMapping
+  ): number {
+    // 计算预估回收价?    const baseValue =
+      mapping.minTradeValue +
+      (mapping.maxTradeValue - mapping.minTradeValue) * 0.5; // 基础价?
+    // 根据设备状况调整价?    const conditionFactor = (device.conditionRating || 7) / 10;
+
+    // 根据使用时长调整价?    const usageFactor = device.usageDurationMonths
       ? Math.max(0.3, 1 - device.usageDurationMonths / 60)
       : 0.7;
-    
+
     return baseValue * conditionFactor * usageFactor;
   }
 }

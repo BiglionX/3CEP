@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 console.log('🔍 FCX智能推荐引擎验证报告\n');
-console.log('=' .repeat(50));
+console.log('='.repeat(50));
 
 // 检查文件结构
 const requiredFiles = [
@@ -24,11 +24,11 @@ const requiredFiles = [
   'tests/recommendation-engine.test.ts',
   'scripts/test-recommendation-engine.js',
   'scripts/deploy-recommendation-engine.js',
-  'docs/guides/fcx-recommendation-engine-guide.md'
+  'docs/guides/fcx-recommendation-engine-guide.md',
 ];
 
 let passedChecks = 0;
-let totalChecks = requiredFiles.length;
+const totalChecks = requiredFiles.length;
 
 console.log('📁 文件结构验证:');
 requiredFiles.forEach(file => {
@@ -54,24 +54,31 @@ const coreFeatures = [
   { name: '大模型推荐集成', file: 'deep-learning-recommender.service.ts' },
   { name: '混合推荐引擎', file: 'hybrid-recommender.service.ts' },
   { name: '推荐API接口', file: 'route.ts' },
-  { name: '数据库表结构', file: '005_fcx_recommendation_engine.sql' }
+  { name: '数据库表结构', file: '005_fcx_recommendation_engine.sql' },
 ];
 
 let featureChecks = 0;
 coreFeatures.forEach(feature => {
-  const filePath = path.join(__dirname, '..', 'src', 'fcx-system', 'services', feature.file);
+  const filePath = path.join(
+    __dirname,
+    '..',
+    'src',
+    'fcx-system',
+    'services',
+    feature.file
+  );
   if (fs.existsSync(filePath)) {
     const content = fs.readFileSync(filePath, 'utf8');
     // 检查关键方法是否存在
     const hasKeyMethods = [
       'recordBehavior',
-      'buildUserProfile', 
+      'buildUserProfile',
       'buildItemProfile',
       'train',
       'recommend',
-      'calculateUserSimilarity'
+      'calculateUserSimilarity',
     ].some(method => content.includes(method));
-    
+
     if (hasKeyMethods) {
       console.log(`  ✅ ${feature.name}`);
       featureChecks++;
@@ -87,26 +94,35 @@ console.log(`\n📊 功能验证结果: ${featureChecks}/${coreFeatures.length} 
 
 // 检查API接口
 console.log('\n🌐 API接口验证:');
-const apiRoutePath = path.join(__dirname, '..', 'src', 'app', 'api', 'fcx', 'recommendations', 'route.ts');
+const apiRoutePath = path.join(
+  __dirname,
+  '..',
+  'src',
+  'app',
+  'api',
+  'fcx',
+  'recommendations',
+  'route.ts'
+);
 if (fs.existsSync(apiRoutePath)) {
   const apiContent = fs.readFileSync(apiRoutePath, 'utf8');
-  const hasHttpMethods = ['GET', 'POST', 'PUT', 'DELETE'].every(method => 
+  const hasHttpMethods = ['GET', 'POST', 'PUT', 'DELETE'].every(method =>
     apiContent.includes(method.toLowerCase())
   );
-  
+
   if (hasHttpMethods) {
     console.log('  ✅ HTTP方法支持完整');
   } else {
     console.log('  ⚠️  HTTP方法支持不完整');
   }
-  
+
   const hasKeyEndpoints = [
     'get-recommendations',
     'record-behavior',
     'batch-recommend',
-    'record-feedback'
+    'record-feedback',
   ].every(endpoint => apiContent.includes(endpoint));
-  
+
   if (hasKeyEndpoints) {
     console.log('  ✅ 核心端点实现完整');
   } else {
@@ -118,7 +134,7 @@ if (fs.existsSync(apiRoutePath)) {
 console.log('\n🧪 测试覆盖验证:');
 const testFiles = [
   'tests/recommendation-engine.test.ts',
-  'scripts/test-recommendation-engine.js'
+  'scripts/test-recommendation-engine.js',
 ];
 
 testFiles.forEach(testFile => {
@@ -131,12 +147,18 @@ testFiles.forEach(testFile => {
 });
 
 // 生成总结报告
-console.log('\n' + '='.repeat(50));
+console.log(`\n${'='.repeat(50)}`);
 console.log('📋 验证总结报告:');
-console.log(`文件结构完整度: ${(passedChecks/totalChecks * 100).toFixed(1)}%`);
-console.log(`功能实现完整度: ${(featureChecks/coreFeatures.length * 100).toFixed(1)}%`);
+console.log(
+  `文件结构完整度: ${((passedChecks / totalChecks) * 100).toFixed(1)}%`
+);
+console.log(
+  `功能实现完整度: ${((featureChecks / coreFeatures.length) * 100).toFixed(1)}%`
+);
 
-const overallScore = (passedChecks/totalChecks + featureChecks/coreFeatures.length) / 2 * 100;
+const overallScore =
+  ((passedChecks / totalChecks + featureChecks / coreFeatures.length) / 2) *
+  100;
 console.log(`总体完成度: ${overallScore.toFixed(1)}%`);
 
 if (overallScore >= 80) {

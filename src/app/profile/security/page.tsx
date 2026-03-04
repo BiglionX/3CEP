@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -29,27 +29,27 @@ export default function SecuritySettingsPage() {
   const [saving, setSaving] = useState(false)
   const [passwordErrors, setPasswordErrors] = useState<string[]>([])
 
-  // 密码强度检查
+  // 密码强度检?
   const checkPasswordStrength = (password: string): { strength: number; suggestions: string[] } => {
     const suggestions: string[] = []
     let strength = 0
 
-    // 长度检查
+    // 长度检?
     if (password.length >= 8) strength += 1
-    else suggestions.push('密码长度至少8位')
+    else suggestions.push('密码长度至少8�?)
 
-    // 大小写字母检查
+    // 大小写字母检?
     if (/[a-z]/.test(password)) strength += 1
     else suggestions.push('包含小写字母')
     
     if (/[A-Z]/.test(password)) strength += 1
     else suggestions.push('包含大写字母')
 
-    // 数字检查
+    // 数字检?
     if (/\d/.test(password)) strength += 1
     else suggestions.push('包含数字')
 
-    // 特殊字符检查
+    // 特殊字符检?
     if (/[^a-zA-Z0-9]/.test(password)) strength += 1
     else suggestions.push('包含特殊字符')
 
@@ -64,9 +64,9 @@ export default function SecuritySettingsPage() {
   }
 
   const getPasswordStrengthText = (strength: number) => {
-    if (strength <= 2) return '弱'
+    if (strength <= 2) return '�?
     if (strength <= 3) return '中等'
-    if (strength <= 4) return '强'
+    if (strength <= 4) return '�?
     return '很强'
   }
 
@@ -75,7 +75,7 @@ export default function SecuritySettingsPage() {
     
     // 实时验证确认密码
     if (field === 'confirmPassword' && value !== passwordForm.newPassword) {
-      setPasswordErrors(['两次输入的密码不一致'])
+      setPasswordErrors(['两次输入的密码不一?])
     } else if (field === 'newPassword') {
       const { suggestions } = checkPasswordStrength(value)
       setPasswordErrors(suggestions)
@@ -92,7 +92,7 @@ export default function SecuritySettingsPage() {
     const { strength, suggestions } = checkPasswordStrength(passwordForm.newPassword)
     
     if (!passwordForm.currentPassword) {
-      errors.push('请输入当前密码')
+      errors.push('请输入当前密?)
     }
     
     if (!passwordForm.newPassword) {
@@ -104,7 +104,7 @@ export default function SecuritySettingsPage() {
     if (!passwordForm.confirmPassword) {
       errors.push('请确认新密码')
     } else if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      errors.push('两次输入的密码不一致')
+      errors.push('两次输入的密码不一?)
     }
     
     if (errors.length > 0) {
@@ -140,7 +140,7 @@ export default function SecuritySettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 左侧：密码设置 */}
+        {/* 左侧：密码设?*/}
         <div>
           <Card>
             <CardHeader>
@@ -160,7 +160,7 @@ export default function SecuritySettingsPage() {
                       type={showPassword ? "text" : "password"}
                       value={passwordForm.currentPassword}
                       onChange={(e) => handlePasswordChange('currentPassword', e.target.value)}
-                      placeholder="请输入当前密码"
+                      placeholder="请输入当前密?
                     />
                     <button
                       type="button"
@@ -176,9 +176,9 @@ export default function SecuritySettingsPage() {
                   </div>
                 </div>
 
-                {/* 新密码 */}
+                {/* 新密?*/}
                 <div className="space-y-2">
-                  <Label htmlFor="newPassword">新密码</Label>
+                  <Label htmlFor="newPassword">新密?/Label>
                   <div className="relative">
                     <Input
                       id="newPassword"
@@ -200,7 +200,7 @@ export default function SecuritySettingsPage() {
                     </button>
                   </div>
                   
-                  {/* 密码强度指示器 */}
+                  {/* 密码强度指示?*/}
                   {passwordForm.newPassword && (
                     <div className="pt-2">
                       <div className="flex items-center justify-between mb-1">
@@ -228,7 +228,7 @@ export default function SecuritySettingsPage() {
 
                 {/* 确认密码 */}
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">确认新密码</Label>
+                  <Label htmlFor="confirmPassword">确认新密?/Label>
                   <div className="relative">
                     <Input
                       id="confirmPassword"
@@ -264,7 +264,7 @@ export default function SecuritySettingsPage() {
           </Card>
         </div>
 
-        {/* 右侧：安全功能 */}
+        {/* 右侧：安全功?*/}
         <div className="space-y-6">
           {/* 两步验证 */}
           <Card>
@@ -275,32 +275,32 @@ export default function SecuritySettingsPage() {
                   两步验证
                 </div>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                  未开启
+                  未开?
                 </span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-gray-600 text-sm">
-                为您的账户添加额外的安全保护层，即使密码泄露也能防止未授权访问。
+                为您的账户添加额外的安全保护层，即使密码泄露也能防止未授权访问?
               </p>
               <div className="flex items-center space-x-2 text-sm text-gray-500">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>短信验证码</span>
+                <span>短信验证?/span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-gray-500">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>身份验证器应用</span>
+                <span>身份验证器应?/span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-gray-500">
                 <XCircle className="w-4 h-4 text-gray-300" />
-                <span>备用恢复码</span>
+                <span>备用恢复?/span>
               </div>
               <Button 
                 onClick={toggleTwoFactorAuth}
                 className="w-full"
                 variant="outline"
               >
-                开启两步验证
+                开启两步验?
               </Button>
             </CardContent>
           </Card>
@@ -310,7 +310,7 @@ export default function SecuritySettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Shield className="w-5 h-5 mr-2 text-purple-600" />
-                最近登录活动
+                最近登录活?
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -329,7 +329,7 @@ export default function SecuritySettingsPage() {
                         )}
                       </div>
                       <div className="text-sm text-gray-600 mt-1">
-                        {login.location} • {login.time}
+                        {login.location} �?{login.time}
                       </div>
                     </div>
                     <div className={`w-2 h-2 rounded-full ${

@@ -1,54 +1,65 @@
-'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { 
-  Package, 
-  Search, 
-  Filter, 
-  Plus, 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Package,
+  Search,
+  Filter,
+  Plus,
+  MoreHorizontal,
+  Eye,
+  Edit,
   Trash2,
   Download,
   ChevronDown,
   Calendar,
   MapPin,
   User,
-  DollarSign
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+  DollarSign,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 // 简化的操作菜单组件
-const ActionMenu = ({ orderId, onView, onEdit, onDelete }: { 
-  orderId: string; 
+const ActionMenu = ({
+  orderId,
+  onView,
+  onEdit,
+  onDelete,
+}: {
+  orderId: string;
   onView: (id: string) => void;
   onEdit: () => void;
   onDelete: () => void;
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="relative">
-      <Button 
-        variant="ghost" 
+      <Button
+        variant="ghost"
         className="h-8 w-8 p-0"
         onClick={() => setIsOpen(!isOpen)}
       >
         <MoreHorizontal className="h-4 w-4" />
       </Button>
-      
+
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-50">
           <div className="py-1">
             <button
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               onClick={() => {
-                onView(orderId)
-                setIsOpen(false)
+                onView(orderId);
+                setIsOpen(false);
               }}
             >
               <Eye className="inline mr-2 h-4 w-4" />
@@ -57,8 +68,8 @@ const ActionMenu = ({ orderId, onView, onEdit, onDelete }: {
             <button
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               onClick={() => {
-                onEdit()
-                setIsOpen(false)
+                onEdit();
+                setIsOpen(false);
               }}
             >
               <Edit className="inline mr-2 h-4 w-4" />
@@ -67,8 +78,8 @@ const ActionMenu = ({ orderId, onView, onEdit, onDelete }: {
             <button
               className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
               onClick={() => {
-                onDelete()
-                setIsOpen(false)
+                onDelete();
+                setIsOpen(false);
               }}
             >
               <Trash2 className="inline mr-2 h-4 w-4" />
@@ -77,16 +88,13 @@ const ActionMenu = ({ orderId, onView, onEdit, onDelete }: {
           </div>
         </div>
       )}
-      
+
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       )}
     </div>
-  )
-}
+  );
+};
 import {
   Table,
   TableBody,
@@ -94,44 +102,50 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 
 interface Order {
-  id: string
-  type: 'import' | 'export'
-  orderNumber: string
-  partner: string
-  product: string
-  quantity: number
-  amount: number
-  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
-  priority: 'low' | 'medium' | 'high'
-  createdAt: string
-  expectedDelivery: string
-  country: string
+  id: string;
+  type: 'import' | 'export';
+  orderNumber: string;
+  partner: string;
+  product: string;
+  quantity: number;
+  amount: number;
+  status:
+    | 'pending'
+    | 'confirmed'
+    | 'processing'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled';
+  priority: 'low' | 'medium' | 'high';
+  createdAt: string;
+  expectedDelivery: string;
+  country: string;
 }
 
 export default function OrdersPage() {
-  const router = useRouter()
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [typeFilter, setTypeFilter] = useState('all')
-  const [priorityFilter, setPriorityFilter] = useState('all')
+  const router = useRouter();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
 
   // 模拟数据加载
   useEffect(() => {
     const loadOrders = () => {
-      setLoading(true)
-      
+      setLoading(true);
+
       // 模拟API调用延迟
       setTimeout(() => {
         const mockOrders: Order[] = [
@@ -147,7 +161,7 @@ export default function OrdersPage() {
             priority: 'high',
             createdAt: '2026-02-25',
             expectedDelivery: '2026-03-15',
-            country: '韩国'
+            country: '韩国',
           },
           {
             id: '2',
@@ -161,7 +175,7 @@ export default function OrdersPage() {
             priority: 'medium',
             createdAt: '2026-02-24',
             expectedDelivery: '2026-03-10',
-            country: '美国'
+            country: '美国',
           },
           {
             id: '3',
@@ -175,7 +189,7 @@ export default function OrdersPage() {
             priority: 'high',
             createdAt: '2026-02-23',
             expectedDelivery: '2026-03-25',
-            country: '美国'
+            country: '美国',
           },
           {
             id: '4',
@@ -189,7 +203,7 @@ export default function OrdersPage() {
             priority: 'medium',
             createdAt: '2026-02-22',
             expectedDelivery: '2026-03-20',
-            country: '德国'
+            country: '德国',
           },
           {
             id: '5',
@@ -203,101 +217,101 @@ export default function OrdersPage() {
             priority: 'low',
             createdAt: '2026-02-21',
             expectedDelivery: '2026-03-20',
-            country: '日本'
-          }
-        ]
-        
-        setOrders(mockOrders)
-        setLoading(false)
-      }, 800)
-    }
+            country: '日本',
+          },
+        ];
 
-    loadOrders()
-  }, [])
+        setOrders(mockOrders);
+        setLoading(false);
+      }, 800);
+    };
+
+    loadOrders();
+  }, []);
 
   // 筛选逻辑
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = 
+    const matchesSearch =
       order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.partner.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.product.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter
-    const matchesType = typeFilter === 'all' || order.type === typeFilter
-    const matchesPriority = priorityFilter === 'all' || order.priority === priorityFilter
-    
-    return matchesSearch && matchesStatus && matchesType && matchesPriority
-  })
+      order.product.toLowerCase().includes(searchTerm.toLowerCase());
 
-  // 状态颜色映射
-  const getStatusColor = (status: string) => {
+    const matchesStatus =
+      statusFilter === 'all' || order.status === statusFilter;
+    const matchesType = typeFilter === 'all' || order.type === typeFilter;
+    const matchesPriority =
+      priorityFilter === 'all' || order.priority === priorityFilter;
+
+    return matchesSearch && matchesStatus && matchesType && matchesPriority;
+  });
+
+  // 状态颜色映?  const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       pending: 'bg-yellow-100 text-yellow-800',
       confirmed: 'bg-blue-100 text-blue-800',
       processing: 'bg-purple-100 text-purple-800',
       shipped: 'bg-indigo-100 text-indigo-800',
       delivered: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800'
-    }
-    return colorMap[status] || 'bg-gray-100 text-gray-800'
-  }
+      cancelled: 'bg-red-100 text-red-800',
+    };
+    return colorMap[status] || 'bg-gray-100 text-gray-800';
+  };
 
   const getStatusText = (status: string) => {
     const textMap: Record<string, string> = {
-      pending: '待确认',
-      confirmed: '已确认',
-      processing: '处理中',
-      shipped: '已发货',
-      delivered: '已交付',
-      cancelled: '已取消'
-    }
-    return textMap[status] || status
-  }
+      pending: '待确?,
+      confirmed: '已确?,
+      processing: '处理?,
+      shipped: '已发?,
+      delivered: '已交?,
+      cancelled: '已取?,
+    };
+    return textMap[status] || status;
+  };
 
   const getPriorityColor = (priority: string) => {
     const colorMap: Record<string, string> = {
       low: 'bg-gray-100 text-gray-800',
       medium: 'bg-yellow-100 text-yellow-800',
-      high: 'bg-red-100 text-red-800'
-    }
-    return colorMap[priority] || 'bg-gray-100 text-gray-800'
-  }
+      high: 'bg-red-100 text-red-800',
+    };
+    return colorMap[priority] || 'bg-gray-100 text-gray-800';
+  };
 
   const getPriorityText = (priority: string) => {
     const textMap: Record<string, string> = {
-      low: '低',
-      medium: '中',
-      high: '高'
-    }
-    return textMap[priority] || priority
-  }
+      low: '�?,
+      medium: '�?,
+      high: '�?,
+    };
+    return textMap[priority] || priority;
+  };
 
   const getTypeIcon = (type: string) => {
-    return type === 'import' ? '📥' : '📤'
-  }
+    return type === 'import' ? '📥' : '📤';
+  };
 
   const handleViewOrder = (orderId: string) => {
-    router.push(`/foreign-trade/company/order/${orderId}`)
-  }
+    router.push(`/foreign-trade/company/order/${orderId}`);
+  };
 
   const handleCreateOrder = () => {
-    router.push('/foreign-trade/company/orders/create')
-  }
+    router.push('/foreign-trade/company/orders/create');
+  };
 
   const handleExport = () => {
     // TODO: 实现导出功能
-    console.log('导出订单数据')
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出订单数据')};
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载订单数据中...</p>
+          <p className="mt-4 text-gray-600">加载订单数据?..</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -331,39 +345,37 @@ export default function OrdersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{orders.length}</div>
-            <p className="text-xs text-muted-foreground">
-              当前活跃订单
-            </p>
+            <p className="text-xs text-muted-foreground">当前活跃订单</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待处理</CardTitle>
+            <CardTitle className="text-sm font-medium">待处?/CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
               {orders.filter(o => o.status === 'pending').length}
             </div>
-            <p className="text-xs text-muted-foreground">
-              需要确认的订单
-            </p>
+            <p className="text-xs text-muted-foreground">需要确认的订单</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">进行中</CardTitle>
+            <CardTitle className="text-sm font-medium">进行?/CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
-              {orders.filter(o => ['confirmed', 'processing', 'shipped'].includes(o.status)).length}
+              {
+                orders.filter(o =>
+                  ['confirmed', 'processing', 'shipped'].includes(o.status)
+                ).length
+              }
             </div>
-            <p className="text-xs text-muted-foreground">
-              处理中的订单
-            </p>
+            <p className="text-xs text-muted-foreground">处理中的订单</p>
           </CardContent>
         </Card>
 
@@ -374,11 +386,12 @@ export default function OrdersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ¥{(orders.reduce((sum, order) => sum + order.amount, 0) / 10000).toFixed(1)}万
-            </div>
-            <p className="text-xs text-muted-foreground">
-              累计交易金额
-            </p>
+              ¥
+              {(
+                orders.reduce((sum, order) => sum + order.amount, 0) / 10000
+              ).toFixed(1)}
+              �?            </div>
+            <p className="text-xs text-muted-foreground">累计交易金额</p>
           </CardContent>
         </Card>
       </div>
@@ -388,8 +401,7 @@ export default function OrdersPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            筛选条件
-          </CardTitle>
+            筛选条?          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -399,24 +411,24 @@ export default function OrdersPage() {
                 <Input
                   placeholder="搜索订单号、合作伙伴或产品..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
             </div>
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="订单状态" />
+                <SelectValue placeholder="订单状? />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状态</SelectItem>
-                <SelectItem value="pending">待确认</SelectItem>
-                <SelectItem value="confirmed">已确认</SelectItem>
-                <SelectItem value="processing">处理中</SelectItem>
-                <SelectItem value="shipped">已发货</SelectItem>
-                <SelectItem value="delivered">已交付</SelectItem>
-                <SelectItem value="cancelled">已取消</SelectItem>
+                <SelectItem value="all">全部状?/SelectItem>
+                <SelectItem value="pending">待确?/SelectItem>
+                <SelectItem value="confirmed">已确?/SelectItem>
+                <SelectItem value="processing">处理?/SelectItem>
+                <SelectItem value="shipped">已发?/SelectItem>
+                <SelectItem value="delivered">已交?/SelectItem>
+                <SelectItem value="cancelled">已取?/SelectItem>
               </SelectContent>
             </Select>
 
@@ -433,10 +445,10 @@ export default function OrdersPage() {
 
             <Select value={priorityFilter} onValueChange={setPriorityFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="优先级" />
+                <SelectValue placeholder="优先? />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部优先级</SelectItem>
+                <SelectItem value="all">全部优先?/SelectItem>
                 <SelectItem value="high">高优先级</SelectItem>
                 <SelectItem value="medium">中优先级</SelectItem>
                 <SelectItem value="low">低优先级</SelectItem>
@@ -451,7 +463,7 @@ export default function OrdersPage() {
         <CardHeader>
           <CardTitle>订单列表</CardTitle>
           <CardDescription>
-            共找到 {filteredOrders.length} 个符合条件的订单
+            共找?{filteredOrders.length} 个符合条件的订单
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -463,7 +475,7 @@ export default function OrdersPage() {
                   <TableHead>合作伙伴</TableHead>
                   <TableHead>产品信息</TableHead>
                   <TableHead>数量/金额</TableHead>
-                  <TableHead>状态</TableHead>
+                  <TableHead>状?/TableHead>
                   <TableHead>创建时间</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
@@ -473,29 +485,38 @@ export default function OrdersPage() {
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-12">
                       <Package className="mx-auto h-12 w-12 text-gray-400" />
-                      <h3 className="mt-2 text-sm font-medium text-gray-900">暂无订单数据</h3>
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        暂无订单数据
+                      </h3>
                       <p className="mt-1 text-sm text-gray-500">
-                        {searchTerm || statusFilter !== 'all' || typeFilter !== 'all' || priorityFilter !== 'all'
-                          ? '没有找到匹配的订单'
+                        {searchTerm ||
+                        statusFilter !== 'all' ||
+                        typeFilter !== 'all' ||
+                        priorityFilter !== 'all'
+                          ? '没有找到匹配的订?
                           : '开始创建第一个订单吧'}
                       </p>
-                      {!searchTerm && statusFilter === 'all' && typeFilter === 'all' && priorityFilter === 'all' && (
-                        <div className="mt-6">
-                          <Button onClick={handleCreateOrder}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            创建新订单
-                          </Button>
-                        </div>
-                      )}
+                      {!searchTerm &&
+                        statusFilter === 'all' &&
+                        typeFilter === 'all' &&
+                        priorityFilter === 'all' && (
+                          <div className="mt-6">
+                            <Button onClick={handleCreateOrder}>
+                              <Plus className="h-4 w-4 mr-2" />
+                              创建新订?                            </Button>
+                          </div>
+                        )}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredOrders.map((order) => (
+                  filteredOrders.map(order => (
                     <TableRow key={order.id} className="hover:bg-gray-50">
                       <TableCell>
                         <div className="flex flex-col">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-900">{order.orderNumber}</span>
+                            <span className="font-medium text-gray-900">
+                              {order.orderNumber}
+                            </span>
                             <Badge variant="outline" className="text-xs">
                               {getTypeIcon(order.type)}
                               {order.type === 'import' ? '进口' : '出口'}
@@ -506,7 +527,7 @@ export default function OrdersPage() {
                           </div>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex flex-col">
                           <div className="font-medium">{order.partner}</div>
@@ -516,43 +537,44 @@ export default function OrdersPage() {
                           </div>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="font-medium">{order.product}</div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex flex-col">
-                          <div className="font-medium">{order.quantity} 件</div>
+                          <div className="font-medium">{order.quantity} �?/div>
                           <div className="text-sm text-gray-500">
-                            ¥{(order.amount / 10000).toFixed(1)}万
-                          </div>
+                            ¥{(order.amount / 10000).toFixed(1)}�?                          </div>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="flex flex-col gap-1">
                           <Badge className={getStatusColor(order.status)}>
                             {getStatusText(order.status)}
                           </Badge>
-                          <Badge variant="outline" className={getPriorityColor(order.priority)}>
-                            {getPriorityText(order.priority)}优先级
-                          </Badge>
+                          <Badge
+                            variant="outline"
+                            className={getPriorityColor(order.priority)}
+                          >
+                            {getPriorityText(order.priority)}优先?                          </Badge>
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
                         <div className="text-sm text-gray-500">
                           {order.createdAt}
                         </div>
                       </TableCell>
-                      
+
                       <TableCell>
-                        <ActionMenu 
+                        <ActionMenu
                           orderId={order.id}
                           onView={handleViewOrder}
-                          onEdit={() => console.log('编辑订单', order.id)}
-                          onDelete={() => console.log('删除订单', order.id)}
+                          onEdit={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('编辑订单', order.id)}
+                          onDelete={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除订单', order.id)}
                         />
                       </TableCell>
                     </TableRow>
@@ -564,5 +586,6 @@ export default function OrdersPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
+

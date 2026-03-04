@@ -20,7 +20,6 @@
 #### 使用方法
 
 1. **导入模板**
-
    - 在 n8n 界面中选择 "Import workflow"
    - 上传 `agent-invoke-template.json` 文件
 
@@ -36,7 +35,6 @@
    ```
 
 3. **创建凭证**
-
    - 进入 n8n 的 Credentials 页面
    - 创建新的 HTTP Header Auth 凭证
    - 配置 Authorization header

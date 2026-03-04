@@ -11,7 +11,9 @@ if (fs.existsSync(envFilePath)) {
   console.log('   ✅ .env.datacenter 文件存在');
   const envContent = fs.readFileSync(envFilePath, 'utf8');
   console.log('   📄 配置预览:');
-  const lines = envContent.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+  const lines = envContent
+    .split('\n')
+    .filter(line => line.trim() && !line.startsWith('#'));
   lines.slice(0, 5).forEach(line => {
     console.log(`     ${line}`);
   });
@@ -28,7 +30,7 @@ const coreFiles = [
   'src/data-center/core/data-center-service.ts',
   'src/data-center/core/redis-health-monitor.ts',
   'src/data-center/streaming/real-time-service.ts',
-  'src/data-center/monitoring/monitoring-service.ts'
+  'src/data-center/monitoring/monitoring-service.ts',
 ];
 
 coreFiles.forEach(file => {
@@ -44,7 +46,7 @@ const requiredDirs = [
   'src/data-center/streaming',
   'src/data-center/monitoring',
   'src/data-center/ml',
-  'logs'
+  'logs',
 ];
 
 requiredDirs.forEach(dir => {
@@ -58,7 +60,8 @@ const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const requiredDeps = ['ioredis', '@supabase/supabase-js'];
 
 requiredDeps.forEach(dep => {
-  const hasDep = packageJson.dependencies?.[dep] || packageJson.devDependencies?.[dep];
+  const hasDep =
+    packageJson.dependencies?.[dep] || packageJson.devDependencies?.[dep];
   console.log(`   ${hasDep ? '✅' : '❌'} ${dep}: ${hasDep || '未安装'}`);
 });
 

@@ -14,7 +14,7 @@ const TEST_CONFIG = {
   baseUrl: 'http://localhost:3001',
   timeout: 10000,
   testProductId: 'TEST-PRODUCT-001',
-  testWarehouseId: 'warehouse-001'
+  testWarehouseId: 'warehouse-001',
 };
 
 class MLPredictionTestSuite {
@@ -35,25 +35,24 @@ class MLPredictionTestSuite {
     try {
       // 1. 基础连通性测试
       await this.testServiceConnectivity();
-      
+
       // 2. 需求预测测试
       await this.testDemandPrediction();
-      
+
       // 3. 价格预测测试
       await this.testPricePrediction();
-      
+
       // 4. 批量预测测试
       await this.testBatchPrediction();
-      
+
       // 5. 错误处理测试
       await this.testErrorHandling();
-      
+
       // 6. 性能测试
       await this.testPerformance();
-      
+
       // 输出总结报告
       this.printTestSummary();
-      
     } catch (error) {
       console.error('❌ 测试套件执行失败:', error);
       process.exit(1);
@@ -65,33 +64,44 @@ class MLPredictionTestSuite {
     const startTime = Date.now();
 
     try {
-      const response = await this.makeRequest('/api/ml-prediction?action=status', 'GET');
-      
+      const response = await this.makeRequest(
+        '/api/ml-prediction?action=status',
+        'GET'
+      );
+
       if (!response.success) {
         throw new Error(`服务状态检查失败: ${response.error}`);
       }
 
       const { data } = response;
-      const isValid = data.serviceStatus === 'running' && 
-                     data.supportedModels && 
-                     data.supportedPredictionTypes;
+      const isValid =
+        data.serviceStatus === 'running' &&
+        data.supportedModels &&
+        data.supportedPredictionTypes;
 
       this.recordResult('服务连通性', isValid, Date.now() - startTime, {
         serviceStatus: data.serviceStatus,
         supportedModels: data.supportedModels?.length || 0,
-        supportedPredictionTypes: data.supportedPredictionTypes?.length || 0
+        supportedPredictionTypes: data.supportedPredictionTypes?.length || 0,
       });
 
       if (isValid) {
         console.log('   ✅ 服务连接正常');
         console.log(`   📊 支持模型数: ${data.supportedModels?.length || 0}`);
-        console.log(`   📊 预测类型数: ${data.supportedPredictionTypes?.length || 0}`);
+        console.log(
+          `   📊 预测类型数: ${data.supportedPredictionTypes?.length || 0}`
+        );
       } else {
         console.log('   ❌ 服务状态异常');
       }
-
     } catch (error) {
-      this.recordResult('服务连通性', false, Date.now() - startTime, null, error.message);
+      this.recordResult(
+        '服务连通性',
+        false,
+        Date.now() - startTime,
+        null,
+        error.message
+      );
       console.log(`   ❌ 连接失败: ${error.message}`);
     }
   }
@@ -108,40 +118,52 @@ class MLPredictionTestSuite {
         horizonDays: 7,
         options: {
           seasonalFactors: ['周末效应', '节假日影响'],
-          externalEvents: ['促销活动']
-        }
+          externalEvents: ['促销活动'],
+        },
       };
 
-      const response = await this.makeRequest('/api/ml-prediction', 'POST', requestBody);
-      
+      const response = await this.makeRequest(
+        '/api/ml-prediction',
+        'POST',
+        requestBody
+      );
+
       if (!response.success) {
         throw new Error(`需求预测失败: ${response.error}`);
       }
 
       const { data } = response;
-      const isValid = data.predictions && 
-                      Array.isArray(data.predictions) && 
-                      data.predictions.length === 7 &&
-                      data.summary &&
-                      data.analysis;
+      const isValid =
+        data.predictions &&
+        Array.isArray(data.predictions) &&
+        data.predictions.length === 7 &&
+        data.summary &&
+        data.analysis;
 
       this.recordResult('需求预测', isValid, Date.now() - startTime, {
         predictionDays: data.predictions?.length || 0,
         totalQuantity: data.summary?.totalQuantity || 0,
-        confidence: data.summary?.confidence || 0
+        confidence: data.summary?.confidence || 0,
       });
 
       if (isValid) {
         console.log('   ✅ 需求预测功能正常');
         console.log(`   📅 预测天数: ${data.predictions.length}`);
         console.log(`   📦 总预测量: ${data.summary.totalQuantity}`);
-        console.log(`   💯 置信度: ${(data.summary.confidence * 100).toFixed(1)}%`);
+        console.log(
+          `   💯 置信度: ${(data.summary.confidence * 100).toFixed(1)}%`
+        );
       } else {
         console.log('   ❌ 需求预测结果格式不正确');
       }
-
     } catch (error) {
-      this.recordResult('需求预测', false, Date.now() - startTime, null, error.message);
+      this.recordResult(
+        '需求预测',
+        false,
+        Date.now() - startTime,
+        null,
+        error.message
+      );
       console.log(`   ❌ 需求预测失败: ${error.message}`);
     }
   }
@@ -158,40 +180,52 @@ class MLPredictionTestSuite {
         horizonDays: 7,
         options: {
           marketConditions: '正常市场环境',
-          competitorActions: '价格竞争激烈'
-        }
+          competitorActions: '价格竞争激烈',
+        },
       };
 
-      const response = await this.makeRequest('/api/ml-prediction', 'POST', requestBody);
-      
+      const response = await this.makeRequest(
+        '/api/ml-prediction',
+        'POST',
+        requestBody
+      );
+
       if (!response.success) {
         throw new Error(`价格预测失败: ${response.error}`);
       }
 
       const { data } = response;
-      const isValid = data.predictions && 
-                      Array.isArray(data.predictions) && 
-                      data.predictions.length === 7 &&
-                      data.summary &&
-                      data.marketInsights;
+      const isValid =
+        data.predictions &&
+        Array.isArray(data.predictions) &&
+        data.predictions.length === 7 &&
+        data.summary &&
+        data.marketInsights;
 
       this.recordResult('价格预测', isValid, Date.now() - startTime, {
         predictionDays: data.predictions?.length || 0,
         priceTrend: data.summary?.priceTrend || '未知',
-        confidence: data.summary?.confidence || 0
+        confidence: data.summary?.confidence || 0,
       });
 
       if (isValid) {
         console.log('   ✅ 价格预测功能正常');
         console.log(`   📅 预测天数: ${data.predictions.length}`);
         console.log(`   📈 价格趋势: ${data.summary.priceTrend}`);
-        console.log(`   💯 置信度: ${(data.summary.confidence * 100).toFixed(1)}%`);
+        console.log(
+          `   💯 置信度: ${(data.summary.confidence * 100).toFixed(1)}%`
+        );
       } else {
         console.log('   ❌ 价格预测结果格式不正确');
       }
-
     } catch (error) {
-      this.recordResult('价格预测', false, Date.now() - startTime, null, error.message);
+      this.recordResult(
+        '价格预测',
+        false,
+        Date.now() - startTime,
+        null,
+        error.message
+      );
       console.log(`   ❌ 价格预测失败: ${error.message}`);
     }
   }
@@ -206,38 +240,43 @@ class MLPredictionTestSuite {
           action: 'predict-demand',
           productId: TEST_CONFIG.testProductId,
           warehouseId: TEST_CONFIG.testWarehouseId,
-          horizonDays: 3
+          horizonDays: 3,
         },
         {
           action: 'predict-price',
           productId: TEST_CONFIG.testProductId,
           platform: 'jd',
-          horizonDays: 3
-        }
+          horizonDays: 3,
+        },
       ];
 
       const requestBody = {
         action: 'batch-predict',
         predictions: batchRequests,
-        parallel: true
+        parallel: true,
       };
 
-      const response = await this.makeRequest('/api/ml-prediction', 'POST', requestBody);
-      
+      const response = await this.makeRequest(
+        '/api/ml-prediction',
+        'POST',
+        requestBody
+      );
+
       if (!response.success) {
         throw new Error(`批量预测失败: ${response.error}`);
       }
 
       const { data } = response;
-      const isValid = data.results && 
-                      Array.isArray(data.results) && 
-                      data.results.length === 2 &&
-                      data.summary;
+      const isValid =
+        data.results &&
+        Array.isArray(data.results) &&
+        data.results.length === 2 &&
+        data.summary;
 
       this.recordResult('批量预测', isValid, Date.now() - startTime, {
         totalRequests: data.results?.length || 0,
         successful: data.summary?.successful || 0,
-        successRate: data.summary?.successRate || '0%'
+        successRate: data.summary?.successRate || '0%',
       });
 
       if (isValid) {
@@ -248,9 +287,14 @@ class MLPredictionTestSuite {
       } else {
         console.log('   ❌ 批量预测结果格式不正确');
       }
-
     } catch (error) {
-      this.recordResult('批量预测', false, Date.now() - startTime, null, error.message);
+      this.recordResult(
+        '批量预测',
+        false,
+        Date.now() - startTime,
+        null,
+        error.message
+      );
       console.log(`   ❌ 批量预测失败: ${error.message}`);
     }
   }
@@ -262,17 +306,21 @@ class MLPredictionTestSuite {
     try {
       // 测试缺少必需参数的情况
       const invalidRequest = {
-        action: 'predict-demand'
+        action: 'predict-demand',
         // 缺少productId和warehouseId
       };
 
-      const response = await this.makeRequest('/api/ml-prediction', 'POST', invalidRequest);
-      
+      const response = await this.makeRequest(
+        '/api/ml-prediction',
+        'POST',
+        invalidRequest
+      );
+
       const isErrorHandled = !response.success && response.error;
-      
+
       this.recordResult('错误处理', isErrorHandled, Date.now() - startTime, {
         errorCode: response.error ? '参数验证错误' : '未捕获错误',
-        errorMessage: response.error || '无错误信息'
+        errorMessage: response.error || '无错误信息',
       });
 
       if (isErrorHandled) {
@@ -282,9 +330,14 @@ class MLPredictionTestSuite {
       } else {
         console.log('   ❌ 错误未被正确处理');
       }
-
     } catch (error) {
-      this.recordResult('错误处理', false, Date.now() - startTime, null, error.message);
+      this.recordResult(
+        '错误处理',
+        false,
+        Date.now() - startTime,
+        null,
+        error.message
+      );
       console.log(`   ❌ 错误处理测试失败: ${error.message}`);
     }
   }
@@ -299,12 +352,12 @@ class MLPredictionTestSuite {
 
       for (let i = 0; i < iterations; i++) {
         const iterStartTime = Date.now();
-        
+
         const requestBody = {
           action: 'predict-demand',
           productId: `${TEST_CONFIG.testProductId}-${i}`,
           warehouseId: TEST_CONFIG.testWarehouseId,
-          horizonDays: 3
+          horizonDays: 3,
         };
 
         try {
@@ -317,10 +370,12 @@ class MLPredictionTestSuite {
       }
 
       const validResults = performanceResults.filter(r => r !== null);
-      const avgResponseTime = validResults.length > 0 
-        ? validResults.reduce((sum, time) => sum + time, 0) / validResults.length 
-        : 0;
-      
+      const avgResponseTime =
+        validResults.length > 0
+          ? validResults.reduce((sum, time) => sum + time, 0) /
+            validResults.length
+          : 0;
+
       const successRate = (validResults.length / iterations) * 100;
       const isValid = avgResponseTime < 5000 && successRate >= 80; // 5秒内，成功率80%以上
 
@@ -328,7 +383,7 @@ class MLPredictionTestSuite {
         averageResponseTime: `${avgResponseTime.toFixed(0)}ms`,
         successRate: `${successRate.toFixed(1)}%`,
         totalIterations: iterations,
-        successfulIterations: validResults.length
+        successfulIterations: validResults.length,
       });
 
       if (isValid) {
@@ -337,12 +392,19 @@ class MLPredictionTestSuite {
         console.log(`   📊 成功率: ${successRate.toFixed(1)}%`);
       } else {
         console.log('   ⚠️  性能基准未达标');
-        console.log(`   ⏱️  平均响应时间: ${avgResponseTime.toFixed(0)}ms (目标: <5000ms)`);
+        console.log(
+          `   ⏱️  平均响应时间: ${avgResponseTime.toFixed(0)}ms (目标: <5000ms)`
+        );
         console.log(`   📊 成功率: ${successRate.toFixed(1)}% (目标: ≥80%)`);
       }
-
     } catch (error) {
-      this.recordResult('性能基准', false, Date.now() - startTime, null, error.message);
+      this.recordResult(
+        '性能基准',
+        false,
+        Date.now() - startTime,
+        null,
+        error.message
+      );
       console.log(`   ❌ 性能测试失败: ${error.message}`);
     }
   }
@@ -350,13 +412,13 @@ class MLPredictionTestSuite {
   // 辅助方法
   async makeRequest(endpoint, method = 'GET', body = null) {
     const url = `${TEST_CONFIG.baseUrl}${endpoint}`;
-    
+
     const options = {
       method,
       headers: {
         'Content-Type': 'application/json',
       },
-      timeout: TEST_CONFIG.timeout
+      timeout: TEST_CONFIG.timeout,
     };
 
     if (body) {
@@ -375,18 +437,24 @@ class MLPredictionTestSuite {
     }
   }
 
-  recordResult(testName, passed, executionTime, details = null, errorMessage = null) {
+  recordResult(
+    testName,
+    passed,
+    executionTime,
+    details = null,
+    errorMessage = null
+  ) {
     const result = {
       testName,
       passed,
       executionTime,
       details,
       errorMessage,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.results.push(result);
-    
+
     if (passed) {
       this.passedTests++;
     } else {
@@ -395,26 +463,28 @@ class MLPredictionTestSuite {
   }
 
   printTestSummary() {
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${'='.repeat(60)}`);
     console.log('📊 ML预测服务测试总结报告');
     console.log('='.repeat(60));
 
     console.log(`\n✅ 通过测试: ${this.passedTests}`);
     console.log(`❌ 失败测试: ${this.failedTests}`);
-    console.log(`📈 总体通过率: ${((this.passedTests / (this.passedTests + this.failedTests)) * 100).toFixed(1)}%`);
+    console.log(
+      `📈 总体通过率: ${((this.passedTests / (this.passedTests + this.failedTests)) * 100).toFixed(1)}%`
+    );
 
     console.log('\n📋 详细结果:');
     this.results.forEach((result, index) => {
       const status = result.passed ? '✅' : '❌';
       console.log(`  ${index + 1}. ${status} ${result.testName}`);
       console.log(`     执行时间: ${result.executionTime}ms`);
-      
+
       if (result.details) {
         Object.entries(result.details).forEach(([key, value]) => {
           console.log(`     ${key}: ${value}`);
         });
       }
-      
+
       if (result.errorMessage) {
         console.log(`     错误信息: ${result.errorMessage}`);
       }
@@ -422,13 +492,15 @@ class MLPredictionTestSuite {
     });
 
     console.log('='.repeat(60));
-    
+
     // 生成测试报告文件
     this.generateTestReport();
-    
+
     const overallSuccess = this.failedTests === 0;
-    console.log(`\n${overallSuccess ? '🎉' : '⚠️'} 测试${overallSuccess ? '全部通过' : '存在失败项'}`);
-    
+    console.log(
+      `\n${overallSuccess ? '🎉' : '⚠️'} 测试${overallSuccess ? '全部通过' : '存在失败项'}`
+    );
+
     if (!overallSuccess) {
       console.log('\n💡 建议:');
       console.log('   1. 检查服务是否正常运行');
@@ -436,7 +508,7 @@ class MLPredictionTestSuite {
       console.log('   3. 确认大模型API配置');
       console.log('   4. 查看详细错误日志');
     }
-    
+
     process.exit(overallSuccess ? 0 : 1);
   }
 
@@ -449,18 +521,25 @@ class MLPredictionTestSuite {
         totalTests: this.passedTests + this.failedTests,
         passedTests: this.passedTests,
         failedTests: this.failedTests,
-        passRate: ((this.passedTests / (this.passedTests + this.failedTests)) * 100).toFixed(2) + '%'
+        passRate: `${(
+          (this.passedTests / (this.passedTests + this.failedTests)) *
+          100
+        ).toFixed(2)}%`,
       },
       results: this.results,
       environment: {
         nodeVersion: process.version,
         platform: process.platform,
-        testConfig: TEST_CONFIG
-      }
+        testConfig: TEST_CONFIG,
+      },
     };
 
-    const reportPath = path.join(process.cwd(), 'test-results', 'ml-prediction-test-report.json');
-    
+    const reportPath = path.join(
+      process.cwd(),
+      'test-results',
+      'ml-prediction-test-report.json'
+    );
+
     // 确保目录存在
     const reportDir = path.dirname(reportPath);
     if (!fs.existsSync(reportDir)) {
@@ -475,7 +554,7 @@ class MLPredictionTestSuite {
 // 执行测试
 async function runTests() {
   const testSuite = new MLPredictionTestSuite();
-  
+
   try {
     await testSuite.runAllTests();
   } catch (error) {

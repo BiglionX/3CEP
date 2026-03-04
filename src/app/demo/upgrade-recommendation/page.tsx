@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import UpgradeRecommendationList from '@/components/crowdfunding/UpgradeRecommendationList';
@@ -15,17 +15,20 @@ import { Button } from '@/components/ui/button';
 import { Smartphone, Zap, TrendingUp } from 'lucide-react';
 
 const UpgradeRecommendationDemo = () => {
+  // @ts-ignore
   const [userId, setUserId] = useState('demo-user-001');
   const [showRecommendations, setShowRecommendations] = useState(false);
 
   const handleRecommendationClick = (recommendation: Recommendation) => {
     console.log('用户点击推荐:', recommendation);
-    alert(`您点击了从 ${recommendation.oldModel} 升级到 ${recommendation.newModel} 的推荐！`);
+    alert(
+      `您点击了?${recommendation.oldModel} 升级?${recommendation.newModel} 的推荐！`
+    );
   };
 
   const handleConversion = (recommendation: Recommendation) => {
     console.log('用户准备升级:', recommendation);
-    alert(`即将为您跳转到 ${recommendation.newModel} 的购买页面！`);
+    alert(`即将为您跳转?${recommendation.newModel} 的购买页面！`);
   };
 
   return (
@@ -64,13 +67,13 @@ const UpgradeRecommendationDemo = () => {
                 <Input
                   type="text"
                   value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
+                  onChange={e => setUserId(e.target.value)}
                   placeholder="请输入用户ID"
                   className="w-full"
                 />
               </div>
               <div className="flex items-end">
-                <Button 
+                <Button
                   size="lg"
                   onClick={() => setShowRecommendations(true)}
                   disabled={!userId || showRecommendations}
@@ -93,8 +96,7 @@ const UpgradeRecommendationDemo = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-green-600" />
-                为您推荐的升级方案
-              </CardTitle>
+                为您推荐的升级方?              </CardTitle>
             </CardHeader>
             <CardContent>
               <UpgradeRecommendationList
@@ -104,15 +106,17 @@ const UpgradeRecommendationDemo = () => {
                 onRecommendationClick={handleRecommendationClick}
                 onConversion={handleConversion}
               />
-              
+
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="font-semibold text-blue-800 mb-2">💡 功能特色</h3>
+                <h3 className="font-semibold text-blue-800 mb-2">
+                  💡 功能特色
+                </h3>
                 <ul className="text-blue-700 space-y-1 text-sm">
-                  <li>• 基于设备使用历史的智能推荐算法</li>
-                  <li>• 实时计算以旧换新优惠金额</li>
-                  <li>• 个性化推荐得分和优先级排序</li>
-                  <li>• 完整的用户行为追踪和分析</li>
-                  <li>• 响应式设计，支持多端访问</li>
+                  <li>�?基于设备使用历史的智能推荐算?/li>
+                  <li>�?实时计算以旧换新优惠金额</li>
+                  <li>�?个性化推荐得分和优先级排序</li>
+                  <li>�?完整的用户行为追踪和分析</li>
+                  <li>�?响应式设计，支持多端访问</li>
                 </ul>
               </div>
             </CardContent>
@@ -171,3 +175,4 @@ const UpgradeRecommendationDemo = () => {
 };
 
 export default UpgradeRecommendationDemo;
+

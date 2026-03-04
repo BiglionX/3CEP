@@ -11,7 +11,9 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('❌ 缺少Supabase配置信息');
-  console.error('请确保设置了 NEXT_PUBLIC_SUPABASE_URL 和 SUPABASE_SERVICE_ROLE_KEY 环境变量');
+  console.error(
+    '请确保设置了 NEXT_PUBLIC_SUPABASE_URL 和 SUPABASE_SERVICE_ROLE_KEY 环境变量'
+  );
   process.exit(1);
 }
 
@@ -19,7 +21,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function initializeDatabase() {
   console.log('🚀 开始初始化第四阶段数据库...');
-  
+
   try {
     // 创建估值日志表
     console.log('\n📋 创建估值日志表...');
@@ -65,15 +67,15 @@ async function initializeDatabase() {
             AND user_profiles.role = 'admin'
           )
         );
-      `
+      `,
     });
-    
+
     if (tableError) {
       console.log('⚠️  表创建可能遇到问题:', tableError.message);
     } else {
       console.log('✅ 估值日志表创建成功');
     }
-    
+
     // 插入测试数据
     console.log('\n📋 插入测试数据...');
     const { error: insertError } = await supabase
@@ -84,12 +86,12 @@ async function initializeDatabase() {
           device_profile: {
             productModel: 'iPhone 14',
             brandName: 'Apple',
-            productCategory: '手机'
+            productCategory: '手机',
           },
           condition_input: {
             screen: 'minor_scratches',
             battery: 'good',
-            body: 'light_wear'
+            body: 'light_wear',
           },
           market_price: 4500,
           final_value: 3800,
@@ -98,19 +100,19 @@ async function initializeDatabase() {
           confidence_level: 'high',
           request_source: 'api',
           processing_time_ms: 120,
-          metadata: { test_record: true }
+          metadata: { test_record: true },
         },
         {
           device_qrcode_id: 'TEST-DEVICE-002',
           device_profile: {
             productModel: 'Samsung Galaxy S23',
             brandName: 'Samsung',
-            productCategory: '手机'
+            productCategory: '手机',
           },
           condition_input: {
             screen: 'perfect',
             battery: 'excellent',
-            body: 'perfect'
+            body: 'perfect',
           },
           market_price: 5200,
           final_value: 4600,
@@ -119,34 +121,33 @@ async function initializeDatabase() {
           confidence_level: 'high',
           request_source: 'web',
           processing_time_ms: 85,
-          metadata: { test_record: true }
-        }
+          metadata: { test_record: true },
+        },
       ]);
-    
+
     if (insertError) {
       console.log('⚠️  测试数据插入失败:', insertError.message);
     } else {
       console.log('✅ 测试数据插入成功');
     }
-    
+
     // 验证表结构
     console.log('\n📋 验证表结构...');
     const { data: columns, error: verifyError } = await supabase
       .from('valuation_logs')
       .select('*')
       .limit(1);
-    
+
     if (verifyError) {
       console.log('❌ 表验证失败:', verifyError.message);
       return false;
     }
-    
+
     console.log('✅ 表结构验证通过');
     console.log(`📊 当前表中记录数: ${columns ? columns.length : 0}`);
-    
+
     console.log('\n🎉 第四阶段数据库初始化完成！');
     return true;
-    
   } catch (error) {
     console.error('❌ 数据库初始化失败:', error.message);
     return false;
@@ -155,12 +156,14 @@ async function initializeDatabase() {
 
 // 执行初始化
 if (require.main === module) {
-  initializeDatabase().then(success => {
-    process.exit(success ? 0 : 1);
-  }).catch(error => {
-    console.error('初始化过程异常:', error);
-    process.exit(1);
-  });
+  initializeDatabase()
+    .then(success => {
+      process.exit(success ? 0 : 1);
+    })
+    .catch(error => {
+      console.error('初始化过程异常:', error);
+      process.exit(1);
+    });
 }
 
 module.exports = { initializeDatabase };

@@ -8,7 +8,7 @@ function testVirtualViews() {
   const viewFiles = [
     'src/data-center/virtualization/views-definition.ts',
     'src/data-center/virtualization/view-executor.ts',
-    'src/app/api/data-center/views/route.ts'
+    'src/app/api/data-center/views/route.ts',
   ];
 
   viewFiles.forEach(file => {
@@ -19,15 +19,18 @@ function testVirtualViews() {
   // 2. 验证视图定义结构
   console.log('\n👁️ 验证视图定义:');
   try {
-    const viewDefContent = fs.readFileSync('src/data-center/virtualization/views-definition.ts', 'utf8');
-    
+    const viewDefContent = fs.readFileSync(
+      'src/data-center/virtualization/views-definition.ts',
+      'utf8'
+    );
+
     const requiredViews = [
       'DEVICE_INFO_VIEW',
       'PART_INFO_VIEW',
       'PRICE_AGGREGATION_VIEW',
       'USER_BEHAVIOR_VIEW',
       'REPAIR_ANALYSIS_VIEW',
-      'INVENTORY_ALERT_VIEW'
+      'INVENTORY_ALERT_VIEW',
     ];
 
     requiredViews.forEach(viewName => {
@@ -37,7 +40,6 @@ function testVirtualViews() {
 
     const hasViewManager = viewDefContent.includes('ViewManager');
     console.log(`  ${hasViewManager ? '✅' : '❌'} ViewManager 类`);
-
   } catch (error) {
     console.log(`  ❌ 检查视图定义时出错: ${error.message}`);
   }
@@ -45,13 +47,16 @@ function testVirtualViews() {
   // 3. 验证执行器功能
   console.log('\n⚡ 验证视图执行器:');
   try {
-    const executorContent = fs.readFileSync('src/data-center/virtualization/view-executor.ts', 'utf8');
-    
+    const executorContent = fs.readFileSync(
+      'src/data-center/virtualization/view-executor.ts',
+      'utf8'
+    );
+
     const requiredMethods = [
       'executeView',
       'executeViews',
       'getViewMetadata',
-      'warmupViews'
+      'warmupViews',
     ];
 
     requiredMethods.forEach(method => {
@@ -61,7 +66,6 @@ function testVirtualViews() {
 
     const hasCacheSupport = executorContent.includes('cache');
     console.log(`  ${hasCacheSupport ? '✅' : '❌'} 缓存支持`);
-
   } catch (error) {
     console.log(`  ❌ 检查执行器时出错: ${error.message}`);
   }
@@ -69,42 +73,44 @@ function testVirtualViews() {
   // 4. 验证API端点
   console.log('\n🌐 验证API端点:');
   try {
-    const apiContent = fs.readFileSync('src/app/api/data-center/views/route.ts', 'utf8');
-    
+    const apiContent = fs.readFileSync(
+      'src/app/api/data-center/views/route.ts',
+      'utf8'
+    );
+
     const apiActions = ['list', 'metadata', 'execute', 'batch', 'warmup'];
     apiActions.forEach(action => {
       const exists = apiContent.includes(action);
       console.log(`  ${exists ? '✅' : '❌'} ${action} 操作`);
     });
 
-    const hasHttpMethods = ['GET', 'POST'].every(method => 
+    const hasHttpMethods = ['GET', 'POST'].every(method =>
       apiContent.includes(method)
     );
     console.log(`  ${hasHttpMethods ? '✅' : '❌'} HTTP方法支持`);
-
   } catch (error) {
     console.log(`  ❌ 检查API端点时出错: ${error.message}`);
   }
 
   // 5. 模拟视图查询测试
   console.log('\n🔍 模拟视图查询测试:');
-  
+
   const sampleQueries = [
     {
       name: '设备信息查询',
       view: 'unified_device_info',
-      params: { brand: 'Apple' }
+      params: { brand: 'Apple' },
     },
     {
       name: '配件价格聚合',
       view: 'price_aggregation',
-      params: { part_id: 'part_001' }
+      params: { part_id: 'part_001' },
     },
     {
       name: '库存预警',
       view: 'inventory_alerts',
-      params: {}
-    }
+      params: {},
+    },
   ];
 
   sampleQueries.forEach(query => {
@@ -115,12 +121,12 @@ function testVirtualViews() {
 
   // 6. 检查集成情况
   console.log('\n🔗 检查系统集成:');
-  
+
   const integrationPoints = [
     'Redis缓存集成',
-    'Trino查询引擎集成', 
+    'Trino查询引擎集成',
     '数据中心API集成',
-    '数据模型映射集成'
+    '数据模型映射集成',
   ];
 
   integrationPoints.forEach(point => {

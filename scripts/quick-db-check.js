@@ -2,7 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 async function quickDatabaseSetup() {
   console.log('🚀 快速数据库配置检查...\n');
-  
+
   const supabase = createClient(
     'https://hrjqzbhqueleszkvnsen.supabase.co',
     'sb_publishable_5e-tqlrRNyKW3fAmWJipIQ_1-fjS711'
@@ -11,7 +11,7 @@ async function quickDatabaseSetup() {
   try {
     // 检查现有表
     console.log('📋 检查现有表结构...');
-    
+
     const { data: tables, error: tablesError } = await supabase
       .from('information_schema.tables')
       .select('table_name')
@@ -32,12 +32,16 @@ async function quickDatabaseSetup() {
 
     console.log('\n🔍 营销表状态:');
     console.log(`  leads表: ${hasLeadsTable ? '✅ 存在' : '❌ 缺失'}`);
-    console.log(`  marketing_events表: ${hasEventsTable ? '✅ 存在' : '❌ 缺失'}`);
-    console.log(`  performance_metrics表: ${hasMetricsTable ? '✅ 存在' : '❌ 缺失'}`);
+    console.log(
+      `  marketing_events表: ${hasEventsTable ? '✅ 存在' : '❌ 缺失'}`
+    );
+    console.log(
+      `  performance_metrics表: ${hasMetricsTable ? '✅ 存在' : '❌ 缺失'}`
+    );
 
     if (hasLeadsTable && hasEventsTable && hasMetricsTable) {
       console.log('\n🎉 所有营销表已存在，数据库配置完成！');
-      
+
       // 验证数据插入
       console.log('\n🧪 测试数据插入...');
       const { data: testData, error: insertError } = await supabase
@@ -49,7 +53,7 @@ async function quickDatabaseSetup() {
           email: `auto-test-${Date.now()}@example.com`,
           phone: '13800138000',
           use_case: '自动化配置验证',
-          source: 'auto_setup'
+          source: 'auto_setup',
         })
         .select();
 
@@ -59,12 +63,11 @@ async function quickDatabaseSetup() {
         console.log('✅ 测试数据插入成功');
         console.log('📋 插入的测试数据ID:', testData[0].id);
       }
-
     } else {
       console.log('\n⚠️  需要创建缺失的表');
       console.log('请在Supabase控制台SQL Editor中执行以下脚本:');
       console.log('\n--- 复制以下SQL到Supabase ---\n');
-      
+
       if (!hasLeadsTable) {
         console.log(`
 CREATE TABLE leads (
@@ -122,7 +125,6 @@ CREATE TABLE performance_metrics (
 
       console.log('\n--- SQL脚本结束 ---\n');
     }
-
   } catch (error) {
     console.error('❌ 配置检查出错:', error.message);
   }

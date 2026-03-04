@@ -16,57 +16,57 @@ const checkScripts = [
   {
     name: '快速健康检查',
     script: 'quick-health-check.js',
-    description: '检查项目核心组件和服务状态'
+    description: '检查项目核心组件和服务状态',
   },
   {
     name: '系统验证',
-    script: 'system-validation.js', 
-    description: '验证核心功能模块是否正常工作'
+    script: 'system-validation.js',
+    description: '验证核心功能模块是否正常工作',
   },
   {
     name: '环境检查',
     script: 'check-environment.js',
-    description: '检查开发环境配置'
+    description: '检查开发环境配置',
   },
   {
     name: '数据库连接检查',
     script: 'verify-database.js',
-    description: '验证数据库连接状态'
+    description: '验证数据库连接状态',
   },
   {
     name: 'Redis 配置检查',
     script: 'check-redis-setup.js',
-    description: '检查 Redis 服务配置'
+    description: '检查 Redis 服务配置',
   },
   {
     name: '实时系统检查',
     script: 'check-realtime-setup.js',
-    description: '检查实时处理系统配置'
+    description: '检查实时处理系统配置',
   },
   {
     name: '监控系统检查',
     script: 'check-monitoring-setup.js',
-    description: '检查监控系统配置'
-  }
+    description: '检查监控系统配置',
+  },
 ];
 
 let passedChecks = 0;
-let totalChecks = checkScripts.length;
+const totalChecks = checkScripts.length;
 
 // 运行每个检查脚本
 checkScripts.forEach((check, index) => {
   console.log(`[${index + 1}/${totalChecks}] ${check.name}`);
   console.log(`📝 ${check.description}`);
   console.log('----------------------------------------');
-  
+
   try {
     const scriptPath = path.join(__dirname, check.script);
     const result = spawnSync('node', [scriptPath], {
       cwd: __dirname,
       stdio: 'inherit',
-      timeout: 30000 // 30秒超时
+      timeout: 30000, // 30秒超时
     });
-    
+
     if (result.status === 0) {
       console.log(`✅ ${check.name} 通过\n`);
       passedChecks++;
@@ -83,7 +83,9 @@ console.log('=====================================');
 console.log('🏆 健康检查汇总报告\n');
 
 const completionRate = Math.round((passedChecks / totalChecks) * 100);
-console.log(`📊 检查完成度: ${passedChecks}/${totalChecks} (${completionRate}%)`);
+console.log(
+  `📊 检查完成度: ${passedChecks}/${totalChecks} (${completionRate}%)`
+);
 
 if (completionRate >= 90) {
   console.log('🎉 项目状态: 优秀 - 准备就绪');

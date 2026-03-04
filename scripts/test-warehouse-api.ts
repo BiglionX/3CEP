@@ -4,55 +4,55 @@
  */
 
 async function testWarehouseOptimizationAPI() {
-  console.log("🚀 开始测试智能分仓引擎API...\n");
+  console.log('🚀 开始测试智能分仓引擎API...\n');
 
-  const apiUrl = "http://localhost:3000/api/warehouse/optimize";
+  const apiUrl = 'http://localhost:3000/api/warehouse/optimize';
 
   // 测试用例1: 标准订单测试
   const testCases = [
     {
-      name: "标准订单测试",
+      name: '标准订单测试',
       data: {
         deliveryAddress: {
-          country: "中国",
-          province: "上海市",
-          city: "上海市",
-          address: "浦东新区张江高科技园区",
+          country: '中国',
+          province: '上海市',
+          city: '上海市',
+          address: '浦东新区张江高科技园区',
         },
         orderItems: [
           {
-            productId: "phone-case-001",
-            productName: "iPhone 14 Pro 手机壳",
+            productId: 'phone-case-001',
+            productName: 'iPhone 14 Pro 手机壳',
             quantity: 2,
             unitPrice: 89.9,
             weight: 0.3,
           },
           {
-            productId: "screen-protector-001",
-            productName: "钢化膜",
+            productId: 'screen-protector-001',
+            productName: '钢化膜',
             quantity: 1,
             unitPrice: 29.9,
             weight: 0.1,
           },
         ],
         deliveryPreferences: {
-          deliveryPriority: "balanced",
+          deliveryPriority: 'balanced',
         },
       },
     },
     {
-      name: "大件商品测试",
+      name: '大件商品测试',
       data: {
         deliveryAddress: {
-          country: "中国",
-          province: "广东省",
-          city: "深圳市",
-          address: "南山区科技园",
+          country: '中国',
+          province: '广东省',
+          city: '深圳市',
+          address: '南山区科技园',
         },
         orderItems: [
           {
-            productId: "laptop-001",
-            productName: "游戏本电脑",
+            productId: 'laptop-001',
+            productName: '游戏本电脑',
             quantity: 1,
             unitPrice: 8999,
             weight: 2.5,
@@ -64,30 +64,30 @@ async function testWarehouseOptimizationAPI() {
           },
         ],
         deliveryPreferences: {
-          deliveryPriority: "fastest",
+          deliveryPriority: 'fastest',
         },
       },
     },
     {
-      name: "批量订单测试",
+      name: '批量订单测试',
       data: {
         deliveryAddress: {
-          country: "中国",
-          province: "北京市",
-          city: "北京市",
-          address: "朝阳区三里屯",
+          country: '中国',
+          province: '北京市',
+          city: '北京市',
+          address: '朝阳区三里屯',
         },
         orderItems: [
           {
-            productId: "keyboard-001",
-            productName: "机械键盘",
+            productId: 'keyboard-001',
+            productName: '机械键盘',
             quantity: 10,
             unitPrice: 399,
             weight: 1.2,
           },
           {
-            productId: "mouse-001",
-            productName: "无线鼠标",
+            productId: 'mouse-001',
+            productName: '无线鼠标',
             quantity: 15,
             unitPrice: 199,
             weight: 0.3,
@@ -95,7 +95,7 @@ async function testWarehouseOptimizationAPI() {
         ],
         deliveryPreferences: {
           maxBudget: 500,
-          deliveryPriority: "cheapest",
+          deliveryPriority: 'cheapest',
         },
       },
     },
@@ -109,9 +109,9 @@ async function testWarehouseOptimizationAPI() {
       const startTime = Date.now();
 
       const response = await fetch(apiUrl, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(testCase.data),
       });
@@ -162,7 +162,7 @@ async function testWarehouseOptimizationAPI() {
         // 验证验收标准
         const meetsStandard = metrics.improvementRate >= 10;
         console.log(
-          `   🎯 验收标准(≥10%改善): ${meetsStandard ? "✅ 通过" : "❌ 未通过"}`
+          `   🎯 验收标准(≥10%改善): ${meetsStandard ? '✅ 通过' : '❌ 未通过'}`
         );
       } else {
         console.log(`❌ API返回错误: ${result.error}`);
@@ -177,27 +177,27 @@ async function testWarehouseOptimizationAPI() {
   }
 
   // 测试错误情况
-  console.log("\n🔍 测试错误处理...");
+  console.log('\n🔍 测试错误处理...');
 
   const errorTestCases = [
     {
-      name: "缺少必填字段",
+      name: '缺少必填字段',
       data: {
         deliveryAddress: {
-          country: "中国",
+          country: '中国',
           // 缺少province和city
         },
         orderItems: [],
       },
     },
     {
-      name: "空订单",
+      name: '空订单',
       data: {
         deliveryAddress: {
-          country: "中国",
-          province: "上海市",
-          city: "上海市",
-          address: "测试地址",
+          country: '中国',
+          province: '上海市',
+          city: '上海市',
+          address: '测试地址',
         },
         orderItems: [],
       },
@@ -209,9 +209,9 @@ async function testWarehouseOptimizationAPI() {
 
     try {
       const response = await fetch(apiUrl, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(testCase.data),
       });
@@ -229,34 +229,34 @@ async function testWarehouseOptimizationAPI() {
     }
   }
 
-  console.log("\n🏁 API测试完成！");
+  console.log('\n🏁 API测试完成！');
 }
 
 // GET请求测试（健康检查）
 async function testHealthCheck() {
-  console.log("\n🏥 测试API健康检查...");
+  console.log('\n🏥 测试API健康检查...');
 
   try {
     const response = await fetch(
-      "http://localhost:3000/api/warehouse/optimize",
+      'http://localhost:3000/api/warehouse/optimize',
       {
-        method: "GET",
+        method: 'GET',
       }
     );
 
     const result = await response.json();
 
     if (result.success) {
-      console.log("✅ 健康检查通过");
+      console.log('✅ 健康检查通过');
       console.log(`   服务状态: ${result.message}`);
       console.log(`   端点: ${result.endpoint}`);
       console.log(`   方法: ${result.method}`);
     } else {
-      console.log("❌ 健康检查失败");
+      console.log('❌ 健康检查失败');
     }
   } catch (error) {
     console.log(`❌ 健康检查请求失败: ${(error as Error).message}`);
-    console.log("   请确认服务是否启动");
+    console.log('   请确认服务是否启动');
   }
 }
 
@@ -269,7 +269,7 @@ async function main() {
     // 再测试主要功能
     await testWarehouseOptimizationAPI();
   } catch (error) {
-    console.error("测试执行失败:", error);
+    console.error('测试执行失败:', error);
   }
 }
 

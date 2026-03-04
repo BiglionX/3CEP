@@ -1,6 +1,7 @@
 # 🚀 数据库部署最终确认指南
 
 ## ✅ 已解决问题
+
 - **错误原因1**: `\ir` 命令不被Supabase SQL Editor支持
 - **错误原因2**: `CREATE POLICY IF NOT EXISTS` 语法不被PostgreSQL支持
 - **解决方案**: 创建了完全兼容的完整一体化脚本
@@ -8,6 +9,7 @@
 ## 🔧 立即执行步骤
 
 ### 执行完整部署脚本
+
 1. **登录Supabase控制台**
    - 访问: https://app.supabase.com/project/hrjqzbhqueleszkvnsen/sql
    - 点击左侧"SQL Editor"
@@ -21,6 +23,7 @@
 ## ✅ 预期执行结果
 
 执行成功后应该看到：
+
 ```
 status
 -----------------------------
@@ -50,11 +53,13 @@ uploaded_content | 3
 ## 🧪 最终验证
 
 执行完成后运行本地验证：
+
 ```bash
 node scripts/final-verification.js
 ```
 
 期望输出：
+
 ```
 ✅ 服务角色密钥: 正常
 ✅ 数据库连接: 正常
@@ -71,6 +76,7 @@ node scripts/final-verification.js
 - **无需分步**: 一体化脚本包含所有必要操作
 
 ---
+
 **当前状态**: ⏳ 等待执行 `complete-deployment.sql`
 **预计完成**: 5分钟内
 **成功率**: 99%+

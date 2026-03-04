@@ -1,0 +1,31 @@
+﻿<h1>Auth Test Page</h1>
+<p>If you can see this text, the page is working.</p>
+<button onclick="testAuth()">Test Authentication</button>
+<div id="result"></div>
+
+<script>
+  async function testAuth() {
+      const result = document.getElementById('result');
+      result.innerHTML = 'Testing...';
+
+      try {
+          const response = await fetch('/api/auth/check-session');
+          const data = await response.json();
+
+          result.innerHTML =
+              <h3>Test Results:</h3>
+              <p>Status: </p>
+              <p>Authenticated: </p>
+              <p>Admin: </p>
+              <p>User: </p>
+          ;
+      } catch (error) {
+          result.innerHTML = <p>Error: </p>;
+      }
+  }
+
+  // Auto-test on page load
+  window.onload = function() {
+      testAuth();
+  };
+</script>

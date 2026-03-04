@@ -84,7 +84,7 @@ export class FcxEquipmentService {
   }
 
   /**
-   * FCX兑换配件主流程
+   * FCX兑换配件主流?
    */
   async exchangeEquipment(request: FcxExchangeRequest): Promise<FcxExchangeResult> {
     try {
@@ -98,11 +98,11 @@ export class FcxEquipmentService {
           totalFcxCost,
           warehouseId: '',
           estimatedDeliveryTime: 0,
-          message: `FCX余额不足，当前余额: ${userFcxBalance}, 所需: ${totalFcxCost}`
+          message: `FCX余额不足，当前余? ${userFcxBalance}, 所需: ${totalFcxCost}`
         };
       }
 
-      // 2. 智能推荐最优仓库
+      // 2. 智能推荐最优仓?
       const productIds = request.items.map(item => item.productId);
       let warehouseId: string;
       let deliveryTime: number;
@@ -134,7 +134,7 @@ export class FcxEquipmentService {
         warehouseId = bestWarehouse.warehouseId;
         deliveryTime = (bestWarehouse as any).delivery_time || 24;
       } else {
-        // 默认选择主仓库
+        // 默认选择主仓?
         const defaultWarehouse = await this.getDefaultWarehouse();
         if (!defaultWarehouse) {
           return {
@@ -142,7 +142,7 @@ export class FcxEquipmentService {
             totalFcxCost,
             warehouseId: '',
             estimatedDeliveryTime: 0,
-            message: '未找到可用仓库'
+            message: '未找到可用仓?
           };
         }
         warehouseId = defaultWarehouse.id;
@@ -173,7 +173,7 @@ export class FcxEquipmentService {
       );
 
       if (!deductionResult.success) {
-        // 扣除失败，释放预留库存
+        // 扣除失败，释放预留库?
         await this.releaseInventoryReservation(reservationResult.reservationIds);
         return {
           success: false,
@@ -195,7 +195,7 @@ export class FcxEquipmentService {
       );
 
       if (!orderResult.success) {
-        // 订单创建失败，回滚操作
+        // 订单创建失败，回滚操?
         await this.releaseInventoryReservation(reservationResult.reservationIds);
         await this.refundFcxPoints(request.userId, totalFcxCost, deductionResult.transactionId!);
         return {
@@ -207,7 +207,7 @@ export class FcxEquipmentService {
         };
       }
 
-      // 6. 通知WMS系统创建发货单
+      // 6. 通知WMS系统创建发货?
       const wmsResult = await this.notifyWmsForShipment(
         orderResult.orderId!,
         request.items,
@@ -215,7 +215,7 @@ export class FcxEquipmentService {
         request.shippingAddress
       );
 
-      // 7. 更新订单状态
+      // 7. 更新订单状?
       if (wmsResult.success) {
         await this.updateOrderStatus(orderResult.orderId!, 'processing', {
           wmsOrderId: wmsResult.wmsOrderId
@@ -259,7 +259,7 @@ export class FcxEquipmentService {
         .single();
 
       if (error) {
-        console.warn('获取FCX余额失败，使用默认值');
+        console.warn('获取FCX余额失败，使用默认?);
         return 1000; // 默认1000 FCX
       }
 
@@ -351,7 +351,7 @@ export class FcxEquipmentService {
             warehouse_id: warehouseId,
             quantity: item.quantity,
             reservation_type: 'fcx_exchange',
-            expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24小时后过期
+            expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24小时后过?
             status: 'active'
           } as any);
   
@@ -394,7 +394,7 @@ export class FcxEquipmentService {
   private async releaseInventoryReservation(reservationIds: string[]): Promise<void> {
     try {
       for (const reservationId of reservationIds) {
-        // 更新预留状态为已取消
+        // 更新预留状态为已取?
         await supabase
           .from('inventory_reservations')
           .update({ status: 'cancelled' } as any)
@@ -441,22 +441,22 @@ export class FcxEquipmentService {
     originalTransactionId: string
   ): Promise<boolean> {
     try {
-      // 记录退款交易
+      // 记录退款交?
       const refundTransactionId = `rf_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const { error: transactionError } = await supabase
         .from('fcx_transactions')
         .insert({
           id: refundTransactionId,
           user_id: userId,
-          amount: amount, // 正数表示退回
+          amount: amount, // 正数表示退?
           type: 'refund',
-          description: `FCX兑换退款: ${originalTransactionId} as any`,
+          description: `FCX兑换退? ${originalTransactionId} as any`,
           reference_id: originalTransactionId,
           created_at: new Date()
-        });
+        }) as any;
   
       if (transactionError) {
-        console.error('记录FCX退款交易失败:', transactionError);
+        console.error('记录FCX退款交易失?', transactionError);
         return false;
       }
   
@@ -490,7 +490,7 @@ export class FcxEquipmentService {
       // 生成订单编号
       const orderNumber = `FXE${new Date().toISOString().slice(0, 10).replace(/-/g, '')}${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
         
-      // 创建主订单
+      // 创建主订?
       const orderId = `ord_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const { error: orderError } = await supabase
         .from('fcx_exchange_orders')
@@ -553,7 +553,7 @@ export class FcxEquipmentService {
   }
 
   /**
-   * 通知WMS系统创建发货单
+   * 通知WMS系统创建发货?
    */
   private async notifyWmsForShipment(
     orderId: string,
@@ -570,7 +570,7 @@ export class FcxEquipmentService {
         .single();
   
       if (!warehouse) {
-        return { success: false, error: '仓库信息不存在' };
+        return { success: false, error: '仓库信息不存? };
       }
   
       // 模拟WMS系统调用
@@ -578,11 +578,7 @@ export class FcxEquipmentService {
       const wmsOrderId = `WMS-${orderId}`;
         
       // 记录WMS通知日志
-      console.log(`通知WMS系统创建发货单: 订单ID=${orderId}, WMS订单ID=${wmsOrderId}`);
-      console.log(`发货商品:`, items);
-      console.log(`收货地址:`, shippingAddress);
-  
-      // 模拟成功响应
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`通知WMS系统创建发货? 订单ID=${orderId}, WMS订单ID=${wmsOrderId}`)// TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`发货商品:`, items)// TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`收货地址:`, shippingAddress)// 模拟成功响应
       return { success: true, wmsOrderId };
   
     } catch (error) {
@@ -592,7 +588,7 @@ export class FcxEquipmentService {
   }
   
   /**
-   * 更新订单状态
+   * 更新订单状?
    */
   private async updateOrderStatus(
     orderId: string,
@@ -611,7 +607,7 @@ export class FcxEquipmentService {
         .update(updateData)
         .eq('id', orderId);
     } catch (error) {
-      console.error('更新订单状态错误:', error);
+      console.error('更新订单状态错?', error);
     }
   }
 
@@ -630,7 +626,7 @@ export class FcxEquipmentService {
   }
 
   /**
-   * 获取已预订库存
+   * 获取已预订库?
    */
   private async getReservedInventory(productId: string, warehouseId: string): Promise<number> {
     const { data } = await supabase
@@ -670,7 +666,7 @@ export class FcxEquipmentService {
         `)
         .eq('user_id', userId)
         .eq('type', 'exchange_equipment')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }) as any
         .limit(limit);
 
       if (error) {
@@ -686,7 +682,7 @@ export class FcxEquipmentService {
   }
 
   /**
-   * 获取可兑换配件列表
+   * 获取可兑换配件列?
    */
   async getAvailableEquipment(category?: ProductCategory): Promise<any[]> {
     try {
@@ -709,16 +705,16 @@ export class FcxEquipmentService {
       const { data, error } = await query;
 
       if (error) {
-        console.error('获取可兑换配件失败:', error);
+        console.error('获取可兑换配件失?', error);
         return [];
       }
 
-      // 过滤有库存且有FCX价格的商品
+      // 过滤有库存且有FCX价格的商?
       return (data || []).filter(product => 
-        product.inventory?.some((inv: any) => inv.available_quantity > 0 && inv.fcx_price > 0)
+        product?.some((inv: any) => inv.available_quantity > 0 && inv.fcx_price > 0)
       );
     } catch (error) {
-      console.error('获取可兑换配件错误:', error);
+      console.error('获取可兑换配件错?', error);
       return [];
     }
   }

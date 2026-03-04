@@ -100,9 +100,8 @@ export async function GET(request: Request, { params }: RouteParams) {
     }
 
     // 调用生命周期服务获取配件更换历史
-    const { DeviceLifecycleService } = await import(
-      '@/services/device-lifecycle.service'
-    );
+    const { DeviceLifecycleService } =
+      await import('@/services/device-lifecycle.service');
     const { DeviceEventType } = await import('@/lib/constants/lifecycle');
 
     const lifecycleService = new DeviceLifecycleService();

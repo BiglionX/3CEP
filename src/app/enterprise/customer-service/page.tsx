@@ -1,22 +1,22 @@
-"use client";
+﻿'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { 
-  Users, 
-  MessageSquare, 
-  Bot, 
-  Headphones, 
-  BarChart3, 
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Users,
+  MessageSquare,
+  Bot,
+  Headphones,
+  BarChart3,
   TrendingUp,
   CheckCircle,
   Clock,
   AlertTriangle,
   Smile,
-  ThumbsUp
-} from "lucide-react";
+  ThumbsUp,
+} from 'lucide-react';
 
 interface ChatSession {
   id: string;
@@ -37,7 +37,11 @@ interface FAQ {
 
 export default function CustomerServicePage() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [newFAQ, setNewFAQ] = useState({ question: '', answer: '', category: '' });
+  const [newFAQ, setNewFAQ] = useState({
+    question: '',
+    answer: '',
+    category: '',
+  });
 
   const chatSessions: ChatSession[] = [
     {
@@ -45,57 +49,65 @@ export default function CustomerServicePage() {
       customerName: '张明',
       status: 'active',
       startTime: '2024-01-20 14:30:25',
-      lastMessage: '如何重置我的账户密码？',
-      satisfaction: 5
+      lastMessage: '如何重置我的账户密码?,
+      satisfaction: 5,
     },
     {
       id: 'CS-002',
       customerName: '李华',
       status: 'waiting',
       startTime: '2024-01-20 14:25:12',
-      lastMessage: '订单什么时候能发货？'
+      lastMessage: '订单什么时候能发货?,
     },
     {
       id: 'CS-003',
-      customerName: '王小红',
+      customerName: '王小?,
       status: 'resolved',
       startTime: '2024-01-20 13:45:33',
-      lastMessage: '谢谢你的帮助！',
-      satisfaction: 5
-    }
+      lastMessage: '谢谢你的帮助?,
+      satisfaction: 5,
+    },
   ];
 
   const faqs: FAQ[] = [
     {
       id: 'FAQ-001',
       question: '如何找回忘记的密码？',
-      answer: '您可以点击登录页面的"忘记密码"链接，输入注册邮箱地址，我们会发送重置密码的链接到您的邮箱。',
+      answer:
+        '您可以点击登录页面的"忘记密码"链接，输入注册邮箱地址，我们会发送重置密码的链接到您的邮箱?,
       category: '账户管理',
-      views: 1247
+      views: 1247,
     },
     {
       id: 'FAQ-002',
       question: '订单多久能发货？',
-      answer: '一般情况下，我们会在24小时内处理订单并安排发货。节假日可能会有所延迟，请您谅解。',
+      answer:
+        '一般情况下，我们会?4小时内处理订单并安排发货。节假日可能会有所延迟，请您谅解?,
       category: '订单相关',
-      views: 892
+      views: 892,
     },
     {
       id: 'FAQ-003',
       question: '如何申请退货退款？',
-      answer: '在"我的订单"页面找到相应订单，点击"申请退货"按钮，填写退货原因并提交申请。我们的客服会在1-2个工作日内处理。',
+      answer:
+        '�?我的订单"页面找到相应订单，点?申请退?按钮，填写退货原因并提交申请。我们的客服会在1-2个工作日内处理?,
       category: '售后服务',
-      views: 654
-    }
+      views: 654,
+    },
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'waiting': return 'bg-yellow-100 text-yellow-800';
-      case 'resolved': return 'bg-blue-100 text-blue-800';
-      case 'transferred': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'waiting':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'resolved':
+        return 'bg-blue-100 text-blue-800';
+      case 'transferred':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -125,7 +137,7 @@ export default function CustomerServicePage() {
         {/* 导航标签 */}
         <div className="border-b border-gray-200 mb-8">
           <nav className="-mb-px flex space-x-8">
-            {['dashboard', 'chat', 'knowledge-base', 'analytics'].map((tab) => (
+            {['dashboard', 'chat', 'knowledge-base', 'analytics'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -135,23 +147,25 @@ export default function CustomerServicePage() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                {tab === 'dashboard' && '仪表板'}
+                {tab === 'dashboard' && '仪表?}
                 {tab === 'chat' && '在线聊天'}
-                {tab === 'knowledge-base' && '知识库管理'}
+                {tab === 'knowledge-base' && '知识库管?}
                 {tab === 'analytics' && '数据分析'}
               </button>
             ))}
           </nav>
         </div>
 
-        {/* 仪表板内容 */}
+        {/* 仪表板内?*/}
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
             {/* 统计卡片 */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">在线客服</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    在线客服
+                  </CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -159,10 +173,11 @@ export default function CustomerServicePage() {
                   <p className="text-xs text-muted-foreground">当前在线用户</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">AI解决率</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    AI解决?                  </CardTitle>
                   <Bot className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -170,21 +185,24 @@ export default function CustomerServicePage() {
                   <p className="text-xs text-muted-foreground">无需人工介入</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">平均响应时间</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    平均响应时间
+                  </CardTitle>
                   <Clock className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">1.2s</div>
-                  <p className="text-xs text-muted-foreground">AI机器人响应</p>
+                  <p className="text-xs text-muted-foreground">AI机器人响?/p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">客户满意度</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    客户满意?                  </CardTitle>
                   <Smile className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -205,8 +223,7 @@ export default function CustomerServicePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    支持上下文理解的连续对话，提供更自然的交互体验
-                  </p>
+                    支持上下文理解的连续对话，提供更自然的交互体?                  </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -229,13 +246,11 @@ export default function CustomerServicePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    智能识别客户情绪状态，提供个性化的服务响应
-                  </p>
+                    智能识别客户情绪状态，提供个性化的服务响?                  </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                      情绪状态分析
-                    </li>
+                      情绪状态分?                    </li>
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                       语调变化识别
@@ -253,8 +268,7 @@ export default function CustomerServicePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    基于用户行为和偏好，主动推荐相关产品和服务
-                  </p>
+                    基于用户行为和偏好，主动推荐相关产品和服?                  </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -283,18 +297,27 @@ export default function CustomerServicePage() {
                   {/* 聊天列表 */}
                   <div className="lg:col-span-1">
                     <div className="space-y-3">
-                      {chatSessions.map((session) => (
-                        <div key={session.id} className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                      {chatSessions.map(session => (
+                        <div
+                          key={session.id}
+                          className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer"
+                        >
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="font-medium">{session.customerName}</h3>
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getStatusColor(session.status)}`}>
-                              {session.status === 'active' && '进行中'}
-                              {session.status === 'waiting' && '等待中'}
-                              {session.status === 'resolved' && '已解决'}
-                              {session.status === 'transferred' && '已转接'}
+                            <h3 className="font-medium">
+                              {session.customerName}
+                            </h3>
+                            <span
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getStatusColor(session.status)}`}
+                            >
+                              {session.status === 'active' && '进行?}
+                              {session.status === 'waiting' && '等待?}
+                              {session.status === 'resolved' && '已解?}
+                              {session.status === 'transferred' && '已转?}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mb-2 truncate">{session.lastMessage}</p>
+                          <p className="text-sm text-gray-600 mb-2 truncate">
+                            {session.lastMessage}
+                          </p>
                           <div className="flex justify-between items-center text-xs text-gray-500">
                             <span>{session.startTime}</span>
                             {session.satisfaction && (
@@ -314,7 +337,7 @@ export default function CustomerServicePage() {
                     <div className="border rounded-lg h-96 flex items-center justify-center bg-gray-50">
                       <div className="text-center text-gray-500">
                         <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p>选择一个会话开始聊天</p>
+                        <p>选择一个会话开始聊?/p>
                       </div>
                     </div>
                   </div>
@@ -324,7 +347,7 @@ export default function CustomerServicePage() {
           </div>
         )}
 
-        {/* 知识库管理 */}
+        {/* 知识库管?*/}
         {activeTab === 'knowledge-base' && (
           <div className="space-y-6">
             <Card>
@@ -338,7 +361,9 @@ export default function CustomerServicePage() {
                       <label className="text-sm font-medium">问题分类</label>
                       <select
                         value={newFAQ.category}
-                        onChange={(e) => setNewFAQ({...newFAQ, category: e.target.value})}
+                        onChange={e =>
+                          setNewFAQ({ ...newFAQ, category: e.target.value })
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       >
@@ -347,32 +372,36 @@ export default function CustomerServicePage() {
                         <option value="order">订单相关</option>
                         <option value="payment">支付问题</option>
                         <option value="service">售后服务</option>
-                        <option value="technical">技术问题</option>
+                        <option value="technical">技术问?/option>
                       </select>
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium">问题标题</label>
                       <Input
                         value={newFAQ.question}
-                        onChange={(e) => setNewFAQ({...newFAQ, question: e.target.value})}
-                        placeholder="请输入常见问题"
+                        onChange={e =>
+                          setNewFAQ({ ...newFAQ, question: e.target.value })
+                        }
+                        placeholder="请输入常见问?
                         required
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <label className="text-sm font-medium">答案内容</label>
                     <textarea
                       value={newFAQ.answer}
-                      onChange={(e) => setNewFAQ({...newFAQ, answer: e.target.value})}
-                      placeholder="请输入详细解答"
+                      onChange={e =>
+                        setNewFAQ({ ...newFAQ, answer: e.target.value })
+                      }
+                      placeholder="请输入详细解?
                       rows={4}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     />
                   </div>
-                  
+
                   <Button type="submit">添加到知识库</Button>
                 </form>
               </CardContent>
@@ -384,7 +413,7 @@ export default function CustomerServicePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {faqs.map((faq) => (
+                  {faqs.map(faq => (
                     <div key={faq.id} className="border rounded-lg p-4">
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="font-medium">{faq.question}</h3>
@@ -394,10 +423,14 @@ export default function CustomerServicePage() {
                       </div>
                       <p className="text-gray-600 mb-3">{faq.answer}</p>
                       <div className="flex justify-between items-center text-xs text-gray-500">
-                        <span>浏览量: {faq.views}</span>
+                        <span>浏览? {faq.views}</span>
                         <div className="flex items-center space-x-2">
-                          <Button variant="outline" size="sm">编辑</Button>
-                          <Button variant="outline" size="sm">删除</Button>
+                          <Button variant="outline" size="sm">
+                            编辑
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            删除
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -422,15 +455,15 @@ export default function CustomerServicePage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span>日均处理会话数</span>
+                      <span>日均处理会话?/span>
                       <span className="font-semibold">1,247</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>AI解决率</span>
+                      <span>AI解决?/span>
                       <span className="font-semibold text-green-600">87%</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>人工转接率</span>
+                      <span>人工转接?/span>
                       <span className="font-semibold text-red-600">13%</span>
                     </div>
                   </div>
@@ -441,13 +474,12 @@ export default function CustomerServicePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <TrendingUp className="w-5 h-5 mr-2" />
-                    客户满意度趋势
-                  </CardTitle>
+                    客户满意度趋?                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span>本月满意度</span>
+                      <span>本月满意?/span>
                       <span className="font-semibold">4.8/5.0</span>
                     </div>
                     <div className="flex justify-between items-center">
@@ -455,7 +487,7 @@ export default function CustomerServicePage() {
                       <span className="font-semibold text-green-600">+0.2</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>投诉率</span>
+                      <span>投诉?/span>
                       <span className="font-semibold text-green-600">1.2%</span>
                     </div>
                   </div>
@@ -477,3 +509,4 @@ function StarIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+

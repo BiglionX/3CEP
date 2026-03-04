@@ -1,20 +1,18 @@
 /**
- * 多因子评分算法服务
- * 实现品类匹配度、价格竞争力、可靠性等多维度评分
- */
+ * 多因子评分算法服? * 实现品类匹配度、价格竞争力、可靠性等多维度评? */
 
-import { Supplier } from "../../supply-chain/models/supplier.model";
+import { Supplier } from '../../supply-chain/models/supplier.model';
 import {
   ParsedProcurementRequest,
   ProcurementItem,
-} from "../models/procurement.model";
+} from '../models/procurement.model';
 import {
   DEFAULT_SCORING_WEIGHTS,
   ProcurementRequestVector,
   ScoringWeights,
   SupplierMatchResult,
   SupplierVector,
-} from "../models/supplier-vector.model";
+} from '../models/supplier-vector.model';
 
 export class MultiFactorScoringService {
   /**
@@ -31,7 +29,7 @@ export class MultiFactorScoringService {
     const results: SupplierMatchResult[] = [];
 
     for (const vectorMatch of vectorMatches) {
-      const supplier = suppliers.find((s) => s.id === vectorMatch.supplierId);
+      const supplier = suppliers.find(s => s.id === vectorMatch.supplierId);
       const supplierVector = supplierVectors.get(vectorMatch.supplierId);
 
       if (!supplier || !supplierVector) continue;
@@ -48,8 +46,7 @@ export class MultiFactorScoringService {
       results.push(matchResult);
     }
 
-    // 按匹配分数降序排列
-    return results.sort((a, b) => b.matchScore - a.matchScore);
+    // 按匹配分数降序排?    return results.sort((a, b) => b.matchScore - a.matchScore);
   }
 
   /**
@@ -63,19 +60,19 @@ export class MultiFactorScoringService {
     vectorSimilarity: number,
     weights: ScoringWeights
   ): SupplierMatchResult {
-    // 1. 品类匹配度评分 (0-100)
+    // 1. 品类匹配度评?(0-100)
     const categoryMatchScore = this.calculateCategoryMatchScore(
       request,
       supplier
     );
 
-    // 2. 价格竞争力评分 (0-100)
+    // 2. 价格竞争力评?(0-100)
     const priceCompetitiveness = this.calculatePriceCompetitiveness(
       request,
       supplier
     );
 
-    // 3. 可靠性评分 (0-100)
+    // 3. 可靠性评?(0-100)
     const reliabilityScore = this.calculateReliabilityScore(supplier);
 
     // 4. 质量评分 (0-100)
@@ -84,8 +81,7 @@ export class MultiFactorScoringService {
     // 5. 服务评分 (0-100)
     const serviceScore = this.calculateServiceScore(supplier);
 
-    // 6. 综合匹配度计算
-    const matchScore = this.calculateWeightedScore(
+    // 6. 综合匹配度计?    const matchScore = this.calculateWeightedScore(
       {
         vectorSimilarity,
         categoryMatch: categoryMatchScore / 100,
@@ -97,8 +93,7 @@ export class MultiFactorScoringService {
       weights
     );
 
-    // 7. 置信度计算
-    const confidence = this.calculateConfidence(
+    // 7. 置信度计?    const confidence = this.calculateConfidence(
       vectorSimilarity,
       categoryMatchScore,
       priceCompetitiveness,
@@ -129,7 +124,7 @@ export class MultiFactorScoringService {
       serviceScore,
       matchScore,
       confidence,
-      riskLevel: (supplier.riskAssessment?.overallRisk as any) || "low",
+      riskLevel: (supplier?.overallRisk as any) || 'low',
       matchingCriteria,
       mismatchedCriteria,
       estimatedPrice: estimatedInfo.estimatedPrice,
@@ -140,39 +135,36 @@ export class MultiFactorScoringService {
   }
 
   /**
-   * 计算品类匹配度评分
-   */
+   * 计算品类匹配度评?   */
   private calculateCategoryMatchScore(
     request: ParsedProcurementRequest,
     supplier: Supplier
   ): number {
     const requestCategories = new Set(
-      request.items.map((item) => item.category.toLowerCase())
+      request.items.map(item => item.category.toLowerCase())
     );
     const supplierCategories = new Set(
-      supplier.products?.map((p) => p.productCategory.toLowerCase()) || []
+      supplier?.map(p => p.productCategory.toLowerCase()) || []
     );
 
     if (supplierCategories.size === 0) {
-      return 30; // 没有明确产品分类，给基础分
-    }
+      return 30; // 没有明确产品分类，给基础?    }
 
     let matchCount = 0;
     let totalCount = requestCategories.size;
 
-    requestCategories.forEach((category) => {
+    requestCategories.forEach(category => {
       if (supplierCategories.has(category)) {
         matchCount++;
       }
     });
 
-    // 计算匹配度 (考虑部分匹配和完全匹配)
+    // 计算匹配?(考虑部分匹配和完全匹?
     const baseScore = (matchCount / totalCount) * 100;
 
-    // 如果供应商经营范围也匹配，额外加分
-    const businessScope = supplier.businessScope.toLowerCase();
+    // 如果供应商经营范围也匹配，额外加?    const businessScope = supplier.businessScope.toLowerCase();
     let bonus = 0;
-    requestCategories.forEach((category) => {
+    requestCategories.forEach(category => {
       if (businessScope.includes(category)) {
         bonus += 5;
       }
@@ -182,8 +174,7 @@ export class MultiFactorScoringService {
   }
 
   /**
-   * 计算价格竞争力评分
-   */
+   * 计算价格竞争力评?   */
   private calculatePriceCompetitiveness(
     request: ParsedProcurementRequest,
     supplier: Supplier
@@ -197,7 +188,7 @@ export class MultiFactorScoringService {
 
     for (const requestItem of request.items) {
       const matchingProducts = supplier.products.filter(
-        (p) =>
+        p =>
           p.productCategory.toLowerCase() === requestItem.category.toLowerCase()
       );
 
@@ -208,12 +199,10 @@ export class MultiFactorScoringService {
         continue;
       }
 
-      // 找到最接近的数量和规格的产品
-      const bestMatch = this.findBestPriceMatch(requestItem, matchingProducts);
+      // 找到最接近的数量和规格的产?      const bestMatch = this.findBestPriceMatch(requestItem, matchingProducts);
 
       if (bestMatch && requestItem.estimatedUnitPrice) {
-        // 基于价格差异计算竞争力分数
-        const priceDiffPercent = Math.abs(
+        // 基于价格差异计算竞争力分?        const priceDiffPercent = Math.abs(
           ((bestMatch.unitPrice - requestItem.estimatedUnitPrice) /
             requestItem.estimatedUnitPrice) *
             100
@@ -221,13 +210,12 @@ export class MultiFactorScoringService {
 
         let priceScore: number;
         if (priceDiffPercent <= 10) {
-          priceScore = 100; // 价格差异在10%以内，满分
-        } else if (priceDiffPercent <= 20) {
-          priceScore = 80; // 价格差异在20%以内
+          priceScore = 100; // 价格差异?0%以内，满?        } else if (priceDiffPercent <= 20) {
+          priceScore = 80; // 价格差异?0%以内
         } else if (priceDiffPercent <= 30) {
-          priceScore = 60; // 价格差异在30%以内
+          priceScore = 60; // 价格差异?0%以内
         } else if (priceDiffPercent <= 50) {
-          priceScore = 40; // 价格差异在50%以内
+          priceScore = 40; // 价格差异?0%以内
         } else {
           priceScore = 20; // 价格差异超过50%
         }
@@ -239,8 +227,7 @@ export class MultiFactorScoringService {
 
         totalScore += priceScore;
       } else {
-        // 没有价格参考，给中等分数
-        totalScore += 50;
+        // 没有价格参考，给中等分?        totalScore += 50;
       }
 
       itemCount++;
@@ -256,14 +243,11 @@ export class MultiFactorScoringService {
     requestItem: ProcurementItem,
     supplierProducts: any[]
   ): any | null {
-    // 简化版本：找到同一品类的第一个产品
-    // 实际应用中可以考虑规格、数量等因素进行更精确匹配
-    return supplierProducts.length > 0 ? supplierProducts[0] : null;
+    // 简化版本：找到同一品类的第一个产?    // 实际应用中可以考虑规格、数量等因素进行更精确匹?    return supplierProducts.length > 0 ? supplierProducts[0] : null;
   }
 
   /**
-   * 计算可靠性评分
-   */
+   * 计算可靠性评?   */
   private calculateReliabilityScore(supplier: Supplier): number {
     let score = 0;
     let factorCount = 0;
@@ -274,21 +258,20 @@ export class MultiFactorScoringService {
       factorCount += 0.3;
     }
 
-    // 2. 准时交货率 (权重: 25%)
-    if (supplier.performanceMetrics?.deliveryRate !== undefined) {
+    // 2. 准时交货?(权重: 25%)
+    if (supplier?.deliveryRate !== undefined) {
       score += supplier.performanceMetrics.deliveryRate * 0.25;
       factorCount += 0.25;
     }
 
     // 3. 合作年限 (权重: 15%)
     if (supplier.cooperationYears !== undefined) {
-      // 合作年限越长，可靠性越高，最多加15分
-      const yearsScore = Math.min(supplier.cooperationYears * 3, 15);
+      // 合作年限越长，可靠性越高，最多加15�?      const yearsScore = Math.min(supplier.cooperationYears * 3, 15);
       score += yearsScore * 0.15;
       factorCount += 0.15;
     }
 
-    // 4. 供应商状态 (权重: 15%)
+    // 4. 供应商状?(权重: 15%)
     const statusScore = this.getStatusScore(supplier.status);
     score += statusScore * 0.15;
     factorCount += 0.15;
@@ -304,17 +287,16 @@ export class MultiFactorScoringService {
   }
 
   /**
-   * 根据供应商状态给出分数
-   */
+   * 根据供应商状态给出分?   */
   private getStatusScore(status: string): number {
     switch (status) {
-      case "approved":
+      case 'approved':
         return 100;
-      case "pending_review":
+      case 'pending_review':
         return 60;
-      case "suspended":
+      case 'suspended':
         return 30;
-      case "blacklisted":
+      case 'blacklisted':
         return 0;
       default:
         return 50;
@@ -328,8 +310,8 @@ export class MultiFactorScoringService {
     let score = 0;
     let factorCount = 0;
 
-    // 1. 产品质量合格率 (权重: 40%)
-    if (supplier.performanceMetrics?.qualityRate !== undefined) {
+    // 1. 产品质量合格?(权重: 40%)
+    if (supplier?.qualityRate !== undefined) {
       score += supplier.performanceMetrics.qualityRate * 0.4;
       factorCount += 0.4;
     }
@@ -341,9 +323,8 @@ export class MultiFactorScoringService {
     }
 
     // 3. 投诉次数 (权重: 20%)
-    if (supplier.performanceMetrics?.complaintCount !== undefined) {
-      // 投诉越少，质量分数越高
-      const complaintPenalty = Math.min(
+    if (supplier?.complaintCount !== undefined) {
+      // 投诉越少，质量分数越?      const complaintPenalty = Math.min(
         supplier.performanceMetrics.complaintCount * 5,
         20
       );
@@ -355,7 +336,7 @@ export class MultiFactorScoringService {
     // 4. 资质认证质量 (权重: 10%)
     if (supplier.certifications) {
       const qualityCerts = supplier.certifications.filter(
-        (cert) => cert.type.includes("quality") || cert.type.includes("iso")
+        cert => cert.type.includes('quality') || cert.type.includes('iso')
       ).length;
       const certScore = Math.min(qualityCerts * 10, 10);
       score += certScore * 0.1;
@@ -373,15 +354,14 @@ export class MultiFactorScoringService {
     let factorCount = 0;
 
     // 1. 服务评分 (权重: 50%)
-    if (supplier.performanceMetrics?.serviceScore !== undefined) {
+    if (supplier?.serviceScore !== undefined) {
       score += (supplier.performanceMetrics.serviceScore / 5) * 100 * 0.5;
       factorCount += 0.5;
     }
 
     // 2. 响应时间 (权重: 30%)
-    if (supplier.performanceMetrics?.responseTime !== undefined) {
-      // 响应时间越短，服务分数越高
-      let responseScore: number;
+    if (supplier?.responseTime !== undefined) {
+      // 响应时间越短，服务分数越?      let responseScore: number;
       const responseHours = supplier.performanceMetrics.responseTime;
       if (responseHours <= 2) {
         responseScore = 100;
@@ -399,9 +379,8 @@ export class MultiFactorScoringService {
     }
 
     // 3. 退货率 (权重: 20%)
-    if (supplier.performanceMetrics?.returnRate !== undefined) {
-      // 退货率越低，服务分数越高
-      const returnScore = Math.max(
+    if (supplier?.returnRate !== undefined) {
+      // 退货率越低，服务分数越?      const returnScore = Math.max(
         100 - supplier.performanceMetrics.returnRate * 2,
         0
       );
@@ -434,8 +413,7 @@ export class MultiFactorScoringService {
       scores.quality * weights.quality +
       scores.service * weights.service;
 
-    // 权重总和用于归一化
-    const weightSum =
+    // 权重总和用于归一?    const weightSum =
       weights.vectorSimilarity +
       weights.categoryMatch +
       weights.priceCompetitiveness +
@@ -447,18 +425,16 @@ export class MultiFactorScoringService {
   }
 
   /**
-   * 计算推荐置信度
-   */
+   * 计算推荐置信?   */
   private calculateConfidence(
     vectorSimilarity: number,
     categoryMatch: number,
     priceCompetitiveness: number,
     reliability: number
   ): number {
-    // 基于关键因子计算置信度
-    const confidence =
+    // 基于关键因子计算置信?    const confidence =
       vectorSimilarity * 40 + // 向量相似度占40%
-      (categoryMatch / 100) * 25 + // 品类匹配占25%
+      (categoryMatch / 100) * 25 + // 品类匹配?5%
       (priceCompetitiveness / 100) * 20 + // 价格竞争力占20%
       (reliability / 100) * 15; // 可靠性占15%
 
@@ -479,52 +455,49 @@ export class MultiFactorScoringService {
 
     // 品类匹配分析
     if (categoryMatch >= 80) {
-      matching.push("品类高度匹配");
+      matching.push('品类高度匹配');
     } else if (categoryMatch >= 50) {
-      matching.push("品类基本匹配");
+      matching.push('品类基本匹配');
     } else {
-      mismatched.push("品类匹配度较低");
+      mismatched.push('品类匹配度较?);
     }
 
-    // 价格竞争力分析
-    if (priceCompetitiveness >= 80) {
-      matching.push("价格具有竞争优势");
+    // 价格竞争力分?    if (priceCompetitiveness >= 80) {
+      matching.push('价格具有竞争优势');
     } else if (priceCompetitiveness >= 60) {
-      matching.push("价格合理");
+      matching.push('价格合理');
     } else {
-      mismatched.push("价格偏高");
+      mismatched.push('价格偏高');
     }
 
-    // 供应商资质分析
-    if (supplier.status === "approved") {
-      matching.push("供应商资质良好");
+    // 供应商资质分?    if (supplier.status === 'approved') {
+      matching.push('供应商资质良?);
     } else {
-      mismatched.push("供应商资质待审核");
+      mismatched.push('供应商资质待审核');
     }
 
     // 信用等级分析
     if (supplier.creditScore && supplier.creditScore >= 80) {
-      matching.push("信用等级优秀");
+      matching.push('信用等级优秀');
     } else if (supplier.creditScore && supplier.creditScore >= 70) {
-      matching.push("信用等级良好");
+      matching.push('信用等级良好');
     } else if (supplier.creditScore) {
-      mismatched.push("信用等级一般");
+      mismatched.push('信用等级一?);
     }
 
     // 交货能力分析
     if (
-      supplier.performanceMetrics?.deliveryRate &&
+      supplier?.deliveryRate &&
       supplier.performanceMetrics.deliveryRate >= 95
     ) {
-      matching.push("交货准时率高");
+      matching.push('交货准时率高');
     }
 
     return { matchingCriteria: matching, mismatchedCriteria: mismatched };
   }
 
   /**
-   * 预估供应商信息
-   */
+   * 预估供应商信?   */
   private estimateSupplierInfo(
     request: ParsedProcurementRequest,
     supplier: Supplier
@@ -544,7 +517,7 @@ export class MultiFactorScoringService {
 
       for (const item of request.items) {
         const matchingProduct = supplier.products.find(
-          (p) => p.productCategory.toLowerCase() === item.category.toLowerCase()
+          p => p.productCategory.toLowerCase() === item.category.toLowerCase()
         );
 
         if (matchingProduct) {
@@ -581,28 +554,26 @@ export class MultiFactorScoringService {
   }
 
   /**
-   * 根据紧急程度调整评分权重
-   */
+   * 根据紧急程度调整评分权?   */
   adjustWeightsForUrgency(
     baseWeights: ScoringWeights,
-    urgency: "low" | "medium" | "high" | "urgent"
+    urgency: 'low' | 'medium' | 'high' | 'urgent'
   ): ScoringWeights {
     const adjustedWeights = { ...baseWeights };
 
     switch (urgency) {
-      case "urgent":
-        // 紧急情况下更重视可靠性和服务，降低价格权重
-        adjustedWeights.reliability += 0.1;
+      case 'urgent':
+        // 紧急情况下更重视可靠性和服务，降低价格权?        adjustedWeights.reliability += 0.1;
         adjustedWeights.service += 0.05;
         adjustedWeights.priceCompetitiveness -= 0.15;
         break;
-      case "high":
+      case 'high':
         // 高紧急程度适度调整
         adjustedWeights.reliability += 0.05;
         adjustedWeights.service += 0.03;
         adjustedWeights.priceCompetitiveness -= 0.08;
         break;
-      case "low":
+      case 'low':
         // 低紧急程度可以更注重价格
         adjustedWeights.priceCompetitiveness += 0.05;
         adjustedWeights.reliability -= 0.02;
@@ -613,7 +584,7 @@ export class MultiFactorScoringService {
   }
 
   /**
-   * 标准化权重，确保总和为1
+   * 标准化权重，确保总和?
    */
   private normalizeWeights(weights: ScoringWeights): ScoringWeights {
     const sum = Object.values(weights).reduce((acc, val) => acc + val, 0);

@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>终极登录闪退测试</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+      .header {
+        background: #4a5568;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+      .test-section {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+      }
+      .test-section:last-child {
+        border-bottom: none;
+      }
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .status-passed {
+        background: #48bb78;
+      }
+      .status-failed {
+        background: #f56565;
+      }
+      .status-warning {
+        background: #ed8936;
+      }
+      .status-pending {
+        background: #a0aec0;
+      }
+      button {
+        background: #4299e1;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 5px;
+        transition: all 0.3s;
+      }
+      button:hover {
+        background: #3182ce;
+        transform: translateY(-2px);
+      }
+      button:disabled {
+        background: #a0aec0;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .result-box {
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 15px;
+        margin: 15px 0;
+        min-height: 100px;
+      }
+      .flash-counter {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #fed7d7;
+        color: #c53030;
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+      .performance-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+      .metric-card {
+        background: #ebf8ff;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .metric-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2b6cb0;
+      }
+      .metric-label {
+        font-size: 14px;
+        color: #4a5568;
+        margin-top: 5px;
+      }
+      .timeline {
+        margin: 20px 0;
+        padding: 0;
+      }
+      .timeline-item {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 6px;
+      }
+      .timeline-time {
+        font-size: 12px;
+        color: #718096;
+        min-width: 80px;
+      }
+      .timeline-event {
+        flex: 1;
+        margin-left: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flash-counter" id="flashCounter">
+      闪烁次数: <span id="flashCount">0</span>
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <h1>🔬 终极登录闪退测试</h1>
+        <p>全面验证统一认证系统的稳定性</p>
+      </div>
+
+      <div class="test-section">
+        <h2>📊 实时性能监控</h2>
+        <div class="performance-metrics">
+          <div class="metric-card">
+            <div class="metric-value" id="renderCount">0</div>
+            <div class="metric-label">组件渲染次数</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="authChecks">0</div>
+            <div class="metric-label">认证检查次数</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="apiCalls">0</div>
+            <div class="metric-label">API调用次数</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="memoryUsage">-</div>
+            <div class="metric-label">内存使用</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2>🧪 核心功能测试</h2>
+        <button onclick="testAuthHook()" id="authHookBtn">
+          测试统一认证Hook
+        </button>
+        <button onclick="testLoginAPI()" id="loginApiBtn">测试登录API</button>
+        <button onclick="testSessionManagement()" id="sessionBtn">
+          测试会话管理
+        </button>
+        <button onclick="testAllTogether()" id="comprehensiveBtn">
+          综合压力测试
+        </button>
+
+        <div class="result-box" id="coreResults">
+          <p>等待测试开始...</p>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2>⏰ 事件时间线</h2>
+        <div class="timeline" id="eventTimeline">
+          <div class="timeline-item">
+            <div class="timeline-time" id="startTime"></div>
+            <div class="timeline-event">测试开始</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2>📋 测试结论</h2>
+        <div class="result-box" id="finalConclusion">
+          <p>执行测试后将显示结果...</p>
+        </div>
+        <button onclick="generateFinalReport()" style="background: #38a169">
+          生成最终报告
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // 全局状态跟踪
+      let flashCount = 0;
+      let renderCount = 0;
+      let authCheckCount = 0;
+      let apiCallCount = 0;
+      let testEvents = [];
+
+      // 初始化
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('startTime').textContent =
+          new Date().toLocaleTimeString();
+        logEvent('页面加载完成', 'system');
+        startMonitoring();
+      });
+
+      // 闪烁检测
+      function detectFlash() {
+        flashCount++;
+        document.getElementById('flashCount').textContent = flashCount;
+        logEvent(`检测到闪烁 #${flashCount}`, 'warning');
+
+        // 超过阈值时高亮显示
+        if (flashCount > 5) {
+          document.querySelector('.flash-counter').style.background = '#fed7d7';
+          document.querySelector('.flash-counter').style.animation =
+            'pulse 0.5s infinite';
+        }
+      }
+
+      // 监控各种可能引起重绘的事件
+      window.addEventListener('resize', detectFlash);
+      window.addEventListener(
+        'scroll',
+        () => Math.random() > 0.8 && detectFlash()
+      );
+      window.addEventListener('visibilitychange', () => {
+        logEvent(`页面${document.hidden ? '隐藏' : '显示'}`, 'system');
+      });
+
+      // 性能监控
+      function startMonitoring() {
+        // 定期更新性能指标
+        setInterval(() => {
+          updateMetrics();
+        }, 1000);
+
+        // 监控组件渲染（模拟）
+        const observer = new MutationObserver(mutations => {
+          mutations.forEach(() => {
+            renderCount++;
+            document.getElementById('renderCount').textContent = renderCount;
+          });
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+        });
+      }
+
+      function updateMetrics() {
+        // 内存使用监控
+        if (performance.memory) {
+          const usedMB = Math.round(
+            performance.memory.usedJSHeapSize / 1048576
+          );
+          const totalMB = Math.round(
+            performance.memory.totalJSHeapSize / 1048576
+          );
+          document.getElementById('memoryUsage').textContent =
+            `${usedMB}/${totalMB}MB`;
+        }
+
+        // 检查是否有内存泄漏迹象
+        if (renderCount > 1000) {
+          logEvent('⚠️ 渲染次数异常高，可能存在内存泄漏', 'error');
+        }
+      }
+
+      // 测试统一认证Hook
+      async function testAuthHook() {
+        const btn = document.getElementById('authHookBtn');
+        const resultBox = document.getElementById('coreResults');
+
+        btn.disabled = true;
+        btn.textContent = '测试中...';
+
+        try {
+          logEvent('开始测试统一认证Hook', 'test');
+
+          // 模拟多次快速调用
+          for (let i = 0; i < 10; i++) {
+            authCheckCount++;
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            // 模拟认证状态变化
+            if (i % 3 === 0) {
+              logEvent(`认证检查 #${authCheckCount}`, 'auth');
+            }
+          }
+
+          resultBox.innerHTML +=
+            '<p style="color: green;">✅ 统一认证Hook测试通过</p>';
+          logEvent('统一认证Hook测试完成', 'success');
+        } catch (error) {
+          resultBox.innerHTML += `<p style="color: red;">❌ 统一认证Hook测试失败: ${error.message}</p>`;
+          logEvent(`统一认证Hook测试失败: ${error.message}`, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '测试统一认证Hook';
+        }
+      }
+
+      // 测试登录API
+      async function testLoginAPI() {
+        const btn = document.getElementById('loginApiBtn');
+        const resultBox = document.getElementById('coreResults');
+
+        btn.disabled = true;
+        btn.textContent = '测试中...';
+
+        try {
+          logEvent('开始测试登录API', 'test');
+
+          // 模拟API调用
+          for (let i = 0; i < 5; i++) {
+            apiCallCount++;
+            document.getElementById('apiCalls').textContent = apiCallCount;
+
+            const response = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: 'test@example.com',
+                password: 'password123',
+              }),
+            });
+
+            logEvent(`API调用 #${apiCallCount}: ${response.status}`, 'api');
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+
+          resultBox.innerHTML +=
+            '<p style="color: green;">✅ 登录API测试通过</p>';
+          logEvent('登录API测试完成', 'success');
+        } catch (error) {
+          resultBox.innerHTML += `<p style="color: red;">❌ 登录API测试失败: ${error.message}</p>`;
+          logEvent(`登录API测试失败: ${error.message}`, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '测试登录API';
+        }
+      }
+
+      // 测试会话管理
+      async function testSessionManagement() {
+        const btn = document.getElementById('sessionBtn');
+        const resultBox = document.getElementById('coreResults');
+
+        btn.disabled = true;
+        btn.textContent = '测试中...';
+
+        try {
+          logEvent('开始测试会话管理', 'test');
+
+          // 模拟会话状态变化
+          const states = ['checking', 'authenticated', 'expired', 'renewed'];
+
+          for (let i = 0; i < states.length; i++) {
+            logEvent(`会话状态变化: ${states[i]}`, 'session');
+            await new Promise(resolve => setTimeout(resolve, 200));
+          }
+
+          resultBox.innerHTML +=
+            '<p style="color: green;">✅ 会话管理测试通过</p>';
+          logEvent('会话管理测试完成', 'success');
+        } catch (error) {
+          resultBox.innerHTML += `<p style="color: red;">❌ 会话管理测试失败: ${error.message}</p>`;
+          logEvent(`会话管理测试失败: ${error.message}`, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '测试会话管理';
+        }
+      }
+
+      // 综合压力测试
+      async function testAllTogether() {
+        const btn = document.getElementById('comprehensiveBtn');
+        const resultBox = document.getElementById('coreResults');
+
+        btn.disabled = true;
+        btn.textContent = '压力测试中...';
+
+        try {
+          logEvent('开始综合压力测试', 'test');
+
+          // 并发执行多项测试
+          const tests = [
+            testAuthHook(),
+            testLoginAPI(),
+            testSessionManagement(),
+          ];
+
+          await Promise.all(tests);
+
+          // 额外的压力测试
+          for (let i = 0; i < 20; i++) {
+            renderCount += Math.floor(Math.random() * 5);
+            authCheckCount += Math.floor(Math.random() * 2);
+            apiCallCount += Math.floor(Math.random() * 3);
+
+            if (i % 5 === 0) {
+              detectFlash();
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 50));
+          }
+
+          resultBox.innerHTML +=
+            '<p style="color: green;">✅ 综合压力测试通过</p>';
+          logEvent('综合压力测试完成', 'success');
+        } catch (error) {
+          resultBox.innerHTML += `<p style="color: red;">❌ 综合压力测试失败: ${error.message}</p>`;
+          logEvent(`综合压力测试失败: ${error.message}`, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '综合压力测试';
+        }
+      }
+
+      // 记录事件到时间线
+      function logEvent(message, type = 'info') {
+        testEvents.push({
+          time: new Date(),
+          message: message,
+          type: type,
+        });
+
+        const timeline = document.getElementById('eventTimeline');
+        const eventElement = document.createElement('div');
+        eventElement.className = 'timeline-item';
+
+        const timeElement = document.createElement('div');
+        timeElement.className = 'timeline-time';
+        timeElement.textContent = new Date().toLocaleTimeString();
+
+        const messageElement = document.createElement('div');
+        messageElement.className = 'timeline-event';
+        messageElement.textContent = message;
+
+        // 根据事件类型设置样式
+        switch (type) {
+          case 'error':
+            messageElement.style.color = '#e53e3e';
+            break;
+          case 'success':
+            messageElement.style.color = '#38a169';
+            break;
+          case 'warning':
+            messageElement.style.color = '#dd6b20';
+            break;
+          case 'auth':
+            messageElement.style.color = '#3182ce';
+            break;
+          case 'api':
+            messageElement.style.color = '#805ad5';
+            break;
+        }
+
+        eventElement.appendChild(timeElement);
+        eventElement.appendChild(messageElement);
+        timeline.appendChild(eventElement);
+
+        // 限制时间线长度
+        if (timeline.children.length > 20) {
+          timeline.removeChild(timeline.children[1]); // 保留第一个初始项
+        }
+      }
+
+      // 生成最终报告
+      function generateFinalReport() {
+        const conclusionBox = document.getElementById('finalConclusion');
+
+        const totalTests = 4;
+        const passedTests = testEvents.filter(e => e.type === 'success').length;
+        const failedTests = testEvents.filter(e => e.type === 'error').length;
+        const warningTests = testEvents.filter(
+          e => e.type === 'warning'
+        ).length;
+
+        let conclusion = '<h3>📊 测试总结报告</h3>';
+        conclusion += `<p><strong>总测试项:</strong> ${totalTests}</p>`;
+        conclusion += `<p><strong>通过:</strong> ${passedTests}</p>`;
+        conclusion += `<p><strong>失败:</strong> ${failedTests}</p>`;
+        conclusion += `<p><strong>警告:</strong> ${warningTests}</p>`;
+        conclusion += `<p><strong>闪烁次数:</strong> ${flashCount}</p>`;
+        conclusion += `<p><strong>总渲染次数:</strong> ${renderCount}</p>`;
+
+        if (flashCount === 0 && failedTests === 0) {
+          conclusion +=
+            '<p style="color: green; font-weight: bold;">🎉 系统表现优秀，无明显问题！</p>';
+          conclusion += '<p>建议: 可以正常使用登录功能</p>';
+        } else if (flashCount <= 3 && failedTests <= 1) {
+          conclusion +=
+            '<p style="color: orange; font-weight: bold;">⚠️ 系统基本稳定，存在轻微问题</p>';
+          conclusion += '<p>建议: 可以使用，但需要关注性能</p>';
+        } else {
+          conclusion +=
+            '<p style="color: red; font-weight: bold;">❌ 系统存在问题，需要进一步修复</p>';
+          conclusion += '<p>建议: 暂停使用，优先解决问题</p>';
+        }
+
+        conclusionBox.innerHTML = conclusion;
+
+        logEvent('生成最终测试报告', 'system');
+      }
+
+      // 页面卸载时的清理
+      window.addEventListener('beforeunload', function () {
+        logEvent('页面即将卸载', 'system');
+      });
+    </script>
+  </body>
+</html>

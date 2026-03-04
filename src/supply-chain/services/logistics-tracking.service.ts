@@ -1,7 +1,5 @@
 /**
- * 物流追踪核心服务类
- * 集成多家物流商API，提供统一的运单轨迹查询和状态更新
- */
+ * 物流追踪核心服务? * 集成多家物流商API，提供统一的运单轨迹查询和状态更? */
 
 import {
   BatchTrackDTO,
@@ -12,13 +10,13 @@ import {
   TrackingCacheItem,
   TrackShipmentDTO,
   UnifiedTrackingResponse,
-} from "../models/logistics.model";
+} from '../models/logistics.model';
 import {
   KdniaoClient,
   LogisticsCarrierClient,
   SfExpressClient,
   Track17Client,
-} from "./logistics-carrier-clients";
+} from './logistics-carrier-clients';
 
 export class LogisticsTrackingService {
   private clients: Map<LogisticsCarrier, LogisticsCarrierClient> = new Map();
@@ -31,10 +29,9 @@ export class LogisticsTrackingService {
   }
 
   /**
-   * 初始化物流商客户端
-   */
+   * 初始化物流商客户?   */
   private initializeClients(): void {
-    this.config.carriers.forEach((carrierConfig) => {
+    this.config.carriers.forEach(carrierConfig => {
       if (!carrierConfig.isEnabled) return;
 
       let client: LogisticsCarrierClient;
@@ -52,14 +49,13 @@ export class LogisticsTrackingService {
       this.clients.set(carrierConfig.carrier, client);
     });
 
-    // 如果配置了快递鸟，也添加快递鸟客户端作为备选
-    const kdniaoConfig = this.config.carriers.find(
-      (c) => c.carrier === LogisticsCarrier.OTHER && c.apiKey.includes("kdniao")
+    // 如果配置了快递鸟，也添加快递鸟客户端作为备?    const kdniaoConfig = this.config.carriers.find(
+      c => c.carrier === LogisticsCarrier.OTHER && c.apiKey.includes('kdniao')
     );
     if (kdniaoConfig) {
       const kdniaoClient = new KdniaoClient(kdniaoConfig);
       // 将快递鸟支持的物流商也添加到客户端映射中
-      kdniaoClient.getSupportedCarriers().forEach((carrier) => {
+      kdniaoClient.getSupportedCarriers().forEach(carrier => {
         if (!this.clients.has(carrier)) {
           this.clients.set(carrier, kdniaoClient);
         }
@@ -76,20 +72,19 @@ export class LogisticsTrackingService {
     // 参数验证
     if (!trackingNumber) {
       return this.createErrorResponse(
-        "MISSING_TRACKING_NUMBER",
-        "运单号不能为空"
+        'MISSING_TRACKING_NUMBER',
+        '运单号不能为?
       );
     }
 
-    // 检查缓存
-    const cacheKey = `${trackingNumber}_${carrier || "auto"}`;
+    // 检查缓?    const cacheKey = `${trackingNumber}_${carrier || 'auto'}`;
     if (this.config.cacheEnabled) {
       const cached = this.getFromCache(cacheKey);
       if (cached) {
         return {
           success: true,
           tracking: cached.trackingInfo,
-          requestId: "cached_" + Date.now().toString(),
+          requestId: 'cached_' + Date.now().toString(),
           timestamp: new Date(),
         };
       }
@@ -97,8 +92,7 @@ export class LogisticsTrackingService {
 
     let detectedCarrier: LogisticsCarrier | null = null;
 
-    // 确定物流商
-    if (carrier) {
+    // 确定物流?    if (carrier) {
       detectedCarrier = carrier;
     } else if (autoDetect) {
       const detectionResult = this.detectCarrier(trackingNumber);
@@ -107,31 +101,27 @@ export class LogisticsTrackingService {
       }
     }
 
-    // 如果指定了物流商但没有对应的客户端
-    if (detectedCarrier && !this.clients.has(detectedCarrier)) {
-      // 尝试使用17track作为备选
-      const fallbackClient = this.clients.get(LogisticsCarrier.OTHER);
+    // 如果指定了物流商但没有对应的客户?    if (detectedCarrier && !this.clients.has(detectedCarrier)) {
+      // 尝试使用17track作为备?      const fallbackClient = this.clients.get(LogisticsCarrier.OTHER);
       if (fallbackClient) {
         detectedCarrier = LogisticsCarrier.OTHER;
       } else {
         return this.createErrorResponse(
-          "UNSUPPORTED_CARRIER",
-          `不支持的物流商: ${detectedCarrier}`
+          'UNSUPPORTED_CARRIER',
+          `不支持的物流? ${detectedCarrier}`
         );
       }
     }
 
-    // 如果没有确定物流商，尝试所有可用的客户端
-    if (!detectedCarrier) {
+    // 如果没有确定物流商，尝试所有可用的客户?    if (!detectedCarrier) {
       return await this.tryAllCarriers(trackingNumber);
     }
 
-    // 使用确定的物流商客户端查询
-    const client = this.clients.get(detectedCarrier);
+    // 使用确定的物流商客户端查?    const client = this.clients.get(detectedCarrier);
     if (!client) {
       return this.createErrorResponse(
-        "CLIENT_NOT_FOUND",
-        `找不到物流商客户端: ${detectedCarrier}`
+        'CLIENT_NOT_FOUND',
+        `找不到物流商客户? ${detectedCarrier}`
       );
     }
 
@@ -146,7 +136,7 @@ export class LogisticsTrackingService {
       return result;
     } catch (error) {
       return this.createErrorResponse(
-        "TRACKING_FAILED",
+        'TRACKING_FAILED',
         `轨迹查询失败: ${(error as Error).message}`
       );
     }
@@ -162,7 +152,7 @@ export class LogisticsTrackingService {
 
     if (!trackingNumbers || trackingNumbers.length === 0) {
       return [
-        this.createErrorResponse("EMPTY_TRACKING_LIST", "运单号列表不能为空"),
+        this.createErrorResponse('EMPTY_TRACKING_LIST', '运单号列表不能为?),
       ];
     }
 
@@ -170,13 +160,13 @@ export class LogisticsTrackingService {
     if (trackingNumbers.length > 100) {
       return [
         this.createErrorResponse(
-          "TOO_MANY_TRACKING_NUMBERS",
-          "单次查询不能超过100个运单号"
+          'TOO_MANY_TRACKING_NUMBERS',
+          '单次查询不能超过100个运单号'
         ),
       ];
     }
 
-    const promises = trackingNumbers.map((trackingNumber) =>
+    const promises = trackingNumbers.map(trackingNumber =>
       this.trackShipment({ trackingNumber, carrier })
     );
 
@@ -184,10 +174,9 @@ export class LogisticsTrackingService {
   }
 
   /**
-   * 自动识别物流商
-   */
+   * 自动识别物流?   */
   detectCarrier(trackingNumber: string): CarrierDetectionResult {
-    // 顺丰速运：12位纯数字
+    // 顺丰速运?2位纯数字
     if (/^\d{12}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.SF_EXPRESS,
@@ -196,8 +185,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // 圆通速递：通常以YT开头
-    if (/^YT\d{10,12}$/.test(trackingNumber)) {
+    // 圆通速递：通常以YT开?    if (/^YT\d{10,12}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.YTO,
         confidence: 0.9,
@@ -205,8 +193,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // 中通快递：通常以ZT开头或纯数字
-    if (/^(ZT\d{10,12}|\d{12})$/.test(trackingNumber)) {
+    // 中通快递：通常以ZT开头或纯数?    if (/^(ZT\d{10,12}|\d{12})$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.ZTO,
         confidence: 0.85,
@@ -214,8 +201,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // 申通快递：通常以ST开头
-    if (/^ST\d{10,12}$/.test(trackingNumber)) {
+    // 申通快递：通常以ST开?    if (/^ST\d{10,12}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.STO,
         confidence: 0.85,
@@ -223,8 +209,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // 韵达快递：通常以YNDD开头
-    if (/^YNDD\d{8,12}$/.test(trackingNumber)) {
+    // 韵达快递：通常以YNDD开?    if (/^YNDD\d{8,12}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.YUNDA,
         confidence: 0.9,
@@ -232,8 +217,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // EMS：通常以EA、EB、EC等开头
-    if (/^E[A-Z]\d{9}CN$/.test(trackingNumber)) {
+    // EMS：通常以EA、EB、EC等开?    if (/^E[A-Z]\d{9}CN$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.EMS,
         confidence: 0.9,
@@ -241,8 +225,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // 京东物流：通常以JD开头
-    if (/^JD\d{10,15}$/.test(trackingNumber)) {
+    // 京东物流：通常以JD开?    if (/^JD\d{10,15}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.JD_LOGISTICS,
         confidence: 0.85,
@@ -250,8 +233,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // DHL：通常以数字开头，长度10-12位
-    if (/^\d{10,12}$/.test(trackingNumber)) {
+    // DHL：通常以数字开头，长度10-12�?    if (/^\d{10,12}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.DHL,
         confidence: 0.7,
@@ -259,8 +241,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // FedEx：通常以数字开头，长度12位
-    if (/^\d{12}$/.test(trackingNumber)) {
+    // FedEx：通常以数字开头，长度12�?    if (/^\d{12}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.FEDEX,
         confidence: 0.65,
@@ -268,8 +249,7 @@ export class LogisticsTrackingService {
       };
     }
 
-    // UPS：通常以1Z开头
-    if (/^1Z[A-Z0-9]{16}$/.test(trackingNumber)) {
+    // UPS：通常?Z开?    if (/^1Z[A-Z0-9]{16}$/.test(trackingNumber)) {
       return {
         carrier: LogisticsCarrier.UPS,
         confidence: 0.9,
@@ -295,8 +275,7 @@ export class LogisticsTrackingService {
 
     for (const client of clients) {
       try {
-        // 验证运单号格式
-        if (client.validateTrackingNumber(trackingNumber)) {
+        // 验证运单号格?        if (client.validateTrackingNumber(trackingNumber)) {
           const result = await client.getTrackingInfo(trackingNumber);
           if (result.success) {
             return result;
@@ -304,13 +283,13 @@ export class LogisticsTrackingService {
         }
       } catch (error) {
         // 继续尝试下一个客户端
-        console.warn(`客户端 ${client.getCarrierName()} 查询失败:`, error);
+        console.warn(`客户?${client.getCarrierName()} 查询失败:`, error);
       }
     }
 
     return this.createErrorResponse(
-      "ALL_CLIENTS_FAILED",
-      "所有物流商客户端查询失败"
+      'ALL_CLIENTS_FAILED',
+      '所有物流商客户端查询失?
     );
   }
 
@@ -321,8 +300,7 @@ export class LogisticsTrackingService {
     const item = this.cache.get(key);
     if (!item) return null;
 
-    // 检查是否过期
-    if (new Date() > item.expiresAt) {
+    // 检查是否过?    if (new Date() > item.expiresAt) {
       this.cache.delete(key);
       return null;
     }
@@ -331,8 +309,7 @@ export class LogisticsTrackingService {
   }
 
   /**
-   * 添加轨迹信息到缓存
-   */
+   * 添加轨迹信息到缓?   */
   private addToCache(key: string, trackingInfo: ShipmentTracking): void {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + this.config.cacheTTL * 1000);
@@ -376,7 +353,7 @@ export class LogisticsTrackingService {
         code,
         message,
       },
-      requestId: "error_" + Date.now().toString(),
+      requestId: 'error_' + Date.now().toString(),
       timestamp: new Date(),
     };
   }
@@ -397,8 +374,7 @@ export class LogisticsTrackingService {
   }
 
   /**
-   * 获取服务状态信息
-   */
+   * 获取服务状态信?   */
   getServiceStatus(): {
     totalCarriers: number;
     enabledCarriers: LogisticsCarrier[];

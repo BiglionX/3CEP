@@ -17,50 +17,50 @@ function fixSpecificErrors() {
       // 修复market-data.service.ts中的update错误
       file: 'src/tech/api/services/market-data.service.ts',
       pattern: /\.update\(updateData\)/,
-      replacement: '.update(updateData as any)'
+      replacement: '.update(updateData as any)',
     },
     {
       // 修复review-service.ts中的update错误
       file: 'src/tech/api/services/review-service.ts',
       pattern: /\.update\(\{[^}]+\}\)/g,
-      replacement: (match) => `${match} as any`
+      replacement: match => `${match} as any`,
     },
     {
       // 修复数组长度访问错误
       file: 'src/tech/api/services/market-data.service.ts',
       pattern: /data\?\.length/,
-      replacement: '(data as any)?.length'
+      replacement: '(data as any)?.length',
     },
     {
       // 修复market.types.ts中的类型错误
       file: 'src/lib/types/market.types.ts',
       pattern: /aggregateData\?: PriceStatistics;/,
-      replacement: 'aggregateData?: PriceStatistics | null;'
-    }
+      replacement: 'aggregateData?: PriceStatistics | null;',
+    },
   ];
-  
+
   let appliedFixes = 0;
-  
+
   fixes.forEach(({ file, pattern, replacement }) => {
     const fullPath = path.join(process.cwd(), file);
     if (fs.existsSync(fullPath)) {
       console.log(`🔧 修复文件: ${file}`);
-      
+
       try {
         let content = fs.readFileSync(fullPath, 'utf8');
         const originalContent = content;
-        
+
         if (typeof replacement === 'function') {
           content = content.replace(pattern, replacement);
         } else {
           content = content.replace(pattern, replacement);
         }
-        
+
         if (content !== originalContent) {
           // 创建备份
-          const backupPath = fullPath + '.precise-backup';
+          const backupPath = `${fullPath}.precise-backup`;
           fs.writeFileSync(backupPath, originalContent);
-          
+
           // 写入修复后的内容
           fs.writeFileSync(fullPath, content);
           console.log(`✅ 已应用修复到 ${file}`);
@@ -75,59 +75,59 @@ function fixSpecificErrors() {
       console.log(`⚠️  文件不存在: ${file}`);
     }
   });
-  
+
   return appliedFixes;
 }
 
 // 批量修复相似错误的函数
 function batchFixSimilarErrors() {
   console.log('\n🔧 批量修复相似错误模式...');
-  
+
   const patterns = [
     {
       // 批量修复.update()调用
       pattern: /(\.update\()(\{[^}]+\})(\))/g,
-      replacement: '$1$2 as any$3'
+      replacement: '$1$2 as any$3',
     },
     {
       // 批量修复.insert()调用
       pattern: /(\.insert\()(\{[^}]+\})(\))/g,
-      replacement: '$1$2 as any$3'
+      replacement: '$1$2 as any$3',
     },
     {
       // 修复数据访问模式
       pattern: /(data\??\.)length/g,
-      replacement: '(data as any)?.$1length'
-    }
+      replacement: '(data as any)?.$1length',
+    },
   ];
-  
+
   let totalBatchFixes = 0;
-  
+
   // 查找所有TS/TSX文件
   const files = findTsFiles();
-  
+
   files.forEach(file => {
     let fileChanged = false;
     let content = fs.readFileSync(file, 'utf8');
     const originalContent = content;
-    
+
     patterns.forEach(({ pattern, replacement }) => {
       content = content.replace(pattern, replacement);
     });
-    
+
     if (content !== originalContent) {
-      const backupPath = file + '.batch-backup';
+      const backupPath = `${file}.batch-backup`;
       fs.writeFileSync(backupPath, originalContent);
       fs.writeFileSync(file, content);
       fileChanged = true;
       totalBatchFixes++;
     }
-    
+
     if (fileChanged) {
       console.log(`✅ 批量修复: ${path.relative(process.cwd(), file)}`);
     }
   });
-  
+
   console.log(`✅ 完成批量修复 ${totalBatchFixes} 个文件`);
   return totalBatchFixes;
 }
@@ -135,35 +135,42 @@ function batchFixSimilarErrors() {
 // 查找TypeScript文件
 function findTsFiles() {
   const glob = require('glob');
-  return glob.sync('{src,tests}/**/*.{ts,tsx}', { 
-    cwd: process.cwd(), 
-    ignore: ['node_modules/**', '.next/**'] 
-  }).map(f => path.join(process.cwd(), f));
+  return glob
+    .sync('{src,tests}/**/*.{ts,tsx}', {
+      cwd: process.cwd(),
+      ignore: ['node_modules/**', '.next/**'],
+    })
+    .map(f => path.join(process.cwd(), f));
 }
 
 // 验证修复效果
 function verifyFixes() {
   console.log('\n🧪 验证修复效果...');
-  
+
   try {
     const { execSync } = require('child_process');
-    
+
     // 检查错误数量变化
     const beforeCount = 1148; // 之前的错误数量
-    
+
     try {
       execSync('npx tsc --noEmit', { stdio: 'pipe' });
       console.log('✅ TypeScript编译完全通过！');
       return { success: true, remainingErrors: 0 };
     } catch (compileError) {
       // 解析新的错误数量
-      const errorOutput = compileError.stdout?.toString() || compileError.stderr?.toString() || '';
+      const errorOutput =
+        compileError.stdout?.toString() ||
+        compileError.stderr?.toString() ||
+        '';
       const errorMatches = errorOutput.match(/error TS\d+/g);
       const newErrorCount = errorMatches ? errorMatches.length : 0;
-      
+
       console.log(`📊 错误数量变化: ${beforeCount} → ${newErrorCount}`);
-      console.log(`📈 改善率: ${Math.round(((beforeCount - newErrorCount) / beforeCount) * 100)}%`);
-      
+      console.log(
+        `📈 改善率: ${Math.round(((beforeCount - newErrorCount) / beforeCount) * 100)}%`
+      );
+
       if (newErrorCount < beforeCount) {
         console.log('✅ 错误数量显著减少');
         return { success: true, remainingErrors: newErrorCount };
@@ -185,7 +192,7 @@ function generateReport(appliedFixes, batchFixes, verification) {
   console.log(`✅ 精确修复应用: ${appliedFixes} 个`);
   console.log(`✅ 批量修复应用: ${batchFixes} 个文件`);
   console.log(`📊 剩余TypeScript错误: ${verification.remainingErrors || 0} 个`);
-  
+
   if (verification.success) {
     console.log('🎉 IDE问题修复成功！');
     console.log('\n💡 使用建议:');
@@ -208,7 +215,7 @@ function main() {
   const batchFixes = batchFixSimilarErrors();
   const verification = verifyFixes();
   generateReport(appliedFixes, batchFixes, verification);
-  
+
   console.log('\n✨ 精确修复脚本执行完成！');
 }
 

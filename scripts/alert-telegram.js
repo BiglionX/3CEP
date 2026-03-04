@@ -13,11 +13,11 @@ class TelegramAlert {
       parseMode: 'HTML', // HTML or Markdown
       disableNotification: false,
       disableWebPagePreview: true,
-      ...config
+      ...config,
     };
 
     this.apiUrl = `https://api.telegram.org/bot${this.config.botToken}`;
-    
+
     // 验证配置
     this.validateConfig();
   }
@@ -53,7 +53,7 @@ class TelegramAlert {
         source = 'unknown',
         metadata = {},
         chatId = null,
-        silent = false
+        silent = false,
       } = alertData;
 
       // 格式化消息内容
@@ -63,7 +63,7 @@ class TelegramAlert {
         message,
         timestamp,
         source,
-        metadata
+        metadata,
       });
 
       // 发送消息
@@ -72,12 +72,11 @@ class TelegramAlert {
         text: formattedMessage,
         parse_mode: this.config.parseMode,
         disable_notification: silent || this.config.disableNotification,
-        disable_web_page_preview: this.config.disableWebPagePreview
+        disable_web_page_preview: this.config.disableWebPagePreview,
       });
 
       console.log(`✅ Telegram告警发送成功: ${result.message_id}`);
       return result;
-
     } catch (error) {
       console.error(`❌ Telegram发送失败: ${error.message}`);
       throw error;
@@ -93,20 +92,20 @@ class TelegramAlert {
       message = '',
       timestamp = new Date(),
       source = 'unknown',
-      chatId = null
+      chatId = null,
     } = recoveryData;
 
     const formattedMessage = this.formatRecoveryMessage({
       title,
       message,
       timestamp,
-      source
+      source,
     });
 
     return await this.sendMessage({
       chat_id: chatId || this.config.chatId,
       text: formattedMessage,
-      parse_mode: this.config.parseMode
+      parse_mode: this.config.parseMode,
     });
   }
 
@@ -119,13 +118,13 @@ class TelegramAlert {
       message,
       buttons = [],
       level = 'info',
-      chatId = null
+      chatId = null,
     } = interactiveData;
 
     const formattedMessage = this.formatInteractiveMessage({
       title,
       message,
-      level
+      level,
     });
 
     const keyboard = this.createInlineKeyboard(buttons);
@@ -134,7 +133,7 @@ class TelegramAlert {
       chat_id: chatId || this.config.chatId,
       text: formattedMessage,
       parse_mode: this.config.parseMode,
-      reply_markup: keyboard
+      reply_markup: keyboard,
     });
   }
 
@@ -146,24 +145,24 @@ class TelegramAlert {
       document,
       caption = '',
       chatId = null,
-      silent = false
+      silent = false,
     } = documentData;
 
     const formData = new FormData();
     formData.append('chat_id', chatId || this.config.chatId);
     formData.append('document', document);
-    
+
     if (caption) {
       formData.append('caption', caption);
     }
-    
+
     if (silent || this.config.disableNotification) {
       formData.append('disable_notification', 'true');
     }
 
     const response = await fetch(`${this.apiUrl}/sendDocument`, {
       method: 'POST',
-      body: formData
+      body: formData,
     });
 
     return await this.handleResponse(response);
@@ -173,29 +172,24 @@ class TelegramAlert {
    * 发送照片消息
    */
   async sendPhoto(photoData) {
-    const {
-      photo,
-      caption = '',
-      chatId = null,
-      silent = false
-    } = photoData;
+    const { photo, caption = '', chatId = null, silent = false } = photoData;
 
     const formData = new FormData();
     formData.append('chat_id', chatId || this.config.chatId);
     formData.append('photo', photo);
-    
+
     if (caption) {
       formData.append('caption', caption);
       formData.append('parse_mode', this.config.parseMode);
     }
-    
+
     if (silent || this.config.disableNotification) {
       formData.append('disable_notification', 'true');
     }
 
     const response = await fetch(`${this.apiUrl}/sendPhoto`, {
       method: 'POST',
-      body: formData
+      body: formData,
     });
 
     return await this.handleResponse(response);
@@ -208,9 +202,9 @@ class TelegramAlert {
     const response = await fetch(`${this.apiUrl}/sendMessage`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(messageData)
+      body: JSON.stringify(messageData),
     });
 
     return await this.handleResponse(response);
@@ -223,7 +217,9 @@ class TelegramAlert {
     const result = await response.json();
 
     if (!result.ok) {
-      throw new Error(`Telegram API错误: ${result.description} (code: ${result.error_code})`);
+      throw new Error(
+        `Telegram API错误: ${result.description} (code: ${result.error_code})`
+      );
     }
 
     return result.result;
@@ -233,19 +229,12 @@ class TelegramAlert {
    * 格式化告警消息
    */
   formatAlertMessage(data) {
-    const {
-      level,
-      title,
-      message,
-      timestamp,
-      source,
-      metadata
-    } = data;
+    const { level, title, message, timestamp, source, metadata } = data;
 
     const levelConfig = this.getLevelConfig(level);
 
     let formattedMessage = `<b>${levelConfig.emoji} ${this.escapeHtml(title)}</b>\n\n`;
-    
+
     formattedMessage += `<b>告警级别:</b> ${levelConfig.text}\n`;
     formattedMessage += `<b>时间:</b> ${timestamp.toLocaleString('zh-CN')}\n`;
     formattedMessage += `<b>来源:</b> ${this.escapeHtml(source)}\n\n`;
@@ -275,11 +264,13 @@ class TelegramAlert {
   formatRecoveryMessage(data) {
     const { title, message, timestamp, source } = data;
 
-    return `<b>✅ ${this.escapeHtml(title)}</b>\n\n` +
-           `<b>时间:</b> ${timestamp.toLocaleString('zh-CN')}\n` +
-           `<b>来源:</b> ${this.escapeHtml(source)}\n\n` +
-           `<b>详情:</b> ${this.escapeHtml(message || '系统已恢复正常运行')}\n\n` +
-           `<i>此消息由FixCycle监控系统自动发送</i>`;
+    return (
+      `<b>✅ ${this.escapeHtml(title)}</b>\n\n` +
+      `<b>时间:</b> ${timestamp.toLocaleString('zh-CN')}\n` +
+      `<b>来源:</b> ${this.escapeHtml(source)}\n\n` +
+      `<b>详情:</b> ${this.escapeHtml(message || '系统已恢复正常运行')}\n\n` +
+      `<i>此消息由FixCycle监控系统自动发送</i>`
+    );
   }
 
   /**
@@ -289,9 +280,11 @@ class TelegramAlert {
     const { title, message, level } = data;
     const levelConfig = this.getLevelConfig(level);
 
-    return `<b>${levelConfig.emoji} ${this.escapeHtml(title)}</b>\n\n` +
-           `${this.escapeHtml(message)}\n\n` +
-           `<i>请选择相应的操作:</i>`;
+    return (
+      `<b>${levelConfig.emoji} ${this.escapeHtml(title)}</b>\n\n` +
+      `${this.escapeHtml(message)}\n\n` +
+      `<i>请选择相应的操作:</i>`
+    );
   }
 
   /**
@@ -307,7 +300,7 @@ class TelegramAlert {
       currentRow.push({
         text: button.text,
         url: button.url,
-        callback_data: button.callbackData
+        callback_data: button.callbackData,
       });
 
       // 每行最多3个按钮
@@ -318,7 +311,7 @@ class TelegramAlert {
     });
 
     return {
-      inline_keyboard: keyboardRows
+      inline_keyboard: keyboardRows,
     };
   }
 
@@ -327,31 +320,31 @@ class TelegramAlert {
    */
   getLevelConfig(level) {
     const configs = {
-      'info': {
+      info: {
         emoji: 'ℹ️',
         text: '信息',
-        color: 'blue'
+        color: 'blue',
       },
-      'warning': {
+      warning: {
         emoji: '⚠️',
         text: '警告',
-        color: 'orange'
+        color: 'orange',
       },
-      'error': {
+      error: {
         emoji: '❌',
         text: '错误',
-        color: 'red'
+        color: 'red',
       },
-      'critical': {
+      critical: {
         emoji: '🚨',
         text: '严重',
-        color: 'red'
+        color: 'red',
       },
-      'emergency': {
+      emergency: {
         emoji: '🔥',
         text: '紧急',
-        color: 'red'
-      }
+        color: 'red',
+      },
     };
 
     return configs[level.toLowerCase()] || configs.warning;
@@ -362,11 +355,12 @@ class TelegramAlert {
    */
   getActionSuggestions(level) {
     const suggestions = {
-      'info': '<blockquote>💡 建议: 请关注系统状态变化</blockquote>',
-      'warning': '<blockquote>⚠️ 建议: 请及时检查相关服务状态</blockquote>',
-      'error': '<blockquote>❌ 建议: 需要立即调查和处理此问题</blockquote>',
-      'critical': '<blockquote>🚨 建议: 立即采取行动，可能影响业务运行</blockquote>',
-      'emergency': '<blockquote>🚒 建议: 紧急响应，需要全员关注</blockquote>'
+      info: '<blockquote>💡 建议: 请关注系统状态变化</blockquote>',
+      warning: '<blockquote>⚠️ 建议: 请及时检查相关服务状态</blockquote>',
+      error: '<blockquote>❌ 建议: 需要立即调查和处理此问题</blockquote>',
+      critical:
+        '<blockquote>🚨 建议: 立即采取行动，可能影响业务运行</blockquote>',
+      emergency: '<blockquote>🚒 建议: 紧急响应，需要全员关注</blockquote>',
     };
 
     return suggestions[level.toLowerCase()] || suggestions.warning;
@@ -377,7 +371,7 @@ class TelegramAlert {
    */
   escapeHtml(text) {
     if (typeof text !== 'string') return String(text);
-    
+
     return text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -390,11 +384,11 @@ class TelegramAlert {
   async testConfiguration() {
     try {
       console.log('🧪 测试Telegram配置...');
-      
+
       // 测试Bot信息
       const meResponse = await fetch(`${this.apiUrl}/getMe`);
       const meResult = await meResponse.json();
-      
+
       if (!meResult.ok) {
         throw new Error(`Bot验证失败: ${meResult.description}`);
       }
@@ -410,14 +404,13 @@ class TelegramAlert {
         metadata: {
           test: true,
           timestamp: new Date().toISOString(),
-          bot_username: meResult.result.username
-        }
+          bot_username: meResult.result.username,
+        },
       };
 
       const result = await this.sendAlert(testAlert);
       console.log('✅ Telegram配置测试成功');
       return result;
-      
     } catch (error) {
       console.error(`❌ Telegram配置测试失败: ${error.message}`);
       throw error;
@@ -432,11 +425,11 @@ class TelegramAlert {
       const response = await fetch(`${this.apiUrl}/getChat`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          chat_id: chatId || this.config.chatId
-        })
+          chat_id: chatId || this.config.chatId,
+        }),
       });
 
       const result = await this.handleResponse(response);
@@ -452,7 +445,7 @@ class TelegramAlert {
    */
   createAlertTemplate(templateName, templateData) {
     const templates = {
-      'database_down': {
+      database_down: {
         title: '🗄️ 数据库连接异常',
         message: '无法连接到主数据库服务器，请检查数据库服务状态。',
         level: 'critical',
@@ -460,10 +453,10 @@ class TelegramAlert {
           service: 'postgresql',
           host: templateData.host || 'localhost',
           port: templateData.port || 5432,
-          error: templateData.error || 'Connection refused'
-        }
+          error: templateData.error || 'Connection refused',
+        },
       },
-      'high_memory_usage': {
+      high_memory_usage: {
         title: '💾 内存使用率过高',
         message: '服务器内存使用率超过阈值，请检查内存使用情况。',
         level: 'warning',
@@ -471,10 +464,10 @@ class TelegramAlert {
           current_usage: templateData.usage || 'unknown',
           threshold: templateData.threshold || '85%',
           available: templateData.available || 'unknown',
-          hostname: templateData.hostname || 'unknown'
-        }
+          hostname: templateData.hostname || 'unknown',
+        },
       },
-      'service_unavailable': {
+      service_unavailable: {
         title: '🔌 服务不可用',
         message: '关键服务无响应，请检查服务运行状态。',
         level: 'error',
@@ -482,26 +475,28 @@ class TelegramAlert {
           service: templateData.service || 'unknown',
           endpoint: templateData.endpoint || 'unknown',
           response_time: templateData.responseTime || 'timeout',
-          last_check: templateData.lastCheck || new Date().toISOString()
-        }
+          last_check: templateData.lastCheck || new Date().toISOString(),
+        },
       },
-      'backup_failed': {
+      backup_failed: {
         title: '💾 备份任务失败',
         message: '数据库备份任务执行失败，请检查备份配置和存储空间。',
         level: 'error',
         metadata: {
           backup_type: templateData.backupType || 'full',
           error_message: templateData.errorMessage || 'unknown error',
-          backup_time: templateData.backupTime || new Date().toISOString()
-        }
-      }
+          backup_time: templateData.backupTime || new Date().toISOString(),
+        },
+      },
     };
 
-    return templates[templateName] || {
-      title: '📝 未知告警模板',
-      message: '使用了未定义的告警模板',
-      level: 'warning'
-    };
+    return (
+      templates[templateName] || {
+        title: '📝 未知告警模板',
+        message: '使用了未定义的告警模板',
+        level: 'warning',
+      }
+    );
   }
 
   /**
@@ -509,7 +504,7 @@ class TelegramAlert {
    */
   async sendBatchMessages(messages) {
     const results = [];
-    
+
     for (const message of messages) {
       try {
         let result;
@@ -528,15 +523,15 @@ class TelegramAlert {
         }
         results.push({ ...result, message, status: 'success' });
       } catch (error) {
-        results.push({ 
-          message, 
-          status: 'failed', 
+        results.push({
+          message,
+          status: 'failed',
           error: error.message,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
     }
-    
+
     return results;
   }
 }
@@ -544,42 +539,47 @@ class TelegramAlert {
 // 命令行接口
 if (require.main === module) {
   const args = process.argv.slice(2);
-  
+
   const config = {
     botToken: process.env.TELEGRAM_BOT_TOKEN,
-    chatId: process.env.TELEGRAM_CHAT_ID
+    chatId: process.env.TELEGRAM_CHAT_ID,
   };
-  
+
   const telegramAlert = new TelegramAlert(config);
-  
+
   switch (args[0]) {
     case 'test':
-      telegramAlert.testConfiguration()
+      telegramAlert
+        .testConfiguration()
         .then(() => console.log('✅ Telegram配置测试完成'))
         .catch(err => {
           console.error('❌ 测试失败:', err.message);
           process.exit(1);
         });
       break;
-      
+
     case 'send':
       const alertData = {
         level: args[1] || 'warning',
         title: args[2] || '测试告警',
         message: args[3] || '这是一条测试消息',
-        source: 'command-line'
+        source: 'command-line',
       };
-      
-      telegramAlert.sendAlert(alertData)
-        .then(result => console.log('✅ Telegram告警发送成功:', result.message_id))
+
+      telegramAlert
+        .sendAlert(alertData)
+        .then(result =>
+          console.log('✅ Telegram告警发送成功:', result.message_id)
+        )
         .catch(err => {
           console.error('❌ 发送失败:', err.message);
           process.exit(1);
         });
       break;
-      
+
     case 'info':
-      telegramAlert.getChatInfo()
+      telegramAlert
+        .getChatInfo()
         .then(info => {
           console.log('聊天信息:');
           console.log(`ID: ${info.id}`);
@@ -592,7 +592,7 @@ if (require.main === module) {
           process.exit(1);
         });
       break;
-      
+
     default:
       console.log(`
 FixCycle Telegram告警工具

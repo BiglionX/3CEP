@@ -1,7 +1,6 @@
 /**
  * FCX系统服务接口定义
- * 定义各个核心服务的接口规范
- */
+ * 定义各个核心服务的接口规? */
 
 import {
   AccountBalance,
@@ -63,8 +62,7 @@ export interface IFcxAccountService {
   unfreeze(accountId: string, amount: number): Promise<void>;
 
   /**
-   * 更新账户状态
-   */
+   * 更新账户状?   */
   updateAccountStatus(
     accountId: string,
     status: FcxAccountStatus
@@ -96,8 +94,7 @@ export interface IFcxTransactionService {
   listTransactions(params: TransactionQueryParams): Promise<FcxTransaction[]>;
 
   /**
-   * 验证交易合法性
-   */
+   * 验证交易合法?   */
   validateTransaction(dto: FcxTransferDTO): Promise<boolean>;
 }
 
@@ -151,8 +148,7 @@ export interface IRepairOrderService {
   confirmOrder(orderId: string, shopId: string): Promise<RepairOrder>;
 
   /**
-   * 完成工单并结算
-   */
+   * 完成工单并结?   */
   completeOrder(dto: CompleteRepairOrderDTO): Promise<RepairOrder>;
 
   /**
@@ -196,16 +192,14 @@ export interface IRepairOrderService {
 // 联盟管理服务接口
 export interface IAllianceService {
   /**
-   * 维修店加入联盟
-   */
+   * 维修店加入联?   */
   joinAlliance(
     shopId: string,
     stakingAmount: number
   ): Promise<ExtendedRepairShop>;
 
   /**
-   * 维修店退出联盟
-   */
+   * 维修店退出联?   */
   leaveAlliance(shopId: string): Promise<ExtendedRepairShop>;
 
   /**
@@ -219,8 +213,7 @@ export interface IAllianceService {
   listAllianceMembers(level?: AllianceLevel): Promise<ExtendedRepairShop[]>;
 
   /**
-   * 获取联盟排行榜
-   */
+   * 获取联盟排行?   */
   getRankings(limit?: number): Promise<ShopRankingInfo[]>;
 
   /**
@@ -315,16 +308,14 @@ export interface IPaymentService {
   verifyPayment(paymentId: string): Promise<boolean>;
 
   /**
-   * 退款处理
-   */
+   * 退款处?   */
   processRefund(transactionId: string, amount: number): Promise<boolean>;
 }
 
 // 风控服务接口
 export interface IRiskControlService {
   /**
-   * 检测异常交易
-   */
+   * 检测异常交?   */
   detectSuspiciousTransactions(accountId: string): Promise<boolean>;
 
   /**
@@ -333,13 +324,11 @@ export interface IRiskControlService {
   assessAccountRisk(accountId: string): Promise<'low' | 'medium' | 'high'>;
 
   /**
-   * 冻结高风险账户
-   */
+   * 冻结高风险账?   */
   freezeHighRiskAccount(accountId: string, reason: string): Promise<void>;
 
   /**
-   * 反欺诈检测
-   */
+   * 反欺诈检?   */
   fraudDetection(transaction: FcxTransferDTO): Promise<{
     isFraud: boolean;
     riskScore: number;

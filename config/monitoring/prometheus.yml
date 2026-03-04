@@ -1,35 +1,43 @@
-# V-OPS-02: 监控告警系统配置
-
-## Prometheus配置文件
+# Prometheus监控配置文件
+# 用于采集采购智能体模块的性能指标
 
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
 rule_files:
-  - "alert-rules.yml"
+  # 告警规则文件
+  - 'alert-rules.yml'
 
 scrape_configs:
-  # 监控Next.js应用
-  - job_name: 'nextjs-app'
+  # 采购智能体API监控
+  - job_name: 'procurement-intelligence-api'
     static_configs:
-      - targets: ['localhost:3001']
-    metrics_path: '/api/monitoring/metrics'
-    
-  # 监控Supabase数据库连接池
-  - job_name: 'supabase-postgres'
-    static_configs:
-      - targets: ['db.supabase.co:5432']
-    metrics_path: '/metrics'
+      - targets: ['localhost:3000']
+    metrics_path: '/api/metrics'
+    scrape_interval: 30s
 
-  # 监控Redis缓存
-  - job_name: 'redis-cache'
+  # Node.js应用监控
+  - job_name: 'nodejs-app'
     static_configs:
-      - targets: ['localhost:6379']
-    metrics_path: '/metrics'
+      - targets: ['localhost:9182']
+    scrape_interval: 30s
 
+  # Redis监控
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['localhost:9121']
+    scrape_interval: 30s
+
+  # PostgreSQL监控
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['localhost:9187']
+    scrape_interval: 30s
+
+# 告警管理器配置
 alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9093
+            - localhost:9093

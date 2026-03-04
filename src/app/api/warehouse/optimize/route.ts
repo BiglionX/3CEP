@@ -1,23 +1,23 @@
-/**
- * 智能分仓引擎API接口
- * 路径: /api/warehouse/optimize
- * 根据用户地理位置、各仓库库存、运费和时效，自动选择最优发货仓
+﻿/**
+ * 鏅鸿兘鍒嗕粨寮曟搸API鎺ュ彛
+ * 璺緞: /api/warehouse/optimize
+ * 鏍规嵁鐢ㄦ埛鍦扮悊浣嶇疆銆佸悇浠撳簱搴撳瓨銆佽繍璐瑰拰鏃舵晥锛岃嚜鍔ㄩ€夋嫨鏈€浼樺彂璐т粨
  */
 
-import { WarehouseOptimizationRequest } from "@/supply-chain/models/warehouse-optimization.model";
-import { WarehouseOptimizationService } from "@/supply-chain/services/warehouse-optimization.service";
-import { NextResponse } from "next/server";
+import { WarehouseOptimizationRequest } from '@/supply-chain/models/warehouse-optimization.model';
+import { WarehouseOptimizationService } from '@/supply-chain/services/warehouse-optimization.service';
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     const validationError = validateOptimizationRequest(body);
     if (validationError) {
       return NextResponse.json(
         {
-          error: "参数验证失败",
+          error: '鍙傛暟楠岃瘉澶辫触',
           details: validationError,
         },
         { status: 400 }
@@ -45,11 +45,10 @@ export async function POST(request: Request) {
       orderMetadata: body.orderMetadata,
     };
 
-    // 执行分仓优化
+    // 鎵ц鍒嗕粨浼樺寲
     const optimizationService = new WarehouseOptimizationService();
-    const result = await optimizationService.optimizeWarehouseSelection(
-      optimizationRequest
-    );
+    const result =
+      await optimizationService.optimizeWarehouseSelection(optimizationRequest);
 
     return NextResponse.json({
       success: true,
@@ -57,10 +56,10 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("智能分仓API错误:", error);
+    console.error('鏅鸿兘鍒嗕粨API閿欒:', error);
     return NextResponse.json(
       {
-        error: "分仓优化服务暂时不可用",
+        error: '鍒嗕粨浼樺寲鏈嶅姟鏆傛椂涓嶅彲?,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -69,16 +68,16 @@ export async function POST(request: Request) {
 }
 
 /**
- * 参数验证函数
+ * 鍙傛暟楠岃瘉鍑芥暟
  */
 function validateOptimizationRequest(data: any): string | null {
   if (!data) {
-    return "请求体不能为空";
+    return '璇锋眰浣撲笉鑳戒负?;
   }
 
-  // 验证配送地址
+  // 楠岃瘉閰嶉€佸湴鍧€
   if (!data.deliveryAddress) {
-    return "缺少配送地址信息";
+    return '缂哄皯閰嶉€佸湴鍧€淇℃伅';
   }
 
   if (
@@ -86,49 +85,48 @@ function validateOptimizationRequest(data: any): string | null {
     !data.deliveryAddress.province ||
     !data.deliveryAddress.city
   ) {
-    return "配送地址必须包含国家、省份和城市信息";
+    return '閰嶉€佸湴鍧€蹇呴』鍖呭惈鍥藉銆佺渷浠藉拰鍩庡競淇℃伅';
   }
 
-  // 验证订单商品
+  // 楠岃瘉璁㈠崟鍟嗗搧
   if (!data.orderItems || !Array.isArray(data.orderItems)) {
-    return "订单商品列表不能为空";
+    return '璁㈠崟鍟嗗搧鍒楄〃涓嶈兘涓虹┖';
   }
 
   if (data.orderItems.length === 0) {
-    return "订单商品列表不能为空数组";
+    return '璁㈠崟鍟嗗搧鍒楄〃涓嶈兘涓虹┖鏁扮粍';
   }
 
-  // 验证每个商品项
-  for (let i = 0; i < data.orderItems.length; i++) {
+  // 楠岃瘉姣忎釜鍟嗗搧?  for (let i = 0; i < data.orderItems.length; i++) {
     const item = data.orderItems[i];
     if (!item.productId) {
-      return `第${i + 1}个商品缺少productId`;
+      return `锟?{i + 1}涓晢鍝佺己灏憄roductId`;
     }
     if (!item.productName) {
-      return `第${i + 1}个商品缺少productName`;
+      return `锟?{i + 1}涓晢鍝佺己灏憄roductName`;
     }
     if (!item.quantity || item.quantity <= 0) {
-      return `第${i + 1}个商品quantity必须大于0`;
+      return `锟?{i + 1}涓晢鍝乹uantity蹇呴』澶т簬0`;
     }
     if (!item.unitPrice || item.unitPrice < 0) {
-      return `第${i + 1}个商品unitPrice不能为负数`;
+      return `锟?{i + 1}涓晢鍝乽nitPrice涓嶈兘涓鸿礋鏁癭;
     }
   }
 
-  // 验证配送偏好（可选）
+  // 楠岃瘉閰嶉€佸亸濂斤紙鍙€夛級
   if (data.deliveryPreferences) {
     const prefs = data.deliveryPreferences;
     if (prefs.maxDeliveryTime && prefs.maxDeliveryTime <= 0) {
-      return "最大配送时间必须大于0";
+      return '鏈€澶ч厤閫佹椂闂村繀椤诲ぇ?';
     }
     if (prefs.maxBudget && prefs.maxBudget <= 0) {
-      return "最大预算必须大于0";
+      return '鏈€澶ч绠楀繀椤诲ぇ?';
     }
     if (
       prefs.deliveryPriority &&
-      !["fastest", "cheapest", "balanced"].includes(prefs.deliveryPriority)
+      !['fastest', 'cheapest', 'balanced'].includes(prefs.deliveryPriority)
     ) {
-      return "配送优先级必须是 fastest, cheapest 或 balanced";
+      return '閰嶉€佷紭鍏堢骇蹇呴』?fastest, cheapest 锟?balanced';
     }
   }
 
@@ -136,89 +134,90 @@ function validateOptimizationRequest(data: any): string | null {
 }
 
 /**
- * GET方法 - 健康检查和文档说明
+ * GET鏂规硶 - 鍋ュ悍妫€鏌ュ拰鏂囨。璇存槑
  */
 export async function GET() {
   return NextResponse.json({
     success: true,
-    message: "智能分仓引擎API服务运行正常",
-    endpoint: "/api/warehouse/optimize",
-    method: "POST",
-    description: "根据用户地理位置、各仓库库存、运费和时效，自动选择最优发货仓",
+    message: '鏅鸿兘鍒嗕粨寮曟搸API鏈嶅姟杩愯姝ｅ父',
+    endpoint: '/api/warehouse/optimize',
+    method: 'POST',
+    description: '鏍规嵁鐢ㄦ埛鍦扮悊浣嶇疆銆佸悇浠撳簱搴撳瓨銆佽繍璐瑰拰鏃舵晥锛岃嚜鍔ㄩ€夋嫨鏈€浼樺彂璐т粨',
     request_format: {
       deliveryAddress: {
-        country: "string (必填)",
-        province: "string (必填)",
-        city: "string (必填)",
-        district: "string (可选)",
-        address: "string (必填)",
+        country: 'string (蹇呭～)',
+        province: 'string (蹇呭～)',
+        city: 'string (蹇呭～)',
+        district: 'string (鍙?',
+        address: 'string (蹇呭～)',
         coordinates: {
-          lat: "number (可选)",
-          lng: "number (可选)",
+          lat: 'number (鍙?',
+          lng: 'number (鍙?',
         },
       },
       orderItems: [
         {
-          productId: "string (必填)",
-          productName: "string (必填)",
-          quantity: "number (必填, >0)",
-          unitPrice: "number (必填, >=0)",
-          weight: "number (可选, kg)",
+          productId: 'string (蹇呭～)',
+          productName: 'string (蹇呭～)',
+          quantity: 'number (蹇呭～, >0)',
+          unitPrice: 'number (蹇呭～, >=0)',
+          weight: 'number (鍙? kg)',
           dimensions: {
-            length: "number (可选, cm)",
-            width: "number (可选, cm)",
-            height: "number (可选, cm)",
+            length: 'number (鍙? cm)',
+            width: 'number (鍙? cm)',
+            height: 'number (鍙? cm)',
           },
         },
       ],
       deliveryPreferences: {
-        maxDeliveryTime: "number (可选, 小时)",
-        maxBudget: "number (可选, 元)",
-        deliveryPriority: "string (可选: fastest|cheapest|balanced)",
+        maxDeliveryTime: 'number (鍙? 灏忔椂)',
+        maxBudget: 'number (鍙? 锟?',
+        deliveryPriority: 'string (鍙? fastest|cheapest|balanced)',
       },
     },
     response_format: {
-      success: "boolean",
+      success: 'boolean',
       data: {
         selectedWarehouse: {
-          warehouseId: "string",
-          warehouseName: "string",
-          distance: "number (km)",
-          estimatedDeliveryTime: "number (小时)",
-          totalCost: "number (元)",
-          optimizationScore: "number (0-100)",
+          warehouseId: 'string',
+          warehouseName: 'string',
+          distance: 'number (km)',
+          estimatedDeliveryTime: 'number (灏忔椂)',
+          totalCost: 'number (锟?',
+          optimizationScore: 'number (0-100)',
         },
-        alternativeOptions: "WarehouseSelection[]",
+        alternativeOptions: 'WarehouseSelection[]',
         optimizationMetrics: {
-          improvementRate: "number (%)",
-          processingTime: "number (ms)",
+          improvementRate: 'number (%)',
+          processingTime: 'number (ms)',
         },
         costAnalysis: {
           savings: {
-            percentage: "number (%)",
+            percentage: 'number (%)',
           },
         },
       },
     },
     example_request: {
       deliveryAddress: {
-        country: "中国",
-        province: "上海市",
-        city: "上海市",
-        address: "浦东新区张江路123号",
+        country: '涓浗',
+        province: '涓婃捣?,
+        city: '涓婃捣?,
+        address: '娴︿笢鏂板尯寮犳睙?23锟?,
       },
       orderItems: [
         {
-          productId: "phone-case-001",
-          productName: "iPhone 14 Pro 手机壳",
+          productId: 'phone-case-001',
+          productName: 'iPhone 14 Pro 鎵嬫満?,
           quantity: 2,
           unitPrice: 89.9,
           weight: 0.3,
         },
       ],
       deliveryPreferences: {
-        deliveryPriority: "balanced",
+        deliveryPriority: 'balanced',
       },
     },
   });
 }
+

@@ -4,7 +4,7 @@
  */
 
 // 导出配置文件
-export { 
+export {
   ENTERPRISE_TEST_CONFIG,
   TEST_ENTERPRISE_USERS,
   TEST_DATA,
@@ -12,21 +12,21 @@ export {
   PERMISSIONS,
   PERFORMANCE_BENCHMARKS,
   SECURITY_TEST_CONFIG,
-  REPORT_CONFIG
+  REPORT_CONFIG,
 } from './enterprise.config';
 
 // 导出工具类
-export { 
-  EnterpriseTestUtils, 
-  createEnterpriseTestUtils 
+export {
+  EnterpriseTestUtils,
+  createEnterpriseTestUtils,
 } from './utils/test-utils';
 
-export { 
-  TestDataManager, 
+export {
+  TestDataManager,
   createTestDataManager,
   type TestEnterprise,
   type TestAgent,
-  type TestProcurementOrder
+  type TestProcurementOrder,
 } from './data/test-data-manager';
 
 // 导出测试fixture
@@ -38,7 +38,7 @@ export {
   regularUserTest,
   permissionTest,
   apiTest,
-  expect
+  expect,
 } from './fixtures/enterprise-fixture';
 
 // 导出默认测试对象
@@ -54,5 +54,5 @@ export const TEST_SUITE_INFO = {
   version: ENTERPRISE_E2E_VERSION,
   description: '企业用户端完整功能端到端测试套件',
   author: 'AI Assistant',
-  created: '2026-02-26'
+  created: '2026-02-26',
 };

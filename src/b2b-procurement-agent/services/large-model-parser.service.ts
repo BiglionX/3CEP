@@ -1,9 +1,8 @@
 /**
  * 大模型API集成服务
- * 集成DeepSeek和通义千问双模型
- */
+ * 集成DeepSeek和通义千问双模? */
 
-import { supabase } from "@/lib/supabase";
+import { supabase } from '@/lib/supabase';
 import {
   InputType,
   ParsedProcurementRequest,
@@ -11,8 +10,8 @@ import {
   ProcurementStatus,
   RawProcurementRequest,
   UrgencyLevel,
-} from "../models/procurement.model";
-import { DemandParserService } from "./demand-parser.service";
+} from '../models/procurement.model';
+import { DemandParserService } from './demand-parser.service';
 
 // 大模型API接口定义
 interface ModelAPI {
@@ -40,14 +39,14 @@ interface ModelAnalysisResult {
 // DeepSeek API实现
 class DeepSeekAPI implements ModelAPI {
   private apiKey: string;
-  private baseUrl: string = "https://api.deepseek.com/v1";
+  private baseUrl: string = 'https://api.deepseek.com/v1';
 
   constructor() {
-    this.apiKey = process.env.DEEPSEEK_API_KEY || "";
+    this.apiKey = process.env.DEEPSEEK_API_KEY || '';
   }
 
   getName(): string {
-    return "DeepSeek";
+    return 'DeepSeek';
   }
 
   getCostPerCall(): number {
@@ -60,7 +59,7 @@ class DeepSeekAPI implements ModelAPI {
 
   async analyze(text: string, context?: any): Promise<ModelAnalysisResult> {
     if (!this.isAvailable()) {
-      throw new Error("DeepSeek API密钥未配置");
+      throw new Error('DeepSeek API密钥未配?);
     }
 
     const startTime = Date.now();
@@ -69,26 +68,26 @@ class DeepSeekAPI implements ModelAPI {
       const prompt = this.buildPrompt(text, context);
 
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: "deepseek-chat",
+          model: 'deepseek-chat',
           messages: [
             {
-              role: "system",
+              role: 'system',
               content:
-                "你是一个专业的采购需求分析助手，请严格按照JSON格式返回分析结果",
+                '你是一个专业的采购需求分析助手，请严格按照JSON格式返回分析结果',
             },
             {
-              role: "user",
+              role: 'user',
               content: prompt,
             },
           ],
           temperature: 0.3,
-          response_format: { type: "json_object" },
+          response_format: { type: 'json_object' },
         }),
       });
 
@@ -104,27 +103,22 @@ class DeepSeekAPI implements ModelAPI {
         processingTime: Date.now() - startTime,
       };
     } catch (error) {
-      console.error("DeepSeek分析失败:", error);
+      console.error('DeepSeek分析失败:', error);
       throw error;
     }
   }
 
   private buildPrompt(text: string, context?: any): string {
     return `
-请分析以下采购需求文本，提取关键信息并以JSON格式返回：
-
-需求文本: "${text}"
+请分析以下采购需求文本，提取关键信息并以JSON格式返回?
+需求文? "${text}"
 
 请提取以下信息：
-1. 物品名称和数量
-2. 预算范围
-3. 紧急程度
-4. 特殊要求
+1. 物品名称和数?2. 预算范围
+3. 紧急程?4. 特殊要求
 5. 交付地点
-6. 需求类型判断
-
-返回格式示例：
-{
+6. 需求类型判?
+返回格式示例?{
   "items": [
     {
       "name": "物品名称",
@@ -133,14 +127,14 @@ class DeepSeekAPI implements ModelAPI {
     }
   ],
   "budget": {
-    "min": 最小值,
-    "max": 最大值,
+    "min": 最小?
+    "max": 最大?
     "currency": "货币"
   },
-  "urgency": "紧急程度(low/medium/high/urgent)",
+  "urgency": "紧急程?low/medium/high/urgent)",
   "requirements": ["要求1", "要求2"],
   "delivery_location": "交付地点",
-  "intent_type": "需求类型"
+  "intent_type": "需求类?
 }
 `;
   }
@@ -151,21 +145,21 @@ class DeepSeekAPI implements ModelAPI {
   ): ModelAnalysisResult {
     try {
       const jsonData = JSON.parse(response);
-      const entities: ModelAnalysisResult["entities"] = [];
+      const entities: ModelAnalysisResult['entities'] = [];
 
       // 提取物品实体
       if (jsonData.items) {
         jsonData.items.forEach((item: any, index: number) => {
           entities.push({
             text: item.name,
-            type: "PRODUCT",
+            type: 'PRODUCT',
             confidence: 0.9,
             position: originalText.indexOf(item.name),
           });
 
           entities.push({
             text: item.quantity.toString(),
-            type: "QUANTITY",
+            type: 'QUANTITY',
             confidence: 0.95,
             position: originalText.indexOf(item.quantity.toString()),
           });
@@ -176,7 +170,7 @@ class DeepSeekAPI implements ModelAPI {
       if (jsonData.budget) {
         entities.push({
           text: jsonData.budget.min.toString(),
-          type: "BUDGET_MIN",
+          type: 'BUDGET_MIN',
           confidence: 0.85,
           position: 0,
         });
@@ -184,17 +178,17 @@ class DeepSeekAPI implements ModelAPI {
 
       return {
         entities,
-        intent: jsonData.intent_type || "procurement",
+        intent: jsonData.intent_type || 'procurement',
         sentiment: 0, // DeepSeek主要用于事实分析
         keyInfo: jsonData,
         rawResponse: jsonData,
         processingTime: 0,
       };
     } catch (error) {
-      console.error("解析DeepSeek响应失败:", error);
+      console.error('解析DeepSeek响应失败:', error);
       return {
         entities: [],
-        intent: "unknown",
+        intent: 'unknown',
         sentiment: 0,
         keyInfo: {},
         rawResponse: response,
@@ -207,14 +201,14 @@ class DeepSeekAPI implements ModelAPI {
 // 通义千问API实现
 class QwenAPI implements ModelAPI {
   private apiKey: string;
-  private baseUrl: string = "https://dashscope.aliyuncs.com/api/v1";
+  private baseUrl: string = 'https://dashscope.aliyuncs.com/api/v1';
 
   constructor() {
-    this.apiKey = process.env.QWEN_API_KEY || "";
+    this.apiKey = process.env.QWEN_API_KEY || '';
   }
 
   getName(): string {
-    return "通义千问";
+    return '通义千问';
   }
 
   getCostPerCall(): number {
@@ -227,7 +221,7 @@ class QwenAPI implements ModelAPI {
 
   async analyze(text: string, context?: any): Promise<ModelAnalysisResult> {
     if (!this.isAvailable()) {
-      throw new Error("通义千问API密钥未配置");
+      throw new Error('通义千问API密钥未配?);
     }
 
     const startTime = Date.now();
@@ -238,21 +232,21 @@ class QwenAPI implements ModelAPI {
       const response = await fetch(
         `${this.baseUrl}/services/aigc/text-generation/generation`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
             Authorization: `Bearer ${this.apiKey}`,
-            "Content-Type": "application/json",
-            "X-DashScope-SSE": "enable",
+            'Content-Type': 'application/json',
+            'X-DashScope-SSE': 'enable',
           },
           body: JSON.stringify({
-            model: "qwen-plus",
+            model: 'qwen-plus',
             input: {
               prompt: prompt,
             },
             parameters: {
               temperature: 0.3,
               max_tokens: 1000,
-              result_format: "message",
+              result_format: 'message',
             },
           }),
         }
@@ -270,7 +264,7 @@ class QwenAPI implements ModelAPI {
         processingTime: Date.now() - startTime,
       };
     } catch (error) {
-      console.error("通义千问分析失败:", error);
+      console.error('通义千问分析失败:', error);
       throw error;
     }
   }
@@ -279,22 +273,19 @@ class QwenAPI implements ModelAPI {
     return `
 作为采购需求智能分析专家，请仔细分析以下采购需求：
 
-【需求文本】
-${text}
+【需求文本?${text}
 
-【分析要求】
-请从文本中提取以下关键信息：
+【分析要求?请从文本中提取以下关键信息：
 
 1. 🔍 **物品识别**
    - 具体物品名称
-   - 需求数量
-   - 计量单位
+   - 需求数?   - 计量单位
 
 2. 💰 **预算信息**
    - 预算金额范围
    - 货币类型
 
-3. ⚡ **紧急程度**
+3. �?**紧急程?*
    - 紧急、高、中、低四个等级
 
 4. 📋 **特殊要求**
@@ -306,22 +297,20 @@ ${text}
    - 交付地点
    - 时间要求
 
-请以结构化JSON格式返回分析结果：
-{
+请以结构化JSON格式返回分析结果?{
   "entities": [
     {
-      "text": "提取的文本内容",
+      "text": "提取的文本内?,
       "type": "实体类型",
       "confidence": 0.95,
       "position": 10
     }
   ],
   "intent": "采购意图分类",
-  "urgency": "紧急程度",
+  "urgency": "紧急程?,
   "budget_range": {
-    "min": 最小值,
-    "max": 最大值
-  },
+    "min": 最小?
+    "max": 最大?  },
   "requirements": ["要求1", "要求2"]
 }
 `;
@@ -335,17 +324,17 @@ ${text}
       const jsonData = JSON.parse(response);
       return {
         entities: jsonData.entities || [],
-        intent: jsonData.intent || "procurement",
+        intent: jsonData.intent || 'procurement',
         sentiment: jsonData.sentiment || 0,
         keyInfo: jsonData,
         rawResponse: jsonData,
         processingTime: 0,
       };
     } catch (error) {
-      console.error("解析通义千问响应失败:", error);
+      console.error('解析通义千问响应失败:', error);
       return {
         entities: [],
-        intent: "unknown",
+        intent: 'unknown',
         sentiment: 0,
         keyInfo: {},
         rawResponse: response,
@@ -355,8 +344,7 @@ ${text}
   }
 }
 
-// 模型编排器
-class ModelOrchestrator {
+// 模型编排?class ModelOrchestrator {
   private models: ModelAPI[];
   private ruleBasedParser: DemandParserService;
 
@@ -374,15 +362,13 @@ class ModelOrchestrator {
     fusion: ModelAnalysisResult;
     selectedModel: string;
   }> {
-    // 智能路由选择最佳模型
-    const primaryModel = this.selectPrimaryModel(text);
+    // 智能路由选择最佳模?    const primaryModel = this.selectPrimaryModel(text);
     const secondaryModel = this.models.find(
-      (m) => m.getName() !== primaryModel.getName()
+      m => m.getName() !== primaryModel.getName()
     );
 
     try {
-      // 主模型分析
-      const primaryResult = await primaryModel.analyze(text, context);
+      // 主模型分?      const primaryResult = await primaryModel.analyze(text, context);
 
       // 次要模型分析（可选）
       let secondaryResult: ModelAnalysisResult | undefined;
@@ -408,26 +394,25 @@ class ModelOrchestrator {
         selectedModel: primaryModel.getName(),
       };
     } catch (error) {
-      console.warn("大模型分析失败，回退到规则引擎:", error);
+      console.warn('大模型分析失败，回退到规则引?', error);
       // 回退到纯规则引擎
       const fallbackResult = await this.ruleBasedFallback(text);
       return {
         primary: fallbackResult,
         fusion: fallbackResult,
-        selectedModel: "Rule Engine",
+        selectedModel: 'Rule Engine',
       };
     }
   }
 
   private selectPrimaryModel(text: string): ModelAPI {
-    // 根据文本特征选择最优模型
-    const technicalKeywords = ["服务器", "配置", "处理器", "内存", "存储"];
-    const businessKeywords = ["采购", "预算", "交付", "合同", "供应商"];
+    // 根据文本特征选择最优模?    const technicalKeywords = ['服务?, '配置', '处理?, '内存', '存储'];
+    const businessKeywords = ['采购', '预算', '交付', '合同', '供应?];
 
-    const technicalScore = technicalKeywords.filter((keyword) =>
+    const technicalScore = technicalKeywords.filter(keyword =>
       text.includes(keyword)
     ).length;
-    const businessScore = businessKeywords.filter((keyword) =>
+    const businessScore = businessKeywords.filter(keyword =>
       text.includes(keyword)
     ).length;
 
@@ -441,7 +426,7 @@ class ModelOrchestrator {
 
   private shouldUseSecondary(text: string): boolean {
     // 复杂需求或高价值需求使用双模型
-    return text.length > 100 || text.includes("预算") || text.includes("紧急");
+    return text.length > 100 || text.includes('预算') || text.includes('紧?);
   }
 
   private fuseResults(
@@ -453,8 +438,7 @@ class ModelOrchestrator {
       return primary;
     }
 
-    // 置信度加权融合
-    const primaryWeight = 0.6;
+    // 置信度加权融?    const primaryWeight = 0.6;
     const secondaryWeight = 0.4;
 
     // 融合实体识别结果
@@ -466,8 +450,7 @@ class ModelOrchestrator {
     // 融合关键信息
     const fusedKeyInfo = this.fuseKeyInfo(primary.keyInfo, secondary.keyInfo);
 
-    // 计算融合后的置信度
-    const fusedConfidence = Math.min(
+    // 计算融合后的置信?    const fusedConfidence = Math.min(
       1,
       (primary.entities.reduce((sum, e) => sum + e.confidence, 0) /
         Math.max(primary.entities.length, 1)) *
@@ -479,13 +462,13 @@ class ModelOrchestrator {
 
     return {
       entities: fusedEntities,
-      intent: primary.intent || secondary.intent || "procurement",
+      intent: primary.intent || secondary.intent || 'procurement',
       sentiment: (primary.sentiment + secondary.sentiment) / 2,
       keyInfo: fusedKeyInfo,
       rawResponse: {
         primary: primary.rawResponse,
         secondary: secondary.rawResponse,
-        fusion_method: "weighted_average",
+        fusion_method: 'weighted_average',
       },
       processingTime: Math.max(
         primary.processingTime,
@@ -498,18 +481,17 @@ class ModelOrchestrator {
    * 融合实体识别结果
    */
   private fuseEntities(
-    primaryEntities: ModelAnalysisResult["entities"],
-    secondaryEntities: ModelAnalysisResult["entities"]
-  ): ModelAnalysisResult["entities"] {
-    const fused: ModelAnalysisResult["entities"] = [];
+    primaryEntities: ModelAnalysisResult['entities'],
+    secondaryEntities: ModelAnalysisResult['entities']
+  ): ModelAnalysisResult['entities'] {
+    const fused: ModelAnalysisResult['entities'] = [];
 
-    // 添加主模型的所有实体
-    fused.push(...primaryEntities);
+    // 添加主模型的所有实?    fused.push(...primaryEntities);
 
     // 添加次模型的高置信度实体（避免重复）
-    secondaryEntities.forEach((secEntity) => {
+    secondaryEntities.forEach(secEntity => {
       const isDuplicate = primaryEntities.some(
-        (primEntity) =>
+        primEntity =>
           primEntity.text === secEntity.text &&
           primEntity.type === secEntity.type
       );
@@ -517,8 +499,7 @@ class ModelOrchestrator {
       if (!isDuplicate && secEntity.confidence > 0.7) {
         fused.push({
           ...secEntity,
-          confidence: secEntity.confidence * 0.8, // 降低次模型实体的置信度
-        });
+          confidence: secEntity.confidence * 0.8, // 降低次模型实体的置信?        });
       }
     });
 
@@ -540,7 +521,7 @@ class ModelOrchestrator {
       ...Object.keys(secondaryInfo),
     ]);
 
-    allKeys.forEach((key) => {
+    allKeys.forEach(key => {
       const primaryValue = primaryInfo[key];
       const secondaryValue = secondaryInfo[key];
 
@@ -550,8 +531,8 @@ class ModelOrchestrator {
           // 数组合并去重
           fused[key] = [...new Set([...primaryValue, ...secondaryValue])];
         } else if (
-          typeof primaryValue === "object" &&
-          typeof secondaryValue === "object"
+          typeof primaryValue === 'object' &&
+          typeof secondaryValue === 'object'
         ) {
           // 对象合并
           fused[key] = { ...primaryValue, ...secondaryValue };
@@ -560,8 +541,7 @@ class ModelOrchestrator {
           fused[key] = primaryValue;
         }
       } else {
-        // 只有一个模型有值
-        fused[key] = primaryValue !== undefined ? primaryValue : secondaryValue;
+        // 只有一个模型有?        fused[key] = primaryValue !== undefined ? primaryValue : secondaryValue;
       }
     });
 
@@ -571,9 +551,9 @@ class ModelOrchestrator {
   private async ruleBasedFallback(text: string): Promise<ModelAnalysisResult> {
     // 使用现有规则引擎作为兜底
     const mockRawRequest: RawProcurementRequest = {
-      id: "fallback_" + Date.now(),
-      companyId: "fallback",
-      requesterId: "fallback",
+      id: 'fallback_' + Date.now(),
+      companyId: 'fallback',
+      requesterId: 'fallback',
       input: text,
       inputType: InputType.TEXT,
       rawDescription: text,
@@ -584,13 +564,13 @@ class ModelOrchestrator {
     const ruleResult = await this.ruleBasedParser.parseDemand(mockRawRequest);
 
     return {
-      entities: ruleResult.items.map((item) => ({
+      entities: ruleResult.items.map(item => ({
         text: item.productName,
-        type: "PRODUCT",
+        type: 'PRODUCT',
         confidence: ruleResult.aiConfidence / 100,
         position: text.indexOf(item.productName),
       })),
-      intent: "procurement",
+      intent: 'procurement',
       sentiment: 0,
       keyInfo: {
         items: ruleResult.items,
@@ -628,8 +608,7 @@ export class LargeModelProcurementService {
           }
         );
 
-      // 构建最终结果
-      const parsedRequest = this.buildParsedRequest(
+      // 构建最终结?      const parsedRequest = this.buildParsedRequest(
         fusion,
         rawRequest,
         selectedModel
@@ -638,7 +617,7 @@ export class LargeModelProcurementService {
       // 记录处理日志
       await this.logProcessing(
         rawRequest.id,
-        "large_model_parsing",
+        'large_model_parsing',
         {
           selectedModel,
           primaryResult: primary,
@@ -652,12 +631,12 @@ export class LargeModelProcurementService {
 
       return parsedRequest;
     } catch (error) {
-      console.error("大模型解析失败:", error);
+      console.error('大模型解析失?', error);
 
       await this.logProcessing(
         rawRequest.id,
-        "large_model_parsing",
-        { error: error instanceof Error ? error.message : "未知错误" },
+        'large_model_parsing',
+        { error: error instanceof Error ? error.message : '未知错误' },
         null,
         Date.now() - startTime,
         false
@@ -674,19 +653,15 @@ export class LargeModelProcurementService {
   ): ParsedProcurementRequest {
     const items: ProcurementItem[] = [];
 
-    // 从分析结果构建物品列表
-    const productEntities = analysis.entities.filter(
-      (e) => e.type === "PRODUCT"
-    );
+    // 从分析结果构建物品列?    const productEntities = analysis.entities.filter(e => e.type === 'PRODUCT');
     const quantityEntities = analysis.entities.filter(
-      (e) => e.type === "QUANTITY"
+      e => e.type === 'QUANTITY'
     );
 
-    // 如果有明确的产品实体，使用它们
-    if (productEntities.length > 0) {
+    // 如果有明确的产品实体，使用它?    if (productEntities.length > 0) {
       productEntities.forEach((product, index) => {
         const quantity = quantityEntities[index] || {
-          text: "1",
+          text: '1',
           confidence: 0.5,
         };
 
@@ -703,8 +678,7 @@ export class LargeModelProcurementService {
       });
     }
 
-    // 如果没有识别到物品，尝试从JSON结果中提取
-    if (items.length === 0 && analysis.keyInfo.items) {
+    // 如果没有识别到物品，尝试从JSON结果中提?    if (items.length === 0 && analysis.keyInfo.items) {
       const jsonItems = Array.isArray(analysis.keyInfo.items)
         ? analysis.keyInfo.items
         : [analysis.keyInfo.items];
@@ -715,14 +689,14 @@ export class LargeModelProcurementService {
             productId: `prod_${this.generateProductId(item.name)}`,
             productName: item.name,
             category: item.category || this.categorizeProduct(item.name),
-            quantity: this.parseQuantity(item.quantity || "1"),
+            quantity: this.parseQuantity(item.quantity || '1'),
             unit:
               item.unit ||
               this.inferUnit(
                 item.category || this.categorizeProduct(item.name)
               ),
-            specifications: item.specifications || "",
-            requiredQuality: item.quality || "standard",
+            specifications: item.specifications || '',
+            requiredQuality: item.quality || 'standard',
           });
         }
       });
@@ -732,16 +706,16 @@ export class LargeModelProcurementService {
     if (items.length === 0) {
       items.push({
         id: `item_default_${Date.now()}`,
-        productId: "generic_item",
-        productName: "通用物品",
-        category: "general",
+        productId: 'generic_item',
+        productName: '通用物品',
+        category: 'general',
         quantity: 1,
-        unit: "件",
+        unit: '�?,
         specifications:
           rawRequest.rawDescription ||
           rawRequest.extractedContent ||
           rawRequest.input,
-        requiredQuality: "standard",
+        requiredQuality: 'standard',
       });
     }
 
@@ -765,7 +739,7 @@ export class LargeModelProcurementService {
         confidenceLevel: this.determineConfidenceLevel(
           this.calculateConfidence(analysis)
         ),
-        processingSteps: ["大模型分析", "结果解析", "结构化转换"],
+        processingSteps: ['大模型分?, '结果解析', '结构化转?],
       },
       status: ProcurementStatus.PROCESSING,
       aiConfidence: this.calculateConfidence(analysis),
@@ -778,29 +752,27 @@ export class LargeModelProcurementService {
     // 生成标准化的产品ID
     return productName
       .toLowerCase()
-      .replace(/[^a-z0-9\u4e00-\u9fa5]/g, "_")
+      .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '_')
       .substring(0, 50);
   }
 
   private parseQuantity(quantityText: string): number {
-    // 解析数量，处理中文数字
-    const chineseNumbers: Record<string, number> = {
+    // 解析数量，处理中文数?    const chineseNumbers: Record<string, number> = {
       一: 1,
-      二: 2,
-      三: 3,
-      四: 4,
-      五: 5,
-      六: 6,
-      七: 7,
-      八: 8,
-      九: 9,
-      十: 10,
+      �? 2,
+      �? 3,
+      �? 4,
+      �? 5,
+      �? 6,
+      �? 7,
+      �? 8,
+      �? 9,
+      �? 10,
     };
 
     const lowerText = quantityText.toLowerCase();
 
-    // 检查中文数字
-    for (const [chinese, num] of Object.entries(chineseNumbers)) {
+    // 检查中文数?    for (const [chinese, num] of Object.entries(chineseNumbers)) {
       if (lowerText.includes(chinese)) {
         return num;
       }
@@ -824,48 +796,47 @@ export class LargeModelProcurementService {
 
     // 查找与产品相关的规格实体
     const specEntities = analysis.entities.filter(
-      (e) => e.type === "SPECIFICATION" || e.type === "BRAND"
+      e => e.type === 'SPECIFICATION' || e.type === 'BRAND'
     );
 
-    specEntities.forEach((entity) => {
+    specEntities.forEach(entity => {
       specs.push(entity.text);
     });
 
-    // 从keyInfo中提取规格
-    if (analysis.keyInfo.requirements) {
+    // 从keyInfo中提取规?    if (analysis.keyInfo.requirements) {
       const reqArray = Array.isArray(analysis.keyInfo.requirements)
         ? analysis.keyInfo.requirements
         : [analysis.keyInfo.requirements];
 
-      reqArray.forEach((req) => {
-        if (typeof req === "string" && req.length > 0) {
+      reqArray.forEach(req => {
+        if (typeof req === 'string' && req.length > 0) {
           specs.push(req);
         }
       });
     }
 
-    return specs.join("; ") || "标准规格";
+    return specs.join('; ') || '标准规格';
   }
 
   private extractQualityRequirement(analysis: ModelAnalysisResult): string {
     // 提取质量要求
-    const qualityKeywords = ["正品", "原厂", "品牌", "认证", "质量"];
+    const qualityKeywords = ['正品', '原厂', '品牌', '认证', '质量'];
     const text = JSON.stringify(analysis.keyInfo).toLowerCase();
 
     for (const keyword of qualityKeywords) {
       if (text.includes(keyword)) {
-        return "high";
+        return 'high';
       }
     }
 
-    return "standard";
+    return 'standard';
   }
 
   private extractDeliveryDeadline(
     analysis: ModelAnalysisResult
   ): Date | undefined {
     // 提取交付截止时间
-    if (analysis.keyInfo.delivery_info?.deadline) {
+    if (analysis.keyInfo?.deadline) {
       try {
         return new Date(analysis.keyInfo.delivery_info.deadline);
       } catch {
@@ -877,11 +848,10 @@ export class LargeModelProcurementService {
 
   private extractDeliveryLocation(
     analysis: ModelAnalysisResult
-  ): ParsedProcurementRequest["deliveryLocation"] {
+  ): ParsedProcurementRequest['deliveryLocation'] {
     // 提取交付地点
     const location =
-      analysis.keyInfo.delivery_info?.location ||
-      analysis.keyInfo.delivery_location;
+      analysis.keyInfo?.location || analysis.keyInfo.delivery_location;
     if (location) {
       return {
         address: location,
@@ -891,56 +861,56 @@ export class LargeModelProcurementService {
   }
 
   private determineConfidenceLevel(confidence: number): string {
-    if (confidence >= 90) return "Excellent";
-    if (confidence >= 80) return "Good";
-    if (confidence >= 70) return "Fair";
-    if (confidence >= 60) return "Poor";
-    return "Very Poor";
+    if (confidence >= 90) return 'Excellent';
+    if (confidence >= 80) return 'Good';
+    if (confidence >= 70) return 'Fair';
+    if (confidence >= 60) return 'Poor';
+    return 'Very Poor';
   }
 
   private categorizeProduct(productText: string): string {
     const lowerText = productText.toLowerCase();
 
     if (
-      lowerText.includes("电脑") ||
-      lowerText.includes("计算机") ||
-      lowerText.includes("笔记本")
+      lowerText.includes('电脑') ||
+      lowerText.includes('计算?) ||
+      lowerText.includes('笔记?)
     ) {
-      return "computer";
-    } else if (lowerText.includes("手机") || lowerText.includes("移动")) {
-      return "mobile";
-    } else if (lowerText.includes("服务器") || lowerText.includes("主机")) {
-      return "server";
-    } else if (lowerText.includes("显示器") || lowerText.includes("屏幕")) {
-      return "display";
+      return 'computer';
+    } else if (lowerText.includes('手机') || lowerText.includes('移动')) {
+      return 'mobile';
+    } else if (lowerText.includes('服务?) || lowerText.includes('主机')) {
+      return 'server';
+    } else if (lowerText.includes('显示?) || lowerText.includes('屏幕')) {
+      return 'display';
     }
 
-    return "general";
+    return 'general';
   }
 
   private inferUnit(category: string): string {
     const unitMap: Record<string, string> = {
-      computer: "台",
-      mobile: "部",
-      server: "台",
-      display: "台",
-      printer: "台",
-      network: "台",
-      storage: "个",
+      computer: '�?,
+      mobile: '�?,
+      server: '�?,
+      display: '�?,
+      printer: '�?,
+      network: '�?,
+      storage: '�?,
     };
 
-    return unitMap[category] || "件";
+    return unitMap[category] || '�?;
   }
 
   private extractUrgency(analysis: ModelAnalysisResult): UrgencyLevel {
-    const urgency = analysis.keyInfo.urgency?.toLowerCase();
+    const urgency = analysis.keyInfo?.toLowerCase();
 
     switch (urgency) {
-      case "urgent":
+      case 'urgent':
         return UrgencyLevel.URGENT;
-      case "high":
+      case 'high':
         return UrgencyLevel.HIGH;
-      case "low":
+      case 'low':
         return UrgencyLevel.LOW;
       default:
         return UrgencyLevel.MEDIUM;
@@ -949,13 +919,13 @@ export class LargeModelProcurementService {
 
   private extractBudget(
     analysis: ModelAnalysisResult
-  ): ParsedProcurementRequest["budgetRange"] {
+  ): ParsedProcurementRequest['budgetRange'] {
     const budget = analysis.keyInfo.budget_range;
     if (budget && budget.min && budget.max) {
       return {
         min: budget.min,
         max: budget.max,
-        currency: "CNY",
+        currency: 'CNY',
       };
     }
     return undefined;
@@ -966,8 +936,7 @@ export class LargeModelProcurementService {
   }
 
   private calculateConfidence(analysis: ModelAnalysisResult): number {
-    // 基于实体置信度和模型选择计算总体置信度
-    const avgEntityConfidence =
+    // 基于实体置信度和模型选择计算总体置信?    const avgEntityConfidence =
       analysis.entities.length > 0
         ? analysis.entities.reduce((sum, e) => sum + e.confidence, 0) /
           analysis.entities.length
@@ -987,7 +956,7 @@ export class LargeModelProcurementService {
     errorMessage?: string
   ): Promise<void> {
     try {
-      await this.supabase.from("processing_logs").insert({
+      (await this.supabase.from('processing_logs').insert({
         id: `log_${Date.now()} as any_${Math.random().toString(36).substr(2, 9)}`,
         request_id: requestId,
         processing_step: step,
@@ -997,16 +966,14 @@ export class LargeModelProcurementService {
         success: success,
         error_message: errorMessage,
         timestamp: new Date(),
-      });
+      })) as any;
     } catch (error) {
-      console.error("记录处理日志失败:", error);
+      console.error('记录处理日志失败:', error);
     }
   }
 
   /**
-   * 健康检查方法
-   * 检查大模型服务的可用性和配置状态
-   */
+   * 健康检查方?   * 检查大模型服务的可用性和配置状?   */
   async healthCheck(): Promise<{
     healthy: boolean;
     message: string;
@@ -1022,7 +989,7 @@ export class LargeModelProcurementService {
       const deepSeekAPI = new DeepSeekAPI();
       const deepSeekHealthy = deepSeekAPI.isAvailable();
       healthDetails.models.push({
-        name: "DeepSeek",
+        name: 'DeepSeek',
         available: deepSeekHealthy,
         costPerCall: deepSeekAPI.getCostPerCall(),
       });
@@ -1031,18 +998,17 @@ export class LargeModelProcurementService {
       const qwenAPI = new QwenAPI();
       const qwenHealthy = qwenAPI.isAvailable();
       healthDetails.models.push({
-        name: "通义千问",
+        name: '通义千问',
         available: qwenHealthy,
         costPerCall: qwenAPI.getCostPerCall(),
       });
 
-      // 检查至少有一个模型可用
-      const atLeastOneAvailable = deepSeekHealthy || qwenHealthy;
+      // 检查至少有一个模型可?      const atLeastOneAvailable = deepSeekHealthy || qwenHealthy;
 
       if (!atLeastOneAvailable) {
         return {
           healthy: false,
-          message: "没有配置可用的大模型API密钥",
+          message: '没有配置可用的大模型API密钥',
           details: healthDetails,
         };
       }
@@ -1050,8 +1016,8 @@ export class LargeModelProcurementService {
       // 检查数据库连接
       try {
         const { data, error } = await this.supabase
-          .from("system_config")
-          .select("key")
+          .from('system_config')
+          .select('key')
           .limit(1);
 
         if (error) {
@@ -1062,20 +1028,20 @@ export class LargeModelProcurementService {
       } catch (dbError) {
         healthDetails.database = {
           connected: false,
-          error: dbError instanceof Error ? dbError.message : "未知数据库错误",
+          error: dbError instanceof Error ? dbError.message : '未知数据库错?,
         };
       }
 
       return {
         healthy: true,
-        message: "大模型服务运行正常",
+        message: '大模型服务运行正?,
         details: healthDetails,
       };
     } catch (error) {
       return {
         healthy: false,
-        message: `健康检查失败: ${
-          error instanceof Error ? error.message : "未知错误"
+        message: `健康检查失? ${
+          error instanceof Error ? error.message : '未知错误'
         }`,
       };
     }

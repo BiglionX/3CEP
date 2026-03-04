@@ -1,23 +1,24 @@
-"use client";
+﻿'use client';
 
-import { useState, useRef } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  FileText, 
-  Upload, 
-  Plus, 
-  Edit, 
-  Trash2, 
+import { useState, useRef } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  FileText,
+  Upload,
+  Plus,
+  Edit,
+  Trash2,
   Eye,
   Download,
   CheckCircle,
@@ -29,8 +30,8 @@ import {
   FileSpreadsheet,
   FileText as FileTextIcon,
   Archive,
-  Search
-} from "lucide-react";
+  Search,
+} from 'lucide-react';
 
 interface Document {
   id: string;
@@ -57,7 +58,7 @@ export default function EnterpriseDocumentsManagement() {
     {
       id: '1',
       title: '营业执照副本',
-      description: '企业法人营业执照副本扫描件',
+      description: '企业法人营业执照副本扫描?,
       file_name: 'business_license_2024.pdf',
       file_size: 2456789,
       file_type: 'application/pdf',
@@ -66,11 +67,11 @@ export default function EnterpriseDocumentsManagement() {
       version: '1.0',
       status: 'approved',
       tags: ['营业执照', '2024'],
-      uploaded_by: '张经理',
+      uploaded_by: '张经?,
       uploaded_at: '2024-01-15T10:30:00Z',
-      reviewed_by: '李主管',
+      reviewed_by: '李主?,
       reviewed_at: '2024-01-16T14:20:00Z',
-      access_level: 'internal'
+      access_level: 'internal',
     },
     {
       id: '2',
@@ -84,9 +85,9 @@ export default function EnterpriseDocumentsManagement() {
       version: '1.0',
       status: 'pending',
       tags: ['认证', '质量管理'],
-      uploaded_by: '王专员',
+      uploaded_by: '王专?,
       uploaded_at: '2024-01-20T09:15:00Z',
-      access_level: 'private'
+      access_level: 'private',
     },
     {
       id: '3',
@@ -94,23 +95,26 @@ export default function EnterpriseDocumentsManagement() {
       description: '2023年度财务审计报告',
       file_name: 'annual_report_2023.xlsx',
       file_size: 3245678,
-      file_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      file_type:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       file_extension: 'xlsx',
       category: 'report',
       version: '1.0',
       status: 'approved',
       tags: ['财务', '年报', '2023'],
-      uploaded_by: '财务部',
+      uploaded_by: '财务?,
       uploaded_at: '2024-01-10T16:45:00Z',
-      reviewed_by: '审计部',
+      reviewed_by: '审计?,
       reviewed_at: '2024-01-12T11:30:00Z',
-      access_level: 'internal'
-    }
+      access_level: 'internal',
+    },
   ]);
 
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(
+    null
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -123,7 +127,7 @@ export default function EnterpriseDocumentsManagement() {
     version: '1.0',
     access_level: 'private',
     tags: '',
-    file_name: ''
+    file_name: '',
   });
 
   const categoryOptions = [
@@ -132,21 +136,47 @@ export default function EnterpriseDocumentsManagement() {
     { value: 'contract', label: '合同协议', icon: '📝' },
     { value: 'report', label: '报告文档', icon: '📊' },
     { value: 'financial', label: '财务资料', icon: '💰' },
-    { value: 'other', label: '其他资料', icon: '📁' }
+    { value: 'other', label: '其他资料', icon: '📁' },
   ];
 
   const statusOptions = [
-    { value: 'pending', label: '待审核', color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-    { value: 'approved', label: '已批准', color: 'bg-green-100 text-green-800', icon: CheckCircle },
-    { value: 'rejected', label: '已拒绝', color: 'bg-red-100 text-red-800', icon: XCircle },
-    { value: 'archived', label: '已归档', color: 'bg-gray-100 text-gray-800', icon: Archive }
+    {
+      value: 'pending',
+      label: '待审?,
+      color: 'bg-yellow-100 text-yellow-800',
+      icon: Clock,
+    },
+    {
+      value: 'approved',
+      label: '已批?,
+      color: 'bg-green-100 text-green-800',
+      icon: CheckCircle,
+    },
+    {
+      value: 'rejected',
+      label: '已拒?,
+      color: 'bg-red-100 text-red-800',
+      icon: XCircle,
+    },
+    {
+      value: 'archived',
+      label: '已归?,
+      color: 'bg-gray-100 text-gray-800',
+      icon: Archive,
+    },
   ];
 
   const getFileIcon = (fileType: string, extension: string) => {
-    if (fileType.startsWith('image/')) return <Image className="w-8 h-8 text-blue-500" />;
-    if (fileType.includes('spreadsheet') || extension === 'xlsx' || extension === 'xls') 
+    if (fileType.startsWith('image/'))
+      return <Image className="w-8 h-8 text-blue-500" />;
+    if (
+      fileType.includes('spreadsheet') ||
+      extension === 'xlsx' ||
+      extension === 'xls'
+    )
       return <FileSpreadsheet className="w-8 h-8 text-green-500" />;
-    if (fileType === 'application/pdf') return <FileTextIcon className="w-8 h-8 text-red-500" />;
+    if (fileType === 'application/pdf')
+      return <FileTextIcon className="w-8 h-8 text-red-500" />;
     return <File className="w-8 h-8 text-gray-500" />;
   };
 
@@ -167,7 +197,9 @@ export default function EnterpriseDocumentsManagement() {
     if (!option) return null;
     const IconComponent = option.icon;
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center ${option.color}`}>
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium flex items-center ${option.color}`}
+      >
         <IconComponent className="w-3 h-3 mr-1" />
         {option.label}
       </span>
@@ -185,10 +217,14 @@ export default function EnterpriseDocumentsManagement() {
   };
 
   const filteredDocuments = documents.filter(doc => {
-    const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesCategory = categoryFilter === 'all' || doc.category === categoryFilter;
+    const matchesSearch =
+      doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doc.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doc.tags.some(tag =>
+        tag.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    const matchesCategory =
+      categoryFilter === 'all' || doc.category === categoryFilter;
     const matchesStatus = statusFilter === 'all' || doc.status === statusFilter;
     return matchesSearch && matchesCategory && matchesStatus;
   });
@@ -198,7 +234,7 @@ export default function EnterpriseDocumentsManagement() {
     if (!files || files.length === 0) return;
 
     const file = files[0];
-    
+
     // 验证文件类型
     const allowedTypes = [
       'application/pdf',
@@ -208,30 +244,28 @@ export default function EnterpriseDocumentsManagement() {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'image/jpeg',
       'image/png',
-      'image/gif'
+      'image/gif',
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      alert('不支持的文件类型。请上传 PDF、Word、Excel 或图片文件。');
+      alert('不支持的文件类型。请上传 PDF、Word、Excel 或图片文件?);
       return;
     }
 
     // 验证文件大小 (10MB 限制)
     if (file.size > 10 * 1024 * 1024) {
-      alert('文件大小超过 10MB 限制。');
+      alert('文件大小超过 10MB 限制?);
       return;
     }
 
-    // 设置文件名
-    setUploadData(prev => ({
+    // 设置文件?    setUploadData(prev => ({
       ...prev,
-      title: prev.title || file.name.replace(/\.[^/.]+$/, ""),
-      file_name: file.name
+      title: prev.title || file.name.replace(/\.[^/.]+$/, ''),
+      file_name: file.name,
     }));
 
     // 这里应该调用实际的上传API
-    console.log('准备上传文件:', file);
-  };
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('准备上传文件:', file)};
 
   const triggerFileUpload = () => {
     if (fileInputRef.current) {
@@ -241,23 +275,26 @@ export default function EnterpriseDocumentsManagement() {
 
   const submitUpload = () => {
     if (!uploadData.title || !uploadData.category) {
-      alert('请填写必要信息');
+      alert('请填写必要信?);
       return;
     }
 
-    // 创建新文档记录
-    const newDocument: Document = {
+    // 创建新文档记?    const newDocument: Document = {
       id: (documents.length + 1).toString(),
       ...uploadData,
-      file_name: uploadData.file_name || '未命名文件',
-      file_size: 0, // 实际上传时获取
-      file_type: 'application/octet-stream', // 实际上传时获取
-      file_extension: uploadData.file_name.split('.').pop() || '',
+      file_name: uploadData.file_name || '未命名文?,
+      file_size: 0, // 实际上传时获?      file_type: 'application/octet-stream', // 实际上传时获?      file_extension: uploadData.file_name.split('.').pop() || '',
       status: 'pending',
-      tags: uploadData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+      tags: uploadData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(Boolean),
       uploaded_by: '当前用户',
       uploaded_at: new Date().toISOString(),
-      access_level: uploadData.access_level as 'private' | 'internal' | 'public'
+      access_level: uploadData.access_level as
+        | 'private'
+        | 'internal'
+        | 'public',
     };
 
     setDocuments([...documents, newDocument]);
@@ -274,7 +311,7 @@ export default function EnterpriseDocumentsManagement() {
       version: '1.0',
       access_level: 'private',
       tags: '',
-      file_name: ''
+      file_name: '',
     });
   };
 
@@ -290,11 +327,11 @@ export default function EnterpriseDocumentsManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 顶部操作栏 */}
+      {/* 顶部操作?*/}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">企业资料管理</h2>
-          <p className="text-gray-600 mt-1">上传和管理企业相关资质文件</p>
+          <p className="text-gray-600 mt-1">上传和管理企业相关资质文?/p>
         </div>
         <Button onClick={() => setShowUploadModal(true)}>
           <Upload className="w-4 h-4 mr-2" />
@@ -302,7 +339,7 @@ export default function EnterpriseDocumentsManagement() {
         </Button>
       </div>
 
-      {/* 搜索和筛选 */}
+      {/* 搜索和筛?*/}
       <Card>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -311,7 +348,7 @@ export default function EnterpriseDocumentsManagement() {
               <Input
                 placeholder="搜索文件..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -333,10 +370,10 @@ export default function EnterpriseDocumentsManagement() {
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="审核状态" />
+                <SelectValue placeholder="审核状? />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状态</SelectItem>
+                <SelectItem value="all">全部状?/SelectItem>
                 {statusOptions.map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     <span className="flex items-center">
@@ -349,8 +386,7 @@ export default function EnterpriseDocumentsManagement() {
             </Select>
             <div className="flex items-center justify-end">
               <span className="text-sm text-gray-500">
-                共 {filteredDocuments.length} 个文件
-              </span>
+                �?{filteredDocuments.length} 个文?              </span>
             </div>
           </div>
         </CardContent>
@@ -358,23 +394,29 @@ export default function EnterpriseDocumentsManagement() {
 
       {/* 文件列表 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredDocuments.map((doc) => (
+        {filteredDocuments.map(doc => (
           <Card key={doc.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
                 <div className="flex items-center space-x-3">
                   {getFileIcon(doc.file_type, doc.file_extension)}
                   <div>
-                    <CardTitle className="text-base line-clamp-2">{doc.title}</CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">{doc.file_name}</p>
+                    <CardTitle className="text-base line-clamp-2">
+                      {doc.title}
+                    </CardTitle>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {doc.file_name}
+                    </p>
                   </div>
                 </div>
                 {getStatusBadge(doc.status)}
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">{doc.description}</p>
-              
+              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                {doc.description}
+              </p>
+
               <div className="flex flex-wrap gap-2 mb-3">
                 {getCategoryBadge(doc.category)}
                 <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -388,7 +430,10 @@ export default function EnterpriseDocumentsManagement() {
               {doc.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-3">
                   {doc.tags.map((tag, index) => (
-                    <span key={index} className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                    <span
+                      key={index}
+                      className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800"
+                    >
                       #{tag}
                     </span>
                   ))}
@@ -396,23 +441,23 @@ export default function EnterpriseDocumentsManagement() {
               )}
 
               <div className="text-xs text-gray-500 mb-3">
-                上传者: {doc.uploaded_by}
+                上传? {doc.uploaded_by}
                 <br />
                 上传时间: {formatDate(doc.uploaded_at)}
               </div>
 
               <div className="flex space-x-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="flex-1"
                   onClick={() => viewDocument(doc)}
                 >
                   <Eye className="w-4 h-4 mr-1" />
                   查看
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => downloadDocument(doc)}
                 >
@@ -445,7 +490,7 @@ export default function EnterpriseDocumentsManagement() {
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold">上传企业资料</h3>
-                <button 
+                <button
                   onClick={() => {
                     setShowUploadModal(false);
                     resetUploadForm();
@@ -459,7 +504,7 @@ export default function EnterpriseDocumentsManagement() {
               <div className="space-y-6">
                 <div>
                   <Label htmlFor="file-upload">选择文件 *</Label>
-                  <div 
+                  <div
                     className="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 cursor-pointer transition-colors"
                     onClick={triggerFileUpload}
                   >
@@ -469,10 +514,10 @@ export default function EnterpriseDocumentsManagement() {
                         <span className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500">
                           上传文件
                         </span>
-                        <p className="pl-1">或将文件拖拽到这里</p>
+                        <p className="pl-1">或将文件拖拽到这?/p>
                       </div>
                       <p className="text-xs text-gray-500">
-                        支持 PDF, Word, Excel, 图片格式，最大 10MB
+                        支持 PDF, Word, Excel, 图片格式，最?10MB
                       </p>
                     </div>
                   </div>
@@ -491,17 +536,21 @@ export default function EnterpriseDocumentsManagement() {
                     <Input
                       id="title"
                       value={uploadData.title}
-                      onChange={(e) => setUploadData({...uploadData, title: e.target.value})}
-                      placeholder="请输入文件标题"
+                      onChange={e =>
+                        setUploadData({ ...uploadData, title: e.target.value })
+                      }
+                      placeholder="请输入文件标?
                       required
                     />
                   </div>
 
                   <div>
                     <Label htmlFor="category">文件分类 *</Label>
-                    <Select 
+                    <Select
                       value={uploadData.category}
-                      onValueChange={(value) => setUploadData({...uploadData, category: value})}
+                      onValueChange={value =>
+                        setUploadData({ ...uploadData, category: value })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="选择分类" />
@@ -525,28 +574,40 @@ export default function EnterpriseDocumentsManagement() {
                   <Textarea
                     id="description"
                     value={uploadData.description}
-                    onChange={(e) => setUploadData({...uploadData, description: e.target.value})}
-                    placeholder="请输入文件描述"
+                    onChange={e =>
+                      setUploadData({
+                        ...uploadData,
+                        description: e.target.value,
+                      })
+                    }
+                    placeholder="请输入文件描?
                     rows={3}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="version">版本号</Label>
+                    <Label htmlFor="version">版本?/Label>
                     <Input
                       id="version"
                       value={uploadData.version}
-                      onChange={(e) => setUploadData({...uploadData, version: e.target.value})}
-                      placeholder="如: 1.0"
+                      onChange={e =>
+                        setUploadData({
+                          ...uploadData,
+                          version: e.target.value,
+                        })
+                      }
+                      placeholder="�? 1.0"
                     />
                   </div>
 
                   <div>
                     <Label htmlFor="access_level">访问权限</Label>
-                    <Select 
+                    <Select
                       value={uploadData.access_level}
-                      onValueChange={(value) => setUploadData({...uploadData, access_level: value})}
+                      onValueChange={value =>
+                        setUploadData({ ...uploadData, access_level: value })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -565,7 +626,9 @@ export default function EnterpriseDocumentsManagement() {
                   <Input
                     id="tags"
                     value={uploadData.tags}
-                    onChange={(e) => setUploadData({...uploadData, tags: e.target.value})}
+                    onChange={e =>
+                      setUploadData({ ...uploadData, tags: e.target.value })
+                    }
                     placeholder="输入标签，用逗号分隔"
                   />
                 </div>
@@ -598,7 +661,7 @@ export default function EnterpriseDocumentsManagement() {
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold">文件预览</h3>
-                <button 
+                <button
                   onClick={() => {
                     setShowPreviewModal(false);
                     setSelectedDocument(null);
@@ -613,35 +676,50 @@ export default function EnterpriseDocumentsManagement() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-3">
-                      {getFileIcon(selectedDocument.file_type, selectedDocument.file_extension)}
+                      {getFileIcon(
+                        selectedDocument.file_type,
+                        selectedDocument.file_extension
+                      )}
                       <span>{selectedDocument.title}</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-sm text-gray-500">文件名</Label>
-                        <p className="font-medium">{selectedDocument.file_name}</p>
+                        <Label className="text-sm text-gray-500">文件?/Label>
+                        <p className="font-medium">
+                          {selectedDocument.file_name}
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">文件大小</Label>
-                        <p className="font-medium">{formatFileSize(selectedDocument.file_size)}</p>
+                        <Label className="text-sm text-gray-500">
+                          文件大小
+                        </Label>
+                        <p className="font-medium">
+                          {formatFileSize(selectedDocument.file_size)}
+                        </p>
                       </div>
                       <div>
                         <Label className="text-sm text-gray-500">分类</Label>
                         <p>{getCategoryBadge(selectedDocument.category)}</p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">状态</Label>
+                        <Label className="text-sm text-gray-500">状?/Label>
                         <p>{getStatusBadge(selectedDocument.status)}</p>
                       </div>
                       <div>
                         <Label className="text-sm text-gray-500">版本</Label>
-                        <p className="font-medium">v{selectedDocument.version}</p>
+                        <p className="font-medium">
+                          v{selectedDocument.version}
+                        </p>
                       </div>
                       <div>
-                        <Label className="text-sm text-gray-500">访问权限</Label>
-                        <p className="font-medium capitalize">{selectedDocument.access_level}</p>
+                        <Label className="text-sm text-gray-500">
+                          访问权限
+                        </Label>
+                        <p className="font-medium capitalize">
+                          {selectedDocument.access_level}
+                        </p>
                       </div>
                     </div>
 
@@ -657,7 +735,10 @@ export default function EnterpriseDocumentsManagement() {
                         <Label className="text-sm text-gray-500">标签</Label>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {selectedDocument.tags.map((tag, index) => (
-                            <span key={index} className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                            <span
+                              key={index}
+                              className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800"
+                            >
                               #{tag}
                             </span>
                           ))}
@@ -668,32 +749,48 @@ export default function EnterpriseDocumentsManagement() {
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-500">
                       <div>
                         <Label>上传信息</Label>
-                        <p className="mt-1">上传者: {selectedDocument.uploaded_by}</p>
-                        <p>上传时间: {formatDate(selectedDocument.uploaded_at)}</p>
+                        <p className="mt-1">
+                          上传? {selectedDocument.uploaded_by}
+                        </p>
+                        <p>
+                          上传时间: {formatDate(selectedDocument.uploaded_at)}
+                        </p>
                       </div>
                       {selectedDocument.reviewed_at && (
                         <div>
                           <Label>审核信息</Label>
-                          <p className="mt-1">审核人: {selectedDocument.reviewed_by}</p>
-                          <p>审核时间: {formatDate(selectedDocument.reviewed_at)}</p>
+                          <p className="mt-1">
+                            审核? {selectedDocument.reviewed_by}
+                          </p>
+                          <p>
+                            审核时间: {formatDate(selectedDocument.reviewed_at)}
+                          </p>
                         </div>
                       )}
                     </div>
 
-                    {selectedDocument.status === 'rejected' && selectedDocument.rejection_reason && (
-                      <div className="mt-4 p-3 bg-red-50 rounded-lg">
-                        <div className="flex items-center">
-                          <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
-                          <Label className="text-sm text-red-800">拒绝原因</Label>
+                    {selectedDocument.status === 'rejected' &&
+                      selectedDocument.rejection_reason && (
+                        <div className="mt-4 p-3 bg-red-50 rounded-lg">
+                          <div className="flex items-center">
+                            <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
+                            <Label className="text-sm text-red-800">
+                              拒绝原因
+                            </Label>
+                          </div>
+                          <p className="mt-1 text-red-700">
+                            {selectedDocument.rejection_reason}
+                          </p>
                         </div>
-                        <p className="mt-1 text-red-700">{selectedDocument.rejection_reason}</p>
-                      </div>
-                    )}
+                      )}
                   </CardContent>
                 </Card>
 
                 <div className="flex justify-end space-x-3">
-                  <Button variant="outline" onClick={() => downloadDocument(selectedDocument)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => downloadDocument(selectedDocument)}
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     下载文件
                   </Button>

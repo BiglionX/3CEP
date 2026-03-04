@@ -1,36 +1,34 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 创建 Supabase 客户端（服务角色）
-const supabase = createClient(
+// 鍒涘缓 Supabase 瀹㈡埛绔紙鏈嶅姟瑙掕壊?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 export async function GET(request: Request) {
   try {
-    console.log('⏰ 开始执行每小时定时任务...');
-    
+    console.log('锟?寮€濮嬫墽琛屾瘡灏忔椂瀹氭椂浠诲姟...');
+
     const startTime = new Date().toISOString();
-    
-    // 1. 检查系统健康状态
-    console.log('🏥 检查系统健康状态...');
+
+    // 1. 妫€鏌ョ郴缁熷仴搴风姸?    console.log('馃彞 妫€鏌ョ郴缁熷仴搴风姸?..');
     const healthCheckResult = await performHealthCheck();
-    
-    // 2. 处理待处理的预约提醒
-    console.log('🔔 处理预约提醒...');
+
+    // 2. 澶勭悊寰呭鐞嗙殑棰勭害鎻愰啋
+    console.log('馃敂 澶勭悊棰勭害鎻愰啋...');
     const reminderResult = await processAppointmentReminders();
-    
-    // 3. 清理临时数据
-    console.log('🗑️ 清理临时数据...');
+
+    // 3. 娓呯悊涓存椂鏁版嵁
+    console.log('馃棏锟?娓呯悊涓存椂鏁版嵁...');
     const cleanupResult = await cleanupTemporaryData();
-    
-    // 4. 更新缓存数据
-    console.log('⚡ 更新缓存数据...');
+
+    // 4. 鏇存柊缂撳瓨鏁版嵁
+    console.log('锟?鏇存柊缂撳瓨鏁版嵁...');
     const cacheResult = await updateCacheData();
-    
+
     const endTime = new Date().toISOString();
-    
+
     const result = {
       success: true,
       timestamp: startTime,
@@ -39,178 +37,175 @@ export async function GET(request: Request) {
         healthCheck: healthCheckResult,
         reminders: reminderResult,
         cleanup: cleanupResult,
-        cache: cacheResult
-      }
+        cache: cacheResult,
+      },
     };
-    
-    console.log('✅ 每小时定时任务执行完成', result);
-    
+
+    console.log('锟?姣忓皬鏃跺畾鏃朵换鍔℃墽琛屽畬?, result);
+
     return NextResponse.json(result);
-    
   } catch (error) {
-    console.error('❌ 每小时定时任务执行失败:', error);
-    
+    console.error('锟?姣忓皬鏃跺畾鏃朵换鍔℃墽琛屽け?', error);
+
     const errorResult = {
       success: false,
       timestamp: new Date().toISOString(),
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
-    
+
     return NextResponse.json(errorResult, { status: 500 });
   }
 }
 
-// 系统健康检查
-async function performHealthCheck() {
+// 绯荤粺鍋ュ悍妫€?async function performHealthCheck() {
   try {
-    // 检查数据库连接
+    // 妫€鏌ユ暟鎹簱杩炴帴
     const { data: health, error } = await supabase
       .from('system_config')
       .select('key')
       .limit(1);
-    
+
     if (error) throw error;
-    
-    // 检查关键表是否存在
+
+    // 妫€鏌ュ叧閿〃鏄惁瀛樺湪
     const tables = ['parts', 'appointments', 'uploaded_content'];
     const tableChecks = [];
-    
+
     for (const table of tables) {
       try {
         const { count, error: countError } = await supabase
           .from(table)
           .select('*', { count: 'exact', head: true });
-        
+
         tableChecks.push({
           table,
           accessible: !countError,
-          recordCount: count || 0
+          recordCount: count || 0,
         });
       } catch (err) {
         tableChecks.push({
           table,
           accessible: false,
-          error: err instanceof Error ? err.message : 'Unknown error'
+          error: err instanceof Error ? err.message : 'Unknown error',
         });
       }
     }
-    
+
     return {
       success: true,
       databaseConnected: true,
-      tableChecks
+      tableChecks,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Health check failed'
+      error: error instanceof Error ? error.message : 'Health check failed',
     };
   }
 }
 
-// 处理预约提醒
+// 澶勭悊棰勭害鎻愰啋
 async function processAppointmentReminders() {
   try {
-    // 查找需要发送提醒的预约（提前1小时）
-    const oneHourFromNow = new Date();
+    // 鏌ユ壘闇€瑕佸彂閫佹彁閱掔殑棰勭害锛堟彁?灏忔椂?    const oneHourFromNow = new Date();
     oneHourFromNow.setHours(oneHourFromNow.getHours() + 1);
-    
+
     const { data: upcomingAppointments, error } = await supabase
       .from('appointments')
       .select('*')
       .gte('appointment_time', new Date().toISOString())
       .lte('appointment_time', oneHourFromNow.toISOString())
       .eq('reminder_sent', false);
-    
+
     if (error) throw error;
-    
-    // 模拟发送提醒
-    const reminderCount = upcomingAppointments?.length || 0;
-    
-    // 标记提醒已发送
-    if (reminderCount > 0) {
+
+    // 妯℃嫙鍙戦€佹彁?    const reminderCount = upcomingAppointments?.length || 0;
+
+    // 鏍囪鎻愰啋宸插彂?    if (reminderCount > 0) {
       const appointmentIds = upcomingAppointments.map(a => a.id);
       await supabase
         .from('appointments')
         .update({ reminder_sent: true } as any)
         .in('id', appointmentIds);
     }
-    
+
     return {
       success: true,
       reminderCount,
-      message: `处理了 ${reminderCount} 个预约提醒`
+      message: `澶勭悊?${reminderCount} 涓绾︽彁閱抈,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Reminder processing failed'
+      error:
+        error instanceof Error ? error.message : 'Reminder processing failed',
     };
   }
 }
 
-// 清理临时数据
+// 娓呯悊涓存椂鏁版嵁
 async function cleanupTemporaryData() {
   try {
-    // 清理过期的临时文件记录
-    const oneDayAgo = new Date();
+    // 娓呯悊杩囨湡鐨勪复鏃舵枃浠惰?    const oneDayAgo = new Date();
     oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-    
+
     const { data, error } = await supabase
       .from('temp_files')
       .delete()
       .lt('created_at', oneDayAgo.toISOString());
-    
-    // 处理可能为 null 的情况
-    const deletedRecords = data || [];
-    
-    if (error && error.code !== '42P01') { // 表不存在不算错误
+
+    // 澶勭悊鍙兘?null 鐨勬儏?    const deletedRecords = data || [];
+
+    if (error && error.code !== '42P01') {
+      // 琛ㄤ笉瀛樺湪涓嶇畻閿欒
       throw error;
     }
-    
+
     return {
       success: true,
       deletedCount: deletedRecords.length,
-      cutoffDate: oneDayAgo.toISOString()
+      cutoffDate: oneDayAgo.toISOString(),
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Temporary data cleanup failed'
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Temporary data cleanup failed',
     };
   }
 }
 
-// 更新缓存数据
+// 鏇存柊缂撳瓨鏁版嵁
 async function updateCacheData() {
   try {
-    // 更新热门配件缓存
+    // 鏇存柊鐑棬閰嶄欢缂撳瓨
     const { data: popularParts, error } = await supabase
       .from('parts')
       .select('*')
       .order('view_count', { ascending: false })
       .limit(20);
-    
+
     if (error) throw error;
-    
-    // 缓存到系统配置中
-    await supabase
-      .from('system_config')
-      .upsert({
-        key: 'popular_parts_cache',
-        value: popularParts,
-        updated_at: new Date().toISOString()
-      });
-    
+
+    // 缂撳瓨鍒扮郴缁熼厤缃腑
+    await supabase.from('system_config').upsert({
+      key: 'popular_parts_cache',
+      value: popularParts,
+      updated_at: new Date().toISOString(),
+    });
+
     return {
       success: true,
       cachedItems: popularParts?.length || 0,
-      message: '热门配件缓存已更新'
+      message: '鐑棬閰嶄欢缂撳瓨宸叉洿?,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Cache update failed'
+      error: error instanceof Error ? error.message : 'Cache update failed',
     };
   }
 }
+

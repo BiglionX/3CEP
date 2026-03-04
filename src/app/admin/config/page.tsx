@@ -1,4 +1,4 @@
-import ConfigManager from '@/components/admin/ConfigManager';
+﻿import ConfigManager from '@/components/admin/ConfigManager';
 
 export default function ConfigPage() {
   return (
@@ -7,3 +7,4 @@ export default function ConfigPage() {
     </div>
   );
 }
+

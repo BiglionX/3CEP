@@ -1,6 +1,6 @@
-/**
- * 联盟成员查询API
- * 获取联盟成员列表和排行榜
+﻿/**
+ * 鑱旂洘鎴愬憳鏌ヨAPI
+ * 鑾峰彇鑱旂洘鎴愬憳鍒楄〃鍜屾帓琛屾
  */
 
 import { NextResponse } from 'next/server';
@@ -16,40 +16,39 @@ export async function GET(request: Request) {
     const allianceService = new AllianceService();
 
     if (type === 'rankings') {
-      // 获取排行榜
-      const rankings = await allianceService.getRankings(limit);
-      
+      // 鑾峰彇鎺掕?      const rankings = await allianceService.getRankings(limit);
+
       return NextResponse.json({
         success: true,
         data: {
           type: 'rankings',
           rankings: rankings,
-          count: rankings.length
-        }
+          count: rankings.length,
+        },
       });
     } else {
-      // 获取成员列表
+      // 鑾峰彇鎴愬憳鍒楄〃
       const members = await allianceService.listAllianceMembers(level);
-      
+
       return NextResponse.json({
         success: true,
         data: {
           type: 'members',
           members: members,
           count: members.length,
-          level: level || 'all'
-        }
+          level: level || 'all',
+        },
       });
     }
-
   } catch (error) {
-    console.error('查询联盟成员错误:', error);
+    console.error('鏌ヨ鑱旂洘鎴愬憳閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '查询失败',
-        details: (error as Error).message 
+      {
+        error: '鏌ヨ澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

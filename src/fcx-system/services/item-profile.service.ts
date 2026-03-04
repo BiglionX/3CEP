@@ -1,14 +1,13 @@
 /**
  * 物品画像服务
- * 负责构建、维护和更新物品（维修店、配件等）画像
- */
+ * 负责构建、维护和更新物品（维修店、配件等）画? */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 import {
   ItemProfile,
   RecommendationItemType,
-} from "../models/recommendation.model";
-import { ItemProfileService } from "./recommendation.interfaces";
+} from '../models/recommendation.model';
+import { ItemProfileService } from './recommendation.interfaces';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,19 +16,17 @@ const supabase = createClient(
 
 export class ItemProfileServiceImpl implements ItemProfileService {
   /**
-   * 构建或更新物品画像
-   */
+   * 构建或更新物品画?   */
   async buildItemProfile(
     itemId: string,
     itemType: string
   ): Promise<ItemProfile> {
     try {
-      console.log(`📦 开始构建物品画像: ${itemId} (${itemType})`);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📦 开始构建物品画? ${itemId} (${itemType})`);
 
       let itemData: any = null;
 
-      // 根据物品类型获取不同数据源
-      switch (itemType as RecommendationItemType) {
+      // 根据物品类型获取不同数据?      switch (itemType as RecommendationItemType) {
         case RecommendationItemType.REPAIR_SHOP:
           itemData = await this.getRepairShopData(itemId);
           break;
@@ -50,7 +47,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
       }
 
       if (!itemData) {
-        throw new Error(`未找到物品数据: ${itemId}`);
+        throw new Error(`未找到物品数? ${itemId}`);
       }
 
       // 构建物品画像
@@ -63,8 +60,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
       // 保存到数据库
       await this.saveItemProfile(itemProfile);
 
-      console.log(`✅ 物品画像构建完成: ${itemId}`);
-      return itemProfile;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?物品画像构建完成: ${itemId}`)return itemProfile;
     } catch (error) {
       console.error(`构建物品画像失败 (${itemId}):`, error);
       throw error;
@@ -77,13 +73,13 @@ export class ItemProfileServiceImpl implements ItemProfileService {
   async getItemProfile(itemId: string): Promise<ItemProfile | null> {
     try {
       const { data, error } = await supabase
-        .from("item_profiles")
-        .select("*")
-        .eq("item_id", itemId)
+        .from('item_profiles')
+        .select('*')
+        .eq('item_id', itemId)
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") {
+        if (error.code === 'PGRST116') {
           return null;
         }
         throw new Error(`获取物品画像失败: ${error.message}`);
@@ -93,23 +89,23 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         itemId: data.item_id,
         itemType: data.item_type,
         basicInfo: {
-          name: data.basic_info?.name || "",
-          description: data.basic_info?.description,
-          category: data.basic_info?.category || "",
-          brand: data.basic_info?.brand,
-          price: data.basic_info?.price,
+          name: data?.name || '',
+          description: data?.description,
+          category: data?.category || '',
+          brand: data?.brand,
+          price: data?.price,
         },
         features: {
-          tags: data.features?.tags || [],
-          attributes: data.features?.attributes || {},
-          popularityScore: data.features?.popularity_score || 0,
-          qualityScore: data.features?.quality_score || 0,
+          tags: data?.tags || [],
+          attributes: data?.attributes || {},
+          popularityScore: data?.popularity_score || 0,
+          qualityScore: data?.quality_score || 0,
         },
         statistics: {
-          viewCount: data.statistics?.view_count || 0,
-          purchaseCount: data.statistics?.purchase_count || 0,
-          rating: data.statistics?.rating,
-          reviewCount: data.statistics?.review_count,
+          viewCount: data?.view_count || 0,
+          purchaseCount: data?.purchase_count || 0,
+          rating: data?.rating,
+          reviewCount: data?.review_count,
         },
         location: data.location
           ? {
@@ -122,7 +118,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         lastUpdated: data.last_updated,
       };
     } catch (error) {
-      console.error("获取物品画像错误:", error);
+      console.error('获取物品画像错误:', error);
       throw error;
     }
   }
@@ -133,23 +129,17 @@ export class ItemProfileServiceImpl implements ItemProfileService {
   async buildItemProfiles(itemIds: string[]): Promise<void> {
     if (!itemIds.length) return;
 
-    console.log(`📦 开始批量构建物品画像 (${itemIds.length} 个物品)`);
-
-    // 分批处理
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📦 开始批量构建物品画?(${itemIds.length} 个物?`)// 分批处理
     const batchSize = 20;
     for (let i = 0; i < itemIds.length; i += batchSize) {
       const batch = itemIds.slice(i, i + batchSize);
 
-      // 并行处理一批物品
-      await Promise.all(
-        batch.map(async (itemId) => {
+      // 并行处理一批物?      await Promise.all(
+        batch.map(async itemId => {
           try {
-            // 先尝试从数据库获取，如果没有则构建
-            const existingProfile = await this.getItemProfile(itemId);
+            // 先尝试从数据库获取，如果没有则构?            const existingProfile = await this.getItemProfile(itemId);
             if (!existingProfile) {
-              // 这里需要知道物品类型才能构建画像
-              // 简化处理：假设都是维修店
-              await this.buildItemProfile(
+              // 这里需要知道物品类型才能构建画?              // 简化处理：假设都是维修?              await this.buildItemProfile(
                 itemId,
                 RecommendationItemType.REPAIR_SHOP
               );
@@ -160,15 +150,13 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         })
       );
 
-      console.log(`✅ 批次 ${Math.floor(i / batchSize) + 1} 处理完成`);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?批次 ${Math.floor(i / batchSize)+ 1} 处理完成`);
     }
 
-    console.log("✅ 批量物品画像构建完成");
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?批量物品画像构建完成')}
 
   /**
-   * 计算物品相似度
-   */
+   * 计算物品相似?   */
   async calculateItemSimilarity(
     itemId1: string,
     itemId2: string
@@ -181,16 +169,13 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         return 0;
       }
 
-      // 类别相似度
-      const categorySimilarity =
+      // 类别相似?      const categorySimilarity =
         profile1.basicInfo.category === profile2.basicInfo.category ? 1 : 0;
 
-      // 品牌相似度
-      const brandSimilarity =
+      // 品牌相似?      const brandSimilarity =
         profile1.basicInfo.brand === profile2.basicInfo.brand ? 1 : 0;
 
-      // 价格相似度（如果都有价格）
-      let priceSimilarity = 0;
+      // 价格相似度（如果都有价格?      let priceSimilarity = 0;
       if (profile1.basicInfo.price && profile2.basicInfo.price) {
         const priceDiff = Math.abs(
           profile1.basicInfo.price - profile2.basicInfo.price
@@ -202,14 +187,12 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         priceSimilarity = maxPrice > 0 ? 1 - priceDiff / maxPrice : 0;
       }
 
-      // 质量分数相似度
-      const qualityDiff = Math.abs(
+      // 质量分数相似?      const qualityDiff = Math.abs(
         profile1.features.qualityScore - profile2.features.qualityScore
       );
-      const qualitySimilarity = 1 - qualityDiff / 100; // 假设质量分数是0-100
+      const qualitySimilarity = 1 - qualityDiff / 100; // 假设质量分数?-100
 
-      // 综合相似度
-      const similarity =
+      // 综合相似?      const similarity =
         categorySimilarity * 0.3 +
         brandSimilarity * 0.2 +
         priceSimilarity * 0.2 +
@@ -217,17 +200,16 @@ export class ItemProfileServiceImpl implements ItemProfileService {
 
       return Math.max(0, Math.min(1, similarity));
     } catch (error) {
-      console.error("计算物品相似度错误:", error);
+      console.error('计算物品相似度错?', error);
       return 0;
     }
   }
 
   /**
-   * 获取维修店数据
-   */
+   * 获取维修店数?   */
   private async getRepairShopData(shopId: string): Promise<any> {
     const { data, error } = await supabase
-      .from("repair_shops")
+      .from('repair_shops')
       .select(
         `
         id,
@@ -256,11 +238,11 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         updated_at
       `
       )
-      .eq("id", shopId)
+      .eq('id', shopId)
       .single();
 
     if (error) {
-      throw new Error(`获取维修店数据失败: ${error.message}`);
+      throw new Error(`获取维修店数据失? ${error.message}`);
     }
 
     return data;
@@ -270,11 +252,10 @@ export class ItemProfileServiceImpl implements ItemProfileService {
    * 获取配件数据
    */
   private async getPartData(partId: string): Promise<any> {
-    // 这里需要根据实际的配件表结构调整
-    const { data, error } = await supabase
-      .from("parts_inventory")
-      .select("*")
-      .eq("id", partId)
+    // 这里需要根据实际的配件表结构调?    const { data, error } = await supabase
+      .from('parts_inventory')
+      .select('*')
+      .eq('id', partId)
       .single();
 
     if (error) {
@@ -290,9 +271,9 @@ export class ItemProfileServiceImpl implements ItemProfileService {
   private async getServiceData(serviceId: string): Promise<any> {
     // 服务数据可能来自维修订单或其他表
     const { data, error } = await supabase
-      .from("repair_orders")
-      .select("service_type, device_type, status")
-      .eq("id", serviceId)
+      .from('repair_orders')
+      .select('service_type, device_type, status')
+      .eq('id', serviceId)
       .single();
 
     if (error) {
@@ -307,9 +288,9 @@ export class ItemProfileServiceImpl implements ItemProfileService {
    */
   private async getDeviceData(deviceId: string): Promise<any> {
     const { data, error } = await supabase
-      .from("devices")
-      .select("*")
-      .eq("id", deviceId)
+      .from('devices')
+      .select('*')
+      .eq('id', deviceId)
       .single();
 
     if (error) {
@@ -325,9 +306,9 @@ export class ItemProfileServiceImpl implements ItemProfileService {
   private async getAccessoryData(accessoryId: string): Promise<any> {
     // 配件附件数据
     const { data, error } = await supabase
-      .from("accessories")
-      .select("*")
-      .eq("id", accessoryId)
+      .from('accessories')
+      .select('*')
+      .eq('id', accessoryId)
       .single();
 
     if (error) {
@@ -379,26 +360,25 @@ export class ItemProfileServiceImpl implements ItemProfileService {
       case RecommendationItemType.REPAIR_SHOP:
         return {
           name: rawData.name,
-          description: rawData.description || `专业的${rawData.name}维修服务`,
-          category: "repair_service",
+          description: rawData.description || `专业?{rawData.name}维修服务`,
+          category: 'repair_service',
           brand: this.extractBrandFromName(rawData.name),
-          price: undefined, // 维修店没有固定价格
-        };
+          price: undefined, // 维修店没有固定价?        };
 
       case RecommendationItemType.PART:
         return {
           name: rawData.name || rawData.part_name,
           description: rawData.description,
-          category: rawData.category || "electronic_part",
+          category: rawData.category || 'electronic_part',
           brand: rawData.brand,
           price: rawData.price,
         };
 
       case RecommendationItemType.SERVICE:
         return {
-          name: rawData.service_type || "维修服务",
+          name: rawData.service_type || '维修服务',
           description: `专业${rawData.service_type}服务`,
-          category: rawData.device_type || "general",
+          category: rawData.device_type || 'general',
           brand: undefined,
           price: undefined,
         };
@@ -407,7 +387,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         return {
           name: rawData.name || rawData.id,
           description: rawData.description,
-          category: "general",
+          category: 'general',
           brand: rawData.brand,
           price: rawData.price,
         };
@@ -430,9 +410,8 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         if (rawData.services) {
           try {
             const services = JSON.parse(rawData.services);
-            tags.push(...services.slice(0, 5)); // 取前5个服务作为标签
-          } catch (e) {
-            tags.push("维修服务");
+            tags.push(...services.slice(0, 5)); // 取前5个服务作为标?          } catch (e) {
+            tags.push('维修服务');
           }
         }
 
@@ -445,8 +424,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
           }
         }
 
-        // 属性特征
-        attributes.certificationLevel = rawData.certification_level;
+        // 属性特?        attributes.certificationLevel = rawData.certification_level;
         attributes.isVerified = rawData.is_verified;
         attributes.serviceCount = rawData.service_count;
         break;
@@ -458,20 +436,18 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         break;
 
       default:
-        tags.push("通用");
+        tags.push('通用');
         break;
     }
 
-    // 计算流行度分数（基于统计数据）
-    const stats = await this.calculateStatistics(rawData.id, itemType);
+    // 计算流行度分数（基于统计数据?    const stats = await this.calculateStatistics(rawData.id, itemType);
     const popularityScore = this.calculatePopularityScore(stats);
 
     // 质量分数（基于评分和认证等）
     const qualityScore = this.calculateQualityScore(rawData, itemType);
 
     return {
-      tags: [...new Set(tags.filter((tag) => tag))], // 去重并过滤空值
-      attributes,
+      tags: [...new Set(tags.filter(tag => tag))], // 去重并过滤空?      attributes,
       popularityScore,
       qualityScore,
     };
@@ -484,8 +460,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
     itemId: string,
     itemType: RecommendationItemType
   ): Promise<any> {
-    // 这里应该从用户行为表和其他相关表中计算统计数据
-    // 简化处理，返回模拟数据
+    // 这里应该从用户行为表和其他相关表中计算统计数?    // 简化处理，返回模拟数据
 
     switch (itemType) {
       case RecommendationItemType.REPAIR_SHOP:
@@ -545,8 +520,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
   }
 
   /**
-   * 计算流行度分数
-   */
+   * 计算流行度分?   */
   private calculatePopularityScore(statistics: any): number {
     const {
       viewCount = 0,
@@ -555,11 +529,10 @@ export class ItemProfileServiceImpl implements ItemProfileService {
       reviewCount = 0,
     } = statistics;
 
-    // 加权计算流行度分数 (0-100)
+    // 加权计算流行度分?(0-100)
     const viewScore = Math.min(100, viewCount / 10);
     const purchaseScore = Math.min(100, purchaseCount * 2);
-    const ratingScore = rating * 20; // 5星 = 100分
-    const reviewScore = Math.min(100, reviewCount / 5);
+    const ratingScore = rating * 20; // 5�?= 100�?    const reviewScore = Math.min(100, reviewCount / 5);
 
     return Math.round(
       viewScore * 0.3 +
@@ -592,8 +565,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
 
         // 评分加权
         if (rawData.rating) {
-          score += (rawData.rating - 3) * 15; // 3星为基础，每高0.1星加1.5分
-        }
+          score += (rawData.rating - 3) * 15; // 3星为基础，每?.1星加1.5�?        }
         break;
 
       default:
@@ -604,14 +576,14 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         break;
     }
 
-    return Math.max(0, Math.min(100, score)); // 限制在0-100之间
+    return Math.max(0, Math.min(100, score)); // 限制?-100之间
   }
 
   /**
    * 保存物品画像到数据库
    */
   private async saveItemProfile(profile: ItemProfile): Promise<void> {
-    const { error } = await supabase.from("item_profiles").upsert(
+    const { error } = await supabase.from('item_profiles').upsert(
       {
         item_id: profile.itemId,
         item_type: profile.itemType,
@@ -645,7 +617,7 @@ export class ItemProfileServiceImpl implements ItemProfileService {
         last_updated: profile.lastUpdated,
       },
       {
-        onConflict: "item_id",
+        onConflict: 'item_id',
       }
     );
 

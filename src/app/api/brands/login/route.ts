@@ -1,13 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
-// 简化的Token生成（实际项目中应使用JWT库）
+// 绠€鍖栫殑Token鐢熸垚锛堝疄闄呴」鐩腑搴斾娇鐢↗WT搴擄級
 function generateSimpleToken(brandId: string): string {
   const timestamp = Date.now();
   return `brand_${brandId}_${timestamp}_token`;
@@ -15,23 +14,23 @@ function generateSimpleToken(brandId: string): string {
 
 function verifySimpleToken(token: string): { brandId: string } | null {
   if (!token.startsWith('brand_')) return null;
-  
+
   const parts = token.split('_');
   if (parts.length !== 4) return null;
-  
+
   return { brandId: parts[1] };
 }
 
-// 品牌商登录API
+// 鍝佺墝鍟嗙櫥褰旳PI
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password, apiKey } = body;
 
-    // 验证输入参数
+    // 楠岃瘉杈撳叆鍙傛暟
     if (!email && !apiKey) {
       return NextResponse.json(
-        { error: '请提供邮箱密码或API Key' },
+        { error: '璇锋彁渚涢偖绠卞瘑鐮佹垨API Key' },
         { status: 400 }
       );
     }
@@ -39,7 +38,7 @@ export async function POST(request: NextRequest) {
     let brand;
 
     if (email && password) {
-      // 邮箱密码登录
+      // 閭瀵嗙爜鐧诲綍
       const { data, error } = await supabase
         .from('brands')
         .select('*')
@@ -48,17 +47,13 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error || !data) {
-        return NextResponse.json(
-          { error: '邮箱或密码错误' },
-          { status: 401 }
-        );
+        return NextResponse.json({ error: '閭鎴栧瘑鐮侀敊? }, { status: 401 });
       }
 
-      // 这里应该验证密码，简化处理
-      // 实际项目中应该使用bcrypt等加密库
+      // 杩欓噷搴旇楠岃瘉瀵嗙爜锛岀畝鍖栧?      // 瀹為檯椤圭洰涓簲璇ヤ娇鐢╞crypt绛夊姞瀵嗗簱
       brand = data;
     } else if (apiKey) {
-      // API Key登录
+      // API Key鐧诲綍
       const { data, error } = await supabase
         .from('brands')
         .select('*')
@@ -67,54 +62,47 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error || !data) {
-        return NextResponse.json(
-          { error: '无效的API Key' },
-          { status: 401 }
-        );
+        return NextResponse.json({ error: '鏃犳晥鐨凙PI Key' }, { status: 401 });
       }
 
       brand = data;
     }
 
-    // 生成简化Token
+    // 鐢熸垚绠€鍖朤oken
     const token = generateSimpleToken(brand.id);
 
-    // 隐藏敏感信息
+    // 闅愯棌鏁忔劅淇℃伅
     const { api_key, ...brandInfo } = brand;
 
     return NextResponse.json({
       success: true,
       token,
       brand: brandInfo,
-      message: '登录成功'
+      message: '鐧诲綍鎴愬姛',
     });
-
   } catch (error) {
-    console.error('品牌商登录错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('鍝佺墝鍟嗙櫥褰曢敊?', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
-// 验证Token中间件
-export async function authenticateBrand(request: NextRequest) {
+// 楠岃瘉Token涓棿?export async function authenticateBrand(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return { error: '缺少认证令牌', status: 401 };
+      return { error: '缂哄皯璁よ瘉浠ょ墝', status: 401 };
     }
 
     const token = authHeader.substring(7);
     const decoded = verifySimpleToken(token);
-    
+
     if (!decoded) {
-      return { error: '无效的认证令牌', status: 401 };
+      return { error: '鏃犳晥鐨勮璇佷护?, status: 401 };
     }
-    
+
     return { brandId: decoded.brandId };
   } catch (error) {
-    return { error: '认证失败', status: 500 };
+    return { error: '璁よ瘉澶辫触', status: 500 };
   }
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -40,7 +40,7 @@ export default function QRCodeManagementPage() {
     size: 300,
   });
 
-  // 获取二维码列表
+  // 获取二维码列?
   const fetchQRCodes = async () => {
     try {
       setLoading(true);
@@ -54,13 +54,13 @@ export default function QRCodeManagementPage() {
       }
     } catch (err) {
       setError("网络请求失败");
-      console.error("获取二维码列表失败:", err);
+      console.error("获取二维码列表失?", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 生成二维码
+  // 生成二维?
   const generateQRCode = async () => {
     try {
       const response = await fetch("/api/qrcode/generate", {
@@ -101,20 +101,20 @@ export default function QRCodeManagementPage() {
       }
     } catch (err) {
       alert("生成请求失败");
-      console.error("生成二维码失败:", err);
+      console.error("生成二维码失?", err);
     }
   };
 
-  // 删除二维码
+  // 删除二维?
   const deleteQRCode = async (qrCodeId: string) => {
     if (!confirm("确定要删除这个二维码吗？")) return;
 
     try {
       // 这里需要实现删除API
-      alert("删除功能待实现");
+      alert("删除功能待实?);
     } catch (err) {
       alert("删除失败");
-      console.error("删除二维码失败:", err);
+      console.error("删除二维码失?", err);
     }
   };
 
@@ -127,7 +127,7 @@ export default function QRCodeManagementPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载中...</p>
+          <p className="mt-4 text-gray-600">加载?..</p>
         </div>
       </div>
     );
@@ -140,7 +140,7 @@ export default function QRCodeManagementPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">二维码管理</h1>
+              <h1 className="text-3xl font-bold text-gray-900">二维码管?/h1>
               <p className="mt-2 text-gray-600">管理产品二维码生成和查看</p>
             </div>
             <button
@@ -160,7 +160,7 @@ export default function QRCodeManagementPage() {
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
-              生成二维码
+              生成二维?
             </button>
           </div>
         </div>
@@ -185,20 +185,20 @@ export default function QRCodeManagementPage() {
           </div>
         )}
 
-        {/* 二维码列表 */}
+        {/* 二维码列?*/}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {qrcodes.length === 0 ? (
             <div className="p-12 text-center">
               <div className="text-gray-400 text-6xl mb-4">📱</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                暂无二维码
+                暂无二维?
               </h3>
               <p className="text-gray-500 mb-6">开始生成您的第一个产品二维码</p>
               <button
                 onClick={() => setShowGenerateModal(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
               >
-                生成二维码
+                生成二维?
               </button>
             </div>
           ) : (
@@ -207,7 +207,7 @@ export default function QRCodeManagementPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      二维码
+                      二维?
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       产品信息
@@ -229,7 +229,7 @@ export default function QRCodeManagementPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <img
                           src={qr.qr_image_base64}
-                          alt="二维码"
+                          alt="二维?
                           className="w-20 h-20 object-contain border border-gray-200 rounded"
                         />
                         <div className="mt-2 text-xs text-gray-500 font-mono">
@@ -238,18 +238,18 @@ export default function QRCodeManagementPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {qr.products?.name || "未知产品"}
+                          {qr?.name || "未知产品"}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {qr.products?.model || "无型号"}
+                          {qr?.model || "无型?}
                         </div>
                         <div className="text-xs text-gray-400 mt-1">
-                          {qr.products?.brands?.name || "未知品牌"}
+                          {qr?.brands?.name || "未知品牌"}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900 capitalize">
-                          {qr.format} • {qr.size}px
+                          {qr.format} �?{qr.size}px
                         </div>
                         <div className="text-xs text-gray-500">
                           {qr.qr_content}
@@ -284,7 +284,7 @@ export default function QRCodeManagementPage() {
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold text-gray-900">
-                    生成二维码
+                    生成二维?
                   </h2>
                   <button
                     onClick={() => setShowGenerateModal(false)}
@@ -320,7 +320,7 @@ export default function QRCodeManagementPage() {
                         setFormData({ ...formData, productId: e.target.value })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: prod_apple_iphone15_001"
+                      placeholder="�? prod_apple_iphone15_001"
                     />
                   </div>
 
@@ -335,7 +335,7 @@ export default function QRCodeManagementPage() {
                         setFormData({ ...formData, brandId: e.target.value })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: brand_apple_001"
+                      placeholder="�? brand_apple_001"
                     />
                   </div>
 
@@ -353,7 +353,7 @@ export default function QRCodeManagementPage() {
                         })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: iPhone 15 Pro"
+                      placeholder="�? iPhone 15 Pro"
                     />
                   </div>
 
@@ -371,7 +371,7 @@ export default function QRCodeManagementPage() {
                         })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: A2842"
+                      placeholder="�? A2842"
                     />
                   </div>
 
@@ -389,7 +389,7 @@ export default function QRCodeManagementPage() {
                         })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: smartphone"
+                      placeholder="�? smartphone"
                     />
                   </div>
 
@@ -407,7 +407,7 @@ export default function QRCodeManagementPage() {
                         })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="如: IPH15P20260219001"
+                      placeholder="�? IPH15P20260219001"
                     />
                   </div>
                 </div>
@@ -466,7 +466,7 @@ export default function QRCodeManagementPage() {
                   }
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
-                  生成二维码
+                  生成二维?
                 </button>
               </div>
             </div>
@@ -476,3 +476,4 @@ export default function QRCodeManagementPage() {
     </div>
   );
 }
+

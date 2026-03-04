@@ -1,0 +1,17 @@
+{
+  "roles": {
+    "admin": {
+      "permissions": ["*"],
+      "description": "管理员角色"
+    },
+    "user": {
+      "permissions": ["read:self", "write:self"],
+      "description": "普通用户角色"
+    }
+  },
+  "permissions": {
+    "*": "所有权限",
+    "read:self": "读取自己的数据",
+    "write:self": "修改自己的数据"
+  }
+}

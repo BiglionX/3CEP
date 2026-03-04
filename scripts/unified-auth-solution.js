@@ -16,35 +16,35 @@ const authSystems = [
   {
     name: '主AuthProvider',
     path: 'src/components/providers/AuthProvider.tsx',
-    type: 'React Context Provider'
+    type: 'React Context Provider',
   },
   {
     name: '模块AuthProvider',
     path: 'src/modules/common/components/providers/AuthProvider.tsx',
-    type: 'React Context Provider'
+    type: 'React Context Provider',
   },
   {
     name: 'Supabase原生认证',
     path: 'src/hooks/use-auth.ts',
-    type: 'Custom Hook'
+    type: 'Custom Hook',
   },
   {
     name: '权限认证Hook',
     path: 'src/hooks/use-permission.tsx',
-    type: 'Permission Hook'
+    type: 'Permission Hook',
   },
   {
     name: '技术模块认证',
     path: 'src/tech/utils/hooks/use-auth.ts',
-    type: 'Custom Hook'
-  }
+    type: 'Custom Hook',
+  },
 ];
 
 authSystems.forEach(system => {
   const fullPath = path.join(process.cwd(), system.path);
   const exists = fs.existsSync(fullPath);
   console.log(`${exists ? '✅' : '❌'} ${system.name} (${system.type})`);
-  
+
   if (exists) {
     try {
       const stats = fs.statSync(fullPath);
@@ -316,10 +316,7 @@ if (!fs.existsSync(authDir)) {
   fs.mkdirSync(authDir, { recursive: true });
 }
 
-fs.writeFileSync(
-  path.join(authDir, 'unified-auth.ts'),
-  unifiedAuthSolution
-);
+fs.writeFileSync(path.join(authDir, 'unified-auth.ts'), unifiedAuthSolution);
 
 console.log('✅ 创建了统一认证服务: src/lib/unified-auth.ts');
 
@@ -374,7 +371,9 @@ console.log('  const { isAuthenticated } = useAuth();');
 console.log('  const { hasPermission } = usePermission();');
 console.log('');
 console.log('  // 新代码');
-console.log('  const { user, isAuthenticated, is_admin, hasPermission } = useUnifiedAuth();');
+console.log(
+  '  const { user, isAuthenticated, is_admin, hasPermission } = useUnifiedAuth();'
+);
 
 console.log('\n方案二: 临时绕过认证冲突');
 console.log('访问紧急管理模式:');

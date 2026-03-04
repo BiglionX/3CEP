@@ -1,4 +1,4 @@
-import { cacheManager, generateCacheKey } from '@/utils/cache-manager';
+﻿import { cacheManager, generateCacheKey } from '@/utils/cache-manager';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
@@ -7,20 +7,20 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 积分体系API
+// 绉垎浣撶郴API
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('user_id') || 'anonymous';
     const action = searchParams.get('action') || 'get_balance'; // get_balance, get_history, get_rules
 
-    // 验证认证
+    // 楠岃瘉璁よ瘉
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ') && userId !== 'anonymous') {
       return NextResponse.json(
         {
           code: 40101,
-          message: '未授权访问',
+          message: '鏈巿鏉冭?,
           data: null,
         },
         { status: 401 }
@@ -40,18 +40,18 @@ export async function GET(request: Request) {
         return NextResponse.json(
           {
             code: 40001,
-            message: '不支持的操作',
+            message: '涓嶆敮鎸佺殑鎿嶄綔',
             data: null,
           },
           { status: 400 }
         );
     }
   } catch (error) {
-    console.error('积分系统错误:', error);
+    console.error('绉垎绯荤粺閿欒:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '积分服务暂时不可用',
+        message: '绉垎鏈嶅姟鏆傛椂涓嶅彲?,
         data: null,
       },
       { status: 500 }
@@ -59,13 +59,12 @@ export async function GET(request: Request) {
   }
 }
 
-// 获取用户积分余额
+// 鑾峰彇鐢ㄦ埛绉垎浣欓
 async function getUserPointsBalance(userId: string) {
   try {
     const cacheKey = generateCacheKey('points_balance', userId);
 
-    // 尝试从缓存获取
-    const cachedBalance = await cacheManager.get(cacheKey);
+    // 灏濊瘯浠庣紦瀛樿幏?    const cachedBalance = await cacheManager.get(cacheKey);
     if (cachedBalance) {
       return NextResponse.json({
         code: 0,
@@ -76,7 +75,7 @@ async function getUserPointsBalance(userId: string) {
       });
     }
 
-    // 从数据库获取
+    // 浠庢暟鎹簱鑾峰彇
     const { data: balanceRecord, error } = await supabase
       .from('user_points')
       .select('total_points, available_points, frozen_points, updated_at')
@@ -86,8 +85,7 @@ async function getUserPointsBalance(userId: string) {
     let balanceData;
 
     if (error || !balanceRecord) {
-      // 用户首次查询，创建默认记录
-      const { data: newRecord, error: insertError } = await supabase
+      // 鐢ㄦ埛棣栨鏌ヨ锛屽垱寤洪粯璁よ?      const { data: newRecord, error: insertError } = await supabase
         .from('user_points')
         .insert({
           user_id: userId,
@@ -101,7 +99,7 @@ async function getUserPointsBalance(userId: string) {
         .single();
 
       if (insertError) {
-        throw new Error('创建用户积分记录失败');
+        throw new Error('鍒涘缓鐢ㄦ埛绉垎璁板綍澶辫触');
       }
 
       balanceData = {
@@ -119,8 +117,7 @@ async function getUserPointsBalance(userId: string) {
       };
     }
 
-    // 缓存结果（5分钟）
-    await cacheManager.set(cacheKey, balanceData, 300);
+    // 缂撳瓨缁撴灉?鍒嗛挓?    await cacheManager.set(cacheKey, balanceData, 300);
 
     return NextResponse.json({
       code: 0,
@@ -128,13 +125,13 @@ async function getUserPointsBalance(userId: string) {
       data: balanceData,
       from_cache: false,
       timestamp: new Date().toISOString(),
-    });
+    }) as any;
   } catch (error) {
-    console.error('获取积分余额失败:', error);
+    console.error('鑾峰彇绉垎浣欓澶辫触:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '获取积分余额失败',
+        message: '鑾峰彇绉垎浣欓澶辫触',
         data: null,
       },
       { status: 500 }
@@ -142,7 +139,7 @@ async function getUserPointsBalance(userId: string) {
   }
 }
 
-// 获取用户积分历史
+// 鑾峰彇鐢ㄦ埛绉垎鍘嗗彶
 async function getUserPointsHistory(
   userId: string,
   page: number,
@@ -163,7 +160,7 @@ async function getUserPointsHistory(
       .range(offset, offset + pageSize - 1);
 
     if (error) {
-      throw new Error('获取积分历史失败');
+      throw new Error('鑾峰彇绉垎鍘嗗彶澶辫触');
     }
 
     const result = {
@@ -189,11 +186,11 @@ async function getUserPointsHistory(
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('获取积分历史失败:', error);
+    console.error('鑾峰彇绉垎鍘嗗彶澶辫触:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '获取积分历史失败',
+        message: '鑾峰彇绉垎鍘嗗彶澶辫触',
         data: null,
       },
       { status: 500 }
@@ -201,13 +198,12 @@ async function getUserPointsHistory(
   }
 }
 
-// 获取积分规则
+// 鑾峰彇绉垎瑙勫垯
 async function getPointsRules() {
   try {
     const cacheKey = 'points_rules';
 
-    // 尝试从缓存获取
-    const cachedRules = await cacheManager.get(cacheKey);
+    // 灏濊瘯浠庣紦瀛樿幏?    const cachedRules = await cacheManager.get(cacheKey);
     if (cachedRules) {
       return NextResponse.json({
         code: 0,
@@ -218,61 +214,60 @@ async function getPointsRules() {
       });
     }
 
-    // 定义积分规则
+    // 瀹氫箟绉垎瑙勫垯
     const rules = [
       {
         action: 'daily_login',
         points: 10,
-        description: '每日签到奖励',
+        description: '姣忔棩绛惧埌濂栧姳',
         frequency: 'once_per_day',
         limit_per_day: 1,
       },
       {
         action: 'like_article',
         points: 2,
-        description: '点赞文章',
+        description: '鐐硅禐鏂囩珷',
         frequency: 'per_action',
         limit_per_day: 50,
       },
       {
         action: 'favorite_article',
         points: 5,
-        description: '收藏文章',
+        description: '鏀惰棌鏂囩珷',
         frequency: 'per_action',
         limit_per_day: 20,
       },
       {
         action: 'share_content',
         points: 15,
-        description: '分享内容到社交平台',
+        description: '鍒嗕韩鍐呭鍒扮ぞ浜ゅ钩?,
         frequency: 'per_action',
         limit_per_day: 10,
       },
       {
         action: 'create_article',
         points: 50,
-        description: '发布原创文章',
+        description: '鍙戝竷鍘熷垱鏂囩珷',
         frequency: 'per_action',
         limit_per_day: 5,
       },
       {
         action: 'complete_repair',
         points: 100,
-        description: '完成维修订单',
+        description: '瀹屾垚缁翠慨璁㈠崟',
         frequency: 'per_action',
         limit_per_day: 3,
       },
       {
         action: 'invite_friend',
         points: 200,
-        description: '邀请好友注册',
+        description: '閭€璇峰ソ鍙嬫敞?,
         frequency: 'per_invite',
         limit_per_day: 10,
       },
     ];
 
-    // 缓存结果（1小时）
-    await cacheManager.set(cacheKey, rules, 3600);
+    // 缂撳瓨缁撴灉?灏忔椂?    await cacheManager.set(cacheKey, rules, 3600);
 
     return NextResponse.json({
       code: 0,
@@ -282,11 +277,11 @@ async function getPointsRules() {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('获取积分规则失败:', error);
+    console.error('鑾峰彇绉垎瑙勫垯澶辫触:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '获取积分规则失败',
+        message: '鑾峰彇绉垎瑙勫垯澶辫触',
         data: null,
       },
       { status: 500 }
@@ -294,15 +289,14 @@ async function getPointsRules() {
   }
 }
 
-// 积分操作接口（POST）
-export async function POST(request: Request) {
+// 绉垎鎿嶄綔鎺ュ彛锛圥OST锟?export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '未授权访问',
+          message: '鏈巿鏉冭?,
           data: null,
         },
         { status: 401 }
@@ -316,14 +310,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '缺少必要参数',
+          message: '缂哄皯蹇呰鍙傛暟',
           data: null,
         },
         { status: 400 }
       );
     }
 
-    // 执行积分操作
+    // 鎵ц绉垎鎿嶄綔
     const result = await executePointsAction(
       user_id,
       action,
@@ -339,11 +333,11 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('积分操作失败:', error);
+    console.error('绉垎鎿嶄綔澶辫触:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '积分操作失败',
+        message: '绉垎鎿嶄綔澶辫触',
         data: null,
       },
       { status: 500 }
@@ -351,7 +345,7 @@ export async function POST(request: Request) {
   }
 }
 
-// 执行积分操作
+// 鎵ц绉垎鎿嶄綔
 async function executePointsAction(
   userId: string,
   action: string,
@@ -360,7 +354,7 @@ async function executePointsAction(
   relatedId?: string
 ) {
   try {
-    // 开始数据库事务
+    // 寮€濮嬫暟鎹簱浜嬪姟
     const { data: userData, error: userError } = await supabase
       .from('user_points')
       .select('id, total_points, available_points, frozen_points')
@@ -368,14 +362,14 @@ async function executePointsAction(
       .single();
 
     if (userError) {
-      throw new Error('用户积分记录不存在');
+      throw new Error('鐢ㄦ埛绉垎璁板綍涓嶅瓨?);
     }
 
-    // 计算新的积分余额
+    // 璁＄畻鏂扮殑绉垎浣欓
     const newTotal = (userData.total_points || 0) + amount;
     const newAvailable = (userData.available_points || 0) + amount;
 
-    // 更新用户积分总额
+    // 鏇存柊鐢ㄦ埛绉垎鎬婚
     const { error: updateError } = await supabase
       .from('user_points')
       .update({
@@ -386,10 +380,10 @@ async function executePointsAction(
       .eq('id', userData.id);
 
     if (updateError) {
-      throw new Error('更新积分失败');
+      throw new Error('鏇存柊绉垎澶辫触');
     }
 
-    // 记录积分变动历史
+    // 璁板綍绉垎鍙樺姩鍘嗗彶
     const { data: transaction, error: transError } = await supabase
       .from('points_transactions')
       .insert({
@@ -405,10 +399,10 @@ async function executePointsAction(
       .single();
 
     if (transError) {
-      console.warn('记录积分历史失败:', transError);
+      console.warn('璁板綍绉垎鍘嗗彶澶辫触:', transError);
     }
 
-    // 清除相关缓存
+    // 娓呴櫎鐩稿叧缂撳瓨
     const balanceCacheKey = generateCacheKey('points_balance', userId);
     await cacheManager.del(balanceCacheKey);
 
@@ -421,23 +415,24 @@ async function executePointsAction(
       description: description || getDefaultDescription(action, amount),
     };
   } catch (error) {
-    console.error('执行积分操作失败:', error);
+    console.error('鎵ц绉垎鎿嶄綔澶辫触:', error);
     throw error;
   }
 }
 
-// 获取默认描述
+// 鑾峰彇榛樿鎻忚堪
 function getDefaultDescription(action: string, amount: number) {
   const actionDescriptions: Record<string, string> = {
-    daily_login: '每日签到奖励',
-    like_article: '点赞文章奖励',
-    favorite_article: '收藏文章奖励',
-    share_content: '分享内容奖励',
-    create_article: '发布文章奖励',
-    complete_repair: '完成维修订单奖励',
-    invite_friend: '邀请好友奖励',
+    daily_login: '姣忔棩绛惧埌濂栧姳',
+    like_article: '鐐硅禐鏂囩珷濂栧姳',
+    favorite_article: '鏀惰棌鏂囩珷濂栧姳',
+    share_content: '鍒嗕韩鍐呭濂栧姳',
+    create_article: '鍙戝竷鏂囩珷濂栧姳',
+    complete_repair: '瀹屾垚缁翠慨璁㈠崟濂栧姳',
+    invite_friend: '閭€璇峰ソ鍙嬪?,
   };
 
-  const baseDesc = actionDescriptions[action] || '积分变动';
-  return `${baseDesc} ${amount > 0 ? '+' : ''}${amount}积分`;
+  const baseDesc = actionDescriptions[action] || '绉垎鍙樺姩';
+  return `${baseDesc} ${amount > 0 ? '+' : ''}${amount}绉垎`;
 }
+

@@ -17,9 +17,9 @@ const environments = {
       'NEXT_PUBLIC_SUPABASE_ANON_KEY',
       'SUPABASE_SERVICE_ROLE_KEY',
       'DATABASE_URL',
-      'NEXT_PUBLIC_SITE_URL'
+      'NEXT_PUBLIC_SITE_URL',
     ],
-    name: '开发环境'
+    name: '开发环境',
   },
   stage: {
     files: ['.env.stage', '.env.stage.local'],
@@ -28,9 +28,9 @@ const environments = {
       'NEXT_PUBLIC_SUPABASE_ANON_KEY',
       'SUPABASE_SERVICE_ROLE_KEY',
       'DATABASE_URL',
-      'NEXT_PUBLIC_SITE_URL'
+      'NEXT_PUBLIC_SITE_URL',
     ],
-    name: '预发布环境'
+    name: '预发布环境',
   },
   prod: {
     files: ['.env.prod', '.env.prod.local'],
@@ -39,10 +39,10 @@ const environments = {
       'NEXT_PUBLIC_SUPABASE_ANON_KEY',
       'SUPABASE_SERVICE_ROLE_KEY',
       'DATABASE_URL',
-      'NEXT_PUBLIC_SITE_URL'
+      'NEXT_PUBLIC_SITE_URL',
     ],
-    name: '生产环境'
-  }
+    name: '生产环境',
+  },
 };
 
 // 占位符模式检测
@@ -50,7 +50,7 @@ const placeholderPatterns = [
   /your_[a-zA-Z0-9_-]+/i,
   /YOUR_[A-Z0-9_-]+/,
   /\[.*PASSWORD.*\]/i,
-  /actual_[a-zA-Z0-9_-]+/i
+  /actual_[a-zA-Z0-9_-]+/i,
 ];
 
 function checkPlaceholder(content, varName) {
@@ -60,20 +60,20 @@ function checkPlaceholder(content, varName) {
 function validateEnvironment(envKey, envConfig) {
   console.log(`\n🔍 验证${envConfig.name}配置:`);
   console.log('='.repeat(40));
-  
+
   let allValid = true;
   let fileExists = false;
-  
+
   // 检查配置文件存在性
   for (const fileName of envConfig.files) {
     const filePath = path.join(__dirname, '..', fileName);
     if (fs.existsSync(filePath)) {
       fileExists = true;
       console.log(`✅ 配置文件存在: ${fileName}`);
-      
+
       try {
         const content = fs.readFileSync(filePath, 'utf8');
-        
+
         // 检查必需变量
         console.log(`\n📋 必需变量检查:`);
         for (const varName of envConfig.requiredVars) {
@@ -90,14 +90,18 @@ function validateEnvironment(envKey, envConfig) {
             allValid = false;
           }
         }
-        
+
         // 检查环境特定变量
         const envSpecificChecks = {
           dev: ['ENABLE_DEVTOOLS', 'HOT_RELOAD_ENABLED'],
           stage: ['MONITORING_ENABLED', 'RATE_LIMITING_ENABLED'],
-          prod: ['HTTPS_ONLY', 'AUTO_BACKUP_ENABLED', 'CONTENT_SECURITY_POLICY']
+          prod: [
+            'HTTPS_ONLY',
+            'AUTO_BACKUP_ENABLED',
+            'CONTENT_SECURITY_POLICY',
+          ],
         };
-        
+
         if (envSpecificChecks[envKey]) {
           console.log(`\n🔧 环境特定配置检查:`);
           for (const varName of envSpecificChecks[envKey]) {
@@ -108,7 +112,6 @@ function validateEnvironment(envKey, envConfig) {
             }
           }
         }
-        
       } catch (error) {
         console.log(`❌ 读取文件 ${fileName} 失败: ${error.message}`);
         allValid = false;
@@ -117,29 +120,30 @@ function validateEnvironment(envKey, envConfig) {
       console.log(`❌ 配置文件不存在: ${fileName}`);
     }
   }
-  
+
   if (!fileExists) {
     console.log(`❌ 该环境没有任何配置文件`);
     allValid = false;
   }
-  
+
   return allValid;
 }
 
 function validateSecrets() {
   console.log(`\n🔒 敏感信息配置检查:`);
   console.log('='.repeat(40));
-  
+
   const secretsFile = path.join(__dirname, '..', '.env.secrets');
   if (!fs.existsSync(secretsFile)) {
     console.log('❌ .env.secrets 文件不存在');
     return false;
   }
-  
+
   try {
     const content = fs.readFileSync(secretsFile, 'utf8');
-    const placeholderCount = (content.match(/actual_[a-zA-Z0-9_-]+/gi) || []).length;
-    
+    const placeholderCount = (content.match(/actual_[a-zA-Z0-9_-]+/gi) || [])
+      .length;
+
     if (placeholderCount > 0) {
       console.log(`⚠️  发现 ${placeholderCount} 个敏感信息占位符需要替换`);
       return false;
@@ -155,9 +159,9 @@ function validateSecrets() {
 
 function main() {
   console.log('🚀 FixCycle 环境配置验证工具\n');
-  
+
   let overallValid = true;
-  
+
   // 验证各个环境
   for (const [envKey, envConfig] of Object.entries(environments)) {
     const isValid = validateEnvironment(envKey, envConfig);
@@ -165,18 +169,18 @@ function main() {
       overallValid = false;
     }
   }
-  
+
   // 验证敏感信息
   const secretsValid = validateSecrets();
   if (!secretsValid) {
     overallValid = false;
   }
-  
+
   // 输出总结
-  console.log('\n' + '='.repeat(50));
+  console.log(`\n${'='.repeat(50)}`);
   console.log('📊 配置验证总结:');
   console.log('='.repeat(50));
-  
+
   if (overallValid) {
     console.log('✅ 所有环境配置验证通过！');
     console.log('\n📋 建议下一步操作:');

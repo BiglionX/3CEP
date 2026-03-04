@@ -3,38 +3,42 @@
 ## 📋 任务分类与优先级
 
 ### 🔴 高优先级（立即执行）
+
 这些任务是系统核心功能，直接影响FCX生态的完整性
 
-| 任务ID | 任务名称 | 依赖关系 | 预估工期 | 负责人 |
-|--------|----------|----------|----------|---------|
-| task_fcx_services | FCX账户服务实现 | 无 | 2周 | 后端开发 |
-| task_alliance_onboarding | 维修店入驻API | task_fcx_services | 1周 | 后端开发 |
-| task_fcx_purchase | FCX购买接口 | task_fcx_services | 1周 | 后端开发 |
-| task_supply_chain_foundation | 供应链基础模块 | 无 | 2周 | 后端开发 |
+| 任务ID                       | 任务名称        | 依赖关系          | 预估工期 | 负责人   |
+| ---------------------------- | --------------- | ----------------- | -------- | -------- |
+| task_fcx_services            | FCX账户服务实现 | 无                | 2周      | 后端开发 |
+| task_alliance_onboarding     | 维修店入驻API   | task_fcx_services | 1周      | 后端开发 |
+| task_fcx_purchase            | FCX购买接口     | task_fcx_services | 1周      | 后端开发 |
+| task_supply_chain_foundation | 供应链基础模块  | 无                | 2周      | 后端开发 |
 
 ### 🟡 中优先级（近期执行）
+
 这些任务增强系统功能，提升用户体验
 
-| 任务ID | 任务名称 | 依赖关系 | 预估工期 | 负责人 |
-|--------|----------|----------|----------|---------|
-| task_recommendation_engine | 智能推荐引擎 | task_alliance_onboarding | 2周 | 算法工程师 |
-| task_order_system | 工单管理系统 | task_fcx_services | 2周 | 后端开发 |
-| task_supplier_management | 供应商管理 | task_supply_chain_foundation | 1周 | 后端开发 |
-| task_multi_warehouse | 多仓管理 | task_supply_chain_foundation | 2周 | 后端开发 |
+| 任务ID                     | 任务名称     | 依赖关系                     | 预估工期 | 负责人     |
+| -------------------------- | ------------ | ---------------------------- | -------- | ---------- |
+| task_recommendation_engine | 智能推荐引擎 | task_alliance_onboarding     | 2周      | 算法工程师 |
+| task_order_system          | 工单管理系统 | task_fcx_services            | 2周      | 后端开发   |
+| task_supplier_management   | 供应商管理   | task_supply_chain_foundation | 1周      | 后端开发   |
+| task_multi_warehouse       | 多仓管理     | task_supply_chain_foundation | 2周      | 后端开发   |
 
 ### 🟢 低优先级（后续执行）
+
 这些任务属于优化和扩展功能
 
-| 任务ID | 任务名称 | 依赖关系 | 预估工期 | 负责人 |
-|--------|----------|----------|----------|---------|
-| task_fcx2_reward | FCX2奖励机制 | task_order_system | 1周 | 后端开发 |
-| task_level_system | 等级体系 | task_fcx2_reward | 1周 | 后端开发 |
-| task_procurement_basic | 采购基础 | task_supplier_management | 2周 | 后端开发 |
-| task_fcx_integration | FCX集成 | task_order_system + task_multi_warehouse | 2周 | 后端开发 |
+| 任务ID                 | 任务名称     | 依赖关系                                 | 预估工期 | 负责人   |
+| ---------------------- | ------------ | ---------------------------------------- | -------- | -------- |
+| task_fcx2_reward       | FCX2奖励机制 | task_order_system                        | 1周      | 后端开发 |
+| task_level_system      | 等级体系     | task_fcx2_reward                         | 1周      | 后端开发 |
+| task_procurement_basic | 采购基础     | task_supplier_management                 | 2周      | 后端开发 |
+| task_fcx_integration   | FCX集成      | task_order_system + task_multi_warehouse | 2周      | 后端开发 |
 
 ## 🔄 并行开发策略
 
 ### 第一波并行（第1-2周）
+
 ```
 🎯 目标：建立核心服务基础
 
@@ -50,6 +54,7 @@
 ```
 
 ### 第二波并行（第3-4周）
+
 ```
 🎯 目标：实现业务流程闭环
 
@@ -65,6 +70,7 @@
 ```
 
 ### 第三波并行（第5-6周）
+
 ```
 🎯 目标：系统集成与优化
 
@@ -82,12 +88,14 @@
 ## 📊 资源配置建议
 
 ### 人员配置
+
 - **后端开发**：3人（2人负责FCX系统，1人负责供应链）
 - **前端开发**：1人（负责管理后台界面）
 - **算法工程师**：1人（兼职，负责推荐算法）
 - **测试工程师**：1人（兼职，负责功能测试）
 
 ### 技术栈统一
+
 - **数据库**：统一使用Supabase PostgreSQL
 - **认证**：复用现有Supabase Auth
 - **API规范**：遵循RESTful设计原则
@@ -96,11 +104,13 @@
 ## ⚠️ 风险控制
 
 ### 技术风险缓解
+
 1. **接口兼容性**：制定统一的API规范文档
 2. **数据一致性**：使用数据库事务保证关键操作原子性
 3. **性能瓶颈**：提前进行压力测试和性能优化
 
 ### 进度风险缓解
+
 1. **里程碑检查**：每周进行进度评审
 2. **代码审查**：建立严格的代码审查流程
 3. **文档同步**：保持技术文档与代码同步更新
@@ -108,11 +118,13 @@
 ## 🎯 成功标准
 
 ### 阶段性目标
+
 - **第2周末**：FCX账户系统基础功能完成
 - **第4周末**：供应链基础模块完成
 - **第6周末**：两个系统实现基本集成
 
 ### 质量指标
+
 - 代码覆盖率 ≥ 80%
 - API响应时间 ≤ 200ms
 - 系统可用性 ≥ 99.5%

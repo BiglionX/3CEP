@@ -18,14 +18,14 @@ class E2ETestRunner {
         failedTests: 0,
         startTime: new Date().toISOString(),
         endTime: null,
-        duration: 0
+        duration: 0,
       },
       suites: {},
       environment: {
         nodeVersion: process.version,
         platform: process.platform,
-        arch: process.arch
-      }
+        arch: process.arch,
+      },
     };
   }
 
@@ -34,22 +34,22 @@ class E2ETestRunner {
    */
   async prepareEnvironment() {
     console.log('🚀 准备测试环境...');
-    
+
     try {
       // 初始化测试数据
       console.log('📋 初始化测试数据...');
       execSync('node tests/test-data-manager.ts', { stdio: 'inherit' });
-      
+
       // 启动开发服务器
       console.log('🔧 启动开发服务器...');
-      const serverProcess = execSync('npm run dev', { 
+      const serverProcess = execSync('npm run dev', {
         stdio: 'pipe',
-        timeout: 30000
+        timeout: 30000,
       });
-      
+
       // 等待服务器启动
       await this.waitForServer('http://localhost:3001', 30000);
-      
+
       console.log('✅ 测试环境准备完成');
       return true;
     } catch (error) {
@@ -63,7 +63,7 @@ class E2ETestRunner {
    */
   async waitForServer(url, timeout) {
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < timeout) {
       try {
         const response = await fetch(url, { method: 'HEAD', timeout: 5000 });
@@ -75,7 +75,7 @@ class E2ETestRunner {
       }
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    
+
     throw new Error(`服务器在 ${timeout}ms 内未启动`);
   }
 
@@ -84,50 +84,50 @@ class E2ETestRunner {
    */
   async runTestSuite(suiteName, pattern) {
     console.log(`🧪 执行测试套件: ${suiteName}`);
-    
+
     const startTime = Date.now();
-    
+
     try {
       // 执行Playwright测试
       const testCommand = `npx playwright test ${pattern} --reporter=json`;
-      const result = execSync(testCommand, { 
+      const result = execSync(testCommand, {
         stdio: 'pipe',
-        timeout: 300000 // 5分钟超时
+        timeout: 300000, // 5分钟超时
       });
-      
+
       const duration = Date.now() - startTime;
-      
+
       // 解析测试结果
       const testOutput = result.toString();
       const jsonMatch = testOutput.match(/\{[\s\S]*\}/);
-      
+
       if (jsonMatch) {
         const jsonData = JSON.parse(jsonMatch[0]);
         this.testResults.suites[suiteName] = {
           ...jsonData,
           duration,
-          status: 'passed'
+          status: 'passed',
         };
-        
+
         this.testResults.summary.passedTests += jsonData.stats?.expected || 0;
         this.testResults.summary.failedTests += jsonData.stats?.unexpected || 0;
         this.testResults.summary.totalTests += jsonData.stats?.total || 0;
-        
+
         console.log(`✅ ${suiteName} 测试套件执行完成`);
         return true;
       }
     } catch (error) {
       const duration = Date.now() - startTime;
-      
+
       this.testResults.suites[suiteName] = {
         error: error.message,
         duration,
-        status: 'failed'
+        status: 'failed',
       };
-      
+
       this.testResults.summary.failedTests += 1;
       this.testResults.summary.totalTests += 1;
-      
+
       console.error(`❌ ${suiteName} 测试套件执行失败:`, error.message);
       return false;
     }
@@ -138,12 +138,24 @@ class E2ETestRunner {
    */
   async runAllTests() {
     const testSuites = [
-      { name: '角色权限测试', pattern: 'tests/e2e/roles-permissions.e2e.spec.ts' },
-      { name: '维修流程测试', pattern: 'tests/e2e/repair-workflow.e2e.spec.ts' },
-      { name: '配件店铺管理测试', pattern: 'tests/e2e/parts-shop-management.e2e.spec.ts' },
+      {
+        name: '角色权限测试',
+        pattern: 'tests/e2e/roles-permissions.e2e.spec.ts',
+      },
+      {
+        name: '维修流程测试',
+        pattern: 'tests/e2e/repair-workflow.e2e.spec.ts',
+      },
+      {
+        name: '配件店铺管理测试',
+        pattern: 'tests/e2e/parts-shop-management.e2e.spec.ts',
+      },
       { name: 'FCX生态测试', pattern: 'tests/e2e/fcx-ecosystem.e2e.spec.ts' },
       { name: 'WMS仓储测试', pattern: 'tests/e2e/wms-warehouse.e2e.spec.ts' },
-      { name: '跨模块一致性测试', pattern: 'tests/e2e/cross-module-consistency.e2e.spec.ts' }
+      {
+        name: '跨模块一致性测试',
+        pattern: 'tests/e2e/cross-module-consistency.e2e.spec.ts',
+      },
     ];
 
     console.log('🎯 开始执行端到端测试...\n');
@@ -155,7 +167,8 @@ class E2ETestRunner {
     }
 
     this.testResults.summary.endTime = new Date().toISOString();
-    this.testResults.summary.duration = Date.now() - new Date(this.testResults.summary.startTime).getTime();
+    this.testResults.summary.duration =
+      Date.now() - new Date(this.testResults.summary.startTime).getTime();
 
     return results;
   }
@@ -165,9 +178,13 @@ class E2ETestRunner {
    */
   async generateReport() {
     console.log('\n📊 生成测试报告...');
-    
-    const reportPath = path.join(process.cwd(), 'test-results', 'e2e-test-report.json');
-    
+
+    const reportPath = path.join(
+      process.cwd(),
+      'test-results',
+      'e2e-test-report.json'
+    );
+
     // 确保目录存在
     const reportDir = path.dirname(reportPath);
     if (!fs.existsSync(reportDir)) {
@@ -180,18 +197,18 @@ class E2ETestRunner {
       metadata: {
         generatedAt: new Date().toISOString(),
         generator: 'FixCycle E2E Test Runner',
-        version: '1.0.0'
+        version: '1.0.0',
       },
       coverage: {
         testCoverage: '85%',
         codeCoverage: '78%',
-        branchCoverage: '82%'
+        branchCoverage: '82%',
       },
       performance: {
         avgTestDuration: this.calculateAverageDuration(),
         slowestTests: this.getSlowestTests(),
-        fastestTests: this.getFastestTests()
-      }
+        fastestTests: this.getFastestTests(),
+      },
     };
 
     // 写入JSON报告
@@ -200,10 +217,10 @@ class E2ETestRunner {
 
     // 生成HTML报告
     await this.generateHtmlReport(detailedReport);
-    
+
     // 生成Markdown报告
     await this.generateMarkdownReport(detailedReport);
-    
+
     return reportPath;
   }
 
@@ -214,9 +231,9 @@ class E2ETestRunner {
     const durations = Object.values(this.testResults.suites)
       .map(suite => suite.duration || 0)
       .filter(duration => duration > 0);
-    
+
     if (durations.length === 0) return 0;
-    
+
     const sum = durations.reduce((acc, curr) => acc + curr, 0);
     return Math.round(sum / durations.length);
   }
@@ -228,11 +245,11 @@ class E2ETestRunner {
     const tests = Object.entries(this.testResults.suites)
       .map(([name, suite]) => ({
         name,
-        duration: suite.duration || 0
+        duration: suite.duration || 0,
       }))
       .sort((a, b) => b.duration - a.duration)
       .slice(0, 5);
-    
+
     return tests;
   }
 
@@ -243,12 +260,12 @@ class E2ETestRunner {
     const tests = Object.entries(this.testResults.suites)
       .map(([name, suite]) => ({
         name,
-        duration: suite.duration || 0
+        duration: suite.duration || 0,
       }))
       .filter(test => test.duration > 0)
       .sort((a, b) => a.duration - b.duration)
       .slice(0, 5);
-    
+
     return tests;
   }
 
@@ -315,14 +332,18 @@ class E2ETestRunner {
         </div>
 
         <h2>📊 测试套件详情</h2>
-        ${Object.entries(data.suites).map(([name, suite]) => `
+        ${Object.entries(data.suites)
+          .map(
+            ([name, suite]) => `
             <div class="suite ${suite.status}">
                 <div class="suite-header">${name}</div>
                 <p>状态: <strong>${suite.status === 'passed' ? '✅ 通过' : '❌ 失败'}</strong></p>
                 <p>耗时: ${(suite.duration / 1000).toFixed(2)} 秒</p>
                 ${suite.error ? `<p style="color: #dc3545;">错误: ${suite.error}</p>` : ''}
             </div>
-        `).join('')}
+        `
+          )
+          .join('')}
 
         <h2>📈 性能指标</h2>
         <div class="stats">
@@ -343,7 +364,11 @@ class E2ETestRunner {
 </body>
 </html>`;
 
-    const htmlPath = path.join(process.cwd(), 'test-results', 'e2e-test-report.html');
+    const htmlPath = path.join(
+      process.cwd(),
+      'test-results',
+      'e2e-test-report.html'
+    );
     fs.writeFileSync(htmlPath, htmlTemplate);
     console.log(`📄 HTML报告已生成: ${htmlPath}`);
   }
@@ -366,12 +391,16 @@ class E2ETestRunner {
 
 ## 🧪 测试套件详情
 
-${Object.entries(data.suites).map(([name, suite]) => `
+${Object.entries(data.suites)
+  .map(
+    ([name, suite]) => `
 ### ${name}
 - **状态**: ${suite.status === 'passed' ? '✅ 通过' : '❌ 失败'}
 - **耗时**: ${(suite.duration / 1000).toFixed(2)} 秒
 ${suite.error ? `- **错误**: ${suite.error}` : ''}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ## 📈 性能指标
 
@@ -391,7 +420,11 @@ ${suite.error ? `- **错误**: ${suite.error}` : ''}
 *此报告由 FixCycle E2E Test Runner 自动生成*
 `;
 
-    const mdPath = path.join(process.cwd(), 'test-results', 'e2e-test-report.md');
+    const mdPath = path.join(
+      process.cwd(),
+      'test-results',
+      'e2e-test-report.md'
+    );
     fs.writeFileSync(mdPath, markdownContent);
     console.log(`📄 Markdown报告已生成: ${mdPath}`);
   }
@@ -402,7 +435,7 @@ ${suite.error ? `- **错误**: ${suite.error}` : ''}
   async run() {
     try {
       console.log('🚀 FixCycle 端到端测试执行器启动\n');
-      
+
       // 准备环境
       const envReady = await this.prepareEnvironment();
       if (!envReady) {
@@ -411,18 +444,19 @@ ${suite.error ? `- **错误**: ${suite.error}` : ''}
 
       // 执行测试
       const results = await this.runAllTests();
-      
+
       // 生成报告
       await this.generateReport();
-      
+
       // 输出总结
       console.log('\n🎉 测试执行完成!');
       console.log(`✅ 通过: ${this.testResults.summary.passedTests}`);
       console.log(`❌ 失败: ${this.testResults.summary.failedTests}`);
-      console.log(`📊 通过率: ${Math.round((this.testResults.summary.passedTests / this.testResults.summary.totalTests) * 100)}%`);
-      
+      console.log(
+        `📊 通过率: ${Math.round((this.testResults.summary.passedTests / this.testResults.summary.totalTests) * 100)}%`
+      );
+
       process.exit(this.testResults.summary.failedTests > 0 ? 1 : 0);
-      
     } catch (error) {
       console.error('💥 测试执行过程中发生错误:', error.message);
       process.exit(1);

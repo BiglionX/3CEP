@@ -5,12 +5,12 @@ import { Button } from './button';
 import { Card, CardContent, CardHeader, CardTitle } from './card';
 import { Badge } from './badge';
 import { ScrollArea } from './scroll-area';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ZoomIn, 
-  ZoomOut, 
-  RotateCw, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
   Download,
   Search,
   BookOpen,
@@ -18,7 +18,7 @@ import {
   Calendar,
   Eye,
   ThumbsUp,
-  MessageSquare
+  MessageSquare,
 } from 'lucide-react';
 
 interface DocumentViewerProps {
@@ -63,13 +63,12 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
     const results: number[] = [];
     paragraphs.forEach((paragraph, index) => {
       if (paragraph.toLowerCase().includes(searchTerm.toLowerCase())) {
-        results.push(Math.floor(index / 3) + 1); // 转换为页码
-      }
+        results.push(Math.floor(index / 3) + 1); // 转换为页?      }
     });
-    
+
     setSearchResults(Array.from(new Set(results))); // 去重
     setCurrentSearchIndex(0);
-    
+
     if (results.length > 0) {
       setCurrentPage(results[0]);
     }
@@ -99,8 +98,7 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
     setRotation(0);
   };
 
-  // 获取当前页内容
-  const getCurrentPageContent = () => {
+  // 获取当前页内?  const getCurrentPageContent = () => {
     const startIndex = (currentPage - 1) * 3;
     return paragraphs.slice(startIndex, startIndex + 3);
   };
@@ -115,16 +113,24 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
             <div>
               <CardTitle className="text-xl">{document.title}</CardTitle>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Badge variant={document.status === 'published' ? 'default' : 'secondary'}>
-                  {document.status === 'published' ? '已发布' : document.status === 'pending' ? '待审核' : '已拒绝'}
+                <Badge
+                  variant={
+                    document.status === 'published' ? 'default' : 'secondary'
+                  }
+                >
+                  {document.status === 'published'
+                    ? '已发?
+                    : document.status === 'pending'
+                      ? '待审?
+                      : '已拒?}
                 </Badge>
                 <span>{document.language}</span>
-                <span>•</span>
+                <span>�?/span>
                 <span>{document.category}</span>
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Button variant="outline" size="sm" onClick={onClose}>
               关闭
@@ -141,15 +147,17 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center">
                   <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span>创建: {new Date(document.created_at).toLocaleDateString()}</span>
+                  <span>
+                    创建: {new Date(document.created_at).toLocaleDateString()}
+                  </span>
                 </div>
                 <div className="flex items-center">
                   <Eye className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span>浏览: {document.views} 次</span>
+                  <span>浏览: {document.views} �?/span>
                 </div>
                 <div className="flex items-center">
                   <ThumbsUp className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span>点赞: {document.likes} 次</span>
+                  <span>点赞: {document.likes} �?/span>
                 </div>
               </div>
             </div>
@@ -162,9 +170,9 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                   type="text"
                   placeholder="搜索内容..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="flex-1 px-2 py-1 border rounded text-sm"
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  onKeyDown={e => e.key === 'Enter' && handleSearch()}
                 />
                 <Button size="sm" variant="outline" onClick={handleSearch}>
                   <Search className="h-4 w-4" />
@@ -172,8 +180,7 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
               </div>
               {searchResults.length > 0 && (
                 <div className="mt-2 text-xs text-muted-foreground">
-                  找到 {searchResults.length} 个结果
-                  {currentSearchIndex + 1}/{searchResults.length}
+                  找到 {searchResults.length} 个结?                  {currentSearchIndex + 1}/{searchResults.length}
                 </div>
               )}
             </div>
@@ -185,19 +192,26 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                 <Button size="sm" variant="outline" onClick={goToFirstPage}>
                   首页
                 </Button>
-                <Button size="sm" variant="outline" onClick={goToPrevPage} disabled={currentPage === 1}>
-                  上一页
-                </Button>
-                <Button size="sm" variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
-                  下一页
-                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={goToPrevPage}
+                  disabled={currentPage === 1}
+                >
+                  上一?                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  下一?                </Button>
                 <Button size="sm" variant="outline" onClick={goToLastPage}>
                   末页
                 </Button>
               </div>
               <div className="mt-2 text-center text-sm text-muted-foreground">
-                第 {currentPage} / {totalPages} 页
-              </div>
+                �?{currentPage} / {totalPages} �?              </div>
             </div>
 
             {/* 显示控制 */}
@@ -218,7 +232,12 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                     </Button>
                   </div>
                 </div>
-                <Button size="sm" variant="outline" className="w-full" onClick={resetZoom}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full"
+                  onClick={resetZoom}
+                >
                   <RotateCw className="h-4 w-4 mr-2" />
                   重置视图
                 </Button>
@@ -247,28 +266,29 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                 <div className="flex items-center space-x-2">
                   {searchResults.length > 0 && (
                     <>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
                         onClick={() => {
-                          const newIndex = (currentSearchIndex - 1 + searchResults.length) % searchResults.length;
+                          const newIndex =
+                            (currentSearchIndex - 1 + searchResults.length) %
+                            searchResults.length;
                           setCurrentSearchIndex(newIndex);
                           setCurrentPage(searchResults[newIndex]);
                         }}
                       >
-                        ←
-                      </Button>
-                      <Button 
-                        size="sm" 
+                        �?                      </Button>
+                      <Button
+                        size="sm"
                         variant="outline"
                         onClick={() => {
-                          const newIndex = (currentSearchIndex + 1) % searchResults.length;
+                          const newIndex =
+                            (currentSearchIndex + 1) % searchResults.length;
                           setCurrentSearchIndex(newIndex);
                           setCurrentPage(searchResults[newIndex]);
                         }}
                       >
-                        →
-                      </Button>
+                        �?                      </Button>
                     </>
                   )}
                 </div>
@@ -277,23 +297,23 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
 
             {/* 内容主体 */}
             <ScrollArea className="flex-1 p-6">
-              <div 
+              <div
                 className="prose max-w-none"
-                style={{ 
+                style={{
                   transform: `scale(${zoomLevel / 100}) rotate(${rotation}deg)`,
                   transformOrigin: 'top left',
-                  transition: 'transform 0.2s ease'
+                  transition: 'transform 0.2s ease',
                 }}
               >
                 {getCurrentPageContent().map((paragraph, index) => (
-                  <p 
-                    key={index} 
+                  <p
+                    key={index}
                     className={`mb-4 ${searchTerm && paragraph.toLowerCase().includes(searchTerm.toLowerCase()) ? 'bg-yellow-100 p-2 rounded' : ''}`}
                   >
                     {paragraph}
                   </p>
                 ))}
-                
+
                 {getCurrentPageContent().length === 0 && (
                   <div className="text-center text-muted-foreground py-8">
                     <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
@@ -303,29 +323,26 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
               </div>
             </ScrollArea>
 
-            {/* 页面导航栏 */}
+            {/* 页面导航?*/}
             <div className="border-t p-4 flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                共 {totalPages} 页，当前第 {currentPage} 页
-              </div>
+                �?{totalPages} 页，当前?{currentPage} �?              </div>
               <div className="flex items-center space-x-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={goToPrevPage}
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="h-4 w-4" />
-                  上一页
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                  上一?                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={goToNextPage}
                   disabled={currentPage === totalPages}
                 >
-                  下一页
-                  <ChevronRight className="h-4 w-4" />
+                  下一?                  <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>

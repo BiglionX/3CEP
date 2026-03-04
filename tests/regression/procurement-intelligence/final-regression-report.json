@@ -1,0 +1,254 @@
+{
+  "testRun": {
+    "startTime": "2026-02-26T13:16:59.048Z",
+    "endTime": "2026-02-26T13:17:03.470Z",
+    "duration": "4.42 seconds"
+  },
+  "summary": {
+    "totalTests": 30,
+    "passedTests": 19,
+    "failedTests": 11,
+    "successRate": "63.33%"
+  },
+  "moduleResults": {
+    "供应商画像服务": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:16:59.359Z",
+        "duration": "302ms",
+        "error": "数据不一致"
+      }
+    ],
+    "市场情报服务": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:16:59.624Z",
+        "duration": "263ms",
+        "error": "报告数据不完整"
+      }
+    ],
+    "风险分析服务": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:16:59.874Z",
+        "duration": "248ms",
+        "error": "风险评分数据类型错误"
+      }
+    ],
+    "决策引擎服务": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:00.199Z",
+        "duration": "323ms",
+        "error": "未返回选中供应商"
+      }
+    ],
+    "价格优化服务": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:00.449Z",
+        "duration": "248ms",
+        "error": "推荐价格数据类型错误"
+      }
+    ],
+    "供应商画像API (GET)": [
+      {
+        "status": 200,
+        "timestamp": "2026-02-26T13:17:00.607Z",
+        "responseTime": 74.36785531950423
+      }
+    ],
+    "供应商画像API (POST)": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:00.702Z",
+        "error": "HTTP 404: Error"
+      }
+    ],
+    "市场情报API (GET)": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:00.841Z",
+        "error": "HTTP 400: Error"
+      }
+    ],
+    "市场情报API (POST)": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:00.966Z",
+        "error": "HTTP 404: Error"
+      }
+    ],
+    "风险分析API (POST)": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:01.124Z",
+        "error": "HTTP 404: Error"
+      }
+    ],
+    "决策引擎API (POST)": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:01.230Z",
+        "error": "HTTP 400: Error"
+      }
+    ],
+    "价格优化API (POST)": [
+      {
+        "status": "failed",
+        "timestamp": "2026-02-26T13:17:01.357Z",
+        "error": "HTTP 400: Error"
+      }
+    ],
+    "智能仪表板": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:01.448Z",
+        "duration": "87ms",
+        "message": "智能仪表板测试通过"
+      }
+    ],
+    "供应商洞察面板": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:01.526Z",
+        "duration": "77ms",
+        "message": "供应商洞察面板测试通过"
+      }
+    ],
+    "市场分析视图": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:01.633Z",
+        "duration": "105ms",
+        "message": "市场分析视图测试通过"
+      }
+    ],
+    "风险监控组件": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:01.710Z",
+        "duration": "75ms",
+        "message": "风险监控组件测试通过"
+      }
+    ],
+    "价格优化工具": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:01.804Z",
+        "duration": "91ms",
+        "message": "价格优化工具测试通过"
+      }
+    ],
+    "合同助手界面": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:01.897Z",
+        "duration": "87ms",
+        "message": "合同助手界面测试通过"
+      }
+    ],
+    "供应商数据一致性": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.005Z",
+        "duration": "105ms",
+        "message": "供应商数据一致性验证通过"
+      }
+    ],
+    "市场数据准确性": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.145Z",
+        "duration": "136ms",
+        "message": "市场数据准确性验证通过"
+      }
+    ],
+    "评分算法正确性": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.301Z",
+        "duration": "154ms",
+        "message": "评分算法正确性验证通过"
+      }
+    ],
+    "历史数据追溯": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.426Z",
+        "duration": "125ms",
+        "message": "历史数据追溯验证通过"
+      }
+    ],
+    "无效输入处理": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.502Z",
+        "duration": "73ms",
+        "message": "无效输入处理测试通过"
+      }
+    ],
+    "数据库连接异常": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.596Z",
+        "duration": "92ms",
+        "message": "数据库连接异常处理测试通过"
+      }
+    ],
+    "API超时处理": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.673Z",
+        "duration": "76ms",
+        "message": "API超时处理测试通过"
+      }
+    ],
+    "并发访问冲突": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:02.783Z",
+        "duration": "105ms",
+        "message": "并发访问冲突处理测试通过"
+      }
+    ],
+    "长时间运行稳定性": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:03.096Z",
+        "duration": "310ms",
+        "message": "长时间运行稳定性测试通过"
+      }
+    ],
+    "内存泄漏检测": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:03.251Z",
+        "duration": "154ms",
+        "message": "内存泄漏检测通过"
+      }
+    ],
+    "资源回收验证": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:03.344Z",
+        "duration": "91ms",
+        "message": "资源回收验证通过"
+      }
+    ],
+    "系统重启恢复": [
+      {
+        "status": "passed",
+        "timestamp": "2026-02-26T13:17:03.469Z",
+        "duration": "124ms",
+        "message": "系统重启恢复测试通过"
+      }
+    ]
+  },
+  "systemHealth": {
+    "overallStatus": "CRITICAL",
+    "performance": "GOOD",
+    "stability": "STABLE"
+  },
+  "recommendations": ["建议优化失败的测试用例", "加强系统稳定性和错误处理能力"]
+}

@@ -18,7 +18,7 @@ export async function GET(
 ) {
   try {
     const manualId = params.manualId;
-    
+
     if (!manualId) {
       return NextResponse.json(
         { success: false, error: '缺少说明书ID参数' },
@@ -28,10 +28,12 @@ export async function GET(
 
     const { data: comments, error } = await supabase
       .from('manual_comments')
-      .select(`
+      .select(
+        `
         *,
         user:auth_users(email)
-      `)
+      `
+      )
       .eq('manual_id', manualId)
       .order('created_at', { ascending: false });
 
@@ -41,15 +43,14 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: comments
+      data: comments,
     });
-
   } catch (error) {
     console.error('获取评论错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '获取评论失败' 
+      {
+        success: false,
+        error: (error as Error).message || '获取评论失败',
       },
       { status: 500 }
     );
@@ -66,8 +67,10 @@ export async function POST(
 ) {
   try {
     const manualId = params.manualId;
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       return NextResponse.json(
         { success: false, error: '需要登录才能发表评论' },
@@ -109,15 +112,14 @@ export async function POST(
     return NextResponse.json({
       success: true,
       data: comment,
-      message: '评论发表成功'
+      message: '评论发表成功',
     });
-
   } catch (error) {
     console.error('发表评论错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '发表评论失败' 
+      {
+        success: false,
+        error: (error as Error).message || '发表评论失败',
       },
       { status: 400 }
     );

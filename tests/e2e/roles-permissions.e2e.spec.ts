@@ -1,7 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { TestHelpers, PermissionHelpers } from '../test-helpers';
 import { testDataManager } from '../test-data-manager';
-import { withRetry, withTimeout, DependencyChecker } from '../test-execution-utils';
+import {
+  withRetry,
+  withTimeout,
+  DependencyChecker,
+} from '../test-execution-utils';
 import { TEST_ENV } from '../test-config';
 
 test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
@@ -20,7 +24,7 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
    */
   test('E2E-ROLE-01: 管理员完整权限访问', async ({ page }) => {
     const adminUser = testDataManager.getUserByRole('admin');
-    
+
     // 步骤1: 管理员登录
     await withRetry(async () => {
       await helpers.login(adminUser.email, adminUser.password);
@@ -33,31 +37,37 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
       '/admin/users',
       '/admin/shops/pending',
       '/admin/settings',
-      '/dashboard'
+      '/dashboard',
     ];
 
     for (const path of adminPaths) {
-      await withTimeout(async () => {
-        await page.goto(`${TEST_ENV.getBaseUrl()}${path}`);
-        await helpers.waitForElement('body');
-        // 验证页面包含管理相关元素
-        await expect(page.getByText(/管理|admin|dashboard/i)).toBeVisible();
-      }, 15000, `访问管理员路径 ${path} 超时`);
+      await withTimeout(
+        async () => {
+          await page.goto(`${TEST_ENV.getBaseUrl()}${path}`);
+          await helpers.waitForElement('body');
+          // 验证页面包含管理相关元素
+          await expect(page.getByText(/管理|admin|dashboard/i)).toBeVisible();
+        },
+        15000,
+        `访问管理员路径 ${path} 超时`
+      );
     }
 
     // 步骤3: 验证敏感操作权限
     await page.goto(`${TEST_ENV.getBaseUrl()}/admin/users`);
-    
+
     // 检查创建用户按钮
     const createUserButton = page.locator('[data-testid="create-user-button"]');
     await expect(createUserButton).toBeVisible();
-    
+
     // 检查删除用户按钮
     const deleteUserButton = page.locator('[data-testid="delete-user-button"]');
     await expect(deleteUserButton).toBeVisible();
-    
+
     // 检查权限修改按钮
-    const modifyPermissionsButton = page.locator('[data-testid="modify-permissions-button"]');
+    const modifyPermissionsButton = page.locator(
+      '[data-testid="modify-permissions-button"]'
+    );
     await expect(modifyPermissionsButton).toBeVisible();
 
     // 步骤4: 验证系统配置访问
@@ -77,9 +87,12 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
    */
   test('E2E-ROLE-02: 消费者权限边界测试', async ({ page }) => {
     const consumerUser = testDataManager.getUserByRole('consumer');
-    
+
     // 等待依赖完成
-    const depsReady = await DependencyChecker.waitForDependencies(['E2E-ROLE-01'], 10000);
+    const depsReady = await DependencyChecker.waitForDependencies(
+      ['E2E-ROLE-01'],
+      10000
+    );
     if (!depsReady) {
       test.skip(true, '依赖的管理员测试未完成');
       return;
@@ -95,17 +108,17 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
       '/admin/users',
       '/admin/shops',
       '/admin/settings',
-      '/dashboard'
+      '/dashboard',
     ];
 
     for (const path of restrictedPaths) {
       await page.goto(`${TEST_ENV.getBaseUrl()}${path}`);
-      
+
       // 应该重定向到403页面或登录页面
       await Promise.race([
         helpers.verifyTextPresent(/403|forbidden|权限不足/i),
         helpers.verifyTextPresent(/login|登录/i),
-        page.waitForTimeout(3000)
+        page.waitForTimeout(3000),
       ]);
     }
 
@@ -140,7 +153,7 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
    */
   test('E2E-ROLE-03: 维修技师工单权限测试', async ({ page }) => {
     const engineerUser = testDataManager.getUserByRole('engineer');
-    
+
     // 步骤1: 技师登录
     await withRetry(async () => {
       await helpers.login(engineerUser.email, engineerUser.password);
@@ -148,21 +161,29 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
 
     // 步骤2: 访问技师工作台
     await page.goto(`${TEST_ENV.getBaseUrl()}/repair-shop/dashboard`);
-    
+
     // 验证工单管理功能
-    const workOrdersSection = page.locator('[data-testid="work-orders-section"]');
+    const workOrdersSection = page.locator(
+      '[data-testid="work-orders-section"]'
+    );
     await expect(workOrdersSection).toBeVisible();
 
     // 验证接受工单按钮
-    const acceptOrderButton = page.locator('[data-testid="accept-order-button"]');
+    const acceptOrderButton = page.locator(
+      '[data-testid="accept-order-button"]'
+    );
     await expect(acceptOrderButton).toBeVisible();
 
     // 验证配件申请功能
-    const partsRequestButton = page.locator('[data-testid="parts-request-button"]');
+    const partsRequestButton = page.locator(
+      '[data-testid="parts-request-button"]'
+    );
     await expect(partsRequestButton).toBeVisible();
 
     // 验证照片上传功能
-    const photoUploadButton = page.locator('[data-testid="photo-upload-button"]');
+    const photoUploadButton = page.locator(
+      '[data-testid="photo-upload-button"]'
+    );
     await expect(photoUploadButton).toBeVisible();
 
     await helpers.takeScreenshot('engineer-permissions-verified');
@@ -175,7 +196,7 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
    */
   test('E2E-ROLE-04: 店铺主管理权限测试', async ({ page }) => {
     const shopOwnerUser = testDataManager.getUserByRole('shop_owner');
-    
+
     // 步骤1: 店铺主登录
     await withRetry(async () => {
       await helpers.login(shopOwnerUser.email, shopOwnerUser.password);
@@ -183,17 +204,21 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
 
     // 步骤2: 访问店铺管理页面
     await page.goto(`${TEST_ENV.getBaseUrl()}/shop/manage`);
-    
+
     // 验证店铺信息管理
     const shopInfoSection = page.locator('[data-testid="shop-info-section"]');
     await expect(shopInfoSection).toBeVisible();
 
     // 验证订单处理功能
-    const orderProcessSection = page.locator('[data-testid="order-process-section"]');
+    const orderProcessSection = page.locator(
+      '[data-testid="order-process-section"]'
+    );
     await expect(orderProcessSection).toBeVisible();
 
     // 验证员工管理功能
-    const staffManageSection = page.locator('[data-testid="staff-manage-section"]');
+    const staffManageSection = page.locator(
+      '[data-testid="staff-manage-section"]'
+    );
     await expect(staffManageSection).toBeVisible();
 
     // 验证财务管理功能
@@ -213,12 +238,12 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
     const multiRoleUser = {
       email: 'multirole@test.com',
       password: 'Test123!@#',
-      roles: ['consumer', 'shop_owner']
+      roles: ['consumer', 'shop_owner'],
     };
 
     // 步骤1: 以消费者角色登录
     await helpers.login(multiRoleUser.email, multiRoleUser.password);
-    
+
     // 验证消费者权限
     await page.goto(`${TEST_ENV.getBaseUrl()}/scan/demo`);
     await expect(page.locator('[data-testid="scan-container"]')).toBeVisible();
@@ -231,11 +256,15 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
 
     // 验证店铺主权限
     await page.goto(`${TEST_ENV.getBaseUrl()}/shop/manage`);
-    await expect(page.locator('[data-testid="shop-info-section"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="shop-info-section"]')
+    ).toBeVisible();
 
     // 验证消费者功能不再可访问
     await page.goto(`${TEST_ENV.getBaseUrl()}/scan/demo`);
-    await expect(page.locator('[data-testid="scan-container"]')).not.toBeVisible();
+    await expect(
+      page.locator('[data-testid="scan-container"]')
+    ).not.toBeVisible();
 
     await helpers.takeScreenshot('role-switching-verified');
   });
@@ -250,7 +279,7 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
       email: 'subrole@test.com',
       password: 'Test123!@#',
       mainRole: 'shop_owner',
-      subRoles: ['content_creator', 'inventory_manager']
+      subRoles: ['content_creator', 'inventory_manager'],
     };
 
     // 步骤1: 登录用户
@@ -258,7 +287,9 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
 
     // 步骤2: 验证主角色权限
     await page.goto(`${TEST_ENV.getBaseUrl()}/shop/manage`);
-    await expect(page.locator('[data-testid="shop-info-section"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="shop-info-section"]')
+    ).toBeVisible();
 
     // 步骤3: 验证子角色权限 - 内容创作者
     await page.goto(`${TEST_ENV.getBaseUrl()}/content/create`);
@@ -266,7 +297,9 @@ test.describe('E2E-ROLE: 用户角色权限端到端测试', () => {
 
     // 步骤4: 验证子角色权限 - 库存管理者
     await page.goto(`${TEST_ENV.getBaseUrl()}/inventory/manage`);
-    await expect(page.locator('[data-testid="inventory-dashboard"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="inventory-dashboard"]')
+    ).toBeVisible();
 
     await helpers.takeScreenshot('subrole-permissions-verified');
   });

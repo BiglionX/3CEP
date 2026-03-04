@@ -44,15 +44,19 @@ try {
   // 检查 Docker 是否运行
   execSync('docker info', { stdio: 'ignore' });
   console.log('  ✅ Docker 环境正常');
-  
+
   // 启动服务
   console.log('  🚀 启动 n8n 最小化服务...');
-  const dockerUp = spawn('docker-compose', ['-f', dockerComposeFile, 'up', '-d'], {
-    cwd: path.join(__dirname, '..'),
-    stdio: 'inherit'
-  });
-  
-  dockerUp.on('close', (code) => {
+  const dockerUp = spawn(
+    'docker-compose',
+    ['-f', dockerComposeFile, 'up', '-d'],
+    {
+      cwd: path.join(__dirname, '..'),
+      stdio: 'inherit',
+    }
+  );
+
+  dockerUp.on('close', code => {
     if (code === 0) {
       console.log('  ✅ Docker 服务启动成功');
       runHealthCheck();
@@ -61,7 +65,6 @@ try {
       process.exit(1);
     }
   });
-  
 } catch (error) {
   console.error('  ❌ Docker 环境检查失败:', error.message);
   console.log('  💡 请确保 Docker 已安装并正在运行');
@@ -71,14 +74,14 @@ try {
 // 4. 运行健康检查
 function runHealthCheck() {
   console.log('\n🏥 执行健康自检...');
-  
+
   setTimeout(() => {
     const healthCheck = spawn('node', ['scripts/quick-health-check.js'], {
       cwd: path.join(__dirname, '..'),
-      stdio: 'inherit'
+      stdio: 'inherit',
     });
-    
-    healthCheck.on('close', (code) => {
+
+    healthCheck.on('close', code => {
       if (code === 0) {
         console.log('\n🎉 最小本地服务启动完成！');
         console.log('\n📝 下一步操作:');

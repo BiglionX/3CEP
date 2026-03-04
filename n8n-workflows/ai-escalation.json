@@ -11,10 +11,7 @@
       "name": "AI诊断结果接收",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -24,10 +21,7 @@
       "name": "置信度评估器",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
@@ -37,10 +31,7 @@
       "name": "转人工条件判断",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        650,
-        300
-      ]
+      "position": [650, 300]
     },
     {
       "parameters": {
@@ -100,10 +91,7 @@
       "name": "工单信息构造",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        850,
-        200
-      ]
+      "position": [850, 200]
     },
     {
       "parameters": {
@@ -147,10 +135,7 @@
       "name": "创建客服工单",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1050,
-        150
-      ]
+      "position": [1050, 150]
     },
     {
       "parameters": {
@@ -160,10 +145,7 @@
       "name": "工程师智能分配",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1050,
-        300
-      ]
+      "position": [1050, 300]
     },
     {
       "parameters": {
@@ -195,10 +177,7 @@
       "name": "企业微信通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1250,
-        150
-      ]
+      "position": [1250, 150]
     },
     {
       "parameters": {
@@ -230,10 +209,7 @@
       "name": "钉钉通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1250,
-        300
-      ]
+      "position": [1250, 300]
     },
     {
       "parameters": {
@@ -269,10 +245,7 @@
       "name": "用户状态通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1250,
-        450
-      ]
+      "position": [1250, 450]
     },
     {
       "parameters": {
@@ -314,10 +287,7 @@
       "name": "处理结果聚合",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        1450,
-        300
-      ]
+      "position": [1450, 300]
     },
     {
       "parameters": {
@@ -327,10 +297,7 @@
       "name": "错误处理器",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1650,
-        300
-      ]
+      "position": [1650, 300]
     }
   ],
   "connections": {

@@ -30,13 +30,13 @@ export interface WarehouseOptimizationRequest {
     };
   }>;
   deliveryPreferences?: {
-    maxDeliveryTime?: number; // 最大配送时间(小时)
-    maxBudget?: number; // 最大预算(元)
-    deliveryPriority?: "fastest" | "cheapest" | "balanced"; // 配送优先级
+    maxDeliveryTime?: number; // 最大配送时?小时)
+    maxBudget?: number; // 最大预?�?
+    deliveryPriority?: 'fastest' | 'cheapest' | 'balanced'; // 配送优先级
   };
   orderMetadata?: {
-    orderType?: "normal" | "express" | "bulk";
-    customerLevel?: "regular" | "vip" | "premium";
+    orderType?: 'normal' | 'express' | 'bulk';
+    customerLevel?: 'regular' | 'vip' | 'premium';
     orderValue?: number;
   };
 }
@@ -48,7 +48,7 @@ export interface WarehouseOptimizationResponse {
   optimizationMetrics: OptimizationMetrics;
   costAnalysis: CostAnalysis;
   deliveryEstimates: DeliveryEstimates;
-  confidenceScore: number; // 信心度分数(0-100)
+  confidenceScore: number; // 信心度分?0-100)
 }
 
 // 仓库选择结果接口
@@ -66,23 +66,20 @@ export interface WarehouseSelection {
     };
   };
   distance: number; // 距离(km)
-  estimatedDeliveryTime: number; // 预计配送时间(小时)
-  totalCost: number; // 总成本(元)
+  estimatedDeliveryTime: number; // 预计配送时?小时)
+  totalCost: number; // 总成?�?
   breakdown: {
     shippingCost: number; // 运费
-    handlingCost: number; // 处理费
-    storageCost?: number; // 存储费(如有)
-    insuranceCost: number; // 保险费
-  };
+    handlingCost: number; // 处理?    storageCost?: number; // 存储?如有)
+    insuranceCost: number; // 保险?  };
   inventoryAvailability: {
     hasSufficientStock: boolean;
-    availableQuantities: Record<string, number>; // 各商品可用库存
-    stockStatus: "in_stock" | "partial_stock" | "out_of_stock";
+    availableQuantities: Record<string, number>; // 各商品可用库?    stockStatus: 'in_stock' | 'partial_stock' | 'out_of_stock';
   };
   serviceLevel: {
-    accuracyRate: number; // 准确率(%)
-    onTimeRate: number; // 准时率(%)
-    qualityScore: number; // 服务质量分(0-100)
+    accuracyRate: number; // 准确?%)
+    onTimeRate: number; // 准时?%)
+    qualityScore: number; // 服务质量?0-100)
   };
   optimizationScore: number; // 优化得分(0-100)
   selectionReasons: string[]; // 选择理由
@@ -92,8 +89,7 @@ export interface WarehouseSelection {
 export interface OptimizationMetrics {
   algorithmVersion: string;
   processingTime: number; // 处理时间(ms)
-  factorsConsidered: string[]; // 考虑的因素
-  scoringWeights: {
+  factorsConsidered: string[]; // 考虑的因?  scoringWeights: {
     distance: number;
     inventory: number;
     cost: number;
@@ -115,21 +111,18 @@ export interface CostAnalysis {
   };
   savings: {
     absolute: number; // 绝对节省金额
-    percentage: number; // 节省百分比
-    roi: number; // 投资回报率
-  };
+    percentage: number; // 节省百分?    roi: number; // 投资回报?  };
 }
 
 // 成本组件接口
 export interface CostComponent {
-  type: "shipping" | "handling" | "storage" | "insurance" | "other";
+  type: 'shipping' | 'handling' | 'storage' | 'insurance' | 'other';
   amount: number;
   description: string;
   calculationMethod: string;
 }
 
-// 配送预估接口
-export interface DeliveryEstimates {
+// 配送预估接?export interface DeliveryEstimates {
   fastestOption: {
     warehouseId: string;
     deliveryTime: number;
@@ -157,19 +150,19 @@ export interface ShippingRateRule {
     cities?: string[];
   };
   weightBrackets: Array<{
-    minWeight: number; // 最小重量(kg)
-    maxWeight: number; // 最大重量(kg)
+    minWeight: number; // 最小重?kg)
+    maxWeight: number; // 最大重?kg)
     baseCost: number; // 基础费用
-    costPerKg: number; // 超重费用(元/kg)
+    costPerKg: number; // 超重费用(�?kg)
   }>;
   distanceBrackets?: Array<{
-    minDistance: number; // 最小距离(km)
-    maxDistance: number; // 最大距离(km)
+    minDistance: number; // 最小距?km)
+    maxDistance: number; // 最大距?km)
     rate: number; // 费率系数
   }>;
   deliveryTimeEstimate: {
     baseTime: number; // 基础时间(小时)
-    timePer100km: number; // 每100公里增加时间(小时)
+    timePer100km: number; // �?00公里增加时间(小时)
     processingTime: number; // 处理时间(小时)
   };
   isActive: boolean;
@@ -187,7 +180,7 @@ export interface LocationCache {
     lng: number;
   };
   lastUpdated: Date;
-  accuracy: "precise" | "approximate";
+  accuracy: 'precise' | 'approximate';
 }
 
 // 仓库评分因子接口
@@ -209,7 +202,7 @@ export interface WarehouseDecisionHistory {
   alternativesConsidered: WarehouseSelection[];
   decisionTimestamp: Date;
   userFeedback?: {
-    satisfaction: number; // 用户满意度(1-5星)
+    satisfaction: number; // 用户满意?1-5�?
     comments?: string;
   };
   performanceTracking?: {

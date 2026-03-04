@@ -1,10 +1,10 @@
 /**
  * 自动结算服务
  */
-import { 
-  ExtendedRepairOrder, 
+import {
+  ExtendedRepairOrder,
   AutoSettlementConfig,
-  Engineer
+  Engineer,
 } from '../models/ticket.model';
 import { FcxAccountService } from './fcx-account.service';
 
@@ -20,7 +20,10 @@ export class AutoSettlementService {
   /**
    * 处理工单结算
    */
-  async processTicketSettlement(ticket: ExtendedRepairOrder, engineer: Engineer): Promise<{
+  async processTicketSettlement(
+    ticket: ExtendedRepairOrder,
+    engineer: Engineer
+  ): Promise<{
     isSuccess: boolean;
     amountPaid: number;
     adjustments: Array<{
@@ -31,27 +34,24 @@ export class AutoSettlementService {
     message: string;
   }> {
     try {
-      // 1. 验证工单状态
-      if (ticket.status !== 'completed') {
+      // 1. 验证工单状?      if (ticket.status !== 'completed') {
         throw new Error('只有已完成的工单才能结算');
       }
 
       if (!ticket.rating) {
-        throw new Error('工单必须有评分才能结算');
+        throw new Error('工单必须有评分才能结?);
       }
 
       // 2. 计算基础金额
       const baseAmount = ticket.fcxAmountLocked || 0;
-      
-      // 3. 计算各种调整项
-      const adjustments = await this.calculateAdjustments(ticket, engineer);
-      
-      // 4. 计算最终支付金额
-      let finalAmount = baseAmount;
+
+      // 3. 计算各种调整?      const adjustments = await this.calculateAdjustments(ticket, engineer);
+
+      // 4. 计算最终支付金?      let finalAmount = baseAmount;
       for (const adjustment of adjustments) {
         finalAmount += adjustment.amount;
       }
-      
+
       // 确保金额不为负数
       finalAmount = Math.max(0, finalAmount);
 
@@ -61,22 +61,27 @@ export class AutoSettlementService {
       }
 
       // 6. 记录结算日志
-      await this.recordSettlementLog(ticket, engineer, baseAmount, finalAmount, adjustments);
+      await this.recordSettlementLog(
+        ticket,
+        engineer,
+        baseAmount,
+        finalAmount,
+        adjustments
+      );
 
       return {
         isSuccess: true,
         amountPaid: finalAmount,
         adjustments,
-        message: `结算成功，支付金额: ${finalAmount.toFixed(2)} FCX`
+        message: `结算成功，支付金? ${finalAmount.toFixed(2)} FCX`,
       };
-
     } catch (error) {
       console.error('工单结算失败:', error);
       return {
         isSuccess: false,
         amountPaid: 0,
         adjustments: [],
-        message: `结算失败: ${(error as Error).message}`
+        message: `结算失败: ${(error as Error).message}`,
       };
     }
   }
@@ -84,20 +89,24 @@ export class AutoSettlementService {
   /**
    * 批量处理结算
    */
-  async batchProcessSettlement(tickets: ExtendedRepairOrder[]): Promise<Array<{
-    ticketId: string;
-    result: any;
-  }>> {
+  async batchProcessSettlement(tickets: ExtendedRepairOrder[]): Promise<
+    Array<{
+      ticketId: string;
+      result: any;
+    }>
+  > {
     const results: Array<{ ticketId: string; result: any }> = [];
-    
+
     for (const ticket of tickets) {
       try {
         // 获取关联的工程师信息
-        const engineer = await this.getEngineerById(ticket.assignedEngineerId || '');
+        const engineer = await this.getEngineerById(
+          ticket.assignedEngineerId || ''
+        );
         if (!engineer) {
           results.push({
             ticketId: ticket.id,
-            result: { isSuccess: false, message: '未找到关联工程师' }
+            result: { isSuccess: false, message: '未找到关联工程师' },
           });
           continue;
         }
@@ -105,29 +114,30 @@ export class AutoSettlementService {
         const result = await this.processTicketSettlement(ticket, engineer);
         results.push({
           ticketId: ticket.id,
-          result
+          result,
         });
       } catch (error) {
         results.push({
           ticketId: ticket.id,
-          result: { 
-            isSuccess: false, 
-            message: `处理失败: ${(error as Error).message}` 
-          }
+          result: {
+            isSuccess: false,
+            message: `处理失败: ${(error as Error).message}`,
+          },
         });
       }
     }
-    
+
     return results;
   }
 
   /**
    * 更新结算配置
    */
-  async updateConfiguration(newConfig: Partial<AutoSettlementConfig>): Promise<void> {
+  async updateConfiguration(
+    newConfig: Partial<AutoSettlementConfig>
+  ): Promise<void> {
     this.config = { ...this.config, ...newConfig };
-    console.log('结算配置已更新:', this.config);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('结算配置已更?', this.config)}
 
   /**
    * 获取默认配置
@@ -137,32 +147,31 @@ export class AutoSettlementService {
       id: 'default-settlement-config',
       isEnabled: true,
       minRatingForFullPayment: 4.0, // 4星及以上获得全额付款
-      partialPaymentThreshold: 3.0, // 3星以下部分付款
-      penaltyRate: 0.2, // 20%罚金比例
+      partialPaymentThreshold: 3.0, // 3星以下部分付?      penaltyRate: 0.2, // 20%罚金比例
       qualityBonusRate: 0.1, // 10%质量奖金比例
-      settlementDelayMinutes: 30, // 30分钟后自动结算
-      autoEscrowRelease: true, // 自动释放托管资金
-      requireAdminApproval: false // 不需要管理员审批
+      settlementDelayMinutes: 30, // 30分钟后自动结?      autoEscrowRelease: true, // 自动释放托管资金
+      requireAdminApproval: false, // 不需要管理员审批
     };
   }
 
   /**
-   * 计算调整项
-   */
+   * 计算调整?   */
   private async calculateAdjustments(
-    ticket: ExtendedRepairOrder, 
+    ticket: ExtendedRepairOrder,
     engineer: Engineer
-  ): Promise<Array<{
-    type: 'bonus' | 'penalty' | 'quality_discount';
-    amount: number;
-    reason: string;
-  }>> {
+  ): Promise<
+    Array<{
+      type: 'bonus' | 'penalty' | 'quality_discount';
+      amount: number;
+      reason: string;
+    }>
+  > {
     const adjustments: Array<{
       type: 'bonus' | 'penalty' | 'quality_discount';
       amount: number;
       reason: string;
     }> = [];
-    
+
     const baseAmount = ticket.fcxAmountLocked || 0;
 
     // 1. 质量奖金
@@ -171,7 +180,7 @@ export class AutoSettlementService {
       adjustments.push({
         type: 'bonus',
         amount: bonusAmount,
-        reason: `高质量服务奖励 (${ticket.rating}星)`
+        reason: `高质量服务奖?(${ticket.rating}�?`,
       });
     }
 
@@ -181,38 +190,35 @@ export class AutoSettlementService {
       adjustments.push({
         type: 'penalty',
         amount: penaltyAmount,
-        reason: `超时处罚 (${ticket.overdueDuration}分钟)`
+        reason: `超时处罚 (${ticket.overdueDuration}分钟)`,
       });
     }
 
-    // 3. 低评分折扣
-    if (ticket.rating && ticket.rating < this.config.partialPaymentThreshold) {
-      const discountRate = (this.config.partialPaymentThreshold - ticket.rating) / this.config.partialPaymentThreshold;
-      const discountAmount = -(baseAmount * discountRate * 0.5); // 最多50%折扣
+    // 3. 低评分折?    if (ticket.rating && ticket.rating < this.config.partialPaymentThreshold) {
+      const discountRate =
+        (this.config.partialPaymentThreshold - ticket.rating) /
+        this.config.partialPaymentThreshold;
+      const discountAmount = -(baseAmount * discountRate * 0.5); // 最?0%折扣
       adjustments.push({
         type: 'quality_discount',
         amount: discountAmount,
-        reason: `服务质量折扣 (${ticket.rating}星)`
+        reason: `服务质量折扣 (${ticket.rating}�?`,
       });
     }
 
-    // 4. 复杂度补贴
-    if (ticket.complexity && ticket.complexity > 7) {
-      const complexityBonus = baseAmount * 0.15; // 15%复杂度补贴
-      adjustments.push({
+    // 4. 复杂度补?    if (ticket.complexity && ticket.complexity > 7) {
+      const complexityBonus = baseAmount * 0.15; // 15%复杂度补?      adjustments.push({
         type: 'bonus',
         amount: complexityBonus,
-        reason: `高复杂度任务补贴`
+        reason: `高复杂度任务补贴`,
       });
     }
 
-    // 5. 紧急任务补贴
-    if (ticket.customerUrgency && ticket.customerUrgency >= 4) {
-      const urgencyBonus = baseAmount * 0.1; // 10%紧急任务补贴
-      adjustments.push({
+    // 5. 紧急任务补?    if (ticket.customerUrgency && ticket.customerUrgency >= 4) {
+      const urgencyBonus = baseAmount * 0.1; // 10%紧急任务补?      adjustments.push({
         type: 'bonus',
         amount: urgencyBonus,
-        reason: `紧急任务补贴`
+        reason: `紧急任务补贴`,
       });
     }
 
@@ -223,26 +229,27 @@ export class AutoSettlementService {
    * 执行支付
    */
   private async executePayment(
-    ticket: ExtendedRepairOrder, 
-    engineer: Engineer, 
+    ticket: ExtendedRepairOrder,
+    engineer: Engineer,
     amount: number
   ): Promise<void> {
     if (amount <= 0) return;
 
-    // 1. 获取消费者账户
-    const consumerAccount = await this.accountService.getAccountByUserId(ticket.consumerId);
+    // 1. 获取消费者账?    const consumerAccount = await this.accountService.getAccountByUserId(
+      ticket.consumerId
+    );
     if (!consumerAccount) {
       throw new Error('消费者账户不存在');
     }
 
-    // 2. 获取工程师账户
-    const engineerAccount = await this.accountService.getAccountByUserId(engineer.userId);
+    // 2. 获取工程师账?    const engineerAccount = await this.accountService.getAccountByUserId(
+      engineer.userId
+    );
     if (!engineerAccount) {
-      // 如果工程师账户不存在，创建一个
-      await this.accountService.createAccount({
+      // 如果工程师账户不存在，创建一?      await this.accountService.createAccount({
         userId: engineer.userId,
         accountType: 'engineer' as any,
-        initialBalance: 0
+        initialBalance: 0,
       });
     }
 
@@ -253,10 +260,12 @@ export class AutoSettlementService {
       amount: amount,
       transactionType: 'SETTLEMENT' as any,
       referenceId: ticket.id,
-      memo: `工单结算: ${ticket.orderNumber}`
+      memo: `工单结算: ${ticket.orderNumber}`,
     });
 
-    console.log(`支付完成: ${amount.toFixed(2)} FCX 转移到工程师 ${engineer.name}`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `支付完成: ${amount.toFixed(2)} FCX 转移到工程师 ${engineer.name}`
+    );
   }
 
   /**
@@ -279,23 +288,20 @@ export class AutoSettlementService {
       finalAmount,
       adjustments: JSON.stringify(adjustments),
       settledAt: new Date(),
-      configVersion: this.config.id
+      configVersion: this.config.id,
     };
 
     // 这里应该保存到数据库
-    console.log('结算日志:', logEntry);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('结算日志:', logEntry)}
 
   /**
-   * 获取工程师信息
-   */
+   * 获取工程师信?   */
   private async getEngineerById(engineerId: string): Promise<Engineer | null> {
-    // 模拟从数据库获取工程师信息
-    if (engineerId === 'eng-001') {
+    // 模拟从数据库获取工程师信?    if (engineerId === 'eng-001') {
       return {
         id: 'eng-001',
         userId: 'user-001',
-        name: '张师傅',
+        name: '张师?,
         phone: '13800138001',
         email: 'zhang@example.com',
         skills: [],
@@ -311,19 +317,19 @@ export class AutoSettlementService {
           longitude: 116.4074,
           address: '北京市朝阳区',
           city: '北京',
-          region: '华北'
+          region: '华北',
         },
         availability: {
           status: 'available',
           lastOnline: new Date(),
           workingHours: '09:00-18:00',
-          holidays: []
+          holidays: [],
         },
-        certifications: ['手机维修技师'],
+        certifications: ['手机维修技?],
         hourlyRate: 150,
         slaLevels: [],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       } as any;
     }
     return null;
@@ -337,16 +343,13 @@ export class AutoSettlementService {
   }
 
   /**
-   * 检查是否可以自动结算
-   */
+   * 检查是否可以自动结?   */
   async canAutoSettle(ticket: ExtendedRepairOrder): Promise<boolean> {
-    // 检查配置是否启用
-    if (!this.config.isEnabled) {
+    // 检查配置是否启?    if (!this.config.isEnabled) {
       return false;
     }
 
-    // 检查工单状态
-    if (ticket.status !== 'completed') {
+    // 检查工单状?    if (ticket.status !== 'completed') {
       return false;
     }
 
@@ -355,10 +358,10 @@ export class AutoSettlementService {
       return false;
     }
 
-    // 检查是否超过延迟时间
-    const completionTime = ticket.actualCompletionAt || new Date();
-    const timeSinceCompletion = (new Date().getTime() - completionTime.getTime()) / (1000 * 60);
-    
+    // 检查是否超过延迟时?    const completionTime = ticket.actualCompletionAt || new Date();
+    const timeSinceCompletion =
+      (new Date().getTime() - completionTime.getTime()) / (1000 * 60);
+
     return timeSinceCompletion >= this.config.settlementDelayMinutes;
   }
 
@@ -378,7 +381,7 @@ export class AutoSettlementService {
       totalAmount: 25400,
       averageAmount: 200,
       successRate: 98.4,
-      pendingSettlements: 3
+      pendingSettlements: 3,
     };
   }
 }

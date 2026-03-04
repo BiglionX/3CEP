@@ -1,13 +1,12 @@
-// 查询优化器核心服务
-// 实现查询下推、JOIN优化、索引建议等优化策略
+// 查询优化器核心服?// 实现查询下推、JOIN优化、索引建议等优化策略
 
 // 查询计划节点类型
-export type QueryNodeType = 
-  | 'SCAN' 
-  | 'FILTER' 
-  | 'JOIN' 
-  | 'AGGREGATE' 
-  | 'SORT' 
+export type QueryNodeType =
+  | 'SCAN'
+  | 'FILTER'
+  | 'JOIN'
+  | 'AGGREGATE'
+  | 'SORT'
   | 'LIMIT'
   | 'PROJECT';
 
@@ -52,8 +51,7 @@ export interface QueryStats {
   timestamp: string;
 }
 
-// 查询优化器主类
-export class QueryOptimizer {
+// 查询优化器主?export class QueryOptimizer {
   private rules: OptimizationRule[] = [];
   private statsStore: Map<string, QueryStats[]> = new Map();
 
@@ -61,33 +59,32 @@ export class QueryOptimizer {
     this.initializeOptimizationRules();
   }
 
-  // 初始化优化规则
-  private initializeOptimizationRules(): void {
+  // 初始化优化规?  private initializeOptimizationRules(): void {
     this.rules = [
       {
         name: 'predicate_pushdown',
         description: '谓词下推优化',
         priority: 1,
-        apply: this.predicatePushdown.bind(this)
+        apply: this.predicatePushdown.bind(this),
       },
       {
         name: 'column_pruning',
-        description: '列裁剪优化',
+        description: '列裁剪优?,
         priority: 2,
-        apply: this.columnPruning.bind(this)
+        apply: this.columnPruning.bind(this),
       },
       {
         name: 'join_reordering',
-        description: 'JOIN重排序优化',
+        description: 'JOIN重排序优?,
         priority: 3,
-        apply: this.joinReordering.bind(this)
+        apply: this.joinReordering.bind(this),
       },
       {
         name: 'limit_pushdown',
         description: 'LIMIT下推优化',
         priority: 4,
-        apply: this.limitPushdown.bind(this)
-      }
+        apply: this.limitPushdown.bind(this),
+      },
     ];
 
     // 按优先级排序
@@ -99,8 +96,7 @@ export class QueryOptimizer {
     let optimizedPlan = { ...originalPlan };
     const appliedOptimizations: string[] = [];
 
-    // 应用所有优化规则
-    for (const rule of this.rules) {
+    // 应用所有优化规?    for (const rule of this.rules) {
       const result = rule.apply(optimizedPlan);
       if (result && result !== optimizedPlan) {
         optimizedPlan = result;
@@ -112,7 +108,7 @@ export class QueryOptimizer {
     optimizedPlan.optimizationInfo = {
       appliedRules: appliedOptimizations,
       originalCost: originalPlan.cost || 0,
-      optimizedCost: optimizedPlan.cost || 0
+      optimizedCost: optimizedPlan.cost || 0,
     };
 
     return optimizedPlan;
@@ -120,17 +116,26 @@ export class QueryOptimizer {
 
   // 谓词下推优化
   private predicatePushdown(plan: QueryPlanNode): QueryPlanNode | null {
-    if (plan.type !== 'FILTER' || !plan.conditions || plan.conditions.length === 0) {
+    if (
+      plan.type !== 'FILTER' ||
+      !plan.conditions ||
+      plan.conditions.length === 0
+    ) {
       return null;
     }
 
     // 如果子节点是SCAN，将过滤条件下推到SCAN节点
-    if (plan.leftChild?.type === 'SCAN') {
+    if (plan?.type === 'SCAN') {
       const scanNode = { ...plan.leftChild };
-      scanNode.conditions = [...(scanNode.conditions || []), ...plan.conditions];
-      
+      scanNode.conditions = [
+        ...(scanNode.conditions || []),
+        ...plan.conditions,
+      ];
+
       // 更新成本估算
-      scanNode.estimatedRows = Math.floor((scanNode.estimatedRows || 1000) * 0.1);
+      scanNode.estimatedRows = Math.floor(
+        (scanNode.estimatedRows || 1000) * 0.1
+      );
       scanNode.cost = (scanNode.cost || 100) * 0.8;
 
       return scanNode;
@@ -139,17 +144,18 @@ export class QueryOptimizer {
     return null;
   }
 
-  // 列裁剪优化
-  private columnPruning(plan: QueryPlanNode): QueryPlanNode | null {
+  // 列裁剪优?  private columnPruning(plan: QueryPlanNode): QueryPlanNode | null {
     if (!plan.columns || plan.columns.length === 0) {
       return null;
     }
 
-    // 如果是SCAN节点，只选择需要的列
-    if (plan.type === 'SCAN') {
+    // 如果是SCAN节点，只选择需要的?    if (plan.type === 'SCAN') {
       const prunedPlan = { ...plan };
       // 这里应该分析哪些列实际被使用
-      prunedPlan.columns = plan.columns.slice(0, Math.min(5, plan.columns.length));
+      prunedPlan.columns = plan.columns.slice(
+        0,
+        Math.min(5, plan.columns.length)
+      );
       prunedPlan.cost = (plan.cost || 100) * 0.7;
       return prunedPlan;
     }
@@ -157,8 +163,7 @@ export class QueryOptimizer {
     return null;
   }
 
-  // JOIN重排序优化
-  private joinReordering(plan: QueryPlanNode): QueryPlanNode | null {
+  // JOIN重排序优?  private joinReordering(plan: QueryPlanNode): QueryPlanNode | null {
     if (plan.type !== 'JOIN' || !plan.leftChild || !plan.rightChild) {
       return null;
     }
@@ -167,8 +172,7 @@ export class QueryOptimizer {
     const leftSize = plan.leftChild.estimatedRows || 1000;
     const rightSize = plan.rightChild.estimatedRows || 1000;
 
-    // 将较小的表放在左边
-    if (leftSize > rightSize) {
+    // 将较小的表放在左?    if (leftSize > rightSize) {
       const reorderedPlan = { ...plan };
       reorderedPlan.leftChild = plan.rightChild;
       reorderedPlan.rightChild = plan.leftChild;
@@ -209,9 +213,8 @@ export class QueryOptimizer {
     // 分析查询模式
     const lowerQuery = query.toLowerCase();
 
-    // 检查是否需要索引
-    if (lowerQuery.includes('where') && lowerQuery.includes('=')) {
-      recommendations.push('考虑在WHERE条件字段上创建索引');
+    // 检查是否需要索?    if (lowerQuery.includes('where') && lowerQuery.includes('=')) {
+      recommendations.push('考虑在WHERE条件字段上创建索?);
       performanceGain += 30;
     }
 
@@ -221,27 +224,31 @@ export class QueryOptimizer {
     }
 
     if (lowerQuery.includes('order by')) {
-      recommendations.push('考虑在ORDER BY字段上创建索引');
-      indexSuggestions.push('CREATE INDEX idx_order_cols ON table_name (order_columns)');
+      recommendations.push('考虑在ORDER BY字段上创建索?);
+      indexSuggestions.push(
+        'CREATE INDEX idx_order_cols ON table_name (order_columns)'
+      );
       performanceGain += 25;
     }
 
     if (lowerQuery.includes('group by')) {
-      recommendations.push('考虑在GROUP BY字段上创建索引');
-      indexSuggestions.push('CREATE INDEX idx_group_cols ON table_name (group_columns)');
+      recommendations.push('考虑在GROUP BY字段上创建索?);
+      indexSuggestions.push(
+        'CREATE INDEX idx_group_cols ON table_name (group_columns)'
+      );
       performanceGain += 20;
     }
 
     // 检查SELECT *
     if (lowerQuery.includes('select *')) {
-      recommendations.push('避免使用SELECT *，只选择需要的列');
+      recommendations.push('避免使用SELECT *，只选择需要的?);
       performanceGain += 15;
     }
 
     return {
       recommendations,
       estimatedPerformanceGain: Math.min(performanceGain, 80),
-      indexSuggestions
+      indexSuggestions,
     };
   }
 
@@ -249,12 +256,11 @@ export class QueryOptimizer {
   recordQueryStats(stats: QueryStats): void {
     const existingStats = this.statsStore.get(stats.queryId) || [];
     existingStats.push(stats);
-    
-    // 只保留最近100次查询统计
-    if (existingStats.length > 100) {
+
+    // 只保留最?00次查询统?    if (existingStats.length > 100) {
       existingStats.shift();
     }
-    
+
     this.statsStore.set(stats.queryId, existingStats);
   }
 
@@ -266,29 +272,31 @@ export class QueryOptimizer {
     totalExecutions: number;
   } {
     const stats = this.statsStore.get(queryId) || [];
-    
+
     if (stats.length === 0) {
       return {
         averageExecutionTime: 0,
         cacheHitRate: 0,
         mostUsedOptimizations: [],
-        totalExecutions: 0
+        totalExecutions: 0,
       };
     }
 
     const totalExecutions = stats.length;
-    const totalTime = stats.reduce((sum, stat) => sum + stat.executionTimeMs, 0);
+    const totalTime = stats.reduce(
+      (sum, stat) => sum + stat.executionTimeMs,
+      0
+    );
     const cacheHits = stats.filter(stat => stat.cacheHit).length;
     const allOptimizations = stats.flatMap(stat => stat.optimizationApplied);
 
-    // 统计最常用的优化规则
-    const optCount: Record<string, number> = {};
+    // 统计最常用的优化规?    const optCount: Record<string, number> = {};
     allOptimizations.forEach(opt => {
       optCount[opt] = (optCount[opt] || 0) + 1;
     });
 
     const mostUsedOptimizations = Object.entries(optCount)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 3)
       .map(([name]) => name);
 
@@ -296,20 +304,18 @@ export class QueryOptimizer {
       averageExecutionTime: totalTime / totalExecutions,
       cacheHitRate: (cacheHits / totalExecutions) * 100,
       mostUsedOptimizations,
-      totalExecutions
+      totalExecutions,
     };
   }
 }
 
-// 查询计划生成器
-export class QueryPlanGenerator {
+// 查询计划生成?export class QueryPlanGenerator {
   // 将SQL查询解析为查询计划树
   parseQueryToPlan(sql: string): QueryPlanNode {
     // 简化的SQL解析逻辑
     const planId = `plan_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // 基于SQL关键字创建基本计划节点
-    if (sql.toLowerCase().includes('join')) {
+
+    // 基于SQL关键字创建基本计划节?    if (sql.toLowerCase().includes('join')) {
       return {
         id: planId,
         type: 'JOIN',
@@ -317,7 +323,7 @@ export class QueryPlanGenerator {
         leftChild: this.createScanNode('table1'),
         rightChild: this.createScanNode('table2'),
         cost: 1000,
-        estimatedRows: 10000
+        estimatedRows: 10000,
       };
     } else if (sql.toLowerCase().includes('where')) {
       return {
@@ -326,7 +332,7 @@ export class QueryPlanGenerator {
         conditions: ['condition1', 'condition2'],
         leftChild: this.createScanNode('main_table'),
         cost: 500,
-        estimatedRows: 1000
+        estimatedRows: 1000,
       };
     } else {
       return this.createScanNode('single_table');
@@ -342,7 +348,7 @@ export class QueryPlanGenerator {
       schema: 'public',
       columns: ['*'],
       cost: 100,
-      estimatedRows: 10000
+      estimatedRows: 10000,
     };
   }
 }

@@ -49,55 +49,46 @@
 ## 测试用例详情
 
 1. **文本输入 - 简单电脑采购** ✅
-
    - 置信度: 100%
    - 处理时间: 2070ms
    - 紧急程度: high
 
 2. **文本输入 - 复杂服务器采购** ✅
-
    - 置信度: 90%
    - 处理时间: 832ms
    - 紧急程度: medium
 
 3. **图片输入模拟 - OCR 内容** ✅
-
    - 置信度: 80%
    - 处理时间: 1750ms
    - 识别物品: 3 个
 
 4. **链接输入模拟 - 网页内容** ✅
-
    - 置信度: 80%
    - 处理时间: 1228ms
    - 识别物品: 1 个
 
 5. **紧急采购需求** ✅
-
    - 置信度: 90%
    - 处理时间: 545ms
    - 紧急程度: urgent
 
 6. **网络设备采购** ✅
-
    - 置信度: 80%
    - 处理时间: 569ms
    - 识别物品: 2 个
 
 7. **多物品混合采购** ✅
-
    - 置信度: 80%
    - 处理时间: 548ms
    - 识别物品: 4 个
 
 8. **带特殊要求的采购** ✅
-
    - 置信度: 80%
    - 处理时间: 558ms
    - 识别物品: 1 个
 
 9. **国际采购需求** ✅
-
    - 置信度: 90%
    - 处理时间: 618ms
    - 识别物品: 1 个
@@ -163,15 +154,15 @@ node scripts/test-b2b-requirement-understanding.js
 
 ```javascript
 const response = await fetch(
-  "http://localhost:3001/api/b2b-procurement/parse-requirement",
+  'http://localhost:3001/api/b2b-procurement/parse-requirement',
   {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      input: "我们需要采购10台联想笔记本电脑，预算3万元",
-      inputType: "text",
-      companyId: "company-001",
-      requesterId: "user-001",
+      input: '我们需要采购10台联想笔记本电脑，预算3万元',
+      inputType: 'text',
+      companyId: 'company-001',
+      requesterId: 'user-001',
     }),
   }
 );

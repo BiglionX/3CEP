@@ -1,17 +1,16 @@
-import { DeviceEventType } from '@/lib/constants/lifecycle';
+﻿import { DeviceEventType } from '@/lib/constants/lifecycle';
 import { DeviceLifecycleService } from '@/services/device-lifecycle.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 const lifecycleService = new DeviceLifecycleService();
 
-// API密钥验证中间件
-function validateApiKey(request: NextRequest): boolean {
+// API瀵嗛挜楠岃瘉涓棿?function validateApiKey(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
   const apiKey = process.env.LIFECYCLE_API_KEY;
 
-  // 开发环境下如果没有配置API密钥，则允许访问
+  // 寮€鍙戠幆澧冧笅濡傛灉娌℃湁閰嶇疆API瀵嗛挜锛屽垯鍏佽璁块棶
   if (!apiKey) {
-    console.warn('⚠️  LIFECYCLE_API_KEY 未配置，请在生产环境中设置');
+    console.warn('鈿狅笍  LIFECYCLE_API_KEY 鏈厤缃紝璇峰湪鐢熶骇鐜涓?);
     return true;
   }
 
@@ -23,15 +22,14 @@ function validateApiKey(request: NextRequest): boolean {
   return token === apiKey;
 }
 
-// POST /api/lifecycle/events - 记录设备生命周期事件（供内部服务调用）
-export async function POST(request: NextRequest) {
+// POST /api/lifecycle/events - 璁板綍璁惧鐢熷懡鍛ㄦ湡浜嬩欢锛堜緵鍐呴儴鏈嶅姟璋冪敤?export async function POST(request: NextRequest) {
   try {
-    // API密钥验证
+    // API瀵嗛挜楠岃瘉
     if (!validateApiKey(request)) {
       return NextResponse.json(
         {
           success: false,
-          error: '未授权访问，请提供有效的API密钥',
+          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -39,12 +37,12 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // 验证必要参数
+    // 楠岃瘉蹇呰鍙傛暟
     if (!body.qrcodeId) {
       return NextResponse.json(
         {
           success: false,
-          error: '缺少必要参数: qrcodeId',
+          error: '缂哄皯蹇呰鍙傛暟: qrcodeId',
         },
         { status: 400 }
       );
@@ -54,46 +52,46 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: '缺少必要参数: eventType',
+          error: '缂哄皯蹇呰鍙傛暟: eventType',
         },
         { status: 400 }
       );
     }
 
-    // 验证事件类型
+    // 楠岃瘉浜嬩欢绫诲瀷
     if (!Object.values(DeviceEventType).includes(body.eventType)) {
       return NextResponse.json(
         {
           success: false,
-          error: `无效的事件类型: ${body.eventType}`,
+          error: `鏃犳晥鐨勪簨浠剁被? ${body.eventType}`,
         },
         { status: 400 }
       );
     }
 
-    // 验证cost格式
+    // 楠岃瘉cost鏍煎紡
     if (body.cost && (typeof body.cost !== 'number' || body.cost < 0)) {
       return NextResponse.json(
         {
           success: false,
-          error: 'cost必须是非负数字',
+          error: 'cost蹇呴』鏄潪璐熸暟?,
         },
         { status: 400 }
       );
     }
 
-    // 验证attachments格式
+    // 楠岃瘉attachments鏍煎紡
     if (body.attachments && !Array.isArray(body.attachments)) {
       return NextResponse.json(
         {
           success: false,
-          error: 'attachments必须是数组格式',
+          error: 'attachments蹇呴』鏄暟缁勬牸?,
         },
         { status: 400 }
       );
     }
 
-    // 记录生命周期事件
+    // 璁板綍鐢熷懡鍛ㄦ湡浜嬩欢
     const event = await lifecycleService.recordEvent({
       qrcodeId: body.qrcodeId,
       eventType: body.eventType,
@@ -106,10 +104,10 @@ export async function POST(request: NextRequest) {
       metadata: body.metadata,
     });
 
-    // 返回成功响应
+    // 杩斿洖鎴愬姛鍝嶅簲
     return NextResponse.json({
       success: true,
-      message: '生命周期事件记录成功',
+      message: '鐢熷懡鍛ㄦ湡浜嬩欢璁板綍鎴愬姛',
       data: {
         eventId: event.id,
         deviceQrcodeId: event.deviceQrcodeId,
@@ -119,26 +117,26 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('记录生命周期事件错误:', error);
+    console.error('璁板綍鐢熷懡鍛ㄦ湡浜嬩欢閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       },
       { status: 500 }
     );
   }
 }
 
-// GET /api/lifecycle/events - 查询生命周期事件列表（带分页和过滤）
+// GET /api/lifecycle/events - 鏌ヨ鐢熷懡鍛ㄦ湡浜嬩欢鍒楄〃锛堝甫鍒嗛〉鍜岃繃婊わ級
 export async function GET(request: NextRequest) {
   try {
-    // API密钥验证
+    // API瀵嗛挜楠岃瘉
     if (!validateApiKey(request)) {
       return NextResponse.json(
         {
           success: false,
-          error: '未授权访问，请提供有效的API密钥',
+          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -146,7 +144,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    // 解析查询参数
+    // 瑙ｆ瀽鏌ヨ鍙傛暟
     const qrcodeId = searchParams.get('qrcodeId');
     const eventType = searchParams.get('eventType') as DeviceEventType | null;
     const limit = searchParams.get('limit')
@@ -158,18 +156,17 @@ export async function GET(request: NextRequest) {
     const orderBy = searchParams.get('orderBy') || 'event_timestamp';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
-    // 如果没有指定设备ID，返回错误
-    if (!qrcodeId) {
+    // 濡傛灉娌℃湁鎸囧畾璁惧ID锛岃繑鍥為敊?    if (!qrcodeId) {
       return NextResponse.json(
         {
           success: false,
-          error: '缺少必要参数: qrcodeId',
+          error: '缂哄皯蹇呰鍙傛暟: qrcodeId',
         },
         { status: 400 }
       );
     }
 
-    // 查询生命周期事件
+    // 鏌ヨ鐢熷懡鍛ㄦ湡浜嬩欢
     const events = await lifecycleService.getDeviceLifecycleHistory(qrcodeId, {
       eventType: eventType || undefined,
       limit,
@@ -200,13 +197,14 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('查询生命周期事件错误:', error);
+    console.error('鏌ヨ鐢熷懡鍛ㄦ湡浜嬩欢閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       },
       { status: 500 }
     );
   }
 }
+

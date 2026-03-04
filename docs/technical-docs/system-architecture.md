@@ -37,6 +37,7 @@ FixCycle 采用**现代化全栈架构**，基于以下核心理念设计：
 ### 后端技术栈
 
 #### 核心框架
+
 ```yaml
 运行时: Node.js 18+/20+
 Web框架: Next.js 14 (App Router)
@@ -47,9 +48,10 @@ Web框架: Next.js 14 (App Router)
 #### 数据库层
 
 ##### 本地数据库 (Supabase)
+
 ```typescript
 // src/lib/supabase.ts
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
 export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -58,6 +60,7 @@ export const supabase = createClient(
 ```
 
 ##### 外部数据集成 (lionfix)
+
 ```typescript
 // src/lib/lionfix-db.ts
 import { Pool } from 'pg';
@@ -73,6 +76,7 @@ const lionfixPool = new Pool({
 ```
 
 #### 缓存层
+
 ```typescript
 // src/lib/redis.ts
 import Redis from 'ioredis';
@@ -85,6 +89,7 @@ export const redis = new Redis({
 ```
 
 #### 机器学习服务
+
 ```python
 # ml-phase2/api/api_service.py
 from fastapi import FastAPI
@@ -101,6 +106,7 @@ async def predict_price(request: ValuationRequest):
 ### 前端技术栈
 
 #### 核心框架
+
 ```yaml
 框架: React 18
 构建工具: Next.js 14
@@ -111,6 +117,7 @@ async def predict_price(request: ValuationRequest):
 ```
 
 #### 关键组件
+
 ```typescript
 // src/components/layout/DashboardLayout.tsx
 export default function DashboardLayout({
@@ -135,7 +142,8 @@ export default function DashboardLayout({
 ### 数据库模式
 
 #### 核心实体关系
-```sql
+
+```
 -- 用户系统
 users ↔ user_profiles
 users ↔ user_devices
@@ -165,6 +173,7 @@ users ↔ fcx_balances
 #### 关键表结构
 
 ##### 用户设备档案 (device_profiles)
+
 ```sql
 CREATE TABLE device_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -181,6 +190,7 @@ CREATE TABLE device_profiles (
 ```
 
 ##### 众筹项目表 (crowdfunding_projects)
+
 ```sql
 CREATE TABLE crowdfunding_projects (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -229,13 +239,17 @@ CREATE TABLE crowdfunding_projects (
 ## 🤖 智能体系统架构
 
 ### 智能体协调器
+
 ```typescript
 // src/agents-orchestrator/orchestrator.ts
 export class AgentsOrchestrator {
   private agents: Map<string, BaseAgent>;
   private workflowEngine: WorkflowEngine;
 
-  async executeWorkflow(workflow: WorkflowDefinition, context: ExecutionContext) {
+  async executeWorkflow(
+    workflow: WorkflowDefinition,
+    context: ExecutionContext
+  ) {
     // 智能体编排和执行
     const results = await this.workflowEngine.execute(workflow, context);
     return results;
@@ -246,6 +260,7 @@ export class AgentsOrchestrator {
 ### 核心智能体模块
 
 #### 1. 估值智能体 (Valuation Agent)
+
 ```typescript
 // src/agents-orchestrator/agents/valuation-agent.ts
 export class ValuationAgent extends BaseAgent {
@@ -254,17 +269,18 @@ export class ValuationAgent extends BaseAgent {
     const mlResult = await this.mlService.predict(deviceInfo);
     const marketResult = await this.marketService.getPrice(deviceInfo);
     const ruleResult = await this.ruleEngine.evaluate(deviceInfo);
-    
+
     return this.fusionEngine.combine([
       { result: mlResult, weight: 0.7 },
       { result: marketResult, weight: 0.2 },
-      { result: ruleResult, weight: 0.1 }
+      { result: ruleResult, weight: 0.1 },
     ]);
   }
 }
 ```
 
 #### 2. 采购智能体 (Procurement Agent)
+
 ```typescript
 // src/b2b-procurement-agent/procurement-agent.ts
 export class ProcurementAgent extends BaseAgent {
@@ -278,6 +294,7 @@ export class ProcurementAgent extends BaseAgent {
 ```
 
 #### 3. 推荐智能体 (Recommendation Agent)
+
 ```typescript
 // src/agents-orchestrator/agents/recommendation-agent.ts
 export class RecommendationAgent extends BaseAgent {
@@ -286,10 +303,10 @@ export class RecommendationAgent extends BaseAgent {
     const userProfile = await this.userService.getProfile(userId);
     const deviceHistory = await this.deviceService.getLifecycle(deviceId);
     const marketTrends = await this.marketService.getTrends();
-    
+
     return this.recommendationEngine.generate(
-      userProfile, 
-      deviceHistory, 
+      userProfile,
+      deviceHistory,
       marketTrends
     );
   }
@@ -299,12 +316,13 @@ export class RecommendationAgent extends BaseAgent {
 ## 🔐 安全架构
 
 ### 认证授权体系
+
 ```typescript
 // src/middleware/auth.middleware.ts
 export async function authenticate(req: NextRequest) {
   const token = req.headers.get('authorization')?.replace('Bearer ', '');
   if (!token) return null;
-  
+
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!);
     return payload as UserPayload;
@@ -315,6 +333,7 @@ export async function authenticate(req: NextRequest) {
 ```
 
 ### 数据安全措施
+
 - **传输加密**：全站 HTTPS，敏感数据 TLS 1.3
 - **数据加密**：敏感字段 AES-256 加密存储
 - **访问控制**：RBAC 细粒度权限管理
@@ -322,13 +341,14 @@ export async function authenticate(req: NextRequest) {
 - **CSRF保护**：双重Cookie模式
 
 ### 安全监控
+
 ```yaml
 实时监控:
   - 异常登录检测
   - API调用频率限制
   - 数据访问审计日志
   - 安全漏洞扫描
-  
+
 告警机制:
   - 高风险操作即时告警
   - 异常行为模式识别
@@ -338,37 +358,39 @@ export async function authenticate(req: NextRequest) {
 ## 📈 性能优化策略
 
 ### 缓存策略
+
 ```typescript
 // 多层缓存架构
 const cacheStrategy = {
   // 浏览器缓存
   browser: {
     staticAssets: '1y',
-    apiResponses: '5m'
+    apiResponses: '5m',
   },
-  
+
   // CDN缓存
   cdn: {
     images: '30d',
-    staticFiles: '7d'
+    staticFiles: '7d',
   },
-  
+
   // 应用缓存
   application: {
     sessionData: '1h',
     apiResults: '10m',
-    computedData: '30m'
+    computedData: '30m',
   },
-  
+
   // 数据库缓存
   database: {
     queryResults: '5m',
-    lookupTables: '1h'
-  }
+    lookupTables: '1h',
+  },
 };
 ```
 
 ### 数据库优化
+
 ```sql
 -- 关键索引优化
 CREATE INDEX idx_device_profiles_user_id ON device_profiles(user_id);
@@ -376,19 +398,20 @@ CREATE INDEX idx_orders_created_at ON orders(created_at DESC);
 CREATE INDEX idx_crowdfunding_projects_status ON crowdfunding_projects(status);
 
 -- 查询优化
-EXPLAIN ANALYZE 
-SELECT * FROM device_profiles 
-WHERE user_id = $1 
-ORDER BY created_at DESC 
+EXPLAIN ANALYZE
+SELECT * FROM device_profiles
+WHERE user_id = $1
+ORDER BY created_at DESC
 LIMIT 10;
 ```
 
 ### 前端性能
+
 ```javascript
 // 代码分割和懒加载
 const LazyComponent = dynamic(() => import('./HeavyComponent'), {
   loading: () => <LoadingSpinner />,
-  ssr: false
+  ssr: false,
 });
 
 // 图片优化
@@ -399,13 +422,85 @@ const LazyComponent = dynamic(() => import('./HeavyComponent'), {
   quality={85}
   placeholder="blur"
   blurDataURL={blurDataUrl}
-/>
+/>;
 ```
+
+## 🔧 新增核心组件架构
+
+### 权限管理架构
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  权限配置中心    │────│  权限管理器     │────│  权限加载器     │
+│ permission-config│    │ permission-    │    │ permission-    │
+│                 │    │ manager        │    │ loader         │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  审计追踪系统    │    │  同步管理器     │    │  租户隔离系统    │
+│ permission-audit│    │ permission-sync │    │ tenant-isolation│
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+**核心特性**:
+
+- ✅ RBAC权限模型设计
+- ✅ 动态配置热更新
+- ✅ 完整的审计追踪
+- ✅ 实时权限同步
+- ✅ 多租户数据隔离
+
+### 智能缓存架构
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   应用层缓存     │────│   Redis缓存     │────│   数据库缓存    │
+│  smart-cache    │    │     Redis       │    │  PostgreSQL    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  缓存策略引擎    │    │  过期清理机制    │    │  性能监控系统    │
+│ eviction-policy │    │ cleanup-engine  │    │ performance-   │
+│                 │    │                 │    │ monitor        │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+**核心特性**:
+
+- ✅ 多级缓存驱逐策略 (LRU/LFU/FIFO/TTL)
+- ✅ 自动过期清理机制
+- ✅ 标签化缓存管理
+- ✅ 实时性能统计监控
+
+### 错误处理架构
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  全局错误捕获    │────│  分级处理策略    │────│  告警通知系统    │
+│ error-handler   │    │ tiered-handler  │    │ alert-system   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  重试机制       │    │  用户提示       │    │  日志记录       │
+│ retry-engine    │    │ user-feedback   │    │ logger         │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+**核心特性**:
+
+- ✅ 6种预设处理策略
+- ✅ 智能重试机制（指数退避）
+- ✅ 自动升级告警系统
+- ✅ 用户友好的错误提示
 
 ## 🚀 部署架构
 
 ### 容器化部署
-```dockerfile
+
+```
 # Dockerfile
 FROM node:18-alpine AS builder
 WORKDIR /app
@@ -423,7 +518,8 @@ CMD ["npm", "start"]
 ```
 
 ### CI/CD 流水线
-```yaml
+
+```
 # .github/workflows/deploy.yml
 name: Deploy Pipeline
 on:
@@ -437,7 +533,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run Tests
         run: npm test
-      
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -450,6 +546,7 @@ jobs:
 ```
 
 ### 监控告警体系
+
 ```yaml
 监控指标:
   - 系统性能: CPU、内存、磁盘IO
@@ -466,6 +563,7 @@ jobs:
 ## 🧪 测试策略
 
 ### 测试金字塔
+
 ```
         🧪 E2E测试 (10%)
        🔄 集成测试 (20%)
@@ -473,7 +571,8 @@ jobs:
 ```
 
 ### 自动化测试
-```typescript
+
+```
 // 单元测试示例
 describe('ValuationService', () => {
   it('should return accurate price prediction', async () => {
@@ -495,39 +594,44 @@ test('user can create crowdfunding project', async ({ page }) => {
 ## 📊 系统指标
 
 ### 性能基准
-| 指标 | 目标值 | 当前值 | 状态 |
-|------|--------|--------|------|
-| 页面加载时间 | ≤200ms | 50-120ms | ✅ 优秀 |
-| API响应时间 | ≤100ms | 20-80ms | ✅ 超预期 |
-| 数据库查询 | ≤50ms | 10-30ms | ✅ 优秀 |
-| 系统可用性 | 99.9% | 99.5%+ | ✅ 良好 |
+
+| 指标         | 目标值 | 当前值   | 状态      |
+| ------------ | ------ | -------- | --------- |
+| 页面加载时间 | ≤200ms | 50-120ms | ✅ 优秀   |
+| API响应时间  | ≤100ms | 20-80ms  | ✅ 超预期 |
+| 数据库查询   | ≤50ms  | 10-30ms  | ✅ 优秀   |
+| 系统可用性   | 99.9%  | 99.5%+   | ✅ 良好   |
 
 ### 业务指标
-| 指标 | 目标值 | 当前值 | 趋势 |
-|------|--------|--------|------|
-| 用户增长率 | 20%/月 | 15%/月 | ⬆️ 稳定增长 |
-| 功能使用率 | 85% | 75% | ⬆️ 逐步提升 |
+
+| 指标       | 目标值  | 当前值  | 趋势        |
+| ---------- | ------- | ------- | ----------- |
+| 用户增长率 | 20%/月  | 15%/月  | ⬆️ 稳定增长 |
+| 功能使用率 | 85%     | 75%     | ⬆️ 逐步提升 |
 | 客户满意度 | 4.5/5.0 | 4.2/5.0 | ⬆️ 持续改善 |
 
 ## 🔮 未来架构演进
 
 ### 短期规划 (3-6个月)
+
 - 微服务拆分试点
 - 引入 GraphQL API
 - 增强实时通信能力
 
 ### 中期规划 (6-12个月)
+
 - 服务网格架构
 - 多区域部署
 - AI能力深度集成
 
 ### 长期愿景 (1-2年)
+
 - 无服务器架构
 - 边缘计算部署
 - 全链路智能化
 
 ---
 
-*最后更新: 2026年2月21日*  
-*架构版本: v3.0*  
-*文档状态: 生产就绪*
+_最后更新: 2026年2月21日_  
+_架构版本: v3.0_  
+_文档状态: 生产就绪_

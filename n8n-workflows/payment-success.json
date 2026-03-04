@@ -11,10 +11,7 @@
       "name": "支付成功回调入口",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -24,10 +21,7 @@
       "name": "签名验证器",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
@@ -43,10 +37,7 @@
       "name": "订单信息验证",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        650,
-        250
-      ]
+      "position": [650, 250]
     },
     {
       "parameters": {
@@ -86,10 +77,7 @@
       "name": "发送确认通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        150
-      ]
+      "position": [850, 150]
     },
     {
       "parameters": {
@@ -99,10 +87,7 @@
       "name": "积分计算器",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        850,
-        300
-      ]
+      "position": [850, 300]
     },
     {
       "parameters": {
@@ -142,10 +127,7 @@
       "name": "更新用户积分",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1050,
-        300
-      ]
+      "position": [1050, 300]
     },
     {
       "parameters": {
@@ -181,10 +163,7 @@
       "name": "启动物流跟踪",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        450
-      ]
+      "position": [850, 450]
     },
     {
       "parameters": {
@@ -220,10 +199,7 @@
       "name": "发送售后信息",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1050,
-        450
-      ]
+      "position": [1050, 450]
     },
     {
       "parameters": {
@@ -265,10 +241,7 @@
       "name": "处理结果聚合",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        1250,
-        300
-      ]
+      "position": [1250, 300]
     },
     {
       "parameters": {
@@ -278,10 +251,7 @@
       "name": "错误处理器",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1450,
-        300
-      ]
+      "position": [1450, 300]
     }
   ],
   "connections": {

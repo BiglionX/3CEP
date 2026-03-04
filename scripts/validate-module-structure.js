@@ -14,7 +14,7 @@ function validateModuleStructure() {
   const results = {
     businessModules: [],
     techModules: [],
-    overall: { valid: 0, total: 0, issues: [] }
+    overall: { valid: 0, total: 0, issues: [] },
   };
 
   // 验证业务模块
@@ -22,14 +22,14 @@ function validateModuleStructure() {
   config.moduleStructure.businessModules.forEach(module => {
     const modulePath = module.path;
     const exists = fs.existsSync(modulePath);
-    
+
     const moduleResult = {
       name: module.name,
       path: modulePath,
       exists,
       dependencies: module.dependencies,
       exports: module.exports,
-      routes: module.routes
+      routes: module.routes,
     };
 
     if (exists) {
@@ -39,7 +39,7 @@ function validateModuleStructure() {
       console.log(`❌ ${module.name} - 缺失 (${modulePath})`);
       results.overall.issues.push(`模块缺失: ${module.name}`);
     }
-    
+
     results.businessModules.push(moduleResult);
     results.overall.total++;
   });
@@ -49,13 +49,13 @@ function validateModuleStructure() {
   config.moduleStructure.techModules.forEach(module => {
     const modulePath = module.path;
     const exists = fs.existsSync(modulePath);
-    
+
     const moduleResult = {
       name: module.name,
       path: modulePath,
       exists,
       dependencies: module.dependencies,
-      exports: module.exports
+      exports: module.exports,
     };
 
     if (exists) {
@@ -65,7 +65,7 @@ function validateModuleStructure() {
       console.log(`❌ ${module.name} - 缺失 (${modulePath})`);
       results.overall.issues.push(`技术模块缺失: ${module.name}`);
     }
-    
+
     results.techModules.push(moduleResult);
     results.overall.total++;
   });
@@ -78,24 +78,28 @@ function validateDependencies(results) {
   console.log('\n🔗 验证模块依赖关系...');
   const issues = [];
 
-  Object.entries(config.dependencyGraph).forEach(([moduleName, dependencies]) => {
-    const moduleExists = results.businessModules.some(m => m.name === moduleName && m.exists) ||
-                        results.techModules.some(m => m.name === moduleName && m.exists);
-    
-    if (!moduleExists) {
-      issues.push(`依赖验证跳过: 模块 ${moduleName} 不存在`);
-      return;
-    }
+  Object.entries(config.dependencyGraph).forEach(
+    ([moduleName, dependencies]) => {
+      const moduleExists =
+        results.businessModules.some(m => m.name === moduleName && m.exists) ||
+        results.techModules.some(m => m.name === moduleName && m.exists);
 
-    dependencies.forEach(dep => {
-      const depExists = results.businessModules.some(m => m.name === dep && m.exists) ||
-                       results.techModules.some(m => m.name === dep && m.exists);
-      
-      if (!depExists) {
-        issues.push(`依赖问题: ${moduleName} 依赖的模块 ${dep} 不存在`);
+      if (!moduleExists) {
+        issues.push(`依赖验证跳过: 模块 ${moduleName} 不存在`);
+        return;
       }
-    });
-  });
+
+      dependencies.forEach(dep => {
+        const depExists =
+          results.businessModules.some(m => m.name === dep && m.exists) ||
+          results.techModules.some(m => m.name === dep && m.exists);
+
+        if (!depExists) {
+          issues.push(`依赖问题: ${moduleName} 依赖的模块 ${dep} 不存在`);
+        }
+      });
+    }
+  );
 
   return issues;
 }
@@ -134,24 +138,30 @@ const finalReport = {
   projectInfo: config.projectInfo,
   structureValidation: structureResults,
   dependencyValidation: {
-    issues: dependencyIssues
+    issues: dependencyIssues,
   },
   routingValidation: {
-    issues: routingIssues
+    issues: routingIssues,
   },
   summary: {
-    structureComplete: structureResults.overall.valid === structureResults.overall.total,
+    structureComplete:
+      structureResults.overall.valid === structureResults.overall.total,
     dependencyIssues: dependencyIssues.length,
     routingIssues: routingIssues.length,
-    overallStatus: (structureResults.overall.valid === structureResults.overall.total && 
-                   dependencyIssues.length === 0 && 
-                   routingIssues.length === 0) ? 'PASS' : 'FAIL'
-  }
+    overallStatus:
+      structureResults.overall.valid === structureResults.overall.total &&
+      dependencyIssues.length === 0 &&
+      routingIssues.length === 0
+        ? 'PASS'
+        : 'FAIL',
+  },
 };
 
 // 输出结果
 console.log('\n📊 验证结果汇总:');
-console.log(`   模块结构: ${structureResults.overall.valid}/${structureResults.overall.total} 通过`);
+console.log(
+  `   模块结构: ${structureResults.overall.valid}/${structureResults.overall.total} 通过`
+);
 console.log(`   依赖关系: ${dependencyIssues.length} 个问题`);
 console.log(`   路由配置: ${routingIssues.length} 个问题`);
 console.log(`   整体状态: ${finalReport.summary.overallStatus}`);

@@ -14,20 +14,20 @@ const migrationMap = {
   'src/app/admin': 'src/modules/admin-panel/app',
   'src/app/login': 'src/modules/auth/app',
   'src/app/fcx': 'src/modules/fcx-alliance/app',
-  
+
   // 技术组件迁移
   'src/controllers': 'src/tech/api/controllers',
   'src/models': 'src/tech/database/models',
   'src/middleware': 'src/tech/middleware',
   'src/hooks': 'src/tech/utils/hooks',
   'src/types': 'src/tech/types',
-  
+
   // 服务层迁移
   'src/services': 'src/tech/api/services',
   'src/lib': 'src/tech/utils/lib',
-  
+
   // 组件迁移
-  'src/components': 'src/modules/common/components'
+  'src/components': 'src/modules/common/components',
 };
 
 // 安全检查函数
@@ -36,13 +36,13 @@ function safeMove(source, target) {
     console.log(`⚠️  源路径不存在: ${source}`);
     return false;
   }
-  
+
   // 确保目标目录存在
   const targetDir = path.dirname(target);
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
   }
-  
+
   try {
     // 如果是目录，递归复制
     if (fs.statSync(source).isDirectory()) {
@@ -63,12 +63,12 @@ function copyDirRecursive(source, target) {
   if (!fs.existsSync(target)) {
     fs.mkdirSync(target, { recursive: true });
   }
-  
+
   const items = fs.readdirSync(source);
   items.forEach(item => {
     const sourcePath = path.join(source, item);
     const targetPath = path.join(target, item);
-    
+
     if (fs.statSync(sourcePath).isDirectory()) {
       copyDirRecursive(sourcePath, targetPath);
     } else {
@@ -79,7 +79,7 @@ function copyDirRecursive(source, target) {
 
 // 执行迁移
 let successCount = 0;
-let totalCount = Object.keys(migrationMap).length;
+const totalCount = Object.keys(migrationMap).length;
 
 console.log('📋 迁移计划:');
 Object.entries(migrationMap).forEach(([source, target]) => {
@@ -112,14 +112,11 @@ const report = {
   results: {
     total: totalCount,
     success: successCount,
-    failed: totalCount - successCount
+    failed: totalCount - successCount,
   },
-  status: successCount === totalCount ? 'SUCCESS' : 'PARTIAL_SUCCESS'
+  status: successCount === totalCount ? 'SUCCESS' : 'PARTIAL_SUCCESS',
 };
 
-fs.writeFileSync(
-  'migration-report.json', 
-  JSON.stringify(report, null, 2)
-);
+fs.writeFileSync('migration-report.json', JSON.stringify(report, null, 2));
 
 console.log('\n📝 详细报告已生成: migration-report.json');

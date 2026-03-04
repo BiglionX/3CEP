@@ -12,7 +12,10 @@ console.log('🧹 缓存清理和问题诊断\n');
 // 1. 检查仍在使用旧认证Hook的文件
 console.log('1️⃣ 检查残留的旧认证Hook使用');
 
-const grepResults = require('child_process').execSync('findstr /r /s "use-permission" src\\*', { encoding: 'utf8' });
+const grepResults = require('child_process').execSync(
+  'findstr /r /s "use-permission" src\\*',
+  { encoding: 'utf8' }
+);
 console.log('仍在使用use-permission的文件:');
 console.log(grepResults || '未找到使用use-permission的文件');
 
@@ -22,7 +25,7 @@ console.log('\n2️⃣ API端点健康检查');
 const apiEndpoints = [
   '/api/auth/check-session',
   '/api/admin/users',
-  '/api/health'
+  '/api/health',
 ];
 
 apiEndpoints.forEach(endpoint => {

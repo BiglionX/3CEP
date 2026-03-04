@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -56,12 +56,12 @@ interface FcxEquityCenterProps {
 type TabType = 'market' | 'my-equities' | 'history';
 
 const EQUITY_ICONS: Record<string, string> = {
-  'priority-order': '⚡',
+  'priority-order': '�?,
   'discount-coupon': '🎫',
   'free-service': '🔧',
   'vip-support': '👑',
   'express-delivery': '🚚',
-  'extended-warranty': '🛡️'
+  'extended-warranty': '🛡�?
 };
 
 export function FcxEquityCenter({ 
@@ -92,7 +92,7 @@ export function FcxEquityCenter({
       const result = await response.json();
       
       if (result.success) {
-        // 为每个权益检查可用性
+        // 为每个权益检查可用?
         const equitiesWithAvailability = await Promise.all(
           result.data.equities.map(async (equity: EquityType) => {
             const availabilityResponse = await fetch(
@@ -165,7 +165,7 @@ export function FcxEquityCenter({
       }
       
     } catch (err) {
-      alert(`兑换过程中发生错误: ${(err as Error).message}`);
+      alert(`兑换过程中发生错? ${(err as Error).message}`);
     } finally {
       setRedeeming(null);
     }
@@ -187,8 +187,8 @@ export function FcxEquityCenter({
 
   const renderEquityCard = (equity: EquityType) => {
     const icon = EQUITY_ICONS[equity.icon] || '🎁';
-    const isAvailable = equity.availability?.available ?? true;
-    const maxQuantity = equity.availability?.maxQuantity ?? 1;
+    const isAvailable = equity?.available ?? true;
+    const maxQuantity = equity?.maxQuantity ?? 1;
     
     return (
       <Card key={equity.id} className="hover:shadow-md transition-shadow">
@@ -221,11 +221,11 @@ export function FcxEquityCenter({
               {equity.validityDays}天有效期
             </div>
             <div>
-              限购{equity.maxRedemptions === -1 ? '无限制' : `${equity.maxRedemptions}次`}
+              限购{equity.maxRedemptions === -1 ? '无限? : `${equity.maxRedemptions}次`}
             </div>
           </div>
           
-          {!isAvailable && equity.availability?.reason && (
+          {!isAvailable && equity?.reason && (
             <div className="mb-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-yellow-700 text-sm">
               <AlertCircle className="w-4 h-4 inline mr-1" />
               {equity.availability.reason}
@@ -240,7 +240,7 @@ export function FcxEquityCenter({
             {redeeming === equity.id ? (
               <>
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                兑换中...
+                兑换?..
               </>
             ) : isAvailable ? (
               <>
@@ -257,7 +257,7 @@ export function FcxEquityCenter({
   };
 
   const renderUserEquityCard = (userEquity: UserEquity) => {
-    const icon = '🎁'; // 简化处理
+    const icon = '🎁'; // 简化处?
     const isExpired = new Date(userEquity.expiresAt) < new Date();
     const statusColor = userEquity.status === 'active' && !isExpired 
       ? 'text-green-600' 
@@ -282,7 +282,7 @@ export function FcxEquityCenter({
             
             <div className="text-right">
               <div className={`font-semibold ${statusColor}`}>
-                {isExpired ? '已过期' : userEquity.status === 'used' ? '已使用' : '有效期内'}
+                {isExpired ? '已过? : userEquity.status === 'used' ? '已使? : '有效期内'}
               </div>
               <div className="text-sm text-gray-500">
                 {userEquity.cost} FCX2
@@ -359,12 +359,12 @@ export function FcxEquityCenter({
 
       {activeTab === 'market' && (
         <div>
-          {/* 搜索和筛选 */}
+          {/* 搜索和筛?*/}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="搜索权益名称或描述..."
+                placeholder="搜索权益名称或描?.."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -379,10 +379,10 @@ export function FcxEquityCenter({
                 className="border border-gray-300 rounded-md px-3 py-2 text-sm"
               >
                 <option value="all">全部等级</option>
-                <option value="bronze">青铜级</option>
-                <option value="silver">白银级</option>
-                <option value="gold">黄金级</option>
-                <option value="diamond">钻石级</option>
+                <option value="bronze">青铜?/option>
+                <option value="silver">白银?/option>
+                <option value="gold">黄金?/option>
+                <option value="diamond">钻石?/option>
               </select>
             </div>
           </div>
@@ -395,7 +395,7 @@ export function FcxEquityCenter({
           {filteredEquities.length === 0 && (
             <div className="text-center py-12">
               <Gift className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">暂无符合条件的权益</p>
+              <p className="text-gray-500">暂无符合条件的权?/p>
             </div>
           )}
         </div>

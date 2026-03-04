@@ -32,12 +32,10 @@ NOTIFICATION_ENDPOINT=http://notification-service/api/notifications
 ## ▶️ 使用步骤
 
 1. **导入模板**
-
    - n8n 界面 → Import workflow
    - 选择 `agent-invoke-template.json`
 
 2. **配置变量**
-
    - 更新所有 `$env.VARIABLE_NAME` 引用
    - 确保凭证 ID 正确
 

@@ -1,9 +1,8 @@
 /**
  * 智能推荐引擎服务实现
- * 提供地理位置推荐、库存优化、供应商匹配等核心功能
- */
+ * 提供地理位置推荐、库存优化、供应商匹配等核心功? */
 
-import { 
+import {
   RecommendationType,
   WarehouseRecommendation,
   InventoryOptimizationSuggestion,
@@ -18,7 +17,7 @@ import {
   ReplenishmentRequest,
   PricingStrategyRequest,
   GeoLocation,
-  UserLocation
+  UserLocation,
 } from '../models/recommendation.model';
 import { supabase } from '@/lib/supabase';
 import { generateUUID } from '@/fcx-system/utils/helpers';
@@ -46,38 +45,40 @@ export class RecommendationService {
   /**
    * 智能仓库位置推荐
    */
-  async recommendWarehouses(request: WarehouseRecommendationRequest): Promise<WarehouseRecommendation[]> {
+  async recommendWarehouses(
+    request: WarehouseRecommendationRequest
+  ): Promise<WarehouseRecommendation[]> {
     try {
       const startTime = Date.now();
-      
-      // 1. 获取所有活跃仓库
-      const warehouses = await this.warehouseService.listWarehouses({
-        status: 'active' as any
+
+      // 1. 获取所有活跃仓?      const warehouses = await this.warehouseService.listWarehouses({
+        status: 'active' as any,
       });
 
-      // 2. 计算距离和配送时间
-      const recommendations = await Promise.all(
-        warehouses.map(async (warehouse) => {
+      // 2. 计算距离和配送时?      const recommendations = await Promise.all(
+        warehouses.map(async warehouse => {
           const distance = this.calculateDistance(
             request.userLocation.coordinates,
             warehouse.location.coordinates
           );
-          
+
           const deliveryTime = await this.estimateDeliveryTime(
             distance,
             warehouse.logisticsInfo.deliveryTime.domestic,
             warehouse.logisticsInfo.deliveryTime.international
           );
 
-          // 3. 获取产品库存和价格信息
-          const productInfo = await Promise.all(
-            request.productIds.map(async (productId) => {
-              const inventory = await this.inventoryService.getInventory(productId, warehouse.id);
+          // 3. 获取产品库存和价格信?          const productInfo = await Promise.all(
+            request.productIds.map(async productId => {
+              const inventory = await this.inventoryService.getInventory(
+                productId,
+                warehouse.id
+              );
               return {
                 productId,
                 price: this.calculateProductPrice(productId, warehouse.id),
                 inventoryStatus: inventory?.status || 'out_of_stock',
-                availableQuantity: inventory?.availableQuantity || 0
+                availableQuantity: inventory?.availableQuantity || 0,
               };
             })
           );
@@ -98,15 +99,23 @@ export class RecommendationService {
             location: warehouse.location.coordinates,
             distance,
             estimatedDeliveryTime: deliveryTime,
-            shippingCost: this.calculateShippingCost(distance, request.quantities || {}),
-            inventoryStatus: this.getOverallInventoryStatus(productInfo.map(p => p.inventoryStatus)),
-            availableQuantity: productInfo.reduce((sum, p) => sum + p.availableQuantity, 0),
+            shippingCost: this.calculateShippingCost(
+              distance,
+              request.quantities || {}
+            ),
+            inventoryStatus: this.getOverallInventoryStatus(
+              productInfo.map(p => p.inventoryStatus)
+            ),
+            availableQuantity: productInfo.reduce(
+              (sum, p) => sum + p.availableQuantity,
+              0
+            ),
             productPrices: productInfo,
             serviceScore: warehouse.performanceMetrics.accuracyRate,
             reliabilityScore: warehouse.performanceMetrics.onTimeRate,
             recommendationScore: scores.overallScore,
             reasons: scores.reasons,
-            createdAt: new Date()
+            createdAt: new Date(),
           };
         })
       );
@@ -124,10 +133,8 @@ export class RecommendationService {
         request.budgetConstraint
       );
 
-      console.log(`🏪 仓库推荐完成，耗时: ${Date.now() - startTime}ms`);
-      return filteredRecommendations.slice(0, 10); // 返回前10个推荐
-
-    } catch (error) {
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🏪 仓库推荐完成，耗时: ${Date.now()- startTime}ms`);
+      return filteredRecommendations.slice(0, 10); // 返回?0个推?    } catch (error) {
       console.error('仓库推荐错误:', error);
       throw error;
     }
@@ -136,24 +143,40 @@ export class RecommendationService {
   /**
    * 库存优化建议
    */
-  async getInventoryOptimizationSuggestions(request: InventoryOptimizationRequest): Promise<InventoryOptimizationSuggestion[]> {
+  async getInventoryOptimizationSuggestions(
+    request: InventoryOptimizationRequest
+  ): Promise<InventoryOptimizationSuggestion[]> {
     try {
       const startTime = Date.now();
-      
-      // 1. 获取仓库库存数据
-      const inventories = await this.getWarehouseInventories(request.warehouseId, request.productIds);
 
-      // 2. 分析每个产品的库存状况
-      const suggestions = await Promise.all(
-        inventories.map(async (inventory) => {
+      // 1. 获取仓库库存数据
+      const inventories = await this.getWarehouseInventories(
+        request.warehouseId,
+        request.productIds
+      );
+
+      // 2. 分析每个产品的库存状?      const suggestions = await Promise.all(
+        inventories.map(async inventory => {
           const productInfo = await this.getProductInfo(inventory.productId);
-          const salesData = await this.getSalesHistory(inventory.productId, request.analysisPeriodDays || 90);
-          
+          const salesData = await this.getSalesHistory(
+            inventory.productId,
+            request.analysisPeriodDays || 90
+          );
+
           // 3. 计算关键指标
-          const turnoverRate = this.calculateTurnoverRate(salesData, inventory.quantity);
-          const obsolescenceRisk = this.assessObsolescenceRisk(salesData, inventory.quantity);
+          const turnoverRate = this.calculateTurnoverRate(
+            salesData,
+            inventory.quantity
+          );
+          const obsolescenceRisk = this.assessObsolescenceRisk(
+            salesData,
+            inventory.quantity
+          );
           const safetyStock = this.calculateSafetyStock(salesData);
-          const reorderPoint = this.calculateReorderPoint(salesData, safetyStock);
+          const reorderPoint = this.calculateReorderPoint(
+            salesData,
+            safetyStock
+          );
 
           // 4. 生成优化建议
           const suggestion = this.generateOptimizationSuggestion(
@@ -178,9 +201,8 @@ export class RecommendationService {
           return priorityMap[b.priority] - priorityMap[a.priority];
         });
 
-      console.log(`📊 库存优化建议生成完成，耗时: ${Date.now() - startTime}ms`);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📊 库存优化建议生成完成，耗时: ${Date.now()- startTime}ms`);
       return prioritizedSuggestions;
-
     } catch (error) {
       console.error('库存优化建议错误:', error);
       throw error;
@@ -188,43 +210,47 @@ export class RecommendationService {
   }
 
   /**
-   * 供应商智能匹配
-   */
-  async matchSuppliers(request: SupplierMatchingRequest): Promise<SupplierMatchRecommendation[]> {
+   * 供应商智能匹?   */
+  async matchSuppliers(
+    request: SupplierMatchingRequest
+  ): Promise<SupplierMatchRecommendation[]> {
     try {
       const startTime = Date.now();
-      
-      // 1. 获取合格供应商列表
-      const suppliers = await this.supplierService.listSuppliers({
-        status: 'approved' as any
+
+      // 1. 获取合格供应商列?      const suppliers = await this.supplierService.listSuppliers({
+        status: 'approved' as any,
       });
 
-      // 2. 为每个供应商计算匹配度
-      const matches = await Promise.all(
-        suppliers.map(async (supplier) => {
+      // 2. 为每个供应商计算匹配?      const matches = await Promise.all(
+        suppliers.map(async supplier => {
           // 3. 计算各项评分
           const distanceScore = this.calculateDistanceScore(
             request.locationPreferences,
-            { address: supplier.address, city: supplier.city, country: supplier.country } // 使用供应商地址信息
+            {
+              address: supplier.address,
+              city: supplier.city,
+              country: supplier.country,
+            } // 使用供应商地址信息
           );
-          
+
           const priceScore = await this.calculatePriceCompetitiveness(
             supplier.id,
             request.productRequirements
           );
-          
-          const qualityScore = this.calculateQualityScore(supplier);
-          const deliveryScore = this.calculateDeliveryScore(supplier, request.productRequirements);
-          const serviceScore = supplier.rating * 20; // 转换为0-100分
 
+          const qualityScore = this.calculateQualityScore(supplier);
+          const deliveryScore = this.calculateDeliveryScore(
+            supplier,
+            request.productRequirements
+          );
+          const serviceScore = supplier.rating * 20; // 转换?-100�?
           // 4. 计算综合得分
-          const totalScore = (
+          const totalScore =
             distanceScore * 0.2 +
             priceScore * 0.3 +
             qualityScore * 0.25 +
             deliveryScore * 0.15 +
-            serviceScore * 0.1
-          );
+            serviceScore * 0.1;
 
           // 5. 生成匹配理由
           const reasons = this.generateMatchReasons(
@@ -241,9 +267,15 @@ export class RecommendationService {
             supplierCode: supplier.code,
             supplierRating: supplier.rating,
             creditLevel: supplier.creditLevel,
-            distance: this.calculateSupplierDistance(request.locationPreferences, { address: supplier.address, city: supplier.city }),
+            distance: this.calculateSupplierDistance(
+              request.locationPreferences,
+              { address: supplier.address, city: supplier.city }
+            ),
             leadTime: 7, // 默认7天交货期
-            unitPrice: await this.getAverageUnitPrice(supplier.id, request.productRequirements),
+            unitPrice: await this.getAverageUnitPrice(
+              supplier.id,
+              request.productRequirements
+            ),
             moq: 100, // 默认最小起订量
             qualityScore,
             deliveryReliability: deliveryScore,
@@ -251,22 +283,20 @@ export class RecommendationService {
             totalScore,
             matchReasons: reasons,
             riskFactors: this.identifyRiskFactors(supplier),
-            certifications: supplier.certifications?.map(c => c.type) || [],
-            createdAt: new Date()
+            certifications: supplier?.map(c => c.type) || [],
+            createdAt: new Date(),
           };
         })
       );
 
       // 6. 按得分排序并过滤
       const rankedMatches = matches
-        .filter(match => match.totalScore >= 60) // 最低60分门槛
-        .sort((a, b) => b.totalScore - a.totalScore);
+        .filter(match => match.totalScore >= 60) // 最?0分门?        .sort((a, b) => b.totalScore - a.totalScore);
 
-      console.log(`🤝 供应商匹配完成，耗时: ${Date.now() - startTime}ms`);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🤝 供应商匹配完成，耗时: ${Date.now()- startTime}ms`);
       return rankedMatches.slice(0, 15);
-
     } catch (error) {
-      console.error('供应商匹配错误:', error);
+      console.error('供应商匹配错?', error);
       throw error;
     }
   }
@@ -274,16 +304,16 @@ export class RecommendationService {
   /**
    * 智能补货建议
    */
-  async getReplenishmentSuggestions(request: ReplenishmentRequest): Promise<ReplenishmentSuggestion[]> {
+  async getReplenishmentSuggestions(
+    request: ReplenishmentRequest
+  ): Promise<ReplenishmentSuggestion[]> {
     try {
-      console.log('🚀 启动智能补货建议引擎...');
-      
-      // 使用增强版补货顾问服务
-      const suggestions = await this.replenishmentAdvisor.generateSmartReplenishmentAdvice(request);
-      
-      console.log(`✅ 智能补货建议完成，生成${suggestions.length}个建议`);
-      return suggestions;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🚀 启动智能补货建议引擎...')// 使用增强版补货顾问服?      const suggestions =
+        await this.replenishmentAdvisor.generateSmartReplenishmentAdvice(
+          request
+        );
 
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?智能补货建议完成，生?{suggestions.length}个建议`)return suggestions;
     } catch (error) {
       console.error('智能补货建议错误:', error);
       throw error;
@@ -293,20 +323,21 @@ export class RecommendationService {
   // 私有辅助方法
 
   private calculateDistance(loc1: GeoLocation, loc2: GeoLocation): number {
-    // 使用Haversine公式计算两点间距离
-    const R = 6371; // 地球半径(km)
+    // 使用Haversine公式计算两点间距?    const R = 6371; // 地球半径(km)
     const dLat = this.deg2rad(loc2.lat - loc1.lat);
     const dLon = this.deg2rad(loc2.lng - loc1.lng);
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(loc1.lat)) * Math.cos(this.deg2rad(loc2.lat)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(loc1.lat)) *
+        Math.cos(this.deg2rad(loc2.lat)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
 
   private deg2rad(deg: number): number {
-    return deg * (Math.PI/180);
+    return deg * (Math.PI / 180);
   }
 
   private async estimateDeliveryTime(
@@ -314,19 +345,17 @@ export class RecommendationService {
     domesticTime: number,
     internationalTime: number
   ): Promise<number> {
-    // 简化的配送时间估算
-    if (distance <= 100) {
-      return domesticTime * 0.5; // 本地配送
-    } else if (distance <= 1000) {
-      return domesticTime; // 国内配送
-    } else {
-      return internationalTime; // 国际配送
-    }
+    // 简化的配送时间估?    if (distance <= 100) {
+      return domesticTime * 0.5; // 本地配?    } else if (distance <= 1000) {
+      return domesticTime; // 国内配?    } else {
+      return internationalTime; // 国际配?    }
   }
 
-  private calculateProductPrice(productId: string, warehouseId: string): number {
-    // 模拟价格计算，实际应查询数据库
-    return Math.floor(Math.random() * 1000) + 100;
+  private calculateProductPrice(
+    productId: string,
+    warehouseId: string
+  ): number {
+    // 模拟价格计算，实际应查询数据?    return Math.floor(Math.random() * 1000) + 100;
   }
 
   private calculateWarehouseScore(
@@ -337,29 +366,29 @@ export class RecommendationService {
     reliabilityScore: number
   ): { overallScore: number; reasons: string[] } {
     // 距离得分 (越近越好)
-    const distanceScore = Math.max(0, 100 - (distance / 10));
-    
-    // 配送时间得分 (越快越好)
-    const timeScore = Math.max(0, 100 - (deliveryTime / 2));
-    
-    // 库存充足度得分
-    const inStockCount = productInfo.filter(p => p.inventoryStatus === 'in_stock').length;
+    const distanceScore = Math.max(0, 100 - distance / 10);
+
+    // 配送时间得?(越快越好)
+    const timeScore = Math.max(0, 100 - deliveryTime / 2);
+
+    // 库存充足度得?    const inStockCount = productInfo.filter(
+      p => p.inventoryStatus === 'in_stock'
+    ).length;
     const stockScore = (inStockCount / productInfo.length) * 100;
-    
+
     // 综合得分
-    const overallScore = (
+    const overallScore =
       distanceScore * 0.25 +
       timeScore * 0.25 +
       stockScore * 0.25 +
       serviceScore * 0.15 +
-      reliabilityScore * 0.10
-    );
+      reliabilityScore * 0.1;
 
     const reasons = [];
     if (distanceScore > 80) reasons.push('地理位置优越');
     if (timeScore > 80) reasons.push('配送时效快');
     if (stockScore > 80) reasons.push('库存充足');
-    if (serviceScore > 90) reasons.push('服务质量高');
+    if (serviceScore > 90) reasons.push('服务质量?);
 
     return { overallScore, reasons };
   }
@@ -388,7 +417,10 @@ export class RecommendationService {
     budgetConstraint?: number
   ): WarehouseRecommendation[] {
     return recommendations.filter(rec => {
-      if (deliveryTimePreference && rec.estimatedDeliveryTime > deliveryTimePreference) {
+      if (
+        deliveryTimePreference &&
+        rec.estimatedDeliveryTime > deliveryTimePreference
+      ) {
         return false;
       }
       if (budgetConstraint && rec.shippingCost > budgetConstraint) {
@@ -398,29 +430,40 @@ export class RecommendationService {
     });
   }
 
-  private getOverallInventoryStatus(statuses: string[]): 'in_stock' | 'low_stock' | 'out_of_stock' {
+  private getOverallInventoryStatus(
+    statuses: string[]
+  ): 'in_stock' | 'low_stock' | 'out_of_stock' {
     if (statuses.some(s => s === 'out_of_stock')) return 'out_of_stock';
     if (statuses.some(s => s === 'low_stock')) return 'low_stock';
     return 'in_stock';
   }
 
-  private calculateShippingCost(distance: number, quantities: Record<string, number>): number {
+  private calculateShippingCost(
+    distance: number,
+    quantities: Record<string, number>
+  ): number {
     const baseCost = 10; // 基础运费
     const distanceCost = distance * 0.5; // 距离费用
-    const weightEstimate = Object.values(quantities).reduce((sum, qty) => sum + qty, 0) * 0.5; // 估算重量
+    const weightEstimate =
+      Object.values(quantities).reduce((sum, qty) => sum + qty, 0) * 0.5; // 估算重量
     const weightCost = weightEstimate * 2; // 重量费用
-    
+
     return baseCost + distanceCost + weightCost;
   }
 
-  // 其他私有方法的简化实现...
-  private async getWarehouseInventories(warehouseId: string, productIds?: string[]) {
+  // 其他私有方法的简化实?..
+  private async getWarehouseInventories(
+    warehouseId: string,
+    productIds?: string[]
+  ) {
     // 模拟实现
-    return [{
-      productId: 'product-001',
-      quantity: 100,
-      warehouseId
-    }];
+    return [
+      {
+        productId: 'product-001',
+        quantity: 100,
+        warehouseId,
+      },
+    ];
   }
 
   private async getProductInfo(productId: string) {
@@ -431,13 +474,21 @@ export class RecommendationService {
     return [{ date: new Date(), quantity: 10 }];
   }
 
-  private calculateTurnoverRate(salesData: any[], currentStock: number): number {
+  private calculateTurnoverRate(
+    salesData: any[],
+    currentStock: number
+  ): number {
     const totalSales = salesData.reduce((sum, sale) => sum + sale.quantity, 0);
     return currentStock > 0 ? (totalSales / currentStock) * 100 : 0;
   }
 
-  private assessObsolescenceRisk(salesData: any[], currentStock: number): 'low' | 'medium' | 'high' {
-    const recentSales = salesData.slice(-30).reduce((sum, sale) => sum + sale.quantity, 0);
+  private assessObsolescenceRisk(
+    salesData: any[],
+    currentStock: number
+  ): 'low' | 'medium' | 'high' {
+    const recentSales = salesData
+      .slice(-30)
+      .reduce((sum, sale) => sum + sale.quantity, 0);
     const ratio = recentSales / currentStock;
     if (ratio > 0.5) return 'low';
     if (ratio > 0.2) return 'medium';
@@ -446,12 +497,15 @@ export class RecommendationService {
 
   private calculateSafetyStock(salesData: any[]): number {
     // 简化的安全库存计算
-    const avgDailySales = salesData.reduce((sum, sale) => sum + sale.quantity, 0) / salesData.length;
-    return Math.ceil(avgDailySales * 7); // 7天安全库存
-  }
+    const avgDailySales =
+      salesData.reduce((sum, sale) => sum + sale.quantity, 0) /
+      salesData.length;
+    return Math.ceil(avgDailySales * 7); // 7天安全库?  }
 
   private calculateReorderPoint(salesData: any[], safetyStock: number): number {
-    const avgDailySales = salesData.reduce((sum, sale) => sum + sale.quantity, 0) / salesData.length;
+    const avgDailySales =
+      salesData.reduce((sum, sale) => sum + sale.quantity, 0) /
+      salesData.length;
     return Math.ceil(avgDailySales * 3 + safetyStock); // 3天提前期 + 安全库存
   }
 
@@ -472,22 +526,29 @@ export class RecommendationService {
       optimizationType = 'increase';
       priority = 'high';
       reason = '库存低于安全库存水平';
-    } else if (obsolescenceRisk === 'high' && inventory.quantity > reorderPoint) {
+    } else if (
+      obsolescenceRisk === 'high' &&
+      inventory.quantity > reorderPoint
+    ) {
       optimizationType = 'decrease';
       priority = 'medium';
-      reason = '存在呆滞风险，建议减少库存';
+      reason = '存在呆滞风险，建议减少库?;
     } else if (turnoverRate < 50) {
       optimizationType = 'decrease';
       priority = 'medium';
-      reason = '库存周转率偏低';
+      reason = '库存周转率偏?;
     }
 
     return {
       productId: inventory.productId,
       productName: productInfo.name,
       currentStock: inventory.quantity,
-      suggestedStock: optimizationType === 'increase' ? reorderPoint * 2 : 
-                     optimizationType === 'decrease' ? safetyStock : inventory.quantity,
+      suggestedStock:
+        optimizationType === 'increase'
+          ? reorderPoint * 2
+          : optimizationType === 'decrease'
+            ? safetyStock
+            : inventory.quantity,
       safetyStock,
       reorderPoint,
       maxStock: reorderPoint * 3,
@@ -497,59 +558,70 @@ export class RecommendationService {
       reason,
       estimatedImpact: {
         costSaving: optimizationType === 'decrease' ? 1000 : 0,
-        serviceLevelImprovement: optimizationType === 'increase' ? 15 : 0
+        serviceLevelImprovement: optimizationType === 'increase' ? 15 : 0,
       },
       priority,
       implementationSteps: [`调整库存至建议水平`],
-      createdAt: new Date()
+      createdAt: new Date(),
     };
   }
 
   // 更多辅助方法...
-  private calculateDistanceScore(location1?: GeoLocation, location2?: any): number {
+  private calculateDistanceScore(
+    location1?: GeoLocation,
+    location2?: any
+  ): number {
     if (!location1 || !location2) return 50;
-    return 80; // 简化实现
-  }
+    return 80; // 简化实?  }
 
-  private async calculatePriceCompetitiveness(supplierId: string, requirements: any[]): Promise<number> {
-    return 75; // 简化实现
-  }
+  private async calculatePriceCompetitiveness(
+    supplierId: string,
+    requirements: any[]
+  ): Promise<number> {
+    return 75; // 简化实?  }
 
   private calculateQualityScore(supplier: any): number {
     return (supplier.qualityRating || 4) * 20;
   }
 
   private calculateDeliveryScore(supplier: any, requirements: any[]): number {
-    return 80; // 简化实现
-  }
+    return 80; // 简化实?  }
 
   private generateMatchReasons(...scores: number[]): string[] {
     return ['综合评分较高', '满足基本要求'];
   }
 
-  private calculateSupplierDistance(location1?: GeoLocation, location2?: any): number {
-    return 500; // 简化实现
-  }
+  private calculateSupplierDistance(
+    location1?: GeoLocation,
+    location2?: any
+  ): number {
+    return 500; // 简化实?  }
 
   private identifyRiskFactors(supplier: any): string[] {
-    return ['无重大风险因素'];
+    return ['无重大风险因?];
   }
 
-  private async getAverageUnitPrice(supplierId: string, requirements: any[]): Promise<number> {
-    return 150; // 简化实现
-  }
+  private async getAverageUnitPrice(
+    supplierId: string,
+    requirements: any[]
+  ): Promise<number> {
+    return 150; // 简化实?  }
 
-  private async generateDemandForecasts(warehouseId: string, productIds?: string[], days: number = 30) {
-    // 如果没有指定产品ID，获取该仓库的所有活跃产品
-    let productsToForecast = productIds;
+  private async generateDemandForecasts(
+    warehouseId: string,
+    productIds?: string[],
+    days: number = 30
+  ) {
+    // 如果没有指定产品ID，获取该仓库的所有活跃产?    let productsToForecast = productIds;
     if (!productsToForecast || productsToForecast.length === 0) {
-      const inventoryRecords = await this.inventoryService.listInventory({ warehouseId });
+      const inventoryRecords = await this.inventoryService.listInventory({
+        warehouseId,
+      });
       productsToForecast = inventoryRecords.map(record => record.productId);
     }
 
-    // 为每个产品生成预测
-    const forecasts = await Promise.all(
-      productsToForecast.map(async (productId) => {
+    // 为每个产品生成预?    const forecasts = await Promise.all(
+      productsToForecast.map(async productId => {
         try {
           const forecast = await this.forecastService.predictDemand(
             productId,
@@ -567,21 +639,20 @@ export class RecommendationService {
             supplierLeadTime: 7, // 默认7天交货期
             trend: forecast.trend,
             seasonalPatterns: forecast.seasonalPatterns,
-            externalFactors: forecast.externalFactors
+            externalFactors: forecast.externalFactors,
           };
         } catch (error) {
-          console.warn(`产品${productId}预测失败，使用默认值:`, error);
-          // 降级到简单预测
-          return {
+          console.warn(`产品${productId}预测失败，使用默认?`, error);
+          // 降级到简单预?          return {
             productId,
             warehouseId,
             forecastPeriod: {
               start: new Date(),
-              end: new Date(Date.now() + days * 24 * 60 * 60 * 1000)
+              end: new Date(Date.now() + days * 24 * 60 * 60 * 1000),
             },
             predictedDemand: 100,
             confidenceInterval: [80, 120] as [number, number],
-            supplierLeadTime: 7
+            supplierLeadTime: 7,
           };
         }
       })
@@ -590,45 +661,59 @@ export class RecommendationService {
     return forecasts;
   }
 
-  private async getCurrentInventories(warehouseId: string, productIds?: string[]) {
-    return [{
-      productId: 'product-001',
-      quantity: 200,
-      warehouseId
-    }];
+  private async getCurrentInventories(
+    warehouseId: string,
+    productIds?: string[]
+  ) {
+    return [
+      {
+        productId: 'product-001',
+        quantity: 200,
+        warehouseId,
+      },
+    ];
   }
 
   private calculateEOQ(dailyDemand: number, leadTime: number): number {
     const annualDemand = dailyDemand * 365;
     const orderingCost = 50;
     const holdingCost = 2;
-    return Math.ceil(Math.sqrt((2 * annualDemand * orderingCost) / holdingCost));
+    return Math.ceil(
+      Math.sqrt((2 * annualDemand * orderingCost) / holdingCost)
+    );
   }
 
   private calculateSafetyStockFromForecast(forecast: any): number {
     return Math.ceil(forecast.predictedDemand * 0.2); // 20%安全库存
   }
 
-  private determineReplenishmentUrgency(current: number, safety: number, reorder: number): 'immediate' | 'soon' | 'planned' {
+  private determineReplenishmentUrgency(
+    current: number,
+    safety: number,
+    reorder: number
+  ): 'immediate' | 'soon' | 'planned' {
     if (current <= safety) return 'immediate';
     if (current <= reorder) return 'soon';
     return 'planned';
   }
 
-  private analyzeReplenishmentCosts(productId: string, orderQty: number, demand: number) {
+  private analyzeReplenishmentCosts(
+    productId: string,
+    orderQty: number,
+    demand: number
+  ) {
     const unitCost = 100;
     const holdingRate = 0.2;
     const orderingCost = 50;
-    
+
     const holdingCost = (orderQty / 2) * unitCost * holdingRate;
     const orderingCostAnnual = (demand / orderQty) * orderingCost;
-    const shortageCost = 0; // 简化处理
-    
+    const shortageCost = 0; // 简化处?
     return {
       holdingCost,
       orderingCost: orderingCostAnnual,
       shortageCost,
-      totalAnnualCost: holdingCost + orderingCostAnnual + shortageCost
+      totalAnnualCost: holdingCost + orderingCostAnnual + shortageCost,
     };
   }
 
@@ -640,7 +725,11 @@ export class RecommendationService {
     return '测试仓库名称';
   }
 
-  private generateReplenishmentReason(inventory: any, forecast: any, urgency: string): string {
-    return `当前库存${inventory.quantity}低于建议水平，预测需求${forecast.predictedDemand}`;
+  private generateReplenishmentReason(
+    inventory: any,
+    forecast: any,
+    urgency: string
+  ): string {
+    return `当前库存${inventory.quantity}低于建议水平，预测需?{forecast.predictedDemand}`;
   }
 }

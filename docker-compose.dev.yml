@@ -18,11 +18,11 @@ services:
       - dev-postgres-data:/var/lib/postgresql/data
       - ./supabase/migrations:/docker-entrypoint-initdb.d:ro
     ports:
-      - "5432:5432"
+      - '5432:5432'
     networks:
       - dev-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U developer"]
+      test: ['CMD-SHELL', 'pg_isready -U developer']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -33,11 +33,11 @@ services:
     container_name: fixcycle-dev-redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - '6379:6379'
     networks:
       - dev-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -48,16 +48,16 @@ services:
     container_name: fixcycle-dev-n8n
     restart: unless-stopped
     ports:
-      - "5678:5678"
+      - '5678:5678'
     environment:
       # 基础配置
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
       - N8N_HOST=localhost
-      
+
       # 加密配置
       - N8N_ENCRYPTION_KEY=dev_encryption_key_12345
-      
+
       # 数据库配置
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_DATABASE=fixcycle_dev
@@ -65,7 +65,7 @@ services:
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_USER=developer
       - DB_POSTGRESDB_PASSWORD=dev_password_123
-      
+
       # 开发配置
       - EXECUTIONS_PROCESS=main
       - EXECUTIONS_MODE=regular
@@ -73,7 +73,7 @@ services:
       - N8N_DIAGNOSTICS_ENABLED=false
       - N8N_VERSION_NOTIFICATIONS_ENABLED=false
       - GENERIC_TIMEZONE=Asia/Shanghai
-      
+
     volumes:
       - dev-n8n-storage:/home/node/.n8n
       - ./n8n-workflows:/home/node/.n8n/custom
@@ -83,7 +83,15 @@ services:
       dev-postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5678/healthz"]
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:5678/healthz',
+        ]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -95,7 +103,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: fixcycle-dev-app
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_SITE_URL=http://localhost:3001

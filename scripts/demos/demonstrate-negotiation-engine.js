@@ -12,17 +12,17 @@ const mockStrategies = [
     conditions: { minDiscountRate: 5, maxPriceDeviation: 10 },
     actions: { priceAdjustment: -3, deliveryTimeFlexibility: 2 },
     priority: 1,
-    isActive: true
+    isActive: true,
   },
   {
-    id: 'strategy-2', 
+    id: 'strategy-2',
     name: '质量优先策略',
     strategyType: 'quality_based',
     conditions: { supplierRatingThreshold: 4.0 },
     actions: { priceAdjustment: -1, qualityGuarantee: 'extended_warranty' },
     priority: 2,
-    isActive: true
-  }
+    isActive: true,
+  },
 ];
 
 const mockSuppliers = [
@@ -35,21 +35,21 @@ const mockSuppliers = [
       averageDiscountRate: 12.5,
       afterSalesRate: 4.6,
       priceCompetitiveness: 4.8,
-      overallRating: 4.5
-    }
+      overallRating: 4.5,
+    },
   },
   {
     id: 'supplier-2',
-    name: '可靠供应商B', 
+    name: '可靠供应商B',
     rating: {
       transactionCount: 32,
       successfulNegotiations: 26,
       averageDiscountRate: 10.2,
       afterSalesRate: 4.3,
       priceCompetitiveness: 4.5,
-      overallRating: 4.2
-    }
-  }
+      overallRating: 4.2,
+    },
+  },
 ];
 
 // 模拟议价策略服务
@@ -62,50 +62,66 @@ class MockNegotiationStrategyService {
     const evaluations = mockStrategies.map(strategy => ({
       strategyId: strategy.id,
       strategyName: strategy.name,
-      matchScore: this.calculateMatchScore(strategy, supplier, targetPrice, initialQuote),
+      matchScore: this.calculateMatchScore(
+        strategy,
+        supplier,
+        targetPrice,
+        initialQuote
+      ),
       recommendedActions: strategy.actions,
       confidence: 85,
-      reasoning: `基于供应商${supplier.name}的历史表现和当前价格情况`
+      reasoning: `基于供应商${supplier.name}的历史表现和当前价格情况`,
     }));
-    
+
     return evaluations.sort((a, b) => b.matchScore - a.matchScore);
   }
 
   async generateNegotiationAdvice(supplier, targetPrice, initialQuote) {
-    const evaluations = await this.evaluateStrategies(supplier, targetPrice, initialQuote);
+    const evaluations = await this.evaluateStrategies(
+      supplier,
+      targetPrice,
+      initialQuote
+    );
     const bestStrategy = evaluations[0];
-    
+
     const priceDeviation = ((initialQuote - targetPrice) / targetPrice) * 100;
     let recommendedPrice = initialQuote;
-    
+
     if (bestStrategy.recommendedActions.priceAdjustment) {
-      recommendedPrice = initialQuote * (1 - bestStrategy.recommendedActions.priceAdjustment / 100);
+      recommendedPrice =
+        initialQuote *
+        (1 - bestStrategy.recommendedActions.priceAdjustment / 100);
     }
-    
+
     recommendedPrice = Math.max(recommendedPrice, targetPrice);
 
     return {
       recommendedPrice,
       confidence: bestStrategy.confidence,
       strategyToUse: bestStrategy.strategyId,
-      riskLevel: priceDeviation > 20 ? 'high' : priceDeviation > 10 ? 'medium' : 'low',
-      expectedDiscount: ((initialQuote - recommendedPrice) / initialQuote) * 100,
-      timeEstimate: 30
+      riskLevel:
+        priceDeviation > 20 ? 'high' : priceDeviation > 10 ? 'medium' : 'low',
+      expectedDiscount:
+        ((initialQuote - recommendedPrice) / initialQuote) * 100,
+      timeEstimate: 30,
     };
   }
 
   calculateMatchScore(strategy, supplier, targetPrice, initialQuote) {
     // 简化的匹配度计算
     let score = 50; // 基础分
-    
-    if (strategy.strategyType === 'price_based' && supplier.rating.averageDiscountRate > 10) {
+
+    if (
+      strategy.strategyType === 'price_based' &&
+      supplier.rating.averageDiscountRate > 10
+    ) {
       score += 30;
     }
-    
+
     if (supplier.rating.overallRating >= 4.0) {
       score += 20;
     }
-    
+
     return Math.min(100, score);
   }
 }
@@ -144,7 +160,7 @@ class MockSmartNegotiationEngine {
         maxRounds: dto.maxRounds || 5,
         status: 'negotiating',
         startTime: new Date(),
-        history: []
+        history: [],
       };
 
       this.sessions.set(sessionId, session);
@@ -153,7 +169,7 @@ class MockSmartNegotiationEngine {
         success: true,
         sessionId,
         session,
-        advice
+        advice,
       };
     } catch (error) {
       return { success: false, errorMessage: error.message };
@@ -176,8 +192,8 @@ class MockSmartNegotiationEngine {
             status: 'failed',
             totalRounds: session.currentRound,
             success: false,
-            message: '已达最大议价轮次限制'
-          }
+            message: '已达最大议价轮次限制',
+          },
         };
       }
 
@@ -192,27 +208,33 @@ class MockSmartNegotiationEngine {
       const round = {
         round: session.currentRound,
         timestamp: new Date(),
-        ourInitialOffer: session.history.length > 0 
-          ? session.history[session.history.length - 1].ourCounterOffer 
-          : session.initialQuote,
+        ourInitialOffer:
+          session.history.length > 0
+            ? session.history[session.history.length - 1].ourCounterOffer
+            : session.initialQuote,
         supplierQuote: dto.supplierQuote,
         ourCounterOffer: advice.recommendedPrice,
         strategyUsed: advice.strategyToUse,
         confidenceLevel: advice.confidence,
-        remarks: dto.roundRemarks
+        remarks: dto.roundRemarks,
       };
 
       session.history.push(round);
       session.currentRound++;
 
       // 检查是否达成协议
-      const priceGap = Math.abs(dto.supplierQuote - advice.recommendedPrice) / advice.recommendedPrice;
-      
+      const priceGap =
+        Math.abs(dto.supplierQuote - advice.recommendedPrice) /
+        advice.recommendedPrice;
+
       if (priceGap <= 0.02) {
         session.status = 'success';
         session.endTime = new Date();
         session.finalPrice = advice.recommendedPrice;
-        session.finalDiscountRate = ((session.initialQuote - advice.recommendedPrice) / session.initialQuote) * 100;
+        session.finalDiscountRate =
+          ((session.initialQuote - advice.recommendedPrice) /
+            session.initialQuote) *
+          100;
       }
 
       return {
@@ -222,16 +244,21 @@ class MockSmartNegotiationEngine {
         result: {
           sessionId: dto.sessionId,
           status: session.status === 'success' ? 'success' : 'ongoing',
-          finalPrice: session.status === 'success' ? advice.recommendedPrice : undefined,
-          discountRate: session.status === 'success' 
-            ? ((session.initialQuote - advice.recommendedPrice) / session.initialQuote) * 100 
-            : undefined,
+          finalPrice:
+            session.status === 'success' ? advice.recommendedPrice : undefined,
+          discountRate:
+            session.status === 'success'
+              ? ((session.initialQuote - advice.recommendedPrice) /
+                  session.initialQuote) *
+                100
+              : undefined,
           totalRounds: session.currentRound,
           success: session.status === 'success',
-          message: session.status === 'success' 
-            ? `议价成功，获得${((session.initialQuote - advice.recommendedPrice) / session.initialQuote) * 100}%折扣`
-            : '议价进行中'
-        }
+          message:
+            session.status === 'success'
+              ? `议价成功，获得${((session.initialQuote - advice.recommendedPrice) / session.initialQuote) * 100}%折扣`
+              : '议价进行中',
+        },
       };
     } catch (error) {
       return { success: false, errorMessage: error.message };
@@ -250,10 +277,18 @@ class MockSmartNegotiationEngine {
       currentRound: session.currentRound,
       statistics: {
         totalRounds: session.history.length,
-        averageDiscountRate: session.history.reduce((sum, h) => 
-          sum + (((h.ourInitialOffer - h.ourCounterOffer) / h.ourInitialOffer) * 100), 0) / Math.max(session.history.length, 1),
-        totalTimeMinutes: Math.floor((Date.now() - session.startTime.getTime()) / 60000)
-      }
+        averageDiscountRate:
+          session.history.reduce(
+            (sum, h) =>
+              sum +
+              ((h.ourInitialOffer - h.ourCounterOffer) / h.ourInitialOffer) *
+                100,
+            0
+          ) / Math.max(session.history.length, 1),
+        totalTimeMinutes: Math.floor(
+          (Date.now() - session.startTime.getTime()) / 60000
+        ),
+      },
     };
   }
 }
@@ -271,14 +306,17 @@ async function demonstrateNegotiationEngine() {
     supplierId: 'supplier-1',
     targetPrice: 10000,
     initialQuote: 12000,
-    maxRounds: 5
+    maxRounds: 5,
   });
 
   if (startResult.success) {
     console.log('✅ 议价会话启动成功');
     console.log('   会话ID:', startResult.sessionId);
     console.log('   建议初始报价:', startResult.advice.recommendedPrice);
-    console.log('   预期折扣:', startResult.advice.expectedDiscount.toFixed(2) + '%');
+    console.log(
+      '   预期折扣:',
+      `${startResult.advice.expectedDiscount.toFixed(2)}%`
+    );
     console.log('   使用策略:', startResult.advice.strategyToUse);
   } else {
     console.log('❌ 议价会话启动失败:', startResult.errorMessage);
@@ -292,7 +330,7 @@ async function demonstrateNegotiationEngine() {
   const rounds = [
     { supplierQuote: 11500, remarks: '第一轮供应商报价' },
     { supplierQuote: 11200, remarks: '第二轮供应商报价' },
-    { supplierQuote: 11000, remarks: '第三轮供应商报价' }
+    { supplierQuote: 11000, remarks: '第三轮供应商报价' },
   ];
 
   let totalDiscount = 0;
@@ -300,28 +338,34 @@ async function demonstrateNegotiationEngine() {
 
   for (let i = 0; i < rounds.length; i++) {
     console.log(`\n--- 第 ${i + 1} 轮议价 ---`);
-    
+
     const roundResult = await engine.executeNegotiationRound({
       sessionId,
       supplierQuote: rounds[i].supplierQuote,
-      roundRemarks: rounds[i].remarks
+      roundRemarks: rounds[i].remarks,
     });
 
     if (roundResult.success) {
       console.log('✅ 议价回合执行成功');
       console.log('   我方还价:', roundResult.nextOffer);
       console.log('   使用策略:', roundResult.strategyUsed);
-      
-      const discount = ((rounds[i].supplierQuote - roundResult.nextOffer) / rounds[i].supplierQuote) * 100;
+
+      const discount =
+        ((rounds[i].supplierQuote - roundResult.nextOffer) /
+          rounds[i].supplierQuote) *
+        100;
       totalDiscount += discount;
       successfulRounds++;
-      
-      console.log('   本轮折扣:', discount.toFixed(2) + '%');
-      
+
+      console.log('   本轮折扣:', `${discount.toFixed(2)}%`);
+
       if (roundResult.result.status === 'success') {
         console.log('🎉 议价成功达成协议!');
         console.log('   最终价格:', roundResult.result.finalPrice);
-        console.log('   最终折扣:', roundResult.result.discountRate.toFixed(2) + '%');
+        console.log(
+          '   最终折扣:',
+          `${roundResult.result.discountRate.toFixed(2)}%`
+        );
         break;
       }
     } else {
@@ -336,23 +380,26 @@ async function demonstrateNegotiationEngine() {
   console.log('   当前状态:', status.session.status);
   console.log('   总轮次:', status.currentRound);
   console.log('   历史记录数:', status.history.length);
-  console.log('   平均折扣率:', status.statistics.averageDiscountRate.toFixed(2) + '%');
+  console.log(
+    '   平均折扣率:',
+    `${status.statistics.averageDiscountRate.toFixed(2)}%`
+  );
 
   // 演示4: 验收标准验证
   console.log('\n📋 演示4: 验收标准验证');
   const successRate = (successfulRounds / rounds.length) * 100;
   const avgDiscountRate = totalDiscount / successfulRounds;
-  
+
   console.log('🎯 验收标准验证结果:');
   console.log(`   议价成功率: ${successRate.toFixed(1)}% (目标: ≥60%)`);
   console.log(`   平均折扣率: ${avgDiscountRate.toFixed(2)}% (目标: ≥5%)`);
-  
+
   const successRatePassed = successRate >= 60;
   const avgDiscountPassed = avgDiscountRate >= 5;
-  
+
   console.log(`   成功率达标: ${successRatePassed ? '✅' : '❌'}`);
   console.log(`   折扣率达标: ${avgDiscountPassed ? '✅' : '❌'}`);
-  
+
   if (successRatePassed && avgDiscountPassed) {
     console.log('\n🎉 恭喜！所有验收标准均已达标！');
   }
@@ -365,7 +412,7 @@ async function demonstrateNegotiationEngine() {
     10000,
     12000
   );
-  
+
   console.log('不同策略的匹配度评估:');
   evaluations.forEach((evalResult, index) => {
     console.log(`   ${index + 1}. ${evalResult.strategyName}`);

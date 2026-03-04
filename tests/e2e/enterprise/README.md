@@ -30,6 +30,7 @@ tests/e2e/enterprise/
 ### 1. 环境准备
 
 确保以下服务正在运行：
+
 - 应用服务：http://localhost:3003
 - 数据库服务
 - Redis服务（如需要）
@@ -101,7 +102,7 @@ VERIFY_SECURITY_HEADERS=false    # 验证安全头
 测试项目已在`playwright.config.ts`中配置了以下测试项目：
 
 - `enterprise-functional-tests`: 功能测试
-- `enterprise-permission-tests`: 权限测试  
+- `enterprise-permission-tests`: 权限测试
 - `enterprise-api-tests`: API测试
 - `enterprise-mobile-tests`: 移动端测试
 
@@ -110,6 +111,7 @@ VERIFY_SECURITY_HEADERS=false    # 验证安全头
 ### 1. 功能测试 (Functional Tests)
 
 测试企业用户端的核心功能：
+
 - 企业服务门户页面访问
 - 用户注册和登录流程
 - 企业管理后台功能
@@ -120,6 +122,7 @@ VERIFY_SECURITY_HEADERS=false    # 验证安全头
 ### 2. 权限测试 (Permission Tests)
 
 验证RBAC权限控制系统：
+
 - 角色权限分配验证
 - 访问控制边界测试
 - 越权访问防护
@@ -128,6 +131,7 @@ VERIFY_SECURITY_HEADERS=false    # 验证安全头
 ### 3. API测试 (API Tests)
 
 验证RESTful API接口：
+
 - 认证相关接口
 - 业务逻辑接口
 - 数据管理接口
@@ -136,6 +140,7 @@ VERIFY_SECURITY_HEADERS=false    # 验证安全头
 ### 4. 性能测试 (Performance Tests)
 
 性能基准测试：
+
 - 页面加载时间
 - API响应时间
 - 并发用户支持
@@ -144,6 +149,7 @@ VERIFY_SECURITY_HEADERS=false    # 验证安全头
 ### 5. 安全测试 (Security Tests)
 
 安全防护验证：
+
 - 输入验证测试
 - XSS攻击防护
 - SQL注入防护
@@ -155,12 +161,12 @@ VERIFY_SECURITY_HEADERS=false    # 验证安全头
 
 系统预定义了以下测试角色：
 
-| 角色 | 邮箱 | 密码 | 权限范围 |
-|------|------|------|----------|
-| admin | admin@enterprise.com | Admin123456 | 完全访问权限 |
-| procurementManager | procurement@enterprise.com | Procure123456 | 采购相关权限 |
-| agentOperator | agent@enterprise.com | Agent123456 | 智能体操作权限 |
-| regularUser | user@enterprise.com | User123456 | 基础访问权限 |
+| 角色               | 邮箱                       | 密码          | 权限范围       |
+| ------------------ | -------------------------- | ------------- | -------------- |
+| admin              | admin@enterprise.com       | Admin123456   | 完全访问权限   |
+| procurementManager | procurement@enterprise.com | Procure123456 | 采购相关权限   |
+| agentOperator      | agent@enterprise.com       | Agent123456   | 智能体操作权限 |
+| regularUser        | user@enterprise.com        | User123456    | 基础访问权限   |
 
 ### 测试数据清理
 
@@ -216,15 +222,17 @@ jobs:
 ### 常见问题
 
 1. **测试环境无法访问**
+
    ```bash
    # 检查服务状态
    curl http://localhost:3003/health
-   
+
    # 重启开发服务器
    npm run dev
    ```
 
 2. **测试数据冲突**
+
    ```bash
    # 清理测试数据
    npm run test:e2e:enterprise -- --clean

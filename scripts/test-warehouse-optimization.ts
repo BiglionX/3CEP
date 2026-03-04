@@ -3,8 +3,8 @@
  * 验证分仓效果优于随机选择，成本降低≥10%
  */
 
-import { WarehouseOptimizationRequest } from "@/supply-chain/models/warehouse-optimization.model";
-import { WarehouseOptimizationService } from "@/supply-chain/services/warehouse-optimization.service";
+import { WarehouseOptimizationRequest } from '@/supply-chain/models/warehouse-optimization.model';
+import { WarehouseOptimizationService } from '@/supply-chain/services/warehouse-optimization.service';
 
 interface TestCase {
   name: string;
@@ -30,89 +30,89 @@ interface TestResult {
 }
 
 async function runWarehouseOptimizationTests() {
-  console.log("🧪 开始智能分仓引擎测试...\n");
+  console.log('🧪 开始智能分仓引擎测试...\n');
 
   const optimizationService = new WarehouseOptimizationService();
 
   // 测试用例集合
   const testCases: TestCase[] = [
     {
-      name: "TC-001 上海地区订单测试",
+      name: 'TC-001 上海地区订单测试',
       request: {
         deliveryAddress: {
-          country: "中国",
-          province: "上海市",
-          city: "上海市",
-          address: "浦东新区陆家嘴金融中心",
+          country: '中国',
+          province: '上海市',
+          city: '上海市',
+          address: '浦东新区陆家嘴金融中心',
         },
         orderItems: [
           {
-            productId: "phone-screen-001",
-            productName: "iPhone屏幕总成",
+            productId: 'phone-screen-001',
+            productName: 'iPhone屏幕总成',
             quantity: 5,
             unitPrice: 1200,
             weight: 0.8,
           },
           {
-            productId: "battery-001",
-            productName: "手机电池",
+            productId: 'battery-001',
+            productName: '手机电池',
             quantity: 10,
             unitPrice: 150,
             weight: 0.3,
           },
         ],
         deliveryPreferences: {
-          deliveryPriority: "balanced",
+          deliveryPriority: 'balanced',
         },
       },
       expectedImprovement: 15,
-      description: "测试上海地区订单的分仓优化效果",
+      description: '测试上海地区订单的分仓优化效果',
     },
     {
-      name: "TC-002 深圳地区订单测试",
+      name: 'TC-002 深圳地区订单测试',
       request: {
         deliveryAddress: {
-          country: "中国",
-          province: "广东省",
-          city: "深圳市",
-          address: "南山区科技园",
+          country: '中国',
+          province: '广东省',
+          city: '深圳市',
+          address: '南山区科技园',
         },
         orderItems: [
           {
-            productId: "laptop-charger-001",
-            productName: "笔记本充电器",
+            productId: 'laptop-charger-001',
+            productName: '笔记本充电器',
             quantity: 3,
             unitPrice: 200,
             weight: 0.5,
           },
         ],
         deliveryPreferences: {
-          deliveryPriority: "fastest",
+          deliveryPriority: 'fastest',
         },
       },
       expectedImprovement: 12,
-      description: "测试深圳地区订单的快速配送优化",
+      description: '测试深圳地区订单的快速配送优化',
     },
     {
-      name: "TC-003 北京地区订单测试",
+      name: 'TC-003 北京地区订单测试',
       request: {
         deliveryAddress: {
-          country: "中国",
-          province: "北京市",
-          city: "北京市",
-          address: "朝阳区三里屯",
+          country: '中国',
+          province: '北京市',
+          city: '北京市',
+          address: '朝阳区三里屯',
         },
         orderItems: [
           {
-            productId: "headphones-001",
-            productName: "无线耳机",
+            productId: 'headphones-001',
+            productName: '无线耳机',
             quantity: 8,
             unitPrice: 300,
             weight: 0.2,
           },
           {
-            productId: "mouse-001",
-            productName: "无线鼠标",
+            productId: 'mouse-001',
+            productName: '无线鼠标',
             quantity: 12,
             unitPrice: 150,
             weight: 0.1,
@@ -120,25 +120,25 @@ async function runWarehouseOptimizationTests() {
         ],
         deliveryPreferences: {
           maxBudget: 200,
-          deliveryPriority: "cheapest",
+          deliveryPriority: 'cheapest',
         },
       },
       expectedImprovement: 18,
-      description: "测试北京地区订单的成本优化效果",
+      description: '测试北京地区订单的成本优化效果',
     },
     {
-      name: "TC-004 大件商品测试",
+      name: 'TC-004 大件商品测试',
       request: {
         deliveryAddress: {
-          country: "中国",
-          province: "浙江省",
-          city: "杭州市",
-          address: "西湖区文三路",
+          country: '中国',
+          province: '浙江省',
+          city: '杭州市',
+          address: '西湖区文三路',
         },
         orderItems: [
           {
-            productId: "desktop-pc-001",
-            productName: "台式电脑主机",
+            productId: 'desktop-pc-001',
+            productName: '台式电脑主机',
             quantity: 1,
             unitPrice: 5000,
             weight: 15,
@@ -150,50 +150,50 @@ async function runWarehouseOptimizationTests() {
           },
         ],
         deliveryPreferences: {
-          deliveryPriority: "balanced",
+          deliveryPriority: 'balanced',
         },
       },
       expectedImprovement: 20,
-      description: "测试大件商品的分仓优化效果",
+      description: '测试大件商品的分仓优化效果',
     },
     {
-      name: "TC-005 批量订单测试",
+      name: 'TC-005 批量订单测试',
       request: {
         deliveryAddress: {
-          country: "中国",
-          province: "江苏省",
-          city: "南京市",
-          address: "鼓楼区中山路",
+          country: '中国',
+          province: '江苏省',
+          city: '南京市',
+          address: '鼓楼区中山路',
         },
         orderItems: [
           {
-            productId: "keyboard-001",
-            productName: "机械键盘",
+            productId: 'keyboard-001',
+            productName: '机械键盘',
             quantity: 50,
             unitPrice: 400,
             weight: 1.2,
           },
           {
-            productId: "monitor-001",
-            productName: "显示器",
+            productId: 'monitor-001',
+            productName: '显示器',
             quantity: 20,
             unitPrice: 1200,
             weight: 8,
           },
         ],
         deliveryPreferences: {
-          deliveryPriority: "balanced",
+          deliveryPriority: 'balanced',
         },
       },
       expectedImprovement: 25,
-      description: "测试批量订单的大规模分仓优化",
+      description: '测试批量订单的大规模分仓优化',
     },
   ];
 
   // 执行测试
   const results: TestResult[] = [];
   let passedTests = 0;
-  let totalTests = testCases.length;
+  const totalTests = testCases.length;
 
   for (const testCase of testCases) {
     console.log(`\n📋 执行测试: ${testCase.name}`);
@@ -211,7 +211,7 @@ async function runWarehouseOptimizationTests() {
         ? actualImprovement >= testCase.expectedImprovement
         : true;
 
-      console.log(`✅ 测试${isPassed ? "通过" : "失败"}`);
+      console.log(`✅ 测试${isPassed ? '通过' : '失败'}`);
       console.log(`   📊 实际改善率: ${actualImprovement.toFixed(2)}%`);
       console.log(`   🎯 期望改善率: ≥${testCase.expectedImprovement}%`);
       console.log(`   🏪 选中仓库: ${result.selectedWarehouse.warehouseName}`);
@@ -254,22 +254,22 @@ async function runWarehouseOptimizationTests() {
   }
 
   // 输出测试总结
-  console.log("\n" + "=".repeat(60));
-  console.log("📊 智能分仓引擎测试总结");
-  console.log("=".repeat(60));
+  console.log(`\n${'='.repeat(60)}`);
+  console.log('📊 智能分仓引擎测试总结');
+  console.log('='.repeat(60));
   console.log(`总测试数: ${totalTests}`);
   console.log(`通过测试: ${passedTests}`);
   console.log(`失败测试: ${totalTests - passedTests}`);
   console.log(`通过率: ${((passedTests / totalTests) * 100).toFixed(1)}%`);
 
   // 性能统计
-  const validResults = results.filter((r) => r.processingTime !== undefined);
+  const validResults = results.filter(r => r.processingTime !== undefined);
   const avgProcessingTime =
     validResults.reduce((sum, r) => sum + (r.processingTime || 0), 0) /
     validResults.length;
 
   const improvementResults = results.filter(
-    (r) => r.actualImprovement !== undefined
+    r => r.actualImprovement !== undefined
   );
   const avgImprovement =
     improvementResults.reduce((sum, r) => sum + (r.actualImprovement || 0), 0) /
@@ -281,25 +281,26 @@ async function runWarehouseOptimizationTests() {
 
   // 详细结果表格
   console.log(`\n📋 详细测试结果:`);
-  console.log("-".repeat(100));
+  console.log('-'.repeat(100));
   console.log(
-    "测试名称".padEnd(25) +
-      "结果".padEnd(8) +
-      "改善率".padEnd(12) +
-      "选中仓库".padEnd(15) +
-      "成本".padEnd(12) +
-      "处理时间"
+    `${
+      '测试名称'.padEnd(25) +
+      '结果'.padEnd(8) +
+      '改善率'.padEnd(12) +
+      '选中仓库'.padEnd(15) +
+      '成本'.padEnd(12)
+    }处理时间`
   );
-  console.log("-".repeat(100));
+  console.log('-'.repeat(100));
 
-  results.forEach((result) => {
-    const status = result.passed ? "✅ 通过" : "❌ 失败";
+  results.forEach(result => {
+    const status = result.passed ? '✅ 通过' : '❌ 失败';
     const improvement = result.actualImprovement
       ? `${result.actualImprovement.toFixed(1)}%`
-      : "N/A";
-    const warehouse = result.selectedWarehouse || "N/A";
-    const cost = result.totalCost ? `¥${result.totalCost.toFixed(0)}` : "N/A";
-    const time = result.processingTime ? `${result.processingTime}ms` : "N/A";
+      : 'N/A';
+    const warehouse = result.selectedWarehouse || 'N/A';
+    const cost = result.totalCost ? `¥${result.totalCost.toFixed(0)}` : 'N/A';
+    const time = result.processingTime ? `${result.processingTime}ms` : 'N/A';
 
     console.log(
       result.testName.padEnd(25) +
@@ -311,14 +312,14 @@ async function runWarehouseOptimizationTests() {
     );
   });
 
-  console.log("-".repeat(100));
+  console.log('-'.repeat(100));
 
   // 验收标准检查
   const meetsAcceptanceCriteria = avgImprovement >= 10;
   console.log(`\n🎯 验收标准检查:`);
   console.log(
     `   成本降低≥10%: ${
-      meetsAcceptanceCriteria ? "✅ 满足" : "❌ 不满足"
+      meetsAcceptanceCriteria ? '✅ 满足' : '❌ 不满足'
     } (${avgImprovement.toFixed(2)}%)`
   );
 
@@ -346,68 +347,68 @@ async function runWarehouseOptimizationTests() {
 
 // 边界情况测试
 async function runBoundaryTests() {
-  console.log("\n🔍 开始边界情况测试...\n");
+  console.log('\n🔍 开始边界情况测试...\n');
 
   const optimizationService = new WarehouseOptimizationService();
 
   const boundaryTestCases: TestCase[] = [
     {
-      name: "空订单测试",
+      name: '空订单测试',
       request: {
         deliveryAddress: {
-          country: "中国",
-          province: "上海市",
-          city: "上海市",
-          address: "测试地址",
+          country: '中国',
+          province: '上海市',
+          city: '上海市',
+          address: '测试地址',
         },
         orderItems: [],
       } as any,
       shouldFail: true,
-      expectedError: "订单商品列表不能为空",
-      description: "测试空订单处理",
+      expectedError: '订单商品列表不能为空',
+      description: '测试空订单处理',
     },
     {
-      name: "无效地址测试",
+      name: '无效地址测试',
       request: {
         deliveryAddress: {
-          country: "",
-          province: "",
-          city: "",
-          address: "测试地址",
+          country: '',
+          province: '',
+          city: '',
+          address: '测试地址',
         },
         orderItems: [
           {
-            productId: "test-001",
-            productName: "测试商品",
+            productId: 'test-001',
+            productName: '测试商品',
             quantity: 1,
             unitPrice: 100,
           },
         ],
       } as any,
       shouldFail: true,
-      expectedError: "配送地址必须包含国家、省份和城市信息",
-      description: "测试无效地址验证",
+      expectedError: '配送地址必须包含国家、省份和城市信息',
+      description: '测试无效地址验证',
     },
     {
-      name: "超远距离测试",
+      name: '超远距离测试',
       request: {
         deliveryAddress: {
-          country: "美国",
-          province: "California",
-          city: "Los Angeles",
-          address: "Test Address",
+          country: '美国',
+          province: 'California',
+          city: 'Los Angeles',
+          address: 'Test Address',
         },
         orderItems: [
           {
-            productId: "test-001",
-            productName: "测试商品",
+            productId: 'test-001',
+            productName: '测试商品',
             quantity: 1,
             unitPrice: 100,
           },
         ],
       },
       shouldFail: false,
-      description: "测试国际订单处理能力",
+      description: '测试国际订单处理能力',
     },
   ];
 
@@ -440,7 +441,7 @@ async function runBoundaryTests() {
 
 // 性能压力测试
 async function runPerformanceTests() {
-  console.log("\n⚡ 开始性能压力测试...\n");
+  console.log('\n⚡ 开始性能压力测试...\n');
 
   const optimizationService = new WarehouseOptimizationService();
 
@@ -448,7 +449,7 @@ async function runPerformanceTests() {
   const largeOrderItems = [];
   for (let i = 0; i < 100; i++) {
     largeOrderItems.push({
-      productId: `product-${i.toString().padStart(3, "0")}`,
+      productId: `product-${i.toString().padStart(3, '0')}`,
       productName: `测试商品${i}`,
       quantity: Math.floor(Math.random() * 10) + 1,
       unitPrice: Math.random() * 1000 + 50,
@@ -458,14 +459,14 @@ async function runPerformanceTests() {
 
   const performanceTestCase: WarehouseOptimizationRequest = {
     deliveryAddress: {
-      country: "中国",
-      province: "广东省",
-      city: "广州市",
-      address: "天河区珠江新城",
+      country: '中国',
+      province: '广东省',
+      city: '广州市',
+      address: '天河区珠江新城',
     },
     orderItems: largeOrderItems,
     deliveryPreferences: {
-      deliveryPriority: "balanced",
+      deliveryPriority: 'balanced',
     },
   };
 
@@ -515,11 +516,11 @@ async function main() {
     // 运行性能测试
     await runPerformanceTests();
 
-    console.log("\n🏁 所有测试完成！");
+    console.log('\n🏁 所有测试完成！');
 
     return mainResults;
   } catch (error) {
-    console.error("测试执行失败:", error);
+    console.error('测试执行失败:', error);
     process.exit(1);
   }
 }
@@ -527,12 +528,12 @@ async function main() {
 // 如果直接运行此文件，则执行测试
 if (require.main === module) {
   main()
-    .then((results) => {
-      console.log("\n✨ 测试结束");
+    .then(results => {
+      console.log('\n✨ 测试结束');
       process.exit(0);
     })
-    .catch((error) => {
-      console.error("测试异常:", error);
+    .catch(error => {
+      console.error('测试异常:', error);
       process.exit(1);
     });
 }

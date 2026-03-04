@@ -4,10 +4,10 @@
  */
 
 import { APIRequestContext } from '@playwright/test';
-import { 
-  TEST_DATA, 
+import {
+  TEST_DATA,
   ENTERPRISE_ROUTES,
-  TEST_ENTERPRISE_USERS
+  TEST_ENTERPRISE_USERS,
 } from '../enterprise.config';
 
 export interface TestEnterprise {
@@ -50,26 +50,31 @@ export class TestDataManager {
   /**
    * 创建测试企业用户
    */
-  async createTestEnterprise(data: Partial<TestEnterprise> = {}): Promise<TestEnterprise> {
+  async createTestEnterprise(
+    data: Partial<TestEnterprise> = {}
+  ): Promise<TestEnterprise> {
     const enterpriseData = {
       ...TEST_DATA.enterpriseInfo,
       ...data,
-      email: data.email || `test_${Date.now()}@enterprise.com`
+      email: data.email || `test_${Date.now()}@enterprise.com`,
     };
 
-    const response = await this.apiContext.post(ENTERPRISE_ROUTES.api.register, {
-      data: {
-        companyName: enterpriseData.companyName,
-        businessLicense: enterpriseData.businessLicense,
-        contactPerson: enterpriseData.contactPerson,
-        phone: enterpriseData.phone,
-        email: enterpriseData.email,
-        password: 'Test123456'
+    const response = await this.apiContext.post(
+      ENTERPRISE_ROUTES.api.register,
+      {
+        data: {
+          companyName: enterpriseData.companyName,
+          businessLicense: enterpriseData.businessLicense,
+          contactPerson: enterpriseData.contactPerson,
+          phone: enterpriseData.phone,
+          email: enterpriseData.email,
+          password: 'Test123456',
+        },
       }
-    });
+    );
 
     const result = await response.json();
-    
+
     const testEnterprise: TestEnterprise = {
       id: result.data?.id || result.id,
       companyName: enterpriseData.companyName,
@@ -77,7 +82,7 @@ export class TestDataManager {
       contactPerson: enterpriseData.contactPerson,
       phone: enterpriseData.phone,
       email: enterpriseData.email,
-      userId: result.data?.userId || result.userId
+      userId: result.data?.userId || result.userId,
     };
 
     // 添加到清理队列
@@ -91,7 +96,9 @@ export class TestDataManager {
    */
   async deleteTestEnterprise(enterpriseId: string): Promise<void> {
     try {
-      await this.apiContext.delete(`${ENTERPRISE_ROUTES.api.users}/${enterpriseId}`);
+      await this.apiContext.delete(
+        `${ENTERPRISE_ROUTES.api.users}/${enterpriseId}`
+      );
     } catch (error) {
       console.warn(`Failed to delete test enterprise ${enterpriseId}:`, error);
     }
@@ -100,10 +107,13 @@ export class TestDataManager {
   /**
    * 创建测试智能体
    */
-  async createTestAgent(enterpriseId: string, data: Partial<TestAgent> = {}): Promise<TestAgent> {
+  async createTestAgent(
+    enterpriseId: string,
+    data: Partial<TestAgent> = {}
+  ): Promise<TestAgent> {
     const agentData = {
       ...TEST_DATA.agentData,
-      ...data
+      ...data,
     };
 
     const response = await this.apiContext.post(ENTERPRISE_ROUTES.api.agents, {
@@ -113,21 +123,21 @@ export class TestDataManager {
         description: agentData.description,
         modelConfig: {
           model: agentData.modelConfig?.model || 'gpt-4',
-          temperature: agentData.modelConfig?.temperature || 0.7
+          temperature: agentData.modelConfig?.temperature || 0.7,
         },
-        status: agentData.status || 'active'
-      }
+        status: agentData.status || 'active',
+      },
     });
 
     const result = await response.json();
-    
+
     const testAgent: TestAgent = {
       id: result.data?.id || result.id,
       name: agentData.name,
       description: agentData.description,
       modelConfig: agentData.modelConfig,
       status: agentData.status || 'active',
-      enterpriseId
+      enterpriseId,
     };
 
     // 添加到清理队列
@@ -141,7 +151,9 @@ export class TestDataManager {
    */
   async deleteTestAgent(agentId: string): Promise<void> {
     try {
-      await this.apiContext.delete(`${ENTERPRISE_ROUTES.api.agents}/${agentId}`);
+      await this.apiContext.delete(
+        `${ENTERPRISE_ROUTES.api.agents}/${agentId}`
+      );
     } catch (error) {
       console.warn(`Failed to delete test agent ${agentId}:`, error);
     }
@@ -150,25 +162,31 @@ export class TestDataManager {
   /**
    * 创建测试采购订单
    */
-  async createTestProcurementOrder(enterpriseId: string, data: Partial<TestProcurementOrder> = {}): Promise<TestProcurementOrder> {
+  async createTestProcurementOrder(
+    enterpriseId: string,
+    data: Partial<TestProcurementOrder> = {}
+  ): Promise<TestProcurementOrder> {
     const orderData = {
       ...TEST_DATA.procurementOrder,
-      ...data
+      ...data,
     };
 
-    const response = await this.apiContext.post(ENTERPRISE_ROUTES.api.procurement, {
-      data: {
-        enterpriseId,
-        title: orderData.title,
-        description: orderData.description,
-        status: orderData.status || 'pending',
-        priority: orderData.priority || 'medium',
-        items: orderData.items || []
+    const response = await this.apiContext.post(
+      ENTERPRISE_ROUTES.api.procurement,
+      {
+        data: {
+          enterpriseId,
+          title: orderData.title,
+          description: orderData.description,
+          status: orderData.status || 'pending',
+          priority: orderData.priority || 'medium',
+          items: orderData.items || [],
+        },
       }
-    });
+    );
 
     const result = await response.json();
-    
+
     const testOrder: TestProcurementOrder = {
       id: result.data?.id || result.id,
       title: orderData.title,
@@ -176,7 +194,7 @@ export class TestDataManager {
       status: orderData.status || 'pending',
       priority: orderData.priority || 'medium',
       itemsCount: orderData.items?.length || 0,
-      enterpriseId
+      enterpriseId,
     };
 
     // 添加到清理队列
@@ -190,9 +208,14 @@ export class TestDataManager {
    */
   async deleteTestProcurementOrder(orderId: string): Promise<void> {
     try {
-      await this.apiContext.delete(`${ENTERPRISE_ROUTES.api.procurement}/${orderId}`);
+      await this.apiContext.delete(
+        `${ENTERPRISE_ROUTES.api.procurement}/${orderId}`
+      );
     } catch (error) {
-      console.warn(`Failed to delete test procurement order ${orderId}:`, error);
+      console.warn(
+        `Failed to delete test procurement order ${orderId}:`,
+        error
+      );
     }
   }
 
@@ -206,13 +229,13 @@ export class TestDataManager {
   }> {
     // 创建企业
     const enterprise = await this.createTestEnterprise();
-    
+
     // 创建智能体
     const agent = await this.createTestAgent(enterprise.id);
-    
+
     // 创建采购订单
     const order = await this.createTestProcurementOrder(enterprise.id);
-    
+
     return { enterprise, agent, order };
   }
 
@@ -221,7 +244,7 @@ export class TestDataManager {
    */
   async cleanupAllTestData(): Promise<void> {
     console.log(`Cleaning up ${this.cleanupQueue.length} test data items...`);
-    
+
     // 执行清理操作
     for (const cleanupFn of this.cleanupQueue) {
       try {
@@ -230,7 +253,7 @@ export class TestDataManager {
         console.warn('Cleanup failed:', error);
       }
     }
-    
+
     // 清空队列
     this.cleanupQueue = [];
     console.log('Test data cleanup completed');
@@ -241,7 +264,7 @@ export class TestDataManager {
    */
   async getTestUserToken(email: string, password: string): Promise<string> {
     const response = await this.apiContext.post(ENTERPRISE_ROUTES.api.login, {
-      data: { email, password }
+      data: { email, password },
     });
 
     const result = await response.json();
@@ -253,17 +276,17 @@ export class TestDataManager {
    */
   async createMultipleTestUsers(): Promise<Record<string, TestEnterprise>> {
     const testUsers: Record<string, TestEnterprise> = {};
-    
+
     for (const [role, userData] of Object.entries(TEST_ENTERPRISE_USERS)) {
       const enterprise = await this.createTestEnterprise({
         companyName: userData.companyName,
         email: userData.email,
-        contactPerson: `联系人_${role}`
+        contactPerson: `联系人_${role}`,
       });
-      
+
       testUsers[role] = enterprise;
     }
-    
+
     return testUsers;
   }
 
@@ -273,14 +296,16 @@ export class TestDataManager {
   async resetTestEnvironment(): Promise<void> {
     // 清理现有测试数据
     await this.cleanupAllTestData();
-    
+
     // 可以添加其他重置逻辑
     console.log('Test environment reset completed');
   }
 }
 
 // 导出工厂函数
-export function createTestDataManager(apiContext: APIRequestContext): TestDataManager {
+export function createTestDataManager(
+  apiContext: APIRequestContext
+): TestDataManager {
   return new TestDataManager(apiContext);
 }
 

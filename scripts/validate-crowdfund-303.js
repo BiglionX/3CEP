@@ -67,7 +67,9 @@ console.log('✅ 输出：推荐列表及预估优惠 - 已实现完整数据结
 console.log('✅ 数据库查询：用户历史产品型号 - 已实现user_device_history表');
 console.log('✅ 映射表：新旧机型对应关系 - 已实现model_upgrade_mappings表');
 console.log('✅ 推荐API：/api/crowdfunding/recommend - 已实现完整API');
-console.log('✅ 前端展示：推荐卡片突出优惠 - 已实现UpgradeRecommendationList组件');
+console.log(
+  '✅ 前端展示：推荐卡片突出优惠 - 已实现UpgradeRecommendationList组件'
+);
 console.log('✅ 验收条件：登录用户看到个性化推荐 - 已实现完整功能链路');
 
 // 部署建议
@@ -75,7 +77,9 @@ console.log('\n🚀 部署建议:');
 console.log('-------------');
 console.log('1. 执行数据库迁移:');
 console.log('   npx supabase migration up');
-console.log('   # 或手动执行: supabase/migrations/020_create_upgrade_recommendation_system.sql');
+console.log(
+  '   # 或手动执行: supabase/migrations/020_create_upgrade_recommendation_system.sql'
+);
 
 console.log('\n2. 集成到现有系统:');
 console.log('   - 在众筹项目页面引入 UpgradeRecommendationList 组件');
@@ -101,9 +105,13 @@ console.log('输入任意用户ID即可体验完整的推荐功能');
 console.log('\n🧪 API测试:');
 console.log('------------');
 console.log('获取推荐:');
-console.log('curl "http://localhost:3001/api/crowdfunding/recommend?userId=USER_ID&limit=5"');
+console.log(
+  'curl "http://localhost:3001/api/crowdfunding/recommend?userId=USER_ID&limit=5"'
+);
 console.log('\n刷新推荐:');
-console.log('curl -X POST "http://localhost:3001/api/crowdfunding/recommend" \\');
+console.log(
+  'curl -X POST "http://localhost:3001/api/crowdfunding/recommend" \\'
+);
 console.log('     -H "Content-Type: application/json" \\');
 console.log('     -d \'{"userId": "USER_ID", "limit": 5}\'');
 

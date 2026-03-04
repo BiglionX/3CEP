@@ -211,43 +211,43 @@ node scripts/test-qrcode-generation.js
 
 ```javascript
 // 单个生成
-const response = await fetch("/api/qrcode/generate", {
-  method: "POST",
+const response = await fetch('/api/qrcode/generate', {
+  method: 'POST',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   body: JSON.stringify({
-    productId: "prod_apple_iphone15_001",
-    brandId: "brand_apple_001",
-    productName: "iPhone 15 Pro",
-    productModel: "A2842",
+    productId: 'prod_apple_iphone15_001',
+    brandId: 'brand_apple_001',
+    productName: 'iPhone 15 Pro',
+    productModel: 'A2842',
     config: {
-      format: "png",
+      format: 'png',
       size: 400,
     },
   }),
 });
 
 const result = await response.json();
-console.log("二维码Base64:", result.qrImageBase64);
+console.log('二维码Base64:', result.qrImageBase64);
 
 // 批量生成
-const batchResponse = await fetch("/api/qrcode/generate", {
-  method: "POST",
+const batchResponse = await fetch('/api/qrcode/generate', {
+  method: 'POST',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   body: JSON.stringify({
     products: [
       {
-        productId: "prod_001",
-        brandId: "brand_001",
-        productName: "产品1",
+        productId: 'prod_001',
+        brandId: 'brand_001',
+        productName: '产品1',
       },
       {
-        productId: "prod_002",
-        brandId: "brand_001",
-        productName: "产品2",
+        productId: 'prod_002',
+        brandId: 'brand_001',
+        productName: '产品2',
       },
     ],
   }),

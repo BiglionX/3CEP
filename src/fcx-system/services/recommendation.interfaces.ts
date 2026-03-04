@@ -12,7 +12,7 @@ import {
   RecommendationResult,
   UserBehavior,
   UserProfile,
-} from "../models/recommendation.model";
+} from '../models/recommendation.model';
 
 // 推荐算法接口
 export interface Recommender {
@@ -24,8 +24,7 @@ export interface Recommender {
 
   /**
    * 生成推荐
-   * @param context 推荐上下文
-   * @param count 推荐数量
+   * @param context 推荐上下?   * @param count 推荐数量
    */
   recommend(
     context: RecommendationContext,
@@ -75,8 +74,7 @@ export interface UserBehaviorCollector {
 // 用户画像服务接口
 export interface UserProfileService {
   /**
-   * 构建或更新用户画像
-   * @param userId 用户ID
+   * 构建或更新用户画?   * @param userId 用户ID
    */
   buildUserProfile(userId: string): Promise<UserProfile>;
 
@@ -89,13 +87,11 @@ export interface UserProfileService {
   /**
    * 更新用户偏好
    * @param userId 用户ID
-   * @param preferences 新偏好
-   */
+   * @param preferences 新偏?   */
   updateUserPreferences(userId: string, preferences: any): Promise<void>;
 
   /**
-   * 计算用户相似度
-   * @param userId1 用户1
+   * 计算用户相似?   * @param userId1 用户1
    * @param userId2 用户2
    */
   calculateUserSimilarity(userId1: string, userId2: string): Promise<number>;
@@ -104,8 +100,7 @@ export interface UserProfileService {
 // 物品画像服务接口
 export interface ItemProfileService {
   /**
-   * 构建或更新物品画像
-   * @param itemId 物品ID
+   * 构建或更新物品画?   * @param itemId 物品ID
    * @param itemType 物品类型
    */
   buildItemProfile(itemId: string, itemType: string): Promise<ItemProfile>;
@@ -123,24 +118,20 @@ export interface ItemProfileService {
   buildItemProfiles(itemIds: string[]): Promise<void>;
 
   /**
-   * 计算物品相似度
-   * @param itemId1 物品1
+   * 计算物品相似?   * @param itemId1 物品1
    * @param itemId2 物品2
    */
   calculateItemSimilarity(itemId1: string, itemId2: string): Promise<number>;
 }
 
-// 推荐引擎主服务接口
-export interface RecommendationEngine {
+// 推荐引擎主服务接?export interface RecommendationEngine {
   /**
-   * 初始化推荐引擎
-   */
+   * 初始化推荐引?   */
   initialize(): Promise<void>;
 
   /**
    * 生成个性化推荐
-   * @param context 推荐上下文
-   * @param count 推荐数量，默认10
+   * @param context 推荐上下?   * @param count 推荐数量，默?0
    */
   getRecommendations(
     context: RecommendationContext,
@@ -149,9 +140,7 @@ export interface RecommendationEngine {
 
   /**
    * 批量生成推荐
-   * @param contexts 推荐上下文数组
-   * @param count 每个用户的推荐数量
-   */
+   * @param contexts 推荐上下文数?   * @param count 每个用户的推荐数?   */
   batchRecommend(
     contexts: RecommendationContext[],
     count?: number
@@ -170,8 +159,7 @@ export interface RecommendationEngine {
   retrainModel(force?: boolean): Promise<void>;
 
   /**
-   * 获取系统健康状态
-   */
+   * 获取系统健康状?   */
   getHealthStatus(): Promise<{
     isHealthy: boolean;
     modelAccuracy?: number;

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: Request) {
@@ -13,64 +13,51 @@ export async function POST(request: Request) {
       utm_medium,
       utm_campaign,
       user_agent,
-      session_id
+      session_id,
     } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!event_type) {
-      return NextResponse.json(
-        { error: '事件类型为必填项' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '浜嬩欢绫诲瀷涓哄繀濉」' }, { status: 400 });
     }
 
-    // 创建Supabase客户端
-    const supabase = createClient(
+    // 鍒涘缓Supabase瀹㈡埛?    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 获取客户端IP地址
+    // 鑾峰彇瀹㈡埛绔疘P鍦板潃
     const forwardedFor = request.headers.get('x-forwarded-for');
     const realIp = request.headers.get('x-real-ip');
     const ip = forwardedFor?.split(',')[0]?.trim() || realIp || null;
 
-    // 插入事件数据
-    const { error } = await supabase
-      .from('marketing_events')
-      .insert({
-        event_type,
-        role: role || null,
-        page_path: page_path || null,
-        source: source || null,
-        utm_source: utm_source || null,
-        utm_medium: utm_medium || null,
-        utm_campaign: utm_campaign || null,
-        user_agent: user_agent || null,
-        ip_address: ip,
-        session_id: session_id || null,
-        created_at: new Date().toISOString()
-      } as any);
+    // 鎻掑叆浜嬩欢鏁版嵁
+    const { error } = await supabase.from('marketing_events').insert({
+      event_type,
+      role: role || null,
+      page_path: page_path || null,
+      source: source || null,
+      utm_source: utm_source || null,
+      utm_medium: utm_medium || null,
+      utm_campaign: utm_campaign || null,
+      user_agent: user_agent || null,
+      ip_address: ip,
+      session_id: session_id || null,
+      created_at: new Date().toISOString(),
+    } as any);
 
     if (error) {
-      console.error('记录事件失败:', error);
-      return NextResponse.json(
-        { error: '记录失败' },
-        { status: 500 }
-      );
+      console.error('璁板綍浜嬩欢澶辫触:', error);
+      return NextResponse.json({ error: '璁板綍澶辫触' }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      message: '事件记录成功'
-    });
-
+      message: '浜嬩欢璁板綍鎴愬姛',
+    }) as any;
   } catch (error) {
-    console.error('处理事件记录错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('澶勭悊浜嬩欢璁板綍閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -83,18 +70,15 @@ export async function GET(request: Request) {
     const endDate = searchParams.get('endDate') || '';
     const groupBy = searchParams.get('groupBy') || 'day';
 
-    // 创建Supabase客户端
-    const supabase = createClient(
+    // 鍒涘缓Supabase瀹㈡埛?    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 构建基础查询
-    let query = supabase
-      .from('marketing_events')
-      .select('*');
+    // 鏋勫缓鍩虹鏌ヨ
+    let query = supabase.from('marketing_events').select('*');
 
-    // 添加过滤条件
+    // 娣诲姞杩囨护鏉′欢
     if (eventType) {
       query = query.eq('event_type', eventType);
     }
@@ -113,17 +97,13 @@ export async function GET(request: Request) {
 
     const { data, error } = await query
       .order('created_at', { ascending: false })
-      .limit(1000); // 限制返回数据量
-
+      .limit(1000); // 闄愬埗杩斿洖鏁版嵁?
     if (error) {
-      console.error('查询事件数据失败:', error);
-      return NextResponse.json(
-        { error: '查询失败' },
-        { status: 500 }
-      );
+      console.error('鏌ヨ浜嬩欢鏁版嵁澶辫触:', error);
+      return NextResponse.json({ error: '鏌ヨ澶辫触' }, { status: 500 });
     }
 
-    // 计算统计数据
+    // 璁＄畻缁熻鏁版嵁
     const stats = calculateEventStats(data || [], groupBy);
 
     return NextResponse.json({
@@ -131,16 +111,12 @@ export async function GET(request: Request) {
       data: {
         events: data,
         stats,
-        total: (data as any)?.data?.length || 0
-      }
+        total: (data as any)?.(data as any)?.length || 0,
+      },
     });
-
   } catch (error) {
-    console.error('处理事件查询错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('澶勭悊浜嬩欢鏌ヨ閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -150,25 +126,25 @@ function calculateEventStats(events: any[], groupBy: string) {
     eventTypes: {},
     roles: {},
     sources: {},
-    dailyCounts: {}
+    dailyCounts: {},
   };
 
   events.forEach(event => {
-    // 统计事件类型
-    stats.eventTypes[event.event_type] = (stats.eventTypes[event.event_type] || 0) + 1;
-    
-    // 统计角色分布
+    // 缁熻浜嬩欢绫诲瀷
+    stats.eventTypes[event.event_type] =
+      (stats.eventTypes[event.event_type] || 0) + 1;
+
+    // 缁熻瑙掕壊鍒嗗竷
     if (event.role) {
       stats.roles[event.role] = (stats.roles[event.role] || 0) + 1;
     }
-    
-    // 统计来源
+
+    // 缁熻鏉ユ簮
     if (event.source) {
       stats.sources[event.source] = (stats.sources[event.source] || 0) + 1;
     }
-    
-    // 按日期统计
-    if (event.created_at) {
+
+    // 鎸夋棩鏈熺粺?    if (event.created_at) {
       const date = new Date(event.created_at).toISOString().split('T')[0];
       stats.dailyCounts[date] = (stats.dailyCounts[date] || 0) + 1;
     }
@@ -176,3 +152,4 @@ function calculateEventStats(events: any[], groupBy: string) {
 
   return stats;
 }
+

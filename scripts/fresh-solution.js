@@ -10,34 +10,35 @@ require('dotenv').config();
 async function freshSolution() {
   console.log('🚀 全新登录解决方案');
   console.log('==================');
-  
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   );
-  
+
   const adminEmail = '1055603323@qq.com';
   const adminPassword = '12345678';
-  
+
   try {
     console.log('\n1️⃣ 执行管理员登录');
-    
-    const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: adminPassword
-    });
-    
+
+    const { data: loginData, error: loginError } =
+      await supabase.auth.signInWithPassword({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
     if (loginError) {
       console.log('❌ 登录失败:', loginError.message);
       return;
     }
-    
+
     console.log('✅ 登录成功');
     console.log('   用户ID:', loginData.user.id);
     console.log('   管理员状态:', loginData.user.user_metadata?.isAdmin);
-    
+
     console.log('\n2️⃣ 创建简化测试页面');
-    
+
     const testPage = `
 <!DOCTYPE html>
 <html>
@@ -108,22 +109,27 @@ async function freshSolution() {
     </script>
 </body>
 </html>`;
-    
+
     // 保存测试页面
     const fs = require('fs');
     fs.writeFileSync('./public/fresh-admin-test.html', testPage);
     console.log('✅ 已创建全新测试页面: public/fresh-admin-test.html');
-    
+
     console.log('\n3️⃣ 测试API访问');
-    
+
     try {
-      const apiResponse = await fetch('http://localhost:3001/api/auth/check-session', {
-        headers: { 'Authorization': `Bearer ${loginData.session.access_token}` }
-      });
-      
+      const apiResponse = await fetch(
+        'http://localhost:3001/api/auth/check-session',
+        {
+          headers: {
+            Authorization: `Bearer ${loginData.session.access_token}`,
+          },
+        }
+      );
+
       const apiResult = await apiResponse.json();
       console.log('API检查结果:', apiResult);
-      
+
       if (apiResult.authenticated && apiResult.user?.isAdmin) {
         console.log('✅ API权限验证通过');
       } else {
@@ -132,19 +138,18 @@ async function freshSolution() {
     } catch (apiError) {
       console.log('❌ API测试失败:', apiError.message);
     }
-    
+
     console.log('\n📋 使用说明:');
     console.log('1. 访问测试页面: http://localhost:3001/fresh-admin-test.html');
     console.log('2. 点击"测试后台访问"按钮验证权限');
     console.log('3. 点击"直接访问后台"按钮进入管理界面');
     console.log('4. 如果仍有问题，请检查浏览器控制台错误');
-    
+
     console.log('\n🎯 核心优势:');
     console.log('- 完全绕过Cookie处理问题');
     console.log('- 直接使用访问令牌验证');
     console.log('- 简化的权限检查逻辑');
     console.log('- 实时的状态反馈');
-    
   } catch (error) {
     console.error('\n❌ 执行过程中发生错误:', error.message);
   }

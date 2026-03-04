@@ -1,11 +1,9 @@
 /**
- * 缓存管理器
- * 提供统一的缓存接口，支持内存缓存和Redis缓存
+ * 缓存管理? * 提供统一的缓存接口，支持内存缓存和Redis缓存
  */
 
 interface CacheOptions {
-  ttl?: number; // 过期时间（秒）
-  prefix?: string; // 缓存键前缀
+  ttl?: number; // 过期时间（秒?  prefix?: string; // 缓存键前缀
 }
 
 interface CacheEntry<T> {
@@ -18,8 +16,7 @@ export class CacheManager {
   private static instance: CacheManager;
   private memoryCache: Map<string, CacheEntry<any>> = new Map();
   private readonly DEFAULT_TTL = 300; // 默认5分钟
-  private readonly CLEANUP_INTERVAL = 60000; // 1分钟清理一次过期缓存
-
+  private readonly CLEANUP_INTERVAL = 60000; // 1分钟清理一次过期缓?
   private constructor() {
     // 启动定期清理过期缓存
     setInterval(() => {
@@ -35,8 +32,7 @@ export class CacheManager {
   }
 
   /**
-   * 获取缓存值
-   */
+   * 获取缓存?   */
   async get<T>(key: string, options: CacheOptions = {}): Promise<T | null> {
     const cacheKey = this.buildKey(key, options.prefix);
     const entry = this.memoryCache.get(cacheKey);
@@ -45,8 +41,7 @@ export class CacheManager {
       return null;
     }
 
-    // 检查是否过期
-    if (Date.now() > entry.expiry) {
+    // 检查是否过?    if (Date.now() > entry.expiry) {
       this.memoryCache.delete(cacheKey);
       return null;
     }
@@ -55,8 +50,7 @@ export class CacheManager {
   }
 
   /**
-   * 设置缓存值
-   */
+   * 设置缓存?   */
   async set<T>(
     key: string,
     value: T,
@@ -83,8 +77,7 @@ export class CacheManager {
   }
 
   /**
-   * 清空指定前缀的所有缓存
-   */
+   * 清空指定前缀的所有缓?   */
   async clearPrefix(prefix: string): Promise<void> {
     const keysToDelete: string[] = [];
 
@@ -98,8 +91,7 @@ export class CacheManager {
   }
 
   /**
-   * 清空所有缓存
-   */
+   * 清空所有缓?   */
   async clearAll(): Promise<void> {
     this.memoryCache.clear();
   }
@@ -136,8 +128,7 @@ export class CacheManager {
   }
 
   /**
-   * 清理过期的缓存条目
-   */
+   * 清理过期的缓存条?   */
   private cleanupExpiredEntries(): void {
     const now = Date.now();
     let cleanedCount = 0;
@@ -150,8 +141,7 @@ export class CacheManager {
     }
 
     if (cleanedCount > 0) {
-      console.log(`[CacheManager] 清理了 ${cleanedCount} 个过期缓存条目`);
-    }
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`[CacheManager] 清理?${cleanedCount} 个过期缓存条目`)}
   }
 
   /**
@@ -159,8 +149,7 @@ export class CacheManager {
    */
   private calculateMemoryUsage(): number {
     // 这是一个简化的内存使用估算
-    // 实际生产环境中可能需要更精确的方法
-    return this.memoryCache.size * 1024; // 假设每个条目约1KB
+    // 实际生产环境中可能需要更精确的方?    return this.memoryCache.size * 1024; // 假设每个条目?KB
   }
 }
 

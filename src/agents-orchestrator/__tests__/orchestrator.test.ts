@@ -106,7 +106,7 @@ describe('AgentOrchestrator', () => {
   });
 
   describe('配置管理测试', () => {
-    test('应该能够更新可靠性配置', () => {
+    test('应该能够更新可靠性配置', async () => {
       const newConfig: Partial<ReliabilityConfig> = {
         maxRetries: 5,
         timeoutMs: 10000,

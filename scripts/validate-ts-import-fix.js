@@ -20,7 +20,13 @@ if (!fs.existsSync(targetFile)) {
 }
 
 // 2. 检查数据库类型文件
-const dbTypesFile = path.join(__dirname, '..', 'src', 'lib', 'database.types.ts');
+const dbTypesFile = path.join(
+  __dirname,
+  '..',
+  'src',
+  'lib',
+  'database.types.ts'
+);
 console.log(`📄 检查数据库类型文件: ${dbTypesFile}`);
 
 if (!fs.existsSync(dbTypesFile)) {
@@ -34,10 +40,10 @@ console.log(`📄 检查TypeScript配置: ${tsConfigFile}`);
 
 if (fs.existsSync(tsConfigFile)) {
   const tsConfig = JSON.parse(fs.readFileSync(tsConfigFile, 'utf8'));
-  
+
   console.log('⚙️  TypeScript配置检查:');
   console.log(`   baseUrl: ${tsConfig.compilerOptions.baseUrl || '未设置'}`);
-  
+
   if (tsConfig.compilerOptions.paths) {
     console.log('   paths配置:');
     Object.keys(tsConfig.compilerOptions.paths).forEach(key => {
@@ -57,13 +63,15 @@ try {
   // 使用标准tsconfig.json编译
   execSync('npx tsc --noEmit test-tenant-api-fix.ts', { stdio: 'pipe' });
   console.log('✅ 使用标准配置编译成功');
-  
+
   // 使用测试配置编译
   if (fs.existsSync(path.join(__dirname, 'tsconfig.test.json'))) {
-    execSync('npx tsc --noEmit --project tsconfig.test.json test-tenant-api-fix.ts', { stdio: 'pipe' });
+    execSync(
+      'npx tsc --noEmit --project tsconfig.test.json test-tenant-api-fix.ts',
+      { stdio: 'pipe' }
+    );
     console.log('✅ 使用测试配置编译成功');
   }
-  
 } catch (error) {
   console.log('❌ 编译失败:');
   console.log(error.stdout?.toString() || error.message);

@@ -13,7 +13,7 @@ async function testDataCenterInfrastructure() {
     'src/data-center/engine',
     'src/data-center/engine/trino-config',
     'src/data-center/engine/trino-config/catalog',
-    'logs/trino'
+    'logs/trino',
   ];
 
   let allDirsExist = true;
@@ -32,7 +32,7 @@ async function testDataCenterInfrastructure() {
     'src/data-center/engine/trino-config/catalog/lionfix.properties',
     'src/data-center/engine/trino-config/catalog/fixcycle.properties',
     'src/data-center/core/data-center-service.ts',
-    'src/app/api/data-center/route.ts'
+    'src/app/api/data-center/route.ts',
   ];
 
   let allFilesExist = true;
@@ -46,7 +46,7 @@ async function testDataCenterInfrastructure() {
   console.log('\n⚙️ 检查环境配置:');
   const envTemplateExists = fs.existsSync('.env.datacenter.example');
   console.log(`  ${envTemplateExists ? '✅' : '❌'} .env.datacenter.example`);
-  
+
   const envFileExists = fs.existsSync('.env.datacenter');
   console.log(`  ${envFileExists ? '✅' : '⭕'} .env.datacenter (需要配置)`);
 
@@ -55,10 +55,10 @@ async function testDataCenterInfrastructure() {
   const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   const requiredScripts = [
     'data-center:start',
-    'data-center:stop', 
+    'data-center:stop',
     'data-center:restart',
     'data-center:logs',
-    'data-center:status'
+    'data-center:status',
   ];
 
   requiredScripts.forEach(script => {
@@ -70,11 +70,15 @@ async function testDataCenterInfrastructure() {
   console.log('\n📊 测试总结:');
   console.log(`  目录结构: ${allDirsExist ? '✅ 完整' : '❌ 不完整'}`);
   console.log(`  配置文件: ${allFilesExist ? '✅ 完整' : '❌ 不完整'}`);
-  console.log(`  环境配置: ${envTemplateExists ? '✅ 模板存在' : '❌ 缺少模板'}`);
-  
+  console.log(
+    `  环境配置: ${envTemplateExists ? '✅ 模板存在' : '❌ 缺少模板'}`
+  );
+
   const overallSuccess = allDirsExist && allFilesExist && envTemplateExists;
-  console.log(`\n🎯 第一阶段基础设施搭建: ${overallSuccess ? '✅ 成功' : '❌ 需要修正'}`);
-  
+  console.log(
+    `\n🎯 第一阶段基础设施搭建: ${overallSuccess ? '✅ 成功' : '❌ 需要修正'}`
+  );
+
   if (!overallSuccess) {
     console.log('\n🔧 建议修正项:');
     if (!allDirsExist) console.log('  - 运行脚本创建缺失的目录');

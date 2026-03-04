@@ -5,45 +5,42 @@
 
 import { AccountType } from '@/lib/database.types';
 
-// FCX账户状态枚举
-export enum FcxAccountStatus {
+// FCX账户状态枚?export enum FcxAccountStatus {
   ACTIVE = 'active',
   FROZEN = 'frozen',
-  CLOSED = 'closed'
+  CLOSED = 'closed',
 }
 
 // FCX交易类型枚举
 export enum FcxTransactionType {
-  PURCHASE = 'purchase',      // 购买FCX
-  REWARD = 'reward',          // 奖励发放
-  SETTLEMENT = 'settlement',  // 工单结算
-  FREEZE = 'freeze',          // 资金冻结
-  UNFREEZE = 'unfreeze',      // 资金解冻
-  STAKE = 'stake',            // 质押
-  UNSTAKE = 'unstake'         // 解除质押
+  PURCHASE = 'purchase', // 购买FCX
+  REWARD = 'reward', // 奖励发放
+  SETTLEMENT = 'settlement', // 工单结算
+  FREEZE = 'freeze', // 资金冻结
+  UNFREEZE = 'unfreeze', // 资金解冻
+  STAKE = 'stake', // 质押
+  UNSTAKE = 'unstake', // 解除质押
 }
 
-// FCX交易状态枚举
-export enum FcxTransactionStatus {
+// FCX交易状态枚?export enum FcxTransactionStatus {
   PENDING = 'pending',
   COMPLETED = 'completed',
   FAILED = 'failed',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
-// FCX2期权状态枚举
-export enum Fcx2OptionStatus {
+// FCX2期权状态枚?export enum Fcx2OptionStatus {
   ACTIVE = 'active',
   REDEEMED = 'redeemed',
-  EXPIRED = 'expired'
+  EXPIRED = 'expired',
 }
 
 // FCX账户基础接口
 export interface FcxAccount {
   id: string;
   userId: string;
-  balance: number;           // 可用余额
-  frozenBalance: number;     // 冻结余额
+  balance: number; // 可用余额
+  frozenBalance: number; // 冻结余额
   accountType: AccountType;
   status: FcxAccountStatus;
   createdAt: Date;
@@ -57,7 +54,7 @@ export interface FcxTransaction {
   toAccountId: string | null;
   amount: number;
   transactionType: FcxTransactionType;
-  referenceId: string | null;  // 关联的业务ID
+  referenceId: string | null; // 关联的业务ID
   memo: string | null;
   status: FcxTransactionStatus;
   createdAt: Date;
@@ -81,35 +78,33 @@ export enum OrderStatus {
   IN_PROGRESS = 'in_progress',
   COMPLETED = 'completed',
   DISPUTED = 'disputed',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 export interface RepairOrder {
   id: string;
-  orderNumber: string;           // 工单编号
+  orderNumber: string; // 工单编号
   consumerId: string | null;
   repairShopId: string | null;
   deviceInfo: Record<string, any> | null;
   faultDescription: string | null;
-  fcxAmountLocked: number | null;  // 锁定的FCX金额
+  fcxAmountLocked: number | null; // 锁定的FCX金额
   status: OrderStatus;
-  rating: number | null;           // 消费者评分 (0.0-5.0)
-  factoryId: string | null;        // 关联的工厂账户
-  createdAt: Date;
+  rating: number | null; // 消费者评?(0.0-5.0)
+  factoryId: string | null; // 关联的工厂账?  createdAt: Date;
   confirmedAt: Date | null;
   completedAt: Date | null;
 }
 
 // 联盟等级枚举
 export enum AllianceLevel {
-  BRONZE = 'bronze',    // 青铜级 (< 1000 FCX2)
-  SILVER = 'silver',    // 白银级 (1000-5000 FCX2)
-  GOLD = 'gold',        // 黄金级 (5000-20000 FCX2)
-  DIAMOND = 'diamond'   // 钻石级 (> 20000 FCX2)
+  BRONZE = 'bronze', // 青铜?(< 1000 FCX2)
+  SILVER = 'silver', // 白银?(1000-5000 FCX2)
+  GOLD = 'gold', // 黄金?(5000-20000 FCX2)
+  DIAMOND = 'diamond', // 钻石?(> 20000 FCX2)
 }
 
-// 扩展的维修店铺接口
-export interface ExtendedRepairShop {
+// 扩展的维修店铺接?export interface ExtendedRepairShop {
   id: string;
   name: string;
   slug: string;
@@ -135,12 +130,11 @@ export interface ExtendedRepairShop {
   createdAt: Date | null;
   updatedAt: Date | null;
   // FCX系统扩展字段
-  fcxStaked: number | null;        // 质押的FCX数量
-  fcx2Balance: number | null;      // 累计的FCX2期权余额
-  allianceLevel: AllianceLevel | null;  // 联盟等级
-  joinDate: Date | null;           // 加入联盟日期
-  isAllianceMember: boolean | null;     // 是否为联盟成员
-  userId: string | null;           // 关联的用户ID
+  fcxStaked: number | null; // 质押的FCX数量
+  fcx2Balance: number | null; // 累计的FCX2期权余额
+  allianceLevel: AllianceLevel | null; // 联盟等级
+  joinDate: Date | null; // 加入联盟日期
+  isAllianceMember: boolean | null; // 是否为联盟成?  userId: string | null; // 关联的用户ID
 }
 
 // 创建FCX账户的请求DTO
@@ -163,8 +157,8 @@ export interface FcxTransferDTO {
 // FCX购买请求DTO
 export interface PurchaseFcxDTO {
   userId: string;
-  amountUSD: number;  // 美元金额
-  paymentMethod: string;  // 支付方式
+  amountUSD: number; // 美元金额
+  paymentMethod: string; // 支付方式
 }
 
 // 质押FCX请求DTO
@@ -187,18 +181,16 @@ export interface CreateRepairOrderDTO {
 // 工单完成请求DTO
 export interface CompleteRepairOrderDTO {
   orderId: string;
-  rating: number;  // 评分 0.0-5.0
+  rating: number; // 评分 0.0-5.0
   completionNotes?: string;
 }
 
 // FCX2奖励计算结果
 export interface Fcx2RewardResult {
-  baseReward: number;      // 基础奖励
+  baseReward: number; // 基础奖励
   ratingMultiplier: number; // 评分倍数
-  totalReward: number;     // 总奖励
-  levelBonus: number;      // 等级加成
-  finalAmount: number;     // 最终发放数量
-}
+  totalReward: number; // 总奖?  levelBonus: number; // 等级加成
+  finalAmount: number; // 最终发放数?}
 
 // 账户余额查询结果
 export interface AccountBalance {
@@ -219,8 +211,7 @@ export interface TransactionQueryParams {
   offset?: number;
 }
 
-// 维修店排名信息
-export interface ShopRankingInfo {
+// 维修店排名信?export interface ShopRankingInfo {
   shopId: string;
   shopName: string;
   allianceLevel: AllianceLevel;

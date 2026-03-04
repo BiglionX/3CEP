@@ -2,8 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/lib/database.types';
 import { AllianceLevel } from '../models/fcx-account.model';
 
-// 初始化Supabase客户端
-const supabase = createClient<Database>(
+// 初始化Supabase客户?const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -65,7 +64,6 @@ export interface EquityRedemptionResult {
 }
 
 export class EquityRedemptionService {
-  
   /**
    * 获取可兑换的权益列表
    */
@@ -94,9 +92,8 @@ export class EquityRedemptionService {
         dailyLimit: item.daily_limit,
         isActive: item.is_active,
         createdAt: item.created_at,
-        updatedAt: item.updated_at
+        updatedAt: item.updated_at,
       }));
-
     } catch (error) {
       console.error('获取权益列表错误:', error);
       throw error;
@@ -106,41 +103,44 @@ export class EquityRedemptionService {
   /**
    * 兑换权益
    */
-  async redeemEquity(request: EquityRedemptionRequest): Promise<EquityRedemptionResult> {
+  async redeemEquity(
+    request: EquityRedemptionRequest
+  ): Promise<EquityRedemptionResult> {
     try {
       const { userId, equityTypeId, quantity = 1 } = request;
 
-      // 1. 验证用户和权益信息
-      const [userInfo, equityInfo] = await Promise.all([
+      // 1. 验证用户和权益信?      const [userInfo, equityInfo] = await Promise.all([
         this.getUserInfo(userId),
-        this.getEquityInfo(equityTypeId)
+        this.getEquityInfo(equityTypeId),
       ]);
 
       if (!userInfo) {
         return {
           success: false,
-          message: '用户不存在',
+          message: '用户不存?,
           redeemedItems: [],
-          remainingBalance: 0
+          remainingBalance: 0,
         };
       }
 
       if (!equityInfo) {
         return {
           success: false,
-          message: '权益类型不存在',
+          message: '权益类型不存?,
           redeemedItems: [],
-          remainingBalance: userInfo.fcx2Balance
+          remainingBalance: userInfo.fcx2Balance,
         };
       }
 
-      // 2. 检查等级要求
-      if (this.getLevelValue(userInfo.level) < this.getLevelValue(equityInfo.levelRequirement)) {
+      // 2. 检查等级要?      if (
+        this.getLevelValue(userInfo.level) <
+        this.getLevelValue(equityInfo.levelRequirement)
+      ) {
         return {
           success: false,
-          message: `等级不足，需要${equityInfo.levelRequirement}级或以上`,
+          message: `等级不足，需?{equityInfo.levelRequirement}级或以上`,
           redeemedItems: [],
-          remainingBalance: userInfo.fcx2Balance
+          remainingBalance: userInfo.fcx2Balance,
         };
       }
 
@@ -149,25 +149,27 @@ export class EquityRedemptionService {
       if (userInfo.fcx2Balance < totalCost) {
         return {
           success: false,
-          message: `FCX2余额不足，需要${totalCost}，当前余额${userInfo.fcx2Balance}`,
+          message: `FCX2余额不足，需?{totalCost}，当前余?{userInfo.fcx2Balance}`,
           redeemedItems: [],
-          remainingBalance: userInfo.fcx2Balance
+          remainingBalance: userInfo.fcx2Balance,
         };
       }
 
-      // 4. 检查兑换限制
-      const restrictionCheck = await this.checkRedemptionRestrictions(userId, equityTypeId, quantity);
+      // 4. 检查兑换限?      const restrictionCheck = await this.checkRedemptionRestrictions(
+        userId,
+        equityTypeId,
+        quantity
+      );
       if (!restrictionCheck.allowed) {
         return {
           success: false,
           message: restrictionCheck.reason,
           redeemedItems: [],
-          remainingBalance: userInfo.fcx2Balance
+          remainingBalance: userInfo.fcx2Balance,
         };
       }
 
-      // 5. 开始事务处理
-      const redeemedItems: Array<{
+      // 5. 开始事务处?      const redeemedItems: Array<{
         equityId: string;
         equityTypeId: string;
         expiresAt: string;
@@ -175,8 +177,10 @@ export class EquityRedemptionService {
 
       for (let i = 0; i < quantity; i++) {
         // 创建用户权益记录
-        const expiresAt = new Date(Date.now() + equityInfo.validityDays * 24 * 60 * 60 * 1000).toISOString();
-        
+        const expiresAt = new Date(
+          Date.now() + equityInfo.validityDays * 24 * 60 * 60 * 1000
+        ).toISOString();
+
         const { data: userEquity, error: equityError } = await supabase
           .from('user_equities')
           .insert({
@@ -186,7 +190,7 @@ export class EquityRedemptionService {
             redeemed_at: new Date().toISOString(),
             expires_at: expiresAt,
             status: 'active',
-            metadata: {} as any
+            metadata: {} as any,
           } as any)
           .select()
           .single();
@@ -198,8 +202,8 @@ export class EquityRedemptionService {
         redeemedItems.push({
           equityId: (userEquity as any).id,
           equityTypeId: (userEquity as any).equity_type_id,
-          expiresAt: (userEquity as any).expires_at
-        });
+          expiresAt: (userEquity as any).expires_at,
+        }) as any;
       }
 
       // 6. 扣除FCX2余额
@@ -219,11 +223,10 @@ export class EquityRedemptionService {
 
       return {
         success: true,
-        message: `成功兑换${quantity}个${equityInfo.name}`,
+        message: `成功兑换${quantity}�?{equityInfo.name}`,
         redeemedItems,
-        remainingBalance: newBalance
+        remainingBalance: newBalance,
       };
-
     } catch (error) {
       console.error('权益兑换错误:', error);
       throw error;
@@ -237,10 +240,12 @@ export class EquityRedemptionService {
     try {
       const { data, error } = await supabase
         .from('user_equities')
-        .select(`
+        .select(
+          `
           *,
           equity_types(name)
-        `)
+        `
+        )
         .eq('user_id', userId)
         .order('redeemed_at', { ascending: false } as any);
 
@@ -257,9 +262,8 @@ export class EquityRedemptionService {
         redeemedAt: item.redeemed_at,
         expiresAt: item.expires_at,
         status: item.status as 'active' | 'expired' | 'used',
-        metadata: item.metadata || {}
+        metadata: item.metadata || {},
       }));
-
     } catch (error) {
       console.error('获取用户权益错误:', error);
       throw error;
@@ -267,9 +271,11 @@ export class EquityRedemptionService {
   }
 
   /**
-   * 检查权益是否可用
-   */
-  async checkEquityAvailability(userId: string, equityTypeId: string): Promise<{
+   * 检查权益是否可?   */
+  async checkEquityAvailability(
+    userId: string,
+    equityTypeId: string
+  ): Promise<{
     available: boolean;
     reason?: string;
     maxQuantity: number;
@@ -277,37 +283,52 @@ export class EquityRedemptionService {
     try {
       const [userInfo, equityInfo] = await Promise.all([
         this.getUserInfo(userId),
-        this.getEquityInfo(equityTypeId)
+        this.getEquityInfo(equityTypeId),
       ]);
 
       if (!userInfo || !equityInfo) {
-        return { available: false, reason: '用户或权益信息不存在', maxQuantity: 0 };
+        return {
+          available: false,
+          reason: '用户或权益信息不存在',
+          maxQuantity: 0,
+        };
       }
 
-      // 检查等级要求
-      if (this.getLevelValue(userInfo.level) < this.getLevelValue(equityInfo.levelRequirement)) {
-        return { available: false, reason: `需要${equityInfo.levelRequirement}级或以上`, maxQuantity: 0 };
+      // 检查等级要?      if (
+        this.getLevelValue(userInfo.level) <
+        this.getLevelValue(equityInfo.levelRequirement)
+      ) {
+        return {
+          available: false,
+          reason: `需?{equityInfo.levelRequirement}级或以上`,
+          maxQuantity: 0,
+        };
       }
 
-      // 检查余额
-      const maxByBalance = Math.floor(userInfo.fcx2Balance / equityInfo.cost);
+      // 检查余?      const maxByBalance = Math.floor(userInfo.fcx2Balance / equityInfo.cost);
       if (maxByBalance === 0) {
         return { available: false, reason: 'FCX2余额不足', maxQuantity: 0 };
       }
 
-      // 检查限制
-      const restrictionCheck = await this.checkRedemptionRestrictions(userId, equityTypeId, 1);
+      // 检查限?      const restrictionCheck = await this.checkRedemptionRestrictions(
+        userId,
+        equityTypeId,
+        1
+      );
       if (!restrictionCheck.allowed) {
-        return { available: false, reason: restrictionCheck.reason, maxQuantity: 0 };
+        return {
+          available: false,
+          reason: restrictionCheck.reason,
+          maxQuantity: 0,
+        };
       }
 
-      return { 
-        available: true, 
-        maxQuantity: Math.min(maxByBalance, restrictionCheck.maxAllowed) 
+      return {
+        available: true,
+        maxQuantity: Math.min(maxByBalance, restrictionCheck.maxAllowed),
       };
-
     } catch (error) {
-      console.error('检查权益可用性错误:', error);
+      console.error('检查权益可用性错?', error);
       return { available: false, reason: '系统错误', maxQuantity: 0 };
     }
   }
@@ -332,9 +353,8 @@ export class EquityRedemptionService {
       return {
         id: (data as any).id,
         level: (data as any).alliance_level as AllianceLevel,
-        fcx2Balance: (data as any).fcx2_balance || 0
+        fcx2Balance: (data as any).fcx2_balance || 0,
       };
-
     } catch (error) {
       return null;
     }
@@ -343,7 +363,9 @@ export class EquityRedemptionService {
   /**
    * 获取权益信息
    */
-  private async getEquityInfo(equityTypeId: string): Promise<EquityType | null> {
+  private async getEquityInfo(
+    equityTypeId: string
+  ): Promise<EquityType | null> {
     try {
       const { data, error } = await supabase
         .from('equity_types')
@@ -366,30 +388,27 @@ export class EquityRedemptionService {
         dailyLimit: (data as any).daily_limit,
         isActive: (data as any).is_active,
         createdAt: (data as any).created_at,
-        updatedAt: (data as any).updated_at
+        updatedAt: (data as any).updated_at,
       };
-
     } catch (error) {
       return null;
     }
   }
 
   /**
-   * 检查兑换限制
-   */
+   * 检查兑换限?   */
   private async checkRedemptionRestrictions(
-    userId: string, 
-    equityTypeId: string, 
+    userId: string,
+    equityTypeId: string,
     quantity: number
   ): Promise<{ allowed: boolean; reason: string; maxAllowed: number }> {
     try {
       const equityInfo = await this.getEquityInfo(equityTypeId);
       if (!equityInfo) {
-        return { allowed: false, reason: '权益不存在', maxAllowed: 0 };
+        return { allowed: false, reason: '权益不存?, maxAllowed: 0 };
       }
 
-      // 检查总兑换次数限制
-      if (equityInfo.maxRedemptions !== -1) {
+      // 检查总兑换次数限?      if (equityInfo.maxRedemptions !== -1) {
         const { count: totalCount } = await supabase
           .from('user_equities')
           .select('*', { count: 'exact', head: true })
@@ -398,16 +417,15 @@ export class EquityRedemptionService {
 
         if (totalCount && totalCount + quantity > equityInfo.maxRedemptions) {
           const remaining = equityInfo.maxRedemptions - (totalCount || 0);
-          return { 
-            allowed: false, 
-            reason: `超过最大兑换次数限制(${equityInfo.maxRedemptions}次)`, 
-            maxAllowed: Math.max(0, remaining)
+          return {
+            allowed: false,
+            reason: `超过最大兑换次数限?${equityInfo.maxRedemptions}�?`,
+            maxAllowed: Math.max(0, remaining),
           };
         }
       }
 
-      // 检查每日限制
-      const today = new Date();
+      // 检查每日限?      const today = new Date();
       today.setHours(0, 0, 0, 0);
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -422,15 +440,14 @@ export class EquityRedemptionService {
 
       if (dailyCount && dailyCount + quantity > equityInfo.dailyLimit) {
         const remaining = equityInfo.dailyLimit - (dailyCount || 0);
-        return { 
-          allowed: false, 
-          reason: `超过每日兑换限制(${equityInfo.dailyLimit}次)`, 
-          maxAllowed: Math.max(0, remaining)
+        return {
+          allowed: false,
+          reason: `超过每日兑换限制(${equityInfo.dailyLimit}�?`,
+          maxAllowed: Math.max(0, remaining),
         };
       }
 
       return { allowed: true, reason: '', maxAllowed: quantity };
-
     } catch (error) {
       return { allowed: false, reason: '检查限制时发生错误', maxAllowed: 0 };
     }
@@ -440,9 +457,9 @@ export class EquityRedemptionService {
    * 记录兑换日志
    */
   private async logRedemption(
-    userId: string, 
-    equityTypeId: string, 
-    quantity: number, 
+    userId: string,
+    equityTypeId: string,
+    quantity: number,
     totalCost: number
   ): Promise<void> {
     try {
@@ -456,21 +473,19 @@ export class EquityRedemptionService {
       //     total_cost: totalCost,
       //     redeemed_at: new Date().toISOString()
       //   } as any) as any);
-
     } catch (error) {
       console.warn('记录兑换日志失败:', error);
     }
   }
 
   /**
-   * 获取等级数值（用于比较）
-   */
+   * 获取等级数值（用于比较?   */
   private getLevelValue(level: AllianceLevel): number {
     const levelMap: Record<AllianceLevel, number> = {
-      'bronze': 1,
-      'silver': 2,
-      'gold': 3,
-      'diamond': 4
+      bronze: 1,
+      silver: 2,
+      gold: 3,
+      diamond: 4,
     };
     return levelMap[level] || 0;
   }

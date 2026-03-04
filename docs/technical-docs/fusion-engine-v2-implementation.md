@@ -30,12 +30,14 @@
 **文件位置**: `src/services/fusion-engine-v2.service.ts`
 
 **核心功能**:
+
 - 并行获取多种估值策略结果
 - 综合评估各策略置信度
 - 动态选择最优策略
 - 记录决策过程和理由
 
 **策略权重配置**:
+
 ```typescript
 strategyWeights: {
   ml: 0.7,      // ML模型权重 70%
@@ -45,6 +47,7 @@ strategyWeights: {
 ```
 
 **置信度阈值**:
+
 ```typescript
 confidenceThresholds: {
   high: 0.8,    // 高置信度 ≥ 80%
@@ -58,15 +61,17 @@ confidenceThresholds: {
 **文件位置**: `src/app/api/valuation/v2/route.ts`
 
 **支持的HTTP方法**:
+
 - `POST /api/valuation/v2` - 详细估值请求
 - `GET /api/valuation/v2?deviceQrcodeId=xxx` - 简单查询
 
 **响应格式**:
+
 ```json
 {
   "success": true,
   "data": {
-    "finalValue": 4250.00,
+    "finalValue": 4250.0,
     "method": "hybrid",
     "confidenceLevel": "high",
     "confidenceScore": 0.85,
@@ -91,6 +96,7 @@ confidenceThresholds: {
 **文件位置**: `supabase/migrations/020_create_valuation_feedback_system.sql`
 
 **表结构**:
+
 ```sql
 CREATE TABLE valuation_feedback (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -110,18 +116,21 @@ CREATE TABLE valuation_feedback (
 ```
 
 **统计视图**:
+
 - `valuation_feedback_stats` - 设备反馈统计
 - `monthly_feedback_trends` - 月度反馈趋势
 
 ## 部署和使用
 
 ### 1. 数据库迁移
+
 ```bash
 # 应用数据库迁移
 npx supabase migration up
 ```
 
 ### 2. API测试
+
 ```bash
 # 测试POST请求
 curl -X POST http://localhost:3000/api/valuation/v2 \
@@ -143,6 +152,7 @@ curl "http://localhost:3000/api/valuation/v2?deviceQrcodeId=QR_TEST_001&includeD
 ```
 
 ### 3. 服务测试
+
 ```bash
 # 运行集成测试
 npx ts-node tests/integration/test-fusion-engine-v2.js
@@ -151,30 +161,31 @@ npx ts-node tests/integration/test-fusion-engine-v2.js
 ## 配置参数
 
 ### 智能决策引擎配置
+
 ```typescript
 const config = {
   // 置信度阈值
   confidenceThresholds: {
     high: 0.8,
-    medium: 0.6, 
-    low: 0.4
+    medium: 0.6,
+    low: 0.4,
   },
-  
+
   // 策略权重
   strategyWeights: {
     ml: 0.7,
     market: 0.2,
-    rule: 0.1
+    rule: 0.1,
   },
-  
+
   // 异常检测
-  outlierThreshold: 0.5,  // 50%价格偏差
-  
+  outlierThreshold: 0.5, // 50%价格偏差
+
   // 最小样本要求
   minSamples: {
     ml: 100,
-    market: 5
-  }
+    market: 5,
+  },
 };
 
 // 运行时更新配置
@@ -184,17 +195,19 @@ fusionEngineV2Service.updateConfig(config);
 ## 监控和维护
 
 ### 关键指标
+
 - 策略选择分布
 - 置信度水平统计
 - 用户反馈满意度
 - 模型准确性跟踪
 
 ### 日志记录
+
 ```typescript
 // 决策日志格式
 {
   deviceId: "device_xxx",
-  model: "iPhone 14 Pro", 
+  model: "iPhone 14 Pro",
   decision: "ml",
   confidence: 0.85,
   value: 4250.00,
@@ -230,6 +243,7 @@ fusionEngineV2Service.updateConfig(config);
    - 查看服务端日志
 
 ### 调试建议
+
 ```bash
 # 启用详细日志
 export DEBUG=fusion-engine:*
@@ -242,6 +256,7 @@ SELECT * FROM decision_logs ORDER BY created_at DESC LIMIT 10;
 ```
 
 ---
+
 **版本**: 1.0  
 **最后更新**: 2026-02-20  
 **作者**: AI助手

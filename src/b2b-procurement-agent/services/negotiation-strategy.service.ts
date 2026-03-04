@@ -1,5 +1,5 @@
-import { generateUUID } from "@/fcx-system/utils/helpers";
-import { createClient } from "@supabase/supabase-js";
+import { generateUUID } from '@/fcx-system/utils/helpers';
+import { createClient } from '@supabase/supabase-js';
 import {
   NegotiationAdvice,
   NegotiationStrategy,
@@ -8,7 +8,7 @@ import {
   StrategyEvaluation,
   StrategyType,
   SupplierWithRating,
-} from "../models/negotiation.model";
+} from '../models/negotiation.model';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,23 +22,22 @@ export class NegotiationStrategyService {
   async getActiveStrategies(): Promise<NegotiationStrategy[]> {
     try {
       const { data, error } = await supabase
-        .from("negotiation_strategies")
-        .select("*")
-        .eq("is_active", true)
-        .order("priority", { ascending: false });
+        .from('negotiation_strategies')
+        .select('*')
+        .eq('is_active', true)
+        .order('priority', { ascending: false });
 
       if (error) throw new Error(`获取议价策略失败: ${error.message}`);
 
       return data?.map(this.mapToStrategy) || [];
     } catch (error) {
-      console.error("获取议价策略错误:", error);
+      console.error('获取议价策略错误:', error);
       throw error;
     }
   }
 
   /**
-   * 根据条件评估并选择最佳策略
-   */
+   * 根据条件评估并选择最佳策?   */
   async evaluateStrategies(
     supplier: SupplierWithRating,
     targetPrice: number,
@@ -71,7 +70,7 @@ export class NegotiationStrategyService {
             ),
             confidence: this.calculateConfidence(
               matchScore,
-              supplier.rating?.overallRating || 0
+              supplier?.overallRating || 0
             ),
             reasoning: this.generateReasoning(strategy, matchScore, supplier),
           });
@@ -81,7 +80,7 @@ export class NegotiationStrategyService {
       // 按匹配度降序排列
       return evaluations.sort((a, b) => b.matchScore - a.matchScore);
     } catch (error) {
-      console.error("评估议价策略错误:", error);
+      console.error('评估议价策略错误:', error);
       throw error;
     }
   }
@@ -119,24 +118,23 @@ export class NegotiationStrategyService {
           (1 - bestStrategy.recommendedActions.priceAdjustment / 100);
       }
 
-      // 确保建议价格不低于目标价格
-      recommendedPrice = Math.max(recommendedPrice, targetPrice);
+      // 确保建议价格不低于目标价?      recommendedPrice = Math.max(recommendedPrice, targetPrice);
 
       return {
         recommendedPrice,
         confidence: bestStrategy.confidence,
         strategyToUse: bestStrategy.strategyId,
-        alternativeStrategies: evaluations.slice(1, 4).map((e) => e.strategyId),
+        alternativeStrategies: evaluations.slice(1, 4).map(e => e.strategyId),
         riskLevel: this.assessRiskLevel(
           priceDeviation,
-          supplier.rating?.overallRating || 0
+          supplier?.overallRating || 0
         ),
         expectedDiscount:
           ((initialQuote - recommendedPrice) / initialQuote) * 100,
         timeEstimate: this.estimateTime(bestStrategy.strategyId, urgencyLevel),
       };
     } catch (error) {
-      console.error("生成议价建议错误:", error);
+      console.error('生成议价建议错误:', error);
       throw error;
     }
   }
@@ -145,14 +143,14 @@ export class NegotiationStrategyService {
    * 创建新的议价策略
    */
   async createStrategy(
-    strategy: Omit<NegotiationStrategy, "id" | "createdAt" | "updatedAt">
+    strategy: Omit<NegotiationStrategy, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<NegotiationStrategy> {
     try {
       const strategyId = generateUUID();
       const now = new Date();
 
       const { data, error } = await supabase
-        .from("negotiation_strategies")
+        .from('negotiation_strategies')
         .insert({
           id: strategyId,
           name: strategy.name,
@@ -173,7 +171,7 @@ export class NegotiationStrategyService {
 
       return this.mapToStrategy(data);
     } catch (error) {
-      console.error("创建议价策略错误:", error);
+      console.error('创建议价策略错误:', error);
       throw error;
     }
   }
@@ -187,7 +185,7 @@ export class NegotiationStrategyService {
   ): Promise<NegotiationStrategy> {
     try {
       const { data, error } = await supabase
-        .from("negotiation_strategies")
+        .from('negotiation_strategies')
         .update({
           name: updates.name,
           description: updates.description,
@@ -198,7 +196,7 @@ export class NegotiationStrategyService {
           is_active: updates.isActive,
           updated_at: new Date(),
         } as any)
-        .eq("id", id)
+        .eq('id', id)
         .select()
         .single();
 
@@ -206,7 +204,7 @@ export class NegotiationStrategyService {
 
       return this.mapToStrategy(data);
     } catch (error) {
-      console.error("更新议价策略错误:", error);
+      console.error('更新议价策略错误:', error);
       throw error;
     }
   }
@@ -217,15 +215,15 @@ export class NegotiationStrategyService {
   async deleteStrategy(id: string): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from("negotiation_strategies")
+        .from('negotiation_strategies')
         .delete()
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) throw new Error(`删除议价策略失败: ${error.message}`);
 
       return true;
     } catch (error) {
-      console.error("删除议价策略错误:", error);
+      console.error('删除议价策略错误:', error);
       return false;
     }
   }
@@ -233,8 +231,7 @@ export class NegotiationStrategyService {
   // 私有辅助方法
 
   /**
-   * 计算策略匹配度得分
-   */
+   * 计算策略匹配度得?   */
   private calculateMatchScore(
     conditions: StrategyConditions,
     supplier: SupplierWithRating,
@@ -245,8 +242,7 @@ export class NegotiationStrategyService {
     let score = 0;
     let totalWeight = 0;
 
-    // 价格偏差检查
-    if (conditions.maxPriceDeviation !== undefined) {
+    // 价格偏差检?    if (conditions.maxPriceDeviation !== undefined) {
       const priceDeviation = Math.abs(
         ((initialQuote - targetPrice) / targetPrice) * 100
       );
@@ -256,16 +252,14 @@ export class NegotiationStrategyService {
       totalWeight += 30;
     }
 
-    // 供应商评分检查
-    if (conditions.supplierRatingThreshold !== undefined && supplier.rating) {
+    // 供应商评分检?    if (conditions.supplierRatingThreshold !== undefined && supplier.rating) {
       if (supplier.rating.overallRating >= conditions.supplierRatingThreshold) {
         score += 25;
       }
       totalWeight += 25;
     }
 
-    // 交易次数检查
-    if (conditions.transactionCountThreshold !== undefined && supplier.rating) {
+    // 交易次数检?    if (conditions.transactionCountThreshold !== undefined && supplier.rating) {
       if (
         supplier.rating.transactionCount >= conditions.transactionCountThreshold
       ) {
@@ -274,16 +268,14 @@ export class NegotiationStrategyService {
       totalWeight += 20;
     }
 
-    // 紧急程度检查
-    if (conditions.urgencyLevel && urgencyLevel) {
+    // 紧急程度检?    if (conditions.urgencyLevel && urgencyLevel) {
       if (conditions.urgencyLevel === urgencyLevel) {
         score += 15;
       }
       totalWeight += 15;
     }
 
-    // 成功率检查
-    if (
+    // 成功率检?    if (
       conditions.successfulNegotiationsRatio !== undefined &&
       supplier.rating
     ) {
@@ -302,8 +294,7 @@ export class NegotiationStrategyService {
   }
 
   /**
-   * 根据上下文调整策略动作
-   */
+   * 根据上下文调整策略动?   */
   private adjustActionsBasedOnContext(
     baseActions: StrategyActions,
     supplier: SupplierWithRating,
@@ -324,8 +315,7 @@ export class NegotiationStrategyService {
       }
     }
 
-    // 根据供应商评分调整其他条件
-    if (supplier.rating) {
+    // 根据供应商评分调整其他条?    if (supplier.rating) {
       if (supplier.rating.overallRating > 4.5) {
         // 高评分供应商可以提供更多优惠
         if (adjustedActions.deliveryTimeFlexibility) {
@@ -343,8 +333,7 @@ export class NegotiationStrategyService {
   }
 
   /**
-   * 计算置信度
-   */
+   * 计算置信?   */
   private calculateConfidence(
     matchScore: number,
     supplierRating: number
@@ -374,17 +363,17 @@ export class NegotiationStrategyService {
 
     if (supplier.rating) {
       if (supplier.rating.overallRating >= 4.0) {
-        reasons.push("供应商历史表现优秀");
+        reasons.push('供应商历史表现优秀');
       } else if (supplier.rating.overallRating >= 3.0) {
-        reasons.push("供应商表现良好");
+        reasons.push('供应商表现良?);
       }
 
       if (supplier.rating.transactionCount >= 20) {
-        reasons.push("供应商经验丰富");
+        reasons.push('供应商经验丰?);
       }
     }
 
-    return reasons.join("，");
+    return reasons.join('�?);
   }
 
   /**
@@ -393,20 +382,19 @@ export class NegotiationStrategyService {
   private assessRiskLevel(
     priceDeviation: number,
     supplierRating: number
-  ): "low" | "medium" | "high" {
+  ): 'low' | 'medium' | 'high' {
     let riskScore = 0;
 
     // 价格偏差风险
     if (priceDeviation > 30) riskScore += 2;
     else if (priceDeviation > 15) riskScore += 1;
 
-    // 供应商评分风险
-    if (supplierRating < 3.0) riskScore += 2;
+    // 供应商评分风?    if (supplierRating < 3.0) riskScore += 2;
     else if (supplierRating < 4.0) riskScore += 1;
 
-    if (riskScore >= 3) return "high";
-    if (riskScore >= 1) return "medium";
-    return "low";
+    if (riskScore >= 3) return 'high';
+    if (riskScore >= 1) return 'medium';
+    return 'low';
   }
 
   /**
@@ -415,7 +403,7 @@ export class NegotiationStrategyService {
   private estimateTime(strategyId: string, urgencyLevel?: string): number {
     let baseTime = 30; // 默认30分钟
 
-    if (urgencyLevel === "urgent") {
+    if (urgencyLevel === 'urgent') {
       baseTime = 15; // 紧急情况下15分钟
     }
 
@@ -436,9 +424,9 @@ export class NegotiationStrategyService {
     return {
       recommendedPrice: Math.min(conservativePrice, initialQuote),
       confidence: 60,
-      strategyToUse: "",
+      strategyToUse: '',
       alternativeStrategies: [],
-      riskLevel: "low",
+      riskLevel: 'low',
       expectedDiscount: Math.max(expectedDiscount, 0),
       timeEstimate: 20,
     };

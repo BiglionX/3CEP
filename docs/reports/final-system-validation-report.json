@@ -1,0 +1,162 @@
+{
+  "overallStatus": "passed",
+  "modules": {
+    "fileStructure": {
+      "src/app": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "src/components": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "src/lib": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "src/hooks": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "src/services": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "src/data-center": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "public": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "docs": {
+        "status": "passed",
+        "message": "目录存在"
+      },
+      "tests": {
+        "status": "passed",
+        "message": "目录存在"
+      }
+    },
+    "coreModules": {
+      "数据管理中心": {
+        "status": "passed",
+        "message": "模块文件存在",
+        "path": "src/data-center"
+      },
+      "用户认证系统": {
+        "status": "passed",
+        "message": "模块文件存在",
+        "path": "src/hooks/use-unified-auth.ts"
+      },
+      "监控告警系统": {
+        "status": "passed",
+        "message": "模块文件存在",
+        "path": "src/data-center/streaming/monitoring-alert-system.ts"
+      },
+      "实时处理服务": {
+        "status": "passed",
+        "message": "模块文件存在",
+        "path": "src/data-center/streaming/enhanced-realtime-service.ts"
+      },
+      "数据质量引擎": {
+        "status": "failed",
+        "message": "模块文件缺失",
+        "path": "src/data-center/monitoring/data-quality-engine.ts"
+      }
+    },
+    "apis": {
+      "监控API": {
+        "status": "passed",
+        "message": "API端点存在",
+        "path": "src/app/api/monitoring/enhanced/route.ts"
+      },
+      "数据质量API": {
+        "status": "passed",
+        "message": "API端点存在",
+        "path": "src/app/api/data-quality/rules/route.ts"
+      },
+      "自动修复API": {
+        "status": "passed",
+        "message": "API端点存在",
+        "path": "src/app/api/data-quality/auto-fix/route.ts"
+      },
+      "趋势分析API": {
+        "status": "passed",
+        "message": "API端点存在",
+        "path": "src/app/api/data-quality/trends/route.ts"
+      }
+    },
+    "dataQuality": {
+      "质量规则引擎": {
+        "status": "passed",
+        "message": "组件存在",
+        "path": "src/data-center/monitoring/extended-quality-rules.ts"
+      },
+      "问题识别引擎": {
+        "status": "passed",
+        "message": "组件存在",
+        "path": "src/data-center/monitoring/issue-identification-engine.ts"
+      },
+      "自动修复执行器": {
+        "status": "passed",
+        "message": "组件存在",
+        "path": "src/data-center/monitoring/auto-fix-executor.ts"
+      },
+      "趋势分析引擎": {
+        "status": "passed",
+        "message": "组件存在",
+        "path": "src/data-center/monitoring/trend-analysis-engine.ts"
+      }
+    },
+    "performance": {
+      "懒加载优化": {
+        "status": "passed",
+        "message": "优化报告存在",
+        "path": "docs/reports/t4-001-lazy-loading-optimization-report.md"
+      },
+      "打包优化": {
+        "status": "passed",
+        "message": "优化报告存在",
+        "path": "docs/reports/t4-002-bundle-optimization-report.md"
+      },
+      "图片优化": {
+        "status": "passed",
+        "message": "优化报告存在",
+        "path": "docs/reports/t4-003-image-optimization-report.md"
+      },
+      "CDN加速": {
+        "status": "passed",
+        "message": "优化报告存在",
+        "path": "docs/reports/t4-004-cdn-acceleration-report.md"
+      }
+    },
+    "security": {
+      "API限流": {
+        "status": "passed",
+        "message": "安全组件存在",
+        "path": "src/middleware/rate-limit.middleware.ts"
+      },
+      "权限控制": {
+        "status": "passed",
+        "message": "安全组件存在",
+        "path": "src/hooks/use-unified-auth.ts"
+      },
+      "熔断机制": {
+        "status": "passed",
+        "message": "安全组件存在",
+        "path": "src/lib/circuit-breaker.ts"
+      },
+      "安全监控": {
+        "status": "passed",
+        "message": "安全组件存在",
+        "path": "src/data-center/streaming/monitoring-alert-system.ts"
+      }
+    }
+  },
+  "totalCount": 30,
+  "passedCount": 29,
+  "failedCount": 1,
+  "timestamp": "2026-03-01T06:46:05.280Z"
+}

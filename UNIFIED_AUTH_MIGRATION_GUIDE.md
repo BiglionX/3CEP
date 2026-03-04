@@ -1,6 +1,4 @@
-
-统一认证系统迁移指南
-====================
+# 统一认证系统迁移指南
 
 1. 替换现有的AuthProvider:
    - 移除 src/components/providers/AuthProvider.tsx

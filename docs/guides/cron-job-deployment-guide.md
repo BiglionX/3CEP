@@ -5,11 +5,11 @@
 ### 已配置的定时任务
 
 1. **每日任务** (`/api/cron/daily-task`)
-   - 执行时间: 每天凌晨 3:00 (0 3 * * *)
+   - 执行时间: 每天凌晨 3:00 (0 3 \* \* \*)
    - 功能: 数据清理、价格更新、预警通知、统计报告、数据备份
 
 2. **每小时任务** (`/api/cron/hourly-task`)
-   - 执行时间: 每小时整点 (0 * * * *)
+   - 执行时间: 每小时整点 (0 \* \* \* \*)
    - 功能: 健康检查、预约提醒、临时数据清理、缓存更新
 
 ## 🚀 部署步骤
@@ -46,7 +46,7 @@ vercel --prod
 # 手动触发每日任务测试
 curl https://your-app.vercel.app/api/cron/daily-task
 
-# 手动触发每小时任务测试  
+# 手动触发每小时任务测试
 curl https://your-app.vercel.app/api/cron/hourly-task
 ```
 
@@ -78,6 +78,7 @@ node scripts/check-cron-execution.js --test
 ### 3. 日志文件监控
 
 日志文件位置: `logs/` 目录下
+
 - `cron-execution-YYYY-MM-DD.log` - 执行日志
 - `cron-monitor-report-YYYY-MM-DD.json` - 监控报告
 - `status-report-YYYY-MM-DD.json` - 状态报告
@@ -96,6 +97,7 @@ node scripts/check-cron-execution.js --test
    - 查看执行过程中的任何错误信息
 
 2. **验证数据库变更**
+
    ```bash
    # 检查系统配置中的执行记录
    node scripts/final-verification.js
@@ -110,16 +112,19 @@ node scripts/check-cron-execution.js --test
 ## ⚠️ 常见问题排查
 
 ### 1. 任务未执行
+
 - 检查 Vercel 项目的 Cron 配置是否正确
 - 确认环境变量已正确设置
 - 查看函数日志中的错误信息
 
 ### 2. 执行失败
+
 - 检查 Supabase 连接配置
 - 验证数据库表结构完整性
 - 查看具体的错误堆栈信息
 
 ### 3. 权限问题
+
 - 确认使用的是 Service Role Key
 - 检查 RLS 策略配置
 - 验证数据库用户权限
@@ -166,11 +171,13 @@ find logs/ -name "*.log" -mtime +30 -delete
 ## 📞 支持信息
 
 如遇到问题，请提供以下信息:
+
 - 完整的错误日志
 - 执行时间和环境
 - 相关的配置信息
 - 最近的变更历史
 
 ---
-*文档版本: 1.0*
-*最后更新: 2026-02-14*
+
+_文档版本: 1.0_
+_最后更新: 2026-02-14_

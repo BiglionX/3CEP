@@ -26,7 +26,7 @@ export interface RewardCreateData {
 }
 
 export class CrowdfundingRewardService {
-  // 获取项目的所有回报设置
+  // 获取项目的所有回报设?
   static async getProjectRewards(projectId: string) {
     try {
       const { data, error } = await supabase
@@ -109,7 +109,7 @@ export class CrowdfundingRewardService {
       if (projectResponse.error) throw projectResponse.error;
 
       if (projectResponse.data.creator_id !== userId) {
-        throw new Error("无权修改此回报设置");
+        throw new Error("无权修改此回报设?);
       }
 
       const { data, error } = await supabase
@@ -145,10 +145,10 @@ export class CrowdfundingRewardService {
       if (projectResponse.error) throw projectResponse.error;
 
       if (projectResponse.data.creator_id !== userId) {
-        throw new Error("无权删除此回报设置");
+        throw new Error("无权删除此回报设?);
       }
 
-      // 检查是否已被认领
+      // 检查是否已被认?
       if (reward.claimed_count > 0) {
         throw new Error("已有用户认领此回报，无法删除");
       }
@@ -188,7 +188,7 @@ export class CrowdfundingRewardService {
     try {
       const reward = await this.getRewardById(rewardId);
 
-      // 检查数量限制
+      // 检查数量限?
       if (
         reward.quantity_limit &&
         reward.claimed_count >= reward.quantity_limit
@@ -214,12 +214,12 @@ export class CrowdfundingRewardService {
     }
   }
 
-  // 验证回报有效性
+  // 验证回报有效?
   static async validateReward(rewardId: string, amount: number) {
     try {
       const reward = await this.getRewardById(rewardId);
 
-      // 验证金额是否满足最低要求
+      // 验证金额是否满足最低要?
       if (amount < reward.minimum_amount) {
         return {
           valid: false,
@@ -251,14 +251,14 @@ export class CrowdfundingRewardService {
     }
   }
 
-  // 获取默认回报（最小金额的回报）
+  // 获取默认回报（最小金额的回报?
   static async getDefaultReward(projectId: string) {
     try {
       const { data, error } = await supabase
         .from("crowdfunding_rewards")
         .select("*")
         .eq("project_id", projectId)
-        .order("minimum_amount", { ascending: true })
+        .order("minimum_amount", { ascending: true }) as any
         .limit(1)
         .single();
 

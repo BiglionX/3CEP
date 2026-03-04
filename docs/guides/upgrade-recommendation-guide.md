@@ -10,7 +10,7 @@
 
 1. **数据库层**
    - `model_upgrade_mappings`: 新旧机型映射表
-   - `user_device_history`: 用户设备历史表  
+   - `user_device_history`: 用户设备历史表
    - `upgrade_recommendations`: 推荐记录表
 
 2. **服务层**
@@ -32,6 +32,7 @@
 ## 数据库设计
 
 ### model_upgrade_mappings 表
+
 ```sql
 CREATE TABLE model_upgrade_mappings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -50,6 +51,7 @@ CREATE TABLE model_upgrade_mappings (
 ```
 
 ### user_device_history 表
+
 ```sql
 CREATE TABLE user_device_history (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -68,16 +70,19 @@ CREATE TABLE user_device_history (
 ## API 接口文档
 
 ### 获取推荐列表
+
 ```
 GET /api/crowdfunding/recommend?userId={userId}&limit={limit}&useCache={true|false}
 ```
 
 **参数说明:**
+
 - `userId` (必需): 用户ID
 - `limit` (可选): 返回推荐数量，默认5
 - `useCache` (可选): 是否使用缓存，默认true
 
 **响应示例:**
+
 ```json
 {
   "success": true,
@@ -87,8 +92,8 @@ GET /api/crowdfunding/recommend?userId={userId}&limit={limit}&useCache={true|fal
       "newModel": "iPhone 15",
       "brand": "Apple",
       "category": "手机",
-      "predictedTradeValue": 650.00,
-      "discountAmount": 97.50,
+      "predictedTradeValue": 650.0,
+      "discountAmount": 97.5,
       "discountRate": 0.15,
       "recommendationScore": 0.85,
       "recommendationReason": "显著性能提升，支持最新iOS功能",
@@ -106,11 +111,13 @@ GET /api/crowdfunding/recommend?userId={userId}&limit={limit}&useCache={true|fal
 ```
 
 ### 强制刷新推荐
+
 ```
 POST /api/crowdfunding/recommend
 ```
 
 **请求体:**
+
 ```json
 {
   "userId": "user-123",
@@ -119,11 +126,13 @@ POST /api/crowdfunding/recommend
 ```
 
 ### 记录推荐点击
+
 ```
 PUT /api/crowdfunding/recommend/click
 ```
 
 **请求体:**
+
 ```json
 {
   "userId": "user-123",
@@ -133,14 +142,16 @@ PUT /api/crowdfunding/recommend/click
 ```
 
 ### 记录推荐转化
+
 ```
 PATCH /api/crowdfunding/recommend/conversion
 ```
 
 **请求体:**
+
 ```json
 {
-  "userId": "user-123", 
+  "userId": "user-123",
   "oldModel": "iPhone 12",
   "newModel": "iPhone 15"
 }
@@ -160,6 +171,7 @@ PATCH /api/crowdfunding/recommend/conversion
    - 考虑兼容性评分和优先级
 
 3. **价值计算**
+
    ```
    预估回收价值 = 基础价值 × 设备状况系数 × 使用时长系数
    折扣金额 = 预估回收价值 × 折扣率
@@ -173,19 +185,20 @@ PATCH /api/crowdfunding/recommend/conversion
 ## 前端集成
 
 ### 基本用法
+
 ```jsx
 import UpgradeRecommendationList from '@/components/crowdfunding/UpgradeRecommendationList';
 
 function CrowdfundingPage({ userId }) {
   return (
     <div className="container mx-auto py-8">
-      <UpgradeRecommendationList 
+      <UpgradeRecommendationList
         userId={userId}
         limit={5}
-        onRecommendationClick={(rec) => {
+        onRecommendationClick={rec => {
           console.log('用户点击查看推荐:', rec);
         }}
-        onConversion={(rec) => {
+        onConversion={rec => {
           console.log('用户准备升级:', rec);
           // 跳转到购买页面
         }}
@@ -196,6 +209,7 @@ function CrowdfundingPage({ userId }) {
 ```
 
 ### 组件属性
+
 - `userId` (必需): 当前用户ID
 - `limit` (可选): 显示推荐数量，默认5
 - `className` (可选): 自定义样式类名
@@ -205,6 +219,7 @@ function CrowdfundingPage({ userId }) {
 ## 部署指南
 
 ### 1. 数据库迁移
+
 ```bash
 # 执行数据库迁移脚本
 npx supabase migration up
@@ -213,13 +228,16 @@ psql -f supabase/migrations/020_create_upgrade_recommendation_system.sql
 ```
 
 ### 2. 环境配置
+
 确保 `.env` 文件包含必要的数据库连接信息：
+
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
 ### 3. 启动服务
+
 ```bash
 npm run dev
 # 或生产环境
@@ -230,11 +248,13 @@ npm start
 ## 测试验证
 
 ### 运行自动化测试
+
 ```bash
 node scripts/test-upgrade-recommendation.js
 ```
 
 ### 手动测试要点
+
 1. 验证API接口返回正确的推荐数据
 2. 检查推荐准确性是否符合预期
 3. 测试缓存机制是否正常工作
@@ -243,11 +263,13 @@ node scripts/test-upgrade-recommendation.js
 ## 性能优化
 
 ### 缓存策略
+
 - 推荐结果默认缓存7天
 - 支持强制刷新机制
 - 智能缓存命中检测
 
 ### 数据库优化
+
 - 关键字段建立索引
 - 使用分页查询限制结果集
 - 异步处理耗时操作
@@ -255,6 +277,7 @@ node scripts/test-upgrade-recommendation.js
 ## 监控指标
 
 ### 关键指标
+
 - 推荐点击率 (CTR)
 - 转化率 (Conversion Rate)
 - 平均推荐得分
@@ -262,11 +285,12 @@ node scripts/test-upgrade-recommendation.js
 - API响应时间
 
 ### 日志记录
+
 ```javascript
 // 推荐生成日志
 console.log('生成推荐', { userId, deviceCount, recommendationCount });
 
-// 用户行为日志  
+// 用户行为日志
 console.log('记录点击', { userId, oldModel, newModel });
 ```
 

@@ -4,12 +4,18 @@
  */
 
 import { test as base, Page, APIRequestContext } from '@playwright/test';
-import { createEnterpriseTestUtils, EnterpriseTestUtils } from '../utils/test-utils';
-import { createTestDataManager, TestDataManager } from '../data/test-data-manager';
-import { 
-  TEST_ENTERPRISE_USERS, 
+import {
+  createEnterpriseTestUtils,
+  EnterpriseTestUtils,
+} from '../utils/test-utils';
+import {
+  createTestDataManager,
+  TestDataManager,
+} from '../data/test-data-manager';
+import {
+  TEST_ENTERPRISE_USERS,
   ENTERPRISE_ROUTES,
-  PERMISSIONS
+  PERMISSIONS,
 } from '../enterprise.config';
 
 // 扩展测试上下文类型
@@ -37,7 +43,9 @@ export const enterpriseTest = base.extend<EnterpriseTestFixtures>({
 
   // 登录辅助函数
   loginAs: async ({ enterpriseUtils }, use) => {
-    const loginFunction = async (role: keyof typeof TEST_ENTERPRISE_USERS = 'regularUser') => {
+    const loginFunction = async (
+      role: keyof typeof TEST_ENTERPRISE_USERS = 'regularUser'
+    ) => {
       await enterpriseUtils.loginAs(role);
     };
     await use(loginFunction);
@@ -48,7 +56,7 @@ export const enterpriseTest = base.extend<EnterpriseTestFixtures>({
     const setupFunction = async () => {
       // 重置测试环境
       await testDataManager.resetTestEnvironment();
-      
+
       // 创建基础测试数据
       console.log('Setting up test environment...');
     };
@@ -69,13 +77,13 @@ export const enterpriseTest = base.extend<EnterpriseTestFixtures>({
   page: async ({ page, setupTestEnvironment, cleanupTestEnvironment }, use) => {
     // 测试前设置
     await setupTestEnvironment();
-    
+
     // 执行测试
     await use(page);
-    
+
     // 测试后清理
     await cleanupTestEnvironment();
-  }
+  },
 });
 
 // 角色特定的测试组
@@ -84,7 +92,7 @@ export const enterpriseAdminTest = enterpriseTest.extend({
     // 以管理员身份登录
     await loginAs('admin');
     await use(page);
-  }
+  },
 });
 
 export const procurementManagerTest = enterpriseTest.extend({
@@ -92,7 +100,7 @@ export const procurementManagerTest = enterpriseTest.extend({
     // 以采购经理身份登录
     await loginAs('procurementManager');
     await use(page);
-  }
+  },
 });
 
 export const agentOperatorTest = enterpriseTest.extend({
@@ -100,7 +108,7 @@ export const agentOperatorTest = enterpriseTest.extend({
     // 以智能体操作员身份登录
     await loginAs('agentOperator');
     await use(page);
-  }
+  },
 });
 
 export const regularUserTest = enterpriseTest.extend({
@@ -108,7 +116,7 @@ export const regularUserTest = enterpriseTest.extend({
     // 以普通用户身份登录
     await loginAs('regularUser');
     await use(page);
-  }
+  },
 });
 
 // 权限测试专用fixture
@@ -116,7 +124,7 @@ export const permissionTest = enterpriseTest.extend({
   // 不自动登录，用于测试权限控制
   page: async ({ page }, use) => {
     await use(page);
-  }
+  },
 });
 
 // API测试专用fixture
@@ -128,7 +136,7 @@ export const apiTest = base.extend<ApiTestFixtures>({
   testDataManager: async ({ request }, use) => {
     const manager = createTestDataManager(request);
     await use(manager);
-  }
+  },
 });
 
 // 导出常用的测试配置

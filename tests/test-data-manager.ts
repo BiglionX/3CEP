@@ -87,7 +87,9 @@ export class TestDataManager {
       customerId: options.customerId,
       status: 'pending',
       createdAt: new Date().toISOString(),
-      estimatedCompletion: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString()
+      estimatedCompletion: new Date(
+        Date.now() + 3 * 24 * 60 * 60 * 1000
+      ).toISOString(),
     };
   }
 
@@ -106,7 +108,7 @@ export class TestDataManager {
       parts: options.parts,
       status: 'assigned',
       assignedAt: new Date().toISOString(),
-      estimatedHours: 2
+      estimatedHours: 2,
     };
   }
 }
@@ -126,10 +128,10 @@ export class TestEnvironmentSetup {
    */
   async prepareUserSessions() {
     console.log('Preparing user sessions...');
-    
+
     // 这里应该实际创建用户的浏览器存储状态
     // 由于这是演示，我们创建空的存储文件
-    
+
     const storageDir = path.resolve(TEST_DATA_PATHS.storage);
     if (!fs.existsSync(storageDir)) {
       fs.mkdirSync(storageDir, { recursive: true });
@@ -140,10 +142,13 @@ export class TestEnvironmentSetup {
     roles.forEach(role => {
       const storagePath = path.join(storageDir, `${role}-storage.json`);
       if (!fs.existsSync(storagePath)) {
-        fs.writeFileSync(storagePath, JSON.stringify({
-          cookies: [],
-          origins: []
-        }));
+        fs.writeFileSync(
+          storagePath,
+          JSON.stringify({
+            cookies: [],
+            origins: [],
+          })
+        );
       }
     });
 
@@ -155,12 +160,12 @@ export class TestEnvironmentSetup {
    */
   async prepareTestData() {
     console.log('Preparing test data...');
-    
+
     // 确保必要的目录存在
     const dirs = [
       'test-results/screenshots',
-      'test-results/videos', 
-      'test-results/traces'
+      'test-results/videos',
+      'test-results/traces',
     ];
 
     dirs.forEach(dir => {
@@ -178,11 +183,11 @@ export class TestEnvironmentSetup {
    */
   async initializeEnvironment() {
     console.log('Initializing test environment...');
-    
+
     try {
       await this.prepareTestData();
       await this.prepareUserSessions();
-      
+
       console.log('✅ Test environment initialized successfully');
       return true;
     } catch (error) {
@@ -196,7 +201,7 @@ export class TestEnvironmentSetup {
    */
   async cleanupEnvironment() {
     console.log('Cleaning up test environment...');
-    
+
     try {
       // 清理临时文件
       const tempDirs = ['test-results/temp', 'test-data/temp'];

@@ -1,5 +1,4 @@
-// 实时数据监控和告警服务
-
+// 实时数据监控和告警服?
 // 监控指标接口
 export interface MonitoringMetric {
   name: string;
@@ -9,7 +8,13 @@ export interface MonitoringMetric {
 }
 
 // 通知渠道类型
-export type NotificationChannel = 'console' | 'email' | 'slack' | 'webhook' | 'sms' | 'pagerduty';
+export type NotificationChannel =
+  | 'console'
+  | 'email'
+  | 'slack'
+  | 'webhook'
+  | 'sms'
+  | 'pagerduty';
 
 // 告警规则接口
 export interface AlertRule {
@@ -18,8 +23,7 @@ export interface AlertRule {
   metric: string;
   condition: 'above' | 'below' | 'equal' | 'change' | 'anomaly';
   threshold: number;
-  duration: number; // 持续时间（秒）
-  severity: 'info' | 'warning' | 'critical' | 'emergency';
+  duration: number; // 持续时间（秒?  severity: 'info' | 'warning' | 'critical' | 'emergency';
   enabled: boolean;
   notifications: NotificationChannel[]; // 通知渠道
   escalationPolicy?: EscalationPolicy;
@@ -30,15 +34,13 @@ export interface AlertRule {
 // 告警升级策略
 export interface EscalationPolicy {
   levels: EscalationLevel[];
-  repeatInterval?: number; // 重复通知间隔（秒）
-}
+  repeatInterval?: number; // 重复通知间隔（秒?}
 
 export interface EscalationLevel {
   level: number;
   channels: NotificationChannel[];
   targets: string[]; // 通知目标
-  delay: number; // 延迟时间（秒）
-}
+  delay: number; // 延迟时间（秒?}
 
 // 告警抑制规则
 export interface SuppressionRule {
@@ -50,7 +52,10 @@ export interface SuppressionRule {
   enabled: boolean;
 }
 
-export type SuppressionCondition = 'time_window' | 'maintenance_window' | 'known_issue';
+export type SuppressionCondition =
+  | 'time_window'
+  | 'maintenance_window'
+  | 'known_issue';
 
 // 告警事件接口
 export interface AlertEvent {
@@ -119,8 +124,7 @@ export interface PagerDutyConfig {
   apiUrl?: string;
 }
 
-// 监控服务类
-export class MonitoringService {
+// 监控服务?export class MonitoringService {
   private metrics: Map<string, MonitoringMetric[]> = new Map();
   public alertRules: Map<string, AlertRule> = new Map();
   private activeAlerts: Map<string, AlertEvent> = new Map();
@@ -131,12 +135,16 @@ export class MonitoringService {
   private maxAlertHistory: number = 1000;
 
   // 记录监控指标
-  recordMetric(name: string, value: number, tags?: Record<string, string>): void {
+  recordMetric(
+    name: string,
+    value: number,
+    tags?: Record<string, string>
+  ): void {
     const metric: MonitoringMetric = {
       name,
       value,
       timestamp: new Date().toISOString(),
-      tags
+      tags,
     };
 
     if (!this.metrics.has(name)) {
@@ -148,40 +156,45 @@ export class MonitoringService {
 
     // 清理过期数据
     this.cleanupExpiredMetrics(name);
-    
-    // 检查告警规则
-    this.checkAlertRules(name, value);
+
+    // 检查告警规?    this.checkAlertRules(name, value);
   }
 
   // 添加告警规则
   addAlertRule(rule: AlertRule): void {
     this.alertRules.set(rule.id, rule);
-    console.log(`✅ 添加告警规则: ${rule.name}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?添加告警规则: ${rule.name}`)}
 
-  // 检查告警规则
-  private checkAlertRules(metricName: string, currentValue: number): void {
+  // 检查告警规?  private checkAlertRules(metricName: string, currentValue: number): void {
     for (const [ruleId, rule] of this.alertRules.entries()) {
       if (!rule.enabled || rule.metric !== metricName) continue;
 
-      const shouldTrigger = this.evaluateCondition(currentValue, rule.condition, rule.threshold);
-      
+      const shouldTrigger = this.evaluateCondition(
+        currentValue,
+        rule.condition,
+        rule.threshold
+      );
+
       if (shouldTrigger) {
-        const existingAlert = Array.from(this.activeAlerts.values())
-          .find(alert => alert.ruleId === ruleId && alert.status === 'triggered');
+        const existingAlert = Array.from(this.activeAlerts.values()).find(
+          alert => alert.ruleId === ruleId && alert.status === 'triggered'
+        );
 
         if (!existingAlert) {
           this.triggerAlert(rule, currentValue);
         }
       } else {
-        // 检查是否应该解除告警
-        this.checkAlertResolution(ruleId, currentValue);
+        // 检查是否应该解除告?        this.checkAlertResolution(ruleId, currentValue);
       }
     }
   }
 
   // 评估告警条件
-  private evaluateCondition(value: number, condition: string, threshold: number): boolean {
+  private evaluateCondition(
+    value: number,
+    condition: string,
+    threshold: number
+  ): boolean {
     switch (condition) {
       case 'above':
         return value > threshold;
@@ -197,7 +210,7 @@ export class MonitoringService {
   // 触发告警
   private triggerAlert(rule: AlertRule, currentValue: number): void {
     const alertId = `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const alertEvent: AlertEvent = {
       id: alertId,
       ruleId: rule.id,
@@ -207,50 +220,47 @@ export class MonitoringService {
       threshold: rule.threshold,
       severity: rule.severity,
       triggeredAt: new Date().toISOString(),
-      status: 'triggered'
+      status: 'triggered',
     };
 
     this.activeAlerts.set(alertId, alertEvent);
-    console.log(`🚨 告警触发: ${rule.name} (${currentValue} ${rule.condition} ${rule.threshold})`);
-    
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `🚨 告警触发: ${rule.name} (${currentValue} ${rule.condition} ${rule.threshold})`
+    );
+
     // 发送通知
     this.sendNotifications(alertEvent);
   }
 
-  // 检查告警解除
-  private checkAlertResolution(ruleId: string, currentValue: number): void {
+  // 检查告警解?  private checkAlertResolution(ruleId: string, currentValue: number): void {
     const rule = this.alertRules.get(ruleId);
     if (!rule) return;
 
-    const alertsToResolve = Array.from(this.activeAlerts.values())
-      .filter(alert => 
-        alert.ruleId === ruleId && 
+    const alertsToResolve = Array.from(this.activeAlerts.values()).filter(
+      alert =>
+        alert.ruleId === ruleId &&
         alert.status === 'triggered' &&
         !this.evaluateCondition(currentValue, rule.condition, rule.threshold)
-      );
+    );
 
     alertsToResolve.forEach(alert => {
       alert.status = 'resolved';
       alert.resolvedAt = new Date().toISOString();
-      console.log(`✅ 告警解除: ${alert.ruleName}`);
-    });
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?告警解除: ${alert.ruleName}`)});
   }
 
   // 配置通知渠道
   configureNotifications(config: NotificationConfig): void {
     this.notificationConfig = { ...this.notificationConfig, ...config };
-    console.log('✅ 通知渠道配置已更新');
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?通知渠道配置已更?)}
 
   // 发送通知
   private async sendNotifications(alert: AlertEvent): Promise<void> {
     const rule = this.alertRules.get(alert.ruleId);
     if (!rule) return;
 
-    // 检查抑制规则
-    if (this.shouldSuppressAlert(alert, rule)) {
-      console.log(`🔇 告警被抑制: ${alert.ruleName}`);
-      return;
+    // 检查抑制规?    if (this.shouldSuppressAlert(alert, rule)) {
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🔇 告警被抑? ${alert.ruleName}`)return;
     }
 
     // 处理升级策略
@@ -267,8 +277,7 @@ export class MonitoringService {
     this.addToAlertHistory(alert);
   }
 
-  // 检查是否应该抑制告警
-  private shouldSuppressAlert(alert: AlertEvent, rule: AlertRule): boolean {
+  // 检查是否应该抑制告?  private shouldSuppressAlert(alert: AlertEvent, rule: AlertRule): boolean {
     if (!rule.suppressionRules || rule.suppressionRules.length === 0) {
       return false;
     }
@@ -276,7 +285,7 @@ export class MonitoringService {
     const now = new Date();
     return rule.suppressionRules.some(rule => {
       if (!rule.enabled) return false;
-      
+
       const start = new Date(rule.startTime);
       const end = new Date(rule.endTime);
       return now >= start && now <= end;
@@ -284,28 +293,36 @@ export class MonitoringService {
   }
 
   // 处理告警升级
-  private async handleEscalation(alert: AlertEvent, rule: AlertRule): Promise<void> {
+  private async handleEscalation(
+    alert: AlertEvent,
+    rule: AlertRule
+  ): Promise<void> {
     if (!rule.escalationPolicy) return;
-    
-    const sortedLevels = [...rule.escalationPolicy.levels].sort((a, b) => a.level - b.level);
-    
+
+    const sortedLevels = [...rule.escalationPolicy.levels].sort(
+      (a, b) => a.level - b.level
+    );
+
     for (const level of sortedLevels) {
-      // 延迟发送
-      if (level.delay > 0) {
+      // 延迟发?      if (level.delay > 0) {
         await new Promise(resolve => setTimeout(resolve, level.delay * 1000));
       }
-      
-      // 发送到该级别的所有渠道
-      for (const channel of level.channels) {
-        await this.sendNotificationToChannel(channel, alert, rule, level.targets);
+
+      // 发送到该级别的所有渠?      for (const channel of level.channels) {
+        await this.sendNotificationToChannel(
+          channel,
+          alert,
+          rule,
+          level.targets
+        );
       }
     }
   }
 
   // 发送到指定渠道
   private async sendNotificationToChannel(
-    channel: NotificationChannel, 
-    alert: AlertEvent, 
+    channel: NotificationChannel,
+    alert: AlertEvent,
     rule: AlertRule,
     targets?: string[]
   ): Promise<void> {
@@ -331,77 +348,84 @@ export class MonitoringService {
           break;
       }
     } catch (error) {
-      console.error(`❌ ${channel}通知发送失败:`, error);
+      console.error(`�?${channel}通知发送失?`, error);
     }
   }
 
   // 控制台通知
   private sendConsoleNotification(alert: AlertEvent): void {
-    const severityEmoji = {
-      'info': 'ℹ️',
-      'warning': '⚠️',
-      'critical': '🚨',
-      'emergency': '🆘'
-    }[alert.severity] || '📢';
-    
-    console.log(`${severityEmoji} [${alert.severity.toUpperCase()}] ${alert.ruleName}: ${alert.currentValue}`);
+    const severityEmoji =
+      {
+        info: 'ℹ️',
+        warning: '⚠️',
+        critical: '🚨',
+        emergency: '🆘',
+      }[alert.severity] || '📢';
+
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `${severityEmoji} [${alert.severity.toUpperCase()}] ${alert.ruleName}: ${alert.currentValue}`
+    );
   }
 
   // 邮件通知
-  private async sendEmailNotification(alert: AlertEvent, targets?: string[]): Promise<void> {
+  private async sendEmailNotification(
+    alert: AlertEvent,
+    targets?: string[]
+  ): Promise<void> {
     if (!this.notificationConfig.email) {
-      console.warn('⚠️ 邮件配置未设置');
+      console.warn('⚠️ 邮件配置未设?);
       return;
     }
-    
+
     const recipients = targets || this.notificationConfig.email.toAddresses;
-    console.log(`📧 发送邮件告警到: ${recipients.join(', ')}`);
-    // 这里应该集成实际的邮件服务
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📧 发送邮件告警到: ${recipients.join(', ')}`);
+    // 这里应该集成实际的邮件服?  }
 
   // Slack通知
   private async sendSlackNotification(alert: AlertEvent): Promise<void> {
     if (!this.notificationConfig.slack) {
-      console.warn('⚠️ Slack配置未设置');
+      console.warn('⚠️ Slack配置未设?);
       return;
     }
-    
-    console.log(`💬 发送Slack告警到: ${this.notificationConfig.slack.channel || '默认频道'}`);
-    // 这里应该发送HTTP请求到Slack webhook
+
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `💬 发送Slack告警? ${this.notificationConfig.slack.channel || '默认频道'}`
+    )// 这里应该发送HTTP请求到Slack webhook
   }
 
   // Webhook通知
   private async sendWebhookNotification(alert: AlertEvent): Promise<void> {
     if (!this.notificationConfig.webhook) {
-      console.warn('⚠️ Webhook配置未设置');
+      console.warn('⚠️ Webhook配置未设?);
       return;
     }
-    
-    console.log(`🔗 发送Webhook告警到: ${this.notificationConfig.webhook.url}`);
-    // 这里应该发送HTTP请求到webhook地址
+
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🔗 发送Webhook告警? ${this.notificationConfig.webhook.url}`)// 这里应该发送HTTP请求到webhook地址
   }
 
   // SMS通知
-  private async sendSMSNotification(alert: AlertEvent, targets?: string[]): Promise<void> {
+  private async sendSMSNotification(
+    alert: AlertEvent,
+    targets?: string[]
+  ): Promise<void> {
     if (!this.notificationConfig.sms) {
-      console.warn('⚠️ SMS配置未设置');
+      console.warn('⚠️ SMS配置未设?);
       return;
     }
-    
+
     const recipients = targets || this.notificationConfig.sms.toNumbers;
-    console.log(`📱 发送短信告警到: ${recipients.join(', ')}`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📱 发送短信告警到: ${recipients.join(', ')}`);
     // 这里应该集成SMS服务提供商API
   }
 
   // PagerDuty通知
   private async sendPagerDutyNotification(alert: AlertEvent): Promise<void> {
     if (!this.notificationConfig.pagerduty) {
-      console.warn('⚠️ PagerDuty配置未设置');
+      console.warn('⚠️ PagerDuty配置未设?);
       return;
     }
-    
-    console.log(`📟 发送PagerDuty告警`);
-    // 这里应该集成PagerDuty API
+
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📟 发送PagerDuty告警`)// 这里应该集成PagerDuty API
   }
 
   // 记录告警历史
@@ -429,7 +453,7 @@ export class MonitoringService {
       totalMetrics: this.metrics.size,
       totalAlertRules: this.alertRules.size,
       activeAlerts: this.getActiveAlerts().length,
-      alertHistoryCount: this.alertHistory.length
+      alertHistoryCount: this.alertHistory.length,
     };
   }
 
@@ -437,31 +461,32 @@ export class MonitoringService {
   recordDataQuality(metric: DataQualityMetric): void {
     const key = `${metric.tableName}_${metric.metricType}`;
     this.dataQualityMetrics.set(key, metric);
-    console.log(`📊 数据质量记录: ${key} = ${metric.score}%`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📊 数据质量记录: ${key} = ${metric.score}%`)}
 
   // 获取监控指标
   getMetrics(metricName?: string, limit: number = 100): MonitoringMetric[] {
     if (metricName) {
       return this.metrics.get(metricName)?.slice(-limit) || [];
     }
-    
-    // 返回所有指标的最新值
-    const allMetrics: MonitoringMetric[] = [];
+
+    // 返回所有指标的最新?    const allMetrics: MonitoringMetric[] = [];
     for (const metrics of this.metrics.values()) {
-      allMetrics.push(...metrics.slice(-10)); // 每个指标最多10个最新值
-    }
-    return allMetrics.sort((a, b) => 
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    ).slice(0, limit);
+      allMetrics.push(...metrics.slice(-10)); // 每个指标最?0个最新?    }
+    return allMetrics
+      .sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )
+      .slice(0, limit);
   }
 
   // 获取活跃告警
   getActiveAlerts(): AlertEvent[] {
     return Array.from(this.activeAlerts.values())
       .filter(alert => alert.status === 'triggered')
-      .sort((a, b) => 
-        new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime()
+      .sort(
+        (a, b) =>
+          new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime()
       );
   }
 
@@ -472,16 +497,15 @@ export class MonitoringService {
     issues: string[];
   } {
     const metrics = Array.from(this.dataQualityMetrics.values());
-    const overallScore = metrics.reduce((sum, m) => sum + m.score, 0) / metrics.length || 0;
-    
-    const issues = metrics
-      .filter(m => m.score < 80)
-      .flatMap(m => m.issues);
+    const overallScore =
+      metrics.reduce((sum, m) => sum + m.score, 0) / metrics.length || 0;
+
+    const issues = metrics.filter(m => m.score < 80).flatMap(m => m.issues);
 
     return {
       overallScore: Math.round(overallScore),
       metrics,
-      issues
+      issues,
     };
   }
 
@@ -491,8 +515,8 @@ export class MonitoringService {
     if (!metrics) return;
 
     const cutoffTime = Date.now() - this.retentionPeriod;
-    const filteredMetrics = metrics.filter(metric => 
-      new Date(metric.timestamp).getTime() > cutoffTime
+    const filteredMetrics = metrics.filter(
+      metric => new Date(metric.timestamp).getTime() > cutoffTime
     );
 
     if (filteredMetrics.length !== metrics.length) {
@@ -500,32 +524,29 @@ export class MonitoringService {
     }
   }
 
-  // 添加预设的监控规则
-  setupDefaultAlerts(): void {
+  // 添加预设的监控规?  setupDefaultAlerts(): void {
     // 查询响应时间告警
     this.addAlertRule({
       id: 'query_response_time',
       name: '查询响应时间过高',
       metric: 'query_response_time',
       condition: 'above',
-      threshold: 2000, // 2秒
-      duration: 300, // 5分钟
+      threshold: 2000, // 2�?      duration: 300, // 5分钟
       severity: 'warning',
       enabled: true,
-      notifications: ['console', 'email']
+      notifications: ['console', 'email'],
     });
 
-    // 缓存命中率告警
-    this.addAlertRule({
+    // 缓存命中率告?    this.addAlertRule({
       id: 'cache_hit_rate',
-      name: '缓存命中率过低',
+      name: '缓存命中率过?,
       metric: 'cache_hit_rate',
       condition: 'below',
       threshold: 70, // 70%
       duration: 600, // 10分钟
       severity: 'warning',
       enabled: true,
-      notifications: ['console']
+      notifications: ['console'],
     });
 
     // 数据库连接数告警
@@ -538,7 +559,7 @@ export class MonitoringService {
       duration: 300,
       severity: 'critical',
       enabled: true,
-      notifications: ['console', 'email', 'webhook']
+      notifications: ['console', 'email', 'webhook'],
     });
 
     // 数据质量综合告警
@@ -552,11 +573,10 @@ export class MonitoringService {
       severity: 'critical',
       enabled: true,
       notifications: ['console', 'email', 'slack'],
-      description: '整体数据质量评分低于阈值'
+      description: '整体数据质量评分低于阈?,
     });
 
-    // 特定表数据质量告警
-    this.addAlertRule({
+    // 特定表数据质量告?    this.addAlertRule({
       id: 'data_quality_parts',
       name: '配件数据质量异常',
       metric: 'data_quality_parts_score',
@@ -566,13 +586,12 @@ export class MonitoringService {
       severity: 'warning',
       enabled: true,
       notifications: ['console', 'email'],
-      description: '配件相关数据质量评分异常'
+      description: '配件相关数据质量评分异常',
     });
 
-    // 实时处理错误率告警
-    this.addAlertRule({
+    // 实时处理错误率告?    this.addAlertRule({
       id: 'realtime_error_rate',
-      name: '实时处理错误率过高',
+      name: '实时处理错误率过?,
       metric: 'realtime_error_rate',
       condition: 'above',
       threshold: 5, // 5%
@@ -580,21 +599,19 @@ export class MonitoringService {
       severity: 'warning',
       enabled: true,
       notifications: ['console', 'pagerduty'],
-      description: '实时数据处理错误率超过阈值'
+      description: '实时数据处理错误率超过阈?,
     });
 
-    // 系统健康状态告警
-    this.addAlertRule({
+    // 系统健康状态告?    this.addAlertRule({
       id: 'system_health',
-      name: '系统健康状态异常',
+      name: '系统健康状态异?,
       metric: 'system_health_status',
       condition: 'below',
-      threshold: 80, // 80分
-      duration: 600,
+      threshold: 80, // 80�?      duration: 600,
       severity: 'critical',
       enabled: true,
       notifications: ['console', 'email', 'sms'],
-      description: '系统整体健康评分低于阈值'
+      description: '系统整体健康评分低于阈?,
     });
   }
 }

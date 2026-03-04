@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth Fix Test Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .test-section h3 {
+        margin-top: 0;
+        color: #555;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .result {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+      .success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+      }
+      .error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+      }
+      .info {
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 Auth Fix Test Page</h1>
+
+      <div class="test-section">
+        <h3>📊 当前状态检查</h3>
+        <button onclick="checkCurrentStatus()">检查当前认证状态</button>
+        <div id="status-result" class="result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>🧪 登录测试</h3>
+        <button onclick="testLogin()">执行登录测试</button>
+        <div id="login-result" class="result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>🔄 重定向测试</h3>
+        <button onclick="testRedirect()">测试重定向功能</button>
+        <div id="redirect-result" class="result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>📋 完整流程测试</h3>
+        <button onclick="runFullTest()">运行完整测试流程</button>
+        <div id="full-test-result" class="result"></div>
+      </div>
+    </div>
+
+    <script>
+      async function checkCurrentStatus() {
+        const resultDiv = document.getElementById('status-result');
+        resultDiv.className = 'result info';
+        resultDiv.innerHTML = '正在检查...';
+
+        try {
+          const response = await fetch('/api/auth/check-session');
+          const data = await response.json();
+
+          resultDiv.className = 'result success';
+          resultDiv.innerHTML = `
+                    <strong>认证状态检查结果:</strong><br>
+                    状态码: ${response.status}<br>
+                    已认证: ${data.authenticated || false}<br>
+                    用户邮箱: ${data.user?.email || '未登录'}<br>
+                    管理员权限: ${data.is_admin || false}<br>
+                    角色: ${data.roles?.join(', ') || '无'}<br>
+                    租户ID: ${data.tenant_id || '无'}
+                `;
+        } catch (error) {
+          resultDiv.className = 'result error';
+          resultDiv.innerHTML = `<strong>检查失败:</strong><br>${error.message}`;
+        }
+      }
+
+      async function testLogin() {
+        const resultDiv = document.getElementById('login-result');
+        resultDiv.className = 'result info';
+        resultDiv.innerHTML = '正在执行登录测试...';
+
+        try {
+          // 使用测试账号登录
+          const loginResponse = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: '1055603323@qq.com',
+              password: '12345678',
+            }),
+          });
+
+          const loginData = await loginResponse.json();
+
+          if (loginResponse.ok) {
+            resultDiv.className = 'result success';
+            resultDiv.innerHTML = `
+                        <strong>登录测试成功:</strong><br>
+                        状态码: ${loginResponse.status}<br>
+                        用户ID: ${loginData.user?.id || '未知'}<br>
+                        用户邮箱: ${loginData.user?.email || '未知'}<br>
+                        管理员权限: ${loginData.user?.isAdmin || false}
+                    `;
+          } else {
+            resultDiv.className = 'result error';
+            resultDiv.innerHTML = `
+                        <strong>登录测试失败:</strong><br>
+                        状态码: ${loginResponse.status}<br>
+                        错误信息: ${loginData.error || '未知错误'}
+                    `;
+          }
+        } catch (error) {
+          resultDiv.className = 'result error';
+          resultDiv.innerHTML = `<strong>登录测试异常:</strong><br>${error.message}`;
+        }
+      }
+
+      async function testRedirect() {
+        const resultDiv = document.getElementById('redirect-result');
+        resultDiv.className = 'result info';
+        resultDiv.innerHTML = '正在测试重定向...';
+
+        try {
+          // 测试带重定向参数的登录
+          const redirectUrl = '/admin/dashboard';
+          const loginWithRedirectResponse = await fetch(
+            `/api/auth/login?redirect=${encodeURIComponent(redirectUrl)}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: '1055603323@qq.com',
+                password: '12345678',
+              }),
+            }
+          );
+
+          const redirectData = await loginWithRedirectResponse.json();
+
+          resultDiv.className = 'result success';
+          resultDiv.innerHTML = `
+                    <strong>重定向测试结果:</strong><br>
+                    状态码: ${loginWithRedirectResponse.status}<br>
+                    应该重定向到: ${redirectUrl}<br>
+                    实际响应: ${JSON.stringify(redirectData)}
+                `;
+        } catch (error) {
+          resultDiv.className = 'result error';
+          resultDiv.innerHTML = `<strong>重定向测试失败:</strong><br>${error.message}`;
+        }
+      }
+
+      async function runFullTest() {
+        const resultDiv = document.getElementById('full-test-result');
+        resultDiv.className = 'result info';
+        resultDiv.innerHTML = '正在运行完整测试流程...';
+
+        const testSteps = [
+          { name: '检查当前状态', func: checkCurrentStatus },
+          { name: '执行登录测试', func: testLogin },
+          { name: '测试重定向功能', func: testRedirect },
+        ];
+
+        let results = [];
+
+        for (let i = 0; i < testSteps.length; i++) {
+          results.push(`<strong>步骤 ${i + 1}: ${testSteps[i].name}</strong>`);
+          try {
+            await testSteps[i].func();
+            results.push('✅ 通过<br>');
+          } catch (error) {
+            results.push(`❌ 失败: ${error.message}<br>`);
+          }
+          // 添加延迟以便观察
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        resultDiv.className = 'result success';
+        resultDiv.innerHTML = results.join('<br>');
+      }
+
+      // 页面加载时自动检查状态
+      window.onload = function () {
+        setTimeout(checkCurrentStatus, 1000);
+      };
+    </script>
+  </body>
+</html>

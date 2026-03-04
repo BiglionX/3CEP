@@ -7,12 +7,15 @@
 ## 场景分类
 
 ### 1. 维修服务自动化场景
+
 涵盖从用户提交维修需求到工程师上门服务的完整自动化流程。
 
-### 2. 供应链自动化场景  
+### 2. 供应链自动化场景
+
 包括采购、库存管理、订单履约等供应链环节的自动化处理。
 
 ### 3. 客户服务自动化场景
+
 涉及客户咨询、预定、通知等客户服务流程的智能化处理。
 
 ---
@@ -20,6 +23,7 @@
 ## 场景一：维修需求全流程自动化
 
 ### 业务背景
+
 用户通过微信小程序提交设备维修需求，系统需要自动完成需求解析、配件采购、工程师派单等全过程。
 
 ### 工作流设计
@@ -45,6 +49,7 @@ graph TD
 ### 详细实现步骤
 
 #### 1.1 触发层设计
+
 ```json
 {
   "webhookConfig": {
@@ -58,7 +63,7 @@ graph TD
       "requiredFields": ["userId", "deviceId", "issueDescription"],
       "fieldTypes": {
         "userId": "string",
-        "deviceId": "string", 
+        "deviceId": "string",
         "issueDescription": "string"
       }
     }
@@ -67,6 +72,7 @@ graph TD
 ```
 
 #### 1.2 B2B采购智能体调用
+
 ```typescript
 // 需求解析节点配置
 {
@@ -90,6 +96,7 @@ graph TD
 ```
 
 #### 1.3 供应商匹配流程
+
 ```json
 {
   "supplierMatchingWorkflow": {
@@ -122,6 +129,7 @@ graph TD
 ```
 
 #### 1.4 海外仓库存检查
+
 ```typescript
 // 库存查询节点
 interface InventoryCheckNode {
@@ -135,27 +143,31 @@ interface InventoryCheckNode {
 
 async function checkWarehouseInventory(nodeConfig: InventoryCheckNode) {
   const results = await Promise.all(
-    nodeConfig.warehouseIds.map(async (warehouseId) => {
-      const response = await fetch(`${WAREHOUSE_API_BASE}/inventory/${warehouseId}`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${WAREHOUSE_API_KEY}` },
-        body: JSON.stringify({
-          items: nodeConfig.requiredItems
-        })
-      });
-      
+    nodeConfig.warehouseIds.map(async warehouseId => {
+      const response = await fetch(
+        `${WAREHOUSE_API_BASE}/inventory/${warehouseId}`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${WAREHOUSE_API_KEY}` },
+          body: JSON.stringify({
+            items: nodeConfig.requiredItems,
+          }),
+        }
+      );
+
       return {
         warehouseId,
-        availability: await response.json()
+        availability: await response.json(),
       };
     })
   );
-  
+
   return results.filter(r => r.availability.inStock);
 }
 ```
 
 #### 1.5 工程师智能分配
+
 ```json
 {
   "engineerAssignment": {
@@ -198,11 +210,11 @@ async function checkWarehouseInventory(nodeConfig: InventoryCheckNode) {
         "duration": "1.2s"
       },
       {
-        "step": "supplier_matching", 
+        "step": "supplier_matching",
         "agent": "supplier_match_service",
         "matches": [
-          {"supplier": "苹果官方", "price": 2800, "delivery": "24h"},
-          {"supplier": "华强北A店", "price": 1200, "delivery": "2-3天"}
+          { "supplier": "苹果官方", "price": 2800, "delivery": "24h" },
+          { "supplier": "华强北A店", "price": 1200, "delivery": "2-3天" }
         ],
         "selected": "华强北A店",
         "duration": "2.1s"
@@ -211,8 +223,8 @@ async function checkWarehouseInventory(nodeConfig: InventoryCheckNode) {
         "step": "inventory_check",
         "agent": "warehouse_management",
         "warehouses": [
-          {"id": "WH_SZ_01", "inStock": true, "quantity": 5},
-          {"id": "WH_SH_01", "inStock": false}
+          { "id": "WH_SZ_01", "inStock": true, "quantity": 5 },
+          { "id": "WH_SH_01", "inStock": false }
         ],
         "selectedWarehouse": "WH_SZ_01",
         "duration": "0.8s"
@@ -244,6 +256,7 @@ async function checkWarehouseInventory(nodeConfig: InventoryCheckNode) {
 ## 场景二：库存预警自动采购
 
 ### 业务背景
+
 当海外仓某种配件库存低于安全阈值时，自动触发采购流程，确保库存及时补充。
 
 ### 工作流设计
@@ -264,19 +277,20 @@ graph TD
 ### 实现细节
 
 #### 2.1 数据库监听配置
+
 ```typescript
 // Supabase Realtime监听
 const inventoryListener = supabase
   .from('warehouse_inventory')
-  .on('UPDATE', async (payload) => {
+  .on('UPDATE', async payload => {
     const { sku, current_stock, safety_threshold } = payload.new;
-    
+
     if (current_stock < safety_threshold) {
       await triggerProcurementWorkflow({
         sku,
         currentStock: current_stock,
         requiredQuantity: safety_threshold * 2 - current_stock,
-        warehouseId: payload.new.warehouse_id
+        warehouseId: payload.new.warehouse_id,
       });
     }
   })
@@ -284,6 +298,7 @@ const inventoryListener = supabase
 ```
 
 #### 2.2 采购需求生成
+
 ```json
 {
   "procurementRequest": {
@@ -305,6 +320,7 @@ const inventoryListener = supabase
 ```
 
 #### 2.3 智能询价流程
+
 ```typescript
 // 询价节点实现
 interface QuotingProcess {
@@ -315,11 +331,11 @@ interface QuotingProcess {
 
 async function automatedQuoting(process: QuotingProcess) {
   const quotes = await Promise.all(
-    process.suppliers.map(supplier => 
+    process.suppliers.map(supplier =>
       requestQuote(supplier, process.quoteTimeout)
     )
   );
-  
+
   return analyzeAndRankQuotes(quotes, process.comparisonCriteria);
 }
 ```
@@ -329,6 +345,7 @@ async function automatedQuoting(process: QuotingProcess) {
 ## 场景三：新机预定智能处理
 
 ### 业务背景
+
 用户提交新机预定请求，系统自动整合工厂优惠、物流信息，提供完整报价方案。
 
 ### 工作流设计
@@ -348,6 +365,7 @@ graph TD
 ### 核心节点配置
 
 #### 3.1 优惠计算节点
+
 ```json
 {
   "discountCalculation": {
@@ -372,6 +390,7 @@ graph TD
 ```
 
 #### 3.2 物流成本计算
+
 ```typescript
 // 物流节点配置
 interface LogisticsNode {
@@ -389,9 +408,9 @@ async function calculateShippingCosts(node: LogisticsNode) {
   const shippingOptions = await Promise.all([
     calculateExpressShipping(node),
     calculateStandardShipping(node),
-    calculateEconomyShipping(node)
+    calculateEconomyShipping(node),
   ]);
-  
+
   return optimizeByCostAndTime(shippingOptions);
 }
 ```
@@ -401,6 +420,7 @@ async function calculateShippingCosts(node: LogisticsNode) {
 ## 场景四：质量监控与异常处理
 
 ### 业务背景
+
 监控各智能体执行质量和系统健康状况，自动处理异常情况。
 
 ### 工作流设计
@@ -476,5 +496,6 @@ graph TD
 - 实施变更管理流程
 
 ---
-*文档版本：v1.0*
-*最后更新：2026年2月19日*
+
+_文档版本：v1.0_
+_最后更新：2026年2月19日_

@@ -6,7 +6,7 @@ services:
     image: trinodb/trino:428
     container_name: trino-coordinator
     ports:
-      - "8080:8080"
+      - '8080:8080'
     volumes:
       - ./src/data-center/engine/trino-config:/etc/trino
       - ./logs/trino:/data/trino/logs
@@ -36,7 +36,7 @@ services:
     image: redis:7-alpine
     container_name: redis-cache
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
@@ -50,7 +50,7 @@ services:
       dockerfile: Dockerfile.datacenter
     container_name: data-center-ui
     ports:
-      - "3002:3000"
+      - '3002:3000'
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3001
       - DATA_CENTER_ENGINE_URL=http://trino-coordinator:8080

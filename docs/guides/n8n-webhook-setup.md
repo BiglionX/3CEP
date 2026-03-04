@@ -5,16 +5,19 @@
 需要在n8n中创建以下webhook节点：
 
 ### 1. 线索收集Webhook (lead_capture)
+
 - **URL**: `/webhook/lead-capture`
 - **Method**: POST
 - **用途**: 接收来自营销页面的线索数据
 
 ### 2. 演示预约Webhook (demo_request)
+
 - **URL**: `/webhook/demo-request`
 - **Method**: POST
 - **用途**: 处理产品演示预约请求
 
 ### 3. 联系表单Webhook (contact_form)
+
 - **URL**: `/webhook/contact-form`
 - **Method**: POST
 - **用途**: 处理通用联系表单提交
@@ -22,11 +25,13 @@
 ## 🔧 详细配置步骤
 
 ### 步骤1: 创建新工作流
+
 1. 登录n8n控制台
 2. 点击"新建工作流"
 3. 命名为"营销线索处理"
 
 ### 步骤2: 添加Webhook触发器
+
 ```
 节点类型: Webhook
 节点名称: Lead Capture Webhook
@@ -36,11 +41,13 @@ HTTP方法: POST
 ```
 
 ### 步骤3: 配置数据处理逻辑
+
 ```
 节点类型: Function
 节点名称: Process Lead Data
 代码:
 ```
+
 ```javascript
 // 处理接收到的线索数据
 const leadData = items[0].json;
@@ -56,13 +63,14 @@ const processedData = {
   timestamp: new Date().toISOString(),
   source: leadData.source || 'marketing_site',
   status: 'new',
-  assigned_to: null
+  assigned_to: null,
 };
 
 return [{ json: processedData }];
 ```
 
 ### 步骤4: 添加CRM集成
+
 ```
 节点类型: HTTP Request (或其他CRM节点)
 节点名称: Send to CRM
@@ -74,6 +82,7 @@ return [{ json: processedData }];
 ```
 
 ### 步骤5: 发送确认邮件
+
 ```
 节点类型: EmailSend
 节点名称: Send Confirmation
@@ -101,6 +110,7 @@ SMTP_PASS=your_smtp_password
 ## 🔍 测试验证
 
 ### 测试线索收集
+
 ```bash
 curl -X POST http://localhost:5678/webhook/lead-capture \
   -H "Content-Type: application/json" \
@@ -115,6 +125,7 @@ curl -X POST http://localhost:5678/webhook/lead-capture \
 ```
 
 ### 预期响应
+
 ```json
 {
   "success": true,
@@ -126,6 +137,7 @@ curl -X POST http://localhost:5678/webhook/lead-capture \
 ## 📊 监控和日志
 
 ### 添加日志记录节点
+
 ```
 节点类型: Logger
 节点名称: Log Processing Result
@@ -136,6 +148,7 @@ curl -X POST http://localhost:5678/webhook/lead-capture \
 ```
 
 ### 错误处理
+
 ```
 节点类型: Catch Error
 节点名称: Handle Processing Errors
@@ -148,6 +161,7 @@ curl -X POST http://localhost:5678/webhook/lead-capture \
 ## 🔄 回滚方案
 
 如果需要回滚：
+
 1. 在n8n中停用相关webhook节点
 2. 删除已创建的工作流
 3. 恢复之前的配置版本

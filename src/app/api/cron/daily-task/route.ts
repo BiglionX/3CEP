@@ -1,42 +1,39 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 创建 Supabase 客户端（服务角色）
-const supabase = createClient(
+// 鍒涘缓 Supabase 瀹㈡埛绔紙鏈嶅姟瑙掕壊?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 export async function GET(request: Request) {
   try {
-    console.log('🚀 开始执行每日定时任务...');
-    
-    // 记录任务开始时间
-    const startTime = new Date().toISOString();
-    
-    // 1. 清理过期的上传内容
-    console.log('🧹 清理过期上传内容...');
+    console.log('馃殌 寮€濮嬫墽琛屾瘡鏃ュ畾鏃朵换?..');
+
+    // 璁板綍浠诲姟寮€濮嬫椂?    const startTime = new Date().toISOString();
+
+    // 1. 娓呯悊杩囨湡鐨勪笂浼犲唴?    console.log('馃Ч 娓呯悊杩囨湡涓婁紶鍐呭...');
     const cleanupResult = await cleanupExpiredUploads();
-    
-    // 2. 更新配件价格信息
-    console.log('💰 更新配件价格信息...');
+
+    // 2. 鏇存柊閰嶄欢浠锋牸淇℃伅
+    console.log('馃挵 鏇存柊閰嶄欢浠锋牸淇℃伅...');
     const priceUpdateResult = await updatePartPrices();
-    
-    // 3. 发送价格预警通知
-    console.log('🔔 发送价格预警通知...');
+
+    // 3. 鍙戦€佷环鏍奸璀﹂€氱煡
+    console.log('馃敂 鍙戦€佷环鏍奸璀﹂€氱煡...');
     const alertResult = await sendPriceAlerts();
-    
-    // 4. 生成系统统计报告
-    console.log('📊 生成系统统计报告...');
+
+    // 4. 鐢熸垚绯荤粺缁熻鎶ュ憡
+    console.log('馃搳 鐢熸垚绯荤粺缁熻鎶ュ憡...');
     const statsResult = await generateSystemStats();
-    
-    // 5. 备份重要数据
-    console.log('💾 执行数据备份...');
+
+    // 5. 澶囦唤閲嶈鏁版嵁
+    console.log('馃捑 鎵ц鏁版嵁澶囦唤...');
     const backupResult = await performDataBackup();
-    
-    // 记录任务结束时间
+
+    // 璁板綍浠诲姟缁撴潫鏃堕棿
     const endTime = new Date().toISOString();
-    
+
     const result = {
       success: true,
       timestamp: startTime,
@@ -46,174 +43,171 @@ export async function GET(request: Request) {
         priceUpdate: priceUpdateResult,
         alerts: alertResult,
         statistics: statsResult,
-        backup: backupResult
-      }
+        backup: backupResult,
+      },
     };
-    
-    console.log('✅ 每日定时任务执行完成', result);
-    
+
+    console.log('锟?姣忔棩瀹氭椂浠诲姟鎵ц瀹屾垚', result);
+
     return NextResponse.json(result);
-    
   } catch (error) {
-    console.error('❌ 每日定时任务执行失败:', error);
-    
+    console.error('锟?姣忔棩瀹氭椂浠诲姟鎵ц澶辫触:', error);
+
     const errorResult = {
       success: false,
       timestamp: new Date().toISOString(),
       error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
     };
-    
+
     return NextResponse.json(errorResult, { status: 500 });
   }
 }
 
-// 清理过期上传内容
+// 娓呯悊杩囨湡涓婁紶鍐呭
 async function cleanupExpiredUploads() {
   try {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
+
     const { data, error } = await supabase
       .from('uploaded_content')
       .delete()
       .lt('created_at', thirtyDaysAgo.toISOString());
-    
-    // 处理可能为 null 的情况
-    const deletedRecords = data || [];
-    
+
+    // 澶勭悊鍙兘?null 鐨勬儏?    const deletedRecords = data || [];
+
     if (error) throw error;
-    
+
     return {
       success: true,
       deletedCount: deletedRecords.length,
-      cutoffDate: thirtyDaysAgo.toISOString()
+      cutoffDate: thirtyDaysAgo.toISOString(),
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Cleanup failed'
+      error: error instanceof Error ? error.message : 'Cleanup failed',
     };
   }
 }
 
-// 更新配件价格信息
+// 鏇存柊閰嶄欢浠锋牸淇℃伅
 async function updatePartPrices() {
   try {
-    // 这里可以集成实际的价格更新逻辑
-    // 例如调用第三方API获取最新价格
-    
+    // 杩欓噷鍙互闆嗘垚瀹為檯鐨勪环鏍兼洿鏂伴€昏緫
+    // 渚嬪璋冪敤绗笁鏂笰PI鑾峰彇鏈€鏂颁环?
     const { data: parts, error } = await supabase
       .from('parts')
       .select('id, name, current_price')
       .limit(10);
-    
+
     if (error) throw error;
-    
-    // 模拟价格更新
+
+    // 妯℃嫙浠锋牸鏇存柊
     const updatedCount = parts?.length || 0;
-    
+
     return {
       success: true,
       updatedCount,
-      message: `检查了 ${updatedCount} 个配件的价格`
+      message: `妫€鏌ヤ簡 ${updatedCount} 涓厤浠剁殑浠锋牸`,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Price update failed'
+      error: error instanceof Error ? error.message : 'Price update failed',
     };
   }
 }
 
-// 发送价格预警通知
+// 鍙戦€佷环鏍奸璀﹂€氱煡
 async function sendPriceAlerts() {
   try {
-    // 查询需要预警的价格变化
+    // 鏌ヨ闇€瑕侀璀︾殑浠锋牸鍙樺寲
     const { data: alerts, error } = await supabase
       .from('price_alerts')
       .select('*')
       .eq('status', 'active')
       .limit(50);
-    
+
     if (error) throw error;
-    
-    // 模拟发送通知
+
+    // 妯℃嫙鍙戦€侀€氱煡
     const alertCount = alerts?.length || 0;
-    
+
     return {
       success: true,
       alertCount,
-      message: `处理了 ${alertCount} 个价格预警`
+      message: `澶勭悊?${alertCount} 涓环鏍奸璀,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Alert processing failed'
+      error: error instanceof Error ? error.message : 'Alert processing failed',
     };
   }
 }
 
-// 生成系统统计报告
+// 鐢熸垚绯荤粺缁熻鎶ュ憡
 async function generateSystemStats() {
   try {
-    // 获取各种统计数据
+    // 鑾峰彇鍚勭缁熻鏁版嵁
     const statsPromises = [
       supabase.from('parts').select('count', { count: 'exact' }),
       supabase.from('appointments').select('count', { count: 'exact' }),
-      supabase.from('uploaded_content').select('count', { count: 'exact' })
+      supabase.from('uploaded_content').select('count', { count: 'exact' }),
     ];
-    
-    const [partsResult, appointmentsResult, uploadsResult] = await Promise.all(statsPromises);
-    
+
+    const [partsResult, appointmentsResult, uploadsResult] =
+      await Promise.all(statsPromises);
+
     const stats = {
       partsCount: partsResult.data?.[0]?.count || 0,
       appointmentsCount: appointmentsResult.data?.[0]?.count || 0,
       uploadsCount: uploadsResult.data?.[0]?.count || 0,
-      generatedAt: new Date().toISOString()
+      generatedAt: new Date().toISOString(),
     };
-    
-    // 保存统计信息到系统配置
-    await supabase
-      .from('system_config')
-      .upsert({
-        key: 'daily_stats',
-        value: stats,
-        updated_at: new Date().toISOString()
-      });
-    
+
+    // 淇濆瓨缁熻淇℃伅鍒扮郴缁熼厤?    await supabase.from('system_config').upsert({
+      key: 'daily_stats',
+      value: stats,
+      updated_at: new Date().toISOString(),
+    });
+
     return {
       success: true,
-      stats
+      stats,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Statistics generation failed'
+      error:
+        error instanceof Error ? error.message : 'Statistics generation failed',
     };
   }
 }
 
-// 执行数据备份
+// 鎵ц鏁版嵁澶囦唤
 async function performDataBackup() {
   try {
-    // 这里可以集成实际的备份逻辑
-    // 例如调用备份API或执行数据库导出
-    
+    // 杩欓噷鍙互闆嗘垚瀹為檯鐨勫浠介€昏緫
+    // 渚嬪璋冪敤澶囦唤API鎴栨墽琛屾暟鎹簱瀵煎嚭
+
     const backupInfo = {
       backupId: `backup_${Date.now()}`,
       timestamp: new Date().toISOString(),
-      status: 'completed'
+      status: 'completed',
     };
-    
+
     return {
       success: true,
-      backupInfo
+      backupInfo,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Backup failed'
+      error: error instanceof Error ? error.message : 'Backup failed',
     };
   }
 }
+

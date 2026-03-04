@@ -12,36 +12,36 @@ const { spawn } = require('child_process');
 async function main() {
   console.log('🔍 企业用户端E2E测试体系完整性验证');
   console.log('='.repeat(60));
-  
+
   let allChecksPassed = true;
-  
+
   // 1. 目录结构验证
   console.log('\n📁 1. 验证目录结构...');
   const structureChecks = await validateDirectoryStructure();
   allChecksPassed = allChecksPassed && structureChecks.passed;
-  
+
   // 2. 配置文件验证
   console.log('\n⚙️  2. 验证配置文件...');
   const configChecks = await validateConfigFiles();
   allChecksPassed = allChecksPassed && configChecks.passed;
-  
+
   // 3. 测试文件验证
   console.log('\n🧪 3. 验证测试文件...');
   const testFileChecks = await validateTestFiles();
   allChecksPassed = allChecksPassed && testFileChecks.passed;
-  
+
   // 4. 依赖验证
   console.log('\n📦 4. 验证依赖项...');
   const dependencyChecks = await validateDependencies();
   allChecksPassed = allChecksPassed && dependencyChecks.passed;
-  
+
   // 5. 环境验证
   console.log('\n🌍 5. 验证测试环境...');
   const environmentChecks = await validateEnvironment();
   allChecksPassed = allChecksPassed && environmentChecks.passed;
-  
+
   // 输出最终结果
-  console.log('\n' + '='.repeat(60));
+  console.log(`\n${'='.repeat(60)}`);
   if (allChecksPassed) {
     console.log('✅ 所有验证检查通过！企业用户端E2E测试体系完整可用');
     console.log('\n💡 快速开始:');
@@ -65,26 +65,26 @@ async function validateDirectoryStructure() {
     'tests/e2e/enterprise/permission',
     'tests/e2e/enterprise/api',
     'tests/e2e/enterprise/performance',
-    'tests/e2e/enterprise/security'
+    'tests/e2e/enterprise/security',
   ];
-  
+
   let passed = true;
   const missingDirs = [];
-  
+
   for (const dir of requiredDirs) {
     if (!fs.existsSync(dir)) {
       missingDirs.push(dir);
       passed = false;
     }
   }
-  
+
   if (passed) {
     console.log('   ✓ 目录结构完整');
   } else {
     console.log('   ❌ 缺少以下目录:');
     missingDirs.forEach(dir => console.log(`     - ${dir}`));
   }
-  
+
   return { passed, missingDirs };
 }
 
@@ -94,26 +94,26 @@ async function validateConfigFiles() {
     'tests/e2e/enterprise/config/test-env-config.ts',
     'tests/e2e/enterprise/fixtures/enterprise-fixture.ts',
     'tests/e2e/enterprise/utils/test-utils.ts',
-    'tests/e2e/enterprise/utils/test-reporter.ts'
+    'tests/e2e/enterprise/utils/test-reporter.ts',
   ];
-  
+
   let passed = true;
   const missingFiles = [];
-  
+
   for (const file of requiredFiles) {
     if (!fs.existsSync(file)) {
       missingFiles.push(file);
       passed = false;
     }
   }
-  
+
   if (passed) {
     console.log('   ✓ 配置文件完整');
   } else {
     console.log('   ❌ 缺少以下配置文件:');
     missingFiles.forEach(file => console.log(`     - ${file}`));
   }
-  
+
   return { passed, missingFiles };
 }
 
@@ -123,17 +123,17 @@ async function validateTestFiles() {
     'tests/e2e/enterprise/permission/*spec.ts',
     'tests/e2e/enterprise/api/*spec.ts',
     'tests/e2e/enterprise/performance/*spec.ts',
-    'tests/e2e/enterprise/security/*spec.ts'
+    'tests/e2e/enterprise/security/*spec.ts',
   ];
-  
+
   let passed = true;
   let totalTests = 0;
-  
+
   for (const pattern of testPatterns) {
     try {
       const files = getFilesMatchingPattern(pattern);
       totalTests += files.length;
-      
+
       // 验证每个测试文件的基本结构
       for (const file of files) {
         const content = fs.readFileSync(file, 'utf8');
@@ -145,33 +145,33 @@ async function validateTestFiles() {
       console.log(`   ⚠ 无法验证模式: ${pattern}`);
     }
   }
-  
+
   if (totalTests > 0) {
     console.log(`   ✓ 发现 ${totalTests} 个测试文件`);
   } else {
     console.log('   ❌ 未找到测试文件');
     passed = false;
   }
-  
+
   return { passed, totalTests };
 }
 
 async function validateDependencies() {
   let passed = true;
-  
+
   try {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    
+
     // 检查必需的依赖
     const requiredDeps = ['@playwright/test'];
     const missingDeps = [];
-    
+
     for (const dep of requiredDeps) {
       if (!packageJson.dependencies[dep] && !packageJson.devDependencies[dep]) {
         missingDeps.push(dep);
       }
     }
-    
+
     if (missingDeps.length > 0) {
       console.log('   ❌ 缺少以下依赖:');
       missingDeps.forEach(dep => console.log(`     - ${dep}`));
@@ -179,38 +179,37 @@ async function validateDependencies() {
     } else {
       console.log('   ✓ 依赖项完整');
     }
-    
+
     // 检查npm脚本
     const requiredScripts = [
       'test:e2e:enterprise',
       'test:e2e:enterprise:functional',
-      'test:e2e:enterprise:api'
+      'test:e2e:enterprise:api',
     ];
-    
+
     const missingScripts = [];
     for (const script of requiredScripts) {
       if (!packageJson.scripts[script]) {
         missingScripts.push(script);
       }
     }
-    
+
     if (missingScripts.length > 0) {
       console.log('   ⚠ 缺少以下npm脚本:');
       missingScripts.forEach(script => console.log(`     - ${script}`));
     }
-    
   } catch (error) {
     console.log('   ❌ 无法读取package.json');
     passed = false;
   }
-  
+
   return { passed };
 }
 
 async function validateEnvironment() {
   let passed = true;
   const issues = [];
-  
+
   // 检查Node.js版本
   const nodeVersion = process.version;
   const majorVersion = parseInt(nodeVersion.split('.')[0].substring(1));
@@ -218,26 +217,28 @@ async function validateEnvironment() {
     issues.push(`Node.js版本过低: ${nodeVersion} (建议≥16)`);
     passed = false;
   }
-  
+
   // 检查环境变量
   const requiredEnvVars = ['NODE_ENV'];
   const missingEnvVars = [];
-  
+
   for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
       missingEnvVars.push(envVar);
     }
   }
-  
+
   if (missingEnvVars.length > 0) {
     console.log('   ⚠ 建议设置以下环境变量:');
     missingEnvVars.forEach(envVar => console.log(`     - ${envVar}`));
   }
-  
+
   // 检查端口可用性
   try {
     const { execSync } = require('child_process');
-    const portCheck = execSync('netstat -an | findstr :3003', { encoding: 'utf8' });
+    const portCheck = execSync('netstat -an | findstr :3003', {
+      encoding: 'utf8',
+    });
     if (portCheck.includes('LISTENING')) {
       console.log('   ✓ 测试端口3003可用');
     } else {
@@ -246,14 +247,14 @@ async function validateEnvironment() {
   } catch (error) {
     console.log('   ⚠ 无法检查端口状态');
   }
-  
+
   if (issues.length > 0) {
     console.log('   ❌ 环境问题:');
     issues.forEach(issue => console.log(`     - ${issue}`));
   } else {
     console.log('   ✓ 环境配置良好');
   }
-  
+
   return { passed, issues };
 }
 

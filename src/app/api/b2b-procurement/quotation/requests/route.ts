@@ -1,19 +1,18 @@
-import { NextResponse } from "next/server";
-import { quotationRequestService } from "../../../../../b2b-procurement-agent/services/quotation-request.service";
+﻿import { NextResponse } from 'next/server';
+import { quotationRequestService } from '../../../../../b2b-procurement-agent/services/quotation-request.service';
 
 export async function GET(request: Request) {
   try {
-    const userId = "test-user-id"; // 临时测试用
-
+    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
     const { searchParams } = new URL(request.url);
     const params: any = {};
 
-    if (searchParams.get("status")) {
-      params.status = searchParams.get("status");
+    if (searchParams.get('status')) {
+      params.status = searchParams.get('status');
     }
 
-    if (searchParams.get("keyword")) {
-      params.keyword = searchParams.get("keyword");
+    if (searchParams.get('keyword')) {
+      params.keyword = searchParams.get('keyword');
     }
 
     const requests = await quotationRequestService.getQuotationRequests(
@@ -26,7 +25,7 @@ export async function GET(request: Request) {
       data: requests,
     });
   } catch (error) {
-    console.error("获取询价请求列表错误:", error);
+    console.error('鑾峰彇璇环璇锋眰鍒楄〃閿欒:', error);
     return NextResponse.json(
       {
         success: false,
@@ -40,8 +39,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const userId = "test-user-id"; // 临时测试用
-
+    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
     const quotationRequest =
       await quotationRequestService.createQuotationRequest(body, userId);
 
@@ -50,7 +48,7 @@ export async function POST(request: Request) {
       data: quotationRequest,
     });
   } catch (error) {
-    console.error("创建询价请求错误:", error);
+    console.error('鍒涘缓璇环璇锋眰閿欒:', error);
     return NextResponse.json(
       {
         success: false,
@@ -60,3 +58,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

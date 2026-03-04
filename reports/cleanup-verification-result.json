@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-03-03T07:18:19.625Z",
+  "allChecksPassed": true,
+  "checks": [
+    {
+      "name": "ESLint 配置",
+      "passed": true
+    },
+    {
+      "name": "Prettier 配置",
+      "passed": true
+    },
+    {
+      "name": "临时文件清理",
+      "passed": false
+    },
+    {
+      "name": "工具脚本",
+      "passed": true
+    },
+    {
+      "name": "最终报告",
+      "passed": true
+    }
+  ],
+  "totalChecks": 5,
+  "passedChecks": 4
+}

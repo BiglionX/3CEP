@@ -1,10 +1,8 @@
 /**
- * WMS客户端接口定义
- * 定义与海外仓WMS系统对接的标准接口
- */
+ * WMS客户端接口定? * 定义与海外仓WMS系统对接的标准接? */
 
 export interface WMSConfig {
-  provider: "goodcang" | "4px" | "winit" | "custom";
+  provider: 'goodcang' | '4px' | 'winit' | 'custom';
   baseUrl: string;
   clientId: string;
   clientSecret: string;
@@ -19,8 +17,7 @@ export interface WMSConfig {
 export interface WMSToken {
   accessToken: string;
   refreshToken?: string;
-  expiresIn: number; // 过期时间戳
-  tokenType: string;
+  expiresIn: number; // 过期时间?  tokenType: string;
 }
 
 export interface WMSInventoryItem {
@@ -38,7 +35,7 @@ export interface WMSInventoryItem {
 export interface WMSOrder {
   orderId: string;
   orderNumber: string;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   items: Array<{
     sku: string;
     quantity: number;
@@ -83,7 +80,7 @@ export interface WMSInboundNotice {
  */
 export interface WMSInboundNoticeCallback {
   noticeId: string;
-  status: "confirmed" | "in_transit" | "received" | "cancelled";
+  status: 'confirmed' | 'in_transit' | 'received' | 'cancelled';
   actualArrival?: Date;
   receivedItems: Array<{
     sku: string;
@@ -157,12 +154,11 @@ export interface WMSClient {
   createInboundNotice(notice: WMSInboundNotice): Promise<WMSResponse<string>>;
 
   /**
-   * 更新订单发货状态
-   */
+   * 更新订单发货状?   */
   updateShipmentStatus(
     orderId: string,
     trackingNumber: string,
-    status: "shipped" | "delivered"
+    status: 'shipped' | 'delivered'
   ): Promise<WMSResponse<void>>;
 
   /**

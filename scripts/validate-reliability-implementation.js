@@ -15,7 +15,7 @@ const expectedFiles = [
   'orchestrator.ts',
   'lib/reliability.ts',
   '__tests__/reliability.test.ts',
-  '__tests__/orchestrator.test.ts'
+  '__tests__/orchestrator.test.ts',
 ];
 
 let allFilesExist = true;
@@ -51,28 +51,28 @@ try {
     {
       name: '超时控制实现',
       pattern: /executeWithTimeout|setTimeout|timeout/i,
-      required: true
+      required: true,
     },
     {
       name: '重试机制实现',
       pattern: /handleRetry|retry|attempt/i,
-      required: true
+      required: true,
     },
     {
       name: '指数退避算法',
       pattern: /Math\.pow.*2|exponential|backoff/i,
-      required: true
+      required: true,
     },
     {
       name: '幂等性检查',
       pattern: /checkIdempotency|idempotency|exists/i,
-      required: true
+      required: true,
     },
     {
       name: '环境变量配置',
       pattern: /process\.env\.RETRY_MAX|process\.env\.TIMEOUT_MS/i,
-      required: true
-    }
+      required: true,
+    },
   ];
 
   let passedChecks = 0;
@@ -90,17 +90,14 @@ try {
 
   // 检查类型定义
   console.log('\n🏷️  类型定义检查:');
-  const typesContent = fs.readFileSync(
-    path.join(basePath, 'types.ts'),
-    'utf8'
-  );
+  const typesContent = fs.readFileSync(path.join(basePath, 'types.ts'), 'utf8');
 
   const typeChecks = [
     'ReliabilityConfig',
-    'AgentInvokeRequest', 
+    'AgentInvokeRequest',
     'AgentInvokeResponse',
     'RetryContext',
-    'IdempotencyStore'
+    'IdempotencyStore',
   ];
 
   typeChecks.forEach(type => {
@@ -115,20 +112,17 @@ try {
   console.log('\n🧪 测试覆盖检查:');
   const testFiles = [
     '__tests__/reliability.test.ts',
-    '__tests__/orchestrator.test.ts'
+    '__tests__/orchestrator.test.ts',
   ];
 
   testFiles.forEach(testFile => {
-    const testContent = fs.readFileSync(
-      path.join(basePath, testFile),
-      'utf8'
-    );
-    
+    const testContent = fs.readFileSync(path.join(basePath, testFile), 'utf8');
+
     const testIndicators = ['test(', 'it(', 'describe('];
-    const hasTests = testIndicators.some(indicator => 
+    const hasTests = testIndicators.some(indicator =>
       testContent.includes(indicator)
     );
-    
+
     if (hasTests) {
       // 统计测试数量
       const testCount = (testContent.match(/test\(|it\(/g) || []).length;
@@ -145,7 +139,6 @@ try {
   console.log('   • 支持从环境变量读取配置 (RETRY_MAX, TIMEOUT_MS)');
   console.log('   • 包含完整的单元测试覆盖');
   console.log('   • 提供类型安全的 TypeScript 接口');
-
 } catch (error) {
   console.log(`\n❌ 验证过程出错: ${error.message}`);
   process.exit(1);

@@ -1,13 +1,13 @@
-/**
- * 企业服务API中间件
- * 用于保护企业服务相关的API端点
+﻿/**
+ * 浼佷笟鏈嶅姟API涓棿?
+ * 鐢ㄤ簬淇濇姢浼佷笟鏈嶅姟鐩稿叧鐨凙PI绔偣
  */
 
 import { NextRequest, NextResponse } from 'next/server'
 import { AuthService } from '@/lib/auth-service'
 import { checkEnterpriseApiAccess } from '@/middleware/enterprise-permissions'
 
-// API权限映射
+// API鏉冮檺鏄犲皠
 const API_PERMISSIONS: Record<string, string> = {
   'GET /api/enterprise/dashboard': 'enterprise_read',
   'POST /api/enterprise/dashboard': 'enterprise_manage',
@@ -20,27 +20,27 @@ const API_PERMISSIONS: Record<string, string> = {
 }
 
 /**
- * 企业服务API中间件处理器
+ * 浼佷笟鏈嶅姟API涓棿浠跺鐞嗗櫒
  */
 export async function enterpriseApiMiddleware(request: NextRequest) {
   const method = request.method
   const pathname = request.nextUrl.pathname
   const routeKey = `${method} ${pathname}`
   
-  // 获取所需权限
+  // 鑾峰彇鎵€闇€鏉冮檺
   const requiredPermission = API_PERMISSIONS[routeKey]
   
   if (!requiredPermission) {
-    // 如果没有定义权限，允许访问但记录警告
-    console.warn(`未定义权限的API路由: ${routeKey}`)
+    // 濡傛灉娌℃湁瀹氫箟鏉冮檺锛屽厑璁歌闂絾璁板綍璀﹀憡
+    console.warn(`鏈畾涔夋潈闄愮殑API璺敱: ${routeKey}`)
     return NextResponse.next()
   }
   
-  // 检查权限
+  // 妫€鏌ユ潈?
   const { allowed, user } = await checkEnterpriseApiAccess(request, requiredPermission)
   
   if (!allowed) {
-    console.warn(`API权限拒绝: ${routeKey}`, {
+    console.warn(`API鏉冮檺鎷掔粷: ${routeKey}`, {
       userId: user?.id || 'anonymous',
       requiredPermission,
       timestamp: new Date().toISOString()
@@ -48,15 +48,15 @@ export async function enterpriseApiMiddleware(request: NextRequest) {
     
     return NextResponse.json(
       {
-        error: '权限不足',
-        message: '您没有权限访问此API端点',
+        error: '鏉冮檺涓嶈冻',
+        message: '鎮ㄦ病鏈夋潈闄愯闂API绔偣',
         requiredPermission
       },
       { status: 403 }
     )
   }
   
-  // 添加用户信息到响应头
+  // 娣诲姞鐢ㄦ埛淇℃伅鍒板搷搴斿ご
   const response = NextResponse.next()
   if (user) {
     response.headers.set('x-user-id', user.id)
@@ -67,7 +67,7 @@ export async function enterpriseApiMiddleware(request: NextRequest) {
 }
 
 /**
- * 通用API权限检查装饰器
+ * 閫氱敤API鏉冮檺妫€鏌ヨ楗板櫒
  */
 export function withEnterprisePermission(
   handler: (req: NextRequest) => Promise<NextResponse>,
@@ -79,15 +79,15 @@ export function withEnterprisePermission(
     if (!allowed) {
       return NextResponse.json(
         {
-          error: '权限不足',
-          message: '您没有执行此操作的权限',
+          error: '鏉冮檺涓嶈冻',
+          message: '鎮ㄦ病鏈夋墽琛屾鎿嶄綔鐨勬潈?,
           requiredPermission: permission
         },
         { status: 403 }
       )
     }
     
-    // 将用户信息注入到请求上下文中
+    // 灏嗙敤鎴蜂俊鎭敞鍏ュ埌璇锋眰涓婁笅鏂囦腑
     (request as any).currentUser = user
     
     return handler(request)

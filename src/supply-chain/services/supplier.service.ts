@@ -1,9 +1,8 @@
 /**
- * 供应商管理服务实现
- * 处理供应商入驻申请、资质审核、信用评级等核心功能
+ * 供应商管理服务实? * 处理供应商入驻申请、资质审核、信用评级等核心功能
  */
 
-import { 
+import {
   Supplier,
   SupplierApplication,
   SupplierCertification,
@@ -14,16 +13,14 @@ import {
   CreateSupplierDTO,
   ReviewSupplierDTO,
   UpdateCreditRatingDTO,
-  SupplierQueryParams
+  SupplierQueryParams,
 } from '../models/supplier.model';
 import { supabase } from '@/lib/supabase';
 import { generateUUID } from '@/fcx-system/utils/helpers';
 
 export class SupplierService {
-  
   /**
-   * 供应商入驻申请
-   */
+   * 供应商入驻申?   */
   async submitApplication(applicationData: any): Promise<{
     success: boolean;
     applicationId?: string;
@@ -35,7 +32,7 @@ export class SupplierService {
       if (!validation.isValid) {
         return {
           success: false,
-          errorMessage: validation.errors.join('; ')
+          errorMessage: validation.errors.join('; '),
         };
       }
 
@@ -54,51 +51,47 @@ export class SupplierService {
         reviewComments: '',
         submittedAt: new Date(),
         reviewedAt: null,
-        createdAt: new Date()
+        createdAt: new Date(),
       };
 
-      const { error } = await supabase
-        .from('supplier_applications')
-        .insert({
-          id: applicationId,
-          applicant_name: applicationData.applicantName,
-          company_name: applicationData.companyName,
-          contact_info: applicationData.contactInfo,
-          business_info: applicationData.businessInfo,
-          products: applicationData.products,
-          documents: applicationData.documents,
-          status: ReviewStatus.PENDING,
-          reviewer_id: null,
-          review_comments: '',
-          submitted_at: new Date(),
-          reviewed_at: null,
-          created_at: new Date()
-        } as any);
+      const { error } = await supabase.from('supplier_applications').insert({
+        id: applicationId,
+        applicant_name: applicationData.applicantName,
+        company_name: applicationData.companyName,
+        contact_info: applicationData.contactInfo,
+        business_info: applicationData.businessInfo,
+        products: applicationData.products,
+        documents: applicationData.documents,
+        status: ReviewStatus.PENDING,
+        reviewer_id: null,
+        review_comments: '',
+        submitted_at: new Date(),
+        reviewed_at: null,
+        created_at: new Date(),
+      } as any);
 
       if (error) {
         return {
           success: false,
-          errorMessage: `提交申请失败: ${error.message}`
+          errorMessage: `提交申请失败: ${error.message}`,
         };
       }
 
       return {
         success: true,
-        applicationId
+        applicationId,
       };
-
     } catch (error) {
-      console.error('供应商申请错误:', error);
+      console.error('供应商申请错?', error);
       return {
         success: false,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
 
   /**
-   * 审核供应商申请
-   */
+   * 审核供应商申?   */
   async reviewApplication(dto: ReviewSupplierDTO): Promise<{
     success: boolean;
     supplierId?: string;
@@ -115,25 +108,24 @@ export class SupplierService {
       if (appError) {
         return {
           success: false,
-          errorMessage: '申请记录不存在'
+          errorMessage: '申请记录不存?,
         };
       }
 
-      // 2. 更新申请状态
-      const { error: updateError } = await supabase
+      // 2. 更新申请状?      const { error: updateError } = await supabase
         .from('supplier_applications')
         .update({
           status: dto.reviewResult,
           reviewer_id: dto.reviewerId,
           review_comments: dto.comments,
-          reviewed_at: new Date()
+          reviewed_at: new Date(),
         } as any)
         .eq('id', dto.supplierId);
 
       if (updateError) {
         return {
           success: false,
-          errorMessage: `更新申请状态失败: ${updateError.message}`
+          errorMessage: `更新申请状态失? ${updateError.message}`,
         };
       }
 
@@ -145,7 +137,8 @@ export class SupplierService {
           code: this.generateSupplierCode(),
           name: application.company_name,
           type: 'manufacturer', // 默认类型
-          legal_name: application.business_info.legalName || application.company_name,
+          legal_name:
+            application.business_info.legalName || application.company_name,
           contact_person: application.applicant_name,
           phone: application.contact_info.phone,
           email: application.contact_info.email,
@@ -155,7 +148,9 @@ export class SupplierService {
           city: application.contact_info.city || '',
           postal_code: application.contact_info.postalCode || '',
           business_scope: application.business_info.businessScope || '',
-          established_year: application.business_info.establishedYear || new Date().getFullYear(),
+          established_year:
+            application.business_info.establishedYear ||
+            new Date().getFullYear(),
           employee_count: application.business_info.employeeCount || 0,
           annual_revenue: 0,
           bank_info: {},
@@ -170,7 +165,7 @@ export class SupplierService {
           next_review_date: this.calculateNextReviewDate(),
           is_active: true,
           created_at: new Date(),
-          updated_at: new Date()
+          updated_at: new Date(),
         };
 
         const { error: supplierError } = await supabase
@@ -180,42 +175,42 @@ export class SupplierService {
         if (supplierError) {
           return {
             success: false,
-            errorMessage: `创建供应商记录失败: ${supplierError.message}`
+            errorMessage: `创建供应商记录失? ${supplierError.message}`,
           };
         }
 
         return {
           success: true,
-          supplierId
+          supplierId,
         };
       }
 
       return {
-        success: true
+        success: true,
       };
-
     } catch (error) {
-      console.error('审核供应商申请错误:', error);
+      console.error('审核供应商申请错?', error);
       return {
         success: false,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
 
   /**
-   * 获取供应商信息
-   */
+   * 获取供应商信?   */
   async getSupplier(supplierId: string): Promise<Supplier | null> {
     try {
       const { data, error } = await supabase
         .from('suppliers')
-        .select(`
+        .select(
+          `
           *,
           certifications (*),
           products (*),
           contracts (*)
-        `)
+        `
+        )
         .eq('id', supplierId)
         .single();
 
@@ -223,25 +218,21 @@ export class SupplierService {
         if (error.code === 'PGRST116') {
           return null;
         }
-        throw new Error(`查询供应商失败: ${error.message}`);
+        throw new Error(`查询供应商失? ${error.message}`);
       }
 
       return this.mapToSupplier(data);
-
     } catch (error) {
-      console.error('获取供应商信息错误:', error);
+      console.error('获取供应商信息错?', error);
       throw error;
     }
   }
 
   /**
-   * 查询供应商列表
-   */
+   * 查询供应商列?   */
   async listSuppliers(params: SupplierQueryParams): Promise<Supplier[]> {
     try {
-      let query = supabase
-        .from('suppliers')
-        .select(`
+      let query = supabase.from('suppliers').select(`
           *,
           certifications (*),
           products (*)
@@ -273,13 +264,15 @@ export class SupplierService {
       }
 
       if (params.keyword) {
-        query = query.or(`name.ilike.%${params.keyword}%,contact_person.ilike.%${params.keyword}%`);
+        query = query.or(
+          `name.ilike.%${params.keyword}%,contact_person.ilike.%${params.keyword}%`
+        );
       }
 
       // 排序
       const sortBy = params.sortBy || 'created_at';
       const sortOrder = params.sortOrder || 'desc';
-      query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+      query = query.order(sortBy, { ascending: sortOrder === 'asc' }) as any;
 
       // 分页
       query = query.range(
@@ -290,20 +283,18 @@ export class SupplierService {
       const { data, error } = await query;
 
       if (error) {
-        throw new Error(`查询供应商列表失败: ${error.message}`);
+        throw new Error(`查询供应商列表失? ${error.message}`);
       }
 
       return data.map(this.mapToSupplier);
-
     } catch (error) {
-      console.error('查询供应商列表错误:', error);
+      console.error('查询供应商列表错?', error);
       throw error;
     }
   }
 
   /**
-   * 更新供应商信用评级
-   */
+   * 更新供应商信用评?   */
   async updateCreditRating(dto: UpdateCreditRatingDTO): Promise<boolean> {
     try {
       const { error } = await supabase
@@ -311,7 +302,7 @@ export class SupplierService {
         .update({
           credit_score: dto.creditScore,
           credit_level: dto.creditLevel,
-          updated_at: new Date()
+          updated_at: new Date(),
         } as any)
         .eq('id', dto.supplierId);
 
@@ -332,11 +323,10 @@ export class SupplierService {
           new_level: dto.creditLevel,
           reason: dto.assessmentReason,
           assessed_by: 'system', // 实际应为用户ID
-          assessed_at: new Date()
+          assessed_at: new Date(),
         } as any);
 
       return !historyError;
-
     } catch (error) {
       console.error('更新信用评级错误:', error);
       return false;
@@ -344,8 +334,7 @@ export class SupplierService {
   }
 
   /**
-   * 供应商信用评估
-   */
+   * 供应商信用评?   */
   async assessSupplierCredit(supplierId: string): Promise<CreditLevel> {
     try {
       const supplier = await this.getSupplier(supplierId);
@@ -359,15 +348,21 @@ export class SupplierService {
 
       // 经营年限权重 (20%)
       const yearsWeight = 0.2;
-      const yearsScore = Math.min(supplier.establishedYear ? 
-        (new Date().getFullYear() - supplier.establishedYear) * 5 : 0, 100);
+      const yearsScore = Math.min(
+        supplier.establishedYear
+          ? (new Date().getFullYear() - supplier.establishedYear) * 5
+          : 0,
+        100
+      );
       totalScore += yearsScore * yearsWeight;
       totalWeight += yearsWeight;
 
       // 员工规模权重 (15%)
       const employeeWeight = 0.15;
-      const employeeScore = Math.min(supplier.employeeCount ? 
-        Math.log(supplier.employeeCount) * 20 : 0, 100);
+      const employeeScore = Math.min(
+        supplier.employeeCount ? Math.log(supplier.employeeCount) * 20 : 0,
+        100
+      );
       totalScore += employeeScore * employeeWeight;
       totalWeight += employeeWeight;
 
@@ -385,12 +380,12 @@ export class SupplierService {
 
       // 资质认证权重 (20%)
       const certificationWeight = 0.2;
-      const certificationScore = Math.min((supplier.certifications?.length || 0) * 25, 100);
+      const certificationScore = Math.min((supplier?.length || 0) * 25, 100);
       totalScore += certificationScore * certificationWeight;
       totalWeight += certificationWeight;
 
-      // 计算最终分数
-      const finalScore = totalWeight > 0 ? Math.round(totalScore / totalWeight) : 0;
+      // 计算最终分?      const finalScore =
+        totalWeight > 0 ? Math.round(totalScore / totalWeight) : 0;
 
       // 根据分数确定信用等级
       let creditLevel: CreditLevel;
@@ -404,26 +399,25 @@ export class SupplierService {
         creditLevel = CreditLevel.D;
       }
 
-      // 更新供应商信用信息
-      await this.updateCreditRating({
+      // 更新供应商信用信?      (await this.updateCreditRating({
         supplierId,
         creditScore: finalScore,
         creditLevel,
-        assessmentReason: `系统自动评估 - 基于经营年限、员工规模、合作年限、综合评分、资质认证等维度`
-      });
+        assessmentReason: `系统自动评估 - 基于经营年限、员工规模、合作年限、综合评分、资质认证等维度`,
+      })) as any;
 
       return creditLevel;
-
     } catch (error) {
-      console.error('供应商信用评估错误:', error);
+      console.error('供应商信用评估错?', error);
       throw error;
     }
   }
 
   /**
-   * 获取待审核申请列表
-   */
-  async getPendingApplications(limit: number = 20): Promise<SupplierApplication[]> {
+   * 获取待审核申请列?   */
+  async getPendingApplications(
+    limit: number = 20
+  ): Promise<SupplierApplication[]> {
     try {
       const { data, error } = await supabase
         .from('supplier_applications')
@@ -433,7 +427,7 @@ export class SupplierService {
         .limit(limit);
 
       if (error) {
-        throw new Error(`查询待审核申请失败: ${error.message}`);
+        throw new Error(`查询待审核申请失? ${error.message}`);
       }
 
       return data.map(app => ({
@@ -449,43 +443,45 @@ export class SupplierService {
         reviewComments: app.review_comments,
         submittedAt: new Date(app.submitted_at),
         reviewedAt: app.reviewed_at ? new Date(app.reviewed_at) : null,
-        createdAt: new Date(app.created_at)
+        createdAt: new Date(app.created_at),
       }));
-
     } catch (error) {
-      console.error('获取待审核申请错误:', error);
+      console.error('获取待审核申请错?', error);
       throw error;
     }
   }
 
   // 私有辅助方法
 
-  private validateApplicationData(data: any): { isValid: boolean; errors: string[] } {
+  private validateApplicationData(data: any): {
+    isValid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
     if (!data.applicantName) {
-      errors.push('申请人姓名不能为空');
+      errors.push('申请人姓名不能为?);
     }
 
     if (!data.companyName) {
       errors.push('公司名称不能为空');
     }
 
-    if (!data.contactInfo?.phone) {
+    if (!data?.phone) {
       errors.push('联系电话不能为空');
     }
 
-    if (!data.contactInfo?.email) {
+    if (!data?.email) {
       errors.push('邮箱不能为空');
     }
 
-    if (!data.businessInfo?.businessLicense) {
-      errors.push('营业执照号不能为空');
+    if (!data?.businessLicense) {
+      errors.push('营业执照号不能为?);
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -529,8 +525,12 @@ export class SupplierService {
       rating: data.rating,
       reviewCount: data.review_count,
       cooperationYears: data.cooperation_years,
-      lastReviewDate: data.last_review_date ? new Date(data.last_review_date) : null,
-      nextReviewDate: data.next_review_date ? new Date(data.next_review_date) : null,
+      lastReviewDate: data.last_review_date
+        ? new Date(data.last_review_date)
+        : null,
+      nextReviewDate: data.next_review_date
+        ? new Date(data.next_review_date)
+        : null,
       certifications: data.certifications || [],
       products: data.products || [],
       contracts: data.contracts || [],
@@ -541,7 +541,7 @@ export class SupplierService {
         serviceScore: 0,
         complaintCount: 0,
         returnRate: 0,
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
       },
       riskAssessment: data.risk_assessment || {
         financialRisk: 'medium',
@@ -551,11 +551,11 @@ export class SupplierService {
         overallRisk: 'medium',
         riskFactors: [],
         mitigationStrategies: [],
-        lastAssessed: new Date()
+        lastAssessed: new Date(),
       },
       isActive: data.is_active,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at)
+      updatedAt: new Date(data.updated_at),
     };
   }
 }

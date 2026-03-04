@@ -10,7 +10,7 @@ console.log('1️⃣ 检查监控服务文件...');
 const monitoringFiles = [
   'src/data-center/monitoring/monitoring-service.ts',
   'src/data-center/monitoring/dashboard-service.ts',
-  'src/app/api/monitoring/route.ts'
+  'src/app/api/monitoring/route.ts',
 ];
 
 monitoringFiles.forEach(file => {
@@ -26,29 +26,29 @@ const alertRules = [
     metric: 'query_response_time',
     condition: 'above',
     threshold: 2000,
-    severity: 'warning'
+    severity: 'warning',
   },
   {
     name: '缓存命中率过低',
     metric: 'cache_hit_rate',
     condition: 'below',
     threshold: 70,
-    severity: 'warning'
+    severity: 'warning',
   },
   {
     name: '数据库连接数过多',
     metric: 'db_active_connections',
     condition: 'above',
     threshold: 50,
-    severity: 'critical'
+    severity: 'critical',
   },
   {
     name: '数据质量严重下降',
     metric: 'data_quality_score',
     condition: 'below',
     threshold: 60,
-    severity: 'critical'
-  }
+    severity: 'critical',
+  },
 ];
 
 console.log('   📋 预配置告警规则:');
@@ -67,7 +67,7 @@ const notificationChannels = [
   '✅ Slack通知 (slack)',
   '✅ Webhook通知 (webhook)',
   '✅ 短信通知 (sms)',
-  '✅ PagerDuty集成 (pagerduty)'
+  '✅ PagerDuty集成 (pagerduty)',
 ];
 
 console.log('   📋 支持的通知渠道:');
@@ -87,7 +87,7 @@ const advancedFeatures = [
   '✅ 性能趋势分析',
   '✅ 数据质量监控',
   '✅ 系统健康检查',
-  '✅ API接口完整'
+  '✅ API接口完整',
 ];
 
 console.log('   📋 高级功能特性:');
@@ -105,7 +105,7 @@ const apiEndpoints = [
   'GET /api/monitoring?action=quality   - 获取数据质量报告',
   'GET /api/monitoring?action=stats     - 获取监控统计',
   'GET /api/monitoring?action=health    - 系统健康检查',
-  'POST /api/monitoring  - 记录指标/添加规则/配置通知'
+  'POST /api/monitoring  - 记录指标/添加规则/配置通知',
 ];
 
 console.log('   📋 可用API端点:');

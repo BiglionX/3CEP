@@ -16,7 +16,7 @@ console.log('=====================================\n');
 const ROLLBACK_TYPES = {
   DATABASE: 'database',
   N8N_WORKFLOWS: 'n8n-workflows',
-  FULL: 'full'
+  FULL: 'full',
 };
 
 // 解析命令行参数
@@ -47,13 +47,13 @@ function getMigrationHistory() {
 
 function rollbackDatabase(targetVer) {
   console.log('🗄️  开始数据库回滚...\n');
-  
+
   const history = getMigrationHistory();
   if (history.length === 0) {
     console.log('⚠️  没有找到迁移历史记录');
     return false;
   }
-  
+
   // 确定回滚到哪个版本
   let rollbackToVersion = targetVer;
   if (!rollbackToVersion) {
@@ -65,26 +65,30 @@ function rollbackDatabase(targetVer) {
       return false;
     }
   }
-  
+
   console.log(`🎯 回滚目标版本: ${rollbackToVersion}`);
-  
+
   // 查找需要回滚的迁移
-  const currentIndex = history.findIndex(item => item.version === rollbackToVersion);
+  const currentIndex = history.findIndex(
+    item => item.version === rollbackToVersion
+  );
   if (currentIndex === -1) {
     console.error(`❌ 未找到目标版本: ${rollbackToVersion}`);
     return false;
   }
-  
+
   const migrationsToRollback = history.slice(currentIndex + 1).reverse();
   console.log(`🔄 需要回滚 ${migrationsToRollback.length} 个迁移`);
-  
+
   // 执行回滚
   let successCount = 0;
   let failureCount = 0;
-  
+
   for (const migration of migrationsToRollback) {
-    console.log(`\n⏪ 回滚迁移: ${migration.version} - ${migration.description}`);
-    
+    console.log(
+      `\n⏪ 回滚迁移: ${migration.version} - ${migration.description}`
+    );
+
     try {
       // 执行回滚SQL（如果有定义）
       if (migration.rollbackSql) {
@@ -94,48 +98,55 @@ function rollbackDatabase(targetVer) {
       } else {
         console.log('   ⚠️  未定义回滚SQL，跳过');
       }
-      
+
       successCount++;
     } catch (error) {
       console.error(`   ❌ 回滚失败: ${error.message}`);
       failureCount++;
     }
   }
-  
+
   console.log(`\n📊 数据库回滚结果:`);
   console.log(`   成功: ${successCount}`);
   console.log(`   失败: ${failureCount}`);
-  
+
   return failureCount === 0;
 }
 
 function rollbackN8nWorkflows(targetVer) {
   console.log('\n🔄 开始 n8n 工作流回滚...\n');
-  
+
   try {
-    const registryPath = path.join(__dirname, '..', 'n8n-workflows', 'VERSION_REGISTRY.json');
+    const registryPath = path.join(
+      __dirname,
+      '..',
+      'n8n-workflows',
+      'VERSION_REGISTRY.json'
+    );
     if (!fs.existsSync(registryPath)) {
       console.log('⚠️  未找到版本注册表文件');
       return false;
     }
-    
+
     const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
     let rollbackSuccess = true;
-    
+
     // 回滚每个域的工作流
     for (const [domain, domainInfo] of Object.entries(registry)) {
       console.log(`🔄 回滚域: ${domain}`);
-      
+
       const currentVersion = domainInfo.current;
       const targetVersion = targetVer || domainInfo.previous;
-      
+
       if (!targetVersion) {
         console.log(`   ⚠️  未指定目标版本，跳过`);
         continue;
       }
-      
-      console.log(`   当前版本: ${currentVersion} -> 目标版本: ${targetVersion}`);
-      
+
+      console.log(
+        `   当前版本: ${currentVersion} -> 目标版本: ${targetVersion}`
+      );
+
       // 这里应该执行实际的工作流回滚逻辑
       // 比如从版本控制系统恢复旧版本文件
       try {
@@ -146,9 +157,8 @@ function rollbackN8nWorkflows(targetVer) {
         rollbackSuccess = false;
       }
     }
-    
+
     return rollbackSuccess;
-    
   } catch (error) {
     console.error(`❌ n8n 工作流回滚失败: ${error.message}`);
     return false;
@@ -157,79 +167,78 @@ function rollbackN8nWorkflows(targetVer) {
 
 function rollbackFullDeployment() {
   console.log('🔄 执行完整回滚...\n');
-  
+
   let success = true;
-  
+
   // 1. 回滚 n8n 工作流
   if (!rollbackN8nWorkflows(targetVersion)) {
     console.log('❌ n8n 工作流回滚失败');
     success = false;
   }
-  
+
   // 2. 回滚数据库
   if (!rollbackDatabase(targetVersion)) {
     console.log('❌ 数据库回滚失败');
     success = false;
   }
-  
+
   return success;
 }
 
 function main() {
   try {
     validateRollbackType(rollbackType);
-    
+
     console.log(`🔄 回滚类型: ${rollbackType}`);
     if (targetVersion) {
       console.log(`🎯 目标版本: ${targetVersion}`);
     }
     console.log('');
-    
+
     let success = false;
-    
+
     switch (rollbackType) {
       case ROLLBACK_TYPES.DATABASE:
         success = rollbackDatabase(targetVersion);
         break;
-        
+
       case ROLLBACK_TYPES.N8N_WORKFLOWS:
         success = rollbackN8nWorkflows(targetVersion);
         break;
-        
+
       case ROLLBACK_TYPES.FULL:
         success = rollbackFullDeployment();
         break;
     }
-    
+
     // 输出结果
     console.log('\n=====================================');
     console.log('📊 回滚执行总结');
     console.log('=====================================');
-    
+
     if (success) {
       console.log('✅ 回滚执行成功！');
       console.log('🚀 系统已恢复到指定版本');
-      
+
       // 重启相关服务
       console.log('\n🔄 重启服务...');
       const restartResult = spawnSync('docker-compose', ['restart'], {
         cwd: process.cwd(),
-        stdio: 'inherit'
+        stdio: 'inherit',
       });
-      
+
       if (restartResult.status === 0) {
         console.log('✅ 服务重启完成');
       } else {
         console.log('⚠️  服务重启可能存在问题');
       }
-      
+
       process.exit(0);
     } else {
       console.log('❌ 回滚执行失败！');
       console.log('🚨 部分组件可能处于不一致状态');
       process.exit(1);
     }
-    
   } catch (error) {
     console.error('\n💥 回滚过程中发生错误:', error.message);
     process.exit(1);

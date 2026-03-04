@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -87,7 +87,7 @@ const UpgradeRecommendationCard: React.FC<{
         </div>
         
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span>从 {oldModel} 升级</span>
+          <span>�?{oldModel} 升级</span>
           <ArrowRight className="h-4 w-4" />
           <span className="font-semibold">{newModel}</span>
         </div>
@@ -99,7 +99,7 @@ const UpgradeRecommendationCard: React.FC<{
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-3 rounded-lg">
             <div className="flex items-center gap-2 mb-1">
               <Tag className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium text-green-800">预估回收价值</span>
+              <span className="text-sm font-medium text-green-800">预估回收价?/span>
             </div>
             <p className="text-xl font-bold text-green-700">
               ¥{predictedTradeValue.toFixed(0)}
@@ -158,7 +158,7 @@ const UpgradeRecommendationCard: React.FC<{
           </Button>
         </div>
 
-        {/* 推荐得分可视化 */}
+        {/* 推荐得分可视?*/}
         <div className="pt-2">
           <div className="flex justify-between text-xs text-gray-500 mb-1">
             <span>推荐指数</span>
@@ -261,14 +261,14 @@ const UpgradeRecommendationList: React.FC<UpgradeRecommendationProps> = ({
       // 调用外部回调
       onConversion?.(recommendation);
       
-      // 可以跳转到购买页面
+      // 可以跳转到购买页?
       window.open(`/crowdfunding/projects?search=${recommendation.newModel}`, '_blank');
     } catch (err) {
       console.error('记录转化失败:', err);
     }
   };
 
-  // 组件挂载时获取推荐
+  // 组件挂载时获取推?
   useEffect(() => {
     if (userId) {
       fetchRecommendations();
@@ -321,7 +321,7 @@ const UpgradeRecommendationList: React.FC<UpgradeRecommendationProps> = ({
           <Smartphone className="h-16 w-16 mx-auto text-gray-300 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">暂无升级推荐</h3>
           <p className="text-gray-500 mb-4">
-            我们会根据您的设备使用历史为您提供个性化的升级建议
+            我们会根据您的设备使用历史为您提供个性化的升级建?
           </p>
           <Button onClick={() => fetchRecommendations(true)} variant="outline">
             <RefreshCw className="h-4 w-4 mr-2" />
@@ -337,7 +337,7 @@ const UpgradeRecommendationList: React.FC<UpgradeRecommendationProps> = ({
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
           <Zap className="h-6 w-6 text-blue-600" />
-          为您推荐的升级方案
+          为您推荐的升级方?
         </h2>
         <Button 
           variant="ghost" 
@@ -362,7 +362,7 @@ const UpgradeRecommendationList: React.FC<UpgradeRecommendationProps> = ({
       </div>
 
       <div className="text-center text-sm text-gray-500 pt-4">
-        基于您的设备使用历史和市场行情，为您精选最适合的升级方案
+        基于您的设备使用历史和市场行情，为您精选最适合的升级方?
       </div>
     </div>
   );

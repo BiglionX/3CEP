@@ -1,5 +1,5 @@
-/**
- * FCX2奖励管理API
+﻿/**
+ * FCX2濂栧姳绠＄悊API
  */
 
 import { NextResponse } from 'next/server';
@@ -10,7 +10,7 @@ import { Fcx2RewardService, Fcx2OptionService } from '@/fcx-system';
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const body = await request.json();
     const { action, orderId, rating, shopId, amount } = body;
@@ -19,12 +19,12 @@ export async function POST(request: Request) {
       case 'calculate':
         if (!orderId || rating === undefined) {
           return NextResponse.json(
-            { success: false, error: '计算奖励需要提供工单ID和评分' },
+            { success: false, error: '璁＄畻濂栧姳闇€瑕佹彁渚涘伐鍗旾D鍜岃瘎? },
             { status: 400 }
           );
         }
 
-        // 获取工单信息
+        // 鑾峰彇宸ュ崟淇℃伅
         const { data: orderData, error: orderError } = await supabase
           .from('repair_orders')
           .select('*')
@@ -33,29 +33,32 @@ export async function POST(request: Request) {
 
         if (orderError || !orderData) {
           return NextResponse.json(
-            { success: false, error: '工单不存在' },
+            { success: false, error: '宸ュ崟涓嶅瓨? },
             { status: 404 }
           );
         }
 
         const rewardService = new Fcx2RewardService();
-        const rewardResult = await rewardService.calculateOrderReward(orderData as any, rating);
+        const rewardResult = await rewardService.calculateOrderReward(
+          orderData as any,
+          rating
+        );
 
         return NextResponse.json({
           success: true,
           data: rewardResult,
-          message: '奖励计算成功'
+          message: '濂栧姳璁＄畻鎴愬姛',
         });
 
       case 'grant':
         if (!orderId || rating === undefined) {
           return NextResponse.json(
-            { success: false, error: '发放奖励需要提供工单ID和评分' },
+            { success: false, error: '鍙戞斁濂栧姳闇€瑕佹彁渚涘伐鍗旾D鍜岃瘎? },
             { status: 400 }
           );
         }
 
-        // 获取工单信息
+        // 鑾峰彇宸ュ崟淇℃伅
         const { data: orderData2, error: orderError2 } = await supabase
           .from('repair_orders')
           .select('*')
@@ -64,24 +67,27 @@ export async function POST(request: Request) {
 
         if (orderError2 || !orderData2) {
           return NextResponse.json(
-            { success: false, error: '工单不存在' },
+            { success: false, error: '宸ュ崟涓嶅瓨? },
             { status: 404 }
           );
         }
 
         const rewardService2 = new Fcx2RewardService();
-        const rewardResult2 = await rewardService2.grantOrderReward(orderData2 as any, rating);
+        const rewardResult2 = await rewardService2.grantOrderReward(
+          orderData2 as any,
+          rating
+        );
 
         return NextResponse.json({
           success: true,
           data: rewardResult2,
-          message: '奖励发放成功'
+          message: '濂栧姳鍙戞斁鎴愬姛',
         });
 
       case 'redeem':
         if (!shopId || !amount) {
           return NextResponse.json(
-            { success: false, error: '兑换期权需要提供店铺ID和金额' },
+            { success: false, error: '鍏戞崲鏈熸潈闇€瑕佹彁渚涘簵閾篒D鍜岄噾? },
             { status: 400 }
           );
         }
@@ -91,23 +97,22 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
           success: true,
-          message: '期权兑换成功'
+          message: '鏈熸潈鍏戞崲鎴愬姛',
         });
 
       default:
         return NextResponse.json(
-          { success: false, error: '无效的操作类型' },
+          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
           { status: 400 }
         );
     }
-
   } catch (error) {
-    console.error('FCX2奖励操作错误:', error);
+    console.error('FCX2濂栧姳鎿嶄綔閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '操作失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鎿嶄綔澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -116,7 +121,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const { searchParams } = new URL(request.url);
     const shopId = searchParams.get('shopId');
@@ -124,7 +129,7 @@ export async function GET(request: Request) {
 
     if (!shopId) {
       return NextResponse.json(
-        { success: false, error: '需要提供店铺ID' },
+        { success: false, error: '闇€瑕佹彁渚涘簵閾篒D' },
         { status: 400 }
       );
     }
@@ -137,7 +142,7 @@ export async function GET(request: Request) {
         return NextResponse.json({
           success: true,
           data: { balance },
-          message: '查询余额成功'
+          message: '鏌ヨ浣欓鎴愬姛',
         });
 
       case 'options':
@@ -148,7 +153,7 @@ export async function GET(request: Request) {
           success: true,
           data: options,
           count: options.length,
-          message: '查询期权记录成功'
+          message: '鏌ヨ鏈熸潈璁板綍鎴愬姛',
         });
 
       case 'statistics':
@@ -158,25 +163,25 @@ export async function GET(request: Request) {
         return NextResponse.json({
           success: true,
           data: stats,
-          message: '查询统计信息成功'
+          message: '鏌ヨ缁熻淇℃伅鎴愬姛',
         });
 
       default:
         return NextResponse.json(
-          { success: false, error: '无效的查询类型' },
+          { success: false, error: '鏃犳晥鐨勬煡璇㈢被? },
           { status: 400 }
         );
     }
-
   } catch (error) {
-    console.error('查询FCX2信息错误:', error);
+    console.error('鏌ヨFCX2淇℃伅閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '查询失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鏌ヨ澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

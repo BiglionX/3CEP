@@ -8,20 +8,26 @@ async function verifyRLSPolicies() {
   try {
     // 1. 验证RLS是否已启用
     console.log('\n1️⃣ 验证RLS启用状态...');
-    const tables = ['parts', 'part_prices', 'uploaded_content', 'appointments', 'system_config'];
-    
+    const tables = [
+      'parts',
+      'part_prices',
+      'uploaded_content',
+      'appointments',
+      'system_config',
+    ];
+
     for (const table of tables) {
       try {
         const response = await fetch(
           `${supabaseUrl}/rest/v1/${table}?select=count`,
           {
             headers: {
-              'apikey': serviceKey,
-              'Authorization': `Bearer ${serviceKey}`
-            }
+              apikey: serviceKey,
+              Authorization: `Bearer ${serviceKey}`,
+            },
           }
         );
-        
+
         if (response.ok) {
           console.log(`✅ 表 ${table} 的RLS已启用`);
         } else {
@@ -38,27 +44,29 @@ async function verifyRLSPolicies() {
       `${supabaseUrl}/rest/v1/pg_policies?select=count`,
       {
         headers: {
-          'apikey': serviceKey,
-          'Authorization': `Bearer ${serviceKey}`
-        }
+          apikey: serviceKey,
+          Authorization: `Bearer ${serviceKey}`,
+        },
       }
     );
-    
+
     if (policyCountResponse.ok) {
       const countData = await policyCountResponse.json();
       console.log(`📊 数据库中总策略数: ${countData.length}`);
-      
+
       // 预期策略数：根据rls_policies.sql文件，应该有15个策略 + 1个视图授权 = 16个
       if (countData.length >= 15) {
         console.log('✅ RLS策略数量正常');
       } else {
-        console.log(`⚠️  策略数量不足（预期至少15个，实际${countData.length}个）`);
+        console.log(
+          `⚠️  策略数量不足（预期至少15个，实际${countData.length}个）`
+        );
       }
     }
 
     // 3. 测试基本访问权限
     console.log('\n3️⃣ 测试基本访问权限...');
-    
+
     // 使用匿名密钥测试公开数据访问
     const anonKey = 'sb_publishable_5e-tqlrRNyKW3fAmWJipIQ_1-fjS711';
     try {
@@ -66,12 +74,12 @@ async function verifyRLSPolicies() {
         `${supabaseUrl}/rest/v1/parts?select=id,name&limit=1`,
         {
           headers: {
-            'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`
-          }
+            apikey: anonKey,
+            Authorization: `Bearer ${anonKey}`,
+          },
         }
       );
-      
+
       if (anonResponse.ok) {
         const data = await anonResponse.json();
         console.log(`✅ 匿名用户可以访问配件表（返回 ${data.length} 条记录）`);
@@ -83,7 +91,7 @@ async function verifyRLSPolicies() {
     }
 
     // 4. 输出最终报告
-    console.log('\n' + '='.repeat(50));
+    console.log(`\n${'='.repeat(50)}`);
     console.log('🛡️  RLS安全策略验证报告');
     console.log('='.repeat(50));
     console.log('✅ RLS策略已配置完成');
@@ -93,7 +101,6 @@ async function verifyRLSPolicies() {
     console.log('1. 在Supabase控制台确认备份策略配置');
     console.log('2. 测试不同角色用户的访问权限');
     console.log('3. 配置监控告警');
-
   } catch (error) {
     console.error('❌ RLS验证过程中发生错误:', error.message);
     process.exit(1);

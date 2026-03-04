@@ -1,6 +1,6 @@
-/**
- * 管理后台设备搜索API
- * 提供设备搜索功能接口
+﻿/**
+ * 绠＄悊鍚庡彴璁惧鎼滅储API
+ * 鎻愪緵璁惧鎼滅储鍔熻兘鎺ュ彛
  */
 import { Database } from '@/lib/database.types';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -16,15 +16,14 @@ export async function GET(request: Request) {
 
     if (!searchTerm || searchTerm.trim().length === 0) {
       return NextResponse.json(
-        { success: false, error: '请提供搜索关键词' },
+        { success: false, error: '璇锋彁渚涙悳绱㈠叧閿瘝' },
         { status: 400 }
       );
     }
 
     const trimmedSearch = searchTerm.trim();
 
-    // 在多个表中搜索设备
-    const devices = await searchDevices(supabase, trimmedSearch);
+    // 鍦ㄥ涓〃涓悳绱㈣?    const devices = await searchDevices(supabase, trimmedSearch);
 
     return NextResponse.json({
       success: true,
@@ -33,14 +32,14 @@ export async function GET(request: Request) {
         devices: devices,
         totalCount: devices.length,
       },
-      message: `找到 ${devices.length} 个匹配的设备`,
+      message: `鎵惧埌 ${devices.length} 涓尮閰嶇殑璁惧`,
     });
   } catch (error) {
-    console.error('设备搜索错误:', error);
+    console.error('璁惧鎼滅储閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '设备搜索失败',
+        error: '璁惧鎼滅储澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }
@@ -49,11 +48,11 @@ export async function GET(request: Request) {
 }
 
 /**
- * 搜索设备的主要逻辑
+ * 鎼滅储璁惧鐨勪富瑕侀€昏緫
  */
 async function searchDevices(supabase: any, searchTerm: string) {
   try {
-    // 1. 在设备二维码表中搜索
+    // 1. 鍦ㄨ澶囦簩缁寸爜琛ㄤ腑鎼滅储
     const { data: qrcodeResults, error: qrcodeError } = await supabase
       .from('product_qrcodes')
       .select(
@@ -69,10 +68,10 @@ async function searchDevices(supabase: any, searchTerm: string) {
       .limit(20);
 
     if (qrcodeError) {
-      console.error('二维码搜索错误:', qrcodeError);
+      console.error('浜岀淮鐮佹悳绱㈤敊?', qrcodeError);
     }
 
-    // 2. 在产品表中搜索型号和名称
+    // 2. 鍦ㄤ骇鍝佽〃涓悳绱㈠瀷鍙峰拰鍚嶇О
     const { data: productResults, error: productError } = await supabase
       .from('products')
       .select(
@@ -88,48 +87,45 @@ async function searchDevices(supabase: any, searchTerm: string) {
       .limit(20);
 
     if (productError) {
-      console.error('产品搜索错误:', productError);
+      console.error('浜у搧鎼滅储閿欒:', productError);
     }
 
-    // 3. 合并和去重结果
-    const allResults = new Map();
+    // 3. 鍚堝苟鍜屽幓閲嶇粨?    const allResults = new Map();
 
-    // 处理二维码搜索结果
-    if (qrcodeResults) {
+    // 澶勭悊浜岀淮鐮佹悳绱㈢粨?    if (qrcodeResults) {
       qrcodeResults.forEach((item: any) => {
         const key = item.qr_code_id;
         if (!allResults.has(key)) {
           allResults.set(key, {
             qrcodeId: item.qr_code_id,
-            productId: item.products?.id,
-            productModel: item.products?.model,
-            productName: item.products?.name,
-            brandName: item.brands?.name || item.products?.brands?.name,
+            productId: item?.id,
+            productModel: item?.model,
+            productName: item?.name,
+            brandName: item?.name || item?.brands?.name,
             source: 'qrcode',
           });
         }
       });
     }
 
-    // 处理产品搜索结果
+    // 澶勭悊浜у搧鎼滅储缁撴灉
     if (productResults) {
       productResults.forEach((item: any) => {
-        // 查找关联的二维码
+        // 鏌ユ壘鍏宠仈鐨勪簩缁寸爜
         const key = `${item.id}-${item.model}`;
         if (!allResults.has(key)) {
           allResults.set(key, {
-            qrcodeId: null, // 需要进一步查询具体的二维码
-            productId: item.id,
+            qrcodeId: null, // 闇€瑕佽繘涓€姝ユ煡璇㈠叿浣撶殑浜岀淮?            productId: item.id,
             productModel: item.model,
             productName: item.name,
-            brandName: item.brands?.name,
+            brandName: item?.name,
             source: 'product',
           });
         }
       });
     }
 
-    // 4. 补充设备档案信息
+    // 4. 琛ュ厖璁惧妗ｆ淇℃伅
     const enrichedDevices = [];
     for (const [_, device] of allResults) {
       const enrichedDevice = await enrichDeviceInfo(supabase, device);
@@ -138,20 +134,19 @@ async function searchDevices(supabase: any, searchTerm: string) {
       }
     }
 
-    return enrichedDevices.slice(0, 20); // 限制返回数量
+    return enrichedDevices.slice(0, 20); // 闄愬埗杩斿洖鏁伴噺
   } catch (error) {
-    console.error('搜索设备错误:', error);
+    console.error('鎼滅储璁惧閿欒:', error);
     return [];
   }
 }
 
 /**
- * 丰富设备信息
+ * 涓板瘜璁惧淇℃伅
  */
 async function enrichDeviceInfo(supabase: any, device: any) {
   try {
-    // 如果没有二维码ID，尝试查找
-    let qrcodeId = device.qrcodeId;
+    // 濡傛灉娌℃湁浜岀淮鐮両D锛屽皾璇曟煡?    let qrcodeId = device.qrcodeId;
     if (!qrcodeId && device.productId) {
       const { data: qrcodeData } = await supabase
         .from('product_qrcodes')
@@ -164,10 +159,9 @@ async function enrichDeviceInfo(supabase: any, device: any) {
     }
 
     if (!qrcodeId) {
-      return null; // 没有二维码的设备不显示
-    }
+      return null; // 娌℃湁浜岀淮鐮佺殑璁惧涓嶆樉?    }
 
-    // 获取设备档案信息
+    // 鑾峰彇璁惧妗ｆ淇℃伅
     const { data: profileData } = await supabase
       .from('device_profiles')
       .select(
@@ -186,7 +180,7 @@ async function enrichDeviceInfo(supabase: any, device: any) {
       .single();
 
     return {
-      id: qrcodeId, // 使用二维码ID作为唯一标识
+      id: qrcodeId, // 浣跨敤浜岀淮鐮両D浣滀负鍞竴鏍囪瘑
       qrcodeId: qrcodeId,
       productModel: device.productModel,
       productName: device.productName,
@@ -202,9 +196,8 @@ async function enrichDeviceInfo(supabase: any, device: any) {
       source: device.source,
     };
   } catch (error) {
-    console.error('丰富设备信息错误:', error);
-    // 即使出错也返回基本设备信息
-    return {
+    console.error('涓板瘜璁惧淇℃伅閿欒:', error);
+    // 鍗充娇鍑洪敊涔熻繑鍥炲熀鏈澶囦俊?    return {
       id: device.qrcodeId || device.productId,
       qrcodeId: device.qrcodeId,
       productModel: device.productModel,
@@ -218,3 +211,4 @@ async function enrichDeviceInfo(supabase: any, device: any) {
     };
   }
 }
+

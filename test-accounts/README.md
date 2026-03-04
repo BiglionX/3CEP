@@ -6,20 +6,20 @@
 
 ## 🎯 覆盖的角色
 
-| 角色 | 权限等级 | 描述 | 测试账户 |
-|------|----------|------|----------|
-| **admin** | 100 | 超级管理员 | admin@fixcycle.com |
-| **manager** | 80 | 业务管理员 | manager@fixcycle.com |
-| **content_manager** | 70 | 内容管理员 | content@fixcycle.com |
-| **shop_manager** | 70 | 店铺管理员 | shop@fixcycle.com |
-| **finance_manager** | 75 | 财务管理员 | finance@fixcycle.com |
-| **procurement_specialist** | 60 | 采购专员 | procurement@fixcycle.com |
-| **warehouse_operator** | 50 | 仓库操作员 | warehouse@fixcycle.com |
-| **agent_operator** | 55 | 智能体操作员 | agent@fixcycle.com |
-| **viewer** | 30 | 只读查看员 | viewer@fixcycle.com |
-| **enterprise_admin** | 85 | 企业服务管理员 | enterprise-admin@fixcycle.com |
-| **procurement_manager** | 75 | 采购经理 | procurement-manager@fixcycle.com |
-| **enterprise_user** | 40 | 企业用户 | enterprise-user@fixcycle.com |
+| 角色                       | 权限等级 | 描述           | 测试账户                         |
+| -------------------------- | -------- | -------------- | -------------------------------- |
+| **admin**                  | 100      | 超级管理员     | admin@fixcycle.com               |
+| **manager**                | 80       | 业务管理员     | manager@fixcycle.com             |
+| **content_manager**        | 70       | 内容管理员     | content@fixcycle.com             |
+| **shop_manager**           | 70       | 店铺管理员     | shop@fixcycle.com                |
+| **finance_manager**        | 75       | 财务管理员     | finance@fixcycle.com             |
+| **procurement_specialist** | 60       | 采购专员       | procurement@fixcycle.com         |
+| **warehouse_operator**     | 50       | 仓库操作员     | warehouse@fixcycle.com           |
+| **agent_operator**         | 55       | 智能体操作员   | agent@fixcycle.com               |
+| **viewer**                 | 30       | 只读查看员     | viewer@fixcycle.com              |
+| **enterprise_admin**       | 85       | 企业服务管理员 | enterprise-admin@fixcycle.com    |
+| **procurement_manager**    | 75       | 采购经理       | procurement-manager@fixcycle.com |
+| **enterprise_user**        | 40       | 企业用户       | enterprise-user@fixcycle.com     |
 
 ## 📁 文件结构
 
@@ -119,8 +119,12 @@ TEST_TIMEOUT=30000           # 超时时间(ms)
     "passRate": "94.87%"
   },
   "roleResults": {
-    "admin": { /* 详细结果 */ },
-    "manager": { /* 详细结果 */ }
+    "admin": {
+      /* 详细结果 */
+    },
+    "manager": {
+      /* 详细结果 */
+    }
     // ... 其他角色
   }
 }
@@ -182,6 +186,7 @@ npx playwright test tests/e2e/roles/role-admin-e2e.spec.ts --headed
 ## 🆕 更新日志
 
 ### v1.0.0 (2026-02-26)
+
 - ✅ 初始化完整角色测试账户系统
 - ✅ 支持12个不同角色的权限测试
 - ✅ 自动生成Playwright测试脚本
@@ -191,9 +196,11 @@ npx playwright test tests/e2e/roles/role-admin-e2e.spec.ts --headed
 ## 📞 技术支持
 
 如有问题或建议，请：
+
 1. 查看ROLE_TESTING_GUIDE.md获取详细信息
 2. 检查生成的测试报告定位具体问题
 3. 联系项目维护团队
 
 ---
-*最后更新: 2026-02-26*
+
+_最后更新: 2026-02-26_

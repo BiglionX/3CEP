@@ -1,10 +1,9 @@
 /**
  * 比价报告生成服务
- * 负责生成供应商报价对比分析报告
- */
+ * 负责生成供应商报价对比分析报? */
 
-import { createClient } from "@supabase/supabase-js";
-import { Supplier } from "../../supply-chain/models/supplier.model";
+import { createClient } from '@supabase/supabase-js';
+import { Supplier } from '../../supply-chain/models/supplier.model';
 import {
   ComparisonReport,
   DeliveryAnalysis,
@@ -12,15 +11,15 @@ import {
   Recommendation,
   ReportSummary,
   RiskAssessment,
-} from "../models/quotation.model";
+} from '../models/quotation.model';
 
 export class ComparisonReportService {
   private supabase: any;
 
   constructor() {
     this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-      process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
     );
   }
 
@@ -33,26 +32,22 @@ export class ComparisonReportService {
   ): Promise<ComparisonReport> {
     try {
       // 获取询价请求信息
-      const quotationRequest = await this.getQuotationRequest(
-        quotationRequestId
-      );
+      const quotationRequest =
+        await this.getQuotationRequest(quotationRequestId);
       if (!quotationRequest) {
-        throw new Error("询价请求不存在");
+        throw new Error('询价请求不存?);
       }
 
-      // 获取供应商报价
-      const supplierQuotes = await this.getSupplierQuotes(quotationRequestId);
+      // 获取供应商报?      const supplierQuotes = await this.getSupplierQuotes(quotationRequestId);
       if (supplierQuotes.length === 0) {
-        throw new Error("没有收到任何供应商报价");
+        throw new Error('没有收到任何供应商报?);
       }
 
-      // 获取供应商信息
-      const suppliers = await this.getSuppliers(
-        supplierQuotes.map((q) => q.supplierId)
+      // 获取供应商信?      const suppliers = await this.getSuppliers(
+        supplierQuotes.map(q => q.supplierId)
       );
 
-      // 生成报告各部分内容
-      const summary = this.generateSummary(supplierQuotes);
+      // 生成报告各部分内?      const summary = this.generateSummary(supplierQuotes);
       const priceAnalysis = this.generatePriceAnalysis(
         supplierQuotes,
         suppliers
@@ -86,7 +81,7 @@ export class ComparisonReportService {
       // 保存报告到数据库
       const report = await this.saveComparisonReport(
         quotationRequestId,
-        "询价比价分析报告",
+        '询价比价分析报告',
         summary,
         priceAnalysis,
         deliveryAnalysis,
@@ -98,7 +93,7 @@ export class ComparisonReportService {
 
       return report;
     } catch (error) {
-      console.error("生成比价报告错误:", error);
+      console.error('生成比价报告错误:', error);
       throw error;
     }
   }
@@ -108,9 +103,9 @@ export class ComparisonReportService {
    */
   private async getQuotationRequest(id: string): Promise<any> {
     const { data, error } = await this.supabase
-      .from("quotation_requests")
-      .select("*")
-      .eq("id", id)
+      .from('quotation_requests')
+      .select('*')
+      .eq('id', id)
       .single();
 
     if (error) throw new Error(`获取询价请求失败: ${error.message}`);
@@ -118,29 +113,27 @@ export class ComparisonReportService {
   }
 
   /**
-   * 获取供应商报价
-   */
+   * 获取供应商报?   */
   private async getSupplierQuotes(quotationRequestId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from("supplier_quotes")
-      .select("*")
-      .eq("quotation_request_id", quotationRequestId)
-      .in("status", ["received", "accepted"]);
+      .from('supplier_quotes')
+      .select('*')
+      .eq('quotation_request_id', quotationRequestId)
+      .in('status', ['received', 'accepted']);
 
-    if (error) throw new Error(`获取供应商报价失败: ${error.message}`);
+    if (error) throw new Error(`获取供应商报价失? ${error.message}`);
     return data || [];
   }
 
   /**
-   * 获取供应商信息
-   */
+   * 获取供应商信?   */
   private async getSuppliers(supplierIds: string[]): Promise<Supplier[]> {
     const { data, error } = await this.supabase
-      .from("suppliers")
-      .select("*")
-      .in("id", supplierIds);
+      .from('suppliers')
+      .select('*')
+      .in('id', supplierIds);
 
-    if (error) throw new Error(`获取供应商信息失败: ${error.message}`);
+    if (error) throw new Error(`获取供应商信息失? ${error.message}`);
     return data || [];
   }
 
@@ -150,7 +143,7 @@ export class ComparisonReportService {
   private generateSummary(supplierQuotes: any[]): ReportSummary {
     const totalSuppliers = supplierQuotes.length;
     const respondedSuppliers = supplierQuotes.length;
-    const prices = supplierQuotes.map((q) => q.total_amount);
+    const prices = supplierQuotes.map(q => q.total_amount);
 
     return {
       totalSuppliers,
@@ -159,7 +152,7 @@ export class ComparisonReportService {
         prices.reduce((sum, price) => sum + price, 0) / prices.length,
       lowestPrice: Math.min(...prices),
       highestPrice: Math.max(...prices),
-      currency: supplierQuotes[0]?.currency || "CNY",
+      currency: supplierQuotes[0]?.currency || 'CNY',
     };
   }
 
@@ -174,33 +167,31 @@ export class ComparisonReportService {
       supplierQuotes.reduce((sum, q) => sum + q.total_amount, 0) /
       supplierQuotes.length;
 
-    const priceComparison = supplierQuotes.map((quote) => {
-      const supplier = suppliers.find((s) => s.id === quote.supplier_id);
+    const priceComparison = supplierQuotes.map(quote => {
+      const supplier = suppliers.find(s => s.id === quote.supplier_id);
       const priceDeviation =
         averagePrice > 0
           ? ((quote.total_amount - averagePrice) / averagePrice) * 100
           : 0;
 
-      let competitiveness: "high" | "medium" | "low" = "medium";
-      if (priceDeviation < -10) competitiveness = "high";
-      else if (priceDeviation > 10) competitiveness = "low";
+      let competitiveness: 'high' | 'medium' | 'low' = 'medium';
+      if (priceDeviation < -10) competitiveness = 'high';
+      else if (priceDeviation > 10) competitiveness = 'low';
 
       return {
         supplierId: quote.supplier_id,
-        supplierName: supplier?.name || "未知供应商",
+        supplierName: supplier?.name || '未知供应?,
         totalPrice: quote.total_amount,
         priceDeviation,
         competitiveness,
       };
     });
 
-    // 按价格排序
-    priceComparison.sort((a, b) => a.totalPrice - b.totalPrice);
+    // 按价格排?    priceComparison.sort((a, b) => a.totalPrice - b.totalPrice);
 
     // 生成商品价格趋势分析
     const priceTrends: any[] = [];
-    // 这里可以根据实际需求添加更详细的商品级别价格分析
-
+    // 这里可以根据实际需求添加更详细的商品级别价格分?
     return {
       priceComparison,
       priceTrends,
@@ -214,25 +205,23 @@ export class ComparisonReportService {
     supplierQuotes: any[],
     suppliers: Supplier[]
   ): DeliveryAnalysis {
-    const deliveryTimeComparison = supplierQuotes.map((quote) => {
-      const supplier = suppliers.find((s) => s.id === quote.supplier_id);
-      const deliveryTime = quote.delivery_time || 30; // 默认30天
-
-      let riskLevel: "low" | "medium" | "high" = "low";
-      if (deliveryTime > 60) riskLevel = "high";
-      else if (deliveryTime > 30) riskLevel = "medium";
+    const deliveryTimeComparison = supplierQuotes.map(quote => {
+      const supplier = suppliers.find(s => s.id === quote.supplier_id);
+      const deliveryTime = quote.delivery_time || 30; // 默认30�?
+      let riskLevel: 'low' | 'medium' | 'high' = 'low';
+      if (deliveryTime > 60) riskLevel = 'high';
+      else if (deliveryTime > 30) riskLevel = 'medium';
 
       return {
         supplierId: quote.supplier_id,
-        supplierName: supplier?.name || "未知供应商",
+        supplierName: supplier?.name || '未知供应?,
         deliveryTime,
-        deliveryTerms: quote.delivery_terms || "标准交期",
+        deliveryTerms: quote.delivery_terms || '标准交期',
         riskLevel,
       };
     });
 
-    // 计算准时交货率（模拟数据）
-    const onTimeDeliveryRate = 0.85; // 85%的模拟准时率
+    // 计算准时交货率（模拟数据?    const onTimeDeliveryRate = 0.85; // 85%的模拟准时率
 
     return {
       deliveryTimeComparison,
@@ -247,11 +236,10 @@ export class ComparisonReportService {
     supplierQuotes: any[],
     suppliers: Supplier[]
   ): RiskAssessment {
-    const supplierRisks = supplierQuotes.map((quote) => {
-      const supplier = suppliers.find((s) => s.id === quote.supplier_id);
+    const supplierRisks = supplierQuotes.map(quote => {
+      const supplier = suppliers.find(s => s.id === quote.supplier_id);
 
-      // 综合风险评分（0-100）
-      let riskScore = 50; // 基础分数
+      // 综合风险评分?-100�?      let riskScore = 50; // 基础分数
 
       // 价格风险：价格过高或过低都有风险
       const avgPrice =
@@ -269,7 +257,7 @@ export class ComparisonReportService {
 
       // 供应商历史表现（如果有数据的话）
       if (supplier) {
-        // 信用评分影响（假设信用评分1-5分）
+        // 信用评分影响（假设信用评?-5分）
         const creditImpact = (5 - (supplier.creditScore || 3)) * 10;
         riskScore += creditImpact;
 
@@ -279,13 +267,13 @@ export class ComparisonReportService {
         else if (cooperationYears < 3) riskScore += 5;
       }
 
-      let riskLevel: "low" | "medium" | "high" = "medium";
-      if (riskScore < 40) riskLevel = "low";
-      else if (riskScore > 70) riskLevel = "high";
+      let riskLevel: 'low' | 'medium' | 'high' = 'medium';
+      if (riskScore < 40) riskLevel = 'low';
+      else if (riskScore > 70) riskLevel = 'high';
 
       return {
         supplierId: quote.supplier_id,
-        supplierName: supplier?.name || "未知供应商",
+        supplierName: supplier?.name || '未知供应?,
         riskScore,
         riskLevel,
         riskFactors: this.identifyRiskFactors(quote, supplier),
@@ -297,9 +285,9 @@ export class ComparisonReportService {
       supplierRisks.reduce((sum, r) => sum + r.riskScore, 0) /
       supplierRisks.length;
 
-    let overallRiskLevel: "low" | "medium" | "high" = "medium";
-    if (avgRiskScore < 40) overallRiskLevel = "low";
-    else if (avgRiskScore > 70) overallRiskLevel = "high";
+    let overallRiskLevel: 'low' | 'medium' | 'high' = 'medium';
+    if (avgRiskScore < 40) overallRiskLevel = 'low';
+    else if (avgRiskScore > 70) overallRiskLevel = 'high';
 
     return {
       supplierRisks,
@@ -322,44 +310,43 @@ export class ComparisonReportService {
 
     // 价格风险
     if (quote.total_amount > 0) {
-      factors.push("价格波动风险");
+      factors.push('价格波动风险');
     }
 
     // 交期风险
     const deliveryTime = quote.delivery_time || 30;
     if (deliveryTime > 45) {
-      factors.push("较长交货周期");
+      factors.push('较长交货周期');
     }
 
-    // 供应商风险
-    if (supplier) {
+    // 供应商风?    if (supplier) {
       if ((supplier.creditScore || 0) < 3) {
-        factors.push("供应商信用评级较低");
+        factors.push('供应商信用评级较?);
       }
 
       if ((supplier.cooperationYears || 0) < 1) {
-        factors.push("合作时间较短");
+        factors.push('合作时间较短');
       }
 
-      if (supplier.status !== "approved") {
-        factors.push("供应商资质状态异常");
+      if (supplier.status !== 'approved') {
+        factors.push('供应商资质状态异?);
       }
     }
 
-    return factors.length > 0 ? factors : ["常规商业风险"];
+    return factors.length > 0 ? factors : ['常规商业风险'];
   }
 
   /**
    * 生成风险总结
    */
-  private generateRiskSummary(riskLevel: "low" | "medium" | "high"): string {
+  private generateRiskSummary(riskLevel: 'low' | 'medium' | 'high'): string {
     switch (riskLevel) {
-      case "low":
-        return "整体风险较低，供应商报价合理，交期可控";
-      case "high":
-        return "存在较高风险，建议谨慎选择或进一步谈判";
+      case 'low':
+        return '整体风险较低，供应商报价合理，交期可?;
+      case 'high':
+        return '存在较高风险，建议谨慎选择或进一步谈?;
       default:
-        return "风险适中，建议综合考虑各方面因素做出决策";
+        return '风险适中，建议综合考虑各方面因素做出决?;
     }
   }
 
@@ -373,12 +360,11 @@ export class ComparisonReportService {
   ): Recommendation[] {
     const recommendations: Recommendation[] = [];
 
-    // 价格最优推荐
-    const bestPriceSupplier = priceAnalysis.priceComparison[0];
-    if (bestPriceSupplier && bestPriceSupplier.competitiveness === "high") {
+    // 价格最优推?    const bestPriceSupplier = priceAnalysis.priceComparison[0];
+    if (bestPriceSupplier && bestPriceSupplier.competitiveness === 'high') {
       recommendations.push({
-        type: "price",
-        priority: "high",
+        type: 'price',
+        priority: 'high',
         content: `推荐选择 ${bestPriceSupplier.supplierName}，其报价最具竞争力`,
         rationale: `该供应商报价比平均水平低 ${Math.abs(
           bestPriceSupplier.priceDeviation
@@ -386,39 +372,37 @@ export class ComparisonReportService {
       });
     }
 
-    // 交期最优推荐
-    const fastestDelivery = deliveryAnalysis.deliveryTimeComparison.sort(
+    // 交期最优推?    const fastestDelivery = deliveryAnalysis.deliveryTimeComparison.sort(
       (a, b) => a.deliveryTime - b.deliveryTime
     )[0];
-    if (fastestDelivery && fastestDelivery.riskLevel === "low") {
+    if (fastestDelivery && fastestDelivery.riskLevel === 'low') {
       recommendations.push({
-        type: "delivery",
-        priority: "medium",
+        type: 'delivery',
+        priority: 'medium',
         content: `如需快速交货，可考虑 ${fastestDelivery.supplierName}`,
         rationale: `该供应商承诺 ${fastestDelivery.deliveryTime} 天交货`,
       });
     }
 
-    // 风险最低推荐
-    const lowestRisk = riskAssessment.supplierRisks.sort(
+    // 风险最低推?    const lowestRisk = riskAssessment.supplierRisks.sort(
       (a, b) => a.riskScore - b.riskScore
     )[0];
-    if (lowestRisk && lowestRisk.riskLevel === "low") {
+    if (lowestRisk && lowestRisk.riskLevel === 'low') {
       recommendations.push({
-        type: "risk",
-        priority: "high",
-        content: `从风险角度考虑，推荐 ${lowestRisk.supplierName}`,
-        rationale: `该供应商综合风险评分为 ${lowestRisk.riskScore}，属于低风险`,
+        type: 'risk',
+        priority: 'high',
+        content: `从风险角度考虑，推?${lowestRisk.supplierName}`,
+        rationale: `该供应商综合风险评分?${lowestRisk.riskScore}，属于低风险`,
       });
     }
 
     // 综合推荐
     if (recommendations.length === 0) {
       recommendations.push({
-        type: "supplier",
-        priority: "high",
-        content: "建议综合考虑价格、交期和风险因素进行最终决策",
-        rationale: "各供应商各有优劣，需要根据具体需求权衡选择",
+        type: 'supplier',
+        priority: 'high',
+        content: '建议综合考虑价格、交期和风险因素进行最终决?,
+        rationale: '各供应商各有优劣，需要根据具体需求权衡选择',
       });
     }
 
@@ -441,7 +425,7 @@ export class ComparisonReportService {
   ): Promise<ComparisonReport> {
     try {
       const { data, error } = await this.supabase
-        .from("comparison_reports")
+        .from('comparison_reports')
         .insert([
           {
             quotation_request_id: quotationRequestId,
@@ -462,7 +446,7 @@ export class ComparisonReportService {
 
       return this.mapToComparisonReport(data);
     } catch (error) {
-      console.error("保存比价报告错误:", error);
+      console.error('保存比价报告错误:', error);
       throw error;
     }
   }
@@ -473,41 +457,40 @@ export class ComparisonReportService {
   async getComparisonReport(id: string): Promise<ComparisonReport | null> {
     try {
       const { data, error } = await this.supabase
-        .from("comparison_reports")
-        .select("*")
-        .eq("id", id)
+        .from('comparison_reports')
+        .select('*')
+        .eq('id', id)
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") return null;
+        if (error.code === 'PGRST116') return null;
         throw new Error(`获取比价报告失败: ${error.message}`);
       }
 
       return this.mapToComparisonReport(data);
     } catch (error) {
-      console.error("获取比价报告错误:", error);
+      console.error('获取比价报告错误:', error);
       throw error;
     }
   }
 
   /**
-   * 获取询价请求的比价报告列表
-   */
+   * 获取询价请求的比价报告列?   */
   async getReportsByQuotationRequest(
     quotationRequestId: string
   ): Promise<ComparisonReport[]> {
     try {
       const { data, error } = await this.supabase
-        .from("comparison_reports")
-        .select("*")
-        .eq("quotation_request_id", quotationRequestId)
-        .order("created_at", { ascending: false });
+        .from('comparison_reports')
+        .select('*')
+        .eq('quotation_request_id', quotationRequestId)
+        .order('created_at', { ascending: false });
 
       if (error) throw new Error(`获取比价报告列表失败: ${error.message}`);
 
       return data.map((item: any) => this.mapToComparisonReport(item));
     } catch (error) {
-      console.error("获取比价报告列表错误:", error);
+      console.error('获取比价报告列表错误:', error);
       throw error;
     }
   }

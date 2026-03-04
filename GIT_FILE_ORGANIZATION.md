@@ -6,7 +6,7 @@
 
 主要包括各种报告和说明文档：
 
-- 实施报告文档 (AGENT*MANAGEMENT*_, API\__, etc.)
+- 实施报告文档 (AGENT*MANAGEMENT*\_, API\_\_, etc.)
 - 验证报告文档
 - 项目规划文档
 - 用户指南文档

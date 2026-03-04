@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 获取热点信息流 (移动端优化版本)
+// 鑾峰彇鐑偣淇℃伅?(绉诲姩绔紭鍖栫増?
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -14,10 +14,9 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('page_size') || '20');
 
-    // 计算偏移量
-    const offset = (page - 1) * pageSize;
+    // 璁＄畻鍋忕Щ?    const offset = (page - 1) * pageSize;
 
-    // 获取热点链接数据
+    // 鑾峰彇鐑偣閾炬帴鏁版嵁
     let query = supabase
       .from('hot_link_pool')
       .select(
@@ -39,26 +38,25 @@ export async function GET(request: Request) {
       .order('created_at', { ascending: false })
       .range(offset, offset + pageSize - 1);
 
-    // 如果指定了设备ID，进行筛选
-    if (deviceId) {
+    // 濡傛灉鎸囧畾浜嗚澶嘔D锛岃繘琛岀瓫?    if (deviceId) {
       query = query.contains('device_ids', [deviceId]);
     }
 
     const { data: hotLinks, error } = await query;
 
     if (error) {
-      console.error('获取热点信息流失败:', error);
+      console.error('鑾峰彇鐑偣淇℃伅娴佸け?', error);
       return NextResponse.json(
         {
           code: 50001,
-          message: '获取数据失败',
+          message: '鑾峰彇鏁版嵁澶辫触',
           data: null,
         },
         { status: 500 }
       );
     }
 
-    // 处理数据格式转换
+    // 澶勭悊鏁版嵁鏍煎紡杞崲
     const formattedData = (hotLinks || []).map((link: any) => ({
       id: link.id,
       type: link.article_id ? 'article' : 'hot_link',
@@ -68,15 +66,14 @@ export async function GET(request: Request) {
       device_names: link.category ? [link.category] : [],
       fault_names: link.sub_category ? [link.sub_category] : [],
       like_count: link.likes || 0,
-      is_liked: false, // 需要根据用户登录状态判断
-      push_reason: deviceId ? `你常修相关设备` : '热门推荐',
+      is_liked: false, // 闇€瑕佹牴鎹敤鎴风櫥褰曠姸鎬佸垽?      push_reason: deviceId ? `浣犲父淇浉鍏宠澶嘸 : '鐑棬鎺ㄨ崘',
       cover_image: '',
       summary: '',
       view_count: link.views || 0,
       created_at: link.created_at,
     }));
 
-    // 获取总数
+    // 鑾峰彇鎬绘暟
     const { count } = await supabase
       .from('hot_link_pool')
       .select('*', { count: 'exact', head: true })
@@ -95,14 +92,15 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('热点信息流API错误:', error);
+    console.error('鐑偣淇℃伅娴丄PI閿欒:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '服务器内部错误',
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         data: null,
       },
       { status: 500 }
     );
   }
 }
+

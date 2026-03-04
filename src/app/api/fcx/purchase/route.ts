@@ -1,5 +1,5 @@
-/**
- * FCX购买API
+﻿/**
+ * FCX璐拱API
  */
 
 import { NextResponse } from 'next/server';
@@ -11,25 +11,22 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { userId, amountUSD, paymentMethod } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!userId || !amountUSD || !paymentMethod) {
       return NextResponse.json(
-        { error: '缺少必要参数: userId, amountUSD, paymentMethod' },
+        { error: '缂哄皯蹇呰鍙傛暟: userId, amountUSD, paymentMethod' },
         { status: 400 }
       );
     }
 
     if (amountUSD <= 0) {
-      return NextResponse.json(
-        { error: '购买金额必须大于0' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '璐拱閲戦蹇呴』澶т簬0' }, { status: 400 });
     }
 
     const dto: PurchaseFcxDTO = {
       userId,
       amountUSD,
-      paymentMethod
+      paymentMethod,
     };
 
     const paymentService = new PaymentService();
@@ -41,27 +38,27 @@ export async function POST(request: Request) {
         data: {
           transactionId: result.transactionId,
           fcxAmount: result.fcxAmount,
-          message: 'FCX购买成功'
-        }
+          message: 'FCX璐拱鎴愬姛',
+        },
       });
     } else {
       return NextResponse.json(
-        { 
-          error: '购买失败',
-          details: result.errorMessage 
+        {
+          error: '璐拱澶辫触',
+          details: result.errorMessage,
         },
         { status: 400 }
       );
     }
-
   } catch (error) {
-    console.error('FCX购买错误:', error);
+    console.error('FCX璐拱閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '购买处理失败',
-        details: (error as Error).message 
+      {
+        error: '璐拱澶勭悊澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

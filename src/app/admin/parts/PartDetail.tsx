@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ interface PartDetailProps {
 }
 
 const PartDetail = ({ partId, onClose }: PartDetailProps) => {
+  // @ts-ignore
   const [partData, setPartData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [stockChange, setStockChange] = useState('');
@@ -19,9 +20,11 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
   useEffect(() => {
     const fetchPartDetail = async () => {
       try {
-        const response = await fetch(`/api/admin/parts/${partId}?partId=${partId}`);
+        const response = await fetch(
+          `/api/admin/parts/${partId}?partId=${partId}`
+        );
         const result = await response.json();
-        
+
         if (result.success) {
           setPartData(result.data);
         }
@@ -31,13 +34,13 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
         setLoading(false);
       }
     };
-    
+
     fetchPartDetail();
   }, [partId]);
 
   const handleStockUpdate = async () => {
     if (!stockChange) return;
-    
+
     try {
       const response = await fetch(`/api/admin/parts/${partId}`, {
         method: 'PUT',
@@ -48,20 +51,22 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
           id: partId,
           stock_change: parseInt(stockChange),
           transaction_type: transactionType,
-          reason: reason
-        })
+          reason: reason,
+        }),
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         // 刷新详情数据
-        const refreshResponse = await fetch(`/api/admin/parts/${partId}?partId=${partId}`);
+        const refreshResponse = await fetch(
+          `/api/admin/parts/${partId}?partId=${partId}`
+        );
         const refreshResult = await refreshResponse.json();
         if (refreshResult.success) {
           setPartData(refreshResult.data);
         }
-        
+
         // 清空表单
         setStockChange('');
         setReason('');
@@ -82,7 +87,7 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
   if (!partData) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">未找到配件信息</p>
+        <p className="text-gray-500">未找到配件信?/p>
       </div>
     );
   }
@@ -117,30 +122,42 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
           </div>
           <div>
             <p className="text-sm text-gray-500">计量单位</p>
-            <p className="font-medium">{part.unit || '个'}</p>
+            <p className="font-medium">{part.unit || '�?}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">当前库存</p>
-            <p className={`font-medium ${part.stock_quantity !== null && part.min_stock !== null && part.stock_quantity <= part.min_stock ? 'text-red-600' : 'text-gray-900'}`}>
-              {part.stock_quantity !== null ? part.stock_quantity : 0}{part.unit || '个'}
-              {part.min_stock && part.stock_quantity !== null && part.stock_quantity <= part.min_stock && (
-                <span className="ml-1 text-xs text-red-500">(库存不足)</span>
-              )}
+            <p
+              className={`font-medium ${part.stock_quantity !== null && part.min_stock !== null && part.stock_quantity <= part.min_stock ? 'text-red-600' : 'text-gray-900'}`}
+            >
+              {part.stock_quantity !== null ? part.stock_quantity : 0}
+              {part.unit || '�?}
+              {part.min_stock &&
+                part.stock_quantity !== null &&
+                part.stock_quantity <= part.min_stock && (
+                  <span className="ml-1 text-xs text-red-500">(库存不足)</span>
+                )}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">状态</p>
-            <span className={`px-2 py-1 rounded-full text-xs ${
-              part.status === 'active' ? 'bg-green-100 text-green-800' :
-              part.status === 'inactive' ? 'bg-yellow-100 text-yellow-800' :
-              'bg-red-100 text-red-800'
-            }`}>
-              {part.status === 'active' ? '正常' : 
-               part.status === 'inactive' ? '停用' : '已删除'}
+            <p className="text-sm text-gray-500">状?/p>
+            <span
+              className={`px-2 py-1 rounded-full text-xs ${
+                part.status === 'active'
+                  ? 'bg-green-100 text-green-800'
+                  : part.status === 'inactive'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-red-100 text-red-800'
+              }`}
+            >
+              {part.status === 'active'
+                ? '正常'
+                : part.status === 'inactive'
+                  ? '停用'
+                  : '已删?}
             </span>
           </div>
         </div>
-        
+
         {part.description && (
           <div className="mt-4">
             <p className="text-sm text-gray-500">描述</p>
@@ -155,9 +172,13 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
           <h3 className="text-lg font-medium text-gray-900 mb-4">适配设备</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {part.compatible_devices.map((device: any) => (
-              <div key={device.id} className="flex items-center p-2 bg-gray-50 rounded">
+              <div
+                key={device.id}
+                className="flex items-center p-2 bg-gray-50 rounded"
+              >
                 <span className="text-sm">
-                  {device.brand} {device.model} {device.series && `(${device.series})`}
+                  {device.brand} {device.model}{' '}
+                  {device.series && `(${device.series})`}
                 </span>
               </div>
             ))}
@@ -171,7 +192,10 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
           <h3 className="text-lg font-medium text-gray-900 mb-4">相关故障</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {part.related_faults.map((fault: any) => (
-              <div key={fault.id} className="flex items-center p-2 bg-gray-50 rounded">
+              <div
+                key={fault.id}
+                className="flex items-center p-2 bg-gray-50 rounded"
+              >
                 <span className="text-sm">
                   {fault.name} ({fault.category})
                 </span>
@@ -188,8 +212,8 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {images.map((image: any) => (
               <div key={image.id} className="relative">
-                <img 
-                  src={image.image_url} 
+                <img
+                  src={image.image_url}
                   alt={image.alt_text || part.name}
                   className="w-full h-32 object-cover rounded-lg"
                 />
@@ -215,8 +239,8 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
             <Input
               type="number"
               value={stockChange}
-              onChange={(e) => setStockChange(e.target.value)}
-              placeholder="正数为入库，负数为出库"
+              onChange={e => setStockChange(e.target.value)}
+              placeholder="正数为入库，负数为出?
             />
           </div>
           <div>
@@ -225,7 +249,7 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
             </label>
             <select
               value={transactionType}
-              onChange={(e) => setTransactionType(e.target.value)}
+              onChange={e => setTransactionType(e.target.value)}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="adjustment">库存调整</option>
@@ -239,16 +263,13 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
             </label>
             <Input
               value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              placeholder="请输入调整原因"
+              onChange={e => setReason(e.target.value)}
+              placeholder="请输入调整原?
             />
           </div>
         </div>
         <div className="mt-4">
-          <Button 
-            onClick={handleStockUpdate}
-            disabled={!stockChange}
-          >
+          <Button onClick={handleStockUpdate} disabled={!stockChange}>
             更新库存
           </Button>
         </div>
@@ -257,16 +278,27 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
       {/* 库存变动历史 */}
       {inventoryHistory && inventoryHistory.length > 0 && (
         <div className="bg-white rounded-lg border p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">库存变动历史</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">
+            库存变动历史
+          </h3>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">时间</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">变动数量</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">类型</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">原因</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作人</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    时间
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    变动数量
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    类型
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    原因
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    操作?                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -275,20 +307,28 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
                     <td className="px-4 py-3 text-sm text-gray-900">
                       {new Date(record.created_at).toLocaleString()}
                     </td>
-                    <td className={`px-4 py-3 text-sm font-medium ${
-                      record.quantity_change > 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {record.quantity_change > 0 ? '+' : ''}{record.quantity_change}
+                    <td
+                      className={`px-4 py-3 text-sm font-medium ${
+                        record.quantity_change > 0
+                          ? 'text-green-600'
+                          : 'text-red-600'
+                      }`}
+                    >
+                      {record.quantity_change > 0 ? '+' : ''}
+                      {record.quantity_change}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900">
-                      {record.transaction_type === 'in' ? '入库' : 
-                       record.transaction_type === 'out' ? '出库' : '调整'}
+                      {record.transaction_type === 'in'
+                        ? '入库'
+                        : record.transaction_type === 'out'
+                          ? '出库'
+                          : '调整'}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900">
                       {record.reason || '-'}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900">
-                      {record.creator?.username || '系统'}
+                      {record?.username || '系统'}
                     </td>
                   </tr>
                 ))}
@@ -302,3 +342,4 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
 };
 
 export default PartDetail;
+

@@ -1,18 +1,18 @@
-import { NegotiationStrategyService } from "@/b2b-procurement-agent/services/negotiation-strategy.service";
-import { SmartNegotiationEngine } from "@/b2b-procurement-agent/services/smart-negotiation-engine.service";
-import { SupplierRecommendationService } from "@/b2b-procurement-agent/services/supplier-recommendation.service";
-import { NextResponse } from "next/server";
+﻿import { NegotiationStrategyService } from '@/b2b-procurement-agent/services/negotiation-strategy.service';
+import { SmartNegotiationEngine } from '@/b2b-procurement-agent/services/smart-negotiation-engine.service';
+import { SupplierRecommendationService } from '@/b2b-procurement-agent/services/supplier-recommendation.service';
+import { NextResponse } from 'next/server';
 
 const negotiationEngine = new SmartNegotiationEngine();
 const strategyService = new NegotiationStrategyService();
 const recommendationService = new SupplierRecommendationService();
 
-// POST /api/b2b-procurement/negotiation/start - 启动议价流程
+// POST /api/b2b-procurement/negotiation/start - 鍚姩璁环娴佺▼
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // 验证必需参数
+    // 楠岃瘉蹇呴渶鍙傛暟
     if (
       !body.procurementRequestId ||
       !body.supplierId ||
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         {
           success: false,
           error:
-            "缺少必要参数：procurementRequestId, supplierId, targetPrice, initialQuote",
+            '缂哄皯蹇呰鍙傛暟锛歱rocurementRequestId, supplierId, targetPrice, initialQuote',
         },
         { status: 400 }
       );
@@ -58,28 +58,28 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
-    console.error("启动议价流程错误:", error);
+    console.error('鍚姩璁环娴佺▼閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: `启动议价流程失败: ${(error as Error).message}`,
+        error: `鍚姩璁环娴佺▼澶辫触: ${(error as Error).message}`,
       },
       { status: 500 }
     );
   }
 }
 
-// GET /api/b2b-procurement/negotiation/strategies - 获取议价策略列表
+// GET /api/b2b-procurement/negotiation/strategies - 鑾峰彇璁环绛栫暐鍒楄〃
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const strategyType = searchParams.get("type");
+    const strategyType = searchParams.get('type');
 
     const strategies = await strategyService.getActiveStrategies();
 
-    // 如果指定了策略类型，进行过滤
+    // 濡傛灉鎸囧畾浜嗙瓥鐣ョ被鍨嬶紝杩涜杩囨护
     const filteredStrategies = strategyType
-      ? strategies.filter((s) => s.strategyType === strategyType)
+      ? strategies.filter(s => s.strategyType === strategyType)
       : strategies;
 
     return NextResponse.json({
@@ -87,13 +87,14 @@ export async function GET(request: Request) {
       data: filteredStrategies,
     });
   } catch (error) {
-    console.error("获取议价策略列表错误:", error);
+    console.error('鑾峰彇璁环绛栫暐鍒楄〃閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: `获取议价策略失败: ${(error as Error).message}`,
+        error: `鑾峰彇璁环绛栫暐澶辫触: ${(error as Error).message}`,
       },
       { status: 500 }
     );
   }
 }
+

@@ -1,16 +1,26 @@
 {
   "recommendations": [
     "ms-vscode.vscode-typescript-next",
+    "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "dsznajder.es7-react-js-snippets",
+    "vortizhe.simple-react-snippets",
     "bradlc.vscode-tailwindcss",
-    "ms-vscode.vscode-eslint",
-    "formulahendry.auto-rename-tag",
+    "csstools.postcss",
     "christian-kohler.path-intellisense",
-    "ms-vscode.vscode-json",
-    "ms-vscode.vscode-javascript",
-    "ms-vscode.vscode-html",
-    "ms-vscode.vscode-css",
+    "mechatroner.rainbow-csv",
+    "streetsidesoftware.code-spell-checker",
+    "bierner.markdown-preview-github-styles",
+    "github.vscode-pull-request-github",
+    "gitkraken.gitkraken-git-graph",
     "ms-vscode.vscode-node-debug2",
-    "ms-vscode.vscode-npm"
+    "ms-edge-devtools.vscode-edge-devtools",
+    "mtxr.sqltools",
+    "cweijan.vscode-database-client2",
+    "ms-azuretools.vscode-docker",
+    "humao.rest-client",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    "usernamehw.errorlens"
   ]
 }

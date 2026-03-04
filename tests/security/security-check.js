@@ -16,13 +16,15 @@ if (fs.existsSync(gitignorePath)) {
     '*.log',
     '.DS_Store',
     'coverage/',
-    '.nyc_output/'
+    '.nyc_output/',
   ];
-  
+
   console.log('   当前.gitignore内容:');
   console.log(gitignoreContent);
-  
-  const missingEntries = requiredEntries.filter(entry => !gitignoreContent.includes(entry));
+
+  const missingEntries = requiredEntries.filter(
+    entry => !gitignoreContent.includes(entry)
+  );
   if (missingEntries.length > 0) {
     console.log('   ❌ 缺少以下重要条目:');
     missingEntries.forEach(entry => console.log(`      - ${entry}`));
@@ -40,7 +42,9 @@ envFiles.forEach(envFile => {
   if (fs.existsSync(envFile)) {
     const content = fs.readFileSync(envFile, 'utf8');
     console.log(`   ${envFile}:`);
-    const lines = content.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+    const lines = content
+      .split('\n')
+      .filter(line => line.trim() && !line.startsWith('#'));
     lines.forEach(line => {
       const [key, value] = line.split('=');
       if (value && value.length > 10) {
@@ -54,9 +58,9 @@ envFiles.forEach(envFile => {
 
 // 检查敏感信息
 console.log('\n3️⃣ 检查代码中的敏感信息...');
-const checkSensitiveInfo = (filePath) => {
+const checkSensitiveInfo = filePath => {
   if (!fs.existsSync(filePath)) return;
-  
+
   const content = fs.readFileSync(filePath, 'utf8');
   const sensitivePatterns = [
     /sk_test_[a-zA-Z0-9]+/,
@@ -64,9 +68,9 @@ const checkSensitiveInfo = (filePath) => {
     /[0-9a-f]{32}/,
     /secret/i,
     /password/i,
-    /token/i
+    /token/i,
   ];
-  
+
   sensitivePatterns.forEach(pattern => {
     const matches = content.match(pattern);
     if (matches) {
@@ -76,11 +80,7 @@ const checkSensitiveInfo = (filePath) => {
 };
 
 // 检查主要文件
-const filesToCheck = [
-  'src/app/page.tsx',
-  'package.json',
-  '.env.local'
-];
+const filesToCheck = ['src/app/page.tsx', 'package.json', '.env.local'];
 
 filesToCheck.forEach(checkSensitiveInfo);
 

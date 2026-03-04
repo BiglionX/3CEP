@@ -14,13 +14,12 @@ let rbacConfig = null;
  */
 function loadRbacConfig() {
   if (rbacConfig) return rbacConfig;
-  
+
   try {
     const configPath = process.env.RBAC_CONFIG_PATH || './config/rbac.json';
     const fullPath = path.resolve(configPath);
     rbacConfig = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
-    console.log('✅ RBAC 配置加载成功');
-    return rbacConfig;
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('✅ RBAC 配置加载成功')return rbacConfig;
   } catch (error) {
     console.error('❌ RBAC 配置加载失败:', error.message);
     throw new Error('RBAC 配置文件加载失败');
@@ -35,12 +34,12 @@ function loadRbacConfig() {
  */
 function hasPermission(userRoles, permission) {
   const config = loadRbacConfig();
-  
+
   // 超级管理员拥有所有权限
   if (userRoles.includes('admin')) {
     return true;
   }
-  
+
   // 检查每个角色的权限
   for (const role of userRoles) {
     const rolePermissions = config.role_permissions[role] || [];
@@ -48,7 +47,7 @@ function hasPermission(userRoles, permission) {
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -79,40 +78,42 @@ function hasAllPermissions(userRoles, permissions) {
  * @returns {Function} 中间件函数
  */
 function requirePermission(permissions, options = {}) {
-  const permissionList = Array.isArray(permissions) ? permissions : [permissions];
-  const { 
-    requireAll = false,  // 是否需要所有权限
+  const permissionList = Array.isArray(permissions)
+    ? permissions
+    : [permissions];
+  const {
+    requireAll = false, // 是否需要所有权限
     errorCode = 403,
-    errorMessage = '权限不足'
+    errorMessage = '权限不足',
   } = options;
-  
-  return function(req, res, next) {
+
+  return function (req, res, next) {
     // 检查用户是否已认证
     if (!req.user) {
       return sendJsonResponse(res, 401, {
         success: false,
         error: '用户未认证',
-        code: 'UNAUTHORIZED'
+        code: 'UNAUTHORIZED',
       });
     }
-    
+
     const userRoles = req.user.roles || [];
-    
+
     // 权限检查
-    const hasAccess = requireAll 
+    const hasAccess = requireAll
       ? hasAllPermissions(userRoles, permissionList)
       : hasAnyPermission(userRoles, permissionList);
-    
+
     if (!hasAccess) {
       return sendJsonResponse(res, errorCode, {
         success: false,
         error: errorMessage,
         code: 'INSUFFICIENT_PERMISSIONS',
         required_permissions: permissionList,
-        user_roles: userRoles
+        user_roles: userRoles,
       });
     }
-    
+
     next();
   };
 }
@@ -126,31 +127,31 @@ function requireTenant(options = {}) {
   const {
     tenantField = 'tenant_id',
     errorCode = 403,
-    errorMessage = '租户访问受限'
+    errorMessage = '租户访问受限',
   } = options;
-  
-  return function(req, res, next) {
+
+  return function (req, res, next) {
     // 检查用户是否已认证
     if (!req.user) {
       return sendJsonResponse(res, 401, {
         success: false,
         error: '用户未认证',
-        code: 'UNAUTHORIZED'
+        code: 'UNAUTHORIZED',
       });
     }
-    
+
     const userTenantId = req.user.tenant_id;
     const requestTenantId = req.query[tenantField] || req.body[tenantField];
-    
+
     // 如果用户没有租户信息，拒绝访问
     if (!userTenantId) {
       return sendJsonResponse(res, errorCode, {
         success: false,
         error: '用户未关联租户',
-        code: 'NO_TENANT_ASSOCIATED'
+        code: 'NO_TENANT_ASSOCIATED',
       });
     }
-    
+
     // 如果请求中指定了租户ID，必须与用户租户ID匹配
     if (requestTenantId && requestTenantId !== userTenantId) {
       return sendJsonResponse(res, errorCode, {
@@ -158,16 +159,16 @@ function requireTenant(options = {}) {
         error: errorMessage,
         code: 'TENANT_MISMATCH',
         user_tenant: userTenantId,
-        requested_tenant: requestTenantId
+        requested_tenant: requestTenantId,
       });
     }
-    
+
     // 将用户租户ID注入到请求中
     req.tenant = {
       id: userTenantId,
-      field: tenantField
+      field: tenantField,
     };
-    
+
     next();
   };
 }
@@ -179,17 +180,21 @@ function requireTenant(options = {}) {
  * @param {String} userTenantId - 用户租户ID
  * @returns {Object} 添加了租户过滤的查询条件
  */
-function applyTenantFilter(queryOptions = {}, tenantField = 'tenant_id', userTenantId) {
+function applyTenantFilter(
+  queryOptions = {},
+  tenantField = 'tenant_id',
+  userTenantId
+) {
   if (!userTenantId) {
     throw new Error('用户租户ID不能为空');
   }
-  
+
   return {
     ...queryOptions,
     where: {
       ...(queryOptions.where || {}),
-      [tenantField]: userTenantId
-    }
+      [tenantField]: userTenantId,
+    },
   };
 }
 
@@ -202,12 +207,14 @@ function applyTenantFilter(queryOptions = {}, tenantField = 'tenant_id', userTen
 function getUserAccessibleResources(userRoles, category = null) {
   const config = loadRbacConfig();
   const accessibleResources = new Set();
-  
+
   // 超级管理员可以访问所有资源
   if (userRoles.includes('admin')) {
-    return Object.keys(config.permissions).map(key => config.permissions[key].resource);
+    return Object.keys(config.permissions).map(
+      key => config.permissions[key].resource
+    );
   }
-  
+
   // 收集用户所有角色的权限对应的资源
   for (const role of userRoles) {
     const permissions = config.role_permissions[role] || [];
@@ -218,7 +225,7 @@ function getUserAccessibleResources(userRoles, category = null) {
       }
     }
   }
-  
+
   return Array.from(accessibleResources);
 }
 
@@ -231,15 +238,15 @@ function getUserAccessibleResources(userRoles, category = null) {
  */
 function canAccessResource(userRoles, resource, action) {
   const config = loadRbacConfig();
-  
+
   // 超级管理员拥有所有权限
   if (userRoles.includes('admin')) {
     return true;
   }
-  
+
   // 构造权限标识
   const permissionKey = `${resource}_${action}`;
-  
+
   // 检查用户是否有对应权限
   return hasPermission(userRoles, permissionKey);
 }
@@ -252,7 +259,7 @@ function sendJsonResponse(res, statusCode, data) {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   });
   res.end(JSON.stringify(data));
 }
@@ -264,16 +271,16 @@ module.exports = {
   hasAnyPermission,
   hasAllPermissions,
   canAccessResource,
-  
+
   // 中间件函数
   requirePermission,
   requireTenant,
-  
+
   // 辅助函数
   applyTenantFilter,
   getUserAccessibleResources,
-  
+
   // 配置管理
   loadRbacConfig,
-  getRbacConfig: () => rbacConfig
+  getRbacConfig: () => rbacConfig,
 };

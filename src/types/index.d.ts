@@ -1,4 +1,4 @@
-// 全局类型声明文件
+﻿// 全局类型声明文件
 // 用于增强IDE的类型提示和智能感知
 
 // Window 对象扩展
@@ -8,7 +8,7 @@ declare global {
     dataLayer?: any[];
     gtag?: (...args: any[]) => void;
   }
-  
+
   // Node.js 全局变量
   namespace NodeJS {
     interface ProcessEnv {
@@ -97,7 +97,7 @@ export interface Shop {
   created_at: string;
 }
 
-// Supabase 客户端增强类型
+// Supabase 客户端增强类
 export interface EnhancedSupabaseClient {
   from: (table: string) => {
     select: (columns?: string) => Promise<any>;
@@ -132,7 +132,7 @@ export interface FormState<T> {
   isSubmitting: boolean;
 }
 
-// Redux 状态类型
+// Redux 状态类
 export interface RootState {
   auth: AuthState;
   ui: UIState;

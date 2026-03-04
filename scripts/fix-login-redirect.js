@@ -12,7 +12,12 @@ console.log('🔧 开始修复管理后台登录跳转问题...\n');
 // 1. 修复 Google 登录按钮参数传递
 console.log('1️⃣ 修复 Google 登录按钮参数传递');
 
-const googleLoginButtonPath = path.join(process.cwd(), 'src', 'components', 'GoogleLoginButton.tsx');
+const googleLoginButtonPath = path.join(
+  process.cwd(),
+  'src',
+  'components',
+  'GoogleLoginButton.tsx'
+);
 let googleLoginButtonContent = fs.readFileSync(googleLoginButtonPath, 'utf8');
 
 // 替换错误的参数传递方式
@@ -29,7 +34,10 @@ const newHandleLogin = `const handleGoogleLogin = () => {
   };`;
 
 if (googleLoginButtonContent.includes(oldHandleLogin)) {
-  googleLoginButtonContent = googleLoginButtonContent.replace(oldHandleLogin, newHandleLogin);
+  googleLoginButtonContent = googleLoginButtonContent.replace(
+    oldHandleLogin,
+    newHandleLogin
+  );
   fs.writeFileSync(googleLoginButtonPath, googleLoginButtonContent);
   console.log('✅ Google 登录按钮已修复');
 } else {
@@ -39,7 +47,14 @@ if (googleLoginButtonContent.includes(oldHandleLogin)) {
 // 2. 修复管理员登录页面的跳转逻辑
 console.log('\n2️⃣ 修复管理员登录页面跳转逻辑');
 
-const adminLoginPagePath = path.join(process.cwd(), 'src', 'app', 'admin', 'login', 'page.tsx');
+const adminLoginPagePath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'admin',
+  'login',
+  'page.tsx'
+);
 let adminLoginPageContent = fs.readFileSync(adminLoginPagePath, 'utf8');
 
 // 添加更完善的跳转逻辑
@@ -80,8 +95,8 @@ if (!adminLoginPageContent.includes('handleLoginSuccess')) {
   if (insertPosition > -1) {
     const beforeReturn = adminLoginPageContent.substring(0, insertPosition);
     const afterReturn = adminLoginPageContent.substring(insertPosition);
-    
-    adminLoginPageContent = beforeReturn + jumpLogic + '\n\n  ' + afterReturn;
+
+    adminLoginPageContent = `${beforeReturn + jumpLogic}\n\n  ${afterReturn}`;
     fs.writeFileSync(adminLoginPagePath, adminLoginPageContent);
     console.log('✅ 管理员登录页面跳转逻辑已增强');
   }
@@ -169,7 +184,13 @@ try {
 // 4. 更新 EnhancedAdminLayout 中的登录逻辑
 console.log('\n4️⃣ 更新管理布局中的登录逻辑');
 
-const enhancedLayoutPath = path.join(process.cwd(), 'src', 'components', 'admin', 'EnhancedAdminLayout.tsx');
+const enhancedLayoutPath = path.join(
+  process.cwd(),
+  'src',
+  'components',
+  'admin',
+  'EnhancedAdminLayout.tsx'
+);
 let enhancedLayoutContent = fs.readFileSync(enhancedLayoutPath, 'utf8');
 
 // 确保登录按钮指向正确的路径
@@ -281,7 +302,11 @@ module.exports = {
 };
 `;
 
-const testScriptPath = path.join(process.cwd(), 'scripts', 'test-login-redirect.js');
+const testScriptPath = path.join(
+  process.cwd(),
+  'scripts',
+  'test-login-redirect.js'
+);
 fs.writeFileSync(testScriptPath, testScriptContent);
 
 console.log('\n📋 修复总结:');

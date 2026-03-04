@@ -1,4 +1,9 @@
-'use client';
+﻿'use client';
+
+// 全局防抖动标志，防止组件重复初始?
+if (typeof window !== 'undefined' && !window.unifiedLoginInitialized) {
+  window.unifiedLoginInitialized = true;
+  // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔒 UnifiedLogin组件防抖动初始化')}
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -30,14 +35,14 @@ interface UnifiedLoginProps {
   mode?: 'modal' | 'page';
 }
 
-// 重定向信息提示组件
-const RedirectInfo = ({ redirectUrl }: { redirectUrl?: string }) => {
+// 重定向信息提示组?
+const RedirectInfo = ({ redirectUrl }: { redirectUrl?: string }) => { // @ts-ignore
   if (!redirectUrl || redirectUrl === '/' || redirectUrl === '') return null;
   
   const getTargetDescription = () => {
     if (redirectUrl.startsWith('/admin')) return '管理后台';
-    if (redirectUrl.startsWith('/brand')) return '品牌商平台';
-    if (redirectUrl.startsWith('/repair-shop')) return '维修师平台';
+    if (redirectUrl.startsWith('/brand')) return '品牌商平?;
+    if (redirectUrl.startsWith('/repair-shop')) return '维修师平?;
     if (redirectUrl.startsWith('/importer') || redirectUrl.startsWith('/exporter')) return '贸易平台';
     return '目标页面';
   };
@@ -51,7 +56,7 @@ const RedirectInfo = ({ redirectUrl }: { redirectUrl?: string }) => {
       <div className="flex items-start">
         <Info className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-blue-800 font-medium">登录后将跳转到:</p>
+          <p className="text-blue-800 font-medium">登录后将跳转?</p>
           <p className="text-blue-700 text-sm mt-1">{getTargetDescription()}</p>
         </div>
       </div>
@@ -64,6 +69,9 @@ interface LoginFormData {
   password: string;
   rememberMe: boolean;
 }
+
+// 防抖动标志，避免重复渲染
+let isProcessing = false;
 
 export function UnifiedLogin({
   isOpen,
@@ -88,17 +96,22 @@ export function UnifiedLogin({
   const [success, setSuccess] = useState(false);
   const [countdown, setCountdown] = useState(3);
 
-  // 如果已经登录，自动关闭或跳转
+  // 如果已经登录，自动关闭或跳转（优化版-防闪烁）
   useEffect(() => {
     if (isAuthenticated && isOpen) {
-      if (onLoginSuccess) {
-        onLoginSuccess({ email: formData.email, is_admin });
-      }
-      handleClose();
+      // 使用setTimeout避免同步执行导致的组件闪?
+      const timer = setTimeout(() => {
+        if (onLoginSuccess) {
+          onLoginSuccess({ email: formData.email, is_admin });
+        }
+        handleClose();
+      }, 100); // 100ms微延?
+      
+      return () => clearTimeout(timer);
     }
-  }, [isAuthenticated, isOpen, onLoginSuccess, formData.email, is_admin]);
+  }, [isAuthenticated, isOpen, onLoginSuccess]);
 
-  // 登录成功后的倒计时
+  // 登录成功后的倒计?
   useEffect(() => {
     if (success && countdown > 0) {
       const timer = setTimeout(() => {
@@ -110,14 +123,14 @@ export function UnifiedLogin({
     }
   }, [success, countdown]);
 
-  // 执行重定向
+  // 执行重定?
   const performRedirect = () => {
     if (onLoginSuccess) {
       onLoginSuccess({ email: formData.email, is_admin });
     }
     handleClose();
     
-    // 使用路由器进行跳转
+    // 使用路由器进行跳?
     if (redirectUrl) {
       router.push(redirectUrl);
     } else if (is_admin) {
@@ -128,7 +141,7 @@ export function UnifiedLogin({
   };
 
   const handleClose = () => {
-    // 重置表单状态
+    // 重置表单状?
     setFormData({
       email: '',
       password: '',
@@ -162,12 +175,12 @@ export function UnifiedLogin({
     }
     
     if (!formData.password) {
-      setError('请输入密码');
+      setError('请输入密?);
       return false;
     }
     
     if (formData.password.length < 6) {
-      setError('密码长度至少6位');
+      setError('密码长度至少6�?);
       return false;
     }
     
@@ -188,34 +201,39 @@ export function UnifiedLogin({
       
       if (result.success) {
         setSuccess(true);
-        // 保存记住我状态
+        // 保存记住我状?
         if (formData.rememberMe) {
           localStorage.setItem('remember_email', formData.email);
         } else {
           localStorage.removeItem('remember_email');
         }
         
-        // 延迟关闭以显示成功状态
+        // 优化的登录成功处理流?
         setTimeout(() => {
+          // 先执行回?
           if (onLoginSuccess) {
             onLoginSuccess(result.user);
           }
-          handleClose();
           
-          // 处理重定向
+          // 然后执行跳转（避免组件卸载时的状态冲突）
           if (redirectUrl) {
             router.push(redirectUrl);
-          } else if (is_admin) {
+          } else if (result?.is_admin) {
             router.push('/admin/dashboard');
           } else {
             router.push('/');
           }
-        }, 1500);
+          
+          // 最后关闭组?
+          setTimeout(() => {
+            handleClose();
+          }, 100);
+        }, 1800);
       } else {
         setError(result.error || '登录失败，请检查邮箱和密码');
       }
     } catch (err: any) {
-      setError(err.message || '登录过程中发生错误');
+      setError(err.message || '登录过程中发生错?);
     } finally {
       setIsLoading(false);
     }
@@ -243,7 +261,7 @@ export function UnifiedLogin({
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* 重定向信息提示 */}
+            {/* 重定向信息提?*/}
             <RedirectInfo redirectUrl={redirectUrl} />
 
             {/* 成功提示 */}
@@ -323,7 +341,7 @@ export function UnifiedLogin({
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   className="pl-10 pr-12 py-5 text-base"
-                  placeholder="••••••••"
+                  placeholder="•••••••�?
                   disabled={isLoading || success}
                   required
                 />
@@ -350,7 +368,7 @@ export function UnifiedLogin({
                   disabled={isLoading || success}
                 />
                 <Label htmlFor="remember" className="text-sm text-gray-600">
-                  记住我
+                  记住?
                 </Label>
               </div>
               <button
@@ -358,7 +376,7 @@ export function UnifiedLogin({
                 className="text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50"
                 disabled={isLoading || success}
               >
-                忘记密码？
+                忘记密码?
               </button>
             </div>
 
@@ -372,7 +390,7 @@ export function UnifiedLogin({
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  登录中...
+                  登录?..
                 </>
               ) : success ? (
                 <>
@@ -389,7 +407,7 @@ export function UnifiedLogin({
           {showRegisterLink && (
             <div className="mt-6 pt-6 border-t border-gray-200 text-center">
               <p className="text-sm text-gray-600">
-                还没有账户？{' '}
+                还没有账户{' '}
                 <button
                   onClick={() => {
                     handleClose();
@@ -445,7 +463,7 @@ export function UnifiedLogin({
   );
 }
 
-// 便捷的Hook用于管理登录状态
+// 便捷的Hook用于管理登录状?
 export function useUnifiedLogin() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   

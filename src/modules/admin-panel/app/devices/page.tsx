@@ -79,8 +79,8 @@ export default function DeviceManagementPage() {
       const result = await response.json();
       if (result.success) {
         setDevices(result.data.devices || []);
-        if (result.data.devices?.length === 1) {
-          // 自动选择第一个设备
+        if (result.data?.length === 1) {
+          // 自动选择第一个设?
           handleDeviceSelect(result.data.devices[0]);
         }
       } else {
@@ -141,7 +141,7 @@ export default function DeviceManagementPage() {
       const result = await response.json();
 
       if (result.success) {
-        // 更新设备状态
+        // 更新设备状?
         setDevices(prev =>
           prev.map(device =>
             device.qrcodeId === selectedDevice.qrcodeId
@@ -159,7 +159,7 @@ export default function DeviceManagementPage() {
         // 重新加载生命周期事件
         await loadLifecycleEvents(selectedDevice.qrcodeId);
 
-        alert('设备已成功标记为回收状态');
+        alert('设备已成功标记为回收状?);
       } else {
         throw new Error(result.error || '回收操作失败');
       }
@@ -170,21 +170,21 @@ export default function DeviceManagementPage() {
     }
   };
 
-  // 获取状态徽章样式
+  // 获取状态徽章样?
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'manufactured':
-        return <Badge variant="secondary">已制造</Badge>;
+        return <Badge variant="secondary">已制?/Badge>;
       case 'activated':
-        return <Badge variant="default">已激活</Badge>;
+        return <Badge variant="default">已激?/Badge>;
       case 'active':
         return <Badge variant="default">正常使用</Badge>;
       case 'in_repair':
-        return <Badge variant="destructive">维修中</Badge>;
+        return <Badge variant="destructive">维修?/Badge>;
       case 'transferred':
-        return <Badge variant="outline">已转移</Badge>;
+        return <Badge variant="outline">已转?/Badge>;
       case 'recycled':
-        return <Badge variant="secondary">已回收</Badge>;
+        return <Badge variant="secondary">已回?/Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -214,7 +214,7 @@ export default function DeviceManagementPage() {
     <div className="container mx-auto py-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">设备管理</h1>
-        <p className="text-gray-600 mt-2">搜索和管理设备生命周期</p>
+        <p className="text-gray-600 mt-2">搜索和管理设备生命周?/p>
       </div>
 
       {/* 搜索区域 */}
@@ -229,7 +229,7 @@ export default function DeviceManagementPage() {
           <div className="flex gap-4">
             <div className="flex-1">
               <Input
-                placeholder="输入设备二维码ID、产品型号或序列号进行搜索"
+                placeholder="输入设备二维码ID、产品型号或序列号进行搜?
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && searchDevices()}
@@ -237,7 +237,7 @@ export default function DeviceManagementPage() {
               />
             </div>
             <Button onClick={searchDevices} disabled={loading}>
-              {loading ? '搜索中...' : '搜索'}
+              {loading ? '搜索?..' : '搜索'}
             </Button>
           </div>
 
@@ -283,7 +283,7 @@ export default function DeviceManagementPage() {
                         <div className="flex items-center gap-2">
                           {getStatusBadge(device.currentStatus)}
                           <span className="text-xs text-gray-500">
-                            维修: {device.totalRepairCount}次
+                            维修: {device.totalRepairCount}�?
                           </span>
                         </div>
                       </div>
@@ -305,7 +305,7 @@ export default function DeviceManagementPage() {
           </Card>
         </div>
 
-        {/* 设备详情和操作 */}
+        {/* 设备详情和操?*/}
         <div className="lg:col-span-2">
           {selectedDevice ? (
             <>
@@ -345,7 +345,7 @@ export default function DeviceManagementPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           {getStatusBadge(selectedDevice.currentStatus)}
-                          <span>当前状态: {selectedDevice.currentStatus}</span>
+                          <span>当前状? {selectedDevice.currentStatus}</span>
                         </div>
                       </div>
                     </div>
@@ -358,14 +358,14 @@ export default function DeviceManagementPage() {
                         <div className="flex items-center gap-2">
                           <Wrench className="w-4 h-4 text-gray-500" />
                           <span>
-                            维修次数: {selectedDevice.totalRepairCount}次
+                            维修次数: {selectedDevice.totalRepairCount}�?
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Battery className="w-4 h-4 text-gray-500" />
                           <span>
                             更换配件: {selectedDevice.totalPartReplacementCount}
-                            次
+                            �?
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -429,7 +429,7 @@ export default function DeviceManagementPage() {
                           {event.technician && (
                             <div className="flex items-center gap-1 text-sm text-gray-600 mb-1">
                               <User className="w-3 h-3" />
-                              <span>技师: {event.technician}</span>
+                              <span>技? {event.technician}</span>
                             </div>
                           )}
 
@@ -476,7 +476,7 @@ export default function DeviceManagementPage() {
         </div>
       </div>
 
-      {/* 回收确认对话框 */}
+      {/* 回收确认对话?*/}
       {showRecycleDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <Card className="w-full max-w-md">
@@ -500,7 +500,7 @@ export default function DeviceManagementPage() {
                   <textarea
                     value={recycleReason}
                     onChange={e => setRecycleReason(e.target.value)}
-                    placeholder="请输入回收原因..."
+                    placeholder="请输入回收原?.."
                     className="w-full p-2 border border-gray-300 rounded-md"
                     rows={3}
                     required
@@ -524,7 +524,7 @@ export default function DeviceManagementPage() {
                     disabled={!recycleReason.trim() || recycling}
                     className="flex-1"
                   >
-                    {recycling ? '处理中...' : '确认回收'}
+                    {recycling ? '处理?..' : '确认回收'}
                   </Button>
                 </div>
               </div>

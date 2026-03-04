@@ -1,4 +1,4 @@
-import AuditTrailViewer from '@/components/admin/AuditTrailViewer';
+﻿import AuditTrailViewer from '@/components/admin/AuditTrailViewer';
 
 export default function AuditLogsPage() {
   return (
@@ -7,3 +7,4 @@ export default function AuditLogsPage() {
     </div>
   );
 }
+

@@ -1,9 +1,8 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -12,25 +11,28 @@ export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('sb-access-token')?.value;
-    
+
     if (!token) {
       return NextResponse.json(
-        { success: false, error: '未授权访问' },
+        { success: false, error: '鏈巿鏉冭? },
         { status: 401 }
       );
     }
 
-    // 验证用户身份
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    // 楠岃瘉鐢ㄦ埛韬唤
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
       return NextResponse.json(
-        { success: false, error: '身份验证失败' },
+        { success: false, error: '韬唤楠岃瘉澶辫触' },
         { status: 401 }
       );
     }
 
-    // 获取企业用户信息
+    // 鑾峰彇浼佷笟鐢ㄦ埛淇℃伅
     const { data: enterpriseUser, error: enterpriseError } = await supabase
       .from('enterprise_users')
       .select('id')
@@ -39,15 +41,15 @@ export async function GET(request: Request) {
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '非企业用户' },
+        { success: false, error: '闈炰紒涓氱敤? },
         { status: 403 }
       );
     }
 
-    // 查询该企业的智能体列表
-    const { data: agents, error: agentsError } = await supabase
+    // 鏌ヨ璇ヤ紒涓氱殑鏅鸿兘浣撳垪?    const { data: agents, error: agentsError } = await supabase
       .from('enterprise_agents')
-      .select(`
+      .select(
+        `
         id,
         name,
         description,
@@ -57,27 +59,27 @@ export async function GET(request: Request) {
         last_used,
         usage_count,
         configuration
-      `)
+      `
+      )
       .eq('enterprise_id', enterpriseUser.id)
       .order('created_at', { ascending: false });
 
     if (agentsError) {
-      console.error('获取智能体列表失败:', agentsError);
+      console.error('鑾峰彇鏅鸿兘浣撳垪琛ㄥけ?', agentsError);
       return NextResponse.json(
-        { success: false, error: '获取智能体列表失败' },
+        { success: false, error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ? },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: agents || []
+      data: agents || [],
     });
-
   } catch (error: any) {
-    console.error('获取智能体列表错误:', error);
+    console.error('鑾峰彇鏅鸿兘浣撳垪琛ㄩ敊?', error);
     return NextResponse.json(
-      { success: false, error: '服务器内部错误' },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
       { status: 500 }
     );
   }
@@ -87,10 +89,10 @@ export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('sb-access-token')?.value;
-    
+
     if (!token) {
       return NextResponse.json(
-        { success: false, error: '未授权访问' },
+        { success: false, error: '鏈巿鏉冭? },
         { status: 401 }
       );
     }
@@ -98,25 +100,28 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, description, configuration } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!name || !configuration) {
       return NextResponse.json(
-        { success: false, error: '请提供智能体名称和配置信息' },
+        { success: false, error: '璇锋彁渚涙櫤鑳戒綋鍚嶇О鍜岄厤缃俊? },
         { status: 400 }
       );
     }
 
-    // 验证用户身份
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    // 楠岃瘉鐢ㄦ埛韬唤
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
       return NextResponse.json(
-        { success: false, error: '身份验证失败' },
+        { success: false, error: '韬唤楠岃瘉澶辫触' },
         { status: 401 }
       );
     }
 
-    // 获取企业用户信息
+    // 鑾峰彇浼佷笟鐢ㄦ埛淇℃伅
     const { data: enterpriseUser, error: enterpriseError } = await supabase
       .from('enterprise_users')
       .select('id')
@@ -125,13 +130,12 @@ export async function POST(request: Request) {
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '非企业用户' },
+        { success: false, error: '闈炰紒涓氱敤? },
         { status: 403 }
       );
     }
 
-    // 创建智能体
-    const { data: agent, error: createError } = await supabase
+    // 鍒涘缓鏅鸿兘?    const { data: agent, error: createError } = await supabase
       .from('enterprise_agents')
       .insert({
         enterprise_id: enterpriseUser.id,
@@ -139,43 +143,46 @@ export async function POST(request: Request) {
         description: description || '',
         configuration,
         status: 'active',
-        version: '1.0.0'
+        version: '1.0.0',
       } as any)
       .select()
       .single();
 
     if (createError) {
-      console.error('创建智能体失败:', createError);
+      console.error('鍒涘缓鏅鸿兘浣撳け?', createError);
       return NextResponse.json(
-        { success: false, error: '创建智能体失败' },
+        { success: false, error: '鍒涘缓鏅鸿兘浣撳け? },
         { status: 500 }
       );
     }
 
-    // 记录操作日志
-    await supabase.from('audit_logs').insert({
+    // 璁板綍鎿嶄綔鏃ュ織
+    (await supabase.from('audit_logs').insert({
       user_id: user.id,
       action: 'create_agent',
       resource_type: 'enterprise_agent',
       resource_id: agent.id,
       details: {
         agent_name: name,
-        enterprise_id: enterpriseUser.id
+        enterprise_id: enterpriseUser.id,
       } as any,
-      ip_address: request.headers.get('x-forwarded-for') || 'unknown'
-    });
+      ip_address: request.headers.get('x-forwarded-for') || 'unknown',
+    })) as any;
 
-    return NextResponse.json({
-      success: true,
-      message: '智能体创建成功',
-      data: agent
-    }, { status: 201 });
-
-  } catch (error: any) {
-    console.error('创建智能体错误:', error);
     return NextResponse.json(
-      { success: false, error: '服务器内部错误' },
+      {
+        success: true,
+        message: '鏅鸿兘浣撳垱寤烘垚?,
+        data: agent,
+      },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error('鍒涘缓鏅鸿兘浣撻敊?', error);
+    return NextResponse.json(
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
       { status: 500 }
     );
   }
 }
+

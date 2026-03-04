@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { queryOptimizer, planGenerator } from '@/data-center/optimizer/query-optimizer';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import {
+  queryOptimizer,
+  planGenerator,
+} from '@/data-center/optimizer/query-optimizer';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,84 +13,77 @@ export async function GET(request: NextRequest) {
     switch (action) {
       case 'analyze':
         if (!query) {
-          return NextResponse.json(
-            { error: '缺少query参数' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: '缂哄皯query鍙傛暟' }, { status: 400 });
         }
 
-        // 生成查询计划
+        // 鐢熸垚鏌ヨ璁″垝
         const plan = planGenerator.parseQueryToPlan(query);
-        
-        // 优化查询计划
+
+        // 浼樺寲鏌ヨ璁″垝
         const optimizedPlan = queryOptimizer.optimizeQueryPlan(plan);
-        
-        // 生成执行建议
+
+        // 鐢熸垚鎵ц寤鸿
         const advice = queryOptimizer.generateExecutionAdvice(query);
 
         return NextResponse.json({
           originalPlan: plan,
           optimizedPlan,
           executionAdvice: advice,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'performance':
         const queryId = searchParams.get('queryId');
         if (!queryId) {
           return NextResponse.json(
-            { error: '缺少queryId参数' },
+            { error: '缂哄皯queryId鍙傛暟' },
             { status: 400 }
           );
         }
 
-        const performanceData = queryOptimizer.getQueryPerformanceAnalysis(queryId);
+        const performanceData =
+          queryOptimizer.getQueryPerformanceAnalysis(queryId);
         return NextResponse.json({
           queryId,
           performanceData,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'rules':
-        // 返回所有优化规则信息
-        return NextResponse.json({
+        // 杩斿洖鎵€鏈変紭鍖栬鍒欎俊?        return NextResponse.json({
           optimizationRules: [
             {
               name: 'predicate_pushdown',
-              description: '谓词下推优化',
-              priority: 1
+              description: '璋撹瘝涓嬫帹浼樺寲',
+              priority: 1,
             },
             {
-              name: 'column_pruning', 
-              description: '列裁剪优化',
-              priority: 2
+              name: 'column_pruning',
+              description: '鍒楄鍓紭?,
+              priority: 2,
             },
             {
               name: 'join_reordering',
-              description: 'JOIN重排序优化', 
-              priority: 3
+              description: 'JOIN閲嶆帓搴忎紭?,
+              priority: 3,
             },
             {
               name: 'limit_pushdown',
-              description: 'LIMIT下推优化',
-              priority: 4
-            }
-          ]
+              description: 'LIMIT涓嬫帹浼樺寲',
+              priority: 4,
+            },
+          ],
         });
 
       default:
-        return NextResponse.json(
-          { error: '未知的操作类型' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
     }
-
   } catch (error: any) {
-    console.error('查询优化器API错误:', error);
+    console.error('鏌ヨ浼樺寲鍣ˋPI閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
@@ -102,10 +98,7 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'optimize':
         if (!query) {
-          return NextResponse.json(
-            { error: '缺少query参数' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: '缂哄皯query鍙傛暟' }, { status: 400 });
         }
 
         const plan = planGenerator.parseQueryToPlan(query);
@@ -116,15 +109,15 @@ export async function POST(request: NextRequest) {
           originalPlan: plan,
           optimizedPlan,
           executionAdvice: advice,
-          optimizationApplied: optimizedPlan.optimizationInfo?.appliedRules || [],
+          optimizationApplied: optimizedPlan?.appliedRules || [],
           performanceGain: advice.estimatedPerformanceGain,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'record-stats':
         if (!stats || !queryId) {
           return NextResponse.json(
-            { error: '缺少必要的统计信息' },
+            { error: '缂哄皯蹇呰鐨勭粺璁′俊? },
             { status: 400 }
           );
         }
@@ -136,29 +129,26 @@ export async function POST(request: NextRequest) {
           bytesProcessed: stats.bytesProcessed || 0,
           cacheHit: stats.cacheHit || false,
           optimizationApplied: stats.optimizationApplied || [],
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         return NextResponse.json({
-          message: '查询统计已记录',
-          queryId
+          message: '鏌ヨ缁熻宸茶?,
+          queryId,
         });
 
       default:
-        return NextResponse.json(
-          { error: '未知的操作类型' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
     }
-
   } catch (error: any) {
-    console.error('查询优化器API错误:', error);
+    console.error('鏌ヨ浼樺寲鍣ˋPI閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
   }
 }
+

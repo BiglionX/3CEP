@@ -13,7 +13,7 @@ console.log('🚀 开始全面IDE问题修复...\n');
 // 创建更完善的类型声明文件
 function createEnhancedTypeDeclarations() {
   console.log('🔧 创建增强类型声明文件...');
-  
+
   const enhancedTypes = `
 // 增强的Supabase类型声明
 declare global {
@@ -231,11 +231,11 @@ export type {
   if (!fs.existsSync(typesDir)) {
     fs.mkdirSync(typesDir, { recursive: true });
   }
-  
+
   const declarationPath = path.join(typesDir, 'enhanced-types.d.ts');
   fs.writeFileSync(declarationPath, enhancedTypes);
   console.log(`✅ 增强类型声明文件已创建: ${declarationPath}`);
-  
+
   // 更新tsconfig.json引用
   const tsconfigPath = path.join(process.cwd(), 'tsconfig.json');
   if (fs.existsSync(tsconfigPath)) {
@@ -254,36 +254,36 @@ export type {
 // 修复常见的TypeScript错误模式
 function fixCommonTsErrors() {
   console.log('\n🔧 修复常见TypeScript错误模式...');
-  
+
   const errorPatterns = [
     {
       // 修复Supabase insert/update类型推断问题
       files: ['**/*.ts', '**/*.tsx'],
       pattern: /(\.insert\(|\.update\()\s*\{([^}]+)\}(?!\s*as)/g,
-      replacement: '$1{$2} as any'
+      replacement: '$1{$2} as any',
     },
     {
       // 修复数组长度检查问题
       files: ['**/*.ts', '**/*.tsx'],
       pattern: /data\?\.(length|map|filter|reduce)/g,
-      replacement: 'data?.$1'
+      replacement: 'data?.$1',
     },
     {
       // 修复never类型分配问题
       files: ['**/*.ts', '**/*.tsx'],
       pattern: /\.update\(\{[^}]+\}\)(?!\s*as)/g,
-      replacement: (match) => `${match} as any`
+      replacement: match => `${match} as any`,
     },
     {
       // 修复导入路径问题
       files: ['tests/**/*.ts', 'tests/**/*.tsx'],
       pattern: /from\s+'\.\/e2e-config'/g,
-      replacement: "from '../tests/e2e-config'"
-    }
+      replacement: "from '../tests/e2e-config'",
+    },
   ];
-  
+
   let totalFixes = 0;
-  
+
   errorPatterns.forEach(({ files, pattern, replacement }) => {
     files.forEach(filePattern => {
       const matchedFiles = findFiles(filePattern);
@@ -293,14 +293,17 @@ function fixCommonTsErrors() {
       });
     });
   });
-  
+
   console.log(`✅ 应用了 ${totalFixes} 个自动修复`);
 }
 
 // 查找匹配的文件
 function findFiles(pattern) {
   const glob = require('glob');
-  return glob.sync(pattern, { cwd: process.cwd(), ignore: ['node_modules/**', '.next/**'] });
+  return glob.sync(pattern, {
+    cwd: process.cwd(),
+    ignore: ['node_modules/**', '.next/**'],
+  });
 }
 
 // 应用正则表达式修复
@@ -308,21 +311,21 @@ function applyPatternFix(filePath, pattern, replacement) {
   try {
     const fullPath = path.join(process.cwd(), filePath);
     if (!fs.existsSync(fullPath)) return 0;
-    
+
     let content = fs.readFileSync(fullPath, 'utf8');
     const originalContent = content;
-    
+
     if (typeof replacement === 'function') {
       content = content.replace(pattern, replacement);
     } else {
       content = content.replace(pattern, replacement);
     }
-    
+
     if (content !== originalContent) {
       // 创建备份
-      const backupPath = fullPath + '.backup';
+      const backupPath = `${fullPath}.backup`;
       fs.writeFileSync(backupPath, originalContent);
-      
+
       // 写入修复后的内容
       fs.writeFileSync(fullPath, content);
       return (content.match(pattern) || []).length;
@@ -336,25 +339,25 @@ function applyPatternFix(filePath, pattern, replacement) {
 // 修复ESLint配置
 function fixEslintConfig() {
   console.log('\n🔧 优化ESLint配置...');
-  
+
   const eslintConfig = {
     root: true,
     extends: [
-      "next/core-web-vitals",
-      "eslint:recommended",
-      "@typescript-eslint/recommended"
+      'next/core-web-vitals',
+      'eslint:recommended',
+      '@typescript-eslint/recommended',
     ],
-    parser: "@typescript-eslint/parser",
-    plugins: ["@typescript-eslint"],
+    parser: '@typescript-eslint/parser',
+    plugins: ['@typescript-eslint'],
     rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
-      "no-console": "off",
-      "prefer-const": "warn"
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-console': 'off',
+      'prefer-const': 'warn',
     },
-    ignorePatterns: ["node_modules/", ".next/", "out/"]
+    ignorePatterns: ['node_modules/', '.next/', 'out/'],
   };
-  
+
   const eslintPath = path.join(process.cwd(), '.eslintrc.json');
   fs.writeFileSync(eslintPath, JSON.stringify(eslintConfig, null, 2));
   console.log('✅ ESLint配置已更新');
@@ -363,7 +366,7 @@ function fixEslintConfig() {
 // 验证修复结果
 function validateFixes() {
   console.log('\n🧪 验证修复结果...');
-  
+
   try {
     // 检查TypeScript编译
     console.log('📋 TypeScript编译检查...');
@@ -374,7 +377,7 @@ function validateFixes() {
     console.log('⚠️  TypeScript编译仍有错误，但已大幅减少');
     console.log('💡 建议手动检查剩余错误');
   }
-  
+
   try {
     // 检查ESLint
     console.log('📋 ESLint检查...');
@@ -392,11 +395,13 @@ function main() {
   fixCommonTsErrors();
   fixEslintConfig();
   validateFixes();
-  
+
   console.log('\n🎉 IDE问题修复完成！');
   console.log('\n📋 后续建议:');
   console.log('1. 重启IDE以重新加载类型定义');
-  console.log('2. 清除IDE缓存（如VSCode: Ctrl+Shift+P -> Developer: Reload Window）');
+  console.log(
+    '2. 清除IDE缓存（如VSCode: Ctrl+Shift+P -> Developer: Reload Window）'
+  );
   console.log('3. 如仍有问题，可以逐个检查剩余的TypeScript错误');
   console.log('4. 建议定期运行此脚本保持代码质量');
 }

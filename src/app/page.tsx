@@ -1,15 +1,15 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  ArrowRight, 
-  Zap, 
-  Shield, 
-  BarChart3, 
-  Users, 
+import {
+  ArrowRight,
+  Zap,
+  Shield,
+  BarChart3,
+  Users,
   Cpu,
   Wrench,
   Smartphone,
@@ -23,62 +23,101 @@ import {
   MessageSquare,
   Headphones,
   Package,
-  Store
+  Store,
 } from 'lucide-react';
 import { SeoHead, SEO_PRESETS } from '@/components/SeoHead';
 
 export default function HomePage() {
-  // 使用统一导航，无需本地状态
-
+  // 使用统一导航，无需本地状?
   const features = [
     {
       icon: <Zap className="w-8 h-8 text-blue-600" />,
-      title: "智能工作流",
-      description: "基于n8n的可视化编排，零代码实现复杂业务自动化",
-      highlights: ["500+应用集成", "毫秒级响应", "99.9%可用性"]
+      title: '智能工作?,
+      description: '基于n8n的可视化编排，零代码实现复杂业务自动?,
+      highlights: ['500+应用集成', '毫秒级响?, '99.9%可用?],
     },
     {
       icon: <Shield className="w-8 h-8 text-green-600" />,
-      title: "设备生命周期",
-      description: "全链路设备管理，从购买到报废的完整数字档案",
-      highlights: ["扫码即查", "维修记录", "价值追踪"]
+      title: '设备生命周期',
+      description: '全链路设备管理，从购买到报废的完整数字档?,
+      highlights: ['扫码即查', '维修记录', '价值追?],
     },
     {
       icon: <Wrench className="w-8 h-8 text-purple-600" />,
-      title: "维修服务",
-      description: "智能派单、进度追踪、质量保障的一站式维修平台",
-      highlights: ["智能匹配", "实时追踪", "质量评级"]
+      title: '维修服务',
+      description: '智能派单、进度追踪、质量保障的一站式维修平台',
+      highlights: ['智能匹配', '实时追踪', '质量评级'],
     },
     {
       icon: <BarChart3 className="w-8 h-8 text-orange-600" />,
-      title: "数据分析",
-      description: "实时业务洞察，驱动数据驱动的决策制定",
-      highlights: ["实时监控", "趋势分析", "预测预警"]
-    }
+      title: '数据分析',
+      description: '实时业务洞察，驱动数据驱动的决策制定',
+      highlights: ['实时监控', '趋势分析', '预测预警'],
+    },
   ];
 
   const stats = [
-    { label: "服务商家", value: "1,200+", suffix: "家" },
-    { label: "完成订单", value: "50,000+", suffix: "单" },
-    { label: "设备管理", value: "100,000+", suffix: "台" },
-    { label: "用户满意度", value: "98.5%", suffix: "" }
+    { label: '服务商家', value: '1,200+', suffix: '�? },
+    { label: '完成订单', value: '50,000+', suffix: '�? },
+    { label: '设备管理', value: '100,000+', suffix: '�? },
+    { label: '用户满意?, value: '98.5%', suffix: '' },
   ];
 
   const quickLinks = [
-    { name: "设备报修", href: "/scan/demo", icon: <Smartphone className="w-5 h-5" />, color: "blue" },
-    { name: "维修师傅", href: "/repair-shop/dashboard", icon: <Wrench className="w-5 h-5" />, color: "green" },
-    { name: "商家入驻", href: "/admin/shops/pending", icon: <Users className="w-5 h-5" />, color: "purple" },
-    { name: "数据看板", href: "/dashboard", icon: <BarChart3 className="w-5 h-5" />, color: "orange" },
-    { name: "贸易管理", href: "/foreign-trade/company", icon: <Globe className="w-5 h-5" />, color: "indigo" },
-    { name: "售后管理", href: "/enterprise/after-sales", icon: <Headphones className="w-5 h-5" />, color: "pink" },
-    { name: "产品管理", href: "/brand/dashboard", icon: <Package className="w-5 h-5" />, color: "cyan" },
-    { name: "维修店铺管理", href: "/admin/shops", icon: <Store className="w-5 h-5" />, color: "amber" }
+    {
+      name: '设备报修',
+      href: '/scan/demo',
+      icon: <Smartphone className="w-5 h-5" />,
+      color: 'blue',
+    },
+    {
+      name: '维修师傅',
+      href: '/repair-shop/dashboard',
+      icon: <Wrench className="w-5 h-5" />,
+      color: 'green',
+    },
+    {
+      name: '商家入驻',
+      href: '/admin/shops/pending',
+      icon: <Users className="w-5 h-5" />,
+      color: 'purple',
+    },
+    {
+      name: '数据看板',
+      href: '/dashboard',
+      icon: <BarChart3 className="w-5 h-5" />,
+      color: 'orange',
+    },
+    {
+      name: '贸易管理',
+      href: '/foreign-trade/company',
+      icon: <Globe className="w-5 h-5" />,
+      color: 'indigo',
+    },
+    {
+      name: '售后管理',
+      href: '/enterprise/after-sales',
+      icon: <Headphones className="w-5 h-5" />,
+      color: 'pink',
+    },
+    {
+      name: '产品管理',
+      href: '/brand/dashboard',
+      icon: <Package className="w-5 h-5" />,
+      color: 'cyan',
+    },
+    {
+      name: '维修店铺管理',
+      href: '/admin/shops',
+      icon: <Store className="w-5 h-5" />,
+      color: 'amber',
+    },
   ];
 
   return (
     <div className="min-h-screen">
       <SeoHead {...SEO_PRESETS.overview} />
-      
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -94,11 +133,10 @@ export default function HomePage() {
               </h1>
               <p className="text-xl text-gray-600 mb-8 max-w-2xl">
                 连接设备、服务、数据的完整生态系统，让每一次维修都创造价值，
-                让每一台设备都能循环利用
-              </p>
+                让每一台设备都能循环利?              </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
                   asChild
                 >
@@ -107,19 +145,17 @@ export default function HomePage() {
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Link>
                 </Button>
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   variant="outline"
                   className="px-8 py-3 text-lg"
                   asChild
                 >
-                  <Link href="/demo/help-system">
-                    产品演示
-                  </Link>
+                  <Link href="/demo/help-system">产品演示</Link>
                 </Button>
               </div>
             </div>
-            
+
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
                 <div className="space-y-6">
@@ -133,7 +169,7 @@ export default function HomePage() {
                       <div className="h-3 bg-gray-200 rounded mt-2 w-3/4"></div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                       <Wrench className="w-6 h-6 text-green-600" />
@@ -143,7 +179,7 @@ export default function HomePage() {
                       <div className="h-3 bg-gray-200 rounded mt-2 w-1/2"></div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                       <BarChart3 className="w-6 h-6 text-purple-600" />
@@ -154,7 +190,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 gap-4 mt-8">
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
@@ -196,10 +232,9 @@ export default function HomePage() {
               核心功能模块
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              覆盖设备全生命周期的智能化解决方案
-            </p>
+              覆盖设备全生命周期的智能化解决方?            </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow">
@@ -211,7 +246,10 @@ export default function HomePage() {
                   <p className="text-gray-600 mb-4">{feature.description}</p>
                   <ul className="space-y-2">
                     {feature.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-gray-500">
+                      <li
+                        key={idx}
+                        className="flex items-center text-sm text-gray-500"
+                      >
                         <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                         {highlight}
                       </li>
@@ -229,22 +267,19 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              快速入口
-            </h2>
-            <p className="text-xl text-gray-600">
-              一键直达核心功能
-            </p>
+              快速入?            </h2>
+            <p className="text-xl text-gray-600">一键直达核心功?/p>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {quickLinks.map((link, index) => (
-              <Link 
-                key={index} 
-                href={link.href}
-                className="group"
-              >
-                <div className={`p-6 bg-white rounded-xl border-2 border-gray-100 hover:border-${link.color}-500 hover:shadow-lg transition-all duration-300 text-center`}>
-                  <div className={`inline-flex p-3 rounded-lg bg-${link.color}-100 text-${link.color}-600 mb-4 group-hover:scale-110 transition-transform`}>
+              <Link key={index} href={link.href} className="group">
+                <div
+                  className={`p-6 bg-white rounded-xl border-2 border-gray-100 hover:border-${link.color}-500 hover:shadow-lg transition-all duration-300 text-center`}
+                >
+                  <div
+                    className={`inline-flex p-3 rounded-lg bg-${link.color}-100 text-${link.color}-600 mb-4 group-hover:scale-110 transition-transform`}
+                  >
                     {link.icon}
                   </div>
                   <h3 className="font-semibold text-gray-900">{link.name}</h3>
@@ -260,13 +295,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              学习与支持中心
-            </h2>
+              学习与支持中?            </h2>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              丰富的文档、教程和社区支持，助您快速上手
-            </p>
+              丰富的文档、教程和社区支持，助您快速上?            </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
               <CardHeader>
@@ -274,26 +307,26 @@ export default function HomePage() {
                 <CardTitle className="text-white">文档中心</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-blue-100 mb-4">完整的使用手册和技术文档</p>
+                <p className="text-blue-100 mb-4">完整的使用手册和技术文?/p>
                 <Button variant="secondary" asChild>
                   <Link href="/documents">浏览文档</Link>
                 </Button>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
               <CardHeader>
                 <Wrench className="w-8 h-8 mb-4" />
                 <CardTitle className="text-white">维修教程</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-blue-100 mb-4">详细的设备维修指导教程</p>
+                <p className="text-blue-100 mb-4">详细的设备维修指导教?/p>
                 <Button variant="secondary" asChild>
                   <Link href="/tutorials">查看教程</Link>
                 </Button>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
               <CardHeader>
                 <Users className="w-8 h-8 mb-4" />
@@ -314,30 +347,24 @@ export default function HomePage() {
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            开始您的智能循环之旅
-          </h2>
+            开始您的智能循环之?          </h2>
           <p className="text-xl text-gray-300 mb-8">
-            加入数千家企业，共同构建可持续的设备生态
-          </p>
+            加入数千家企业，共同构建可持续的设备生?          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 text-lg"
               asChild
             >
-              <Link href="/landing/overview">
-                免费试用
-              </Link>
+              <Link href="/landing/overview">免费试用</Link>
             </Button>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="outline"
               className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3 text-lg"
               asChild
             >
-              <Link href="/contact">
-                联系销售
-              </Link>
+              <Link href="/contact">联系销?/Link>
             </Button>
           </div>
         </div>
@@ -345,3 +372,4 @@ export default function HomePage() {
     </div>
   );
 }
+

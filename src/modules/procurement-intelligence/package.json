@@ -1,0 +1,39 @@
+{
+  "name": "@procyc/procurement-intelligence",
+  "version": "1.0.0",
+  "description": "FixCycle 4.0 采购智能体升级模块",
+  "main": "index.ts",
+  "types": "index.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.48.1",
+    "axios": "^1.13.5",
+    "date-fns": "^4.1.0",
+    "lodash": "^4.17.21",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^22.19.11",
+    "@types/uuid": "^9.0.8",
+    "jest": "^29.0.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "procurement",
+    "intelligence",
+    "b2b",
+    "supply-chain",
+    "ai"
+  ],
+  "author": "FixCycle Team",
+  "license": "MIT"
+}

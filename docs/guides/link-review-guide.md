@@ -7,6 +7,7 @@
 ## 🏗️ 系统架构
 
 ### 核心组件
+
 - **数据库表**: `hot_link_pool`, `articles`, `article_categories`
 - **API接口**: `/api/admin/links/pending`
 - **前端页面**: `/admin/links/pending`
@@ -15,6 +16,7 @@
 ### 表结构设计
 
 #### hot_link_pool (热点链接池)
+
 ```sql
 - id: UUID主键
 - url: 链接地址 (唯一)
@@ -31,6 +33,7 @@
 ```
 
 #### articles (文章表)
+
 ```sql
 - id: UUID主键
 - title: 文章标题
@@ -46,7 +49,9 @@
 ## 🚀 部署指南
 
 ### 1. 数据库部署
+
 在Supabase控制台执行SQL脚本：
+
 ```bash
 # 手动部署方式
 1. 登录 Supabase 控制台
@@ -55,11 +60,13 @@
 ```
 
 或者使用自动化脚本：
+
 ```bash
 node scripts/deploy-link-review-tables.js
 ```
 
 ### 2. 功能验证
+
 ```bash
 # 运行测试脚本
 node scripts/test-link-review.js
@@ -68,6 +75,7 @@ node scripts/test-link-review.js
 ## 💻 使用说明
 
 ### 访问路径
+
 ```
 http://localhost:3000/admin/links/pending
 ```
@@ -75,24 +83,29 @@ http://localhost:3000/admin/links/pending
 ### 主要功能
 
 #### 1. 链接列表展示
+
 - 显示待审核链接的基本信息
 - 支持分页浏览
 - 提供搜索和分类筛选
 - 显示AI打标结果和置信度
 
 #### 2. 内容预览
+
 - 点击"查看详情"可查看完整内容
 - 显示原始链接可在新窗口打开
 - 展示封面图片和详细元数据
 
 #### 3. 批量审核操作
+
 **发布操作**：
+
 - 选中一条或多条链接
 - 点击"批量发布"按钮
 - 系统自动创建对应文章并发布
 - 更新链接状态为"已发布"
 
 **驳回操作**：
+
 - 选中需要驳回的链接
 - 点击"批量驳回"按钮
 - 填写驳回原因
@@ -100,21 +113,22 @@ http://localhost:3000/admin/links/pending
 
 ### 界面元素说明
 
-| 元素 | 功能 |
-|------|------|
-| 🔍 搜索框 | 按标题或描述搜索 |
-| 🎯 分类筛选 | 按内容分类过滤 |
-| ☑️ 复选框 | 选择单条或多条记录 |
-| ✅ 发布按钮 | 批量发布选中链接 |
-| ❌ 驳回按钮 | 批量驳回选中链接 |
-| 👁️ 预览按钮 | 查看链接详情 |
-| 🔗 外链按钮 | 打开原始链接 |
+| 元素        | 功能               |
+| ----------- | ------------------ |
+| 🔍 搜索框   | 按标题或描述搜索   |
+| 🎯 分类筛选 | 按内容分类过滤     |
+| ☑️ 复选框   | 选择单条或多条记录 |
+| ✅ 发布按钮 | 批量发布选中链接   |
+| ❌ 驳回按钮 | 批量驳回选中链接   |
+| 👁️ 预览按钮 | 查看链接详情       |
+| 🔗 外链按钮 | 打开原始链接       |
 
 ## 🔧 技术实现细节
 
 ### API接口设计
 
 #### GET /api/admin/links/pending
+
 ```javascript
 // 请求参数
 ?page=1&pageSize=20&status=pending_review&search=关键词
@@ -132,6 +146,7 @@ http://localhost:3000/admin/links/pending
 ```
 
 #### POST /api/admin/links/pending
+
 ```javascript
 // 发布请求
 {
@@ -141,7 +156,7 @@ http://localhost:3000/admin/links/pending
 
 // 驳回请求
 {
-  "action": "reject", 
+  "action": "reject",
   "ids": ["uuid1", "uuid2"],
   "rejectionReason": "内容质量不符合要求"
 }
@@ -150,12 +165,14 @@ http://localhost:3000/admin/links/pending
 ### 前端组件特性
 
 #### 主要交互功能
+
 - **实时数据刷新**: 操作完成后自动更新列表
 - **状态提示**: 操作成功/失败的用户反馈
 - **加载状态**: 数据加载时的视觉反馈
 - **响应式设计**: 适配不同屏幕尺寸
 
 #### 安全机制
+
 - **权限验证**: 只有content_reviewer及以上权限可访问
 - **CSRF保护**: 表单提交安全验证
 - **输入验证**: 用户输入数据校验
@@ -163,6 +180,7 @@ http://localhost:3000/admin/links/pending
 ## 📊 数据流说明
 
 ### 审核流程
+
 ```
 1. 系统抓取热点链接 → hot_link_pool (status: pending_review)
 2. 管理员审核 → 选择发布或驳回
@@ -172,6 +190,7 @@ http://localhost:3000/admin/links/pending
 ```
 
 ### 数据关系
+
 ```
 hot_link_pool ──article_id──→ articles
      ↓
@@ -183,6 +202,7 @@ hot_link_pool ──article_id──→ articles
 ## 🔍 监控和维护
 
 ### 日志记录
+
 - 审核操作日志
 - 系统错误日志
 - 性能监控数据
@@ -190,6 +210,7 @@ hot_link_pool ──article_id──→ articles
 ### 常见问题排查
 
 #### 数据不显示
+
 ```bash
 # 检查表结构
 SELECT * FROM hot_link_pool LIMIT 5;
@@ -199,6 +220,7 @@ SELECT * FROM pg_policy WHERE polname LIKE '%hot_link%';
 ```
 
 #### 权限问题
+
 ```bash
 # 检查用户角色
 SELECT * FROM admin_users WHERE user_id = '当前用户ID';
@@ -210,11 +232,13 @@ SELECT * FROM permissions WHERE role = 'content_reviewer';
 ## 📈 性能优化建议
 
 ### 数据库层面
+
 - 合理使用索引 (status, scraped_at, likes等字段)
 - 定期清理已处理的历史数据
 - 优化分页查询性能
 
 ### 前端层面
+
 - 实现虚拟滚动处理大量数据
 - 图片懒加载减少初始加载时间
 - 缓存常用分类和标签数据
@@ -222,12 +246,14 @@ SELECT * FROM permissions WHERE role = 'content_reviewer';
 ## 🔄 后续扩展方向
 
 ### 功能增强
+
 - [ ] 支持自定义审核流程
 - [ ] 添加审核历史记录查询
 - [ ] 实现智能推荐审核优先级
 - [ ] 增加批量导入导出功能
 
 ### 技术升级
+
 - [ ] 集成更强大的AI内容分析
 - [ ] 添加实时协作审核功能
 - [ ] 实现审核工作量统计报表

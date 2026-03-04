@@ -1,9 +1,9 @@
-import EnhancedAdminLayout from '@/components/admin/EnhancedAdminLayout'
+import EnhancedAdminLayout from '@/components/admin/EnhancedAdminLayout';
 
 export default function AdminRootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  return <EnhancedAdminLayout>{children}</EnhancedAdminLayout>
+  return <EnhancedAdminLayout>{children}</EnhancedAdminLayout>;
 }

@@ -3,10 +3,10 @@
  * 负责构建、维护和更新用户画像，支持个性化推荐
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { UserBehavior, UserProfile } from "../models/recommendation.model";
-import { UserProfileService } from "./recommendation.interfaces";
-import { UserBehaviorCollectorService } from "./user-behavior-collector.service";
+import { createClient } from '@supabase/supabase-js';
+import { UserBehavior, UserProfile } from '../models/recommendation.model';
+import { UserProfileService } from './recommendation.interfaces';
+import { UserBehaviorCollectorService } from './user-behavior-collector.service';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,13 +21,10 @@ export class UserProfileServiceImpl implements UserProfileService {
   }
 
   /**
-   * 构建或更新用户画像
-   */
+   * 构建或更新用户画?   */
   async buildUserProfile(userId: string): Promise<UserProfile> {
     try {
-      console.log(`🤖 开始构建用户画像: ${userId}`);
-
-      // 1. 获取用户基本信息
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🤖 开始构建用户画? ${userId}`)// 1. 获取用户基本信息
       const basicInfo = await this.getUserBasicInfo(userId);
 
       // 2. 获取用户行为数据
@@ -42,8 +39,7 @@ export class UserProfileServiceImpl implements UserProfileService {
       // 4. 计算行为摘要
       const behaviorSummary = this.calculateBehaviorSummary(behaviors);
 
-      // 5. 确定用户参与度等级
-      const engagementLevel = this.determineEngagementLevel(behaviorSummary);
+      // 5. 确定用户参与度等?      const engagementLevel = this.determineEngagementLevel(behaviorSummary);
 
       // 6. 构建完整用户画像
       const userProfile: UserProfile = {
@@ -58,8 +54,7 @@ export class UserProfileServiceImpl implements UserProfileService {
       // 7. 保存到数据库
       await this.saveUserProfile(userProfile);
 
-      console.log(`✅ 用户画像构建完成: ${userId}`);
-      return userProfile;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?用户画像构建完成: ${userId}`)return userProfile;
     } catch (error) {
       console.error(`构建用户画像失败 (${userId}):`, error);
       throw error;
@@ -72,13 +67,13 @@ export class UserProfileServiceImpl implements UserProfileService {
   async getUserProfile(userId: string): Promise<UserProfile | null> {
     try {
       const { data, error } = await supabase
-        .from("user_profiles")
-        .select("*")
-        .eq("user_id", userId)
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', userId)
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") {
+        if (error.code === 'PGRST116') {
           // 记录不存在，返回null
           return null;
         }
@@ -91,22 +86,22 @@ export class UserProfileServiceImpl implements UserProfileService {
           ? JSON.parse(data.demographics)
           : undefined,
         preferences: {
-          categories: data.preferences?.categories || [],
-          brands: data.preferences?.brands || [],
-          priceRange: data.preferences?.price_range,
-          serviceTypes: data.preferences?.service_types || [],
+          categories: data?.categories || [],
+          brands: data?.brands || [],
+          priceRange: data?.price_range,
+          serviceTypes: data?.service_types || [],
         },
         behaviorSummary: {
-          totalActions: data.behavior_summary?.total_actions || 0,
-          recentActivityDays: data.behavior_summary?.recent_activity_days || 0,
-          favoriteCategories: data.behavior_summary?.favorite_categories || [],
-          avgSessionDuration: data.behavior_summary?.avg_session_duration,
+          totalActions: data?.total_actions || 0,
+          recentActivityDays: data?.recent_activity_days || 0,
+          favoriteCategories: data?.favorite_categories || [],
+          avgSessionDuration: data?.avg_session_duration,
         },
         engagementLevel: data.engagement_level,
         lastUpdated: data.last_updated,
       };
     } catch (error) {
-      console.error("获取用户画像错误:", error);
+      console.error('获取用户画像错误:', error);
       throw error;
     }
   }
@@ -117,7 +112,7 @@ export class UserProfileServiceImpl implements UserProfileService {
   async updateUserPreferences(userId: string, preferences: any): Promise<void> {
     try {
       const { error } = await supabase
-        .from("user_profiles")
+        .from('user_profiles')
         .update({
           preferences: {
             categories: preferences.categories || [],
@@ -127,15 +122,14 @@ export class UserProfileServiceImpl implements UserProfileService {
           } as any,
           last_updated: new Date().toISOString(),
         })
-        .eq("user_id", userId);
+        .eq('user_id', userId);
 
       if (error) {
         throw new Error(`更新用户偏好失败: ${error.message}`);
       }
 
-      console.log(`✅ 用户偏好更新成功: ${userId}`);
-    } catch (error) {
-      console.error("更新用户偏好错误:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?用户偏好更新成功: ${userId}`)} catch (error) {
+      console.error('更新用户偏好错误:', error);
       throw error;
     }
   }
@@ -148,16 +142,14 @@ export class UserProfileServiceImpl implements UserProfileService {
     userId2: string
   ): Promise<number> {
     try {
-      // 获取两个用户的画像
-      const profile1 = await this.getUserProfile(userId1);
+      // 获取两个用户的画?      const profile1 = await this.getUserProfile(userId1);
       const profile2 = await this.getUserProfile(userId2);
 
       if (!profile1 || !profile2) {
         return 0;
       }
 
-      // 计算偏好向量相似度
-      const categorySimilarity = this.calculateVectorSimilarity(
+      // 计算偏好向量相似?      const categorySimilarity = this.calculateVectorSimilarity(
         profile1.preferences.categories,
         profile2.preferences.categories
       );
@@ -167,21 +159,19 @@ export class UserProfileServiceImpl implements UserProfileService {
         profile2.preferences.brands
       );
 
-      // 行为模式相似度
-      const behaviorSimilarity = this.calculateBehaviorSimilarity(
+      // 行为模式相似?      const behaviorSimilarity = this.calculateBehaviorSimilarity(
         profile1.behaviorSummary,
         profile2.behaviorSummary
       );
 
-      // 加权平均相似度
-      const similarity =
+      // 加权平均相似?      const similarity =
         categorySimilarity * 0.4 +
         brandSimilarity * 0.3 +
         behaviorSimilarity * 0.3;
 
-      return Math.max(0, Math.min(1, similarity)); // 限制在0-1之间
+      return Math.max(0, Math.min(1, similarity)); // 限制?-1之间
     } catch (error) {
-      console.error("计算用户相似度错误:", error);
+      console.error('计算用户相似度错?', error);
       return 0;
     }
   }
@@ -195,20 +185,20 @@ export class UserProfileServiceImpl implements UserProfileService {
       cutoffDate.setDate(cutoffDate.getDate() - days);
 
       const { data, error } = await supabase
-        .from("user_behaviors")
-        .select("user_id")
-        .gte("timestamp", cutoffDate.toISOString())
-        .order("timestamp", { ascending: false });
+        .from('user_behaviors')
+        .select('user_id')
+        .gte('timestamp', cutoffDate.toISOString())
+        .order('timestamp', { ascending: false });
 
       if (error) {
         throw new Error(`获取活跃用户失败: ${error.message}`);
       }
 
       // 去重并返回用户ID列表
-      const userIds = [...new Set((data || []).map((item) => item.user_id))];
+      const userIds = [...new Set((data || []).map(item => item.user_id))];
       return userIds;
     } catch (error) {
-      console.error("获取活跃用户错误:", error);
+      console.error('获取活跃用户错误:', error);
       throw error;
     }
   }
@@ -220,22 +210,21 @@ export class UserProfileServiceImpl implements UserProfileService {
     try {
       // 从用户档案表获取基本信息
       const { data: profileData } = await supabase
-        .from("profiles")
-        .select("city, province, country")
-        .eq("id", userId)
+        .from('profiles')
+        .select('city, province, country')
+        .eq('id', userId)
         .single();
 
-      // 从维修订单获取设备类型信息
-      const { data: orderData } = await supabase
-        .from("repair_orders")
-        .select("device_type")
-        .eq("consumer_id", userId)
+      // 从维修订单获取设备类型信?      const { data: orderData } = await supabase
+        .from('repair_orders')
+        .select('device_type')
+        .eq('consumer_id', userId)
         .limit(10);
 
       const deviceTypes = orderData
         ? [
             ...new Set(
-              orderData.map((order) => order.device_type).filter(Boolean)
+              orderData.map(order => order.device_type).filter(Boolean)
             ),
           ]
         : [];
@@ -253,7 +242,7 @@ export class UserProfileServiceImpl implements UserProfileService {
           : undefined,
       };
     } catch (error) {
-      console.warn("获取用户基本信息警告:", error);
+      console.warn('获取用户基本信息警告:', error);
       return { demographics: undefined };
     }
   }
@@ -268,7 +257,7 @@ export class UserProfileServiceImpl implements UserProfileService {
     let purchaseCount = 0;
     const serviceTypes = new Set<string>();
 
-    behaviors.forEach((behavior) => {
+    behaviors.forEach(behavior => {
       // 从itemId中提取类别和品牌信息（简化处理）
       const itemInfo = this.parseItemId(behavior.itemId);
 
@@ -283,13 +272,13 @@ export class UserProfileServiceImpl implements UserProfileService {
       }
 
       // 统计购买相关信息
-      if (behavior.actionType === "purchase") {
-        totalPrice += behavior.metadata?.amount || 0;
+      if (behavior.actionType === 'purchase') {
+        totalPrice += behavior?.amount || 0;
         purchaseCount++;
       }
 
       // 收集服务类型
-      if (behavior.metadata?.serviceType) {
+      if (behavior?.serviceType) {
         serviceTypes.add(behavior.metadata.serviceType);
       }
     });
@@ -336,16 +325,14 @@ export class UserProfileServiceImpl implements UserProfileService {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    // 计算最近活跃天数
-    const activeDates = new Set(
+    // 计算最近活跃天?    const activeDates = new Set(
       behaviors
-        .filter((b) => new Date(b.timestamp) > thirtyDaysAgo)
-        .map((b) => new Date(b.timestamp).toISOString().split("T")[0])
+        .filter(b => new Date(b.timestamp) > thirtyDaysAgo)
+        .map(b => new Date(b.timestamp).toISOString().split('T')[0])
     );
 
-    // 统计各类别行为
-    const categoryActions: Record<string, number> = {};
-    behaviors.forEach((behavior) => {
+    // 统计各类别行?    const categoryActions: Record<string, number> = {};
+    behaviors.forEach(behavior => {
       const itemInfo = this.parseItemId(behavior.itemId);
       if (itemInfo.category) {
         categoryActions[itemInfo.category] =
@@ -367,32 +354,29 @@ export class UserProfileServiceImpl implements UserProfileService {
   }
 
   /**
-   * 确定用户参与度等级
-   */
+   * 确定用户参与度等?   */
   private determineEngagementLevel(
     behaviorSummary: any
-  ): "low" | "medium" | "high" {
+  ): 'low' | 'medium' | 'high' {
     const { totalActions, recentActivityDays } = behaviorSummary;
 
-    // 高参与度：最近30天活跃超过15天且总行为超过50次
-    if (recentActivityDays > 15 && totalActions > 50) {
-      return "high";
+    // 高参与度：最?0天活跃超?5天且总行为超?0�?    if (recentActivityDays > 15 && totalActions > 50) {
+      return 'high';
     }
 
-    // 中等参与度：最近30天活跃超过5天或总行为超过20次
-    if (recentActivityDays > 5 || totalActions > 20) {
-      return "medium";
+    // 中等参与度：最?0天活跃超?天或总行为超?0�?    if (recentActivityDays > 5 || totalActions > 20) {
+      return 'medium';
     }
 
     // 低参与度
-    return "low";
+    return 'low';
   }
 
   /**
    * 保存用户画像到数据库
    */
   private async saveUserProfile(profile: UserProfile): Promise<void> {
-    const { error } = await supabase.from("user_profiles").upsert(
+    const { error } = await supabase.from('user_profiles').upsert(
       {
         user_id: profile.userId,
         demographics: profile.demographics
@@ -414,7 +398,7 @@ export class UserProfileServiceImpl implements UserProfileService {
         last_updated: profile.lastUpdated,
       },
       {
-        onConflict: "user_id",
+        onConflict: 'user_id',
       }
     );
 
@@ -429,15 +413,13 @@ export class UserProfileServiceImpl implements UserProfileService {
   private calculateVectorSimilarity(vec1: string[], vec2: string[]): number {
     if (vec1.length === 0 || vec2.length === 0) return 0;
 
-    // 创建词汇表
-    const vocabulary = [...new Set([...vec1, ...vec2])];
+    // 创建词汇?    const vocabulary = [...new Set([...vec1, ...vec2])];
 
     // 创建向量表示
-    const vector1 = vocabulary.map((word) => (vec1.includes(word) ? 1 : 0));
-    const vector2 = vocabulary.map((word) => (vec2.includes(word) ? 1 : 0));
+    const vector1 = vocabulary.map(word => (vec1.includes(word) ? 1 : 0));
+    const vector2 = vocabulary.map(word => (vec2.includes(word) ? 1 : 0));
 
-    // 计算余弦相似度
-    const dotProduct = vector1.reduce(
+    // 计算余弦相似?    const dotProduct = vector1.reduce(
       (sum, val, i) => sum + val * vector2[i],
       0 as number
     );
@@ -454,8 +436,7 @@ export class UserProfileServiceImpl implements UserProfileService {
   }
 
   /**
-   * 计算行为相似度
-   */
+   * 计算行为相似?   */
   private calculateBehaviorSimilarity(summary1: any, summary2: any): number {
     // 基于行为总数的相似度
     const actionsDiff = Math.abs(summary1.totalActions - summary2.totalActions);
@@ -476,19 +457,17 @@ export class UserProfileServiceImpl implements UserProfileService {
   }
 
   /**
-   * 从itemId解析类别和品牌信息
-   */
+   * 从itemId解析类别和品牌信?   */
   private parseItemId(itemId: string): { category?: string; brand?: string } {
-    // 简化的解析逻辑，实际应用中可能需要更复杂的规则
-    const lowerId = itemId.toLowerCase();
+    // 简化的解析逻辑，实际应用中可能需要更复杂的规?    const lowerId = itemId.toLowerCase();
 
     // 品牌识别
-    const brands = ["apple", "huawei", "xiaomi", "samsung", "oppo", "vivo"];
-    const brand = brands.find((b) => lowerId.includes(b));
+    const brands = ['apple', 'huawei', 'xiaomi', 'samsung', 'oppo', 'vivo'];
+    const brand = brands.find(b => lowerId.includes(b));
 
     // 类别识别
-    const categories = ["phone", "tablet", "laptop", "watch", "accessory"];
-    const category = categories.find((c) => lowerId.includes(c));
+    const categories = ['phone', 'tablet', 'laptop', 'watch', 'accessory'];
+    const category = categories.find(c => lowerId.includes(c));
 
     return { category, brand };
   }
@@ -505,8 +484,7 @@ export class UserProfileServiceImpl implements UserProfileService {
       const timeDiff =
         new Date(behaviors[i].timestamp).getTime() -
         new Date(behaviors[i - 1].timestamp).getTime();
-      // 只考虑合理的时间间隔（小于1小时）
-      if (timeDiff > 0 && timeDiff < 3600000) {
+      // 只考虑合理的时间间隔（小于1小时?      if (timeDiff > 0 && timeDiff < 3600000) {
         totalTime += timeDiff;
       }
     }

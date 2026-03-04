@@ -184,7 +184,7 @@ DELETE /api/fcx/recommendations?days=90
 ### 前端集成 (React)
 
 ```javascript
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 function RecommendationWidget({ userId, location }) {
   const [recommendations, setRecommendations] = useState([]);
@@ -197,11 +197,11 @@ function RecommendationWidget({ userId, location }) {
   const fetchRecommendations = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/fcx/recommendations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/fcx/recommendations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: "get-recommendations",
+          action: 'get-recommendations',
           userId,
           context: { location },
           count: 5,
@@ -213,23 +213,23 @@ function RecommendationWidget({ userId, location }) {
         setRecommendations(result.data.items);
       }
     } catch (error) {
-      console.error("获取推荐失败:", error);
+      console.error('获取推荐失败:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleItemClick = async (itemId) => {
+  const handleItemClick = async itemId => {
     // 记录用户点击行为
-    await fetch("/api/fcx/recommendations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    await fetch('/api/fcx/recommendations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        action: "record-behavior",
+        action: 'record-behavior',
         userId,
         itemId,
-        itemType: "repair_shop",
-        actionType: "click",
+        itemType: 'repair_shop',
+        actionType: 'click',
       }),
     });
   };
@@ -239,7 +239,7 @@ function RecommendationWidget({ userId, location }) {
   return (
     <div className="recommendations">
       <h3>为您推荐</h3>
-      {recommendations.map((item) => (
+      {recommendations.map(item => (
         <div
           key={item.itemId}
           className="recommendation-item"
@@ -260,15 +260,15 @@ function RecommendationWidget({ userId, location }) {
 // 推荐服务封装
 class RecommendationService {
   constructor() {
-    this.baseUrl = "/api/fcx/recommendations";
+    this.baseUrl = '/api/fcx/recommendations';
   }
 
   async getRecommendations(userId, options = {}) {
     const response = await fetch(this.baseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        action: "get-recommendations",
+        action: 'get-recommendations',
         userId,
         ...options,
       }),
@@ -276,7 +276,7 @@ class RecommendationService {
 
     const result = await response.json();
     if (!result.success) {
-      throw new Error(result.error || "推荐服务调用失败");
+      throw new Error(result.error || '推荐服务调用失败');
     }
 
     return result.data;
@@ -284,10 +284,10 @@ class RecommendationService {
 
   async recordBehavior(behavior) {
     const response = await fetch(this.baseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        action: "record-behavior",
+        action: 'record-behavior',
         ...behavior,
       }),
     });
@@ -297,10 +297,10 @@ class RecommendationService {
 
   async batchRecommend(userContexts, count = 10) {
     const response = await fetch(this.baseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        action: "batch-recommend",
+        action: 'batch-recommend',
         contexts: userContexts,
         count,
       }),
@@ -308,7 +308,7 @@ class RecommendationService {
 
     const result = await response.json();
     if (!result.success) {
-      throw new Error(result.error || "批量推荐失败");
+      throw new Error(result.error || '批量推荐失败');
     }
 
     return result.data;
@@ -320,11 +320,11 @@ const recommendationService = new RecommendationService();
 
 // 获取用户推荐
 const recommendations = await recommendationService.getRecommendations(
-  "user_123",
+  'user_123',
   {
     context: {
       location: { lat: 31.2304, lng: 121.4737 },
-      deviceType: "mobile",
+      deviceType: 'mobile',
     },
     count: 10,
   }
@@ -332,8 +332,8 @@ const recommendations = await recommendationService.getRecommendations(
 
 // 批量处理多个用户
 const batchResults = await recommendationService.batchRecommend([
-  { userId: "user_001", location: { lat: 31.2304, lng: 121.4737 } },
-  { userId: "user_002", location: { lat: 30.2304, lng: 120.4737 } },
+  { userId: 'user_001', location: { lat: 31.2304, lng: 121.4737 } },
+  { userId: 'user_002', location: { lat: 30.2304, lng: 120.4737 } },
 ]);
 ```
 
@@ -351,9 +351,8 @@ const getCachedRecommendations = async (userId, cacheKey) => {
     return JSON.parse(cached);
   }
 
-  const recommendations = await recommendationService.getRecommendations(
-    userId
-  );
+  const recommendations =
+    await recommendationService.getRecommendations(userId);
   await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(recommendations));
   return recommendations;
 };
@@ -363,13 +362,13 @@ const getCachedRecommendations = async (userId, cacheKey) => {
 
 ```javascript
 // 用户登录时预加载推荐
-const preloadRecommendations = async (userId) => {
+const preloadRecommendations = async userId => {
   // 异步预加载，不影响主流程
   setTimeout(async () => {
     try {
       await recommendationService.getRecommendations(userId, { count: 20 });
     } catch (error) {
-      console.log("预加载推荐失败:", error);
+      console.log('预加载推荐失败:', error);
     }
   }, 1000);
 };
@@ -420,13 +419,11 @@ GET /api/metrics/recommendation-performance
 ### 常见问题
 
 1. **推荐结果为空**
-
    - 检查用户行为数据是否足够
    - 验证用户 ID 是否正确
    - 确认地理位置参数格式
 
 2. **响应时间过长**
-
    - 检查数据库连接状态
    - 验证缓存是否正常工作
    - 考虑减少推荐数量

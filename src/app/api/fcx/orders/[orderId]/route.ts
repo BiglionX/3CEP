@@ -17,7 +17,7 @@ interface RouteParams {
 
 export async function GET(request: Request, { params }: RouteParams) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const orderService = new RepairOrderService();
     const order = await orderService.getOrder(params.orderId);
@@ -31,16 +31,15 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     return NextResponse.json({
       success: true,
-      data: order
+      data: order,
     });
-
   } catch (error) {
     console.error('获取工单详情错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: '获取工单详情失败',
-        details: (error as Error).message 
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -49,7 +48,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 
 export async function PUT(request: Request, { params }: RouteParams) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const body = await request.json();
     const { action, shopId, rating, completionNotes, cancelReason } = body;
@@ -64,11 +63,14 @@ export async function PUT(request: Request, { params }: RouteParams) {
             { status: 400 }
           );
         }
-        const confirmedOrder = await orderService.confirmOrder(params.orderId, shopId);
+        const confirmedOrder = await orderService.confirmOrder(
+          params.orderId,
+          shopId
+        );
         return NextResponse.json({
           success: true,
           data: confirmedOrder,
-          message: '工单确认成功'
+          message: '工单确认成功',
         });
 
       case 'complete':
@@ -81,13 +83,13 @@ export async function PUT(request: Request, { params }: RouteParams) {
         const completeDto: CompleteRepairOrderDTO = {
           orderId: params.orderId,
           rating,
-          completionNotes
+          completionNotes,
         };
         const completedOrder = await orderService.completeOrder(completeDto);
         return NextResponse.json({
           success: true,
           data: completedOrder,
-          message: '工单完成成功'
+          message: '工单完成成功',
         });
 
       case 'cancel':
@@ -97,11 +99,14 @@ export async function PUT(request: Request, { params }: RouteParams) {
             { status: 400 }
           );
         }
-        const cancelledOrder = await orderService.cancelOrder(params.orderId, cancelReason);
+        const cancelledOrder = await orderService.cancelOrder(
+          params.orderId,
+          cancelReason
+        );
         return NextResponse.json({
           success: true,
           data: cancelledOrder,
-          message: '工单取消成功'
+          message: '工单取消成功',
         });
 
       default:
@@ -110,14 +115,13 @@ export async function PUT(request: Request, { params }: RouteParams) {
           { status: 400 }
         );
     }
-
   } catch (error) {
     console.error('操作工单错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: '操作工单失败',
-        details: (error as Error).message 
+        details: (error as Error).message,
       },
       { status: 500 }
     );

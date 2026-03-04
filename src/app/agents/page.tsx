@@ -1,5 +1,5 @@
-/**
- * 智能体管理页面
+﻿/**
+ * 智能体管理页?
  * 提供智能体列表、创建、配置和 Playground 功能
  */
 
@@ -81,7 +81,7 @@ export default function AgentsPage() {
       const response = await fetch('/api/agents');
       
       if (!response.ok) {
-        throw new Error('获取智能体列表失败');
+        throw new Error('获取智能体列表失?);
       }
       
       const result = await response.json();
@@ -93,7 +93,7 @@ export default function AgentsPage() {
       }
       
     } catch (err: any) {
-      console.error('加载智能体失败:', err);
+      console.error('加载智能体失?', err);
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -111,7 +111,7 @@ export default function AgentsPage() {
       );
     }
     
-    // 状态过滤
+    // 状态过?
     if (statusFilter !== 'all') {
       filtered = filtered.filter(agent => agent.status === statusFilter);
     }
@@ -165,17 +165,17 @@ export default function AgentsPage() {
       });
       
       if (!response.ok) {
-        throw new Error('执行智能体失败');
+        throw new Error('执行智能体失?);
       }
       
       const result = await response.json();
-      alert(`${isDebug ? '调试' : '执行'}已启动: ${result.data.agentName}`);
+      alert(`${isDebug ? '调试' : '执行'}已启? ${result.data.agentName}`);
       
       // 重新加载执行记录
       loadAgents();
       
     } catch (err: any) {
-      console.error('执行智能体失败:', err);
+      console.error('执行智能体失?', err);
       alert(`执行失败: ${err.message}`);
     } finally {
       setIsExecuting(false);
@@ -230,19 +230,19 @@ export default function AgentsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">智能体管理</h1>
-              <p className="text-gray-600 mt-1">管理和测试您的 AI 智能体</p>
+              <h1 className="text-2xl font-bold text-gray-900">智能体管?/h1>
+              <p className="text-gray-600 mt-1">管理和测试您?AI 智能?/p>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
               className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-4 h-4" />
-              <span>新建智能体</span>
+              <span>新建智能?/span>
             </button>
           </div>
           
-          {/* 搜索和过滤 */}
+          {/* 搜索和过?*/}
           <div className="mt-6 flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -262,9 +262,9 @@ export default function AgentsPage() {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
-                <option value="all">全部状态</option>
-                <option value="active">已激活</option>
-                <option value="inactive">未激活</option>
+                <option value="all">全部状?/option>
+                <option value="active">已激?/option>
+                <option value="inactive">未激?/option>
                 <option value="draft">草稿</option>
               </select>
             </div>
@@ -274,7 +274,7 @@ export default function AgentsPage() {
 
       {/* 主要内容区域 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 智能体列表 */}
+        {/* 智能体列?*/}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           {filteredAgents.length === 0 ? (
             <div className="text-center py-12">
@@ -283,8 +283,8 @@ export default function AgentsPage() {
                   <Bot className="w-6 h-6" />
                 </div>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无智能体</h3>
-              <p className="text-gray-500">创建您的第一个 AI 智能体来开始自动化任务</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无智能?/h3>
+              <p className="text-gray-500">创建您的第一?AI 智能体来开始自动化任务</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
@@ -306,10 +306,10 @@ export default function AgentsPage() {
                       )}
                       
                       <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
-                        <span>创建于 {formatDate(agent.created_at)}</span>
-                        <span>更新于 {formatDate(agent.updated_at)}</span>
+                        <span>创建?{formatDate(agent.created_at)}</span>
+                        <span>更新?{formatDate(agent.updated_at)}</span>
                         {agent.executions && agent.executions.length > 0 && (
-                          <span>{agent.executions.length} 次执行</span>
+                          <span>{agent.executions.length} 次执?/span>
                         )}
                       </div>
                       
@@ -326,17 +326,17 @@ export default function AgentsPage() {
                       {/* 执行记录预览 */}
                       {agent.executions && agent.executions.length > 0 && (
                         <div className="mb-4">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">最近执行:</h4>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">最近执?</h4>
                           <div className="space-y-2">
                             {agent.executions.slice(0, 2).map((execution) => (
                               <div key={execution.id} className="flex items-center justify-between text-sm">
                                 <div className="flex items-center space-x-2">
                                   <Clock className="w-4 h-4 text-gray-400" />
                                   <span className={getExecutionStatusColor(execution.status)}>
-                                    {execution.status === 'completed' && '✅ '}
-                                    {execution.status === 'failed' && '❌ '}
+                                    {execution.status === 'completed' && '�?'}
+                                    {execution.status === 'failed' && '�?'}
                                     {execution.status === 'running' && '🔄 '}
-                                    {execution.status === 'pending' && '⏳ '}
+                                    {execution.status === 'pending' && '�?'}
                                     {execution.status}
                                   </span>
                                   <span className="text-gray-500">
@@ -442,7 +442,7 @@ export default function AgentsPage() {
                       className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <Play className="w-4 h-4" />
-                      <span>{isExecuting ? '执行中...' : '执行'}</span>
+                      <span>{isExecuting ? '执行?..' : '执行'}</span>
                     </button>
                     
                     <button
@@ -465,7 +465,7 @@ export default function AgentsPage() {
                     <div>
                       <Terminal className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                       <p>执行结果将在这里显示</p>
-                      <p className="text-sm mt-1">点击执行按钮开始测试</p>
+                      <p className="text-sm mt-1">点击执行按钮开始测?/p>
                     </div>
                   </div>
                 </div>
@@ -480,17 +480,17 @@ export default function AgentsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">创建新智能体</h2>
-            <p className="text-gray-600 mb-6">配置您的 AI 智能体</p>
+            <p className="text-gray-600 mb-6">配置您的 AI 智能?/p>
             
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  智能体名称 *
+                  智能体名?*
                 </label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="输入智能体名称"
+                  placeholder="输入智能体名?
                 />
               </div>
               
@@ -518,12 +518,12 @@ export default function AgentsPage() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  状态
+                  状?
                 </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                   <option value="draft">草稿</option>
-                  <option value="active">激活</option>
-                  <option value="inactive">未激活</option>
+                  <option value="active">激?/option>
+                  <option value="inactive">未激?/option>
                 </select>
               </div>
             </div>
@@ -542,7 +542,7 @@ export default function AgentsPage() {
                 }}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                创建智能体
+                创建智能?
               </button>
             </div>
           </div>

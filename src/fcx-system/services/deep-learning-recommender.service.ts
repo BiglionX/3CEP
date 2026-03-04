@@ -1,6 +1,6 @@
 /**
  * 深度学习推荐服务
- * 集成大语言模型和深度学习算法进行智能推荐
+ * 集成大语言模型和深度学习算法进行智能推?
  */
 
 import {
@@ -28,13 +28,11 @@ export class DeepLearningRecommender implements Recommender {
   }
 
   /**
-   * 初始化深度学习模型
+   * 初始化深度学习模?
    */
   async initialize(): Promise<void> {
     try {
-      console.log("🧠 初始化深度学习推荐模型...");
-
-      // 检查必要的环境变量
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log("🧠 初始化深度学习推荐模?..")// 检查必要的环境变量
       if (!process.env.DEEPSEEK_API_KEY) {
         console.warn("⚠️ 未配置DeepSeek API密钥，将使用简化推荐逻辑");
         this.isInitialized = true;
@@ -43,9 +41,8 @@ export class DeepLearningRecommender implements Recommender {
 
       // 可以在这里加载预训练模型或初始化API连接
       this.isInitialized = true;
-      console.log("✅ 深度学习推荐模型初始化完成");
-    } catch (error) {
-      console.error("深度学习模型初始化失败:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log("�?深度学习推荐模型初始化完?)} catch (error) {
+      console.error("深度学习模型初始化失?", error);
       // 即使初始化失败也标记为已初始化，使用备用方案
       this.isInitialized = true;
     }
@@ -55,15 +52,12 @@ export class DeepLearningRecommender implements Recommender {
    * 训练模型（在线学习）
    */
   async train(userData: UserBehavior[]): Promise<void> {
-    console.log("🤖 深度学习模型在线学习...");
-
-    // 在实际应用中，这里可以：
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log("🤖 深度学习模型在线学习...")// 在实际应用中，这里可以：
     // 1. 将数据发送到训练服务
     // 2. 更新嵌入向量
     // 3. 微调模型参数
 
-    console.log("✅ 深度学习模型学习完成");
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log("�?深度学习模型学习完成")}
 
   /**
    * 生成推荐
@@ -86,14 +80,14 @@ export class DeepLearningRecommender implements Recommender {
       // 2. 获取候选物品池
       const candidates = await this.getCandidateItems(userId, filters);
 
-      // 3. 使用大模型进行智能排序
+      // 3. 使用大模型进行智能排?
       const rankedItems = await this.rankItemsWithLLM(
         userProfile,
         candidates,
         context
       );
 
-      // 4. 后处理和多样化
+      // 4. 后处理和多样?
       const finalRecommendations = await this.postProcessRecommendations(
         rankedItems,
         count,
@@ -120,11 +114,10 @@ export class DeepLearningRecommender implements Recommender {
   async updateConfig(config: any): Promise<void> {
     // 可以在这里更新模型参数或API配置
     this.modelVersion = config.version || this.modelVersion;
-    console.log("✅ 深度学习推荐配置已更新");
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log("�?深度学习推荐配置已更?)}
 
   /**
-   * 获取候选物品
+   * 获取候选物?
    */
   private async getCandidateItems(
     userId: string,
@@ -144,7 +137,7 @@ export class DeepLearningRecommender implements Recommender {
       // 3. 获取新品物品
       const newItemIds = await this.getNewItems(30);
 
-      // 4. 合并并去重
+      // 4. 合并并去?
       const allCandidateIds = [...userItemIds, ...popularItems, ...newItemIds];
       const uniqueCandidateIds = [...new Set(allCandidateIds)].slice(0, 200);
 
@@ -164,7 +157,7 @@ export class DeepLearningRecommender implements Recommender {
 
       return candidateDetails.filter(Boolean) as any[];
     } catch (error) {
-      console.error("获取候选物品失败:", error);
+      console.error("获取候选物品失?", error);
       return [];
     }
   }
@@ -186,13 +179,13 @@ export class DeepLearningRecommender implements Recommender {
       // 否则使用传统机器学习方法
       return await this.mlBasedRanking(userProfile, candidates, context);
     } catch (error) {
-      console.error("LLM排序失败，使用备用方案:", error);
+      console.error("LLM排序失败，使用备用方?", error);
       return await this.mlBasedRanking(userProfile, candidates, context);
     }
   }
 
   /**
-   * 基于大语言模型的排序
+   * 基于大语言模型的排?
    */
   private async llmBasedRanking(
     userProfile: any,
@@ -224,35 +217,35 @@ export class DeepLearningRecommender implements Recommender {
     candidates: any[],
     context: RecommendationContext
   ): Promise<RecommendationItem[]> {
-    // 基于特征的评分系统
+    // 基于特征的评分系?
     const scoredCandidates = candidates.map((candidate) => {
       let score = 50; // 基础分数
 
-      // 用户偏好匹配度
+      // 用户偏好匹配?
       if (
-        userProfile?.preferences?.categories?.includes(
-          candidate.profile?.basicInfo?.category
+        userProfile??.categories?.includes(
+          candidate?.basicInfo?.category
         )
       ) {
         score += 20;
       }
 
       if (
-        userProfile?.preferences?.brands?.includes(
-          candidate.profile?.basicInfo?.brand
+        userProfile??.brands?.includes(
+          candidate?.basicInfo?.brand
         )
       ) {
         score += 15;
       }
 
       // 物品质量分数
-      score += (candidate.profile?.features?.qualityScore || 50) * 0.3;
+      score += (candidate?.features?.qualityScore || 50) * 0.3;
 
-      // 流行度分数
-      score += (candidate.profile?.features?.popularityScore || 50) * 0.2;
+      // 流行度分?
+      score += (candidate?.features?.popularityScore || 50) * 0.2;
 
       // 地理位置因素
-      if (context.location && candidate.profile?.location) {
+      if (context.location && candidate?.location) {
         const distance = this.calculateDistance(
           context.location.lat,
           context.location.lng,
@@ -266,7 +259,7 @@ export class DeepLearningRecommender implements Recommender {
       return {
         itemId: candidate.id,
         itemType:
-          candidate.profile?.itemType || RecommendationItemType.REPAIR_SHOP,
+          candidate?.itemType || RecommendationItemType.REPAIR_SHOP,
         score: Math.min(100, score),
         confidence: 0.8,
         reason: "基于机器学习算法推荐",
@@ -290,34 +283,34 @@ export class DeepLearningRecommender implements Recommender {
       ? `位置: ${context.location.lat.toFixed(
           4
         )}, ${context.location.lng.toFixed(4)}`
-      : "位置: 未提供";
+      : "位置: 未提?;
 
     const candidatesInfo = candidates
-      .slice(0, 20) // 限制候选物品数量
+      .slice(0, 20) // 限制候选物品数?
       .map((c, i) => {
         const profile = c.profile;
-        return `${i + 1}. ${profile?.basicInfo?.name || c.id} - ${
-          profile?.basicInfo?.category || "未知类别"
-        } - 质量分:${profile?.features?.qualityScore || 0}`;
+        return `${i + 1}. ${profile??.name || c.id} - ${
+          profile??.category || "未知类别"
+        } - 质量?${profile??.qualityScore || 0}`;
       })
       .join("\n");
 
     return `
-你是一个专业的推荐系统AI助手。请根据以下信息为用户推荐最合适的服务/商品：
+你是一个专业的推荐系统AI助手。请根据以下信息为用户推荐最合适的服务/商品?
 
 用户画像:
-- 偏好类别: ${userPrefs.categories?.join(", ") || "未提供"}
-- 偏好品牌: ${userPrefs.brands?.join(", ") || "未提供"}
-- 参与度: ${userProfile?.engagementLevel || "未知"}
+- 偏好类别: ${userPrefs?.join(", ") || "未提?}
+- 偏好品牌: ${userPrefs?.join(", ") || "未提?}
+- 参与? ${userProfile?.engagementLevel || "未知"}
 
-上下文信息:
+上下文信?
 - ${locationInfo}
 - 时间: ${new Date().toISOString()}
 
-候选物品列表:
+候选物品列?
 ${candidatesInfo}
 
-请按照适合程度对这些物品进行排序，只返回物品编号的排序结果，如："3,1,7,2,5..."。
+请按照适合程度对这些物品进行排序，只返回物品编号的排序结果，如?3,1,7,2,5..."�?
 `;
   }
 
@@ -354,7 +347,7 @@ ${candidatesInfo}
     }
 
     const data = await response.json();
-    return data.choices[0]?.message?.content || "";
+    return data.choices[0]??.content || "";
   }
 
   /**
@@ -372,7 +365,7 @@ ${candidatesInfo}
       }
 
       const rankedIndices = numbers
-        .map((num) => parseInt(num) - 1) // 转换为0基索引
+        .map((num) => parseInt(num) - 1) // 转换?基索?
         .filter((index) => index >= 0 && index < candidates.length) // 过滤有效索引
         .slice(0, 20); // 限制数量
 
@@ -384,7 +377,7 @@ ${candidatesInfo}
         return {
           itemId: candidate.id,
           itemType:
-            candidate.profile?.itemType || RecommendationItemType.REPAIR_SHOP,
+            candidate?.itemType || RecommendationItemType.REPAIR_SHOP,
           score: Math.max(50, 100 - rank * 3), // 根据排名给分
           confidence: 0.9,
           reason: "基于大语言模型智能推荐",
@@ -397,7 +390,7 @@ ${candidatesInfo}
       return candidates.slice(0, 10).map((candidate, index) => ({
         itemId: candidate.id,
         itemType:
-          candidate.profile?.itemType || RecommendationItemType.REPAIR_SHOP,
+          candidate?.itemType || RecommendationItemType.REPAIR_SHOP,
         score: 70 - index * 5,
         confidence: 0.7,
         reason: "基于大语言模型推荐（降级处理）",
@@ -407,14 +400,14 @@ ${candidatesInfo}
   }
 
   /**
-   * 推荐后处理
+   * 推荐后处?
    */
   private async postProcessRecommendations(
     recommendations: RecommendationItem[],
     targetCount: number,
     location?: { lat: number; lng: number }
   ): Promise<RecommendationItem[]> {
-    // 1. 多样化处理 - 确保类别多样性
+    // 1. 多样化处?- 确保类别多样?
     const diversified = this.ensureDiversity(recommendations);
 
     // 2. 地理位置优化
@@ -433,14 +426,14 @@ ${candidatesInfo}
   }
 
   /**
-   * 确保推荐多样性
+   * 确保推荐多样?
    */
   private ensureDiversity(
     recommendations: RecommendationItem[]
   ): RecommendationItem[] {
     const categoryGroups = new Map<string, RecommendationItem[]>();
 
-    // 按类别分组
+    // 按类别分?
     recommendations.forEach((item) => {
       const category = this.getItemCategory(item.itemId);
       if (!categoryGroups.has(category)) {
@@ -449,7 +442,7 @@ ${candidatesInfo}
       categoryGroups.get(category)?.push(item);
     });
 
-    // 从每个类别中选取物品，确保多样性
+    // 从每个类别中选取物品，确保多样?
     const result: RecommendationItem[] = [];
     const categories = Array.from(categoryGroups.keys());
     let remainingSlots = recommendations.length;
@@ -476,7 +469,7 @@ ${candidatesInfo}
   ): RecommendationItem[] {
     return recommendations.map((item) => {
       // 这里可以查询物品的具体位置并计算距离
-      // 简化处理：给所有物品添加位置相关分数
+      // 简化处理：给所有物品添加位置相关分?
       const locationBonus = Math.random() * 10; // 模拟位置优势
       return {
         ...item,
@@ -508,10 +501,10 @@ ${candidatesInfo}
   }
 
   /**
-   * 获取新物品
+   * 获取新物?
    */
   private async getNewItems(limit: number): Promise<string[]> {
-    // 模拟新物品获取
+    // 模拟新物品获?
     return Array.from({ length: limit }, (_, i) => `new_${i + 1}`);
   }
 
@@ -519,8 +512,8 @@ ${candidatesInfo}
    * 获取物品类别
    */
   private getItemCategory(itemId: string): string {
-    // 简化实现
-    if (itemId.includes("shop")) return "维修店";
+    // 简化实?
+    if (itemId.includes("shop")) return "维修?;
     if (itemId.includes("part")) return "配件";
     if (itemId.includes("service")) return "服务";
     return "其他";

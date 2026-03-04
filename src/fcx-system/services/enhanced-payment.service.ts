@@ -1,12 +1,10 @@
 /**
- * FCX购买服务增强版
- * 支持多种支付方式和完善的账户状态管理
- */
+ * FCX购买服务增强? * 支持多种支付方式和完善的账户状态管? */
 
-import { 
+import {
   PurchaseFcxDTO,
   FcxTransactionType,
-  AccountBalance
+  AccountBalance,
 } from '../models/fcx-account.model';
 import { IPaymentService } from './interfaces';
 import { supabase } from '@/lib/supabase';
@@ -21,17 +19,16 @@ export enum PaymentMethod {
   PAYPAL = 'paypal',
   ALIPAY = 'alipay',
   WECHAT_PAY = 'wechat_pay',
-  BANK_TRANSFER = 'bank_transfer'
+  BANK_TRANSFER = 'bank_transfer',
 }
 
-// 支付状态枚举
-export enum PaymentStatus {
+// 支付状态枚?export enum PaymentStatus {
   PENDING = 'pending',
   PROCESSING = 'processing',
   COMPLETED = 'completed',
   FAILED = 'failed',
   CANCELLED = 'cancelled',
-  REFUNDED = 'refunded'
+  REFUNDED = 'refunded',
 }
 
 // 支付记录接口
@@ -44,15 +41,12 @@ export interface PaymentRecord {
   paymentStatus: PaymentStatus;
   transactionId: string | null;
   paymentGatewayId: string | null; // 第三方支付网关ID
-  metadata: Record<string, any>; // 支付相关元数据
-  createdAt: Date;
+  metadata: Record<string, any>; // 支付相关元数?  createdAt: Date;
   updatedAt: Date;
 }
 
 export class EnhancedPaymentService {
-  // 注意：这个类不直接实现IPaymentService，因为返回类型不同
-  // 但提供了兼容的方法
-  
+  // 注意：这个类不直接实现IPaymentService，因为返回类型不?  // 但提供了兼容的方?
   private accountService: FcxAccountService;
 
   constructor() {
@@ -60,8 +54,7 @@ export class EnhancedPaymentService {
   }
 
   /**
-   * 处理FCX购买支付（增强版）
-   */
+   * 处理FCX购买支付（增强版?   */
   async processFcxPurchase(dto: PurchaseFcxDTO): Promise<{
     success: boolean;
     transactionId?: string;
@@ -78,7 +71,7 @@ export class EnhancedPaymentService {
           success: false,
           fcxAmount: 0,
           paymentStatus: PaymentStatus.FAILED,
-          errorMessage: validation.errors.join('; ')
+          errorMessage: validation.errors.join('; '),
         };
       }
 
@@ -98,10 +91,10 @@ export class EnhancedPaymentService {
         paymentGatewayId: null,
         metadata: {
           userAgent: 'enhanced-payment-service',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       // 4. 保存支付记录
@@ -118,7 +111,7 @@ export class EnhancedPaymentService {
           payment_gateway_id: null,
           metadata: paymentRecord.metadata,
           created_at: new Date(),
-          updated_at: new Date()
+          updated_at: new Date(),
         } as any);
 
       if (paymentError) {
@@ -126,13 +119,17 @@ export class EnhancedPaymentService {
           success: false,
           fcxAmount: 0,
           paymentStatus: PaymentStatus.FAILED,
-          errorMessage: `创建支付记录失败: ${paymentError.message}`
+          errorMessage: `创建支付记录失败: ${paymentError.message}`,
         };
       }
 
       // 5. 处理具体支付方式
-      const paymentResult = await this.handlePaymentMethod(dto, paymentId, fcxAmount);
-      
+      const paymentResult = await this.handlePaymentMethod(
+        dto,
+        paymentId,
+        fcxAmount
+      );
+
       if (!paymentResult.success) {
         // 更新支付状态为失败
         await this.updatePaymentStatus(paymentId, PaymentStatus.FAILED);
@@ -141,19 +138,17 @@ export class EnhancedPaymentService {
           paymentId,
           fcxAmount: 0,
           paymentStatus: PaymentStatus.FAILED,
-          errorMessage: paymentResult.errorMessage
+          errorMessage: paymentResult.errorMessage,
         };
       }
 
-      // 6. 更新支付状态为处理中
-      await this.updatePaymentStatus(paymentId, PaymentStatus.PROCESSING);
+      // 6. 更新支付状态为处理?      await this.updatePaymentStatus(paymentId, PaymentStatus.PROCESSING);
 
-      // 7. 查找或创建用户账户
-      let accountId = await this.getOrCreateUserAccount(dto.userId);
+      // 7. 查找或创建用户账?      let accountId = await this.getOrCreateUserAccount(dto.userId);
 
       // 8. 创建交易记录
       const transactionId = generateUUID();
-      const { error: transactionError } = await supabase
+      const { error: transactionError } = (await supabase
         .from('fcx_transactions')
         .insert({
           id: transactionId,
@@ -164,8 +159,8 @@ export class EnhancedPaymentService {
           reference_id: paymentId,
           memo: `购买${fcxAmount} as any FCX via ${dto.paymentMethod}`,
           status: 'completed',
-          created_at: new Date()
-        });
+          created_at: new Date(),
+        })) as any;
 
       if (transactionError) {
         await this.updatePaymentStatus(paymentId, PaymentStatus.FAILED);
@@ -174,14 +169,14 @@ export class EnhancedPaymentService {
           paymentId,
           fcxAmount: 0,
           paymentStatus: PaymentStatus.FAILED,
-          errorMessage: `创建交易记录失败: ${transactionError.message}`
+          errorMessage: `创建交易记录失败: ${transactionError.message}`,
         };
       }
 
       // 9. 更新账户余额
       const { error: updateError } = await supabase.rpc('add_fcx_balance', {
         p_account_id: accountId,
-        p_amount: fcxAmount
+        p_amount: fcxAmount,
       });
 
       if (updateError) {
@@ -191,14 +186,14 @@ export class EnhancedPaymentService {
           paymentId,
           fcxAmount: 0,
           paymentStatus: PaymentStatus.FAILED,
-          errorMessage: `更新账户余额失败: ${updateError.message}`
+          errorMessage: `更新账户余额失败: ${updateError.message}`,
         };
       }
 
       // 10. 更新支付状态为完成
       await this.updatePaymentStatus(paymentId, PaymentStatus.COMPLETED, {
         transactionId,
-        paymentGatewayId: paymentResult.gatewayId
+        paymentGatewayId: paymentResult.gatewayId,
       });
 
       return {
@@ -206,16 +201,15 @@ export class EnhancedPaymentService {
         transactionId,
         paymentId,
         fcxAmount,
-        paymentStatus: PaymentStatus.COMPLETED
+        paymentStatus: PaymentStatus.COMPLETED,
       };
-
     } catch (error) {
       console.error('处理FCX购买错误:', error);
       return {
         success: false,
         fcxAmount: 0,
         paymentStatus: PaymentStatus.FAILED,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
@@ -239,7 +233,7 @@ export class EnhancedPaymentService {
       if (error) {
         return {
           isValid: false,
-          paymentStatus: PaymentStatus.FAILED
+          paymentStatus: PaymentStatus.FAILED,
         };
       }
 
@@ -247,22 +241,23 @@ export class EnhancedPaymentService {
         isValid: data.payment_status === PaymentStatus.COMPLETED,
         paymentStatus: data.payment_status as PaymentStatus,
         transactionId: data.transaction_id,
-        fcxAmount: data.fcx_amount
+        fcxAmount: data.fcx_amount,
       };
-
     } catch (error) {
       console.error('验证支付结果错误:', error);
       return {
         isValid: false,
-        paymentStatus: PaymentStatus.FAILED
+        paymentStatus: PaymentStatus.FAILED,
       };
     }
   }
 
   /**
-   * 退款处理
-   */
-  async processRefund(transactionId: string, amount: number): Promise<{
+   * 退款处?   */
+  async processRefund(
+    transactionId: string,
+    amount: number
+  ): Promise<{
     success: boolean;
     refundId?: string;
     errorMessage?: string;
@@ -278,38 +273,37 @@ export class EnhancedPaymentService {
       if (transactionError) {
         return {
           success: false,
-          errorMessage: '交易记录不存在'
+          errorMessage: '交易记录不存?,
         };
       }
 
-      // 2. 验证退款金额
-      if (amount <= 0 || amount > transaction.amount) {
+      // 2. 验证退款金?      if (amount <= 0 || amount > transaction.amount) {
         return {
           success: false,
-          errorMessage: '退款金额无效'
+          errorMessage: '退款金额无?,
         };
       }
 
-      // 3. 验证交易类型是否支持退款
-      if (transaction.transaction_type !== FcxTransactionType.PURCHASE) {
+      // 3. 验证交易类型是否支持退?      if (transaction.transaction_type !== FcxTransactionType.PURCHASE) {
         return {
           success: false,
-          errorMessage: '该交易不支持退款'
+          errorMessage: '该交易不支持退?,
         };
       }
 
       // 4. 验证原支付是否已完成
-      const paymentVerification = await this.verifyPayment(transaction.reference_id);
+      const paymentVerification = await this.verifyPayment(
+        transaction.reference_id
+      );
       if (!paymentVerification.isValid) {
         return {
           success: false,
-          errorMessage: '原支付未完成，无法退款'
+          errorMessage: '原支付未完成，无法退?,
         };
       }
 
-      // 5. 创建退款记录
-      const refundId = generateUUID();
-      const { error: refundError } = await supabase
+      // 5. 创建退款记?      const refundId = generateUUID();
+      const { error: refundError } = (await supabase
         .from('fcx_transactions')
         .insert({
           id: refundId,
@@ -318,44 +312,48 @@ export class EnhancedPaymentService {
           amount: amount,
           transaction_type: 'refund',
           reference_id: transactionId,
-          memo: `退款 ${amount} as any FCX`,
+          memo: `退?${amount} as any FCX`,
           status: 'completed',
-          created_at: new Date()
-        });
+          created_at: new Date(),
+        })) as any;
 
       if (refundError) {
         return {
           success: false,
-          errorMessage: `创建退款记录失败: ${refundError.message}`
+          errorMessage: `创建退款记录失? ${refundError.message}`,
         };
       }
 
       // 6. 更新账户余额
-      const { error: updateError } = await supabase.rpc('subtract_fcx_balance', {
-        p_account_id: transaction.to_account_id,
-        p_amount: amount
-      });
+      const { error: updateError } = await supabase.rpc(
+        'subtract_fcx_balance',
+        {
+          p_account_id: transaction.to_account_id,
+          p_amount: amount,
+        }
+      );
 
       if (updateError) {
         return {
           success: false,
-          errorMessage: `更新账户余额失败: ${updateError.message}`
+          errorMessage: `更新账户余额失败: ${updateError.message}`,
         };
       }
 
-      // 7. 更新原支付记录状态
-      await this.updatePaymentStatus(transaction.reference_id, PaymentStatus.REFUNDED);
+      // 7. 更新原支付记录状?      await this.updatePaymentStatus(
+        transaction.reference_id,
+        PaymentStatus.REFUNDED
+      );
 
       return {
         success: true,
-        refundId
+        refundId,
       };
-
     } catch (error) {
-      console.error('处理退款错误:', error);
+      console.error('处理退款错?', error);
       return {
         success: false,
-        errorMessage: `系统错误: ${(error as Error).message}`
+        errorMessage: `系统错误: ${(error as Error).message}`,
       };
     }
   }
@@ -363,7 +361,10 @@ export class EnhancedPaymentService {
   /**
    * 获取用户支付历史
    */
-  async getUserPaymentHistory(userId: string, limit: number = 20): Promise<PaymentRecord[]> {
+  async getUserPaymentHistory(
+    userId: string,
+    limit: number = 20
+  ): Promise<PaymentRecord[]> {
     try {
       const { data, error } = await supabase
         .from('payment_records')
@@ -387,9 +388,8 @@ export class EnhancedPaymentService {
         paymentGatewayId: record.payment_gateway_id,
         metadata: record.metadata,
         createdAt: new Date(record.created_at),
-        updatedAt: new Date(record.updated_at)
+        updatedAt: new Date(record.updated_at),
       }));
-
     } catch (error) {
       console.error('获取支付历史错误:', error);
       throw error;
@@ -399,20 +399,21 @@ export class EnhancedPaymentService {
   /**
    * 获取账户余额详情
    */
-  async getAccountBalanceDetails(userId: string): Promise<AccountBalance & {
-    totalTransactions: number;
-    recentTransactions: any[];
-  }> {
+  async getAccountBalanceDetails(userId: string): Promise<
+    AccountBalance & {
+      totalTransactions: number;
+      recentTransactions: any[];
+    }
+  > {
     try {
       const account = await this.accountService.getAccountByUserId(userId);
       if (!account) {
-        throw new Error('账户不存在');
+        throw new Error('账户不存?);
       }
 
       const balance = await this.accountService.getBalance(account.id);
-      
-      // 获取最近交易记录
-      const { data: transactions } = await supabase
+
+      // 获取最近交易记?      const { data: transactions } = await supabase
         .from('fcx_transactions')
         .select('*')
         .or(`from_account_id.eq.${account.id},to_account_id.eq.${account.id}`)
@@ -428,9 +429,8 @@ export class EnhancedPaymentService {
       return {
         ...balance,
         totalTransactions: totalTransactions || 0,
-        recentTransactions: transactions || []
+        recentTransactions: transactions || [],
       };
-
     } catch (error) {
       console.error('获取账户余额详情错误:', error);
       throw error;
@@ -439,7 +439,10 @@ export class EnhancedPaymentService {
 
   // 私有辅助方法
 
-  private validatePurchaseRequest(dto: PurchaseFcxDTO): { isValid: boolean; errors: string[] } {
+  private validatePurchaseRequest(dto: PurchaseFcxDTO): {
+    isValid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
     if (!dto.userId) {
@@ -460,18 +463,21 @@ export class EnhancedPaymentService {
       errors.push(`不支持的支付方式: ${dto.paymentMethod}`);
     }
 
-    // 金额限制检查
-    if (dto.amountUSD > 10000) {
+    // 金额限制检?    if (dto.amountUSD > 10000) {
       errors.push('单笔购买金额不能超过10000美元');
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
-  private async handlePaymentMethod(dto: PurchaseFcxDTO, paymentId: string, fcxAmount: number): Promise<{
+  private async handlePaymentMethod(
+    dto: PurchaseFcxDTO,
+    paymentId: string,
+    fcxAmount: number
+  ): Promise<{
     success: boolean;
     gatewayId?: string;
     errorMessage?: string;
@@ -491,12 +497,15 @@ export class EnhancedPaymentService {
       default:
         return {
           success: false,
-          errorMessage: '不支持的支付方式'
+          errorMessage: '不支持的支付方式',
         };
     }
   }
 
-  private async processStripePayment(dto: PurchaseFcxDTO, paymentId: string): Promise<{
+  private async processStripePayment(
+    dto: PurchaseFcxDTO,
+    paymentId: string
+  ): Promise<{
     success: boolean;
     gatewayId?: string;
     errorMessage?: string;
@@ -504,29 +513,31 @@ export class EnhancedPaymentService {
     try {
       // 模拟Stripe支付处理
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // 90%成功率模拟
-      if (Math.random() > 0.1) {
+
+      // 90%成功率模?      if (Math.random() > 0.1) {
         const gatewayId = `stripe_${generateUUID()}`;
         return {
           success: true,
-          gatewayId
+          gatewayId,
         };
       } else {
         return {
           success: false,
-          errorMessage: 'Stripe支付处理失败'
+          errorMessage: 'Stripe支付处理失败',
         };
       }
     } catch (error) {
       return {
         success: false,
-        errorMessage: 'Stripe支付系统错误'
+        errorMessage: 'Stripe支付系统错误',
       };
     }
   }
 
-  private async processPayPalPayment(dto: PurchaseFcxDTO, paymentId: string): Promise<{
+  private async processPayPalPayment(
+    dto: PurchaseFcxDTO,
+    paymentId: string
+  ): Promise<{
     success: boolean;
     gatewayId?: string;
     errorMessage?: string;
@@ -539,7 +550,10 @@ export class EnhancedPaymentService {
     return { success: false, errorMessage: 'PayPal支付失败' };
   }
 
-  private async processAlipayPayment(dto: PurchaseFcxDTO, paymentId: string): Promise<{
+  private async processAlipayPayment(
+    dto: PurchaseFcxDTO,
+    paymentId: string
+  ): Promise<{
     success: boolean;
     gatewayId?: string;
     errorMessage?: string;
@@ -549,10 +563,13 @@ export class EnhancedPaymentService {
     if (Math.random() > 0.05) {
       return { success: true, gatewayId: `alipay_${generateUUID()}` };
     }
-    return { success: false, errorMessage: '支付宝支付失败' };
+    return { success: false, errorMessage: '支付宝支付失? };
   }
 
-  private async processWeChatPayPayment(dto: PurchaseFcxDTO, paymentId: string): Promise<{
+  private async processWeChatPayPayment(
+    dto: PurchaseFcxDTO,
+    paymentId: string
+  ): Promise<{
     success: boolean;
     gatewayId?: string;
     errorMessage?: string;
@@ -565,17 +582,19 @@ export class EnhancedPaymentService {
     return { success: false, errorMessage: '微信支付失败' };
   }
 
-  private async processBankTransfer(dto: PurchaseFcxDTO, paymentId: string): Promise<{
+  private async processBankTransfer(
+    dto: PurchaseFcxDTO,
+    paymentId: string
+  ): Promise<{
     success: boolean;
     gatewayId?: string;
     errorMessage?: string;
   }> {
     // 银行转账逻辑（模拟）
-    // 银行转账通常需要人工确认，所以返回特殊状态
-    return { 
-      success: true, 
+    // 银行转账通常需要人工确认，所以返回特殊状?    return {
+      success: true,
       gatewayId: `bank_${generateUUID()}`,
-      errorMessage: '银行转账需要人工确认，请联系客服' 
+      errorMessage: '银行转账需要人工确认，请联系客?,
     };
   }
 
@@ -588,13 +607,12 @@ export class EnhancedPaymentService {
     const newAccount = await this.accountService.createAccount({
       userId,
       accountType: 'user' as any,
-      initialBalance: 0
+      initialBalance: 0,
     });
     return newAccount.id;
   }
 
-  // 兼容IPaymentService接口的方法
-  async processFcxPurchaseCompatible(dto: PurchaseFcxDTO): Promise<{
+  // 兼容IPaymentService接口的方?  async processFcxPurchaseCompatible(dto: PurchaseFcxDTO): Promise<{
     success: boolean;
     transactionId?: string;
     fcxAmount: number;
@@ -605,7 +623,7 @@ export class EnhancedPaymentService {
       success: result.success,
       transactionId: result.transactionId,
       fcxAmount: result.fcxAmount,
-      errorMessage: result.errorMessage
+      errorMessage: result.errorMessage,
     };
   }
 
@@ -614,20 +632,23 @@ export class EnhancedPaymentService {
     return result.isValid;
   }
 
-  async processRefundCompatible(transactionId: string, amount: number): Promise<boolean> {
+  async processRefundCompatible(
+    transactionId: string,
+    amount: number
+  ): Promise<boolean> {
     const result = await this.processRefund(transactionId, amount);
     return result.success;
   }
 
   private async updatePaymentStatus(
-    paymentId: string, 
-    status: PaymentStatus, 
+    paymentId: string,
+    status: PaymentStatus,
     additionalData?: { transactionId?: string; paymentGatewayId?: string }
   ): Promise<void> {
     try {
       const updateData: any = {
         payment_status: status,
-        updated_at: new Date()
+        updated_at: new Date(),
       };
 
       if (additionalData?.transactionId) {
@@ -642,9 +663,8 @@ export class EnhancedPaymentService {
         .from('payment_records')
         .update(updateData)
         .eq('id', paymentId);
-
     } catch (error) {
-      console.error('更新支付状态错误:', error);
+      console.error('更新支付状态错?', error);
     }
   }
 }

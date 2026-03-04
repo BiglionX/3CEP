@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -52,7 +52,7 @@ export default function ShopsManagementPage() {
   const [editingShop, setEditingShop] = useState<Shop | null>(null)
   const [expandedRows, setExpandedRows] = useState<string[]>([])
 
-  // 获取已审核店铺列表
+  // 获取已审核店铺列?
   const fetchApprovedShops = async () => {
     try {
       setLoading(true)
@@ -71,7 +71,7 @@ export default function ShopsManagementPage() {
         setPagination(result.pagination)
       }
     } catch (error) {
-      console.error('获取已审核店铺失败:', error)
+      console.error('获取已审核店铺失?', error)
     } finally {
       setLoading(false)
     }
@@ -81,7 +81,7 @@ export default function ShopsManagementPage() {
     fetchApprovedShops()
   }, [pagination.page, searchTerm, statusFilter])
 
-  // 处理全选
+  // 处理全?
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(shops.map(shop => shop.id))
@@ -138,7 +138,7 @@ export default function ShopsManagementPage() {
     const newStatus = currentStatus === 'approved' ? 'disabled' : 'approved'
     const actionText = newStatus === 'disabled' ? '禁用' : '启用'
     
-    if (!confirm(`确定要${actionText}这家店铺吗？`)) return
+    if (!confirm(`确定?{actionText}这家店铺吗？`)) return
     
     try {
       const response = await fetch(`/api/admin/shops/${shopId}`, {
@@ -159,14 +159,14 @@ export default function ShopsManagementPage() {
         alert(`操作失败: ${result.error}`)
       }
     } catch (error) {
-      console.error('状态切换失败:', error)
+      console.error('状态切换失?', error)
       alert('操作失败')
     }
   }
 
   // 删除店铺
   const deleteShop = async (shopId: string, shopName: string) => {
-    if (!confirm(`确定要删除店铺 "${shopName}" 吗？此操作不可撤销！`)) return
+    if (!confirm(`确定要删除店?"${shopName}" 吗？此操作不可撤销！`)) return
     
     try {
       const response = await fetch(`/api/admin/shops/${shopId}`, {
@@ -186,7 +186,7 @@ export default function ShopsManagementPage() {
     }
   }
 
-  // 切换行展开状态
+  // 切换行展开状?
   const toggleRowExpansion = (id: string) => {
     setExpandedRows(prev => 
       prev.includes(id) 
@@ -195,17 +195,17 @@ export default function ShopsManagementPage() {
     )
   }
 
-  // 格式化日期
+  // 格式化日?
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'yyyy-MM-dd HH:mm', { locale: zhCN })
   }
 
-  // 获取状态标签样式
+  // 获取状态标签样?
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
       approved: { text: '已通过', className: 'bg-green-100 text-green-800' },
-      rejected: { text: '已驳回', className: 'bg-red-100 text-red-800' },
-      disabled: { text: '已禁用', className: 'bg-gray-100 text-gray-800' }
+      rejected: { text: '已驳?, className: 'bg-red-100 text-red-800' },
+      disabled: { text: '已禁?, className: 'bg-gray-100 text-gray-800' }
     }
     
     const config = statusMap[status] || { text: status, className: 'bg-gray-100 text-gray-800' }
@@ -223,16 +223,16 @@ export default function ShopsManagementPage() {
     const hasHalfStar = rating % 1 !== 0
     
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<span key={i} className="text-yellow-400">★</span>)
+      stars.push(<span key={i} className="text-yellow-400">�?/span>)
     }
     
     if (hasHalfStar) {
-      stars.push(<span key="half" className="text-yellow-400">☆</span>)
+      stars.push(<span key="half" className="text-yellow-400">�?/span>)
     }
     
     const remaining = 5 - Math.ceil(rating)
     for (let i = 0; i < remaining; i++) {
-      stars.push(<span key={`empty-${i}`} className="text-gray-300">☆</span>)
+      stars.push(<span key={`empty-${i}`} className="text-gray-300">�?/span>)
     }
     
     return (
@@ -249,7 +249,7 @@ export default function ShopsManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">店铺管理</h1>
-          <p className="text-gray-600 mt-1">管理已审核通过的维修店铺</p>
+          <p className="text-gray-600 mt-1">管理已审核通过的维修店?/p>
         </div>
         
         <div className="flex gap-2 flex-wrap">
@@ -265,10 +265,10 @@ export default function ShopsManagementPage() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="all">全部状态</option>
+            <option value="all">全部状?/option>
             <option value="approved">已通过</option>
-            <option value="rejected">已驳回</option>
-            <option value="disabled">已禁用</option>
+            <option value="rejected">已驳?/option>
+            <option value="disabled">已禁?/option>
           </select>
           
           {selectedIds.length > 0 && (
@@ -286,7 +286,7 @@ export default function ShopsManagementPage() {
         {loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-2 text-gray-600">加载中...</span>
+            <span className="ml-2 text-gray-600">加载?..</span>
           </div>
         ) : (
           <Table>
@@ -301,9 +301,9 @@ export default function ShopsManagementPage() {
                   />
                 </TableHead>
                 <TableHead>店铺信息</TableHead>
-                <TableHead>联系人</TableHead>
+                <TableHead>联系?/TableHead>
                 <TableHead>评分</TableHead>
-                <TableHead>状态</TableHead>
+                <TableHead>状?/TableHead>
                 <TableHead>更新时间</TableHead>
                 <TableHead className="text-right">操作</TableHead>
               </TableRow>
@@ -350,7 +350,7 @@ export default function ShopsManagementPage() {
                     <div className="flex items-center">
                       {renderRating(shop.rating || 0)}
                       <span className="ml-2 text-xs text-gray-500">
-                        ({shop.review_count || 0}条评论)
+                        ({shop.review_count || 0}条评?
                       </span>
                     </div>
                   </TableCell>
@@ -398,9 +398,9 @@ export default function ShopsManagementPage() {
                           <div>
                             <h4 className="font-medium text-gray-900 mb-2">基本信息</h4>
                             <div className="space-y-1 text-sm">
-                              <div><span className="text-gray-500">地址：</span>{shop.address}</div>
-                              <div><span className="text-gray-500">营业执照：</span>{shop.business_license || '未提供'}</div>
-                              <div><span className="text-gray-500">创建时间：</span>{formatDate(shop.created_at)}</div>
+                              <div><span className="text-gray-500">地址?/span>{shop.address}</div>
+                              <div><span className="text-gray-500">营业执照?/span>{shop.business_license || '未提?}</div>
+                              <div><span className="text-gray-500">创建时间?/span>{formatDate(shop.created_at)}</div>
                             </div>
                           </div>
                           
@@ -454,7 +454,7 @@ export default function ShopsManagementPage() {
                             <h4 className="font-medium text-gray-900 mb-2">店铺照片</h4>
                             <img 
                               src={shop.cover_image_url} 
-                              alt="店铺门头照"
+                              alt="店铺门头?
                               className="w-64 h-32 rounded-md object-cover border"
                             />
                           </div>
@@ -472,9 +472,9 @@ export default function ShopsManagementPage() {
         {pagination.totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t">
             <div className="text-sm text-gray-700">
-              显示第 {(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
+              显示?{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
               {Math.min(pagination.page * pagination.pageSize, pagination.total)} 条，
-              共 {pagination.total} 条记录
+              �?{pagination.total} 条记?
             </div>
             <div className="flex gap-2">
               <Button
@@ -483,7 +483,7 @@ export default function ShopsManagementPage() {
                 variant="outline"
                 size="sm"
               >
-                上一页
+                上一?
               </Button>
               <Button
                 onClick={() => setPagination({...pagination, page: pagination.page + 1})}
@@ -491,14 +491,14 @@ export default function ShopsManagementPage() {
                 variant="outline"
                 size="sm"
               >
-                下一页
+                下一?
               </Button>
             </div>
           </div>
         )}
       </div>
 
-      {/* 编辑店铺对话框 */}
+      {/* 编辑店铺对话?*/}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -521,7 +521,7 @@ export default function ShopsManagementPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    联系人 *
+                    联系?*
                   </label>
                   <Input
                     value={editingShop.contact_person}

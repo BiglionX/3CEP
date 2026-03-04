@@ -50,19 +50,16 @@ export default function MonitoringDashboard() {
   >([]);
   const [chartData, setChartData] = useState<any[]>([]);
 
-  // 初始化加载数据
-  useEffect(() => {
+  // 初始化加载数?  useEffect(() => {
     loadData();
     // 设置定时刷新
-    const interval = setInterval(loadData, 30000); // 每30秒刷新一次
-    return () => clearInterval(interval);
+    const interval = setInterval(loadData, 30000); // �?0秒刷新一?    return () => clearInterval(interval);
   }, []);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      // 并行获取所有数据
-      const [metricsData, healthData, alertsData, chartData] =
+      // 并行获取所有数?      const [metricsData, healthData, alertsData, chartData] =
         await Promise.all([
           MonitoringService.getSystemMetrics(),
           MonitoringService.getSystemHealth(),
@@ -120,17 +117,17 @@ export default function MonitoringDashboard() {
     return (
       <div className="flex items-center justify-center py-12">
         <RefreshCw className="w-6 h-6 animate-spin mr-2" />
-        加载监控数据中...
+        加载监控数据?..
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和刷新按钮 */}
+      {/* 页面标题和刷新按?*/}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">系统监控仪表板</h1>
+          <h1 className="text-3xl font-bold tracking-tight">系统监控仪表?/h1>
           <p className="text-muted-foreground">
             实时监控系统运行状态和关键指标
           </p>
@@ -139,18 +136,17 @@ export default function MonitoringDashboard() {
           <RefreshCw
             className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`}
           />
-          {refreshing ? '刷新中...' : '刷新数据'}
+          {refreshing ? '刷新?..' : '刷新数据'}
         </Button>
       </div>
 
-      {/* 健康状态概览 */}
+      {/* 健康状态概?*/}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className={`${getHealthBgColor(healthScore)} border-0`}>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center">
               <Activity className="w-4 h-4 mr-2" />
-              系统健康度
-            </CardTitle>
+              系统健康?            </CardTitle>
           </CardHeader>
           <CardContent>
             <div
@@ -162,8 +158,8 @@ export default function MonitoringDashboard() {
               {healthScore >= 80
                 ? '系统运行良好'
                 : healthScore >= 60
-                ? '需要注意'
-                : '系统存在问题'}
+                  ? '需要注?
+                  : '系统存在问题'}
             </p>
           </CardContent>
         </Card>
@@ -179,7 +175,7 @@ export default function MonitoringDashboard() {
             <div className="text-2xl font-bold">
               {metrics?.active_users || 0}
             </div>
-            <p className="text-xs text-muted-foreground">过去1小时活跃用户数</p>
+            <p className="text-xs text-muted-foreground">过去1小时活跃用户?/p>
           </CardContent>
         </Card>
 
@@ -187,8 +183,7 @@ export default function MonitoringDashboard() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center">
               <Clock className="w-4 h-4 mr-2" />
-              待审核
-            </CardTitle>
+              待审?            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -220,13 +215,12 @@ export default function MonitoringDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Cpu className="w-5 h-5 mr-2" />
-              CPU使用率
-            </CardTitle>
+              CPU使用?            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm">当前使用率</span>
+                <span className="text-sm">当前使用?/span>
                 <span className="font-medium">{metrics?.cpu_usage || 0}%</span>
               </div>
               <div className="w-full bg-secondary rounded-full h-2">
@@ -235,8 +229,8 @@ export default function MonitoringDashboard() {
                     (metrics?.cpu_usage || 0) > 80
                       ? 'bg-red-500'
                       : (metrics?.cpu_usage || 0) > 60
-                      ? 'bg-yellow-500'
-                      : 'bg-green-500'
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500'
                   }`}
                   style={{ width: `${metrics?.cpu_usage || 0}%` }}
                 ></div>
@@ -249,13 +243,12 @@ export default function MonitoringDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Database className="w-5 h-5 mr-2" />
-              内存使用率
-            </CardTitle>
+              内存使用?            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm">当前使用率</span>
+                <span className="text-sm">当前使用?/span>
                 <span className="font-medium">
                   {metrics?.memory_usage || 0}%
                 </span>
@@ -266,8 +259,8 @@ export default function MonitoringDashboard() {
                     (metrics?.memory_usage || 0) > 85
                       ? 'bg-red-500'
                       : (metrics?.memory_usage || 0) > 70
-                      ? 'bg-yellow-500'
-                      : 'bg-green-500'
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500'
                   }`}
                   style={{ width: `${metrics?.memory_usage || 0}%` }}
                 ></div>
@@ -280,13 +273,12 @@ export default function MonitoringDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <HardDrive className="w-5 h-5 mr-2" />
-              磁盘使用率
-            </CardTitle>
+              磁盘使用?            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm">当前使用率</span>
+                <span className="text-sm">当前使用?/span>
                 <span className="font-medium">{metrics?.disk_usage || 0}%</span>
               </div>
               <div className="w-full bg-secondary rounded-full h-2">
@@ -295,8 +287,8 @@ export default function MonitoringDashboard() {
                     (metrics?.disk_usage || 0) > 90
                       ? 'bg-red-500'
                       : (metrics?.disk_usage || 0) > 80
-                      ? 'bg-yellow-500'
-                      : 'bg-green-500'
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500'
                   }`}
                   style={{ width: `${metrics?.disk_usage || 0}%` }}
                 ></div>
@@ -306,14 +298,14 @@ export default function MonitoringDashboard() {
         </Card>
       </div>
 
-      {/* 图表和警告区域 */}
+      {/* 图表和警告区?*/}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 用户活跃度趋势图 */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
               <BarChart3 className="w-5 h-5 mr-2" />
-              用户活跃度趋势 (24小时)
+              用户活跃度趋?(24小时)
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -374,15 +366,15 @@ export default function MonitoringDashboard() {
                         alert.level === 'error'
                           ? 'destructive'
                           : alert.level === 'warning'
-                          ? 'default'
-                          : 'secondary'
+                            ? 'default'
+                            : 'secondary'
                       }
                     >
                       {alert.level === 'error'
                         ? '严重'
                         : alert.level === 'warning'
-                        ? '警告'
-                        : '信息'}
+                          ? '警告'
+                          : '信息'}
                     </Badge>
                   </div>
                 ))
@@ -408,13 +400,13 @@ export default function MonitoringDashboard() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">错误率</CardTitle>
+            <CardTitle className="text-sm font-medium">错误?/CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {metrics?.error_rate || 0}%
             </div>
-            <p className="text-xs text-muted-foreground">系统错误率</p>
+            <p className="text-xs text-muted-foreground">系统错误?/p>
           </CardContent>
         </Card>
 
@@ -426,7 +418,7 @@ export default function MonitoringDashboard() {
             <div className="text-2xl font-bold">
               {metrics?.online_users || 0}
             </div>
-            <p className="text-xs text-muted-foreground">当前在线用户数</p>
+            <p className="text-xs text-muted-foreground">当前在线用户?/p>
           </CardContent>
         </Card>
 
@@ -438,7 +430,7 @@ export default function MonitoringDashboard() {
             <div className="text-2xl font-bold">
               {metrics?.recent_activities || 0}
             </div>
-            <p className="text-xs text-muted-foreground">过去24小时活动数</p>
+            <p className="text-xs text-muted-foreground">过去24小时活动?/p>
           </CardContent>
         </Card>
       </div>

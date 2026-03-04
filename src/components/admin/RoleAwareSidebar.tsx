@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 角色感知的侧边栏菜单组件
  * 根据用户角色动态显示菜单项
  */
@@ -32,7 +32,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-// 菜单项接口
+// 菜单项接?
 interface MenuItem {
   id: string;
   name: string;
@@ -56,7 +56,7 @@ export function RoleAwareSidebar() {
   const menuItems: MenuItem[] = [
     {
       id: 'dashboard',
-      name: '仪表板',
+      name: '仪表?,
       href: '/admin/dashboard',
       icon: <Home className="w-5 h-5" />,
       roles: [
@@ -136,7 +136,7 @@ export function RoleAwareSidebar() {
       children: [
         {
           id: 'shop-pending',
-          name: '待审核店铺',
+          name: '待审核店?,
           href: '/admin/shops/pending',
           icon: <Shield className="w-4 h-4" />,
           roles: ['admin', 'manager', 'shop_manager'],
@@ -144,7 +144,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'shop-list',
-          name: '已审核店铺',
+          name: '已审核店?,
           href: '/admin/shops/list',
           icon: <Store className="w-4 h-4" />,
           roles: ['admin', 'manager', 'shop_manager'],
@@ -174,7 +174,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'refunds',
-          name: '退款处理',
+          name: '退款处?,
           href: '/admin/finance/refunds',
           icon: <Eye className="w-4 h-4" />,
           roles: ['admin', 'manager', 'finance_manager'],
@@ -204,7 +204,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'procurement-suppliers',
-          name: '供应商管理',
+          name: '供应商管?,
           href: '/admin/procurement/suppliers',
           icon: <Package className="w-4 h-4" />,
           roles: ['admin', 'manager', 'procurement_specialist'],
@@ -236,14 +236,14 @@ export function RoleAwareSidebar() {
     },
     {
       id: 'agents',
-      name: '智能体管理',
+      name: '智能体管?,
       icon: <Zap className="w-5 h-5" />,
       href: '',
       roles: ['admin', 'manager', 'agent_operator'],
       children: [
         {
           id: 'agent-execution',
-          name: '执行工作流',
+          name: '执行工作?,
           href: '/admin/agents/execute',
           icon: <Zap className="w-4 h-4" />,
           roles: ['admin', 'manager', 'agent_operator'],
@@ -257,7 +257,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'workflows',
-          name: '工作流管理',
+          name: '工作流管?,
           href: '/admin/agents/workflows',
           icon: <Workflow className="w-4 h-4" />,
           roles: ['admin', 'manager'],
@@ -281,7 +281,7 @@ export function RoleAwareSidebar() {
     },
   ];
 
-  // 切换子菜单展开状态
+  // 切换子菜单展开状?
   const toggleExpand = (itemId: string) => {
     setExpandedItems(prev => ({
       ...prev,
@@ -289,7 +289,7 @@ export function RoleAwareSidebar() {
     }));
   };
 
-  // 获取当前用户可访问的菜单项
+  // 获取当前用户可访问的菜单?
   const getAccessibleMenuItems = () => {
     return menuItems.filter(item => {
       if (item.separator) return true;
@@ -297,7 +297,7 @@ export function RoleAwareSidebar() {
     });
   };
 
-  // 渲染菜单项
+  // 渲染菜单?
   const renderMenuItem = (item: MenuItem, isChild = false) => {
     if (item.separator) {
       return (
@@ -339,7 +339,7 @@ export function RoleAwareSidebar() {
 
           {isExpanded && (
             <div className="ml-4">
-              {item.children?.map(child => renderMenuItem(child, true))}
+              {item?.map(child => renderMenuItem(child, true))}
             </div>
           )}
         </div>
@@ -372,7 +372,7 @@ export function RoleAwareSidebar() {
 
   return (
     <>
-      {/* 移动端遮罩 */}
+      {/* 移动端遮?*/}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
@@ -380,7 +380,7 @@ export function RoleAwareSidebar() {
         />
       )}
 
-      {/* 侧边栏 */}
+      {/* 侧边?*/}
       <div
         className={cn(
           'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
@@ -422,15 +422,15 @@ export function RoleAwareSidebar() {
               <div className="flex items-center">
                 <div className="bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
                   <span className="text-sm font-medium text-gray-700">
-                    {userInfo?.email?.charAt(0).toUpperCase() || 'U'}
+                    {userInfo??.charAt(0).toUpperCase() || 'U'}
                   </span>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900">
-                    {userInfo?.email || '未登录'}
+                    {userInfo?.email || '未登?}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {userInfo?.roles?.map(role => role).join(', ') || '访客'}
+                    {userInfo??.map(role => role).join(', ') || '访客'}
                   </p>
                 </div>
               </div>
@@ -439,7 +439,7 @@ export function RoleAwareSidebar() {
         </div>
       </div>
 
-      {/* 移动端触发按钮 */}
+      {/* 移动端触发按?*/}
       {!sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}

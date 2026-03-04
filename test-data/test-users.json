@@ -7,7 +7,7 @@
       "role": "admin",
       "permissions": [
         "system.admin",
-        "user.manage", 
+        "user.manage",
         "shop.review",
         "dashboard.view",
         "settings.update"
@@ -19,25 +19,15 @@
       "email": "consumer@test.com",
       "password": "Test123!@#",
       "role": "consumer",
-      "permissions": [
-        "repair.request",
-        "order.track",
-        "payment.make",
-        "profile.update"
-      ],
+      "permissions": ["repair.request", "order.track", "payment.make", "profile.update"],
       "status": "active"
     },
     {
-      "id": "user-engineer-001", 
+      "id": "user-engineer-001",
       "email": "engineer@test.com",
       "password": "Test123!@#",
       "role": "engineer",
-      "permissions": [
-        "workorder.accept",
-        "repair.complete",
-        "parts.request",
-        "photo.upload"
-      ],
+      "permissions": ["workorder.accept", "repair.complete", "parts.request", "photo.upload"],
       "status": "active"
     },
     {
@@ -45,12 +35,7 @@
       "email": "shopowner@test.com",
       "password": "Test123!@#",
       "role": "shop_owner",
-      "permissions": [
-        "shop.manage",
-        "order.process",
-        "staff.manage",
-        "finance.view"
-      ],
+      "permissions": ["shop.manage", "order.process", "staff.manage", "finance.view"],
       "status": "active"
     }
   ],
@@ -67,7 +52,7 @@
     {
       "id": "DEVICE_002",
       "model": "华为 P50",
-      "brand": "Huawei", 
+      "brand": "Huawei",
       "serial": "HW001B002",
       "faultTypes": ["power_issue", "audio_issue"],
       "purchaseDate": "2023-03-20",
@@ -77,7 +62,7 @@
       "id": "DEVICE_003",
       "model": "小米 13",
       "brand": "Xiaomi",
-      "serial": "XM001C003", 
+      "serial": "XM001C003",
       "faultTypes": ["screen_broken", "charging_issue"],
       "purchaseDate": "2023-08-10",
       "warrantyStatus": "valid"
@@ -94,7 +79,7 @@
       "compatibility": "完美适配"
     },
     {
-      "sku": "BAT-IPH13-001", 
+      "sku": "BAT-IPH13-001",
       "name": "iPhone 13 电池",
       "category": "battery",
       "price": 120,
@@ -126,13 +111,13 @@
       "technicians": 3
     },
     {
-      "id": "SHOP-002", 
+      "id": "SHOP-002",
       "name": "快修连锁店",
       "contactPerson": "李经理",
       "phone": "13900139000",
       "address": "广州市天河区珠江新城花城大道88号",
       "city": "广州",
-      "province": "广东", 
+      "province": "广东",
       "status": "active",
       "rating": 4.5,
       "technicians": 5

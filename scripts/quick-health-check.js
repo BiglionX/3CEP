@@ -21,7 +21,7 @@ const coreDirs = [
   'src/fcx-system',
   'src/data-center',
   'supabase/migrations',
-  'scripts'
+  'scripts',
 ];
 
 let dirCheckPassed = 0;
@@ -42,7 +42,7 @@ const keyFiles = [
   'next.config.js',
   'tsconfig.json',
   'supabase/config.toml',
-  '.env'
+  '.env',
 ];
 
 let fileCheckPassed = 0;
@@ -72,7 +72,8 @@ if (fs.existsSync(migrationsDir)) {
 // 4. 检查脚本文件
 console.log('\n🤖 自动化脚本检查:');
 const scriptsDir = path.join(__dirname, '..');
-const scriptFiles = fs.readdirSync(scriptsDir)
+const scriptFiles = fs
+  .readdirSync(scriptsDir)
   .filter(file => file.startsWith('test-') && file.endsWith('.js'));
 
 console.log(`  ✅ 找到 ${scriptFiles.length} 个测试脚本`);
@@ -90,7 +91,7 @@ const apiRoutes = [
   'src/app/api/admin',
   'src/app/api/supply-chain',
   'src/app/api/fcx',
-  'src/app/api/data-center'
+  'src/app/api/data-center',
 ];
 
 let apiCheckPassed = 0;

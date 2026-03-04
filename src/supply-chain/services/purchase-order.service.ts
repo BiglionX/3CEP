@@ -34,10 +34,10 @@ export class PurchaseOrderService implements IPurchaseOrderService {
     warehouseId: string
   ): Promise<PurchaseOrder> {
     try {
-      // 计算总金额
+      // 计算总金?
       const totalAmount = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
       
-      // 生成订单号
+      // 生成订单?
       const orderNumber = `PO-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
       
       // 创建采购订单
@@ -61,7 +61,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
           created_by: 'system', // TODO: 从认证上下文获取用户ID
           created_at: new Date(),
           updated_at: new Date()
-        })
+        }) as any
         .select()
         .single();
 
@@ -200,7 +200,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
   }
 
   /**
-   * 更新订单状态
+   * 更新订单状?
    */
   async updateOrderStatus(orderId: string, status: string, remarks?: string): Promise<PurchaseOrder> {
     try {
@@ -222,16 +222,16 @@ export class PurchaseOrderService implements IPurchaseOrderService {
         .single();
 
       if (error) {
-        throw new Error(`更新订单状态失败: ${error.message}`);
+        throw new Error(`更新订单状态失? ${error.message}`);
       }
 
-      // 记录状态变更历史
+      // 记录状态变更历?
       await supabase
         .from('purchase_order_status_history')
         .insert({
           id: generateUUID(),
           order_id: orderId,
-          status_from: '', // 需要先查询当前状态
+          status_from: '', // 需要先查询当前状?
           status_to: status,
           remarks: remarks || '',
           created_at: new Date()
@@ -240,7 +240,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
       return this.mapToPurchaseOrder(data);
 
     } catch (error) {
-      console.error('更新订单状态错误:', error);
+      console.error('更新订单状态错?', error);
       throw error;
     }
   }
@@ -274,7 +274,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
   }
 
   /**
-   * 获取待处理订单统计
+   * 获取待处理订单统?
    */
   async getOrderStatistics(): Promise<{
     pending: number;
@@ -307,7 +307,7 @@ export class PurchaseOrderService implements IPurchaseOrderService {
         if (order.status !== 'cancelled') {
           stats.totalAmount += order.total_amount;
         }
-      });
+      }) as any;
 
       return stats;
 

@@ -13,7 +13,7 @@ async function runTest() {
     console.log('1️⃣ 启动开发服务器...');
     const devProcess = spawn('npm', ['run', 'dev'], {
       cwd: process.cwd(),
-      stdio: 'pipe'
+      stdio: 'pipe',
     });
 
     // 等待服务器启动
@@ -29,42 +29,49 @@ async function runTest() {
       city: '测试城市',
       province: '测试省份',
       status: 'active',
-      is_verified: true
+      is_verified: true,
     };
 
     // 注意：实际测试中需要先创建店铺数据
 
     // 3. 测试联盟资格验证
     console.log('\n3️⃣ 测试联盟资格验证...');
-    const qualificationResponse = await fetch('http://localhost:3001/api/fcx/alliance/members?type=members&level=bronze');
+    const qualificationResponse = await fetch(
+      'http://localhost:3001/api/fcx/alliance/members?type=members&level=bronze'
+    );
     const qualificationResult = await qualificationResponse.json();
     console.log('✅ 联盟成员查询结果:', qualificationResult);
 
     // 4. 测试排行榜查询
     console.log('\n4️⃣ 测试联盟排行榜...');
-    const rankingResponse = await fetch('http://localhost:3001/api/fcx/alliance/members?type=rankings&limit=10');
+    const rankingResponse = await fetch(
+      'http://localhost:3001/api/fcx/alliance/members?type=rankings&limit=10'
+    );
     const rankingResult = await rankingResponse.json();
     console.log('✅ 联盟排行榜结果:', rankingResult);
 
     // 5. 模拟加盟流程测试（需要实际店铺ID）
     console.log('\n5️⃣ 测试加盟流程...');
     console.log('📝 注意: 实际加盟需要有效的店铺ID和用户ID');
-    
+
     // 模拟加盟请求（使用占位符数据）
     const joinTestData = {
       shopId: 'test-shop-id-001',
       userId: 'test-user-id-001',
-      stakingAmount: 5000
+      stakingAmount: 5000,
     };
 
     try {
-      const joinResponse = await fetch('http://localhost:3001/api/fcx/alliance/join', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(joinTestData)
-      });
+      const joinResponse = await fetch(
+        'http://localhost:3001/api/fcx/alliance/join',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(joinTestData),
+        }
+      );
 
       const joinResult = await joinResponse.json();
       console.log('✅ 加盟请求结果:', joinResult);
@@ -78,7 +85,6 @@ async function runTest() {
     console.log('- 联盟排行榜: 通过 ✓');
     console.log('- 加盟流程验证: 需要真实数据验证');
     console.log('- 退出联盟功能: 待测试');
-
   } catch (error) {
     console.error('❌ 测试过程中出现错误:', error.message);
   } finally {

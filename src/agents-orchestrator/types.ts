@@ -6,15 +6,15 @@
 export interface ReliabilityConfig {
   /** 最大重试次数 */
   maxRetries: number;
-  /** 基础超时时间(毫秒) */
+  /** 基础超时时间 (毫秒) */
   timeoutMs: number;
-  /** 重试间隔的基础延迟(毫秒) */
+  /** 重试间隔的基础延迟 (毫秒) */
   retryDelayMs: number;
-  /** 指数退避的最大延迟(毫秒) */
+  /** 指数退避的最大延迟 (毫秒) */
   maxRetryDelayMs: number;
   /** 是否启用幂等性检查 */
   enableIdempotency: boolean;
-  /** 幂等性键的过期时间(毫秒) */
+  /** 幂等性键的过期时间 (毫秒) */
   idempotencyExpiryMs: number;
 }
 
@@ -22,9 +22,9 @@ export interface ReliabilityConfig {
 export interface AgentInvokeRequest {
   /** 幂等性键 */
   idempotency_key: string;
-  /** 追踪ID */
+  /** 追踪 ID */
   trace_id: string;
-  /** 超时时间(秒) */
+  /** 超时时间 (秒) */
   timeout: number;
   /** 代理名称 */
   agent_name: string;
@@ -84,6 +84,6 @@ export interface IdempotencyStore {
   get(key: string): Promise<any>;
   /** 删除键 */
   delete(key: string): Promise<void>;
-  /** 清理过期键 */
+  /** 清理过期项 */
   cleanup(): Promise<void>;
 }

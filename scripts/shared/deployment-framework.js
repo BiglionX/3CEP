@@ -15,9 +15,9 @@ class DeploymentFramework {
       verbose: false,
       dryRun: false,
       environment: process.env.NODE_ENV || 'development',
-      ...options
+      ...options,
     };
-    
+
     this.logger = new Logger(this.options.verbose);
     this.validator = new Validator();
   }
@@ -28,36 +28,38 @@ class DeploymentFramework {
   async executeCommand(command, args = [], options = {}) {
     return new Promise((resolve, reject) => {
       if (this.options.dryRun) {
-        this.logger.info(`[DRY-RUN] Would execute: ${command} ${args.join(' ')}`);
+        this.logger.info(
+          `[DRY-RUN] Would execute: ${command} ${args.join(' ')}`
+        );
         resolve({ stdout: '', stderr: '' });
         return;
       }
 
       this.logger.info(`Executing: ${command} ${args.join(' ')}`);
-      
+
       const child = spawn(command, args, {
         stdio: ['pipe', 'pipe', 'pipe'],
-        ...options
+        ...options,
       });
 
       let stdout = '';
       let stderr = '';
 
-      child.stdout.on('data', (data) => {
+      child.stdout.on('data', data => {
         stdout += data.toString();
         if (this.options.verbose) {
           process.stdout.write(data);
         }
       });
 
-      child.stderr.on('data', (data) => {
+      child.stderr.on('data', data => {
         stderr += data.toString();
         if (this.options.verbose) {
           process.stderr.write(data);
         }
       });
 
-      child.on('close', (code) => {
+      child.on('close', code => {
         if (code === 0) {
           resolve({ stdout: stdout.trim(), stderr: stderr.trim(), code });
         } else {
@@ -65,7 +67,7 @@ class DeploymentFramework {
         }
       });
 
-      child.on('error', (error) => {
+      child.on('error', error => {
         reject(error);
       });
     });
@@ -81,10 +83,10 @@ class DeploymentFramework {
     }
 
     this.logger.info(`Executing (sync): ${command} ${args.join(' ')}`);
-    
+
     const result = spawnSync(command, args, {
       stdio: this.options.verbose ? 'inherit' : 'pipe',
-      ...options
+      ...options,
     });
 
     if (result.error) {
@@ -94,7 +96,7 @@ class DeploymentFramework {
     return {
       status: result.status,
       stdout: result.stdout ? result.stdout.toString().trim() : '',
-      stderr: result.stderr ? result.stderr.toString().trim() : ''
+      stderr: result.stderr ? result.stderr.toString().trim() : '',
     };
   }
 
@@ -103,7 +105,7 @@ class DeploymentFramework {
    */
   checkRequiredTools(tools) {
     const missing = [];
-    
+
     for (const tool of tools) {
       try {
         this.executeCommandSync(tool, ['--version']);
@@ -126,7 +128,7 @@ class DeploymentFramework {
     try {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       const env = this.options.environment;
-      
+
       if (!config[env]) {
         throw new Error(`Environment '${env}' not found in config`);
       }
@@ -153,7 +155,7 @@ class DeploymentFramework {
     }
 
     fs.mkdirSync(backupDir, { recursive: true });
-    
+
     if (fs.existsSync(source)) {
       const dest = path.join(backupDir, path.basename(source));
       fs.cpSync(source, dest, { recursive: true });
@@ -169,7 +171,7 @@ class DeploymentFramework {
       timestamp: new Date().toISOString(),
       environment: this.options.environment,
       dryRun: this.options.dryRun,
-      ...data
+      ...data,
     };
 
     fs.writeFileSync(outputPath, JSON.stringify(report, null, 2));

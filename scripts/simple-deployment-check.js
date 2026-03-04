@@ -16,22 +16,24 @@ try {
   const envContent = fs.readFileSync(envPath, 'utf8');
   const requiredVars = [
     'NEXT_PUBLIC_SUPABASE_URL',
-    'NEXT_PUBLIC_SUPABASE_ANON_KEY', 
-    'SUPABASE_SERVICE_ROLE_KEY'
+    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+    'SUPABASE_SERVICE_ROLE_KEY',
   ];
-  
+
   let allGood = true;
   requiredVars.forEach(varName => {
-    if (envContent.includes(varName) && 
-        !envContent.includes(`${varName}=your_`) &&
-        !envContent.includes(`${varName}=YOUR_`)) {
+    if (
+      envContent.includes(varName) &&
+      !envContent.includes(`${varName}=your_`) &&
+      !envContent.includes(`${varName}=YOUR_`)
+    ) {
       console.log(`  ✅ ${varName}`);
     } else {
       console.log(`  ❌ ${varName} (需要配置)`);
       allGood = false;
     }
   });
-  
+
   console.log(`  环境配置状态: ${allGood ? '✅ 完整' : '❌ 需要完善'}`);
 } catch (error) {
   console.log('  ❌ 无法读取环境文件');
@@ -42,7 +44,7 @@ console.log('\n🏗️ 构建状态检查:');
 const nextDir = path.join(__dirname, '..', '.next');
 if (fs.existsSync(nextDir)) {
   console.log('  ✅ 构建目录存在');
-  
+
   // 检查关键构建文件
   const requiredFiles = ['BUILD_ID', 'routes-manifest.json'];
   requiredFiles.forEach(file => {
@@ -61,9 +63,9 @@ if (fs.existsSync(nextDir)) {
 console.log('\n⚙️ 配置文件检查:');
 const configFiles = [
   'next.config.js',
-  'tsconfig.json', 
+  'tsconfig.json',
   'package.json',
-  'vercel.json'
+  'vercel.json',
 ];
 
 configFiles.forEach(file => {

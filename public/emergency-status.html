@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>紧急状态检查</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f0f2f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .status-card {
+        margin: 15px 0;
+        padding: 15px;
+        border-radius: 4px;
+        border-left: 4px solid #ddd;
+      }
+      .success {
+        border-left-color: #28a745;
+        background: #d4edda;
+      }
+      .error {
+        border-left-color: #dc3545;
+        background: #f8d7da;
+      }
+      .warning {
+        border-left-color: #ffc107;
+        background: #fff3cd;
+      }
+      .info {
+        border-left-color: #17a2b8;
+        background: #d1ecf1;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .crash-indicator {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        width: 20px;
+        height: 20px;
+        background: #ff4757;
+        border-radius: 50%;
+        animation: pulse 1s infinite;
+        z-index: 9999;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="crash-indicator"
+      id="crashIndicator"
+      style="display: none"
+    ></div>
+
+    <div class="container">
+      <h1>🚨 紧急状态检查</h1>
+      <p>实时监控登录组件状态，检测闪退问题</p>
+
+      <div class="status-card info">
+        <h3>📊 实时监控</h3>
+        <div id="monitoring-info">
+          <p>正在初始化监控...</p>
+        </div>
+      </div>
+
+      <div class="status-card">
+        <h3>🔧 快速测试</h3>
+        <button onclick="testLoginFlow()">测试登录流程</button>
+        <button onclick="checkComponentState()">检查组件状态</button>
+        <button onclick="clearAllStates()">清空所有状态</button>
+        <button onclick="toggleCrashDetection()">切换崩溃检测</button>
+      </div>
+
+      <div class="status-card">
+        <h3>📋 检查结果</h3>
+        <div id="test-results">
+          <p>等待测试执行...</p>
+        </div>
+      </div>
+
+      <div class="status-card">
+        <h3>⚙️ 技术信息</h3>
+        <div id="technical-info">
+          <pre id="tech-details">收集技术信息中...</pre>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let crashDetectionEnabled = true;
+      let crashCount = 0;
+      let lastErrorTime = null;
+
+      // 初始化监控
+      function initMonitoring() {
+        console.log('🔒 紧急监控系统启动');
+
+        // 监控全局错误
+        window.addEventListener('error', function (event) {
+          if (crashDetectionEnabled) {
+            handleCrash(
+              'JavaScript错误',
+              event.error?.message || event.message
+            );
+          }
+        });
+
+        // 监控未捕获的Promise拒绝
+        window.addEventListener('unhandledrejection', function (event) {
+          if (crashDetectionEnabled) {
+            handleCrash(
+              'Promise拒绝',
+              event.reason?.message || '未知Promise错误'
+            );
+          }
+        });
+
+        // 监控页面可见性变化
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) {
+            console.log('页面隐藏 - 可能的闪退');
+          } else {
+            console.log('页面恢复可见');
+          }
+        });
+
+        // 定期健康检查
+        setInterval(healthCheck, 2000);
+
+        updateTechnicalInfo();
+      }
+
+      // 崩溃处理
+      function handleCrash(type, message) {
+        crashCount++;
+        lastErrorTime = new Date();
+
+        console.error(`🚨 检测到${type}:`, message);
+
+        // 显示崩溃指示器
+        document.getElementById('crashIndicator').style.display = 'block';
+
+        // 记录到结果区域
+        const resultsEl = document.getElementById('test-results');
+        resultsEl.innerHTML += `
+                <div class="status-card error">
+                    <h4>💥 第${crashCount}次崩溃检测</h4>
+                    <p><strong>类型:</strong> ${type}</p>
+                    <p><strong>时间:</strong> ${lastErrorTime.toLocaleString()}</p>
+                    <p><strong>信息:</strong> ${message}</p>
+                </div>
+            `;
+
+        // 3秒后隐藏指示器
+        setTimeout(() => {
+          document.getElementById('crashIndicator').style.display = 'none';
+        }, 3000);
+      }
+
+      // 健康检查
+      function healthCheck() {
+        const info = {
+          timestamp: new Date().toLocaleString(),
+          memory: performance.memory
+            ? {
+                used:
+                  Math.round(performance.memory.usedJSHeapSize / 1048576) +
+                  'MB',
+                total:
+                  Math.round(performance.memory.totalJSHeapSize / 1048576) +
+                  'MB',
+                limit:
+                  Math.round(performance.memory.jsHeapSizeLimit / 1048576) +
+                  'MB',
+              }
+            : '不可用',
+          listeners: {
+            error: window.onerror ? '已注册' : '未注册',
+            unhandled: window.onunhandledrejection ? '已注册' : '未注册',
+          },
+          globalFlags: {
+            unifiedLoginInitialized: window.unifiedLoginInitialized,
+            loginRedirectProcessed: window.loginRedirectProcessed,
+            initComplete: window.initComplete,
+          },
+        };
+
+        document.getElementById('monitoring-info').innerHTML = `
+                <p><strong>最后检查:</strong> ${info.timestamp}</p>
+                <p><strong>内存使用:</strong> ${info.memory.used}/${info.memory.total}</p>
+                <p><strong>崩溃次数:</strong> ${crashCount}</p>
+                <p><strong>组件初始化:</strong> ${info.globalFlags.unifiedLoginInitialized ? '✅' : '❌'}</p>
+            `;
+      }
+
+      // 测试登录流程
+      function testLoginFlow() {
+        const resultsEl = document.getElementById('test-results');
+        resultsEl.innerHTML = '<p>🚀 开始登录流程测试...</p>';
+
+        // 模拟登录步骤
+        const steps = [
+          '1. 初始化登录组件',
+          '2. 渲染登录表单',
+          '3. 用户输入凭据',
+          '4. 提交登录请求',
+          '5. 验证用户身份',
+          '6. 设置用户会话',
+          '7. 执行页面跳转',
+        ];
+
+        let currentStep = 0;
+
+        const executeStep = () => {
+          if (currentStep < steps.length) {
+            resultsEl.innerHTML += `<p>${steps[currentStep]}</p>`;
+
+            // 模拟每步可能的错误
+            if (Math.random() < 0.1) {
+              // 10%概率模拟错误
+              handleCrash('模拟错误', `在步骤${currentStep + 1}中发生错误`);
+            }
+
+            currentStep++;
+            setTimeout(executeStep, 800);
+          } else {
+            resultsEl.innerHTML += `
+                        <div class="status-card success">
+                            <h4>✅ 登录流程测试完成</h4>
+                            <p>总步骤: ${steps.length}</p>
+                            <p>检测到崩溃: ${crashCount}次</p>
+                            <button onclick="window.open('/login?redirect=/admin/dashboard', '_blank')">
+                                实际测试登录
+                            </button>
+                        </div>
+                    `;
+          }
+        };
+
+        executeStep();
+      }
+
+      // 检查组件状态
+      function checkComponentState() {
+        const resultsEl = document.getElementById('test-results');
+
+        const checks = {
+          React状态: typeof React !== 'undefined' ? '✅ 可用' : '❌ 不可用',
+          'Next.js路由':
+            typeof window.next !== 'undefined' ? '✅ 可用' : '❌ 不可用',
+          统一认证Hook:
+            typeof window.useUnifiedAuth !== 'undefined'
+              ? '✅ 已加载'
+              : '❌ 未加载',
+          防抖动标志: window.unifiedLoginInitialized
+            ? '✅ 已设置'
+            : '❌ 未设置',
+          跳转处理标志: window.loginRedirectProcessed
+            ? '✅ 已处理'
+            : '❌ 未处理',
+        };
+
+        let resultHtml = '<div class="status-card"><h4>🔍 组件状态检查</h4>';
+        for (const [key, value] of Object.entries(checks)) {
+          resultHtml += `<p><strong>${key}:</strong> ${value}</p>`;
+        }
+        resultHtml += '</div>';
+
+        resultsEl.innerHTML += resultHtml;
+      }
+
+      // 清空所有状态
+      function clearAllStates() {
+        // 清除全局标志
+        delete window.unifiedLoginInitialized;
+        delete window.loginRedirectProcessed;
+        delete window.initComplete;
+
+        // 清除localStorage
+        localStorage.clear();
+
+        // 重置计数器
+        crashCount = 0;
+
+        document.getElementById('test-results').innerHTML = `
+                <div class="status-card warning">
+                    <h4>🧹 状态已清空</h4>
+                    <p>所有全局状态和存储已重置</p>
+                    <p>建议刷新页面重新开始</p>
+                </div>
+            `;
+
+        updateTechnicalInfo();
+      }
+
+      // 切换崩溃检测
+      function toggleCrashDetection() {
+        crashDetectionEnabled = !crashDetectionEnabled;
+        const btn = event.target;
+        btn.textContent = crashDetectionEnabled
+          ? '禁用崩溃检测'
+          : '启用崩溃检测';
+        btn.style.background = crashDetectionEnabled ? '#007bff' : '#6c757d';
+      }
+
+      // 更新技术信息
+      function updateTechnicalInfo() {
+        const techInfo = {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform,
+          language: navigator.language,
+          cookiesEnabled: navigator.cookieEnabled,
+          online: navigator.onLine,
+          screen: `${screen.width}x${screen.height}`,
+          viewport: `${window.innerWidth}x${window.innerHeight}`,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timestamp: new Date().toISOString(),
+        };
+
+        document.getElementById('tech-details').textContent = JSON.stringify(
+          techInfo,
+          null,
+          2
+        );
+      }
+
+      // 页面加载完成后初始化
+      window.addEventListener('load', function () {
+        console.log('🚨 紧急状态检查页面加载完成');
+        initMonitoring();
+      });
+
+      // 页面即将卸载时的处理
+      window.addEventListener('beforeunload', function (event) {
+        console.log('监听页面卸载事件');
+        // 可以在这里记录卸载原因
+      });
+    </script>
+  </body>
+</html>

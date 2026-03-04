@@ -1,6 +1,6 @@
-/**
- * 智能体管理 API 端点
- * 提供智能体列表、创建、更新、删除等功能
+﻿/**
+ * 鏅鸿兘浣撶?API 绔偣
+ * 鎻愪緵鏅鸿兘浣撳垪琛ㄣ€佸垱寤恒€佹洿鏂般€佸垹闄ょ瓑鍔熻兘
  */
 
 import { NextResponse } from 'next/server';
@@ -14,12 +14,12 @@ export async function GET(request: Request) {
   );
 
   try {
-    // 验证用户认证
+    // 楠岃瘉鐢ㄦ埛璁よ瘉
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
 
     if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈? }, { status: 401 });
     }
 
     const {
@@ -28,22 +28,20 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛璁よ瘉澶辫触' }, { status: 401 });
     }
 
-    // 获取查询参数
+    // 鑾峰彇鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const status = searchParams.get('status');
     const search = searchParams.get('search');
 
-    // 构建查询
-    let query = supabase
-      .from('agents')
-      .select('*', { count: 'exact' });
+    // 鏋勫缓鏌ヨ
+    let query = supabase.from('agents').select('*', { count: 'exact' });
 
-    // 应用过滤条件
+    // 搴旂敤杩囨护鏉′欢
     if (status) {
       query = query.eq('status', status);
     }
@@ -52,17 +50,20 @@ export async function GET(request: Request) {
       query = query.ilike('name', `%${search}%`);
     }
 
-    // 分页
+    // 鍒嗛〉
     const offset = (page - 1) * limit;
     query = query.range(offset, offset + limit - 1);
 
-    const { data: agents, error, count } = await query
-      .order('updated_at', { ascending: false });
+    const {
+      data: agents,
+      error,
+      count,
+    } = await query.order('updated_at', { ascending: false });
 
     if (error) {
-      console.error('获取智能体列表失败:', error);
+      console.error('鑾峰彇鏅鸿兘浣撳垪琛ㄥけ?', error);
       return NextResponse.json(
-        { error: '获取智能体列表失败' }, 
+        { error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ? },
         { status: 500 }
       );
     }
@@ -74,16 +75,12 @@ export async function GET(request: Request) {
         page,
         limit,
         total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit)
-      }
+        totalPages: Math.ceil((count || 0) / limit),
+      },
     });
-
   } catch (error: any) {
-    console.error('智能体 API 错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    console.error('鏅鸿兘?API 閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -94,12 +91,12 @@ export async function POST(request: Request) {
   );
 
   try {
-    // 验证用户认证
+    // 楠岃瘉鐢ㄦ埛璁よ瘉
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
 
     if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈? }, { status: 401 });
     }
 
     const {
@@ -108,54 +105,52 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛璁よ瘉澶辫触' }, { status: 401 });
     }
 
-    // 解析请求体
-    const body = await request.json();
-    
-    // 验证必要字段
+    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+
+    // 楠岃瘉蹇呰瀛楁
     if (!body.name || !body.configuration) {
       return NextResponse.json(
-        { error: '智能体名称和配置为必填项' }, 
+        { error: '鏅鸿兘浣撳悕绉板拰閰嶇疆涓哄繀濉」' },
         { status: 400 }
       );
     }
 
-    // 创建智能体
-    const { data: agent, error } = await supabase
+    // 鍒涘缓鏅鸿兘?    const { data: agent, error } = await supabase
       .from('agents')
       .insert({
         name: body.name.trim(),
-        description: body.description?.trim() || null,
+        description: body?.trim() || null,
         configuration: body.configuration,
         status: body.status || 'inactive',
         version: '1.0.0',
         created_by: user.id,
-        updated_by: user.id
+        updated_by: user.id,
       } as any)
       .select()
       .single();
 
     if (error) {
-      console.error('创建智能体失败:', error);
+      console.error('鍒涘缓鏅鸿兘浣撳け?', error);
       return NextResponse.json(
-        { error: '创建智能体失败', details: error.message }, 
+        { error: '鍒涘缓鏅鸿兘浣撳け?, details: error.message },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: '智能体创建成功',
-      data: agent
-    }, { status: 201 });
-
-  } catch (error: any) {
-    console.error('创建智能体错误:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+      {
+        success: true,
+        message: '鏅鸿兘浣撳垱寤烘垚?,
+        data: agent,
+      },
+      { status: 201 }
+    ) as any;
+  } catch (error: any) {
+    console.error('鍒涘缓鏅鸿兘浣撻敊?', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
+

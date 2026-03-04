@@ -4,11 +4,11 @@
  */
 
 import { Page, expect, APIRequestContext } from '@playwright/test';
-import { 
-  ENTERPRISE_TEST_CONFIG, 
-  TEST_ENTERPRISE_USERS, 
+import {
+  ENTERPRISE_TEST_CONFIG,
+  TEST_ENTERPRISE_USERS,
   ENTERPRISE_ROUTES,
-  TEST_DATA
+  TEST_DATA,
 } from '../enterprise.config';
 
 export class EnterpriseTestUtils {
@@ -26,34 +26,39 @@ export class EnterpriseTestUtils {
   async navigateTo(path: string): Promise<void> {
     const baseUrl = ENTERPRISE_TEST_CONFIG.getBaseUrl();
     const fullPath = path.startsWith('http') ? path : `${baseUrl}${path}`;
-    
+
     await this.page.goto(fullPath, {
       waitUntil: 'networkidle',
-      timeout: ENTERPRISE_TEST_CONFIG.timeouts.pageLoad
+      timeout: ENTERPRISE_TEST_CONFIG.timeouts.pageLoad,
     });
   }
 
   /**
    * 企业用户登录
    */
-  async loginAs(role: keyof typeof TEST_ENTERPRISE_USERS = 'regularUser'): Promise<void> {
+  async loginAs(
+    role: keyof typeof TEST_ENTERPRISE_USERS = 'regularUser'
+  ): Promise<void> {
     const user = TEST_ENTERPRISE_USERS[role];
-    
+
     // 导航到登录页面
     await this.navigateTo(ENTERPRISE_ROUTES.login);
-    
+
     // 填写登录表单
     await this.page.getByPlaceholder('请输入邮箱').fill(user.email);
     await this.page.getByPlaceholder('请输入密码').fill(user.password);
-    
+
     // 提交登录
     await this.page.getByRole('button', { name: '登录' }).click();
-    
+
     // 等待登录完成
-    await this.page.waitForURL(`${ENTERPRISE_TEST_CONFIG.getBaseUrl()}${ENTERPRISE_ROUTES.dashboard}`, {
-      timeout: ENTERPRISE_TEST_CONFIG.timeouts.pageLoad
-    });
-    
+    await this.page.waitForURL(
+      `${ENTERPRISE_TEST_CONFIG.getBaseUrl()}${ENTERPRISE_ROUTES.dashboard}`,
+      {
+        timeout: ENTERPRISE_TEST_CONFIG.timeouts.pageLoad,
+      }
+    );
+
     // 验证登录成功
     await expect(this.page.getByText(user.companyName)).toBeVisible();
   }
@@ -64,12 +69,14 @@ export class EnterpriseTestUtils {
   async logout(): Promise<void> {
     // 点击用户菜单
     await this.page.getByRole('button', { name: '用户菜单' }).click();
-    
+
     // 点击登出按钮
     await this.page.getByRole('menuitem', { name: '退出登录' }).click();
-    
+
     // 等待回到登录页面
-    await this.page.waitForURL(`${ENTERPRISE_TEST_CONFIG.getBaseUrl()}${ENTERPRISE_ROUTES.login}`);
+    await this.page.waitForURL(
+      `${ENTERPRISE_TEST_CONFIG.getBaseUrl()}${ENTERPRISE_ROUTES.login}`
+    );
   }
 
   /**
@@ -77,18 +84,21 @@ export class EnterpriseTestUtils {
    */
   async createTestEnterprise(): Promise<any> {
     const enterpriseData = TEST_DATA.enterpriseInfo;
-    
-    const response = await this.apiContext.post(ENTERPRISE_ROUTES.api.register, {
-      data: {
-        companyName: enterpriseData.companyName,
-        businessLicense: enterpriseData.businessLicense,
-        contactPerson: enterpriseData.contactPerson,
-        phone: enterpriseData.phone,
-        email: enterpriseData.email,
-        password: 'Test123456'
+
+    const response = await this.apiContext.post(
+      ENTERPRISE_ROUTES.api.register,
+      {
+        data: {
+          companyName: enterpriseData.companyName,
+          businessLicense: enterpriseData.businessLicense,
+          contactPerson: enterpriseData.contactPerson,
+          phone: enterpriseData.phone,
+          email: enterpriseData.email,
+          password: 'Test123456',
+        },
       }
-    });
-    
+    );
+
     return await response.json();
   }
 
@@ -97,9 +107,9 @@ export class EnterpriseTestUtils {
    */
   async getAuthToken(email: string, password: string): Promise<string> {
     const response = await this.apiContext.post(ENTERPRISE_ROUTES.api.login, {
-      data: { email, password }
+      data: { email, password },
     });
-    
+
     const result = await response.json();
     return result.token || '';
   }
@@ -108,7 +118,7 @@ export class EnterpriseTestUtils {
    * 设置认证头
    */
   async setAuthHeader(token: string): Promise<void> {
-    await this.page.addInitScript((tokenValue) => {
+    await this.page.addInitScript(tokenValue => {
       window.localStorage.setItem('auth-token', tokenValue);
     }, token);
   }
@@ -119,17 +129,20 @@ export class EnterpriseTestUtils {
   async waitForElement(selector: string, timeout?: number): Promise<void> {
     await this.page.waitForSelector(selector, {
       state: 'visible',
-      timeout: timeout || ENTERPRISE_TEST_CONFIG.timeouts.elementWait
+      timeout: timeout || ENTERPRISE_TEST_CONFIG.timeouts.elementWait,
     });
   }
 
   /**
    * 等待元素不可见
    */
-  async waitForElementHidden(selector: string, timeout?: number): Promise<void> {
+  async waitForElementHidden(
+    selector: string,
+    timeout?: number
+  ): Promise<void> {
     await this.page.waitForSelector(selector, {
       state: 'hidden',
-      timeout: timeout || ENTERPRISE_TEST_CONFIG.timeouts.elementWait
+      timeout: timeout || ENTERPRISE_TEST_CONFIG.timeouts.elementWait,
     });
   }
 
@@ -142,9 +155,9 @@ export class EnterpriseTestUtils {
       '[data-testid="loading-spinner"]',
       '.loading',
       '[aria-busy="true"]',
-      '.skeleton'
+      '.skeleton',
     ];
-    
+
     for (const selector of loadingSelectors) {
       try {
         await this.waitForElementHidden(selector, 2000);
@@ -160,10 +173,10 @@ export class EnterpriseTestUtils {
   async takeScreenshot(name: string): Promise<void> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `enterprise-${name}-${timestamp}.png`;
-    
+
     await this.page.screenshot({
       path: `./test-results/screenshots/${filename}`,
-      fullPage: true
+      fullPage: true,
     });
   }
 
@@ -177,12 +190,15 @@ export class EnterpriseTestUtils {
   }> {
     const metrics = await this.page.evaluate(() => {
       return {
-        loadTime: performance.timing.loadEventEnd - performance.timing.navigationStart,
-        domContentLoaded: performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart,
-        firstPaint: performance.getEntriesByType('paint')[0]?.startTime || 0
+        loadTime:
+          performance.timing.loadEventEnd - performance.timing.navigationStart,
+        domContentLoaded:
+          performance.timing.domContentLoadedEventEnd -
+          performance.timing.navigationStart,
+        firstPaint: performance.getEntriesByType('paint')[0]?.startTime || 0,
       };
     });
-    
+
     return metrics;
   }
 
@@ -193,9 +209,9 @@ export class EnterpriseTestUtils {
     const thresholds = {
       loadTime: 3000, // 3秒
       domContentLoaded: 2000, // 2秒
-      firstPaint: 1000 // 1秒
+      firstPaint: 1000, // 1秒
     };
-    
+
     expect(metrics.loadTime).toBeLessThan(thresholds.loadTime);
     expect(metrics.domContentLoaded).toBeLessThan(thresholds.domContentLoaded);
     expect(metrics.firstPaint).toBeLessThan(thresholds.firstPaint);
@@ -209,12 +225,12 @@ export class EnterpriseTestUtils {
     await this.page.evaluate(() => {
       localStorage.clear();
     });
-    
+
     // 清理会话存储
     await this.page.evaluate(() => {
       sessionStorage.clear();
     });
-    
+
     // 删除cookies
     const cookies = await this.page.context().cookies();
     const cookieNames = cookies.map(cookie => cookie.name);
@@ -234,12 +250,14 @@ export class EnterpriseTestUtils {
    */
   async verifyAccessDenied(path: string): Promise<void> {
     await this.navigateTo(path);
-    
+
     // 应该重定向到登录页面或显示无权限提示
     const currentUrl = this.page.url();
     const isLoginPage = currentUrl.includes(ENTERPRISE_ROUTES.login);
-    const hasPermissionDenied = await this.page.getByText(/(无权限|access denied|权限不足)/i).isVisible();
-    
+    const hasPermissionDenied = await this.page
+      .getByText(/(无权限|access denied|权限不足)/i)
+      .isVisible();
+
     expect(isLoginPage || hasPermissionDenied).toBeTruthy();
   }
 
@@ -252,14 +270,19 @@ export class EnterpriseTestUtils {
       companyName: `测试公司_${timestamp}`,
       businessLicense: `91310000MA${Math.random().toString().substr(2, 8)}`,
       contactPerson: `联系人_${timestamp}`,
-      phone: `138${Math.floor(Math.random() * 100000000).toString().padStart(8, '0')}`,
-      email: `test_${timestamp}@example.com`
+      phone: `138${Math.floor(Math.random() * 100000000)
+        .toString()
+        .padStart(8, '0')}`,
+      email: `test_${timestamp}@example.com`,
     };
   }
 }
 
 // 导出工厂函数
-export function createEnterpriseTestUtils(page: Page, apiContext: APIRequestContext): EnterpriseTestUtils {
+export function createEnterpriseTestUtils(
+  page: Page,
+  apiContext: APIRequestContext
+): EnterpriseTestUtils {
   return new EnterpriseTestUtils(page, apiContext);
 }
 

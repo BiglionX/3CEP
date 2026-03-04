@@ -1,4 +1,4 @@
-/**
+﻿/**
  * n8n 权限集成演示页面
  * 展示权限同步和工作流控制功能
  */
@@ -21,7 +21,7 @@ export default function N8nIntegrationDemoPage() {
             n8n 权限集成演示
           </h1>
           <p className="text-gray-600">
-            展示系统权限与 n8n 工作流平台的深度集成
+            展示系统权限?n8n 工作流平台的深度集成
           </p>
         </div>
 
@@ -29,17 +29,15 @@ export default function N8nIntegrationDemoPage() {
           <h3 className="font-medium text-yellow-800 mb-2">🚀 功能亮点</h3>
           <ul className="text-yellow-700 space-y-1 text-sm">
             <li>
-              • <strong>自动权限同步</strong> - 用户角色变更时自动同步到 n8n
+              �?<strong>自动权限同步</strong> - 用户角色变更时自动同步到 n8n
             </li>
             <li>
-              • <strong>细粒度控制</strong> - 支持读取、执行、管理三级权限
+              �?<strong>细粒度控?/strong> - 支持读取、执行、管理三级权?            </li>
+            <li>
+              �?<strong>实时监控</strong> - 工作流执行状态和权限变更跟踪
             </li>
             <li>
-              • <strong>实时监控</strong> - 工作流执行状态和权限变更跟踪
-            </li>
-            <li>
-              • <strong>事件驱动</strong> - 基于事件的实时权限更新机制
-            </li>
+              �?<strong>事件驱动</strong> - 基于事件的实时权限更新机?            </li>
           </ul>
         </div>
 
@@ -51,19 +49,19 @@ export default function N8nIntegrationDemoPage() {
             <div>
               <h4 className="font-medium mb-2">权限同步机制</h4>
               <ul className="space-y-1">
-                <li>• 用户角色变更时自动触发同步</li>
-                <li>• 每5分钟执行定期一致性检查</li>
-                <li>• 支持批量操作和重试机制</li>
-                <li>• 完整的审计日志记录</li>
+                <li>�?用户角色变更时自动触发同?/li>
+                <li>�?�?分钟执行定期一致性检?/li>
+                <li>�?支持批量操作和重试机?/li>
+                <li>�?完整的审计日志记?/li>
               </ul>
             </div>
             <div>
-              <h4 className="font-medium mb-2">工作流权限控制</h4>
+              <h4 className="font-medium mb-2">工作流权限控?/h4>
               <ul className="space-y-1">
-                <li>• 读取权限：查看工作流定义和状态</li>
-                <li>• 执行权限：运行工作流实例</li>
-                <li>• 管理权限：修改工作流配置</li>
-                <li>• 支持按角色和用户的精确控制</li>
+                <li>�?读取权限：查看工作流定义和状?/li>
+                <li>�?执行权限：运行工作流实例</li>
+                <li>�?管理权限：修改工作流配置</li>
+                <li>�?支持按角色和用户的精确控?/li>
               </ul>
             </div>
           </div>
@@ -72,3 +70,4 @@ export default function N8nIntegrationDemoPage() {
     </RoleAwareLayout>
   );
 }
+

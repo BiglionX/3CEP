@@ -15,13 +15,13 @@ console.log('1️⃣ 修复环境变量配置');
 const envLocalPath = path.join(process.cwd(), '.env.local');
 if (fs.existsSync(envLocalPath)) {
   let envContent = fs.readFileSync(envLocalPath, 'utf8');
-  
+
   // 确保使用正确的端口
   envContent = envContent.replace(
     /NEXT_PUBLIC_SITE_URL=http:\/\/localhost:\d+/g,
     'NEXT_PUBLIC_SITE_URL=http://localhost:3001'
   );
-  
+
   fs.writeFileSync(envLocalPath, envContent);
   console.log('✅ .env.local 已更新为正确端口');
 }
@@ -29,10 +29,16 @@ if (fs.existsSync(envLocalPath)) {
 // 2. 修复登录页面跳转逻辑
 console.log('\n2️⃣ 优化登录页面跳转逻辑');
 
-const loginPagePath = path.join(process.cwd(), 'src', 'app', 'login', 'page.tsx');
+const loginPagePath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'login',
+  'page.tsx'
+);
 if (fs.existsSync(loginPagePath)) {
   let content = fs.readFileSync(loginPagePath, 'utf8');
-  
+
   // 确保跳转逻辑完整且健壮
   const jumpLogic = `
       if (response.ok) {
@@ -57,7 +63,7 @@ if (fs.existsSync(loginPagePath)) {
     /if \(response\.ok\) \{[\s\S]*?\n\s*\} else \{/,
     jumpLogic
   );
-  
+
   fs.writeFileSync(loginPagePath, content);
   console.log('✅ 登录页面跳转逻辑已优化');
 }
@@ -65,10 +71,18 @@ if (fs.existsSync(loginPagePath)) {
 // 3. 添加调试信息到登录API
 console.log('\n3️⃣ 增强登录API调试信息');
 
-const loginApiPath = path.join(process.cwd(), 'src', 'app', 'api', 'auth', 'login', 'route.ts');
+const loginApiPath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'api',
+  'auth',
+  'login',
+  'route.ts'
+);
 if (fs.existsSync(loginApiPath)) {
   let content = fs.readFileSync(loginApiPath, 'utf8');
-  
+
   // 在管理员检查部分添加调试日志
   const debugCode = `
     // 检查是否为管理员用户
@@ -107,7 +121,7 @@ if (fs.existsSync(loginApiPath)) {
     /\/\/ 检查是否为管理员用户[\s\S]*?isAdmin = !!adminData/g,
     debugCode
   );
-  
+
   fs.writeFileSync(loginApiPath, content);
   console.log('✅ 登录API已添加调试信息');
 }
@@ -295,7 +309,13 @@ export default function LoginJumpTest() {
 }
 `;
 
-const testPagePath = path.join(process.cwd(), 'src', 'app', 'login-test', 'page.tsx');
+const testPagePath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'login-test',
+  'page.tsx'
+);
 const testPageDir = path.dirname(testPagePath);
 
 if (!fs.existsSync(testPageDir)) {

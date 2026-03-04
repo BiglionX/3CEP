@@ -404,10 +404,10 @@ export default function ScanLandingPage() {
                           {detectedDevice.brand === 'Apple'
                             ? '🍎'
                             : detectedDevice.brand === 'Samsung'
-                            ? '📱'
-                            : detectedDevice.deviceType === 'computer'
-                            ? '💻'
-                            : '📱'}
+                              ? '📱'
+                              : detectedDevice.deviceType === 'computer'
+                                ? '💻'
+                                : '📱'}
                         </div>
                       </div>
                     </div>
@@ -834,8 +834,7 @@ export default function ScanLandingPage() {
                                 }}
                                 onDetailClick={eventId => {
                                   // TODO: 实现查看维修工单详情功能
-                                  console.log('查看工单详情:', eventId);
-                                }}
+                                  // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看工单详情:', eventId)}}
                               />
                             ))}
                           </div>

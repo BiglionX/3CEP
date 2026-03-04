@@ -1,24 +1,24 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 
-// 模拟用户余额API端点
+// 妯℃嫙鐢ㄦ埛浣欓API绔偣
 export async function GET() {
   try {
-    // 模拟用户余额数据
+    // 妯℃嫙鐢ㄦ埛浣欓鏁版嵁
     const balance = {
       balance: 150,
       total_purchased: 500,
-      total_consumed: 350
+      total_consumed: 350,
     };
 
     return NextResponse.json({
       success: true,
-      data: balance
+      data: balance,
     });
-
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: '获取余额失败' },
+      { success: false, error: '鑾峰彇浣欓澶辫触' },
       { status: 500 }
     );
   }
 }
+

@@ -1,43 +1,42 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>管理员登录测试</title>
-    <meta charset="utf-8">
-</head>
-<body>
+    <meta charset="utf-8" />
+  </head>
+  <body>
     <h1>管理员后台测试</h1>
     <div id="status">正在检查权限...</div>
     <div id="result"></div>
-    
+
     <script>
-        async function testAdminAccess() {
-            try {
-                const response = await fetch('/api/auth/check-session');
-                const data = await response.json();
-                
-                document.getElementById('status').innerHTML = '检查完成';
-                
-                if (data.authenticated && data.user.isAdmin) {
-                    document.getElementById('result').innerHTML = 
-                        '<h2 style="color: green;">✅ 管理员权限验证通过</h2>' +
-                        '<p>用户: ' + data.user.email + '</p>' +
-                        '<p>角色: ' + data.user.role + '</p>' +
-                        '<button onclick="window.location.href='/admin/dashboard'">进入管理后台</button>';
-                } else {
-                    document.getElementById('result').innerHTML = 
-                        '<h2 style="color: red;">❌ 权限不足</h2>' +
-                        '<p>当前用户不是管理员</p>';
-                }
-            } catch (error) {
-                document.getElementById('result').innerHTML = 
-                    '<h2 style="color: red;">❌ 检查失败</h2>' +
-                    '<p>错误: ' + error.message + '</p>';
-            }
-        }
-        
-        // 页面加载后自动测试
-        window.onload = testAdminAccess;
+      async function testAdminAccess() {
+          try {
+              const response = await fetch('/api/auth/check-session');
+              const data = await response.json();
+
+              document.getElementById('status').innerHTML = '检查完成';
+
+              if (data.authenticated && data.user.isAdmin) {
+                  document.getElementById('result').innerHTML =
+                      '<h2 style="color: green;">✅ 管理员权限验证通过</h2>' +
+                      '<p>用户: ' + data.user.email + '</p>' +
+                      '<p>角色: ' + data.user.role + '</p>' +
+                      '<button onclick="window.location.href='/admin/dashboard'">进入管理后台</button>';
+              } else {
+                  document.getElementById('result').innerHTML =
+                      '<h2 style="color: red;">❌ 权限不足</h2>' +
+                      '<p>当前用户不是管理员</p>';
+              }
+          } catch (error) {
+              document.getElementById('result').innerHTML =
+                  '<h2 style="color: red;">❌ 检查失败</h2>' +
+                  '<p>错误: ' + error.message + '</p>';
+          }
+      }
+
+      // 页面加载后自动测试
+      window.onload = testAdminAccess;
     </script>
-</body>
+  </body>
 </html>

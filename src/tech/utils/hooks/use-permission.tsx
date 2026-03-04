@@ -1,7 +1,6 @@
 /**
- * 权限检查 Hook
- * 用于在 React 组件中进行权限判断
- */
+ * 权限检?Hook
+ * 用于?React 组件中进行权限判? */
 
 'use client';
 
@@ -34,7 +33,7 @@ export interface UserInfo {
 }
 
 /**
- * 权限检查 Hook
+ * 权限检?Hook
  */
 export function usePermission() {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -51,8 +50,7 @@ export function usePermission() {
     try {
       setLoading(true);
 
-      // 从 localStorage 获取用户信息（实际项目中应该从 API 获取）
-      const storedToken = localStorage.getItem('jwt_token');
+      // �?localStorage 获取用户信息（实际项目中应该?API 获取?      const storedToken = localStorage.getItem('jwt_token');
       if (storedToken) {
         try {
           // 解析 JWT token
@@ -77,18 +75,15 @@ export function usePermission() {
   };
 
   /**
-   * 检查是否具有指定权限
-   */
+   * 检查是否具有指定权?   */
   const hasPermission = (permission: Permission): boolean => {
     if (!userInfo) return false;
 
-    // 超级管理员拥有所有权限
-    if (userInfo.roles.includes('admin')) {
+    // 超级管理员拥有所有权?    if (userInfo.roles.includes('admin')) {
       return true;
     }
 
-    // 这里应该从 RBAC 配置中检查权限映射
-    // 简化实现：根据角色直接判断常见权限
+    // 这里应该?RBAC 配置中检查权限映?    // 简化实现：根据角色直接判断常见权限
     const rolePermissions: Record<UserRole, Permission[]> = {
       admin: ['*'],
       manager: [
@@ -167,42 +162,36 @@ export function usePermission() {
   };
 
   /**
-   * 检查是否具有任意一个权限
-   */
+   * 检查是否具有任意一个权?   */
   const hasAnyPermission = (permissions: Permission[]): boolean => {
     return permissions.some(permission => hasPermission(permission));
   };
 
   /**
-   * 检查是否具有所有权限
-   */
+   * 检查是否具有所有权?   */
   const hasAllPermissions = (permissions: Permission[]): boolean => {
     return permissions.every(permission => hasPermission(permission));
   };
 
   /**
-   * 检查是否具有指定角色
-   */
+   * 检查是否具有指定角?   */
   const hasRole = (role: UserRole): boolean => {
     return userInfo?.roles.includes(role) || false;
   };
 
   /**
-   * 检查是否具有任意一个角色
-   */
+   * 检查是否具有任意一个角?   */
   const hasAnyRole = (roles: UserRole[]): boolean => {
     return roles.some(role => hasRole(role));
   };
 
   /**
-   * 获取用户可访问的菜单项
-   */
+   * 获取用户可访问的菜单?   */
   const getAccessibleMenus = (menuItems: any[]): any[] => {
     if (!userInfo) return [];
 
     return menuItems.filter(item => {
-      // 如果没有指定角色要求，默认可见
-      if (!item.roles) return true;
+      // 如果没有指定角色要求，默认可?      if (!item.roles) return true;
 
       // 检查用户是否具有所需角色之一
       return item.roles.some((role: UserRole) => hasRole(role));
@@ -217,12 +206,11 @@ export function usePermission() {
   };
 
   /**
-   * 用户是否已认证
-   */
+   * 用户是否已认?   */
   const isAuthenticated = (): boolean => {
     if (!userInfo) return false;
 
-    // 检查 token 是否过期
+    // 检?token 是否过期
     if (userInfo.exp) {
       return Date.now() < userInfo.exp * 1000;
     }
@@ -247,13 +235,11 @@ export function usePermission() {
   };
 
   return {
-    // 状态
-    userInfo,
+    // 状?    userInfo,
     loading,
     isAuthenticated: isAuthenticated(),
 
-    // 权限检查方法
-    hasPermission,
+    // 权限检查方?    hasPermission,
     hasAnyPermission,
     hasAllPermissions,
     hasRole,
@@ -294,8 +280,7 @@ export function PermissionGuard({
     hasAnyRole,
   } = usePermission();
 
-  // 权限检查
-  let hasAccess = true;
+  // 权限检?  let hasAccess = true;
 
   if (permission) {
     const permissions = Array.isArray(permission) ? permission : [permission];
@@ -304,8 +289,7 @@ export function PermissionGuard({
       : hasAnyPermission(permissions);
   }
 
-  // 角色检查
-  if (role && hasAccess) {
+  // 角色检?  if (role && hasAccess) {
     const roles = Array.isArray(role) ? role : [role];
     hasAccess = requireAll ? roles.every(r => hasRole(r)) : hasAnyRole(roles);
   }
@@ -318,8 +302,7 @@ export function PermissionGuard({
 }
 
 /**
- * 角色保护组件 - 简化版本
- */
+ * 角色保护组件 - 简化版? */
 export function RoleGuard({
   roles,
   fallback = null,

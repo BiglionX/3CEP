@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-02-27T14:21:56.917Z",
+  "environment": "dev",
+  "checks": [
+    {
+      "suite": "基础健康检查",
+      "test": "服务可达性检查",
+      "passed": false,
+      "message": "服务响应状态码: 206",
+      "timestamp": "2026-02-27T14:21:57.955Z"
+    },
+    {
+      "suite": "基础健康检查",
+      "test": "API端点健康检查",
+      "passed": false,
+      "message": "健康端点通过: 2/3",
+      "timestamp": "2026-02-27T14:21:58.749Z"
+    },
+    {
+      "suite": "基础健康检查",
+      "test": "数据库连接检查",
+      "passed": false,
+      "message": "数据库连接失败: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+      "timestamp": "2026-02-27T14:22:01.126Z"
+    },
+    {
+      "suite": "基础健康检查",
+      "test": "认证系统检查",
+      "passed": true,
+      "message": "认证系统基础功能正常",
+      "timestamp": "2026-02-27T14:22:01.134Z"
+    },
+    {
+      "suite": "API功能测试",
+      "test": "安全监控API测试",
+      "passed": true,
+      "message": "安全事件处理: 成功",
+      "timestamp": "2026-02-27T14:22:01.214Z"
+    },
+    {
+      "suite": "API功能测试",
+      "test": "用户行为分析API测试",
+      "passed": true,
+      "message": "用户行为分析API: 响应正常",
+      "timestamp": "2026-02-27T14:22:01.248Z"
+    },
+    {
+      "suite": "API功能测试",
+      "test": "告警通知API测试",
+      "passed": false,
+      "message": "执行异常: this.testAlertNotificationApi is not a function",
+      "timestamp": "2026-02-27T14:22:01.249Z"
+    },
+    {
+      "suite": "API功能测试",
+      "test": "配置管理API测试",
+      "passed": false,
+      "message": "执行异常: this.testConfigurationApi is not a function",
+      "timestamp": "2026-02-27T14:22:01.250Z"
+    },
+    {
+      "suite": "安全监控测试",
+      "test": "威胁检测功能测试",
+      "passed": true,
+      "message": "威胁检测功能基础验证通过",
+      "timestamp": "2026-02-27T14:22:01.251Z"
+    },
+    {
+      "suite": "安全监控测试",
+      "test": "异常行为识别测试",
+      "passed": true,
+      "message": "异常检测功能基础验证通过",
+      "timestamp": "2026-02-27T14:22:01.251Z"
+    },
+    {
+      "suite": "安全监控测试",
+      "test": "实时告警测试",
+      "passed": true,
+      "message": "实时告警功能基础验证通过",
+      "timestamp": "2026-02-27T14:22:01.251Z"
+    },
+    {
+      "suite": "安全监控测试",
+      "test": "合规性检查测试",
+      "passed": false,
+      "message": "执行异常: this.testComplianceChecking is not a function",
+      "timestamp": "2026-02-27T14:22:01.252Z"
+    },
+    {
+      "suite": "集成测试",
+      "test": "n8n工作流集成测试",
+      "passed": true,
+      "message": "n8n工作流集成验证通过",
+      "timestamp": "2026-02-27T14:22:01.253Z"
+    },
+    {
+      "suite": "集成测试",
+      "test": "WebSocket实时通信测试",
+      "passed": true,
+      "message": "WebSocket实时通信验证通过",
+      "timestamp": "2026-02-27T14:22:01.253Z"
+    },
+    {
+      "suite": "集成测试",
+      "test": "通知渠道集成测试",
+      "passed": false,
+      "message": "执行异常: this.testNotificationChannels is not a function",
+      "timestamp": "2026-02-27T14:22:01.254Z"
+    },
+    {
+      "suite": "集成测试",
+      "test": "数据同步一致性测试",
+      "passed": false,
+      "message": "执行异常: this.testDataConsistency is not a function",
+      "timestamp": "2026-02-27T14:22:01.256Z"
+    },
+    {
+      "suite": "性能测试",
+      "test": "API响应时间测试",
+      "passed": false,
+      "message": "API响应时间: 348ms (超时)",
+      "timestamp": "2026-02-27T14:22:01.606Z"
+    },
+    {
+      "suite": "性能测试",
+      "test": "并发处理能力测试",
+      "passed": true,
+      "message": "并发处理平均时间: 47.60ms",
+      "timestamp": "2026-02-27T14:22:02.082Z"
+    },
+    {
+      "suite": "性能测试",
+      "test": "内存使用测试",
+      "passed": false,
+      "message": "执行异常: this.testMemoryUsage is not a function",
+      "timestamp": "2026-02-27T14:22:02.083Z"
+    },
+    {
+      "suite": "性能测试",
+      "test": "数据库查询性能测试",
+      "passed": false,
+      "message": "执行异常: this.testDatabasePerformance is not a function",
+      "timestamp": "2026-02-27T14:22:02.084Z"
+    }
+  ],
+  "summary": {
+    "total": 20,
+    "passed": 9,
+    "failed": 11,
+    "skipped": 0
+  },
+  "successRate": "45.00%",
+  "recommendations": ["需要修复失败的测试项", "检查相关服务的配置和连接"]
+}

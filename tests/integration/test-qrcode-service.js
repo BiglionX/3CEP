@@ -7,9 +7,7 @@ console.log('🧪 FixCycle 3.0 二维码生成服务测试开始...\n');
 
 // 1. 检查API文件
 console.log('1️⃣ 检查API文件...');
-const apiFiles = [
-  'src/app/api/products/qr/route.ts'
-];
+const apiFiles = ['src/app/api/products/qr/route.ts'];
 
 apiFiles.forEach(file => {
   const exists = fs.existsSync(file);
@@ -18,9 +16,7 @@ apiFiles.forEach(file => {
 
 // 2. 检查数据库迁移文件
 console.log('\n2️⃣ 检查数据库结构...');
-const migrationFiles = [
-  'supabase/migrations/011_fixcycle_3_0_schema.sql'
-];
+const migrationFiles = ['supabase/migrations/011_fixcycle_3_0_schema.sql'];
 
 migrationFiles.forEach(file => {
   const exists = fs.existsSync(file);
@@ -35,7 +31,7 @@ const features = [
   '✅ 产品信息存储',
   '✅ 唯一URL生成 (https://fx.cn/p/{product_id})',
   '✅ 数据库表结构设计',
-  '✅ 品牌-产品关联'
+  '✅ 品牌-产品关联',
 ];
 
 console.log('   📋 已实现功能:');
@@ -87,12 +83,12 @@ console.log('   }');
 console.log('\n6️⃣ 数据库表结构:');
 const tables = [
   'brands - 品牌信息表',
-  'products - 产品信息表', 
+  'products - 产品信息表',
   'manuals - 产品说明书表',
   'scan_records - 扫描记录表',
   'diagnosis_records - 诊断记录表',
   'token_balances - Token余额表',
-  'token_transactions - Token交易记录表'
+  'token_transactions - Token交易记录表',
 ];
 
 console.log('   📊 主要数据表:');
@@ -107,7 +103,7 @@ const deploymentItems = [
   '✅ 数据库迁移脚本准备',
   '✅ 环境变量配置模板',
   '✅ 错误处理机制',
-  '✅ 日志记录功能'
+  '✅ 日志记录功能',
 ];
 
 console.log('   📋 部署检查项:');

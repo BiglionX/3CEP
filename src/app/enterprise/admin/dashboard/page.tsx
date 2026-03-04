@@ -1,12 +1,12 @@
-"use client";
+﻿'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Bot, 
-  ShoppingCart, 
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Bot,
+  ShoppingCart,
   BarChart3,
   Users,
   Package,
@@ -20,8 +20,8 @@ import {
   Menu,
   X,
   HelpCircle,
-  FileText
-} from "lucide-react";
+  FileText,
+} from 'lucide-react';
 
 interface DashboardStats {
   totalAgents: number;
@@ -49,50 +49,64 @@ export default function EnterpriseDashboardPage() {
     totalOrders: 156,
     pendingOrders: 23,
     monthlySpend: 45800,
-    savingsRate: 18
+    savingsRate: 18,
   });
 
   const [recentActivities] = useState<RecentActivity[]>([
     {
       id: '1',
       type: 'agent',
-      title: '智能客服机器人部署成功',
-      description: '新的客服AI助手已上线运行',
-      time: '2小时前',
-      status: 'success'
+      title: '智能客服机器人部署成?,
+      description: '新的客服AI助手已上线运?,
+      time: '2小时?,
+      status: 'success',
     },
     {
       id: '2',
       type: 'order',
-      title: '采购订单待审批',
-      description: '有3个采购订单等待您的审批',
-      time: '4小时前',
-      status: 'warning'
+      title: '采购订单待审?,
+      description: '�?个采购订单等待您的审?,
+      time: '4小时?,
+      status: 'warning',
     },
     {
       id: '3',
       type: 'alert',
       title: '系统维护通知',
-      description: '今晚23:00-24:00将进行系统维护',
+      description: '今晚23:00-24:00将进行系统维?,
       time: '1天前',
-      status: 'info'
-    }
+      status: 'info',
+    },
   ]);
 
   const menuItems = [
-    { name: '仪表板', href: '/enterprise/admin/dashboard', icon: BarChart3 },
-    { name: '智能体管理', href: '/enterprise/admin/agents', icon: Bot },
-    { name: '采购管理', href: '/enterprise/admin/procurement', icon: ShoppingCart },
+    { name: '仪表?, href: '/enterprise/admin/dashboard', icon: BarChart3 },
+    { name: '智能体管?, href: '/enterprise/admin/agents', icon: Bot },
+    {
+      name: '采购管理',
+      href: '/enterprise/admin/procurement',
+      icon: ShoppingCart,
+    },
     { name: '有奖问答', href: '/enterprise/admin/reward-qa', icon: HelpCircle },
-    { name: '新品众筹', href: '/enterprise/admin/crowdfunding', icon: DollarSign },
+    {
+      name: '新品众筹',
+      href: '/enterprise/admin/crowdfunding',
+      icon: DollarSign,
+    },
     { name: '企业资料', href: '/enterprise/admin/documents', icon: FileText },
     { name: '设备管理', href: '/enterprise/admin/devices', icon: Package },
     { name: '数据分析', href: '/enterprise/admin/analytics', icon: TrendingUp },
     { name: '团队管理', href: '/enterprise/admin/team', icon: Users },
-    { name: '系统设置', href: '/enterprise/admin/settings', icon: Settings }
+    { name: '系统设置', href: '/enterprise/admin/settings', icon: Settings },
   ];
 
-  const StatCard = ({ title, value, icon: Icon, change, isCurrency = false }: any) => (
+  const StatCard = ({
+    title,
+    value,
+    icon: Icon,
+    change,
+    isCurrency = false,
+  }: any) => (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -105,7 +119,8 @@ export default function EnterpriseDashboardPage() {
         {change && (
           <p className="text-xs text-muted-foreground">
             <span className={change > 0 ? 'text-green-600' : 'text-red-600'}>
-              {change > 0 ? '+' : ''}{change}%
+              {change > 0 ? '+' : ''}
+              {change}%
             </span>{' '}
             本月对比
           </p>
@@ -116,7 +131,7 @@ export default function EnterpriseDashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 顶部导航栏 */}
+      {/* 顶部导航?*/}
       <header className="bg-white shadow-sm border-b">
         <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center">
@@ -130,10 +145,12 @@ export default function EnterpriseDashboardPage() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">E</span>
               </div>
-              <span className="ml-2 text-xl font-semibold text-gray-900">企业管理中心</span>
+              <span className="ml-2 text-xl font-semibold text-gray-900">
+                企业管理中心
+              </span>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4 mr-2" />
@@ -141,15 +158,16 @@ export default function EnterpriseDashboardPage() {
             </Button>
             <Button variant="ghost" size="sm">
               <LogOut className="h-4 w-4 mr-2" />
-              退出
-            </Button>
+              退?            </Button>
           </div>
         </div>
       </header>
 
       <div className="flex">
-        {/* 侧边栏 */}
-        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out`}>
+        {/* 侧边?*/}
+        <aside
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out`}
+        >
           <div className="flex items-center justify-between h-16 px-4 border-b">
             <h2 className="text-lg font-semibold text-gray-900">管理菜单</h2>
             <button
@@ -159,9 +177,9 @@ export default function EnterpriseDashboardPage() {
               <X className="h-5 w-5" />
             </button>
           </div>
-          
+
           <nav className="mt-5 px-2 space-y-1">
-            {menuItems.map((item) => {
+            {menuItems.map(item => {
               const Icon = item.icon;
               return (
                 <Link
@@ -182,10 +200,9 @@ export default function EnterpriseDashboardPage() {
           <div className="py-6 px-4 sm:px-6 lg:px-8">
             {/* 页面标题 */}
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">仪表板概览</h1>
+              <h1 className="text-2xl font-bold text-gray-900">仪表板概?/h1>
               <p className="mt-1 text-sm text-gray-600">
-                欢迎回来！这里是您企业AI服务的管理中心
-              </p>
+                欢迎回来！这里是您企业AI服务的管理中?              </p>
             </div>
 
             {/* 统计卡片 */}
@@ -217,7 +234,7 @@ export default function EnterpriseDashboardPage() {
               />
             </div>
 
-            {/* 图表和活动区域 */}
+            {/* 图表和活动区?*/}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
               {/* 近期活动 */}
               <Card className="lg:col-span-1">
@@ -229,12 +246,20 @@ export default function EnterpriseDashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {recentActivities.map((activity) => (
-                      <div key={activity.id} className="flex items-start space-x-3">
-                        <div className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${
-                          activity.status === 'success' ? 'bg-green-500' :
-                          activity.status === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
-                        }`} />
+                    {recentActivities.map(activity => (
+                      <div
+                        key={activity.id}
+                        className="flex items-start space-x-3"
+                      >
+                        <div
+                          className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${
+                            activity.status === 'success'
+                              ? 'bg-green-500'
+                              : activity.status === 'warning'
+                                ? 'bg-yellow-500'
+                                : 'bg-blue-500'
+                          }`}
+                        />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-900 truncate">
                             {activity.title}
@@ -265,35 +290,50 @@ export default function EnterpriseDashboardPage() {
                     <Link href="/enterprise/agents/customize">
                       <Button className="w-full h-20 flex flex-col items-center justify-center space-y-2">
                         <Bot className="h-6 w-6" />
-                        <span>创建智能体</span>
+                        <span>创建智能?/span>
                       </Button>
                     </Link>
                     <Link href="/enterprise/procurement">
-                      <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+                      <Button
+                        variant="outline"
+                        className="w-full h-20 flex flex-col items-center justify-center space-y-2"
+                      >
                         <ShoppingCart className="h-6 w-6" />
                         <span>发起采购</span>
                       </Button>
                     </Link>
                     <Link href="/enterprise/admin/agents">
-                      <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+                      <Button
+                        variant="outline"
+                        className="w-full h-20 flex flex-col items-center justify-center space-y-2"
+                      >
                         <Settings className="h-6 w-6" />
-                        <span>管理智能体</span>
+                        <span>管理智能?/span>
                       </Button>
                     </Link>
                     <Link href="/enterprise/admin/procurement">
-                      <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+                      <Button
+                        variant="outline"
+                        className="w-full h-20 flex flex-col items-center justify-center space-y-2"
+                      >
                         <Package className="h-6 w-6" />
                         <span>查看订单</span>
                       </Button>
                     </Link>
                     <Link href="/enterprise/admin/analytics">
-                      <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+                      <Button
+                        variant="outline"
+                        className="w-full h-20 flex flex-col items-center justify-center space-y-2"
+                      >
                         <BarChart3 className="h-6 w-6" />
                         <span>数据分析</span>
                       </Button>
                     </Link>
                     <Link href="/enterprise/admin/settings">
-                      <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+                      <Button
+                        variant="outline"
+                        className="w-full h-20 flex flex-col items-center justify-center space-y-2"
+                      >
                         <Users className="h-6 w-6" />
                         <span>团队设置</span>
                       </Button>
@@ -305,33 +345,38 @@ export default function EnterpriseDashboardPage() {
 
             {/* 详细统计 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* 智能体状态 */}
+              {/* 智能体状?*/}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Bot className="h-5 w-5 mr-2" />
-                    智能体运行状态
-                  </CardTitle>
+                    智能体运行状?                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">总计</span>
-                      <span className="font-semibold">{stats.totalAgents} 个</span>
+                      <span className="font-semibold">
+                        {stats.totalAgents} �?                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-green-600">运行中</span>
-                      <span className="font-semibold text-green-600">{stats.activeAgents} 个</span>
+                      <span className="text-green-600">运行?/span>
+                      <span className="font-semibold text-green-600">
+                        {stats.activeAgents} �?                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-yellow-600">待启动</span>
-                      <span className="font-semibold text-yellow-600">{stats.totalAgents - stats.activeAgents} 个</span>
+                      <span className="text-yellow-600">待启?/span>
+                      <span className="font-semibold text-yellow-600">
+                        {stats.totalAgents - stats.activeAgents} �?                      </span>
                     </div>
                     <div className="pt-4 border-t">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">运行率</span>
+                        <span className="text-gray-600">运行?/span>
                         <span className="font-semibold text-green-600">
-                          {Math.round((stats.activeAgents / stats.totalAgents) * 100)}%
+                          {Math.round(
+                            (stats.activeAgents / stats.totalAgents) * 100
+                          )}
+                          %
                         </span>
                       </div>
                     </div>
@@ -351,20 +396,25 @@ export default function EnterpriseDashboardPage() {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">总订单数</span>
-                      <span className="font-semibold">{stats.totalOrders} 单</span>
+                      <span className="font-semibold">
+                        {stats.totalOrders} �?                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-blue-600">处理中</span>
-                      <span className="font-semibold text-blue-600">{stats.pendingOrders} 单</span>
+                      <span className="text-blue-600">处理?/span>
+                      <span className="font-semibold text-blue-600">
+                        {stats.pendingOrders} �?                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-green-600">已完成</span>
-                      <span className="font-semibold text-green-600">{stats.totalOrders - stats.pendingOrders} 单</span>
+                      <span className="text-green-600">已完?/span>
+                      <span className="font-semibold text-green-600">
+                        {stats.totalOrders - stats.pendingOrders} �?                      </span>
                     </div>
                     <div className="pt-4 border-t">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">成本节约率</span>
-                        <span className="font-semibold text-green-600">{stats.savingsRate}%</span>
+                        <span className="text-gray-600">成本节约?/span>
+                        <span className="font-semibold text-green-600">
+                          {stats.savingsRate}%
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -377,7 +427,7 @@ export default function EnterpriseDashboardPage() {
 
       {/* 遮罩层（移动端） */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
@@ -385,3 +435,4 @@ export default function EnterpriseDashboardPage() {
     </div>
   );
 }
+

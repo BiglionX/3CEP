@@ -9,6 +9,7 @@
 ### 环境要求
 
 #### 服务器配置
+
 ```
 最低配置:
 - CPU: 4核
@@ -24,17 +25,20 @@
 ```
 
 #### 软件依赖
+
 - Docker 20.10+
 - Docker Compose 1.29+
 - Node.js 16+ (可选)
 - Git 2.30+
 
 #### 网络要求
+
 - 公网可访问的域名/IP
 - SSL证书配置
 - 防火墙开放端口: 5678, 443, 80
 
 ### 权限准备
+
 - n8n管理员账号
 - 相关API服务访问权限
 - 数据库连接权限
@@ -45,6 +49,7 @@
 ### 第一步：环境准备
 
 #### 1.1 服务器初始化
+
 ```bash
 # 更新系统
 sudo apt update && sudo apt upgrade -y
@@ -58,6 +63,7 @@ sudo systemctl enable docker
 ```
 
 #### 1.2 项目代码获取
+
 ```bash
 # 克隆项目代码
 git clone https://github.com/your-org/3cep.git /opt/n8n-workflows
@@ -68,6 +74,7 @@ git checkout production
 ```
 
 #### 1.3 配置文件准备
+
 ```bash
 # 复制环境配置模板
 cp .env.n8n.example .env.n8n
@@ -77,6 +84,7 @@ vim .env.n8n
 ```
 
 关键环境变量配置：
+
 ```bash
 # n8n基础配置
 N8N_PORT=5678
@@ -101,6 +109,7 @@ DB_POSTGRESDB_DATABASE=n8n_prod
 ### 第二步：服务部署
 
 #### 2.1 启动基础服务
+
 ```bash
 # 使用docker-compose启动n8n及相关服务
 docker-compose -f docker-compose.n8n.yml up -d
@@ -110,6 +119,7 @@ docker-compose -f docker-compose.n8n.yml ps
 ```
 
 #### 2.2 等待服务就绪
+
 ```bash
 # 等待n8n启动完成
 until curl -f https://workflows.yourdomain.com/healthz; do
@@ -121,6 +131,7 @@ echo "n8n服务启动成功"
 ```
 
 #### 2.3 初始化配置
+
 ```bash
 # 创建管理员用户
 docker exec n8n n8n create-user \
@@ -139,6 +150,7 @@ curl -X POST "https://workflows.yourdomain.com/variables" \
 ### 第三步：工作流部署
 
 #### 3.1 使用自动化脚本部署
+
 ```bash
 # 设置部署环境变量
 export N8N_API_URL="https://workflows.yourdomain.com"
@@ -154,6 +166,7 @@ scripts\deploy-n8n-workflows.bat
 ```
 
 #### 3.2 手动部署验证
+
 ```bash
 # 验证工作流导入成功
 curl -X GET "https://workflows.yourdomain.com/workflows" \
@@ -169,6 +182,7 @@ curl -X POST "https://workflows.yourdomain.com/webhook/scan-service" \
 ### 第四步：集成测试
 
 #### 4.1 运行集成测试套件
+
 ```bash
 # 执行完整的集成测试
 npm run test:n8n-integration
@@ -178,6 +192,7 @@ node scripts/test-workflow-suite.js
 ```
 
 #### 4.2 关键功能验证
+
 ```bash
 # 测试扫码服务工作流
 curl -X POST "https://workflows.yourdomain.com/webhook/scan-service" \
@@ -227,6 +242,7 @@ curl -X POST "https://workflows.yourdomain.com/webhook/payment-success" \
 ### 核心监控指标
 
 #### 系统级别监控
+
 ```yaml
 # Prometheus监控配置
 - name: n8n_system_metrics
@@ -237,8 +253,8 @@ curl -X POST "https://workflows.yourdomain.com/webhook/payment-success" \
       labels:
         severity: warning
       annotations:
-        summary: "n8n CPU使用率过高"
-        description: "CPU使用率超过80%，当前值为{{ $value }}"
+        summary: 'n8n CPU使用率过高'
+        description: 'CPU使用率超过80%，当前值为{{ $value }}'
 
     - alert: HighMemoryUsage
       expr: container_memory_usage_bytes{container="n8n"} / container_memory_limit_bytes{container="n8n"} > 0.85
@@ -246,11 +262,12 @@ curl -X POST "https://workflows.yourdomain.com/webhook/payment-success" \
       labels:
         severity: warning
       annotations:
-        summary: "n8n内存使用率过高"
-        description: "内存使用率超过85%，当前值为{{ $value }}"
+        summary: 'n8n内存使用率过高'
+        description: '内存使用率超过85%，当前值为{{ $value }}'
 ```
 
 #### 应用级别监控
+
 ```json
 {
   "监控项": {
@@ -276,6 +293,7 @@ curl -X POST "https://workflows.yourdomain.com/webhook/payment-success" \
 ### 告警通知渠道
 
 #### 钉钉机器人配置
+
 ```json
 {
   "webhook_url": "https://oapi.dingtalk.com/robot/send?access_token=your_token",
@@ -286,6 +304,7 @@ curl -X POST "https://workflows.yourdomain.com/webhook/payment-success" \
 ```
 
 #### 企业微信群机器人
+
 ```json
 {
   "webhook_url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=your_key",
@@ -299,6 +318,7 @@ curl -X POST "https://workflows.yourdomain.com/webhook/payment-success" \
 ### 常见故障场景
 
 #### 1. 服务无法启动
+
 ```bash
 # 检查容器日志
 docker logs n8n
@@ -311,6 +331,7 @@ docker-compose -f docker-compose.n8n.yml restart
 ```
 
 #### 2. 工作流执行失败
+
 ```bash
 # 查看执行历史
 curl -X GET "https://workflows.yourdomain.com/executions" \
@@ -322,6 +343,7 @@ curl -X POST "https://workflows.yourdomain.com/executions/{executionId}/retry" \
 ```
 
 #### 3. 数据库连接问题
+
 ```bash
 # 检查数据库连接
 docker exec n8n pg_isready -h postgres.yourdomain.com -p 5432
@@ -333,6 +355,7 @@ docker-compose -f docker-compose.n8n.yml restart n8n
 ### 回滚操作流程
 
 #### 自动回滚
+
 ```bash
 # 使用部署脚本回滚
 ./scripts/deploy-n8n-workflows.sh --rollback \
@@ -343,6 +366,7 @@ docker-compose -f docker-compose.n8n.yml restart n8n
 ```
 
 #### 手动回滚步骤
+
 ```bash
 # 1. 停止当前服务
 docker-compose -f docker-compose.n8n.yml down
@@ -364,6 +388,7 @@ docker-compose -f docker-compose.n8n.yml up -d
 ## 性能优化建议
 
 ### 系统层面优化
+
 ```bash
 # 调整系统参数
 echo 'vm.max_map_count=262144' >> /etc/sysctl.conf
@@ -383,6 +408,7 @@ EOF
 ```
 
 ### n8n配置优化
+
 ```bash
 # 环境变量优化
 N8N_CONCURRENCY=20
@@ -393,6 +419,7 @@ N8N_QUEUE_HEALTH_CHECK_THRESHOLD=100
 ```
 
 ### 数据库优化
+
 ```sql
 -- PostgreSQL优化配置
 ALTER SYSTEM SET shared_buffers = '2GB';
@@ -405,22 +432,23 @@ ALTER SYSTEM SET wal_buffers = '16MB';
 ## 安全加固措施
 
 ### 访问控制
+
 ```yaml
 # nginx安全配置
 server {
     listen 443 ssl http2;
     server_name workflows.yourdomain.com;
-    
+
     # SSL配置
     ssl_certificate /path/to/certificate.crt;
     ssl_certificate_key /path/to/private.key;
     ssl_protocols TLSv1.2 TLSv1.3;
-    
+
     # 安全头设置
     add_header X-Frame-Options DENY;
     add_header X-Content-Type-Options nosniff;
     add_header X-XSS-Protection "1; mode=block";
-    
+
     # 速率限制
     limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
     limit_req zone=api burst=20 nodelay;
@@ -428,6 +456,7 @@ server {
 ```
 
 ### API安全配置
+
 ```json
 {
   "安全策略": {
@@ -443,18 +472,21 @@ server {
 ## 文档维护
 
 ### 更新记录
-| 版本 | 更新日期 | 更新内容 | 负责人 |
-|------|----------|----------|--------|
-| v1.0.0 | 2026-02-20 | 初始版本发布 | 运维团队 |
+
+| 版本   | 更新日期   | 更新内容         | 负责人   |
+| ------ | ---------- | ---------------- | -------- |
+| v1.0.0 | 2026-02-20 | 初始版本发布     | 运维团队 |
 | v1.1.0 | 2026-03-01 | 增加安全加固章节 | 安全团队 |
 
 ### 维护周期
+
 - **日常维护**: 每日检查服务状态
 - **周度维护**: 每周审查监控告警
 - **月度维护**: 每月更新安全配置
 - **季度维护**: 每季度优化性能配置
 
 ---
+
 **文档版本**: v1.0.0  
 **适用环境**: n8n v1.0.0+  
 **最后更新**: 2026年2月20日  

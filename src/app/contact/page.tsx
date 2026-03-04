@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -45,14 +45,14 @@ export default function ContactPage() {
       icon: Phone,
       title: '电话咨询',
       content: '400-888-9999',
-      subtitle: '工作日 9:00-18:00',
+      subtitle: '工作?9:00-18:00',
       action: 'tel:400-888-9999'
     },
     {
       icon: Mail,
       title: '邮件联系',
       content: 'support@fixcycle.com',
-      subtitle: '24小时内回复',
+      subtitle: '24小时内回?,
       action: 'mailto:support@fixcycle.com'
     },
     {
@@ -65,15 +65,15 @@ export default function ContactPage() {
     {
       icon: QrCode,
       title: '微信客服',
-      content: '扫描二维码关注',
+      content: '扫描二维码关?,
       subtitle: '微信在线咨询',
       action: '#'
     },
     {
       icon: Clock,
-      title: '紧急维修',
+      title: '紧急维?,
       content: '400-999-8888',
-      subtitle: '24小时紧急热线',
+      subtitle: '24小时紧急热?,
       action: 'tel:400-999-8888'
     },
     {
@@ -88,29 +88,29 @@ export default function ContactPage() {
   const companyAddresses = [
     {
       city: '北京总部',
-      address: '北京市朝阳区建国路88号现代城A座1501室',
+      address: '北京市朝阳区建国?8号现代城A�?501�?,
       phone: '010-88889999'
     },
     {
-      city: '上海分公司',
-      address: '上海市浦东新区陆家嘴环路1000号恒生大厦2808室',
+      city: '上海分公?,
+      address: '上海市浦东新区陆家嘴环路1000号恒生大?808�?,
       phone: '021-66668888'
     },
     {
-      city: '广州办事处',
-      address: '广州市天河区珠江新城华夏路10号富力中心3205室',
+      city: '广州办事?,
+      address: '广州市天河区珠江新城华夏?0号富力中?205�?,
       phone: '020-77776666'
     },
     {
       city: '深圳研发中心',
-      address: '深圳市南山区科技园南区高新南一道001号',
+      address: '深圳市南山区科技园南区高新南一?01�?,
       phone: '0755-55553333'
     }
   ]
 
   const socialMedia = [
     {
-      platform: '微信公众号',
+      platform: '微信公众?,
       icon: '📱',
       account: 'FixCycle官方',
       qrCode: '/images/wechat-qrcode.jpg'
@@ -131,27 +131,27 @@ export default function ContactPage() {
 
   const serviceChannels = [
     {
-      channel: '技术支持',
-      description: '设备维修技术问题咨询',
-      responseTime: '30分钟内响应',
+      channel: '技术支?,
+      description: '设备维修技术问题咨?,
+      responseTime: '30分钟内响?,
       available: true
     },
     {
       channel: '商务合作',
-      description: '商户入驻和战略合作',
-      responseTime: '1个工作日内响应',
+      description: '商户入驻和战略合?,
+      responseTime: '1个工作日内响?,
       available: true
     },
     {
       channel: '媒体采访',
       description: '新闻媒体合作联系',
-      responseTime: '2个工作日内响应',
+      responseTime: '2个工作日内响?,
       available: false
     },
     {
-      channel: '投资者关系',
-      description: '投资和融资相关咨询',
-      responseTime: '3个工作日内响应',
+      channel: '投资者关?,
+      description: '投资和融资相关咨?,
+      responseTime: '3个工作日内响?,
       available: true
     }
   ]
@@ -160,7 +160,7 @@ export default function ContactPage() {
     const newErrors: Record<string, string> = {}
     
     if (!formData.name.trim()) {
-      newErrors.name = '请输入您的姓名'
+      newErrors.name = '请输入您的姓?
     }
     
     if (!formData.email.trim()) {
@@ -176,7 +176,7 @@ export default function ContactPage() {
     if (!formData.message.trim()) {
       newErrors.message = '请输入留言内容'
     } else if (formData.message.length < 10) {
-      newErrors.message = '留言内容至少10个字符'
+      newErrors.message = '留言内容至少10个字?
     }
     
     setErrors(newErrors)
@@ -197,7 +197,7 @@ export default function ContactPage() {
       setSubmitSuccess(true)
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
       
-      // 3秒后重置成功状态
+      // 3秒后重置成功状?
       setTimeout(() => setSubmitSuccess(false), 3000)
     } catch (error) {
       alert('提交失败，请稍后重试')
@@ -209,7 +209,7 @@ export default function ContactPage() {
   const handleInputChange = (field: keyof ContactForm, value: string) => {
     setFormData({ ...formData, [field]: value })
     
-    // 清除对应字段的错误
+    // 清除对应字段的错?
     if (errors[field]) {
       setErrors({ ...errors, [field]: '' })
     }
@@ -223,7 +223,7 @@ export default function ContactPage() {
           联系我们
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          我们随时为您提供专业的技术支持和服务，期待与您的沟通
+          我们随时为您提供专业的技术支持和服务，期待与您的沟?
         </p>
       </div>
 
@@ -269,7 +269,7 @@ export default function ContactPage() {
                     <CheckCircle className="w-8 h-8 text-green-600" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">提交成功</h3>
-                  <p className="text-gray-600">我们已收到您的留言，将在24小时内回复您。</p>
+                  <p className="text-gray-600">我们已收到您的留言，将?4小时内回复您?/p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -281,7 +281,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         className={errors.name ? 'border-red-500' : ''}
-                        placeholder="请输入您的姓名"
+                        placeholder="请输入您的姓?
                       />
                       {errors.name && (
                         <div className="flex items-center text-red-500 text-sm">
@@ -299,7 +299,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         className={errors.email ? 'border-red-500' : ''}
-                        placeholder="请输入您的邮箱"
+                        placeholder="请输入您的邮?
                       />
                       {errors.email && (
                         <div className="flex items-center text-red-500 text-sm">
@@ -318,7 +318,7 @@ export default function ContactPage() {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder="请输入您的电话"
+                        placeholder="请输入您的电?
                       />
                     </div>
 
@@ -333,7 +333,7 @@ export default function ContactPage() {
                         }`}
                       >
                         <option value="">请选择咨询主题</option>
-                        <option value="technical">技术支持</option>
+                        <option value="technical">技术支?/option>
                         <option value="business">商务合作</option>
                         <option value="complaint">投诉建议</option>
                         <option value="other">其他问题</option>
@@ -354,7 +354,7 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={(e) => handleInputChange('message', e.target.value)}
                       className={`min-h-[120px] ${errors.message ? 'border-red-500' : ''}`}
-                      placeholder="请详细描述您的问题或需求..."
+                      placeholder="请详细描述您的问题或需?.."
                     />
                     <div className="flex justify-between items-center">
                       {errors.message && (
@@ -377,7 +377,7 @@ export default function ContactPage() {
                     {isSubmitting ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        提交中...
+                        提交?..
                       </>
                     ) : (
                       <>
@@ -436,7 +436,7 @@ export default function ContactPage() {
             <CardContent>
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">工作日</span>
+                  <span className="text-gray-600">工作?/span>
                   <span className="font-medium">09:00 - 18:00</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -444,12 +444,12 @@ export default function ContactPage() {
                   <span className="font-medium">10:00 - 17:00</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">节假日</span>
+                  <span className="text-gray-600">节假?/span>
                   <span className="font-medium text-orange-600">预约服务</span>
                 </div>
                 <div className="pt-4 text-sm text-gray-500">
                   <p>📞 紧急维修服务：24小时热线 400-888-9999</p>
-                  <p className="mt-1">💬 在线客服：全天候为您服务</p>
+                  <p className="mt-1">💬 在线客服：全天候为您服?/p>
                 </div>
               </div>
             </CardContent>
@@ -474,7 +474,7 @@ export default function ContactPage() {
                     </div>
                     {social.qrCode !== '#' && (
                       <Button size="sm" variant="outline">
-                        查看二维码
+                        查看二维?
                       </Button>
                     )}
                   </div>
@@ -506,7 +506,7 @@ export default function ContactPage() {
             </CardContent>
           </Card>
 
-          {/* FAQ快速链接 */}
+          {/* FAQ快速链?*/}
           <Card>
             <CardHeader>
               <CardTitle>常见问题</CardTitle>
@@ -514,10 +514,10 @@ export default function ContactPage() {
             <CardContent>
               <div className="space-y-3">
                 {[
-                  '如何预约上门维修服务？',
-                  '维修费用如何计算？',
+                  '如何预约上门维修服务?,
+                  '维修费用如何计算?,
                   '保修期内免费维修吗？',
-                  '如何查询维修进度？'
+                  '如何查询维修进度?
                 ].map((question, index) => (
                   <button
                     key={index}
@@ -525,7 +525,7 @@ export default function ContactPage() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-sm">{question}</span>
-                      <span className="text-blue-600 text-lg">›</span>
+                      <span className="text-blue-600 text-lg">�?/span>
                     </div>
                   </button>
                 ))}

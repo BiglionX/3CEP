@@ -13,12 +13,12 @@ import {
   RecommendationItemType,
   RecommendationResult,
   UserActionType,
-} from "../models/recommendation.model";
-import { generateUUID } from "../utils/helpers";
-import { CollaborativeFilterRecommender } from "./collaborative-filter-recommender.service";
-import { DeepLearningRecommender } from "./deep-learning-recommender.service";
-import { RecommendationEngine } from "./recommendation.interfaces";
-import { UserBehaviorCollectorService } from "./user-behavior-collector.service";
+} from '../models/recommendation.model';
+import { generateUUID } from '../utils/helpers';
+import { CollaborativeFilterRecommender } from './collaborative-filter-recommender.service';
+import { DeepLearningRecommender } from './deep-learning-recommender.service';
+import { RecommendationEngine } from './recommendation.interfaces';
+import { UserBehaviorCollectorService } from './user-behavior-collector.service';
 
 export class HybridRecommenderService implements RecommendationEngine {
   private collaborativeRecommender: CollaborativeFilterRecommender;
@@ -44,15 +44,12 @@ export class HybridRecommenderService implements RecommendationEngine {
   }
 
   /**
-   * 初始化推荐引擎
-   */
+   * 初始化推荐引?   */
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
     try {
-      console.log("🔄 初始化混合推荐引擎...");
-
-      // 初始化各推荐算法
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔄 初始化混合推荐引?..')// 初始化各推荐算法
       await Promise.all([
         this.collaborativeRecommender.train([]), // 使用空数据初始化
         this.deepLearningRecommender.initialize(),
@@ -62,9 +59,8 @@ export class HybridRecommenderService implements RecommendationEngine {
       await this.loadAbTestConfig();
 
       this.isInitialized = true;
-      console.log("✅ 混合推荐引擎初始化完成");
-    } catch (error) {
-      console.error("混合推荐引擎初始化失败:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?混合推荐引擎初始化完?)} catch (error) {
+      console.error('混合推荐引擎初始化失?', error);
       throw error;
     }
   }
@@ -85,15 +81,11 @@ export class HybridRecommenderService implements RecommendationEngine {
         await this.initialize();
       }
 
-      console.log(`🚀 生成推荐请求: ${requestId} for user ${context.userId}`);
-
-      // 确定使用的算法变体（A/B测试）
-      const algorithmVariant = await this.determineAlgorithmVariant(
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🚀 生成推荐请求: ${requestId} for user ${context.userId}`)// 确定使用的算法变体（A/B测试?      const algorithmVariant = await this.determineAlgorithmVariant(
         context.userId
       );
 
-      // 并行生成不同算法的推荐
-      const [collaborativeRecs, deepLearningRecs] = await Promise.all([
+      // 并行生成不同算法的推?      const [collaborativeRecs, deepLearningRecs] = await Promise.all([
         this.collaborativeRecommender.recommend(context, count * 2),
         this.deepLearningRecommender.recommend(context, count * 2),
       ]);
@@ -106,8 +98,7 @@ export class HybridRecommenderService implements RecommendationEngine {
         count
       );
 
-      // 计算元数据
-      const metadata = await this.calculateMetadata(
+      // 计算元数?      const metadata = await this.calculateMetadata(
         collaborativeRecs,
         deepLearningRecs,
         hybridItems
@@ -127,11 +118,9 @@ export class HybridRecommenderService implements RecommendationEngine {
       // 保存推荐结果用于后续分析
       await this.saveRecommendationResult(result);
 
-      console.log(
-        `✅ 推荐生成完成: ${requestId}, ${hybridItems.length} 个项目`
-      );
-
-      return result;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `�?推荐生成完成: ${requestId}, ${hybridItems.length} 个项目`
+      )return result;
     } catch (error) {
       console.error(`推荐生成失败 (${requestId}):`, error);
 
@@ -143,7 +132,7 @@ export class HybridRecommenderService implements RecommendationEngine {
         userId: context.userId,
         context,
         items: fallbackItems,
-        algorithm: "fallback",
+        algorithm: 'fallback',
         generationTime: new Date().toISOString(),
         processingTimeMs: Date.now() - startTime,
         metadata: {
@@ -151,7 +140,7 @@ export class HybridRecommenderService implements RecommendationEngine {
           filteredCount: 0,
           diversityScore: 0,
           noveltyScore: 0,
-          modelVersion: "fallback",
+          modelVersion: 'fallback',
         },
       };
     }
@@ -164,15 +153,11 @@ export class HybridRecommenderService implements RecommendationEngine {
     contexts: RecommendationContext[],
     count: number = 10
   ): Promise<RecommendationResult[]> {
-    console.log(`🔄 批量生成推荐 (${contexts.length} 个用户)`);
-
-    // 并行处理所有推荐请求
-    const results = await Promise.all(
-      contexts.map((context) => this.getRecommendations(context, count))
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🔄 批量生成推荐 (${contexts.length} 个用?`)// 并行处理所有推荐请?    const results = await Promise.all(
+      contexts.map(context => this.getRecommendations(context, count))
     );
 
-    console.log("✅ 批量推荐生成完成");
-    return results;
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?批量推荐生成完成')return results;
   }
 
   /**
@@ -195,9 +180,8 @@ export class HybridRecommenderService implements RecommendationEngine {
         },
       });
 
-      console.log(`✅ 反馈记录成功: ${feedback.recommendationId}`);
-    } catch (error) {
-      console.error("记录推荐反馈失败:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?反馈记录成功: ${feedback.recommendationId}`)} catch (error) {
+      console.error('记录推荐反馈失败:', error);
       throw error;
     }
   }
@@ -207,14 +191,10 @@ export class HybridRecommenderService implements RecommendationEngine {
    */
   async retrainModel(force: boolean = false): Promise<void> {
     try {
-      console.log("🔄 重新训练推荐模型...");
-
-      // 获取最新的用户行为数据
-      const recentBehaviors = await this.getRecentUserBehaviors(30); // 最近30天
-
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔄 重新训练推荐模型...')// 获取最新的用户行为数据
+      const recentBehaviors = await this.getRecentUserBehaviors(30); // 最?0�?
       if (recentBehaviors.length === 0 && !force) {
-        console.log("ℹ️ 没有新的行为数据，跳过训练");
-        return;
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('ℹ️ 没有新的行为数据，跳过训?)return;
       }
 
       // 重新训练协同过滤模型
@@ -223,21 +203,17 @@ export class HybridRecommenderService implements RecommendationEngine {
       // 深度学习模型在线学习
       await this.deepLearningRecommender.train(recentBehaviors);
 
-      console.log("✅ 模型重新训练完成");
-    } catch (error) {
-      console.error("模型重新训练失败:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?模型重新训练完成')} catch (error) {
+      console.error('模型重新训练失败:', error);
       throw error;
     }
   }
 
   /**
-   * 获取系统健康状态
-   */
+   * 获取系统健康状?   */
   async getHealthStatus(): Promise<any> {
     try {
-      // 检查各组件状态
-      const collaborativeHealthy = true; // 简化检查
-      const deepLearningHealthy = !!process.env.DEEPSEEK_API_KEY;
+      // 检查各组件状?      const collaborativeHealthy = true; // 简化检?      const deepLearningHealthy = !!process.env.DEEPSEEK_API_KEY;
 
       // 获取基本统计信息
       const totalUsers = await this.getTotalUserCount();
@@ -245,8 +221,7 @@ export class HybridRecommenderService implements RecommendationEngine {
 
       return {
         isHealthy: collaborativeHealthy && deepLearningHealthy,
-        modelAccuracy: 0.85, // 模拟准确率
-        lastTrainingTime: new Date().toISOString(),
+        modelAccuracy: 0.85, // 模拟准确?        lastTrainingTime: new Date().toISOString(),
         totalUsers,
         totalItems,
         algorithms: {
@@ -260,10 +235,10 @@ export class HybridRecommenderService implements RecommendationEngine {
         },
       };
     } catch (error) {
-      console.error("获取健康状态失败:", error);
+      console.error('获取健康状态失?', error);
       return {
         isHealthy: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -280,15 +255,11 @@ export class HybridRecommenderService implements RecommendationEngine {
    */
   async recordAbTestResult(result: AbTestResult): Promise<void> {
     try {
-      console.log(
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
         `📊 A/B测试结果记录: ${result.experimentId} - ${result.variantId}`
-      );
-
-      // 这里应该保存到专门的A/B测试表中
-      // 简化处理：仅记录日志
-      console.log("A/B测试指标:", result.metrics);
-    } catch (error) {
-      console.error("记录A/B测试结果失败:", error);
+      )// 这里应该保存到专门的A/B测试表中
+      // 简化处理：仅记录日?      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('A/B测试指标:', result.metrics)} catch (error) {
+      console.error('记录A/B测试结果失败:', error);
     }
   }
 
@@ -301,17 +272,14 @@ export class HybridRecommenderService implements RecommendationEngine {
     context: RecommendationContext,
     count: number
   ): Promise<RecommendationItem[]> {
-    // 1. 加权合并不同算法的结果
-    const weightedItems = this.weightedMerge(
+    // 1. 加权合并不同算法的结?    const weightedItems = this.weightedMerge(
       collaborativeRecs,
       deepLearningRecs
     );
 
-    // 2. 多样性调整
-    const diverseItems = this.applyDiversityPenalty(weightedItems);
+    // 2. 多样性调?    const diverseItems = this.applyDiversityPenalty(weightedItems);
 
-    // 3. 新鲜度加权
-    const freshItems = this.applyFreshnessBoost(diverseItems);
+    // 3. 新鲜度加?    const freshItems = this.applyFreshnessBoost(diverseItems);
 
     // 4. 最终排序和截取
     return freshItems
@@ -336,7 +304,7 @@ export class HybridRecommenderService implements RecommendationEngine {
     >();
 
     // 处理协同过滤结果
-    collaborativeRecs.forEach((item) => {
+    collaborativeRecs.forEach(item => {
       const current = itemScores.get(item.itemId) || {
         score: 0,
         sources: 0,
@@ -350,7 +318,7 @@ export class HybridRecommenderService implements RecommendationEngine {
     });
 
     // 处理深度学习结果
-    deepLearningRecs.forEach((item) => {
+    deepLearningRecs.forEach(item => {
       const current = itemScores.get(item.itemId) || {
         score: 0,
         sources: 0,
@@ -374,28 +342,27 @@ export class HybridRecommenderService implements RecommendationEngine {
         itemType: this.getItemType(itemId),
         score: data.score / data.sources, // 平均分数
         confidence: avgConfidence,
-        reason: "混合推荐算法结果",
+        reason: '混合推荐算法结果',
         rank: 0,
         metadata: {
           sources: data.sources,
           collaborativeScore:
-            collaborativeRecs.find((i) => i.itemId === itemId)?.score || 0,
+            collaborativeRecs.find(i => i.itemId === itemId)?.score || 0,
           deepLearningScore:
-            deepLearningRecs.find((i) => i.itemId === itemId)?.score || 0,
+            deepLearningRecs.find(i => i.itemId === itemId)?.score || 0,
         },
       };
     });
   }
 
   /**
-   * 应用多样性惩罚
-   */
+   * 应用多样性惩?   */
   private applyDiversityPenalty(
     items: RecommendationItem[]
   ): RecommendationItem[] {
     const categoryCounts = new Map<string, number>();
 
-    return items.map((item) => {
+    return items.map(item => {
       const category = this.getItemCategory(item.itemId);
       const currentCount = categoryCounts.get(category) || 0;
 
@@ -411,52 +378,46 @@ export class HybridRecommenderService implements RecommendationEngine {
   }
 
   /**
-   * 应用新鲜度加权
-   */
+   * 应用新鲜度加?   */
   private applyFreshnessBoost(
     items: RecommendationItem[]
   ): RecommendationItem[] {
-    return items.map((item) => ({
+    return items.map(item => ({
       ...item,
       score: item.score * (1 + this.config.freshnessBoost),
     }));
   }
 
   /**
-   * 计算元数据
-   */
+   * 计算元数?   */
   private async calculateMetadata(
     collabRecs: RecommendationItem[],
     dlRecs: RecommendationItem[],
     finalRecs: RecommendationItem[]
   ): Promise<any> {
-    // 计算多样性分数
-    const categories = new Set(
-      finalRecs.map((item) => this.getItemCategory(item.itemId))
+    // 计算多样性分?    const categories = new Set(
+      finalRecs.map(item => this.getItemCategory(item.itemId))
     );
     const diversityScore = Math.min(
       1,
       categories.size / Math.max(1, finalRecs.length / 3)
     );
 
-    // 计算新颖性分数（基于物品的新鲜度）
-    const noveltyScore = 0.75; // 简化处理
-
+    // 计算新颖性分数（基于物品的新鲜度?    const noveltyScore = 0.75; // 简化处?
     return {
       totalCandidates: collabRecs.length + dlRecs.length,
       filteredCount: finalRecs.length,
       diversityScore,
       noveltyScore,
-      modelVersion: "1.0.0",
+      modelVersion: '1.0.0',
     };
   }
 
   /**
-   * 确定算法变体（用于A/B测试）
-   */
+   * 确定算法变体（用于A/B测试?   */
   private async determineAlgorithmVariant(userId: string): Promise<string> {
     if (!this.abTestConfig) {
-      return "hybrid_default";
+      return 'hybrid_default';
     }
 
     // 简单的哈希分配
@@ -470,34 +431,30 @@ export class HybridRecommenderService implements RecommendationEngine {
       }
     }
 
-    return "hybrid_default";
+    return 'hybrid_default';
   }
 
   /**
-   * 简单哈希函数
-   */
+   * 简单哈希函?   */
   private simpleHash(str: string): number {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = (hash << 5) - hash + char;
-      hash = hash & hash; // 转换为32位整数
-    }
-    return (Math.abs(hash) % 1000) / 1000; // 返回0-1之间的值
-  }
+      hash = hash & hash; // 转换?2位整?    }
+    return (Math.abs(hash) % 1000) / 1000; // 返回0-1之间的?  }
 
   /**
    * 计算反馈分数
    */
   private calculateFeedbackScore(feedback: RecommendationFeedback): number {
-    const baseScore = feedback.rating * 20; // 1-5星转换为20-100分
-
+    const baseScore = feedback.rating * 20; // 1-5星转换为20-100�?
     switch (feedback.feedbackType) {
-      case "purchase":
+      case 'purchase':
         return baseScore * 1.5;
-      case "click":
+      case 'click':
         return baseScore * 1.2;
-      case "dislike":
+      case 'dislike':
         return Math.max(0, baseScore - 30);
       default:
         return baseScore;
@@ -515,7 +472,7 @@ export class HybridRecommenderService implements RecommendationEngine {
       itemType: RecommendationItemType.REPAIR_SHOP,
       score: 50 - i * 3,
       confidence: 0.5,
-      reason: "系统降级推荐",
+      reason: '系统降级推荐',
       rank: i + 1,
     }));
   }
@@ -525,47 +482,43 @@ export class HybridRecommenderService implements RecommendationEngine {
   private async loadAbTestConfig(): Promise<void> {
     // 简化实现：硬编码A/B测试配置
     this.abTestConfig = {
-      experimentId: "rec_alg_v1",
+      experimentId: 'rec_alg_v1',
       variants: [
-        { variantId: "A", algorithm: "collaborative_only", weight: 0.5 },
-        { variantId: "B", algorithm: "hybrid_balanced", weight: 0.5 },
+        { variantId: 'A', algorithm: 'collaborative_only', weight: 0.5 },
+        { variantId: 'B', algorithm: 'hybrid_balanced', weight: 0.5 },
       ],
       startDate: new Date().toISOString(),
       endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30天后
-      metrics: ["ctr", "conversion_rate", "engagement_time"],
+      metrics: ['ctr', 'conversion_rate', 'engagement_time'],
     };
   }
 
   private async getRecentUserBehaviors(days: number): Promise<any[]> {
     // 获取最近的用户行为数据
-    return []; // 简化实现
-  }
+    return []; // 简化实?  }
 
   private async getTotalUserCount(): Promise<number> {
-    return 1000; // 模拟用户数
-  }
+    return 1000; // 模拟用户?  }
 
   private async getTotalItemCount(): Promise<number> {
-    return 500; // 模拟物品数
-  }
+    return 500; // 模拟物品?  }
 
   private async saveRecommendationResult(
     result: RecommendationResult
   ): Promise<void> {
     // 保存推荐结果用于分析
-    console.log(`💾 保存推荐结果: ${result.requestId}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`💾 保存推荐结果: ${result.requestId}`)}
 
   private getItemType(itemId: string): string {
-    if (itemId.startsWith("shop_")) return RecommendationItemType.REPAIR_SHOP;
-    if (itemId.startsWith("part_")) return RecommendationItemType.PART;
+    if (itemId.startsWith('shop_')) return RecommendationItemType.REPAIR_SHOP;
+    if (itemId.startsWith('part_')) return RecommendationItemType.PART;
     return RecommendationItemType.REPAIR_SHOP;
   }
 
   private getItemCategory(itemId: string): string {
-    if (itemId.includes("phone")) return "手机";
-    if (itemId.includes("tablet")) return "平板";
-    if (itemId.includes("laptop")) return "笔记本";
-    return "其他";
+    if (itemId.includes('phone')) return '手机';
+    if (itemId.includes('tablet')) return '平板';
+    if (itemId.includes('laptop')) return '笔记?;
+    return '其他';
   }
 }

@@ -1,30 +1,22 @@
 /**
- * 供应链库存管理数据模型
- * 定义库存、仓库、商品等相关数据结构
+ * 供应链库存管理数据模? * 定义库存、仓库、商品等相关数据结构
  */
 
 // 仓库类型枚举
 export enum WarehouseType {
-  DOMESTIC = 'domestic',      // 国内仓
-  OVERSEAS = 'overseas',      // 海外仓
-  VIRTUAL = 'virtual'         // 虚拟仓
-}
+  DOMESTIC = 'domestic', // 国内?  OVERSEAS = 'overseas', // 海外?  VIRTUAL = 'virtual', // 虚拟?}
 
-// 库存状态枚举
-export enum InventoryStatus {
-  IN_STOCK = 'in_stock',      // 有库存
-  LOW_STOCK = 'low_stock',    // 库存不足
-  OUT_OF_STOCK = 'out_of_stock' // 缺货
+// 库存状态枚?export enum InventoryStatus {
+  IN_STOCK = 'in_stock', // 有库?  LOW_STOCK = 'low_stock', // 库存不足
+  OUT_OF_STOCK = 'out_of_stock', // 缺货
 }
 
 // 商品类别枚举
 export enum ProductCategory {
-  PHONE_ACCESSORIES = 'phone_accessories',    // 手机配件
-  LAPTOP_PARTS = 'laptop_parts',              // 笔记本配件
-  TABLET_PARTS = 'tablet_parts',              // 平板配件
-  WEARABLE_DEVICES = 'wearable_devices',      // 可穿戴设备
-  AUDIO_EQUIPMENT = 'audio_equipment',        // 音频设备
-  OTHER = 'other'                             // 其他
+  PHONE_ACCESSORIES = 'phone_accessories', // 手机配件
+  LAPTOP_PARTS = 'laptop_parts', // 笔记本配?  TABLET_PARTS = 'tablet_parts', // 平板配件
+  WEARABLE_DEVICES = 'wearable_devices', // 可穿戴设?  AUDIO_EQUIPMENT = 'audio_equipment', // 音频设备
+  OTHER = 'other', // 其他
 }
 
 // 仓库信息接口
@@ -41,9 +33,7 @@ export interface Warehouse {
     email: string;
     manager: string;
   };
-  capacity: number;           // 容量（件）
-  currentOccupancy: number;   // 当前占用量
-  isActive: boolean;
+  capacity: number; // 容量（件?  currentOccupancy: number; // 当前占用?  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,15 +41,15 @@ export interface Warehouse {
 // 商品信息接口
 export interface Product {
   id: string;
-  sku: string;                // SKU编码
+  sku: string; // SKU编码
   name: string;
   category: ProductCategory;
   brand: string;
   model: string;
   description: string;
   specifications: Record<string, any>; // 规格参数
-  unitWeight: number;         // 单位重量(kg)
-  unitVolume: number;         // 单位体积(m³)
+  unitWeight: number; // 单位重量(kg)
+  unitVolume: number; // 单位体积(m³)
   imageUrl: string;
   isActive: boolean;
   createdAt: Date;
@@ -71,13 +61,10 @@ export interface InventoryRecord {
   id: string;
   productId: string;
   warehouseId: string;
-  quantity: number;           // 当前库存数量
-  reservedQuantity: number;   // 已预订数量
-  availableQuantity: number;  // 可用数量
-  safetyStock: number;        // 安全库存
-  reorderPoint: number;       // 重新订购点
-  lastRestockedAt: Date;      // 最后补货时间
-  status: InventoryStatus;
+  quantity: number; // 当前库存数量
+  reservedQuantity: number; // 已预订数?  availableQuantity: number; // 可用数量
+  safetyStock: number; // 安全库存
+  reorderPoint: number; // 重新订购?  lastRestockedAt: Date; // 最后补货时?  status: InventoryStatus;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -90,13 +77,11 @@ export interface InventoryMovement {
   movementType: 'in' | 'out' | 'adjustment' | 'transfer';
   quantity: number;
   reason: string;
-  referenceNumber: string;    // 关联单号
-  createdBy: string;          // 操作人
-  createdAt: Date;
+  referenceNumber: string; // 关联单号
+  createdBy: string; // 操作?  createdAt: Date;
 }
 
-// 供应商信息接口
-export interface Supplier {
+// 供应商信息接?export interface Supplier {
   id: string;
   name: string;
   code: string;
@@ -105,7 +90,7 @@ export interface Supplier {
   email: string;
   address: string;
   country: string;
-  rating: number;             // 评分 0-5
+  rating: number; // 评分 0-5
   creditLevel: 'A' | 'B' | 'C' | 'D'; // 信用等级
   isActive: boolean;
   joinedAt: Date;
@@ -130,8 +115,7 @@ export interface PurchaseOrder {
   updatedAt: Date;
 }
 
-// 采购订单项接口
-export interface PurchaseOrderItem {
+// 采购订单项接?export interface PurchaseOrderItem {
   productId: string;
   quantity: number;
   unitPrice: number;
@@ -172,8 +156,7 @@ export interface CreateProductDTO {
 export interface AdjustInventoryDTO {
   productId: string;
   warehouseId: string;
-  quantityChange: number;     // 正数为增加，负数为减少
-  reason: string;
+  quantityChange: number; // 正数为增加，负数为减?  reason: string;
   referenceNumber: string;
 }
 
@@ -185,9 +168,8 @@ export interface SupplierApplicationDTO {
   email: string;
   address: string;
   country: string;
-  businessLicense: string;    // 营业执照
-  companyProfile: string;     // 公司简介
-}
+  businessLicense: string; // 营业执照
+  companyProfile: string; // 公司简?}
 
 // 库存查询参数
 export interface InventoryQueryParams {
@@ -206,10 +188,10 @@ export interface WarehouseRecommendation {
   warehouseId: string;
   warehouseName: string;
   warehouseCode: string;
-  distance: number;           // 距离(km)
-  deliveryTime: number;       // 预计配送时间(小时)
-  shippingCost: number;       // 运费
+  distance: number; // 距离(km)
+  deliveryTime: number; // 预计配送时?小时)
+  shippingCost: number; // 运费
   inventoryStatus: InventoryStatus;
   availableQuantity: number;
-  score: number;              // 推荐得分
+  score: number; // 推荐得分
 }

@@ -3,15 +3,18 @@
 ## 🚀 快速入口
 
 ### 🎯 用户入口
+
 - [快速入门指南](./user-guides/getting-started.md) - 5分钟上手平台使用
 - [网站地图](./SITE_MAP.md) - 完整功能导航
 
 ### 👨‍💻 开发者入口
+
 - [项目说明书](./project-overview/project-specification.md) - 完整项目概览
 - [技术架构文档](./technical-docs/system-architecture.md) - 系统设计详解
 - [API参考文档](./technical-docs/api-documentation.md) - 接口使用指南
 
 ### 🛠️ 运维入口
+
 - [部署操作手册](./technical-docs/deployment-guide.md) - 生产环境部署
 - [版本更新日志](./release-notes/changelog.md) - 版本变更记录
 
@@ -94,8 +97,6 @@ npm run dev
 
 - [`historical-reports/`](./archived/historical-reports/) - 历史报告文档
 - [`legacy-docs/`](./archived/legacy-docs/) - 旧版技术文档
-
-
 
 ### ⚙️ 技术文档 (Technical Docs)
 

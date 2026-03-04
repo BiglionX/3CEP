@@ -1,14 +1,14 @@
-'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { 
-  Smartphone, 
-  QrCode, 
-  Plus, 
-  Search, 
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Smartphone,
+  QrCode,
+  Plus,
+  Search,
   MoreVertical,
   Battery,
   Calendar,
@@ -16,29 +16,29 @@ import {
   Wrench,
   Eye,
   Trash2,
-  Edit3
-} from 'lucide-react'
+  Edit3,
+} from 'lucide-react';
 
 interface Device {
-  id: string
-  name: string
-  brand: string
-  model: string
-  serialNumber: string
-  purchaseDate: string
-  warrantyEndDate: string
-  status: 'normal' | 'repairing' | 'broken'
-  lastServiceDate: string
-  location: string
-  qrCode: string
-  imageUrl: string
+  id: string;
+  name: string;
+  brand: string;
+  model: string;
+  serialNumber: string;
+  purchaseDate: string;
+  warrantyEndDate: string;
+  status: 'normal' | 'repairing' | 'broken';
+  lastServiceDate: string;
+  location: string;
+  qrCode: string;
+  imageUrl: string;
 }
 
 export default function UserDevicesPage() {
-  const [devices, setDevices] = useState<Device[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [showAddModal, setShowAddModal] = useState(false)
+  const [devices, setDevices] = useState<Device[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     // 模拟获取设备数据
@@ -56,7 +56,7 @@ export default function UserDevicesPage() {
           lastServiceDate: '2024-01-10',
           location: '北京',
           qrCode: 'QR001DEV001',
-          imageUrl: ''
+          imageUrl: '',
         },
         {
           id: 'dev_002',
@@ -70,7 +70,7 @@ export default function UserDevicesPage() {
           lastServiceDate: '2024-02-15',
           location: '上海',
           qrCode: 'QR002DEV002',
-          imageUrl: ''
+          imageUrl: '',
         },
         {
           id: 'dev_003',
@@ -84,53 +84,62 @@ export default function UserDevicesPage() {
           lastServiceDate: '2024-01-20',
           location: '广州',
           qrCode: 'QR003DEV003',
-          imageUrl: ''
-        }
-      ]
-      setDevices(mockDevices)
-      setLoading(false)
-    }, 500)
-  }, [])
+          imageUrl: '',
+        },
+      ];
+      setDevices(mockDevices);
+      setLoading(false);
+    }, 500);
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'normal': return 'bg-green-100 text-green-800'
-      case 'repairing': return 'bg-yellow-100 text-yellow-800'
-      case 'broken': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'normal':
+        return 'bg-green-100 text-green-800';
+      case 'repairing':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'broken':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
-  }
+  };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'normal': return '正常使用'
-      case 'repairing': return '维修中'
-      case 'broken': return '已损坏'
-      default: return '未知状态'
+      case 'normal':
+        return '正常使用';
+      case 'repairing':
+        return '维修?;
+      case 'broken':
+        return '已损?;
+      default:
+        return '未知状?;
     }
-  }
+  };
 
-  const filteredDevices = devices.filter(device =>
-    device.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    device.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    device.model.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredDevices = devices.filter(
+    device =>
+      device.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      device.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      device.model.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleScanQRCode = () => {
     // 模拟扫码功能
-    alert('请使用摄像头扫描设备二维码')
-  }
+    alert('请使用摄像头扫描设备二维?);
+  };
 
   const handleAddDevice = () => {
-    setShowAddModal(true)
-  }
+    setShowAddModal(true);
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -139,7 +148,7 @@ export default function UserDevicesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">我的设备</h1>
-          <p className="text-gray-600 mt-1">管理您的所有设备信息</p>
+          <p className="text-gray-600 mt-1">管理您的所有设备信?/p>
         </div>
         <div className="flex items-center space-x-3">
           <div className="relative">
@@ -147,7 +156,7 @@ export default function UserDevicesPage() {
             <Input
               placeholder="搜索设备名称、品牌或型号..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="pl-10 w-64"
             />
           </div>
@@ -171,13 +180,15 @@ export default function UserDevicesPage() {
                 <Smartphone className="w-5 h-5 text-blue-600" />
               </div>
               <div className="ml-3">
-                <p className="text-2xl font-bold text-gray-900">{devices.length}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {devices.length}
+                </p>
                 <p className="text-sm text-gray-600">总设备数</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
@@ -193,7 +204,7 @@ export default function UserDevicesPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
@@ -204,12 +215,12 @@ export default function UserDevicesPage() {
                 <p className="text-2xl font-bold text-gray-900">
                   {devices.filter(d => d.status === 'repairing').length}
                 </p>
-                <p className="text-sm text-gray-600">维修中</p>
+                <p className="text-sm text-gray-600">维修?/p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
@@ -218,7 +229,11 @@ export default function UserDevicesPage() {
               </div>
               <div className="ml-3">
                 <p className="text-2xl font-bold text-gray-900">
-                  {devices.filter(d => new Date(d.warrantyEndDate) > new Date()).length}
+                  {
+                    devices.filter(
+                      d => new Date(d.warrantyEndDate) > new Date()
+                    ).length
+                  }
                 </p>
                 <p className="text-sm text-gray-600">保修期内</p>
               </div>
@@ -229,21 +244,27 @@ export default function UserDevicesPage() {
 
       {/* 设备列表 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredDevices.map((device) => (
+        {filteredDevices.map(device => (
           <Card key={device.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
                     {device.imageUrl ? (
-                      <img src={device.imageUrl} alt={device.name} className="w-8 h-8 rounded" />
+                      <img
+                        src={device.imageUrl}
+                        alt={device.name}
+                        className="w-8 h-8 rounded"
+                      />
                     ) : (
                       <Smartphone className="w-5 h-5 text-gray-600" />
                     )}
                   </div>
                   <div>
                     <CardTitle className="text-lg">{device.name}</CardTitle>
-                    <p className="text-sm text-gray-600">{device.brand} {device.model}</p>
+                    <p className="text-sm text-gray-600">
+                      {device.brand} {device.model}
+                    </p>
                   </div>
                 </div>
                 <Button variant="ghost" size="sm" className="p-1">
@@ -251,14 +272,18 @@ export default function UserDevicesPage() {
                 </Button>
               </div>
             </CardHeader>
-            
+
             <CardContent className="space-y-3">
-              {/* 状态标签 */}
+              {/* 状态标?*/}
               <div className="flex items-center justify-between">
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(device.status)}`}>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(device.status)}`}
+                >
                   {getStatusText(device.status)}
                 </span>
-                <span className="text-xs text-gray-500">SN: {device.serialNumber}</span>
+                <span className="text-xs text-gray-500">
+                  SN: {device.serialNumber}
+                </span>
               </div>
 
               {/* 设备信息 */}
@@ -295,13 +320,13 @@ export default function UserDevicesPage() {
         ))}
       </div>
 
-      {/* 空状态 */}
+      {/* 空状?*/}
       {filteredDevices.length === 0 && (
         <div className="text-center py-12">
           <Smartphone className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">暂无设备</h3>
           <p className="mt-1 text-sm text-gray-500">
-            {searchTerm ? '没有找到匹配的设备' : '添加您的第一台设备开始管理'}
+            {searchTerm ? '没有找到匹配的设? : '添加您的第一台设备开始管?}
           </p>
           <div className="mt-6">
             <Button onClick={handleAddDevice}>
@@ -312,5 +337,6 @@ export default function UserDevicesPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
+

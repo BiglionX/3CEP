@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin登录调试页面</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      input {
+        padding: 8px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 200px;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 Admin登录问题诊断</h1>
+
+      <div class="test-section info">
+        <h3>当前状态</h3>
+        <div id="current-status">
+          <p>正在检测当前认证状态...</p>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>1. 检查认证状态</h3>
+        <button onclick="checkSession()">检查会话状态</button>
+        <div id="session-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>2. 测试登录</h3>
+        <div>
+          <label
+            >邮箱:
+            <input type="email" id="email" value="1055603323@qq.com" /></label
+          ><br />
+          <label
+            >密码:
+            <input type="password" id="password" value="12345678" /></label
+          ><br />
+          <button onclick="testLogin()">测试登录</button>
+        </div>
+        <div id="login-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>3. 测试重定向</h3>
+        <button onclick="testRedirect()">测试跳转到管理后台</button>
+        <div id="redirect-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>4. 完整登录流程测试</h3>
+        <button onclick="fullLoginTest()">完整流程测试</button>
+        <div id="full-test-result"></div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = 'http://localhost:3001';
+
+      // 检查当前会话状态
+      async function checkSession() {
+        const resultEl = document.getElementById('session-result');
+        resultEl.innerHTML = '<p>正在检查...</p>';
+
+        try {
+          const response = await fetch(`${API_BASE}/api/auth/check-session`);
+          const data = await response.json();
+
+          if (response.ok) {
+            resultEl.innerHTML = `
+                        <div class="success">
+                            <h4>✅ 会话检查成功</h4>
+                            <p><strong>认证状态:</strong> ${data.authenticated ? '已认证' : '未认证'}</p>
+                            <p><strong>管理员权限:</strong> ${data.is_admin ? '是' : '否'}</p>
+                            <p><strong>用户邮箱:</strong> ${data.user?.email || '未知'}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+          } else {
+            resultEl.innerHTML = `
+                        <div class="error">
+                            <h4>❌ 会话检查失败</h4>
+                            <p>HTTP状态: ${response.status}</p>
+                            <p>错误信息: ${data.error || '未知错误'}</p>
+                        </div>
+                    `;
+          }
+        } catch (error) {
+          resultEl.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 请求失败</h4>
+                        <p>错误: ${error.message}</p>
+                    </div>
+                `;
+        }
+      }
+
+      // 测试登录功能
+      async function testLogin() {
+        const resultEl = document.getElementById('login-result');
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        resultEl.innerHTML = '<p>正在登录...</p>';
+
+        try {
+          const response = await fetch(`${API_BASE}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            resultEl.innerHTML = `
+                        <div class="success">
+                            <h4>✅ 登录成功</h4>
+                            <p><strong>用户ID:</strong> ${data.user?.id}</p>
+                            <p><strong>用户邮箱:</strong> ${data.user?.email}</p>
+                            <p><strong>管理员权限:</strong> ${data.user?.is_admin ? '是' : '否'}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+          } else {
+            resultEl.innerHTML = `
+                        <div class="error">
+                            <h4>❌ 登录失败</h4>
+                            <p>错误信息: ${data.error}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+          }
+        } catch (error) {
+          resultEl.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 登录请求失败</h4>
+                        <p>错误: ${error.message}</p>
+                    </div>
+                `;
+        }
+      }
+
+      // 测试重定向
+      function testRedirect() {
+        const resultEl = document.getElementById('redirect-result');
+        resultEl.innerHTML = `
+                <div class="info">
+                    <h4>🔄 正在跳转...</h4>
+                    <p>即将跳转到管理后台</p>
+                </div>
+            `;
+
+        // 2秒后执行跳转
+        setTimeout(() => {
+          window.location.href = `${API_BASE}/admin/dashboard`;
+        }, 2000);
+      }
+
+      // 完整登录流程测试
+      async function fullLoginTest() {
+        const resultEl = document.getElementById('full-test-result');
+        resultEl.innerHTML = '<p>开始完整流程测试...</p>';
+
+        try {
+          // 1. 先检查当前状态
+          resultEl.innerHTML += '<p>1. 检查初始状态...</p>';
+          await checkSession();
+
+          // 2. 执行登录
+          resultEl.innerHTML += '<p>2. 执行登录...</p>';
+          await testLogin();
+
+          // 3. 再次检查状态
+          resultEl.innerHTML += '<p>3. 验证登录后状态...</p>';
+          await checkSession();
+
+          // 4. 提供跳转选项
+          resultEl.innerHTML += `
+                    <div class="success">
+                        <h4>✅ 完整测试完成</h4>
+                        <p>所有步骤执行完毕，可以选择以下操作：</p>
+                        <button onclick="window.location.href='${API_BASE}/admin/dashboard'">进入管理后台</button>
+                        <button onclick="window.location.href='${API_BASE}/login?redirect=/admin/dashboard'">测试登录页面</button>
+                    </div>
+                `;
+        } catch (error) {
+          resultEl.innerHTML += `
+                    <div class="error">
+                        <h4>❌ 测试过程中出现错误</h4>
+                        <p>错误: ${error.message}</p>
+                    </div>
+                `;
+        }
+      }
+
+      // 页面加载时自动检查状态
+      window.addEventListener('load', function () {
+        const statusEl = document.getElementById('current-status');
+
+        fetch(`${API_BASE}/api/auth/check-session`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.authenticated) {
+              statusEl.innerHTML = `
+                            <div class="success">
+                                <p><strong>✅ 当前已登录</strong></p>
+                                <p>用户: ${data.user?.email}</p>
+                                <p>管理员: ${data.is_admin ? '是' : '否'}</p>
+                            </div>
+                        `;
+            } else {
+              statusEl.innerHTML = `
+                            <div class="info">
+                                <p><strong>ℹ️ 当前未登录</strong></p>
+                                <p>请使用下方功能进行登录测试</p>
+                            </div>
+                        `;
+            }
+          })
+          .catch(error => {
+            statusEl.innerHTML = `
+                        <div class="error">
+                            <p><strong>❌ 无法获取当前状态</strong></p>
+                            <p>错误: ${error.message}</p>
+                        </div>
+                    `;
+          });
+      });
+    </script>
+  </body>
+</html>

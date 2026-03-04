@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -36,10 +36,10 @@ export default function NewWorkOrderPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const technicians = [
-    { id: 'tech-001', name: '李师傅', specialty: '手机维修' },
-    { id: 'tech-002', name: '王师傅', specialty: '平板维修' },
-    { id: 'tech-003', name: '张师傅', specialty: '笔记本维修' },
-    { id: 'tech-004', name: '陈师傅', specialty: '综合维修' }
+    { id: 'tech-001', name: '李师?, specialty: '手机维修' },
+    { id: 'tech-002', name: '王师?, specialty: '平板维修' },
+    { id: 'tech-003', name: '张师?, specialty: '笔记本维? },
+    { id: 'tech-004', name: '陈师?, specialty: '综合维修' }
   ];
 
   const deviceBrands = [
@@ -48,7 +48,7 @@ export default function NewWorkOrderPage() {
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // 清除对应字段的错误
+    // 清除对应字段的错?
     if (errors[field]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -62,11 +62,11 @@ export default function NewWorkOrderPage() {
     const newErrors: Record<string, string> = {};
     
     if (!formData.customerName.trim()) {
-      newErrors.customerName = '请输入客户姓名';
+      newErrors.customerName = '请输入客户姓?;
     }
     
     if (!formData.customerPhone.trim()) {
-      newErrors.customerPhone = '请输入客户电话';
+      newErrors.customerPhone = '请输入客户电?;
     } else if (!/^1[3-9]\d{9}$/.test(formData.customerPhone)) {
       newErrors.customerPhone = '请输入正确的手机号码';
     }
@@ -76,15 +76,15 @@ export default function NewWorkOrderPage() {
     }
     
     if (!formData.deviceModel.trim()) {
-      newErrors.deviceModel = '请输入设备型号';
+      newErrors.deviceModel = '请输入设备型?;
     }
     
     if (!formData.deviceIssue.trim()) {
-      newErrors.deviceIssue = '请描述设备问题';
+      newErrors.deviceIssue = '请描述设备问?;
     }
     
     if (!formData.technician) {
-      newErrors.technician = '请选择负责技师';
+      newErrors.technician = '请选择负责技?;
     }
     
     setErrors(newErrors);
@@ -104,12 +104,10 @@ export default function NewWorkOrderPage() {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // 生成工单号
+      // 生成工单?
       const workOrderId = `WO-${Date.now().toString().slice(-6)}`;
       
-      console.log('创建工单:', { ...formData, id: workOrderId });
-      
-      // 跳转到工单详情页
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('创建工单:', { ...formData, id: workOrderId })// 跳转到工单详情页
       router.push(`/repair-shop/work-orders/${workOrderId}`);
     } catch (error) {
       console.error('创建工单失败:', error);
@@ -134,7 +132,7 @@ export default function NewWorkOrderPage() {
                 onClick={handleCancel}
                 className="mr-4"
               >
-                ← 取消
+                �?取消
               </Button>
               <h1 className="text-xl font-semibold text-gray-900">新建工单</h1>
             </div>
@@ -150,7 +148,7 @@ export default function NewWorkOrderPage() {
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    创建中...
+                    创建?..
                   </>
                 ) : (
                   <>
@@ -174,7 +172,7 @@ export default function NewWorkOrderPage() {
                 客户信息
               </CardTitle>
               <CardDescription>
-                输入客户的联系信息
+                输入客户的联系信?
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -185,7 +183,7 @@ export default function NewWorkOrderPage() {
                     id="customerName"
                     value={formData.customerName}
                     onChange={(e) => handleChange('customerName', e.target.value)}
-                    placeholder="请输入客户姓名"
+                    placeholder="请输入客户姓?
                     className={errors.customerName ? 'border-red-500' : ''}
                   />
                   {errors.customerName && (
@@ -202,7 +200,7 @@ export default function NewWorkOrderPage() {
                     id="customerPhone"
                     value={formData.customerPhone}
                     onChange={(e) => handleChange('customerPhone', e.target.value)}
-                    placeholder="请输入手机号码"
+                    placeholder="请输入手机号?
                     className={errors.customerPhone ? 'border-red-500' : ''}
                   />
                   {errors.customerPhone && (
@@ -276,7 +274,7 @@ export default function NewWorkOrderPage() {
                   id="deviceIssue"
                   value={formData.deviceIssue}
                   onChange={(e) => handleChange('deviceIssue', e.target.value)}
-                  placeholder="详细描述设备出现的问题..."
+                  placeholder="详细描述设备出现的问?.."
                   rows={4}
                   className={errors.deviceIssue ? 'border-red-500' : ''}
                 />
@@ -289,7 +287,7 @@ export default function NewWorkOrderPage() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="priority">优先级</Label>
+                <Label htmlFor="priority">优先?/Label>
                 <Select 
                   value={formData.priority} 
                   onValueChange={(value: string) => handleChange('priority', value)}
@@ -298,9 +296,9 @@ export default function NewWorkOrderPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">普通</SelectItem>
+                    <SelectItem value="low">普?/SelectItem>
                     <SelectItem value="medium">中等</SelectItem>
-                    <SelectItem value="high">紧急</SelectItem>
+                    <SelectItem value="high">紧?/SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -321,13 +319,13 @@ export default function NewWorkOrderPage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="technician">负责技师 *</Label>
+                  <Label htmlFor="technician">负责技?*</Label>
                   <Select 
                     value={formData.technician} 
                     onValueChange={(value: string) => handleChange('technician', value)}
                   >
                     <SelectTrigger className={errors.technician ? 'border-red-500' : ''}>
-                      <SelectValue placeholder="选择技师" />
+                      <SelectValue placeholder="选择技? />
                     </SelectTrigger>
                     <SelectContent>
                       {technicians.map(tech => (
@@ -384,7 +382,7 @@ export default function NewWorkOrderPage() {
               {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  创建中...
+                  创建?..
                 </>
               ) : (
                 <>

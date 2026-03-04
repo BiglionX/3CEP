@@ -23,15 +23,15 @@ if (!fs.existsSync(envExamplePath)) {
 if (fs.existsSync(envPath)) {
   console.log('⚠️  警告: .env 文件已存在');
   console.log('   如果继续将覆盖现有文件');
-  
+
   // 简单确认（实际项目中可能需要更复杂的交互）
   const readline = require('readline');
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
-  rl.question('是否覆盖现有 .env 文件? (y/N): ', (answer) => {
+  rl.question('是否覆盖现有 .env 文件? (y/N): ', answer => {
     if (answer.toLowerCase() === 'y') {
       copyTemplate();
     } else {
@@ -53,7 +53,7 @@ function copyTemplate() {
     console.log('📝 请编辑 .env 文件，填入实际的配置值');
     console.log('\n🔑 重要的配置项:');
     console.log('  - NEXT_PUBLIC_SUPABASE_URL');
-    console.log('  - NEXT_PUBLIC_SUPABASE_ANON_KEY'); 
+    console.log('  - NEXT_PUBLIC_SUPABASE_ANON_KEY');
     console.log('  - SUPABASE_SERVICE_ROLE_KEY');
     console.log('  - DATABASE_URL');
     console.log('\n💡 获取这些值的方法:');

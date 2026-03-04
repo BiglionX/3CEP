@@ -3,14 +3,17 @@
 ## 已创建的工作流
 
 ### 1. device-activation-welcome.json (N8N-206)
+
 **功能**: 监听设备激活事件并发送个性化欢迎消息
 
-**触发条件**: 
+**触发条件**:
+
 - 监听 `device_profiles` 表
 - 当 `current_status` 变为 `activated` 时触发
 - 过滤最近5分钟内的激活事件
 
 **执行流程**:
+
 1. 监听设备激活事件
 2. 过滤首次激活的设备
 3. 准备欢迎消息数据
@@ -19,18 +22,22 @@
 6. 记录通知日志
 
 **配置参数**:
+
 - `wechatWebhookUrl`: 企业微信机器人Webhook地址
 - `emailApiUrl`: 邮件服务API地址
 
 ### 2. ticket-completion-archive.json (N8N-205)
+
 **功能**: 监听工单完成事件，自动记录设备档案并发送通知
 
 **触发条件**:
+
 - 监听 `tickets` 表
 - 当 `status` 变为 `completed` 时触发
 - 过滤最近10分钟内的完成事件
 
 **执行流程**:
+
 1. 监听工单完成事件
 2. 提取工单相关数据
 3. 调用LIFE-201 API记录生命周期事件
@@ -39,6 +46,7 @@
 6. 记录完成日志
 
 **配置参数**:
+
 - `lifecycleApiUrl`: 生命周期API基础URL
 - `lifecycleApiKey`: API密钥
 - `wechatWebhookUrl`: 通知Webhook地址
@@ -47,6 +55,7 @@
 ## 部署步骤
 
 1. **环境配置**:
+
    ```bash
    # 设置必要的环境变量
    export WECHAT_WEBHOOK_URL="your_wechat_webhook_url"

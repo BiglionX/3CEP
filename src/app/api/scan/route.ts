@@ -1,41 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
-// 扫码落地页重定向API
+// 鎵爜钀藉湴椤甸噸瀹氬悜API
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get('id');
-    
+
     if (!productId) {
-      return NextResponse.json(
-        { error: '缺少产品ID参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缂哄皯浜у搧ID鍙傛暟' }, { status: 400 });
     }
 
-    // 验证产品ID格式
+    // 楠岃瘉浜у搧ID鏍煎紡
     if (!productId.startsWith('prod_')) {
-      return NextResponse.json(
-        { error: '无效的产品ID格式' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '鏃犳晥鐨勪骇鍝両D鏍煎紡' }, { status: 400 });
     }
 
-    // 返回扫码页面URL
+    // 杩斿洖鎵爜椤甸潰URL
     const redirectUrl = `/scan?id=${productId}`;
-    
+
     return NextResponse.json({
       success: true,
       redirectUrl,
       productId,
-      message: '重定向到扫码落地页'
+      message: '閲嶅畾鍚戝埌鎵爜钀藉湴?,
     });
-
   } catch (error) {
-    console.error('扫码重定向错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('鎵爜閲嶅畾鍚戦敊?', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
+

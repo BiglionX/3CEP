@@ -25,10 +25,7 @@
       "name": "监听工单完成状态",
       "type": "n8n-nodes-base.supabaseTrigger",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -75,10 +72,7 @@
       "name": "提取工单信息",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        450,
-        250
-      ]
+      "position": [450, 250]
     },
     {
       "parameters": {
@@ -95,10 +89,7 @@
       "name": "记录生命周期事件(LIFE-201)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        650,
-        250
-      ]
+      "position": [650, 250]
     },
     {
       "parameters": {
@@ -116,10 +107,7 @@
       "name": "检查记录是否成功",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [
-        850,
-        250
-      ]
+      "position": [850, 250]
     },
     {
       "parameters": {
@@ -135,10 +123,7 @@
       "name": "发送企业微信通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1050,
-        200
-      ]
+      "position": [1050, 200]
     },
     {
       "parameters": {
@@ -156,10 +141,7 @@
       "name": "记录完成日志",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [
-        1250,
-        250
-      ]
+      "position": [1250, 250]
     },
     {
       "parameters": {
@@ -175,10 +157,7 @@
       "name": "发送错误通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1050,
-        400
-      ]
+      "position": [1050, 400]
     },
     {
       "parameters": {
@@ -196,10 +175,7 @@
       "name": "记录错误日志",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [
-        1250,
-        400
-      ]
+      "position": [1250, 400]
     }
   ],
   "connections": {
@@ -294,10 +270,6 @@
     "tags": ["工单完成", "档案记录", "自动化通知", "LIFE-201"],
     "dependencies": ["Supabase Realtime", "LIFE API", "企业微信"],
     "trigger": "工单状态变为completed",
-    "actions": [
-      "调用LIFE-201记录维修事件",
-      "发送企业微信完成通知",
-      "记录操作日志"
-    ]
+    "actions": ["调用LIFE-201记录维修事件", "发送企业微信完成通知", "记录操作日志"]
   }
 }

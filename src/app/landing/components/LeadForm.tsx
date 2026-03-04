@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
@@ -16,7 +16,7 @@ interface FAQSectionProps {
 
 export function FAQSection({ 
   title = "常见问题",
-  subtitle = "解答您最关心的问题",
+  subtitle = "解答您最关心的问?,
   faqs
 }: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -69,14 +69,14 @@ export function FAQSection({
         <div className="mt-12 text-center">
           <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              还有其他问题？
+              还有其他问题?
             </h3>
             <p className="text-gray-600 mb-6">
-              我们的专业团队随时为您解答
+              我们的专业团队随时为您解?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                联系销售顾问
+                联系销售顾?
               </button>
               <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
                 在线客服咨询
@@ -157,7 +157,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
     <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          开始免费试用
+          开始免费试?
         </h3>
         <p className="text-gray-600">
           填写信息，我们的专家将为您提供个性化演示
@@ -170,10 +170,10 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
             <CheckCircle className="w-8 h-8 text-green-600" />
           </div>
           <h4 className="text-xl font-semibold text-gray-900 mb-2">
-            提交成功！
+            提交成功?
           </h4>
           <p className="text-gray-600">
-            感谢您的关注，我们将在24小时内与您联系
+            感谢您的关注，我们将?4小时内与您联?
           </p>
         </div>
       ) : (
@@ -191,7 +191,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="请输入您的姓名"
+                placeholder="请输入您的姓?
               />
             </div>
             
@@ -206,7 +206,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
                 value={formData.company}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="请输入公司名称"
+                placeholder="请输入公司名?
               />
             </div>
           </div>
@@ -224,7 +224,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="请输入工作邮箱"
+                placeholder="请输入工作邮?
               />
             </div>
             
@@ -239,7 +239,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="请输入手机号码"
+                placeholder="请输入手机号?
               />
             </div>
           </div>
@@ -257,8 +257,8 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
             >
               <option value="">请选择您的角色</option>
               <option value="ops">运营/客服</option>
-              <option value="tech">技术/运维</option>
-              <option value="biz">业务负责人</option>
+              <option value="tech">技?运维</option>
+              <option value="biz">业务负责?/option>
               <option value="partner">合作伙伴</option>
               <option value="other">其他</option>
             </select>
@@ -290,7 +290,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
             disabled={isSubmitting}
             className="w-full py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
           >
-            {isSubmitting ? '提交中...' : '立即获取演示'}
+            {isSubmitting ? '提交?..' : '立即获取演示'}
           </button>
           
           <p className="text-center text-sm text-gray-500">

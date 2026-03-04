@@ -1,292 +1,305 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>管理后台登录测试</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .status {
-            padding: 15px;
-            border-radius: 6px;
-            margin: 15px 0;
-            font-weight: 500;
-        }
-        .status.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .status.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .status.info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        .test-section {
-            margin: 25px 0;
-            padding: 20px;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-        }
-        .btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
-            transition: background-color 0.2s;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .btn.success {
-            background-color: #28a745;
-        }
-        .btn.warning {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        .btn.danger {
-            background-color: #dc3545;
-        }
-        .result {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            white-space: pre-wrap;
-            font-family: monospace;
-            font-size: 14px;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .status {
+        padding: 15px;
+        border-radius: 6px;
+        margin: 15px 0;
+        font-weight: 500;
+      }
+      .status.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .status.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .status.info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      .test-section {
+        margin: 25px 0;
+        padding: 20px;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+      }
+      .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 5px;
+        transition: background-color 0.2s;
+      }
+      .btn:hover {
+        background-color: #0056b3;
+      }
+      .btn.success {
+        background-color: #28a745;
+      }
+      .btn.warning {
+        background-color: #ffc107;
+        color: #212529;
+      }
+      .btn.danger {
+        background-color: #dc3545;
+      }
+      .result {
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>🔧 管理后台登录跳转测试</h1>
-            <p>验证修复后的登录跳转功能</p>
-        </div>
+      <div class="header">
+        <h1>🔧 管理后台登录跳转测试</h1>
+        <p>验证修复后的登录跳转功能</p>
+      </div>
 
-        <div id="current-status" class="status info">
-            正在检查当前状态...
-        </div>
+      <div id="current-status" class="status info">正在检查当前状态...</div>
 
-        <div class="test-section">
-            <h3>📊 当前状态检查</h3>
-            <button class="btn" onclick="checkCurrentStatus()">检查认证状态</button>
-            <button class="btn warning" onclick="clearAuthData()">清除认证数据</button>
-            <div id="status-result" class="result" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3>📊 当前状态检查</h3>
+        <button class="btn" onclick="checkCurrentStatus()">检查认证状态</button>
+        <button class="btn warning" onclick="clearAuthData()">
+          清除认证数据
+        </button>
+        <div id="status-result" class="result" style="display: none"></div>
+      </div>
 
-        <div class="test-section">
-            <h3>🚀 登录流程测试</h3>
-            <button class="btn" onclick="testAdminLoginFlow()">测试管理员登录流程</button>
-            <button class="btn success" onclick="goToAdminDirect()">直接访问管理后台</button>
-            <div id="login-result" class="result" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3>🚀 登录流程测试</h3>
+        <button class="btn" onclick="testAdminLoginFlow()">
+          测试管理员登录流程
+        </button>
+        <button class="btn success" onclick="goToAdminDirect()">
+          直接访问管理后台
+        </button>
+        <div id="login-result" class="result" style="display: none"></div>
+      </div>
 
-        <div class="test-section">
-            <h3>🔍 详细诊断</h3>
-            <button class="btn" onclick="runFullDiagnostics()">运行完整诊断</button>
-            <button class="btn danger" onclick="testAllAPIs()">测试所有API接口</button>
-            <div id="diagnostic-result" class="result" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3>🔍 详细诊断</h3>
+        <button class="btn" onclick="runFullDiagnostics()">运行完整诊断</button>
+        <button class="btn danger" onclick="testAllAPIs()">
+          测试所有API接口
+        </button>
+        <div id="diagnostic-result" class="result" style="display: none"></div>
+      </div>
     </div>
 
     <script>
-        // 更新状态显示
-        function updateStatus(message, type = 'info') {
-            const statusEl = document.getElementById('current-status');
-            statusEl.className = `status ${type}`;
-            statusEl.innerHTML = message;
-        }
+      // 更新状态显示
+      function updateStatus(message, type = 'info') {
+        const statusEl = document.getElementById('current-status');
+        statusEl.className = `status ${type}`;
+        statusEl.innerHTML = message;
+      }
 
-        // 显示结果
-        function showResult(elementId, content, isSuccess = true) {
-            const el = document.getElementById(elementId);
-            el.style.display = 'block';
-            el.textContent = content;
-            el.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
-        }
+      // 显示结果
+      function showResult(elementId, content, isSuccess = true) {
+        const el = document.getElementById(elementId);
+        el.style.display = 'block';
+        el.textContent = content;
+        el.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
+      }
 
-        // 检查当前认证状态
-        async function checkCurrentStatus() {
-            const resultEl = document.getElementById('status-result');
-            try {
-                updateStatus('正在检查认证状态...', 'info');
-                
-                const response = await fetch('/api/auth/check-session');
-                const data = await response.json();
-                
-                let message = `认证状态: ${data.authenticated ? '✅ 已认证' : '❌ 未认证'}\n`;
-                if (data.authenticated) {
-                    message += `用户邮箱: ${data.user?.email || '未知'}\n`;
-                    message += `管理员权限: ${data.is_admin ? '✅ 是' : '❌ 否'}\n`;
-                    message += `用户角色: ${data.user?.role || '普通用户'}`;
-                    
-                    if (data.is_admin) {
-                        updateStatus('✅ 当前已登录且具有管理员权限', 'success');
-                    } else {
-                        updateStatus('⚠️ 当前已登录但非管理员用户', 'warning');
-                    }
-                } else {
-                    updateStatus('❌ 当前未登录', 'error');
-                }
-                
-                showResult('status-result', message, data.authenticated);
-                
-            } catch (error) {
-                const errorMsg = `检查失败: ${error.message}`;
-                updateStatus('❌ 状态检查失败', 'error');
-                showResult('status-result', errorMsg, false);
+      // 检查当前认证状态
+      async function checkCurrentStatus() {
+        const resultEl = document.getElementById('status-result');
+        try {
+          updateStatus('正在检查认证状态...', 'info');
+
+          const response = await fetch('/api/auth/check-session');
+          const data = await response.json();
+
+          let message = `认证状态: ${data.authenticated ? '✅ 已认证' : '❌ 未认证'}\n`;
+          if (data.authenticated) {
+            message += `用户邮箱: ${data.user?.email || '未知'}\n`;
+            message += `管理员权限: ${data.is_admin ? '✅ 是' : '❌ 否'}\n`;
+            message += `用户角色: ${data.user?.role || '普通用户'}`;
+
+            if (data.is_admin) {
+              updateStatus('✅ 当前已登录且具有管理员权限', 'success');
+            } else {
+              updateStatus('⚠️ 当前已登录但非管理员用户', 'warning');
             }
-        }
+          } else {
+            updateStatus('❌ 当前未登录', 'error');
+          }
 
-        // 测试管理员登录流程
-        async function testAdminLoginFlow() {
-            const resultEl = document.getElementById('login-result');
-            try {
-                resultEl.textContent = '正在测试登录流程...\n';
-                
-                // 1. 检查当前状态
-                resultEl.textContent += '1. 检查当前认证状态...\n';
-                const statusResponse = await fetch('/api/auth/check-session');
-                const statusData = await statusResponse.json();
-                
-                if (statusData.authenticated && statusData.is_admin) {
-                    resultEl.textContent += '✅ 已经是管理员用户，可以直接访问管理后台\n';
-                    resultEl.textContent += '点击"直接访问管理后台"按钮进行测试\n';
-                    showResult('login-result', resultEl.textContent, true);
-                    return;
-                }
-                
-                // 2. 测试登录页面访问
-                resultEl.textContent += '2. 测试登录页面访问...\n';
-                try {
-                    const loginResponse = await fetch('/admin/login');
-                    if (loginResponse.ok) {
-                        resultEl.textContent += '✅ 管理员登录页面可正常访问\n';
-                    } else {
-                        resultEl.textContent += `❌ 登录页面访问失败: ${loginResponse.status}\n`;
-                    }
-                } catch (error) {
-                    resultEl.textContent += `❌ 登录页面测试失败: ${error.message}\n`;
-                }
-                
-                // 3. 提供登录指引
-                resultEl.textContent += '\n📝 登录测试指引:\n';
-                resultEl.textContent += '• 点击右上角的登录按钮\n';
-                resultEl.textContent += '• 使用Google账号登录\n';
-                resultEl.textContent += '• 登录成功后应该自动跳转到管理后台\n';
-                
-                showResult('login-result', resultEl.textContent, true);
-                
-            } catch (error) {
-                const errorMsg = `登录流程测试失败: ${error.message}`;
-                showResult('login-result', errorMsg, false);
+          showResult('status-result', message, data.authenticated);
+        } catch (error) {
+          const errorMsg = `检查失败: ${error.message}`;
+          updateStatus('❌ 状态检查失败', 'error');
+          showResult('status-result', errorMsg, false);
+        }
+      }
+
+      // 测试管理员登录流程
+      async function testAdminLoginFlow() {
+        const resultEl = document.getElementById('login-result');
+        try {
+          resultEl.textContent = '正在测试登录流程...\n';
+
+          // 1. 检查当前状态
+          resultEl.textContent += '1. 检查当前认证状态...\n';
+          const statusResponse = await fetch('/api/auth/check-session');
+          const statusData = await statusResponse.json();
+
+          if (statusData.authenticated && statusData.is_admin) {
+            resultEl.textContent +=
+              '✅ 已经是管理员用户，可以直接访问管理后台\n';
+            resultEl.textContent += '点击"直接访问管理后台"按钮进行测试\n';
+            showResult('login-result', resultEl.textContent, true);
+            return;
+          }
+
+          // 2. 测试登录页面访问
+          resultEl.textContent += '2. 测试登录页面访问...\n';
+          try {
+            const loginResponse = await fetch('/admin/login');
+            if (loginResponse.ok) {
+              resultEl.textContent += '✅ 管理员登录页面可正常访问\n';
+            } else {
+              resultEl.textContent += `❌ 登录页面访问失败: ${loginResponse.status}\n`;
             }
-        }
+          } catch (error) {
+            resultEl.textContent += `❌ 登录页面测试失败: ${error.message}\n`;
+          }
 
-        // 直接访问管理后台
-        function goToAdminDirect() {
-            window.location.href = '/admin/dashboard';
-        }
+          // 3. 提供登录指引
+          resultEl.textContent += '\n📝 登录测试指引:\n';
+          resultEl.textContent += '• 点击右上角的登录按钮\n';
+          resultEl.textContent += '• 使用Google账号登录\n';
+          resultEl.textContent += '• 登录成功后应该自动跳转到管理后台\n';
 
-        // 清除认证数据
-        function clearAuthData() {
-            localStorage.clear();
-            // 清除可能的cookie
-            document.cookie.split(";").forEach(function(c) { 
-                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
-            });
-            
-            updateStatus('🧹 已清除所有认证数据，请重新登录', 'info');
-            document.getElementById('status-result').style.display = 'none';
+          showResult('login-result', resultEl.textContent, true);
+        } catch (error) {
+          const errorMsg = `登录流程测试失败: ${error.message}`;
+          showResult('login-result', errorMsg, false);
         }
+      }
 
-        // 运行完整诊断
-        async function runFullDiagnostics() {
-            const resultEl = document.getElementById('diagnostic-result');
-            resultEl.textContent = '开始完整诊断...\n\n';
-            
-            // 测试关键API
-            const apis = [
-                '/api/auth/check-session',
-                '/api/health',
-                '/admin',
-                '/admin/dashboard'
-            ];
-            
-            for (const api of apis) {
-                try {
-                    resultEl.textContent += `测试 ${api} ... `;
-                    const response = await fetch(api, { method: 'HEAD' });
-                    resultEl.textContent += response.ok ? '✅ OK\n' : `⚠️ ${response.status}\n`;
-                } catch (error) {
-                    resultEl.textContent += `❌ 错误: ${error.message}\n`;
-                }
-            }
-            
-            resultEl.textContent += '\n诊断完成！';
-            showResult('diagnostic-result', resultEl.textContent, true);
-        }
+      // 直接访问管理后台
+      function goToAdminDirect() {
+        window.location.href = '/admin/dashboard';
+      }
 
-        // 测试所有API接口
-        async function testAllAPIs() {
-            const resultEl = document.getElementById('diagnostic-result');
-            resultEl.textContent = '测试所有API接口...\n\n';
-            
-            const apiGroups = {
-                '认证相关': ['/api/auth/check-session', '/api/auth/login'],
-                '管理后台': ['/api/admin/users', '/api/admin/manuals/review'],
-                '健康检查': ['/api/health', '/api/dashboard/data']
-            };
-            
-            for (const [group, apis] of Object.entries(apiGroups)) {
-                resultEl.textContent += `${group}:\n`;
-                for (const api of apis) {
-                    try {
-                        const response = await fetch(api, { method: 'HEAD' });
-                        resultEl.textContent += `  ${api}: ${response.ok ? '✅' : `❌ ${response.status}`}\n`;
-                    } catch (error) {
-                        resultEl.textContent += `  ${api}: ❌ 连接失败\n`;
-                    }
-                }
-                resultEl.textContent += '\n';
-            }
-            
-            showResult('diagnostic-result', resultEl.textContent, true);
-        }
-
-        // 页面加载完成后自动检查状态
-        window.addEventListener('load', function() {
-            setTimeout(checkCurrentStatus, 1000);
+      // 清除认证数据
+      function clearAuthData() {
+        localStorage.clear();
+        // 清除可能的cookie
+        document.cookie.split(';').forEach(function (c) {
+          document.cookie = c
+            .replace(/^ +/, '')
+            .replace(
+              /=.*/,
+              '=;expires=' + new Date().toUTCString() + ';path=/'
+            );
         });
+
+        updateStatus('🧹 已清除所有认证数据，请重新登录', 'info');
+        document.getElementById('status-result').style.display = 'none';
+      }
+
+      // 运行完整诊断
+      async function runFullDiagnostics() {
+        const resultEl = document.getElementById('diagnostic-result');
+        resultEl.textContent = '开始完整诊断...\n\n';
+
+        // 测试关键API
+        const apis = [
+          '/api/auth/check-session',
+          '/api/health',
+          '/admin',
+          '/admin/dashboard',
+        ];
+
+        for (const api of apis) {
+          try {
+            resultEl.textContent += `测试 ${api} ... `;
+            const response = await fetch(api, { method: 'HEAD' });
+            resultEl.textContent += response.ok
+              ? '✅ OK\n'
+              : `⚠️ ${response.status}\n`;
+          } catch (error) {
+            resultEl.textContent += `❌ 错误: ${error.message}\n`;
+          }
+        }
+
+        resultEl.textContent += '\n诊断完成！';
+        showResult('diagnostic-result', resultEl.textContent, true);
+      }
+
+      // 测试所有API接口
+      async function testAllAPIs() {
+        const resultEl = document.getElementById('diagnostic-result');
+        resultEl.textContent = '测试所有API接口...\n\n';
+
+        const apiGroups = {
+          认证相关: ['/api/auth/check-session', '/api/auth/login'],
+          管理后台: ['/api/admin/users', '/api/admin/manuals/review'],
+          健康检查: ['/api/health', '/api/dashboard/data'],
+        };
+
+        for (const [group, apis] of Object.entries(apiGroups)) {
+          resultEl.textContent += `${group}:\n`;
+          for (const api of apis) {
+            try {
+              const response = await fetch(api, { method: 'HEAD' });
+              resultEl.textContent += `  ${api}: ${response.ok ? '✅' : `❌ ${response.status}`}\n`;
+            } catch (error) {
+              resultEl.textContent += `  ${api}: ❌ 连接失败\n`;
+            }
+          }
+          resultEl.textContent += '\n';
+        }
+
+        showResult('diagnostic-result', resultEl.textContent, true);
+      }
+
+      // 页面加载完成后自动检查状态
+      window.addEventListener('load', function () {
+        setTimeout(checkCurrentStatus, 1000);
+      });
     </script>
-</body>
+  </body>
 </html>

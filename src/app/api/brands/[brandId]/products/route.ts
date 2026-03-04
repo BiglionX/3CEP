@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
         description: description || '',
         specifications: specifications || {} as any,
         created_at: new Date().toISOString()
-      })
+      }) as any
       .select(`
         id,
         name,

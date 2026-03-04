@@ -12,28 +12,40 @@ console.log('🎯 最终修复：右上角登录状态控件整合\n');
 
 // 1. 验证当前布局文件
 console.log('🔍 步骤1: 验证布局文件使用情况');
-const layoutPath = path.join(process.cwd(), 'src', 'app', 'admin', 'layout.tsx');
-const enhancedLayoutPath = path.join(process.cwd(), 'src', 'components', 'admin', 'EnhancedAdminLayout.tsx');
+const layoutPath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'admin',
+  'layout.tsx'
+);
+const enhancedLayoutPath = path.join(
+  process.cwd(),
+  'src',
+  'components',
+  'admin',
+  'EnhancedAdminLayout.tsx'
+);
 
 try {
   const layoutContent = fs.readFileSync(layoutPath, 'utf8');
   const enhancedContent = fs.readFileSync(enhancedLayoutPath, 'utf8');
-  
+
   console.log('✅ 使用的布局文件:', layoutPath);
   console.log('✅ 实际实现文件:', enhancedLayoutPath);
-  
+
   // 检查关键逻辑
-  const hasUnifiedLogin = enhancedContent.includes('统一登录状态控件') && 
-                         enhancedContent.includes('{userEmail ? (') &&
-                         enhancedContent.includes('// 已登录状态') &&
-                         enhancedContent.includes('// 未登录状态');
-  
+  const hasUnifiedLogin =
+    enhancedContent.includes('统一登录状态控件') &&
+    enhancedContent.includes('{userEmail ? (') &&
+    enhancedContent.includes('// 已登录状态') &&
+    enhancedContent.includes('// 未登录状态');
+
   if (hasUnifiedLogin) {
     console.log('✅ 登录状态控件已按要求整合为统一组件');
   } else {
     console.log('❌ 登录状态控件未正确整合');
   }
-  
 } catch (error) {
   console.error('❌ 文件读取失败:', error.message);
 }

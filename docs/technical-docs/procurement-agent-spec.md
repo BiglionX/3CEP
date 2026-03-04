@@ -7,6 +7,7 @@
 ## 系统架构总览
 
 ### 整体架构模式
+
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   用户交互层    │────│   AI代理引擎层   │────│   数据服务层    │
@@ -29,12 +30,14 @@
 ## 核心技术栈
 
 ### AI与机器学习
+
 - **大语言模型**: DeepSeek API (主力) + OpenAI API (备用)
 - **向量数据库**: Pinecone (供应商匹配) + Weaviate (语义搜索)
 - **机器学习框架**: TensorFlow.js / ONNX Runtime
 - **自然语言处理**: LangChain + Transformers
 
 ### 后端技术栈
+
 - **运行环境**: Node.js 18+/20+
 - **Web框架**: Next.js 14 (App Router)
 - **编程语言**: TypeScript 5.0+
@@ -44,6 +47,7 @@
 - **工作流引擎**: Temporal.io 或自研状态机
 
 ### 外部服务集成
+
 - **商业数据**: 企查查/天眼查 API
 - **汇率服务**: ExchangeRate-API
 - **通讯服务**: Twilio (短信/邮件通知)
@@ -54,6 +58,7 @@
 ### 1. 需求理解与结构化引擎
 
 #### 1.1 多模态需求解析
+
 ```typescript
 // src/lib/procurement/request-parser.ts
 interface ProcurementRequest {
@@ -111,7 +116,7 @@ class MultiModalRequestParser {
 
     const response = await this.llmClient.chatCompletion({
       messages: [{ role: 'user', content: prompt }],
-      temperature: 0.3
+      temperature: 0.3,
     });
 
     return this.validateAndStructure(JSON.parse(response.content));
@@ -120,13 +125,13 @@ class MultiModalRequestParser {
   private async parseImageRequest(image: File): Promise<ParsedRequirements> {
     // 1. 图像预处理
     const processedImage = await this.preprocessImage(image);
-    
+
     // 2. OCR文字识别
     const ocrText = await this.visionProcessor.extractText(processedImage);
-    
+
     // 3. 商品识别
     const items = await this.visionProcessor.identifyProducts(processedImage);
-    
+
     // 4. 结构化处理
     return await this.parseTextRequest(ocrText + '\n' + JSON.stringify(items));
   }
@@ -134,10 +139,10 @@ class MultiModalRequestParser {
   private async parseLinkRequest(url: string): Promise<ParsedRequirements> {
     // 1. 网页内容抓取
     const content = await this.linkExtractor.extractContent(url);
-    
+
     // 2. 内容分析
     const analysis = await this.analyzePageContent(content);
-    
+
     // 3. 需求提取
     return await this.parseTextRequest(analysis.text);
   }
@@ -147,6 +152,7 @@ class MultiModalRequestParser {
 ### 2. 供应商智能匹配系统
 
 #### 2.1 向量检索与多因子评分
+
 ```typescript
 // src/lib/procurement/supplier-matcher.ts
 interface SupplierProfile {
@@ -180,28 +186,30 @@ class IntelligentSupplierMatcher {
     limit: number = 10
   ): Promise<MatchResult[]> {
     // 1. 生成需求向量
-    const requirementEmbedding = await this.generateRequirementEmbedding(requirements);
+    const requirementEmbedding =
+      await this.generateRequirementEmbedding(requirements);
 
     // 2. 向量相似度检索
     const vectorMatches = await this.vectorStore.query({
       vector: requirementEmbedding,
       topK: limit * 2, // 多检索一些用于后续过滤
-      includeMetadata: true
+      includeMetadata: true,
     });
 
     // 3. 多因子评分
     const scoredSuppliers = await Promise.all(
-      vectorMatches.matches.map(async (match) => {
+      vectorMatches.matches.map(async match => {
         const supplier = match.metadata as SupplierProfile;
-        const score = await this.calculateMultiFactorScore(supplier, requirements);
+        const score = await this.calculateMultiFactorScore(
+          supplier,
+          requirements
+        );
         return { supplier, score, confidence: match.score };
       })
     );
 
     // 4. 排序和过滤
-    return scoredSuppliers
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit);
+    return scoredSuppliers.sort((a, b) => b.score - a.score).slice(0, limit);
   }
 
   private async calculateMultiFactorScore(
@@ -228,13 +236,13 @@ class IntelligentSupplierMatcher {
       reliability: supplier.reliabilityScore,
 
       // 响应速度 (权重: 0.1)
-      responsiveness: this.calculateResponsivenessScore(supplier.responseTime)
+      responsiveness: this.calculateResponsivenessScore(supplier.responseTime),
     };
 
     // 加权平均
     return Object.entries(factors).reduce((total, [factor, weight]) => {
       const factorWeight = this.getFactorWeight(factor as keyof typeof factors);
-      return total + (factors[factor as keyof typeof factors] * factorWeight);
+      return total + factors[factor as keyof typeof factors] * factorWeight;
     }, 0);
   }
 
@@ -242,12 +250,12 @@ class IntelligentSupplierMatcher {
     supplierCategories: string[],
     requiredCategories: string[]
   ): number {
-    const intersection = supplierCategories.filter(cat => 
-      requiredCategories.some(reqCat => 
-        this.semanticSimilarity(cat, reqCat) > 0.8
+    const intersection = supplierCategories.filter(cat =>
+      requiredCategories.some(
+        reqCat => this.semanticSimilarity(cat, reqCat) > 0.8
       )
     );
-    
+
     return intersection.length / Math.max(requiredCategories.length, 1);
   }
 }
@@ -256,6 +264,7 @@ class IntelligentSupplierMatcher {
 ### 3. 自动询价与比价平台
 
 #### 3.1 批量询价流程编排
+
 ```typescript
 // src/lib/procurement/quotation-manager.ts
 interface QuotationRequest {
@@ -286,7 +295,7 @@ class AutomatedQuotationManager {
     const workflow = await this.workflowEngine.createWorkflow({
       type: 'bulk_quotation_request',
       data: request,
-      timeout: 72 * 60 * 60 * 1000 // 72小时超时
+      timeout: 72 * 60 * 60 * 1000, // 72小时超时
     });
 
     // 2. 并行发送询价请求
@@ -296,7 +305,7 @@ class AutomatedQuotationManager {
 
     // 3. 等待并收集报价
     const quotes = await Promise.allSettled(quotePromises);
-    
+
     // 4. 处理结果
     const successfulQuotes = quotes
       .filter(result => result.status === 'fulfilled')
@@ -306,18 +315,19 @@ class AutomatedQuotationManager {
       .filter(result => result.status === 'rejected')
       .map((result, index) => ({
         supplier: request.suppliers[index],
-        error: result.reason
+        error: result.reason,
       }));
 
     // 5. 生成比价报告
-    const comparisonReport = await this.generateComparisonReport(successfulQuotes);
+    const comparisonReport =
+      await this.generateComparisonReport(successfulQuotes);
 
     return {
       workflowId: workflow.id,
       quotes: successfulQuotes,
       failures: failedQuotes,
       comparisonReport,
-      summary: this.generateSummary(successfulQuotes, failedQuotes)
+      summary: this.generateSummary(successfulQuotes, failedQuotes),
     };
   }
 
@@ -329,12 +339,12 @@ class AutomatedQuotationManager {
     // 1. 生成标准化询价单
     const quotationDocument = this.generateQuotationTemplate({
       supplier,
-      request
+      request,
     });
 
     // 2. 多渠道发送（API/邮件/短信）
     const channels = this.determineCommunicationChannels(supplier);
-    
+
     let response: SupplierQuote | null = null;
     for (const channel of channels) {
       try {
@@ -355,7 +365,9 @@ class AutomatedQuotationManager {
     return response;
   }
 
-  private async generateComparisonReport(quotes: SupplierQuote[]): Promise<ComparisonReport> {
+  private async generateComparisonReport(
+    quotes: SupplierQuote[]
+  ): Promise<ComparisonReport> {
     // 1. 价格标准化（统一货币）
     const standardizedQuotes = await this.standardizeCurrencies(quotes);
 
@@ -373,7 +385,7 @@ class AutomatedQuotationManager {
       metrics,
       riskAssessments,
       recommendations: this.generateRecommendations(metrics, riskAssessments),
-      visualization: await this.createVisualizationData(standardizedQuotes)
+      visualization: await this.createVisualizationData(standardizedQuotes),
     };
   }
 }
@@ -382,6 +394,7 @@ class AutomatedQuotationManager {
 ### 4. 智能议价与下单系统
 
 #### 4.1 议价策略引擎
+
 ```typescript
 // src/lib/procurement/negotiation-engine.ts
 interface NegotiationStrategy {
@@ -435,7 +448,7 @@ class IntelligentNegotiationEngine {
       targetDiscount: prediction.target_discount,
       minimumAcceptable: prediction.min_acceptable,
       escalationThreshold: prediction.escalation_threshold,
-      timePressure: prediction.time_pressure
+      timePressure: prediction.time_pressure,
     };
   }
 
@@ -445,7 +458,7 @@ class IntelligentNegotiationEngine {
   ): Promise<NegotiationProposal> {
     const baselinePrice = context.currentQuote.totalPrice;
     const marketPrice = context.marketPrice;
-    
+
     // 计算合理议价区间
     const reasonableRange = this.calculateReasonableRange(
       baselinePrice,
@@ -455,7 +468,7 @@ class IntelligentNegotiationEngine {
 
     // 根据策略调整目标价格
     const targetPrice = baselinePrice * (1 - strategy.targetDiscount / 100);
-    
+
     // 确保在合理范围内
     const finalTarget = Math.max(targetPrice, reasonableRange.min);
 
@@ -463,7 +476,7 @@ class IntelligentNegotiationEngine {
       targetPrice: finalTarget,
       justification: this.generateJustification(context, strategy),
       alternatives: this.generateAlternativeProposals(context, strategy),
-      deadline: this.calculateDeadline(strategy, context.urgencyLevel)
+      deadline: this.calculateDeadline(strategy, context.urgencyLevel),
     };
   }
 
@@ -487,9 +500,12 @@ class IntelligentNegotiationEngine {
         return {
           success: true,
           finalPrice: counterOffer.price,
-          discountAchieved: ((context.currentQuote.totalPrice - counterOffer.price) / context.currentQuote.totalPrice) * 100,
+          discountAchieved:
+            ((context.currentQuote.totalPrice - counterOffer.price) /
+              context.currentQuote.totalPrice) *
+            100,
           rounds: currentRound,
-          terms: counterOffer.terms
+          terms: counterOffer.terms,
         };
       }
 
@@ -498,9 +514,12 @@ class IntelligentNegotiationEngine {
         return {
           success: true,
           finalPrice: counterOffer.price,
-          discountAchieved: ((context.currentQuote.totalPrice - counterOffer.price) / context.currentQuote.totalPrice) * 100,
+          discountAchieved:
+            ((context.currentQuote.totalPrice - counterOffer.price) /
+              context.currentQuote.totalPrice) *
+            100,
           rounds: currentRound,
-          terms: counterOffer.terms
+          terms: counterOffer.terms,
         };
       }
 
@@ -514,7 +533,7 @@ class IntelligentNegotiationEngine {
       success: false,
       reason: '未能达成协议',
       finalPrice: context.currentQuote.totalPrice,
-      rounds: currentRound - 1
+      rounds: currentRound - 1,
     };
   }
 }
@@ -523,6 +542,7 @@ class IntelligentNegotiationEngine {
 ### 5. 供应商风险预警系统
 
 #### 5.1 实时风险监控
+
 ```typescript
 // src/lib/procurement/risk-monitor.ts
 interface RiskIndicator {
@@ -563,7 +583,7 @@ class SupplierRiskMonitor {
       overallRiskScore: riskScore,
       riskIndicators: indicators,
       lastAssessment: new Date(),
-      trend: await this.calculateRiskTrend(supplierId, riskScore)
+      trend: await this.calculateRiskTrend(supplierId, riskScore),
     };
 
     // 5. 触发预警（如有必要）
@@ -578,45 +598,47 @@ class SupplierRiskMonitor {
     const sources = [
       // 企业工商信息
       this.getExternalData('business_registry', supplierId),
-      
+
       // 财务状况
       this.getExternalData('financial_reports', supplierId),
-      
+
       // 法律诉讼
       this.getExternalData('legal_records', supplierId),
-      
+
       // 行业舆情
       this.getExternalData('news_sentiment', supplierId),
-      
+
       // 内部交易数据
       this.getInternalData('transaction_history', supplierId),
-      
+
       // 质量投诉
-      this.getInternalData('quality_issues', supplierId)
+      this.getInternalData('quality_issues', supplierId),
     ];
 
     return await Promise.all(sources);
   }
 
-  private async evaluateRiskIndicators(dataSources: DataSource[]): Promise<RiskIndicator[]> {
+  private async evaluateRiskIndicators(
+    dataSources: DataSource[]
+  ): Promise<RiskIndicator[]> {
     const indicators: RiskIndicator[] = [];
 
     // 财务风险检查
     const financialData = dataSources.find(d => d.type === 'financial_reports');
     if (financialData) {
-      indicators.push(...await this.evaluateFinancialRisk(financialData));
+      indicators.push(...(await this.evaluateFinancialRisk(financialData)));
     }
 
     // 合规风险检查
     const legalData = dataSources.find(d => d.type === 'legal_records');
     if (legalData) {
-      indicators.push(...await this.evaluateComplianceRisk(legalData));
+      indicators.push(...(await this.evaluateComplianceRisk(legalData)));
     }
 
     // 运营风险检查
     const businessData = dataSources.find(d => d.type === 'business_registry');
     if (businessData) {
-      indicators.push(...await this.evaluateOperationalRisk(businessData));
+      indicators.push(...(await this.evaluateOperationalRisk(businessData)));
     }
 
     return indicators;
@@ -627,20 +649,24 @@ class SupplierRiskMonitor {
       low: 1,
       medium: 3,
       high: 7,
-      critical: 15
+      critical: 15,
     };
 
     const totalScore = indicators.reduce((sum, indicator) => {
-      return sum + (severityWeights[indicator.severity] * indicator.confidence);
+      return sum + severityWeights[indicator.severity] * indicator.confidence;
     }, 0);
 
     // 归一化到0-100分
     return Math.min(100, Math.round(totalScore));
   }
 
-  private async triggerRiskAlert(supplierId: string, riskProfile: SupplierRiskProfile) {
-    const alertLevel = riskProfile.overallRiskScore > 85 ? 'critical' : 'warning';
-    
+  private async triggerRiskAlert(
+    supplierId: string,
+    riskProfile: SupplierRiskProfile
+  ) {
+    const alertLevel =
+      riskProfile.overallRiskScore > 85 ? 'critical' : 'warning';
+
     await this.notificationService.send({
       type: 'supplier_risk_alert',
       level: alertLevel,
@@ -648,10 +674,11 @@ class SupplierRiskMonitor {
       data: {
         supplierId,
         riskScore: riskProfile.overallRiskScore,
-        criticalIndicators: riskProfile.riskIndicators
-          .filter(i => i.severity === 'high' || i.severity === 'critical'),
-        recommendedActions: this.generateRiskMitigationActions(riskProfile)
-      }
+        criticalIndicators: riskProfile.riskIndicators.filter(
+          i => i.severity === 'high' || i.severity === 'critical'
+        ),
+        recommendedActions: this.generateRiskMitigationActions(riskProfile),
+      },
     });
   }
 }
@@ -660,6 +687,7 @@ class SupplierRiskMonitor {
 ### 6. 采购数据分析与策略优化
 
 #### 6.1 智能分析引擎
+
 ```typescript
 // src/lib/procurement/analytics-engine.ts
 interface ProcurementAnalysis {
@@ -689,7 +717,7 @@ class ProcurementAnalyticsEngine {
       this.analyzeSupplierPerformance(cleanData),
       this.analyzeCategoryTrends(cleanData),
       this.identifySavingsOpportunities(cleanData),
-      this.assessPortfolioRisks(cleanData)
+      this.assessPortfolioRisks(cleanData),
     ]);
 
     // 3. 机器学习洞察
@@ -707,11 +735,13 @@ class ProcurementAnalyticsEngine {
       categoryInsights: analyses[2],
       savingsOpportunities: analyses[3],
       riskAssessments: analyses[4],
-      optimizationRecommendations: recommendations
+      optimizationRecommendations: recommendations,
     };
   }
 
-  private async analyzeSpendingPatterns(data: CleanedData): Promise<SpendingPattern[]> {
+  private async analyzeSpendingPatterns(
+    data: CleanedData
+  ): Promise<SpendingPattern[]> {
     const patterns: SpendingPattern[] = [];
 
     // 时间趋势分析
@@ -729,7 +759,9 @@ class ProcurementAnalyticsEngine {
     return patterns;
   }
 
-  private async identifySavingsOpportunities(data: CleanedData): Promise<SavingsOpportunity[]> {
+  private async identifySavingsOpportunities(
+    data: CleanedData
+  ): Promise<SavingsOpportunity[]> {
     const opportunities: SavingsOpportunity[] = [];
 
     // 1. 重复采购优化
@@ -737,7 +769,8 @@ class ProcurementAnalyticsEngine {
     opportunities.push(...duplicateOpportunities);
 
     // 2. 批量采购建议
-    const bulkOpportunities = await this.identifyBulkProcurementOpportunities(data);
+    const bulkOpportunities =
+      await this.identifyBulkProcurementOpportunities(data);
     opportunities.push(...bulkOpportunities);
 
     // 3. 替代品建议
@@ -745,7 +778,8 @@ class ProcurementAnalyticsEngine {
     opportunities.push(...substitutionOpportunities);
 
     // 4. 供应商整合建议
-    const consolidationOpportunities = await this.suggestSupplierConsolidation(data);
+    const consolidationOpportunities =
+      await this.suggestSupplierConsolidation(data);
     opportunities.push(...consolidationOpportunities);
 
     return opportunities
@@ -761,7 +795,7 @@ class ProcurementAnalyticsEngine {
 
     // 基于分析结果生成建议
     recommendations.push(...this.generateStrategicRecommendations(analyses));
-    
+
     // 基于ML洞察生成建议
     recommendations.push(...this.generatePredictiveRecommendations(mlInsights));
 
@@ -770,7 +804,7 @@ class ProcurementAnalyticsEngine {
       .map(rec => ({
         ...rec,
         priority: this.calculateRecommendationPriority(rec),
-        implementationEffort: this.estimateImplementationEffort(rec)
+        implementationEffort: this.estimateImplementationEffort(rec),
       }))
       .sort((a, b) => b.priority - a.priority);
   }
@@ -905,69 +939,69 @@ CREATE TABLE procurement_analytics (
 // src/app/api/procurement/requests/route.ts
 export async function POST(request: Request) {
   const requestData = await request.json();
-  
+
   const parser = new MultiModalRequestParser();
   const parsedRequest = await parser.parseRequest(requestData.input);
-  
+
   const procurementRequest = await procurementService.createRequest({
     buyerId: requestData.buyerId,
     parsedRequirements: parsedRequest,
-    rawInput: requestData.input
+    rawInput: requestData.input,
   });
-  
+
   return NextResponse.json(procurementRequest);
 }
 
 // src/app/api/procurement/match-suppliers/route.ts
 export async function POST(request: Request) {
   const { requestId } = await request.json();
-  
+
   const request = await procurementService.getRequest(requestId);
   const matcher = new IntelligentSupplierMatcher();
-  
+
   const matches = await matcher.findBestSuppliers(request.parsedRequirements);
-  
+
   return NextResponse.json(matches);
 }
 
 // src/app/api/procurement/quotes/request/route.ts
 export async function POST(request: Request) {
   const { requestId, supplierIds } = await request.json();
-  
+
   const quotationManager = new AutomatedQuotationManager();
   const response = await quotationManager.requestQuotes({
     requestId,
-    supplierIds
+    supplierIds,
   });
-  
+
   return NextResponse.json(response);
 }
 
 // src/app/api/procurement/negotiate/route.ts
 export async function POST(request: Request) {
   const { quoteId } = await request.json();
-  
+
   const quote = await quotationService.getQuote(quoteId);
   const negotiationEngine = new IntelligentNegotiationEngine();
-  
+
   const outcome = await negotiationEngine.negotiateBestPrice({
     quote,
-    context: quote.procurementContext
+    context: quote.procurementContext,
   });
-  
+
   return NextResponse.json(outcome);
 }
 
 // src/app/api/procurement/analytics/generate/route.ts
 export async function POST(request: Request) {
   const { buyerId, period } = await request.json();
-  
+
   const analyticsEngine = new ProcurementAnalyticsEngine();
   const analysis = await analyticsEngine.generateProcurementAnalysis(
     buyerId,
     period
   );
-  
+
   return NextResponse.json(analysis);
 }
 ```
@@ -980,17 +1014,19 @@ export async function POST(request: Request) {
 // src/lib/cache/procurement-cache.ts
 class ProcurementCacheManager {
   private readonly TTL_CONFIG = {
-    supplier_profiles: 86400,    // 24小时
-    price_benchmarks: 3600,      // 1小时
-    market_intelligence: 1800,   // 30分钟
-    risk_scores: 7200,           // 2小时
-    ml_model_predictions: 300    // 5分钟
+    supplier_profiles: 86400, // 24小时
+    price_benchmarks: 3600, // 1小时
+    market_intelligence: 1800, // 30分钟
+    risk_scores: 7200, // 2小时
+    ml_model_predictions: 300, // 5分钟
   };
 
-  async getCachedSupplierProfile(supplierId: string): Promise<SupplierProfile | null> {
+  async getCachedSupplierProfile(
+    supplierId: string
+  ): Promise<SupplierProfile | null> {
     const cacheKey = `supplier:profile:${supplierId}`;
     const cached = await redis.get(cacheKey);
-    
+
     if (cached) {
       return JSON.parse(cached);
     }
@@ -1011,7 +1047,7 @@ class ProcurementCacheManager {
     const patterns = [
       `supplier:profile:${supplierId}`,
       `supplier:quotes:${supplierId}*`,
-      `supplier:risk:${supplierId}`
+      `supplier:risk:${supplierId}`,
     ];
 
     for (const pattern of patterns) {
@@ -1036,26 +1072,28 @@ class ProcurementMonitor {
     negotiation_success_rate: 0.6,
     supplier_risk_score: 70,
     cost_savings_target: 0.15,
-    processing_time_limit: 72 // 小时
+    processing_time_limit: 72, // 小时
   };
 
-  async monitorProcurementPerformance(buyerId: string): Promise<PerformanceReport> {
+  async monitorProcurementPerformance(
+    buyerId: string
+  ): Promise<PerformanceReport> {
     const metrics = await Promise.all([
       this.calculateQuoteResponseRate(buyerId),
       this.calculateNegotiationSuccessRate(buyerId),
       this.calculateAverageSavings(buyerId),
       this.calculateProcessEfficiency(buyerId),
-      this.aggregateSupplierRisks(buyerId)
+      this.aggregateSupplierRisks(buyerId),
     ]);
 
     const alerts = this.generateAlerts(metrics);
-    
+
     return {
       buyerId,
       metrics,
       alerts,
       recommendations: this.generateImprovementRecommendations(metrics),
-      timestamp: new Date()
+      timestamp: new Date(),
     };
   }
 
@@ -1067,7 +1105,7 @@ class ProcurementMonitor {
         type: 'low_quote_response',
         severity: 'warning',
         message: '供应商报价响应率低于阈值',
-        value: metrics.quoteResponseRate
+        value: metrics.quoteResponseRate,
       });
     }
 
@@ -1076,7 +1114,7 @@ class ProcurementMonitor {
         type: 'high_supplier_risk',
         severity: 'critical',
         message: '供应商组合风险评分过高',
-        value: metrics.averageRiskScore
+        value: metrics.averageRiskScore,
       });
     }
 
@@ -1126,6 +1164,6 @@ class ProcurementSecurity {
 
 ---
 
-*文档版本：v1.0*
-*最后更新：2026年2月15日*
-*适用范围：FixCycle 4.0 B2B采购智能体系统*
+_文档版本：v1.0_
+_最后更新：2026年2月15日_
+_适用范围：FixCycle 4.0 B2B采购智能体系统_

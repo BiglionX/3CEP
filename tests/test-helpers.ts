@@ -15,8 +15,8 @@ export class TestHelpers {
    * 等待元素出现
    */
   async waitForElement(selector: string, timeout?: number) {
-    return await this.page.waitForSelector(selector, { 
-      timeout: timeout || TEST_ENV.timeouts.elementAppear 
+    return await this.page.waitForSelector(selector, {
+      timeout: timeout || TEST_ENV.timeouts.elementAppear,
     });
   }
 
@@ -43,7 +43,9 @@ export class TestHelpers {
    * 生成随机字符串
    */
   static generateRandomString(length: number = 8): string {
-    return Math.random().toString(36).substring(2, length + 2);
+    return Math.random()
+      .toString(36)
+      .substring(2, length + 2);
   }
 
   /**
@@ -58,19 +60,19 @@ export class TestHelpers {
    */
   async login(email: string, password: string) {
     await this.page.goto(`${TEST_ENV.getBaseUrl()}/login`);
-    
+
     // 等待页面完全加载
     await this.page.waitForLoadState('domcontentloaded');
     await this.page.waitForTimeout(2000); // 额外等待确保CSR完成
-    
+
     // 使用多种方式查找邮箱输入框
     const emailSelectors = [
       '#email',
       'input[type="email"]',
       'input[name="email"]',
-      '[placeholder*="邮箱"], [placeholder*="email"]'
+      '[placeholder*="邮箱"], [placeholder*="email"]',
     ];
-    
+
     let emailInputFound = false;
     for (const selector of emailSelectors) {
       try {
@@ -82,18 +84,18 @@ export class TestHelpers {
         console.log(`🔍 尝试选择器: ${selector} - 未找到`);
       }
     }
-    
+
     if (!emailInputFound) {
       throw new Error('无法找到邮箱输入框');
     }
-    
+
     // 查找密码输入框
     const passwordSelectors = [
       '#password',
       'input[type="password"]:not([id*="confirm"])',
-      'input[name="password"]'
+      'input[name="password"]',
     ];
-    
+
     let passwordInputFound = false;
     for (const selector of passwordSelectors) {
       try {
@@ -105,23 +107,29 @@ export class TestHelpers {
         console.log(`🔍 尝试选择器: ${selector} - 未找到`);
       }
     }
-    
+
     if (!passwordInputFound) {
       throw new Error('无法找到密码输入框');
     }
-    
+
     // 填写登录表单
-    await this.page.fill('#email, input[type="email"], input[name="email"]', email);
-    await this.page.fill('#password, input[type="password"]:not([id*="confirm"]), input[name="password"]', password);
-    
+    await this.page.fill(
+      '#email, input[type="email"], input[name="email"]',
+      email
+    );
+    await this.page.fill(
+      '#password, input[type="password"]:not([id*="confirm"]), input[name="password"]',
+      password
+    );
+
     // 查找并点击登录按钮
     const buttonSelectors = [
       'button[type="submit"]',
       'button:has-text("登录")',
       'button:has-text("Login")',
-      '[type="submit"]'
+      '[type="submit"]',
     ];
-    
+
     let buttonClicked = false;
     for (const selector of buttonSelectors) {
       try {
@@ -133,17 +141,17 @@ export class TestHelpers {
         console.log(`🔍 尝试按钮选择器: ${selector} - 未找到`);
       }
     }
-    
+
     if (!buttonClicked) {
       throw new Error('无法找到登录按钮');
     }
-    
+
     // 等待登录完成并跳转
-    await this.page.waitForURL(/^(?!.*\/login).*$/, { 
+    await this.page.waitForURL(/^(?!.*\/login).*$/, {
       timeout: TEST_ENV.timeouts.navigation,
-      waitUntil: 'networkidle'
+      waitUntil: 'networkidle',
     });
-    
+
     console.log('✅ 登录流程完成');
   }
 
@@ -183,11 +191,11 @@ export class TestHelpers {
    */
   async scanQRCode(deviceId: string) {
     // 模拟扫码过程
-    await this.page.evaluate((id) => {
+    await this.page.evaluate(id => {
       // 这里可以注入模拟扫码的逻辑
       sessionStorage.setItem('scannedDeviceId', id);
     }, deviceId);
-    
+
     // 等待扫码结果处理
     await this.page.waitForTimeout(1000);
   }
@@ -197,7 +205,10 @@ export class TestHelpers {
    */
   async selectFaultType(faultType: string) {
     await this.waitForElement('[data-testid="fault-type-selector"]');
-    await this.page.selectOption('[data-testid="fault-type-selector"]', faultType);
+    await this.page.selectOption(
+      '[data-testid="fault-type-selector"]',
+      faultType
+    );
   }
 
   /**
@@ -212,15 +223,15 @@ export class TestHelpers {
    * 验证API响应
    */
   async verifyApiResponse(expectedStatus: number, expectedData?: any) {
-    const response = await this.page.waitForResponse(response => 
-      response.status() === expectedStatus
+    const response = await this.page.waitForResponse(
+      response => response.status() === expectedStatus
     );
-    
+
     if (expectedData) {
       const responseBody = await response.json();
       expect(responseBody).toMatchObject(expectedData);
     }
-    
+
     return response;
   }
 
@@ -285,7 +296,7 @@ export class PermissionHelpers {
       // 应该重定向到403页面或登录页面
       await Promise.race([
         this.helpers.verifyTextPresent(/403|forbidden|权限不足/i),
-        this.helpers.verifyTextPresent(/login|登录/i)
+        this.helpers.verifyTextPresent(/login|登录/i),
       ]);
     }
   }
@@ -302,23 +313,31 @@ export class PermissionHelpers {
     // 测试创建用户
     if (operations.createUser) {
       await this.page.goto(`${TEST_ENV.getBaseUrl()}/admin/users`);
-      await this.helpers.verifyElementExists('[data-testid="create-user-button"]');
+      await this.helpers.verifyElementExists(
+        '[data-testid="create-user-button"]'
+      );
     }
 
     // 测试删除用户
     if (operations.deleteUser) {
-      await this.helpers.verifyElementExists('[data-testid="delete-user-button"]');
+      await this.helpers.verifyElementExists(
+        '[data-testid="delete-user-button"]'
+      );
     }
 
     // 测试权限修改
     if (operations.modifyPermissions) {
-      await this.helpers.verifyElementExists('[data-testid="modify-permissions-button"]');
+      await this.helpers.verifyElementExists(
+        '[data-testid="modify-permissions-button"]'
+      );
     }
 
     // 测试系统配置
     if (operations.systemConfig) {
       await this.page.goto(`${TEST_ENV.getBaseUrl()}/admin/settings`);
-      await this.helpers.verifyElementExists('[data-testid="system-config-form"]');
+      await this.helpers.verifyElementExists(
+        '[data-testid="system-config-form"]'
+      );
     }
   }
 }
@@ -369,7 +388,7 @@ export class BusinessFlowHelpers {
   async trackRepairProgress(orderId: string, expectedStatuses: string[]) {
     await this.page.goto(`${TEST_ENV.getBaseUrl()}/user/orders`);
     await this.helpers.waitForElement(`[data-testid="order-${orderId}"]`);
-    
+
     for (const status of expectedStatuses) {
       await this.helpers.verifyTextPresent(new RegExp(status, 'i'));
       // 模拟状态更新间隔

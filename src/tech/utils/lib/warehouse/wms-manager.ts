@@ -1,24 +1,23 @@
 /**
- * WMS管理器
- * 负责管理多个WMS客户端实例和统一接口
+ * WMS管理? * 负责管理多个WMS客户端实例和统一接口
  */
 
-import { GoodcangWMSClient } from "./goodcang-wms-client";
+import { GoodcangWMSClient } from './goodcang-wms-client';
 import {
   WMSClient,
   WMSConfig,
   WMSInventoryItem,
   WMSResponse,
-} from "./wms-client.interface";
+} from './wms-client.interface';
 
 export interface WMSConnection {
   id: string;
   name: string;
-  provider: "goodcang" | "4px" | "winit" | "custom";
+  provider: 'goodcang' | '4px' | 'winit' | 'custom';
   warehouseId: string;
   isActive: boolean;
   lastSync?: Date;
-  syncStatus: "success" | "failed" | "syncing" | "pending";
+  syncStatus: 'success' | 'failed' | 'syncing' | 'pending';
   errorMessage?: string;
 }
 
@@ -28,8 +27,7 @@ export class WMSManager {
   private syncInterval: NodeJS.Timeout | null = null;
 
   constructor() {
-    // 绑定方法上下文
-    this.startPeriodicSync = this.startPeriodicSync.bind(this);
+    // 绑定方法上下?    this.startPeriodicSync = this.startPeriodicSync.bind(this);
     this.stopPeriodicSync = this.stopPeriodicSync.bind(this);
   }
 
@@ -37,28 +35,26 @@ export class WMSManager {
    * 添加WMS连接
    */
   async addConnection(
-    connection: Omit<WMSConnection, "id" | "syncStatus">,
+    connection: Omit<WMSConnection, 'id' | 'syncStatus'>,
     config: WMSConfig
   ): Promise<WMSResponse<string>> {
     try {
       // 生成唯一ID
       const id = this.generateConnectionId();
 
-      // 创建客户端实例
-      let client: WMSClient;
+      // 创建客户端实?      let client: WMSClient;
       switch (config.provider) {
-        case "goodcang":
+        case 'goodcang':
           client = new GoodcangWMSClient(config);
           break;
-        case "4px":
-        case "winit":
-        case "custom":
-          // TODO: 实现其他提供商的客户端
-          return {
+        case '4px':
+        case 'winit':
+        case 'custom':
+          // TODO: 实现其他提供商的客户?          return {
             success: false,
             error: {
-              code: "PROVIDER_NOT_IMPLEMENTED",
-              message: `提供商 ${config.provider} 尚未实现`,
+              code: 'PROVIDER_NOT_IMPLEMENTED',
+              message: `提供?${config.provider} 尚未实现`,
               details: null,
             },
             requestId: this.generateRequestId(),
@@ -68,8 +64,8 @@ export class WMSManager {
           return {
             success: false,
             error: {
-              code: "INVALID_PROVIDER",
-              message: `不支持的提供商: ${config.provider}`,
+              code: 'INVALID_PROVIDER',
+              message: `不支持的提供? ${config.provider}`,
               details: null,
             },
             requestId: this.generateRequestId(),
@@ -83,8 +79,8 @@ export class WMSManager {
         return {
           success: false,
           error: {
-            code: "CONNECTION_TEST_FAILED",
-            message: "连接测试失败",
+            code: 'CONNECTION_TEST_FAILED',
+            message: '连接测试失败',
             details: authResult.error,
           },
           requestId: this.generateRequestId(),
@@ -96,7 +92,7 @@ export class WMSManager {
       const connectionInfo: WMSConnection = {
         ...connection,
         id,
-        syncStatus: "pending",
+        syncStatus: 'pending',
       };
 
       this.clients.set(id, client);
@@ -112,8 +108,8 @@ export class WMSManager {
       return {
         success: false,
         error: {
-          code: "CONNECTION_SETUP_ERROR",
-          message: "连接设置失败",
+          code: 'CONNECTION_SETUP_ERROR',
+          message: '连接设置失败',
           details: (error as Error).message,
         },
         requestId: this.generateRequestId(),
@@ -129,8 +125,7 @@ export class WMSManager {
     try {
       const client = this.clients.get(connectionId);
       if (client) {
-        // 清理客户端资源
-        if ("destroy" in client && typeof client.destroy === "function") {
+        // 清理客户端资?        if ('destroy' in client && typeof client.destroy === 'function') {
           client.destroy();
         }
         this.clients.delete(connectionId);
@@ -147,8 +142,8 @@ export class WMSManager {
       return {
         success: false,
         error: {
-          code: "CONNECTION_REMOVAL_ERROR",
-          message: "移除连接失败",
+          code: 'CONNECTION_REMOVAL_ERROR',
+          message: '移除连接失败',
           details: (error as Error).message,
         },
         requestId: this.generateRequestId(),
@@ -158,8 +153,7 @@ export class WMSManager {
   }
 
   /**
-   * 获取所有连接
-   */
+   * 获取所有连?   */
   getConnections(): WMSConnection[] {
     return Array.from(this.connections.values());
   }
@@ -180,8 +174,8 @@ export class WMSManager {
       return {
         success: false,
         error: {
-          code: "CONNECTION_NOT_FOUND",
-          message: "连接不存在",
+          code: 'CONNECTION_NOT_FOUND',
+          message: '连接不存?,
           details: null,
         },
         requestId: this.generateRequestId(),
@@ -212,8 +206,8 @@ export class WMSManager {
       return {
         success: false,
         error: {
-          code: "CONNECTION_NOT_FOUND",
-          message: "连接不存在",
+          code: 'CONNECTION_NOT_FOUND',
+          message: '连接不存?,
           details: null,
         },
         requestId: this.generateRequestId(),
@@ -225,8 +219,8 @@ export class WMSManager {
       return {
         success: false,
         error: {
-          code: "CONNECTION_INACTIVE",
-          message: "连接已被禁用",
+          code: 'CONNECTION_INACTIVE',
+          message: '连接已被禁用',
           details: null,
         },
         requestId: this.generateRequestId(),
@@ -235,36 +229,33 @@ export class WMSManager {
     }
 
     try {
-      // 更新连接状态
-      connection.syncStatus = "syncing";
+      // 更新连接状?      connection.syncStatus = 'syncing';
       connection.errorMessage = undefined;
       this.connections.set(connectionId, connection);
 
       // 执行同步
       const result = await client.syncInventory();
 
-      // 更新连接状态
-      if (result.success) {
-        connection.syncStatus = "success";
+      // 更新连接状?      if (result.success) {
+        connection.syncStatus = 'success';
         connection.lastSync = new Date();
       } else {
-        connection.syncStatus = "failed";
-        connection.errorMessage = result.error?.message;
+        connection.syncStatus = 'failed';
+        connection.errorMessage = result?.message;
       }
       this.connections.set(connectionId, connection);
 
       return result;
     } catch (error) {
-      // 更新连接状态
-      connection.syncStatus = "failed";
+      // 更新连接状?      connection.syncStatus = 'failed';
       connection.errorMessage = (error as Error).message;
       this.connections.set(connectionId, connection);
 
       return {
         success: false,
         error: {
-          code: "SYNC_EXECUTION_ERROR",
-          message: "同步执行失败",
+          code: 'SYNC_EXECUTION_ERROR',
+          message: '同步执行失败',
           details: (error as Error).message,
         },
         requestId: this.generateRequestId(),
@@ -274,13 +265,12 @@ export class WMSManager {
   }
 
   /**
-   * 批量同步所有活跃仓库
-   */
+   * 批量同步所有活跃仓?   */
   async syncAllActiveWarehouses(): Promise<
     WMSResponse<{ [key: string]: WMSInventoryItem[] }>
   > {
     const activeConnections = Array.from(this.connections.values()).filter(
-      (conn) => conn.isActive
+      conn => conn.isActive
     );
 
     if (activeConnections.length === 0) {
@@ -293,8 +283,7 @@ export class WMSManager {
     }
 
     try {
-      // 并发执行所有同步
-      const syncPromises = activeConnections.map(async (connection) => {
+      // 并发执行所有同?      const syncPromises = activeConnections.map(async connection => {
         const result = await this.syncWarehouseInventory(connection.id);
         return {
           connectionId: connection.id,
@@ -311,19 +300,19 @@ export class WMSManager {
       results.forEach((result, index) => {
         const connectionId = activeConnections[index].id;
 
-        if (result.status === "fulfilled") {
+        if (result.status === 'fulfilled') {
           if (result.value.result.success && result.value.result.data) {
             syncData[connectionId] = result.value.result.data;
           } else {
             errors.push({
               connectionId,
-              error: result.value.result.error?.message || "同步失败",
+              error: result.value.result?.message || '同步失败',
             });
           }
         } else {
           errors.push({
             connectionId,
-            error: result.reason?.message || "同步异常",
+            error: result?.message || '同步异常',
           });
         }
       });
@@ -333,7 +322,7 @@ export class WMSManager {
           success: false,
           data: syncData,
           error: {
-            code: "PARTIAL_SYNC_FAILURE",
+            code: 'PARTIAL_SYNC_FAILURE',
             message: `部分仓库同步失败 (${errors.length}/${activeConnections.length})`,
             details: errors,
           },
@@ -352,8 +341,8 @@ export class WMSManager {
       return {
         success: false,
         error: {
-          code: "BATCH_SYNC_ERROR",
-          message: "批量同步执行失败",
+          code: 'BATCH_SYNC_ERROR',
+          message: '批量同步执行失败',
           details: (error as Error).message,
         },
         requestId: this.generateRequestId(),
@@ -363,34 +352,33 @@ export class WMSManager {
   }
 
   /**
-   * 启动周期性同步
-   */
+   * 启动周期性同?   */
   startPeriodicSync(intervalMinutes: number = 5): void {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
     }
 
-    this.syncInterval = setInterval(async () => {
-      try {
-        await this.syncAllActiveWarehouses();
-      } catch (error) {
-        console.error("周期性同步失败:", error);
-        // 可以在这里添加告警通知
-      }
-    }, intervalMinutes * 60 * 1000);
+    this.syncInterval = setInterval(
+      async () => {
+        try {
+          await this.syncAllActiveWarehouses();
+        } catch (error) {
+          console.error('周期性同步失?', error);
+          // 可以在这里添加告警通知
+        }
+      },
+      intervalMinutes * 60 * 1000
+    );
 
-    console.log(`✅ 已启动周期性同步，间隔: ${intervalMinutes}分钟`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?已启动周期性同步，间隔: ${intervalMinutes}分钟`)}
 
   /**
-   * 停止周期性同步
-   */
+   * 停止周期性同?   */
   stopPeriodicSync(): void {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      console.log("✅ 已停止周期性同步");
-    }
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?已停止周期性同?)}
   }
 
   /**
@@ -407,7 +395,7 @@ export class WMSManager {
     const now = new Date();
     let lastSyncTime: Date | undefined;
 
-    connections.forEach((conn) => {
+    connections.forEach(conn => {
       if (conn.lastSync && (!lastSyncTime || conn.lastSync > lastSyncTime)) {
         lastSyncTime = conn.lastSync;
       }
@@ -415,21 +403,19 @@ export class WMSManager {
 
     return {
       totalConnections: connections.length,
-      activeConnections: connections.filter((conn) => conn.isActive).length,
-      successfulSyncs: connections.filter(
-        (conn) => conn.syncStatus === "success"
-      ).length,
-      failedSyncs: connections.filter((conn) => conn.syncStatus === "failed")
+      activeConnections: connections.filter(conn => conn.isActive).length,
+      successfulSyncs: connections.filter(conn => conn.syncStatus === 'success')
+        .length,
+      failedSyncs: connections.filter(conn => conn.syncStatus === 'failed')
         .length,
       lastSyncTime,
     };
   }
 
   /**
-   * 获取连接健康状态
-   */
+   * 获取连接健康状?   */
   getConnectionHealth(connectionId: string): WMSResponse<{
-    status: "healthy" | "degraded" | "unhealthy";
+    status: 'healthy' | 'degraded' | 'unhealthy';
     lastSync?: Date;
     errorMessage?: string;
     uptimePercentage: number;
@@ -439,8 +425,8 @@ export class WMSManager {
       return {
         success: false,
         error: {
-          code: "CONNECTION_NOT_FOUND",
-          message: "连接不存在",
+          code: 'CONNECTION_NOT_FOUND',
+          message: '连接不存?,
           details: null,
         },
         requestId: this.generateRequestId(),
@@ -449,14 +435,14 @@ export class WMSManager {
     }
 
     // 简化的健康检查逻辑
-    let status: "healthy" | "degraded" | "unhealthy" = "healthy";
+    let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
     let uptimePercentage = 100;
 
-    if (connection.syncStatus === "failed") {
-      status = "unhealthy";
+    if (connection.syncStatus === 'failed') {
+      status = 'unhealthy';
       uptimePercentage = 0;
-    } else if (connection.syncStatus === "syncing") {
-      status = "degraded";
+    } else if (connection.syncStatus === 'syncing') {
+      status = 'degraded';
       uptimePercentage = 80;
     }
 
@@ -488,14 +474,13 @@ export class WMSManager {
   }
 
   /**
-   * 清理所有资源
-   */
+   * 清理所有资?   */
   destroy(): void {
     this.stopPeriodicSync();
 
     // 清理所有客户端
-    this.clients.forEach((client) => {
-      if ("destroy" in client && typeof client.destroy === "function") {
+    this.clients.forEach(client => {
+      if ('destroy' in client && typeof client.destroy === 'function') {
         client.destroy();
       }
     });

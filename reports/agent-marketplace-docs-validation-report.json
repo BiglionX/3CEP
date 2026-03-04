@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-03-01T11:56:48.334Z",
+  "overallSuccess": true,
+  "statistics": {
+    "totalDocs": 2,
+    "passedDocs": 2,
+    "failedDocs": 0,
+    "passRate": 100
+  },
+  "details": {
+    "mainDocs": [
+      {
+        "doc": {
+          "path": "docs/project-planning/agent-marketplace-optimization-plan.md",
+          "name": "智能体市场优化方案",
+          "requiredSections": ["项目背景与目标", "整体架构设计", "原子任务清单", "技术实现细节"]
+        },
+        "validation": {
+          "success": true,
+          "checks": {
+            "minLength": true,
+            "keywords": {
+              "智能体": true,
+              "Agent": true,
+              "Marketplace": true,
+              "Token": true
+            },
+            "sections": {
+              "项目背景与目标": true,
+              "整体架构设计": true,
+              "原子任务清单": true,
+              "技术实现细节": true
+            },
+            "links": {
+              "internalLinks": 0,
+              "codeReferences": 1
+            }
+          },
+          "errors": [],
+          "warnings": []
+        }
+      },
+      {
+        "doc": {
+          "path": "docs/project-overview/project-specification.md",
+          "name": "项目说明书",
+          "requiredSections": ["智能体市场平台", "FixCycle 6.0"]
+        },
+        "validation": {
+          "success": true,
+          "checks": {
+            "minLength": true,
+            "keywords": {
+              "智能体": true,
+              "Agent": true,
+              "Marketplace": true,
+              "Token": true
+            },
+            "sections": {
+              "智能体市场平台": true,
+              "FixCycle 6.0": true
+            },
+            "links": {
+              "internalLinks": 11,
+              "codeReferences": 0
+            }
+          },
+          "errors": [],
+          "warnings": []
+        }
+      }
+    ],
+    "crossRefs": {
+      "success": true,
+      "missingRefs": [],
+      "brokenLinks": []
+    }
+  }
+}

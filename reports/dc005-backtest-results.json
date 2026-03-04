@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-02-28T10:08:17.021Z",
+  "testName": "DC005 Prototype Development Backtest",
+  "modules": {
+    "fileStructure": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "文件存在性: src/app/data-center/page.tsx",
+          "status": "passed",
+          "details": "文件存在"
+        },
+        {
+          "name": "文件存在性: src/app/data-center/sources/page.tsx",
+          "status": "passed",
+          "details": "文件存在"
+        },
+        {
+          "name": "文件存在性: src/app/data-center/query/page.tsx",
+          "status": "passed",
+          "details": "文件存在"
+        },
+        {
+          "name": "文件存在性: src/app/data-center/monitoring/page.tsx",
+          "status": "passed",
+          "details": "文件存在"
+        }
+      ]
+    },
+    "codeQuality": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "TypeScript 类型检查",
+          "status": "passed",
+          "details": "检查通过"
+        },
+        {
+          "name": "React 组件结构",
+          "status": "passed",
+          "details": "检查通过"
+        },
+        {
+          "name": "UI 组件导入",
+          "status": "passed",
+          "details": "检查通过"
+        }
+      ]
+    },
+    "functionality": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "导航菜单完整性",
+          "status": "passed",
+          "details": "功能完整"
+        },
+        {
+          "name": "数据展示组件",
+          "status": "passed",
+          "details": "功能完整"
+        },
+        {
+          "name": "交互功能实现",
+          "status": "passed",
+          "details": "功能完整"
+        }
+      ]
+    },
+    "subPages": {
+      "status": "partial",
+      "tests": [
+        {
+          "name": "数据源管理页面",
+          "status": "passed",
+          "details": "页面功能完整"
+        },
+        {
+          "name": "查询分析页面",
+          "status": "failed",
+          "details": "页面功能不完整"
+        },
+        {
+          "name": "监控告警页面",
+          "status": "passed",
+          "details": "页面功能完整"
+        }
+      ]
+    },
+    "responsive": {
+      "status": "complete",
+      "tests": [
+        {
+          "name": "响应式设计特性",
+          "status": "passed",
+          "details": "检测到 4 个响应式特性，满足要求"
+        }
+      ]
+    }
+  },
+  "summary": {
+    "totalTests": 14,
+    "passedTests": 13,
+    "failedTests": 1,
+    "successRate": 93
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "apiEndpoints": [],
+  "dataFlows": {
+    "flows": ["用户认证流", "安全事件流", "告警通知流"]
+  },
+  "securityRequirements": {
+    "requirements": ["认证授权", "数据加密", "访问控制"]
+  },
+  "integrationPoints": {
+    "points": [
+      "auth-middleware",
+      "data-models",
+      "websocket-service",
+      "notification-channels",
+      "n8n-nodes"
+    ]
+  }
+}

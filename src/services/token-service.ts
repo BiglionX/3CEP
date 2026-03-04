@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import { supabaseAdmin as supabase } from '@/lib/supabase';
 
@@ -83,7 +83,7 @@ export async function getUserTokenBalance(userId: string): Promise<{ data: UserT
       throw error;
     }
 
-    // 如果用户没有Token记录，创建默认记录
+    // 如果用户没有Token记录，创建默认记?
     if (!data) {
       const { data: newRecord, error: insertError } = await supabase
         .from('user_tokens')
@@ -122,7 +122,7 @@ export async function createPaymentOrder(
       .single();
 
     if (packageError) throw packageError;
-    if (!packageData) throw new Error('套餐不存在');
+    if (!packageData) throw new Error('套餐不存?);
 
     // 创建支付记录
     const { data, error } = await supabase
@@ -151,7 +151,7 @@ export async function completePayment(
   transactionId: string
 ): Promise<{ success: boolean; error: string | null }> {
   try {
-    // 更新支付状态
+    // 更新支付状?
     const { data: payment, error: updateError } = await supabase
       .from('payments')
       .update({
@@ -199,7 +199,7 @@ export async function completePayment(
 
       if (updateTokenError) throw updateTokenError;
     } else {
-      // 创建新记录
+      // 创建新记?
       const { error: insertTokenError } = await supabase
         .from('user_tokens')
         .insert({
@@ -295,7 +295,7 @@ export async function getUserTransactions(
       .from('token_transactions')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: false }) as any
       .limit(limit);
 
     if (error) throw error;

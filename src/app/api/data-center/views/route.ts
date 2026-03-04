@@ -1,9 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { virtualViewExecutor, executeVirtualView, executeMultipleViews } from '@/data-center/virtualization/view-executor';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import {
+  virtualViewExecutor,
+  executeVirtualView,
+  executeMultipleViews,
+} from '@/data-center/virtualization/view-executor';
 import { ViewManager } from '@/data-center/virtualization/views-definition';
 
-// 视图管理器实例
-const viewManager = new ViewManager();
+// 瑙嗗浘绠＄悊鍣ㄥ疄?const viewManager = new ViewManager();
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,42 +18,34 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'list':
-        // 列出所有可用视图
-        const views = viewManager.getAllViews().map(view => ({
+        // 鍒楀嚭鎵€鏈夊彲鐢ㄨ?        const views = viewManager.getAllViews().map(view => ({
           name: view.name,
           description: view.description,
           sourceCatalogs: view.sourceCatalogs,
           cacheEnabled: view.cacheEnabled,
-          refreshInterval: view.refreshInterval
+          refreshInterval: view.refreshInterval,
         }));
-        
+
         return NextResponse.json({
           views,
-          totalCount: views.length
+          totalCount: views.length,
         });
 
       case 'metadata':
-        // 获取视图元数据
-        if (!viewName) {
-          return NextResponse.json(
-            { error: '缺少view参数' },
-            { status: 400 }
-          );
+        // 鑾峰彇瑙嗗浘鍏冩暟?        if (!viewName) {
+          return NextResponse.json({ error: '缂哄皯view鍙傛暟' }, { status: 400 });
         }
-        
+
         const metadata = await virtualViewExecutor.getViewMetadata(viewName);
         return NextResponse.json(metadata);
 
       case 'execute':
-        // 执行单个视图
+        // 鎵ц鍗曚釜瑙嗗浘
         if (!viewName) {
-          return NextResponse.json(
-            { error: '缺少view参数' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: '缂哄皯view鍙傛暟' }, { status: 400 });
         }
 
-        // 处理查询参数
+        // 澶勭悊鏌ヨ鍙傛暟
         const parameters: Record<string, any> = {};
         for (const [key, value] of searchParams.entries()) {
           if (!['action', 'view', 'cache', 'refresh'].includes(key)) {
@@ -61,54 +56,50 @@ export async function GET(request: NextRequest) {
         const result = await executeVirtualView(viewName, {
           useCache,
           forceRefresh,
-          parameters: Object.keys(parameters).length > 0 ? parameters : undefined
+          parameters:
+            Object.keys(parameters).length > 0 ? parameters : undefined,
         });
 
         return NextResponse.json(result);
 
       case 'batch':
-        // 批量执行视图
+        // 鎵归噺鎵ц瑙嗗浘
         const viewNamesParam = searchParams.get('views');
         if (!viewNamesParam) {
-          return NextResponse.json(
-            { error: '缺少views参数' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: '缂哄皯views鍙傛暟' }, { status: 400 });
         }
 
         const viewNames = viewNamesParam.split(',').map(name => name.trim());
         const batchResults = await executeMultipleViews(viewNames, {
           useCache,
-          forceRefresh
+          forceRefresh,
         });
 
         return NextResponse.json(batchResults);
 
       case 'warmup':
-        // 预热视图缓存
+        // 棰勭儹瑙嗗浘缂撳瓨
         const warmupViews = searchParams.get('views');
-        const viewsToWarm = warmupViews ? warmupViews.split(',').map(v => v.trim()) : undefined;
-        
+        const viewsToWarm = warmupViews
+          ? warmupViews.split(',').map(v => v.trim())
+          : undefined;
+
         await virtualViewExecutor.warmupViews(viewsToWarm);
-        
+
         return NextResponse.json({
-          message: '视图缓存预热完成',
-          warmedViews: viewsToWarm || 'all_cached_views'
+          message: '瑙嗗浘缂撳瓨棰勭儹瀹屾垚',
+          warmedViews: viewsToWarm || 'all_cached_views',
         });
 
       default:
-        return NextResponse.json(
-          { error: '未知的操作类型' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
     }
-
   } catch (error: any) {
-    console.error('虚拟视图API错误:', error);
+    console.error('铏氭嫙瑙嗗浘API閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
@@ -124,7 +115,7 @@ export async function POST(request: NextRequest) {
       case 'execute':
         if (!viewName) {
           return NextResponse.json(
-            { error: '缺少viewName参数' },
+            { error: '缂哄皯viewName鍙傛暟' },
             { status: 400 }
           );
         }
@@ -133,7 +124,7 @@ export async function POST(request: NextRequest) {
           useCache: options?.useCache ?? true,
           forceRefresh: options?.forceRefresh ?? false,
           timeoutMs: options?.timeoutMs,
-          parameters
+          parameters,
         });
 
         return NextResponse.json(result);
@@ -141,7 +132,7 @@ export async function POST(request: NextRequest) {
       case 'batch':
         if (!viewNames || !Array.isArray(viewNames)) {
           return NextResponse.json(
-            { error: '缺少viewNames数组参数' },
+            { error: '缂哄皯viewNames鏁扮粍鍙傛暟' },
             { status: 400 }
           );
         }
@@ -150,7 +141,7 @@ export async function POST(request: NextRequest) {
           useCache: options?.useCache ?? true,
           forceRefresh: options?.forceRefresh ?? false,
           timeoutMs: options?.timeoutMs,
-          parameters
+          parameters,
         });
 
         return NextResponse.json(batchResults);
@@ -158,25 +149,22 @@ export async function POST(request: NextRequest) {
       case 'warmup':
         await virtualViewExecutor.warmupViews(viewNames);
         return NextResponse.json({
-          message: '视图缓存预热完成',
-          warmedViews: viewNames || 'all_cached_views'
+          message: '瑙嗗浘缂撳瓨棰勭儹瀹屾垚',
+          warmedViews: viewNames || 'all_cached_views',
         });
 
       default:
-        return NextResponse.json(
-          { error: '未知的操作类型' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
     }
-
   } catch (error: any) {
-    console.error('虚拟视图API错误:', error);
+    console.error('铏氭嫙瑙嗗浘API閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
   }
 }
+

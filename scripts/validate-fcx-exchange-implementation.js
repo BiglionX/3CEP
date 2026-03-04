@@ -21,25 +21,24 @@ class FcxExchangeValidation {
     try {
       // 1. 验证数据库表结构
       await this.validateDatabaseTables();
-      
+
       // 2. 验证服务类实现
       await this.validateServiceClasses();
-      
+
       // 3. 验证API接口
       await this.validateApiEndpoints();
-      
+
       // 4. 验证前端组件
       await this.validateFrontendComponents();
-      
+
       // 5. 输出验证报告
       await this.generateValidationReport();
-
     } catch (error) {
       console.error('❌ 验证过程中发生错误:', error);
       this.validationResults.push({
         component: '整体验证',
         status: 'FAILED',
-        error: error.message
+        error: error.message,
       });
     }
 
@@ -48,13 +47,13 @@ class FcxExchangeValidation {
 
   async validateDatabaseTables() {
     console.log('🗄️ 验证数据库表结构...');
-    
+
     const requiredTables = [
       'part_fcx_prices',
       'fcx_exchange_orders',
       'fcx_exchange_order_items',
       'inventory_reservations',
-      'fcx_exchange_transactions'
+      'fcx_exchange_transactions',
     ];
 
     try {
@@ -64,25 +63,26 @@ class FcxExchangeValidation {
           .from(tableName)
           .select('count(*)', { count: 'exact', head: true });
 
-        if (error && error.code !== '42P01') { // 42P01 = 表不存在
+        if (error && error.code !== '42P01') {
+          // 42P01 = 表不存在
           console.log(`⚠️  表 ${tableName} 查询出错: ${error.message}`);
           this.validationResults.push({
             component: `数据库表-${tableName}`,
             status: 'WARNING',
-            message: `查询出错: ${error.message}`
+            message: `查询出错: ${error.message}`,
           });
         } else if (error && error.code === '42P01') {
           console.log(`❌ 表 ${tableName} 不存在`);
           this.validationResults.push({
             component: `数据库表-${tableName}`,
             status: 'MISSING',
-            message: '表不存在'
+            message: '表不存在',
           });
         } else {
           console.log(`✅ 表 ${tableName} 存在`);
           this.validationResults.push({
             component: `数据库表-${tableName}`,
-            status: 'PRESENT'
+            status: 'PRESENT',
           });
         }
       }
@@ -100,7 +100,7 @@ class FcxExchangeValidation {
             console.log(`✅ 视图 ${viewName} 存在`);
             this.validationResults.push({
               component: `数据库视图-${viewName}`,
-              status: 'PRESENT'
+              status: 'PRESENT',
             });
           }
         } catch (viewError) {
@@ -108,30 +108,29 @@ class FcxExchangeValidation {
           this.validationResults.push({
             component: `数据库视图-${viewName}`,
             status: 'WARNING',
-            message: '视图可能不存在'
+            message: '视图可能不存在',
           });
         }
       }
-
     } catch (error) {
       console.error('❌ 数据库表验证失败:', error);
       this.validationResults.push({
         component: '数据库表结构',
         status: 'FAILED',
-        error: error.message
+        error: error.message,
       });
     }
   }
 
   async validateServiceClasses() {
     console.log('\n⚙️ 验证服务类实现...');
-    
+
     try {
       // 动态导入服务类进行验证
       const serviceFiles = [
         'src/fcx-system/services/fcx-equipment.service.ts',
         'src/supply-chain/services/inventory-reservation.service.ts',
-        'src/lib/warehouse/wms-shipment.service.ts'
+        'src/lib/warehouse/wms-shipment.service.ts',
       ];
 
       for (const serviceFile of serviceFiles) {
@@ -142,9 +141,9 @@ class FcxExchangeValidation {
             console.log(`✅ 服务文件 ${serviceFile} 存在`);
             this.validationResults.push({
               component: `服务类-${serviceFile}`,
-              status: 'PRESENT'
+              status: 'PRESENT',
             });
-            
+
             // 简单的语法检查
             const content = fs.readFileSync(serviceFile, 'utf8');
             if (content.includes('class') && content.includes('export')) {
@@ -154,36 +153,37 @@ class FcxExchangeValidation {
             console.log(`❌ 服务文件 ${serviceFile} 不存在`);
             this.validationResults.push({
               component: `服务类-${serviceFile}`,
-              status: 'MISSING'
+              status: 'MISSING',
             });
           }
         } catch (fileError) {
-          console.log(`⚠️  检查服务文件 ${serviceFile} 出错: ${fileError.message}`);
+          console.log(
+            `⚠️  检查服务文件 ${serviceFile} 出错: ${fileError.message}`
+          );
           this.validationResults.push({
             component: `服务类-${serviceFile}`,
             status: 'WARNING',
-            message: fileError.message
+            message: fileError.message,
           });
         }
       }
-
     } catch (error) {
       console.error('❌ 服务类验证失败:', error);
       this.validationResults.push({
         component: '服务类实现',
         status: 'FAILED',
-        error: error.message
+        error: error.message,
       });
     }
   }
 
   async validateApiEndpoints() {
     console.log('\n🌐 验证API接口...');
-    
+
     const apiEndpoints = [
       '/api/fcx/exchange',
       '/api/fcx/equipment/exchange',
-      '/api/inventory/reserve'
+      '/api/inventory/reserve',
     ];
 
     try {
@@ -192,18 +192,18 @@ class FcxExchangeValidation {
           // 检查API路由文件是否存在
           const routeFile = `src/app${endpoint}/route.ts`;
           const fs = require('fs');
-          
+
           if (fs.existsSync(routeFile)) {
             console.log(`✅ API路由 ${endpoint} 存在`);
             this.validationResults.push({
               component: `API接口-${endpoint}`,
-              status: 'PRESENT'
+              status: 'PRESENT',
             });
           } else {
             console.log(`⚠️  API路由 ${endpoint} 文件不存在`);
             this.validationResults.push({
               component: `API接口-${endpoint}`,
-              status: 'MISSING_FILE'
+              status: 'MISSING_FILE',
             });
           }
         } catch (apiError) {
@@ -211,39 +211,36 @@ class FcxExchangeValidation {
           this.validationResults.push({
             component: `API接口-${endpoint}`,
             status: 'WARNING',
-            message: apiError.message
+            message: apiError.message,
           });
         }
       }
-
     } catch (error) {
       console.error('❌ API接口验证失败:', error);
       this.validationResults.push({
         component: 'API接口',
         status: 'FAILED',
-        error: error.message
+        error: error.message,
       });
     }
   }
 
   async validateFrontendComponents() {
     console.log('\n🖥️ 验证前端组件...');
-    
+
     try {
-      const frontendFiles = [
-        'src/app/fcx/exchange/page.tsx'
-      ];
+      const frontendFiles = ['src/app/fcx/exchange/page.tsx'];
 
       for (const componentFile of frontendFiles) {
         try {
           const fs = require('fs');
           if (fs.existsSync(componentFile)) {
             const content = fs.readFileSync(componentFile, 'utf8');
-            
+
             console.log(`✅ 前端组件 ${componentFile} 存在`);
             this.validationResults.push({
               component: `前端组件-${componentFile}`,
-              status: 'PRESENT'
+              status: 'PRESENT',
             });
 
             // 检查关键功能
@@ -254,7 +251,7 @@ class FcxExchangeValidation {
               { pattern: 'fetch', name: 'API调用' },
               { pattern: 'FCX', name: 'FCX相关功能' },
               { pattern: '购物车|cart', name: '购物车功能', flags: 'i' },
-              { pattern: '兑换|exchange', name: '兑换功能', flags: 'i' }
+              { pattern: '兑换|exchange', name: '兑换功能', flags: 'i' },
             ];
 
             console.log('   🔍 功能检查:');
@@ -266,44 +263,52 @@ class FcxExchangeValidation {
                 console.log(`     ❌ 缺少 ${check.name}`);
               }
             });
-
           } else {
             console.log(`❌ 前端组件 ${componentFile} 不存在`);
             this.validationResults.push({
               component: `前端组件-${componentFile}`,
-              status: 'MISSING'
+              status: 'MISSING',
             });
           }
         } catch (compError) {
-          console.log(`⚠️  检查前端组件 ${componentFile} 出错: ${compError.message}`);
+          console.log(
+            `⚠️  检查前端组件 ${componentFile} 出错: ${compError.message}`
+          );
           this.validationResults.push({
             component: `前端组件-${componentFile}`,
             status: 'WARNING',
-            message: compError.message
+            message: compError.message,
           });
         }
       }
-
     } catch (error) {
       console.error('❌ 前端组件验证失败:', error);
       this.validationResults.push({
         component: '前端组件',
         status: 'FAILED',
-        error: error.message
+        error: error.message,
       });
     }
   }
 
   async generateValidationReport() {
     console.log('\n📊 生成验证报告...');
-    
-    const presentItems = this.validationResults.filter(r => r.status === 'PRESENT').length;
-    const missingItems = this.validationResults.filter(r => r.status === 'MISSING' || r.status === 'MISSING_FILE').length;
-    const warningItems = this.validationResults.filter(r => r.status === 'WARNING').length;
-    const failedItems = this.validationResults.filter(r => r.status === 'FAILED').length;
+
+    const presentItems = this.validationResults.filter(
+      r => r.status === 'PRESENT'
+    ).length;
+    const missingItems = this.validationResults.filter(
+      r => r.status === 'MISSING' || r.status === 'MISSING_FILE'
+    ).length;
+    const warningItems = this.validationResults.filter(
+      r => r.status === 'WARNING'
+    ).length;
+    const failedItems = this.validationResults.filter(
+      r => r.status === 'FAILED'
+    ).length;
     const totalItems = this.validationResults.length;
 
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${'='.repeat(60)}`);
     console.log('FCX配件兑换模块验证报告');
     console.log('='.repeat(60));
     console.log(`总验证项: ${totalItems}`);
@@ -351,8 +356,8 @@ class FcxExchangeValidation {
         missingItems,
         warningItems,
         failedItems,
-        completeness: `${((presentItems / totalItems) * 100).toFixed(1)}%`
-      }
+        completeness: `${((presentItems / totalItems) * 100).toFixed(1)}%`,
+      },
     });
   }
 }
@@ -361,7 +366,7 @@ class FcxExchangeValidation {
 async function runValidation() {
   const validator = new FcxExchangeValidation();
   const results = await validator.validateImplementation();
-  
+
   // 输出最终结果
   const failedItems = results.filter(r => r.status === 'FAILED').length;
   process.exit(failedItems > 0 ? 1 : 0);

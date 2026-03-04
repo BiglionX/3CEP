@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -79,18 +79,18 @@ export default function TutorialsManagementPage() {
     return matchesSearch && matchesStatus && matchesDevice;
   });
 
-  // 获取唯一的设备型号
+  // 获取唯一的设备型?
   const uniqueDevices = [...new Set(tutorials.map((t) => t.device_model))];
 
-  // 状态标签样式
+  // 状态标签样?
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "published":
-        return <Badge className="bg-green-100 text-green-800">已发布</Badge>;
+        return <Badge className="bg-green-100 text-green-800">已发?/Badge>;
       case "draft":
         return <Badge className="bg-yellow-100 text-yellow-800">草稿</Badge>;
       case "archived":
-        return <Badge className="bg-gray-100 text-gray-800">已归档</Badge>;
+        return <Badge className="bg-gray-100 text-gray-800">已归?/Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -98,7 +98,7 @@ export default function TutorialsManagementPage() {
 
   // 难度等级显示
   const getDifficultyLevel = (level: number) => {
-    const levels = ["入门", "简单", "中等", "困难", "专家"];
+    const levels = ["入门", "简?, "中等", "困难", "专家"];
     return levels[level - 1] || "未知";
   };
 
@@ -116,7 +116,7 @@ export default function TutorialsManagementPage() {
 
   // 处理删除教程
   const handleDeleteTutorial = async (id: string) => {
-    if (!confirm("确定要删除这个教程吗？此操作不可撤销。")) {
+    if (!confirm("确定要删除这个教程吗？此操作不可撤销?)) {
       return;
     }
 
@@ -137,7 +137,7 @@ export default function TutorialsManagementPage() {
     }
   };
 
-  // 处理状态变更
+  // 处理状态变?
   const handleStatusChange = async (
     id: string,
     newStatus: "draft" | "published" | "archived"
@@ -155,11 +155,11 @@ export default function TutorialsManagementPage() {
         fetchTutorials(); // 重新加载列表
       } else {
         const result = await response.json();
-        alert(`状态更新失败: ${result.error}`);
+        alert(`状态更新失? ${result.error}`);
       }
     } catch (error) {
-      console.error("更新状态错误:", error);
-      alert("状态更新失败");
+      console.error("更新状态错?", error);
+      alert("状态更新失?);
     }
   };
 
@@ -189,7 +189,7 @@ export default function TutorialsManagementPage() {
         </Button>
       </div>
 
-      {/* 搜索和筛选 */}
+      {/* 搜索和筛?*/}
       <Card>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -209,10 +209,10 @@ export default function TutorialsManagementPage() {
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="all">所有状态</option>
-                <option value="published">已发布</option>
+                <option value="all">所有状?/option>
+                <option value="published">已发?/option>
                 <option value="draft">草稿</option>
-                <option value="archived">已归档</option>
+                <option value="archived">已归?/option>
               </select>
             </div>
 
@@ -222,7 +222,7 @@ export default function TutorialsManagementPage() {
                 onChange={(e) => setFilterDevice(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="all">所有设备</option>
+                <option value="all">所有设?/option>
                 {uniqueDevices.map((device) => (
                   <option key={device} value={device}>
                     {device}
@@ -233,7 +233,7 @@ export default function TutorialsManagementPage() {
 
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
-              筛选
+              筛?
             </Button>
           </div>
         </CardContent>
@@ -285,7 +285,7 @@ export default function TutorialsManagementPage() {
                     <th className="text-left py-3 px-4 font-medium">
                       难度/时间
                     </th>
-                    <th className="text-left py-3 px-4 font-medium">状态</th>
+                    <th className="text-left py-3 px-4 font-medium">状?/th>
                     <th className="text-left py-3 px-4 font-medium">统计</th>
                     <th className="text-left py-3 px-4 font-medium">操作</th>
                   </tr>
@@ -437,8 +437,8 @@ function TutorialModal({
       { id: "step1", title: "", description: "", estimated_time: 10 },
     ],
     video_url: tutorial?.video_url || "",
-    tools: tutorial?.tools?.join(", ") || "",
-    parts: tutorial?.parts?.join(", ") || "",
+    tools: tutorial??.join(", ") || "",
+    parts: tutorial??.join(", ") || "",
     cover_image: tutorial?.cover_image || "",
     difficulty_level: tutorial?.difficulty_level || 3,
     estimated_time: tutorial?.estimated_time || 30,
@@ -494,7 +494,7 @@ function TutorialModal({
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">
-              {tutorial ? "编辑教程" : "创建新教程"}
+              {tutorial ? "编辑教程" : "创建新教?}
             </h2>
             <button
               onClick={onClose}
@@ -574,7 +574,7 @@ function TutorialModal({
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value={1}>入门 (1)</option>
-                  <option value={2}>简单 (2)</option>
+                  <option value={2}>简?(2)</option>
                   <option value={3}>中等 (3)</option>
                   <option value={4}>困难 (4)</option>
                   <option value={5}>专家 (5)</option>
@@ -669,3 +669,4 @@ function TutorialModal({
     </div>
   );
 }
+

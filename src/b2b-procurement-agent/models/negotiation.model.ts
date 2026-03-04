@@ -4,50 +4,36 @@
 
 // 议价策略类型枚举
 export enum StrategyType {
-  PRICE_BASED = "price_based", // 价格基础策略
-  QUALITY_BASED = "quality_based", // 质量基础策略
-  RELATIONSHIP_BASED = "relationship_based", // 关系基础策略
-  URGENCY_BASED = "urgency_based", // 紧急程度基础策略
+  PRICE_BASED = 'price_based', // 价格基础策略
+  QUALITY_BASED = 'quality_based', // 质量基础策略
+  RELATIONSHIP_BASED = 'relationship_based', // 关系基础策略
+  URGENCY_BASED = 'urgency_based', // 紧急程度基础策略
 }
 
-// 议价状态枚举
-export enum NegotiationStatus {
-  SUCCESS = "success", // 成功
-  FAILED = "failed", // 失败
-  ONGOING = "ongoing", // 进行中
-  CANCELLED = "cancelled", // 已取消
-}
+// 议价状态枚?export enum NegotiationStatus {
+  SUCCESS = 'success', // 成功
+  FAILED = 'failed', // 失败
+  ONGOING = 'ongoing', // 进行?  CANCELLED = 'cancelled', // 已取?}
 
-// 议价会话状态枚举
-export enum SessionStatus {
-  PENDING = "pending", // 待处理
-  NEGOTIATING = "negotiating", // 谈判中
-  SUCCESS = "success", // 成功
-  FAILED = "failed", // 失败
-  CANCELLED = "cancelled", // 已取消
-}
+// 议价会话状态枚?export enum SessionStatus {
+  PENDING = 'pending', // 待处?  NEGOTIATING = 'negotiating', // 谈判?  SUCCESS = 'success', // 成功
+  FAILED = 'failed', // 失败
+  CANCELLED = 'cancelled', // 已取?}
 
 // 策略触发条件接口
 export interface StrategyConditions {
   minDiscountRate?: number; // 最小折扣率 (%)
-  maxPriceDeviation?: number; // 最大价格偏差 (%)
-  supplierRatingThreshold?: number; // 供应商评分阈值
-  transactionCountThreshold?: number; // 交易次数阈值
-  urgencyLevel?: string; // 紧急程度
-  maxRounds?: number; // 最大议价轮次
-  successfulNegotiationsRatio?: number; // 成功议价比例阈值
-  priceCompetitivenessThreshold?: number; // 价格竞争力阈值
-}
+  maxPriceDeviation?: number; // 最大价格偏?(%)
+  supplierRatingThreshold?: number; // 供应商评分阈?  transactionCountThreshold?: number; // 交易次数阈?  urgencyLevel?: string; // 紧急程?  maxRounds?: number; // 最大议价轮?  successfulNegotiationsRatio?: number; // 成功议价比例阈?  priceCompetitivenessThreshold?: number; // 价格竞争力阈?}
 
 // 策略执行动作接口
 export interface StrategyActions {
   priceAdjustment?: number; // 价格调整幅度 (%)
-  deliveryTimeFlexibility?: number; // 交期灵活性 (天)
+  deliveryTimeFlexibility?: number; // 交期灵活?(�?
   paymentTerms?: string; // 付款条件
   additionalServices?: string[]; // 附加服务
   qualityGuarantee?: string; // 质量保证
-  fastDelivery?: boolean; // 快速交货
-  longTermContract?: boolean; // 长期合同
+  fastDelivery?: boolean; // 快速交?  longTermContract?: boolean; // 长期合同
   extendedWarranty?: boolean; // 延长保修
 }
 
@@ -121,8 +107,7 @@ export interface NegotiationHistory {
   updatedAt: Date;
 }
 
-// 供应商评分模型
-export interface SupplierRating {
+// 供应商评分模?export interface SupplierRating {
   id: string;
   supplierId: string;
   transactionCount: number;
@@ -137,8 +122,7 @@ export interface SupplierRating {
   lastUpdated: Date;
 }
 
-// 供应商综合信息（包含评分）
-export interface SupplierWithRating {
+// 供应商综合信息（包含评分?export interface SupplierWithRating {
   id: string;
   name: string;
   contactPerson: string;
@@ -178,8 +162,7 @@ export interface NegotiationResult {
   message: string;
 }
 
-// 供应商推荐结果
-export interface SupplierRecommendation {
+// 供应商推荐结?export interface SupplierRecommendation {
   supplierId: string;
   supplierName: string;
   score: number; // 推荐得分 0-100
@@ -212,9 +195,9 @@ export interface NegotiationStats {
 export interface StrategyEvaluation {
   strategyId: string;
   strategyName: string;
-  matchScore: number; // 匹配度得分 0-100
+  matchScore: number; // 匹配度得?0-100
   recommendedActions: StrategyActions;
-  confidence: number; // 置信度 0-100
+  confidence: number; // 置信?0-100
   reasoning: string; // 推荐理由
 }
 
@@ -224,7 +207,7 @@ export interface NegotiationAdvice {
   confidence: number;
   strategyToUse: string;
   alternativeStrategies: string[];
-  riskLevel: "low" | "medium" | "high";
+  riskLevel: 'low' | 'medium' | 'high';
   expectedDiscount: number;
   timeEstimate: number; // 预估所需时间(分钟)
 }

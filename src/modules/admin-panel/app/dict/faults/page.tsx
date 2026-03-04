@@ -10,7 +10,7 @@ interface Fault {
   id: string
   name: string
   category: string
-  difficulty: '简单' | '中等' | '困难'
+  difficulty: '简? | '中等' | '困难'
   description: string
   created_at: string
   updated_at: string
@@ -23,11 +23,11 @@ export default function FaultsDictPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingFault, setEditingFault] = useState<Fault | null>(null)
   
-  // 表单状态
+  // 表单状?
   const [formData, setFormData] = useState({
     name: '',
     category: '',
-    difficulty: '中等' as '简单' | '中等' | '困难',
+    difficulty: '中等' as '简? | '中等' | '困难',
     description: ''
   })
 
@@ -44,32 +44,32 @@ export default function FaultsDictPage() {
           id: '1',
           name: '屏幕碎裂',
           category: '硬件故障',
-          difficulty: '简单',
-          description: '屏幕出现裂纹或显示异常',
+          difficulty: '简?,
+          description: '屏幕出现裂纹或显示异?,
           created_at: '2024-01-01T00:00:00Z',
           updated_at: '2024-01-01T00:00:00Z'
         },
         {
           id: '2',
-          name: '电池续航短',
+          name: '电池续航?,
           category: '硬件故障',
           difficulty: '中等',
-          description: '电池容量下降，使用时间明显缩短',
+          description: '电池容量下降，使用时间明显缩?,
           created_at: '2024-01-01T00:00:00Z',
           updated_at: '2024-01-01T00:00:00Z'
         },
         {
           id: '3',
-          name: '无法开机',
+          name: '无法开?,
           category: '系统故障',
           difficulty: '困难',
-          description: '设备完全无法启动或频繁重启',
+          description: '设备完全无法启动或频繁重?,
           created_at: '2024-01-01T00:00:00Z',
           updated_at: '2024-01-01T00:00:00Z'
         },
         {
           id: '4',
-          name: '摄像头故障',
+          name: '摄像头故?,
           category: '硬件故障',
           difficulty: '中等',
           description: '摄像头无法正常工作或画质异常',
@@ -78,9 +78,9 @@ export default function FaultsDictPage() {
         },
         {
           id: '5',
-          name: 'WiFi连接不稳定',
+          name: 'WiFi连接不稳?,
           category: '网络故障',
-          difficulty: '简单',
+          difficulty: '简?,
           description: 'WiFi信号弱或经常断开连接',
           created_at: '2024-01-01T00:00:00Z',
           updated_at: '2024-01-01T00:00:00Z'
@@ -133,7 +133,7 @@ export default function FaultsDictPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('确定要删除这个故障类型吗？')) return
+    if (!confirm('确定要删除这个故障类型吗?)) return
     
     try {
       // 模拟删除故障
@@ -171,7 +171,7 @@ export default function FaultsDictPage() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case '简单': return 'bg-green-100 text-green-800'
+      case '简?: return 'bg-green-100 text-green-800'
       case '中等': return 'bg-yellow-100 text-yellow-800'
       case '困难': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
@@ -207,18 +207,18 @@ export default function FaultsDictPage() {
 
     const reader = new FileReader()
     reader.onload = (e) => {
-      const text = e.target?.result as string
+      const text = e?.result as string
       const lines = text.split('\n')
       const headers = lines[0].split(',')
       
-      // 跳过标题行，处理数据行
+      // 跳过标题行，处理数据?
       const importedFaults: Fault[] = lines.slice(1).map((line, index) => {
         const values = line.split(',')
         return {
           id: `imported_${Date.now()}_${index}`,
           name: values[0]?.trim() || '',
           category: values[1]?.trim() || '',
-          difficulty: (values[2]?.trim() || '中等') as '简单' | '中等' | '困难',
+          difficulty: (values[2]?.trim() || '中等') as '简? | '中等' | '困难',
           description: values[3]?.trim() || '',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -292,7 +292,7 @@ export default function FaultsDictPage() {
                   <Input
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    placeholder="请输入故障名称"
+                    placeholder="请输入故障名?
                   />
                 </div>
                 <div>
@@ -320,7 +320,7 @@ export default function FaultsDictPage() {
                     value={formData.difficulty}
                     onChange={(e) => setFormData({...formData, difficulty: e.target.value as any})}
                   >
-                    <option value="简单">简单</option>
+                    <option value="简?>简?/option>
                     <option value="中等">中等</option>
                     <option value="困难">困难</option>
                   </select>
@@ -332,7 +332,7 @@ export default function FaultsDictPage() {
                     rows={3}
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    placeholder="请输入故障详细描述"
+                    placeholder="请输入故障详细描?
                   />
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
@@ -347,7 +347,7 @@ export default function FaultsDictPage() {
         </div>
       </div>
 
-      {/* 搜索框 */}
+      {/* 搜索?*/}
       <div className="bg-white shadow rounded-lg p-4">
         <Input
           placeholder="搜索故障名称、类别或描述..."
@@ -374,7 +374,7 @@ export default function FaultsDictPage() {
             {filteredFaults.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                  {searchTerm ? '没有找到匹配的故障' : '暂无故障数据'}
+                  {searchTerm ? '没有找到匹配的故? : '暂无故障数据'}
                 </TableCell>
               </TableRow>
             ) : (
@@ -425,9 +425,9 @@ export default function FaultsDictPage() {
             <p className="text-2xl font-bold text-gray-900">{faults.length}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">简单难度</p>
+            <p className="text-sm text-gray-600">简单难?/p>
             <p className="text-2xl font-bold text-green-600">
-              {faults.filter(f => f.difficulty === '简单').length}
+              {faults.filter(f => f.difficulty === '简?).length}
             </p>
           </div>
           <div>
@@ -445,7 +445,7 @@ export default function FaultsDictPage() {
         </div>
         <div className="mt-4 pt-4 border-t">
           <p className="text-sm text-gray-600">
-            当前搜索结果: <span className="font-medium text-gray-900">{filteredFaults.length}</span> 个故障
+            当前搜索结果: <span className="font-medium text-gray-900">{filteredFaults.length}</span> 个故?
           </p>
         </div>
       </div>

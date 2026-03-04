@@ -13,18 +13,21 @@ if (!fs.existsSync(storageDir)) {
 // 创建空的存储状态文件
 const storageFiles = [
   'admin-storage.json',
-  'consumer-storage.json', 
+  'consumer-storage.json',
   'engineer-storage.json',
-  'shopowner-storage.json'
+  'shopowner-storage.json',
 ];
 
 storageFiles.forEach(file => {
   const filePath = path.join(storageDir, file);
   if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, JSON.stringify({
-      cookies: [],
-      origins: []
-    }));
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify({
+        cookies: [],
+        origins: [],
+      })
+    );
     console.log(`📄 创建存储文件: ${file}`);
   }
 });
@@ -33,7 +36,7 @@ storageFiles.forEach(file => {
 const resultDirs = [
   'test-results/screenshots',
   'test-results/videos',
-  'test-results/traces'
+  'test-results/traces',
 ];
 
 resultDirs.forEach(dir => {

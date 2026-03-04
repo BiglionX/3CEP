@@ -1,18 +1,15 @@
-// 增强版实时数据处理服务
-// 支持批量处理、事务、优先级队列和更完善的监控
-
+// 增强版实时数据处理服?// 支持批量处理、事务、优先级队列和更完善的监?
 import { EventEmitter } from 'events';
 import { monitoringService } from '../monitoring/monitoring-service';
-import { 
-  MessageQueueManager, 
-  MessageHandler, 
-  QueueMessage, 
+import {
+  MessageQueueManager,
+  MessageHandler,
+  QueueMessage,
   MessageQueueType,
-  DEFAULT_QUEUE_CONFIGS 
+  DEFAULT_QUEUE_CONFIGS,
 } from './message-queue-manager';
 
-// 增强的事件类型
-export type EnhancedEventType = 
+// 增强的事件类?export type EnhancedEventType =
   | 'price_update'
   | 'inventory_change'
   | 'user_action'
@@ -27,12 +24,11 @@ export type EnhancedEventType =
   | 'transaction_commit'
   | 'bulk_data_import';
 
-// 优先级枚举
-export enum EventPriority {
+// 优先级枚?export enum EventPriority {
   LOW = 0,
   NORMAL = 1,
   HIGH = 2,
-  CRITICAL = 3
+  CRITICAL = 3,
 }
 
 // 批量处理配置
@@ -58,8 +54,7 @@ export interface EnhancedEventProcessor {
   processBatch?(events: EnhancedEvent[]): Promise<void>;
 }
 
-// 增强的事件接口
-export interface EnhancedEvent {
+// 增强的事件接?export interface EnhancedEvent {
   id: string;
   type: EnhancedEventType;
   payload: any;
@@ -81,33 +76,36 @@ export interface ProcessingStats {
   batchProcessingCount: number;
   transactionSuccessCount: number;
   lastProcessedAt: string;
-  priorityStats: Record<EventPriority, {
-    count: number;
-    averageTime: number;
-  }>;
+  priorityStats: Record<
+    EventPriority,
+    {
+      count: number;
+      averageTime: number;
+    }
+  >;
 }
 
-// 增强的实时数据服务
-export class EnhancedRealTimeService extends EventEmitter {
+// 增强的实时数据服?export class EnhancedRealTimeService extends EventEmitter {
   private messageQueue: MessageQueueManager;
-  private processors: Map<EnhancedEventType, EnhancedEventProcessor[]> = new Map();
+  private processors: Map<EnhancedEventType, EnhancedEventProcessor[]> =
+    new Map();
   private isRunning: boolean = false;
   private processingStats: Map<EnhancedEventType, ProcessingStats> = new Map();
   private batchBuffers: Map<EnhancedEventType, EnhancedEvent[]> = new Map();
   private batchTimers: Map<EnhancedEventType, NodeJS.Timeout> = new Map();
   private performanceTimer: NodeJS.Timeout | null = null;
-  
+
   // 配置选项
   private batchConfig: BatchConfig = {
     maxSize: 50,
     maxWaitTime: 1000,
-    flushOnClose: true
+    flushOnClose: true,
   };
-  
+
   private transactionConfig: TransactionConfig = {
     timeout: 30000,
     retryAttempts: 3,
-    isolationLevel: 'read_committed'
+    isolationLevel: 'read_committed',
   };
 
   constructor(
@@ -120,15 +118,23 @@ export class EnhancedRealTimeService extends EventEmitter {
     this.startPerformanceMonitoring();
   }
 
-  // 初始化统计数据
-  private initializeStats(): void {
+  // 初始化统计数?  private initializeStats(): void {
     const eventTypes: EnhancedEventType[] = [
-      'price_update', 'inventory_change', 'user_action', 'system_alert',
-      'data_quality_issue', 'order_status_change', 'supplier_notification',
-      'maintenance_alert', 'performance_metric', 'security_event',
-      'batch_operation', 'transaction_commit', 'bulk_data_import'
+      'price_update',
+      'inventory_change',
+      'user_action',
+      'system_alert',
+      'data_quality_issue',
+      'order_status_change',
+      'supplier_notification',
+      'maintenance_alert',
+      'performance_metric',
+      'security_event',
+      'batch_operation',
+      'transaction_commit',
+      'bulk_data_import',
     ];
-    
+
     eventTypes.forEach(type => {
       this.processingStats.set(type, {
         totalProcessed: 0,
@@ -142,8 +148,8 @@ export class EnhancedRealTimeService extends EventEmitter {
           [EventPriority.LOW]: { count: 0, averageTime: 0 },
           [EventPriority.NORMAL]: { count: 0, averageTime: 0 },
           [EventPriority.HIGH]: { count: 0, averageTime: 0 },
-          [EventPriority.CRITICAL]: { count: 0, averageTime: 0 }
-        }
+          [EventPriority.CRITICAL]: { count: 0, averageTime: 0 },
+        },
       });
     });
   }
@@ -152,102 +158,114 @@ export class EnhancedRealTimeService extends EventEmitter {
   private startPerformanceMonitoring(): void {
     this.performanceTimer = setInterval(() => {
       this.reportPerformanceMetrics();
-    }, 30000); // 每30秒报告一次
-  }
+    }, 30000); // �?0秒报告一?  }
 
   // 报告性能指标
   private reportPerformanceMetrics(): void {
     let totalEvents = 0;
     let totalErrors = 0;
     let totalBatchOperations = 0;
-    
+
     for (const [eventType, stats] of this.processingStats.entries()) {
       totalEvents += stats.totalProcessed;
       totalErrors += stats.errorCount;
       totalBatchOperations += stats.batchProcessingCount;
-      
+
       // 记录详细指标
       monitoringService.recordMetric(
-        `enhanced_realtime_events_${eventType}`, 
+        `enhanced_realtime_events_${eventType}`,
         stats.totalProcessed
       );
-      
+
       monitoringService.recordMetric(
-        `enhanced_realtime_errors_${eventType}`, 
+        `enhanced_realtime_errors_${eventType}`,
         stats.errorCount
       );
-      
+
       monitoringService.recordMetric(
-        `enhanced_realtime_batch_ops_${eventType}`, 
+        `enhanced_realtime_batch_ops_${eventType}`,
         stats.batchProcessingCount
       );
-      
-      // 记录优先级分布
-      Object.entries(stats.priorityStats).forEach(([priority, priorityStats]) => {
-        monitoringService.recordMetric(
-          `enhanced_realtime_priority_${priority}_${eventType}`,
-          priorityStats.count
-        );
-      });
+
+      // 记录优先级分?      Object.entries(stats.priorityStats).forEach(
+        ([priority, priorityStats]) => {
+          monitoringService.recordMetric(
+            `enhanced_realtime_priority_${priority}_${eventType}`,
+            priorityStats.count
+          );
+        }
+      );
     }
-    
+
     const errorRate = totalEvents > 0 ? (totalErrors / totalEvents) * 100 : 0;
-    monitoringService.recordMetric('enhanced_realtime_total_events', totalEvents);
+    monitoringService.recordMetric(
+      'enhanced_realtime_total_events',
+      totalEvents
+    );
     monitoringService.recordMetric('enhanced_realtime_error_rate', errorRate);
-    monitoringService.recordMetric('enhanced_realtime_batch_operations', totalBatchOperations);
-    
-    console.log(`📊 增强实时处理统计: 总事件=${totalEvents}, 错误率=${errorRate.toFixed(2)}%, 批处理=${totalBatchOperations}`);
+    monitoringService.recordMetric(
+      'enhanced_realtime_batch_operations',
+      totalBatchOperations
+    );
+
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `📊 增强实时处理统计: 总事?${totalEvents}, 错误?${errorRate.toFixed(2)}%, 批处?${totalBatchOperations}`
+    );
   }
 
   // 连接消息队列
   async connect(): Promise<void> {
     await this.messageQueue.connect(this.queueType);
-    console.log(`✅ 增强实时服务已连接到 ${this.queueType}`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?增强实时服务已连接到 ${this.queueType}`)}
 
   // 断开连接
   async disconnect(): Promise<void> {
-    // 刷新所有批处理缓冲区
-    if (this.batchConfig.flushOnClose) {
+    // 刷新所有批处理缓冲?    if (this.batchConfig.flushOnClose) {
       await this.flushAllBatches();
     }
-    
-    // 清理定时器
-    this.cleanupTimers();
-    
+
+    // 清理定时?    this.cleanupTimers();
+
     await this.messageQueue.disconnect();
     this.isRunning = false;
-    
+
     if (this.performanceTimer) {
       clearInterval(this.performanceTimer);
       this.performanceTimer = null;
     }
-    
-    console.log('🛑 增强实时服务已停止');
-  }
 
-  // 注册处理器
-  registerProcessor(processor: EnhancedEventProcessor): void {
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🛑 增强实时服务已停?)}
+
+  // 注册处理?  registerProcessor(processor: EnhancedEventProcessor): void {
     const eventType = processor.getType();
     if (!this.processors.has(eventType)) {
       this.processors.set(eventType, []);
     }
     this.processors.get(eventType)?.push(processor);
-    console.log(`✅ 注册增强处理器: ${eventType} (优先级: ${processor.getPriority()})`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `�?注册增强处理? ${eventType} (优先? ${processor.getPriority()})`
+    );
   }
 
   // 发布事件
-  async publishEvent(event: Partial<EnhancedEvent> & { type: EnhancedEventType; payload: any; source: string }): Promise<string> {
+  async publishEvent(
+    event: Partial<EnhancedEvent> & {
+      type: EnhancedEventType;
+      payload: any;
+      source: string;
+    }
+  ): Promise<string> {
     const enhancedEvent: EnhancedEvent = {
       ...event,
-      id: event.id || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id:
+        event.id ||
+        `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: event.timestamp || new Date().toISOString(),
       priority: event.priority ?? EventPriority.NORMAL,
-      retryCount: event.retryCount || 0
+      retryCount: event.retryCount || 0,
     };
 
-    // 根据优先级决定处理方式
-    if (enhancedEvent.priority >= EventPriority.HIGH) {
+    // 根据优先级决定处理方?    if (enhancedEvent.priority >= EventPriority.HIGH) {
       // 高优先级事件立即处理
       await this.processEventImmediately(enhancedEvent);
     } else {
@@ -261,63 +279,60 @@ export class EnhancedRealTimeService extends EventEmitter {
   // 立即处理高优先级事件
   private async processEventImmediately(event: EnhancedEvent): Promise<void> {
     const startTime = Date.now();
-    
+
     try {
       const processors = this.processors.get(event.type) || [];
-      const processingPromises = processors.map(processor => 
+      const processingPromises = processors.map(processor =>
         this.executeProcessorWithRetry(processor, event)
       );
-      
+
       await Promise.all(processingPromises);
-      
+
       const processingTime = Date.now() - startTime;
       this.updateStats(event.type, true, processingTime, event.priority);
-      
-      console.log(`⚡ 高优先级事件立即处理完成: ${event.type} (${event.id}) 耗时: ${processingTime}ms`);
+
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `�?高优先级事件立即处理完成: ${event.type} (${event.id})耗时: ${processingTime}ms`
+      );
       this.emit('high_priority_event_processed', { event, processingTime });
-      
     } catch (error) {
       const processingTime = Date.now() - startTime;
       this.updateStats(event.type, false, processingTime, event.priority);
-      
-      console.error(`❌ 高优先级事件处理失败 ${event.id}:`, error);
+
+      console.error(`�?高优先级事件处理失败 ${event.id}:`, error);
       this.emit('high_priority_event_failed', { event, error });
     }
   }
 
-  // 入队普通事件
-  private async enqueueEvent(event: EnhancedEvent): Promise<void> {
+  // 入队普通事?  private async enqueueEvent(event: EnhancedEvent): Promise<void> {
     const message: QueueMessage = {
       id: event.id,
       topic: event.type,
       payload: event,
       timestamp: event.timestamp,
       priority: event.priority,
-      metadata: event.metadata
+      metadata: event.metadata,
     };
 
     await this.messageQueue.publish(event.type, message);
-    console.log(`📤 事件已入队: ${event.type} (${event.id}) 优先级: ${event.priority}`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `📤 事件已入? ${event.type} (${event.id})优先? ${event.priority}`
+    );
     this.emit('event_enqueued', { event });
   }
 
-  // 启动消费者
-  async startConsumers(): Promise<void> {
+  // 启动消费?  async startConsumers(): Promise<void> {
     if (this.isRunning) {
-      console.log('⚠️ 消费者已在运行');
-      return;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('⚠️ 消费者已在运?)return;
     }
 
     this.isRunning = true;
-    console.log('🚀 启动增强实时数据消费者...');
-
-    // 为每个事件类型订阅消息
-    for (const eventType of this.processors.keys()) {
-      const handler: MessageHandler = async (message) => {
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🚀 启动增强实时数据消费?..')// 为每个事件类型订阅消?    for (const eventType of this.processors.keys()) {
+      const handler: MessageHandler = async message => {
         const event: EnhancedEvent = message.payload;
         await this.processQueuedEvent(event);
       };
-      
+
       await this.messageQueue.subscribe(eventType, handler);
     }
   }
@@ -326,7 +341,7 @@ export class EnhancedRealTimeService extends EventEmitter {
   private async processQueuedEvent(event: EnhancedEvent): Promise<void> {
     const startTime = Date.now();
     const processors = this.processors.get(event.type) || [];
-    
+
     if (processors.length === 0) {
       console.warn(`⚠️ 无处理器注册: ${event.type}`);
       return;
@@ -334,33 +349,37 @@ export class EnhancedRealTimeService extends EventEmitter {
 
     try {
       // 检查是否支持批处理
-      const batchSupportingProcessors = processors.filter(p => p.supportsBatch?.());
-      
-      if (batchSupportingProcessors.length > 0 && this.shouldBatch(event.type)) {
-        // 批处理模式
-        await this.addToBatch(event, batchSupportingProcessors);
+      const batchSupportingProcessors = processors.filter(p =>
+        p.supportsBatch?.()
+      );
+
+      if (
+        batchSupportingProcessors.length > 0 &&
+        this.shouldBatch(event.type)
+      ) {
+        // 批处理模?        await this.addToBatch(event, batchSupportingProcessors);
       } else {
-        // 单事件处理模式
-        const processingPromises = processors.map(processor => 
+        // 单事件处理模?        const processingPromises = processors.map(processor =>
           this.executeProcessorWithRetry(processor, event)
         );
-        
+
         await Promise.all(processingPromises);
       }
-      
+
       const processingTime = Date.now() - startTime;
       this.updateStats(event.type, true, processingTime, event.priority);
-      
-      console.log(`✅ 队列事件处理完成: ${event.type} (${event.id}) 耗时: ${processingTime}ms`);
+
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `�?队列事件处理完成: ${event.type} (${event.id})耗时: ${processingTime}ms`
+      );
       this.emit('queued_event_processed', { event, processingTime });
-      
     } catch (error) {
       const processingTime = Date.now() - startTime;
       this.updateStats(event.type, false, processingTime, event.priority);
-      
-      console.error(`❌ 队列事件处理失败 ${event.id}:`, error);
+
+      console.error(`�?队列事件处理失败 ${event.id}:`, error);
       this.emit('queued_event_failed', { event, error });
-      
+
       // 实现重试逻辑
       if ((event.retryCount || 0) < 3) {
         await this.scheduleRetry(event);
@@ -370,11 +389,16 @@ export class EnhancedRealTimeService extends EventEmitter {
 
   // 批处理逻辑
   private shouldBatch(eventType: EnhancedEventType): boolean {
-    return this.batchBuffers.has(eventType) || 
-           (this.processors.get(eventType)?.some(p => p.supportsBatch?.()) ?? false);
+    return (
+      this.batchBuffers.has(eventType) ||
+      (this.processors.get(eventType)?.some(p => p.supportsBatch?.()) ?? false)
+    );
   }
 
-  private async addToBatch(event: EnhancedEvent, processors: EnhancedEventProcessor[]): Promise<void> {
+  private async addToBatch(
+    event: EnhancedEvent,
+    processors: EnhancedEventProcessor[]
+  ): Promise<void> {
     if (!this.batchBuffers.has(event.type)) {
       this.batchBuffers.set(event.type, []);
       this.startBatchTimer(event.type);
@@ -391,7 +415,8 @@ export class EnhancedRealTimeService extends EventEmitter {
 
   private startBatchTimer(eventType: EnhancedEventType): void {
     const timer = setTimeout(async () => {
-      const processors = this.processors.get(eventType)?.filter(p => p.supportsBatch?.()) || [];
+      const processors =
+        this.processors.get(eventType)?.filter(p => p.supportsBatch?.()) || [];
       if (processors.length > 0) {
         await this.flushBatch(eventType, processors);
       }
@@ -400,37 +425,34 @@ export class EnhancedRealTimeService extends EventEmitter {
     this.batchTimers.set(eventType, timer);
   }
 
-  private async flushBatch(eventType: EnhancedEventType, processors: EnhancedEventProcessor[]): Promise<void> {
+  private async flushBatch(
+    eventType: EnhancedEventType,
+    processors: EnhancedEventProcessor[]
+  ): Promise<void> {
     const buffer = this.batchBuffers.get(eventType);
     if (!buffer || buffer.length === 0) return;
 
-    // 清除定时器
-    const timer = this.batchTimers.get(eventType);
+    // 清除定时?    const timer = this.batchTimers.get(eventType);
     if (timer) {
       clearTimeout(timer);
       this.batchTimers.delete(eventType);
     }
 
     try {
-      // 执行批处理
-      const batchPromises = processors
+      // 执行批处?      const batchPromises = processors
         .filter(p => p.processBatch)
         .map(processor => processor.processBatch!(buffer));
-      
+
       await Promise.all(batchPromises);
-      
-      // 更新批处理统计
-      const stats = this.processingStats.get(eventType);
+
+      // 更新批处理统?      const stats = this.processingStats.get(eventType);
       if (stats) {
         stats.batchProcessingCount++;
       }
-      
-      console.log(`📦 批处理完成: ${eventType} (${buffer.length}个事件)`);
-      this.emit('batch_processed', { eventType, count: buffer.length });
-      
+
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📦 批处理完? ${eventType} (${buffer.length}个事?`)this.emit('batch_processed', { eventType, count: buffer.length });
     } finally {
-      // 清空缓冲区
-      this.batchBuffers.set(eventType, []);
+      // 清空缓冲?      this.batchBuffers.set(eventType, []);
     }
   }
 
@@ -438,7 +460,9 @@ export class EnhancedRealTimeService extends EventEmitter {
   private async flushAllBatches(): Promise<void> {
     for (const [eventType, buffer] of this.batchBuffers.entries()) {
       if (buffer.length > 0) {
-        const processors = this.processors.get(eventType)?.filter(p => p.supportsBatch?.()) || [];
+        const processors =
+          this.processors.get(eventType)?.filter(p => p.supportsBatch?.()) ||
+          [];
         if (processors.length > 0) {
           await this.flushBatch(eventType, processors);
         }
@@ -446,14 +470,13 @@ export class EnhancedRealTimeService extends EventEmitter {
     }
   }
 
-  // 带重试的处理器执行
-  private async executeProcessorWithRetry(
-    processor: EnhancedEventProcessor, 
+  // 带重试的处理器执?  private async executeProcessorWithRetry(
+    processor: EnhancedEventProcessor,
     event: EnhancedEvent
   ): Promise<void> {
     let attempts = 0;
     const maxAttempts = this.transactionConfig.retryAttempts;
-    
+
     while (attempts < maxAttempts) {
       try {
         await processor.process(event);
@@ -463,9 +486,8 @@ export class EnhancedRealTimeService extends EventEmitter {
         if (attempts >= maxAttempts) {
           throw error;
         }
-        
-        // 指数退避延迟
-        const delay = Math.pow(2, attempts) * 100;
+
+        // 指数退避延?        const delay = Math.pow(2, attempts) * 100;
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
@@ -476,50 +498,55 @@ export class EnhancedRealTimeService extends EventEmitter {
     const retryEvent = {
       ...event,
       retryCount: (event.retryCount || 0) + 1,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    
+
     // 延迟重试（指数退避）
     const delay = Math.pow(2, retryEvent.retryCount) * 1000;
     setTimeout(() => {
       this.publishEvent(retryEvent).catch(error => {
-        console.error(`❌ 重试调度失败:`, error);
+        console.error(`�?重试调度失败:`, error);
       });
     }, delay);
-    
-    console.log(`🔄 调度重试: ${event.type} (${event.id}) 第${retryEvent.retryCount}次`);
+
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `🔄 调度重试: ${event.type} (${event.id})�?{retryEvent.retryCount}次`
+    );
   }
 
   // 更新统计信息
   private updateStats(
-    eventType: EnhancedEventType, 
-    success: boolean, 
+    eventType: EnhancedEventType,
+    success: boolean,
     processingTime: number,
     priority: EventPriority
   ): void {
     const stats = this.processingStats.get(eventType);
     if (!stats) return;
-    
+
     stats.totalProcessed++;
     stats.lastProcessedAt = new Date().toISOString();
-    
-    // 更新优先级统计
-    const priorityStat = stats.priorityStats[priority];
+
+    // 更新优先级统?    const priorityStat = stats.priorityStats[priority];
     priorityStat.count++;
-    const newAvg = ((priorityStat.averageTime * (priorityStat.count - 1)) + processingTime) / priorityStat.count;
+    const newAvg =
+      (priorityStat.averageTime * (priorityStat.count - 1) + processingTime) /
+      priorityStat.count;
     priorityStat.averageTime = Math.round(newAvg);
-    
+
     if (success) {
       stats.successCount++;
-      const newAvg = ((stats.averageProcessingTime * (stats.successCount - 1)) + processingTime) / stats.successCount;
+      const newAvg =
+        (stats.averageProcessingTime * (stats.successCount - 1) +
+          processingTime) /
+        stats.successCount;
       stats.averageProcessingTime = Math.round(newAvg);
     } else {
       stats.errorCount++;
     }
   }
 
-  // 清理定时器
-  private cleanupTimers(): void {
+  // 清理定时?  private cleanupTimers(): void {
     for (const timer of this.batchTimers.values()) {
       clearTimeout(timer);
     }
@@ -543,55 +570,48 @@ export class EnhancedRealTimeService extends EventEmitter {
         stats.transactionSuccessCount = 0;
         stats.averageProcessingTime = 0;
         stats.lastProcessedAt = new Date().toISOString();
-        
-        // 重置优先级统计
-        Object.keys(stats.priorityStats).forEach(priority => {
+
+        // 重置优先级统?        Object.keys(stats.priorityStats).forEach(priority => {
           stats.priorityStats[priority as unknown as EventPriority] = {
             count: 0,
-            averageTime: 0
+            averageTime: 0,
           };
         });
       }
     } else {
       this.initializeStats();
     }
-    console.log(`📊 统计信息已${eventType ? eventType + ' ' : ''}重置`);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📊 统计信息?{eventType ? eventType + ' ' : ''}重置`)}
 
-  // 配置批处理
-  configureBatch(config: Partial<BatchConfig>): void {
+  // 配置批处?  configureBatch(config: Partial<BatchConfig>): void {
     this.batchConfig = { ...this.batchConfig, ...config };
-    console.log(`⚙️ 批处理配置已更新:`, this.batchConfig);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`⚙️ 批处理配置已更新:`, this.batchConfig)}
 
   // 配置事务
   configureTransaction(config: Partial<TransactionConfig>): void {
     this.transactionConfig = { ...this.transactionConfig, ...config };
-    console.log(`⚙️ 事务配置已更新:`, this.transactionConfig);
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`⚙️ 事务配置已更?`, this.transactionConfig)}
 
-  // 获取队列状态
-  async getQueueStats(topic: string): Promise<any> {
+  // 获取队列状?  async getQueueStats(topic: string): Promise<any> {
     return await this.messageQueue.getQueueStats(topic);
   }
 
   // 切换消息队列类型
   async switchQueueType(newType: MessageQueueType): Promise<void> {
     const wasRunning = this.isRunning;
-    
+
     if (wasRunning) {
       await this.disconnect();
     }
-    
+
     this.queueType = newType;
     await this.connect();
-    
+
     if (wasRunning) {
       await this.startConsumers();
     }
-    
-    console.log(`🔄 消息队列类型已切换到: ${newType}`);
-  }
+
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🔄 消息队列类型已切换到: ${newType}`)}
 }
 
 // 导出默认实例

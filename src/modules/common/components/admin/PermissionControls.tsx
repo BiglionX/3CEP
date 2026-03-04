@@ -1,6 +1,5 @@
 /**
- * 动态权限控制组件
- * 根据用户权限动态显示或隐藏界面元素
+ * 动态权限控制组? * 根据用户权限动态显示或隐藏界面元素
  */
 
 'use client';
@@ -12,11 +11,11 @@ interface PermissionControlProps {
   permission?: Permission | Permission[];
   /** 需要的角色 */
   role?: UserRole | UserRole[];
-  /** 是否需要满足所有权限/角色 */
+  /** 是否需要满足所有权?角色 */
   requireAll?: boolean;
   /** 权限不足时显示的内容 */
   fallback?: React.ReactNode;
-  /** 子元素 */
+  /** 子元?*/
   children: React.ReactNode;
   /** 元素类型 */
   as?: keyof JSX.IntrinsicElements | React.ComponentType<any>;
@@ -26,8 +25,7 @@ interface PermissionControlProps {
 
 /**
  * 权限控制容器组件
- * 根据权限决定是否渲染子元素
- */
+ * 根据权限决定是否渲染子元? */
 export function PermissionControl({
   permission,
   role,
@@ -45,8 +43,7 @@ export function PermissionControl({
     hasAnyRole,
   } = usePermission();
 
-  // 权限检查
-  let hasAccess = true;
+  // 权限检?  let hasAccess = true;
 
   if (permission) {
     const permissions = Array.isArray(permission) ? permission : [permission];
@@ -55,8 +52,7 @@ export function PermissionControl({
       : hasAnyPermission(permissions);
   }
 
-  // 角色检查
-  if (role && hasAccess) {
+  // 角色检?  if (role && hasAccess) {
     const roles = Array.isArray(role) ? role : [role];
     hasAccess = requireAll ? roles.every(r => hasRole(r)) : hasAnyRole(roles);
   }
@@ -68,21 +64,20 @@ export function PermissionControl({
   return <Component {...props}>{children}</Component>;
 }
 
-interface PermissionButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface PermissionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** 需要的权限标识 */
   permission?: Permission | Permission[];
   /** 需要的角色 */
   requiredRole?: UserRole | UserRole[];
   /** 权限不足时的提示信息 */
   tooltip?: string;
-  /** 权限不足时是否禁用而不是隐藏 */
+  /** 权限不足时是否禁用而不是隐?*/
   disableInsteadOfHide?: boolean;
 }
 
 /**
  * 权限控制按钮组件
- * 根据权限动态启用/禁用按钮
+ * 根据权限动态启?禁用按钮
  */
 export function PermissionButton({
   permission,
@@ -95,8 +90,7 @@ export function PermissionButton({
   const { hasPermission, hasRole, hasAnyPermission, hasAnyRole } =
     usePermission();
 
-  // 权限检查
-  let hasAccess = true;
+  // 权限检?  let hasAccess = true;
 
   if (permission) {
     const permissions = Array.isArray(permission) ? permission : [permission];
@@ -108,8 +102,7 @@ export function PermissionButton({
     hasAccess = hasAnyRole(roles);
   }
 
-  // 如果权限不足且选择隐藏，则不渲染
-  if (!hasAccess && !disableInsteadOfHide) {
+  // 如果权限不足且选择隐藏，则不渲?  if (!hasAccess && !disableInsteadOfHide) {
     return null;
   }
 
@@ -128,9 +121,9 @@ export function PermissionButton({
 }
 
 interface PermissionMenuItemProps {
-  /** 菜单项标题 */
+  /** 菜单项标?*/
   title: string;
-  /** 菜单项图标 */
+  /** 菜单项图?*/
   icon?: React.ReactNode;
   /** 路径 */
   href?: string;
@@ -145,8 +138,7 @@ interface PermissionMenuItemProps {
 }
 
 /**
- * 权限控制菜单项组件
- */
+ * 权限控制菜单项组? */
 export function PermissionMenuItem({
   title,
   icon,
@@ -159,8 +151,7 @@ export function PermissionMenuItem({
   const { hasPermission, hasRole, hasAnyPermission, hasAnyRole } =
     usePermission();
 
-  // 权限检查
-  let hasAccess = true;
+  // 权限检?  let hasAccess = true;
 
   if (permission) {
     const permissions = Array.isArray(permission) ? permission : [permission];
@@ -228,8 +219,7 @@ interface PermissionFieldProps {
 }
 
 /**
- * 权限感知的表单字段组件
- */
+ * 权限感知的表单字段组? */
 export function PermissionField({
   permission,
   requiredRole,
@@ -316,8 +306,7 @@ interface ActionMenuProps {
 }
 
 /**
- * 权限感知的动作菜单组件
- */
+ * 权限感知的动作菜单组? */
 export function ActionMenu({ actions, rowData }: ActionMenuProps) {
   const { hasAnyPermission, hasAnyRole } = usePermission();
 

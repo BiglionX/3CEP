@@ -61,7 +61,7 @@ export async function POST(
         input_data: body.input_data || {} as any,
         started_at: new Date().toISOString(),
         triggered_by: user.id
-      })
+      }) as any
       .select()
       .single();
 
@@ -227,9 +227,9 @@ export async function PATCH(
       data: {
         replayExecutionId: replayExecution.id,
         originalExecutionId: execution.id,
-        workflowName: execution.workflow?.name
+        workflowName: execution?.name
       }
-    });
+    }) as any;
 
   } catch (error: any) {
     console.error('回放工作流错误:', error);

@@ -1,0 +1,235 @@
+{
+  "suiteName": "采购智能体模块回归测试套件",
+  "generatedAt": "2026-02-27T08:24:49.583Z",
+  "testResults": [
+    {
+      "testCaseId": "RT-001",
+      "testName": "供应商搜索功能回归测试",
+      "status": "PASS",
+      "executionTime": 1,
+      "timestamp": "2026-02-27T08:24:49.578Z",
+      "details": "供应商搜索功能正常"
+    },
+    {
+      "testCaseId": "RT-002",
+      "testName": "价格分析引擎回归测试",
+      "status": "PASS",
+      "executionTime": 0,
+      "timestamp": "2026-02-27T08:24:49.578Z",
+      "details": "价格分析引擎工作正常"
+    },
+    {
+      "testCaseId": "RT-003",
+      "testName": "采购建议生成功归测试",
+      "status": "PASS",
+      "executionTime": 0,
+      "timestamp": "2026-02-27T08:24:49.579Z",
+      "details": "采购建议生成功能验证"
+    },
+    {
+      "testCaseId": "RT-004",
+      "testName": "API端点可用性测试",
+      "status": "PASS",
+      "executionTime": 1,
+      "timestamp": "2026-02-27T08:24:49.580Z",
+      "details": "API端点全部可用"
+    },
+    {
+      "testCaseId": "RT-006",
+      "testName": "安全机制回归测试",
+      "status": "PASS",
+      "executionTime": 0,
+      "timestamp": "2026-02-27T08:24:49.580Z",
+      "details": "高优先级测试通过"
+    },
+    {
+      "testCaseId": "RT-007",
+      "testName": "数据一致性回归测试",
+      "status": "PASS",
+      "executionTime": 0,
+      "timestamp": "2026-02-27T08:24:49.581Z",
+      "details": "高优先级测试通过"
+    },
+    {
+      "testCaseId": "RT-005",
+      "testName": "系统性能回归测试",
+      "status": "PASS",
+      "executionTime": 0,
+      "timestamp": "2026-02-27T08:24:49.581Z",
+      "details": "性能指标在可接受范围内"
+    },
+    {
+      "testCaseId": "RT-008",
+      "testName": "第三方服务集成测试",
+      "status": "PASS",
+      "executionTime": 0,
+      "timestamp": "2026-02-27T08:24:49.582Z",
+      "details": "中优先级测试通过"
+    }
+  ],
+  "testCases": [
+    {
+      "id": "RT-001",
+      "name": "供应商搜索功能回归测试",
+      "category": "core-functionality",
+      "priority": "HIGH",
+      "description": "验证供应商搜索功能的基本操作",
+      "steps": [
+        "初始化搜索服务",
+        "执行关键词搜索",
+        "验证搜索结果格式",
+        "检查分页功能",
+        "验证过滤条件"
+      ],
+      "expectedOutcome": "返回正确的供应商列表，支持分页和过滤",
+      "createdAt": "2026-02-27T08:24:49.574Z",
+      "lastExecuted": "2026-02-27T08:24:49.578Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "RT-002",
+      "name": "价格分析引擎回归测试",
+      "category": "core-functionality",
+      "priority": "HIGH",
+      "description": "验证价格分析和比较功能",
+      "steps": [
+        "加载历史价格数据",
+        "执行价格趋势分析",
+        "比较多个供应商报价",
+        "生成价格分析报告",
+        "验证分析准确性"
+      ],
+      "expectedOutcome": "准确的价格分析结果和趋势预测",
+      "createdAt": "2026-02-27T08:24:49.575Z",
+      "lastExecuted": "2026-02-27T08:24:49.578Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "RT-003",
+      "name": "采购建议生成功归测试",
+      "category": "core-functionality",
+      "priority": "HIGH",
+      "description": "验证智能采购建议生成",
+      "steps": ["分析采购需求", "评估供应商能力", "计算成本效益", "生成采购建议", "验证建议合理性"],
+      "expectedOutcome": "生成符合业务需求的采购建议",
+      "createdAt": "2026-02-27T08:24:49.575Z",
+      "lastExecuted": "2026-02-27T08:24:49.579Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "RT-004",
+      "name": "API端点可用性测试",
+      "category": "api-testing",
+      "priority": "HIGH",
+      "description": "验证所有API端点的可用性和响应",
+      "steps": ["测试搜索API", "测试分析API", "测试管理API", "验证认证机制", "检查错误处理"],
+      "expectedOutcome": "所有API端点正常响应，错误处理完善",
+      "createdAt": "2026-02-27T08:24:49.575Z",
+      "lastExecuted": "2026-02-27T08:24:49.580Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "RT-005",
+      "name": "系统性能回归测试",
+      "category": "performance",
+      "priority": "MEDIUM",
+      "description": "验证系统性能指标是否达标",
+      "steps": [
+        "测量API响应时间",
+        "测试并发处理能力",
+        "验证内存使用情况",
+        "检查数据库查询性能",
+        "评估缓存命中率"
+      ],
+      "expectedOutcome": "性能指标维持在可接受范围内",
+      "createdAt": "2026-02-27T08:24:49.575Z",
+      "lastExecuted": "2026-02-27T08:24:49.581Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "RT-006",
+      "name": "安全机制回归测试",
+      "category": "security",
+      "priority": "HIGH",
+      "description": "验证安全防护机制有效性",
+      "steps": ["测试认证流程", "验证权限控制", "检查输入验证", "测试速率限制", "验证日志记录"],
+      "expectedOutcome": "安全机制按预期工作，无安全漏洞",
+      "createdAt": "2026-02-27T08:24:49.575Z",
+      "lastExecuted": "2026-02-27T08:24:49.580Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "RT-007",
+      "name": "数据一致性回归测试",
+      "category": "data-integrity",
+      "priority": "HIGH",
+      "description": "验证数据的一致性和完整性",
+      "steps": ["检查数据同步", "验证引用完整性", "测试事务处理", "检查数据备份", "验证恢复机制"],
+      "expectedOutcome": "数据保持一致性和完整性",
+      "createdAt": "2026-02-27T08:24:49.575Z",
+      "lastExecuted": "2026-02-27T08:24:49.581Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "RT-008",
+      "name": "第三方服务集成测试",
+      "category": "integration",
+      "priority": "MEDIUM",
+      "description": "验证与外部服务的集成",
+      "steps": [
+        "测试供应商API集成",
+        "验证支付网关连接",
+        "检查通知服务",
+        "测试文件存储服务",
+        "验证监控集成"
+      ],
+      "expectedOutcome": "外部服务集成稳定可靠",
+      "createdAt": "2026-02-27T08:24:49.575Z",
+      "lastExecuted": "2026-02-27T08:24:49.582Z",
+      "executionCount": 1,
+      "passCount": 1,
+      "failCount": 0,
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "totalTests": 8,
+    "passed": 8,
+    "failed": 0,
+    "errors": 0,
+    "passRate": 100,
+    "coverageRate": 0
+  },
+  "coverage": {
+    "totalFunctions": 0,
+    "testedFunctions": 0,
+    "coveragePercentage": 0
+  },
+  "recommendations": [
+    "代码覆盖率0%，建议增加测试用例",
+    "重点关注未覆盖的核心业务逻辑",
+    "定期执行回归测试确保功能稳定性",
+    "持续改进测试用例质量和覆盖面"
+  ]
+}

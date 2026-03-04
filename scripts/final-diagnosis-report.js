@@ -15,11 +15,11 @@ const report = {
   systemInfo: {
     nodeVersion: process.version,
     platform: process.platform,
-    arch: process.arch
+    arch: process.arch,
   },
   fileStatus: {},
   testResults: [],
-  recommendations: []
+  recommendations: [],
 };
 
 // 检查关键文件
@@ -27,7 +27,7 @@ const criticalFiles = [
   'src/app/login/page.tsx',
   'src/app/api/auth/login/route.ts',
   'src/app/api/auth/check-session/route.ts',
-  'src/components/GoogleLoginButton.tsx'
+  'src/components/GoogleLoginButton.tsx',
 ];
 
 console.log('📁 文件状态检查:');
@@ -75,7 +75,7 @@ const suggestions = [
   '4. 验证Network面板请求响应',
   '5. 确认管理员权限设置',
   '6. 检查路由配置文件',
-  '7. 验证Cookie设置情况'
+  '7. 验证Cookie设置情况',
 ];
 
 suggestions.forEach(suggestion => {
@@ -88,7 +88,7 @@ console.log('\n🧪 测试链接:');
 const testLinks = [
   'http://localhost:3001/ultimate-test - 终极诊断页面',
   'http://localhost:3001/minimal-login-test - 最小化测试',
-  'http://localhost:3001/login?redirect=/admin/dashboard - 标准登录测试'
+  'http://localhost:3001/login?redirect=/admin/dashboard - 标准登录测试',
 ];
 
 testLinks.forEach(link => {

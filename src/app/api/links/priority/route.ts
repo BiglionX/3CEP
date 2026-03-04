@@ -1,9 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -12,63 +11,53 @@ const supabase = createClient(
  * @swagger
  * /api/links/priority:
  *   get:
- *     summary: 获取链接优先级列表
- *     description: 返回所有链接的优先级信息，支持筛选和排序
+ *     summary: 鑾峰彇閾炬帴浼樺厛绾у垪? *     description: 杩斿洖鎵€鏈夐摼鎺ョ殑浼樺厛绾т俊鎭紝鏀寔绛涢€夊拰鎺掑簭
  *     parameters:
  *       - name: status
  *         in: query
- *         description: 链接状态筛选
- *         schema:
+ *         description: 閾炬帴鐘舵€佺瓫? *         schema:
  *           type: string
  *           enum: [active, inactive, pending_review, rejected]
  *       - name: category
  *         in: query
- *         description: 分类筛选
- *         schema:
+ *         description: 鍒嗙被绛? *         schema:
  *           type: string
  *       - name: sortBy
  *         in: query
- *         description: 排序字段
+ *         description: 鎺掑簭瀛楁
  *         schema:
  *           type: string
  *           enum: [priority, created_at, views, likes]
  *           default: priority
  *       - name: sortOrder
  *         in: query
- *         description: 排序方向
+ *         description: 鎺掑簭鏂瑰悜
  *         schema:
  *           type: string
  *           enum: [asc, desc]
  *           default: desc
  *     responses:
  *       200:
- *         description: 成功返回优先级列表
- *       401:
- *         description: 未授权访问
- */
+ *         description: 鎴愬姛杩斿洖浼樺厛绾у垪? *       401:
+ *         description: 鏈巿鏉冭? */
 export async function GET(request: NextRequest) {
   try {
-    // 验证用户权限
+    // 楠岃瘉鐢ㄦ埛鏉冮檺
     const cookieStore = await cookies();
     const session = cookieStore.get('supabase-auth-token');
-    
+
     if (!session) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
-    
+
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || '';
     const category = searchParams.get('category') || '';
     const sortBy = searchParams.get('sortBy') || 'priority';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
-    
-    // 构建查询
-    let query = supabase
-      .from('unified_link_library')
-      .select(`
+
+    // 鏋勫缓鏌ヨ
+    let query = supabase.from('unified_link_library').select(`
         id,
         url,
         title,
@@ -85,42 +74,34 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `);
-    
-    // 添加筛选条件
-    if (status) {
+
+    // 娣诲姞绛涢€夋潯?    if (status) {
       query = query.eq('status', status);
     }
-    
+
     if (category) {
       query = query.eq('category', category);
     }
-    
-    // 添加排序
+
+    // 娣诲姞鎺掑簭
     const ascending = sortOrder === 'asc';
     query = query.order(sortBy, { ascending });
-    
+
     const { data, error } = await query;
-    
+
     if (error) {
-      console.error('获取优先级列表失败:', error);
-      return NextResponse.json(
-        { error: '获取数据失败' },
-        { status: 500 }
-      );
+      console.error('鑾峰彇浼樺厛绾у垪琛ㄥけ?', error);
+      return NextResponse.json({ error: '鑾峰彇鏁版嵁澶辫触' }, { status: 500 });
     }
-    
+
     return NextResponse.json({
       links: data || [],
-      total: (data as any)?.data?.length || 0,
-      timestamp: new Date().toISOString()
+      total: (data as any)?.(data as any)?.length || 0,
+      timestamp: new Date().toISOString(),
     });
-    
   } catch (error) {
-    console.error('优先级API错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('浼樺厛绾PI閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -128,9 +109,7 @@ export async function GET(request: NextRequest) {
  * @swagger
  * /api/links/priority:
  *   put:
- *     summary: 批量更新链接优先级
- *     description: 批量更新多个链接的优先级值
- *     requestBody:
+ *     summary: 鎵归噺鏇存柊閾炬帴浼樺厛? *     description: 鎵归噺鏇存柊澶氫釜閾炬帴鐨勪紭鍏堢骇? *     requestBody:
  *       required: true
  *       content:
  *         application/json:
@@ -144,84 +123,75 @@ export async function GET(request: NextRequest) {
  *                   properties:
  *                     id:
  *                       type: string
- *                       description: 链接ID
+ *                       description: 閾炬帴ID
  *                     priority:
  *                       type: integer
- *                       description: 新的优先级值
- *     responses:
+ *                       description: 鏂扮殑浼樺厛绾? *     responses:
  *       200:
- *         description: 更新成功
+ *         description: 鏇存柊鎴愬姛
  *       400:
- *         description: 请求参数错误
+ *         description: 璇锋眰鍙傛暟閿欒
  *       401:
- *         description: 未授权访问
- */
+ *         description: 鏈巿鏉冭? */
 export async function PUT(request: NextRequest) {
   try {
-    // 验证用户权限
+    // 楠岃瘉鐢ㄦ埛鏉冮檺
     const cookieStore = await cookies();
     const session = cookieStore.get('supabase-auth-token');
-    
+
     if (!session) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
-    
+
     const { updates } = await request.json();
-    
+
     if (!updates || !Array.isArray(updates)) {
       return NextResponse.json(
-        { error: '无效的更新数据格式' },
+        { error: '鏃犳晥鐨勬洿鏂版暟鎹牸? },
         { status: 400 }
       );
     }
-    
-    // 批量更新
-    const updatePromises = updates.map(async (update) => {
+
+    // 鎵归噺鏇存柊
+    const updatePromises = updates.map(async update => {
       const { id, priority } = update;
-      
+
       if (!id || typeof priority !== 'number') {
-        throw new Error('无效的更新项');
+        throw new Error('鏃犳晥鐨勬洿鏂伴」');
       }
-      
+
       return supabase
         .from('unified_link_library')
-        .update({ 
+        .update({
           priority,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         } as any)
         .eq('id', id);
     });
-    
+
     const results = await Promise.all(updatePromises);
-    
-    // 检查是否有错误
+
+    // 妫€鏌ユ槸鍚︽湁閿欒
     const errors = results.filter(result => result.error);
     if (errors.length > 0) {
-      console.error('批量更新失败:', errors);
+      console.error('鎵归噺鏇存柊澶辫触:', errors);
       return NextResponse.json(
-        { 
-          error: '部分更新失败',
-          details: errors.map(e => e.error?.message)
+        {
+          error: '閮ㄥ垎鏇存柊澶辫触',
+          details: errors.map(e => e?.message),
         },
         { status: 500 }
       );
     }
-    
+
     return NextResponse.json({
       success: true,
       updated: updates.length,
-      message: `成功更新 ${updates.length} 条链接的优先级`
+      message: `鎴愬姛鏇存柊 ${updates.length} 鏉￠摼鎺ョ殑浼樺厛绾,
     });
-    
   } catch (error) {
-    console.error('优先级更新错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('浼樺厛绾ф洿鏂伴敊?', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -229,9 +199,7 @@ export async function PUT(request: NextRequest) {
  * @swagger
  * /api/links/priority/auto-adjust:
  *   post:
- *     summary: 自动调整链接优先级
- *     description: 根据AI质量评分、互动数据等因素自动调整链接优先级
- *     requestBody:
+ *     summary: 鑷姩璋冩暣閾炬帴浼樺厛? *     description: 鏍规嵁AI璐ㄩ噺璇勫垎銆佷簰鍔ㄦ暟鎹瓑鍥犵礌鑷姩璋冩暣閾炬帴浼樺厛? *     requestBody:
  *       content:
  *         application/json:
  *           schema:
@@ -239,137 +207,127 @@ export async function PUT(request: NextRequest) {
  *             properties:
  *               strategy:
  *                 type: string
- *                 description: 调整策略
+ *                 description: 璋冩暣绛栫暐
  *                 enum: [quality_based, engagement_based, mixed]
  *                 default: mixed
  *     responses:
  *       200:
- *         description: 自动调整成功
+ *         description: 鑷姩璋冩暣鎴愬姛
  *       401:
- *         description: 未授权访问
- */
+ *         description: 鏈巿鏉冭? */
 export async function POST(request: NextRequest) {
   try {
-    // 验证用户权限
+    // 楠岃瘉鐢ㄦ埛鏉冮檺
     const cookieStore = await cookies();
     const session = cookieStore.get('supabase-auth-token');
-    
+
     if (!session) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
-    
+
     const { strategy = 'mixed' } = await request.json();
-    
-    // 获取所有活跃链接
-    const { data: links, error: fetchError } = await supabase
+
+    // 鑾峰彇鎵€鏈夋椿璺冮摼?    const { data: links, error: fetchError } = await supabase
       .from('unified_link_library')
       .select('id, priority, ai_quality_score, views, likes, source')
       .eq('status', 'active');
-    
+
     if (fetchError) {
-      console.error('获取链接数据失败:', fetchError);
-      return NextResponse.json(
-        { error: '获取数据失败' },
-        { status: 500 }
-      );
+      console.error('鑾峰彇閾炬帴鏁版嵁澶辫触:', fetchError);
+      return NextResponse.json({ error: '鑾峰彇鏁版嵁澶辫触' }, { status: 500 });
     }
-    
+
     if (!links || links.length === 0) {
       return NextResponse.json({
         success: true,
-        message: '没有需要调整的链接',
-        adjusted: 0
+        message: '娌℃湁闇€瑕佽皟鏁寸殑閾炬帴',
+        adjusted: 0,
       });
     }
-    
-    // 计算新的优先级
-    const updates = links.map(link => {
+
+    // 璁＄畻鏂扮殑浼樺厛?    const updates = links.map(link => {
       let newPriority = link.priority || 0;
-      
+
       switch (strategy) {
         case 'quality_based':
-          // 基于AI质量评分调整
+          // 鍩轰簬AI璐ㄩ噺璇勫垎璋冩暣
           if (link.ai_quality_score) {
             newPriority = Math.round(link.ai_quality_score * 100);
           }
           break;
-          
+
         case 'engagement_based':
-          // 基于互动数据调整
+          // 鍩轰簬浜掑姩鏁版嵁璋冩暣
           const engagementScore = Math.min(
             (link.views || 0) / 100 + (link.likes || 0) / 10,
             100
           );
           newPriority = Math.round(engagementScore);
           break;
-          
+
         case 'mixed':
         default:
-          // 混合策略
+          // 娣峰悎绛栫暐
           let qualityComponent = 0;
           let engagementComponent = 0;
           let sourceBonus = 0;
-          
-          // AI质量评分组件 (40%权重)
+
+          // AI璐ㄩ噺璇勫垎缁勪欢 (40%鏉冮噸)
           if (link.ai_quality_score) {
             qualityComponent = link.ai_quality_score * 40;
           }
-          
-          // 互动数据组件 (30%权重)
+
+          // 浜掑姩鏁版嵁缁勪欢 (30%鏉冮噸)
           engagementComponent = Math.min(
             ((link.views || 0) / 100 + (link.likes || 0) / 10) * 0.3,
             30
           );
-          
-          // 来源加分 (30%权重)
+
+          // 鏉ユ簮鍔犲垎 (30%鏉冮噸)
           if (link.source === 'iFixit') sourceBonus = 30;
-          else if (link.source === '官方') sourceBonus = 25;
-          else if (link.source?.includes('知乎')) sourceBonus = 20;
-          else if (link.source?.includes('bilibili')) sourceBonus = 15;
-          
-          newPriority = Math.round(qualityComponent + engagementComponent + sourceBonus);
+          else if (link.source === '瀹樻柟') sourceBonus = 25;
+          else if (link?.includes('鐭ヤ箮')) sourceBonus = 20;
+          else if (link?.includes('bilibili')) sourceBonus = 15;
+
+          newPriority = Math.round(
+            qualityComponent + engagementComponent + sourceBonus
+          );
           break;
       }
-      
-      // 确保优先级在合理范围内
-      newPriority = Math.max(0, Math.min(100, newPriority));
-      
+
+      // 纭繚浼樺厛绾у湪鍚堢悊鑼冨洿?      newPriority = Math.max(0, Math.min(100, newPriority));
+
       return {
         id: link.id,
-        priority: newPriority
+        priority: newPriority,
       };
     });
-    
-    // 批量更新优先级
-    const updatePromises = updates.map(update =>
+
+    // 鎵归噺鏇存柊浼樺厛?    const updatePromises = updates.map(update =>
       supabase
         .from('unified_link_library')
-        .update({ 
+        .update({
           priority: update.priority,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         } as any)
         .eq('id', update.id)
     );
-    
+
     const updateResults = await Promise.all(updatePromises);
-    const successfulUpdates = updateResults.filter(result => !result.error).length;
-    
+    const successfulUpdates = updateResults.filter(
+      result => !result.error
+    ).length;
+
     return NextResponse.json({
       success: true,
       adjusted: successfulUpdates,
       total: links.length,
       strategy,
-      message: `成功自动调整 ${successfulUpdates}/${links.length} 条链接的优先级`
+      message: `鎴愬姛鑷姩璋冩暣 ${successfulUpdates}/${links.length} 鏉￠摼鎺ョ殑浼樺厛绾,
     });
-    
   } catch (error) {
-    console.error('自动调整优先级错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('鑷姩璋冩暣浼樺厛绾ч敊?', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
+

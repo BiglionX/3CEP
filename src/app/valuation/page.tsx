@@ -1,30 +1,31 @@
-"use client";
+﻿'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// Slider 组件可能需要自定义实现或使用其他UI库
-import { 
-  Calculator, 
-  Smartphone, 
-  TrendingUp, 
-  Battery, 
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+// Slider 组件可能需要自定义实现或使用其他UI�?import {
+  Calculator,
+  Smartphone,
+  TrendingUp,
+  Battery,
   Camera,
   Zap,
   Calendar,
   MapPin,
-  Tag
-} from "lucide-react";
+  Tag,
+} from 'lucide-react';
 
 interface DeviceCondition {
-  screen: number; // 1-10分
-  battery: number; // 1-10分
-  body: number; // 1-10分
-  functionality: number; // 1-10分
-}
+  screen: number; // 1-10�?  battery: number; // 1-10�?  body: number; // 1-10�?  functionality: number; // 1-10�?}
 
 interface ValuationResult {
   baseValue: number;
@@ -41,76 +42,99 @@ interface ValuationResult {
 }
 
 export default function ValuationPage() {
-  const [deviceType, setDeviceType] = useState("iphone");
-  const [brand, setBrand] = useState("Apple");
-  const [model, setModel] = useState("");
-  const [purchaseYear, setPurchaseYear] = useState(new Date().getFullYear().toString());
+  const [deviceType, setDeviceType] = useState('iphone');
+  const [brand, setBrand] = useState('Apple');
+  const [model, setModel] = useState('');
+  const [purchaseYear, setPurchaseYear] = useState(
+    new Date().getFullYear().toString()
+  );
   const [condition, setCondition] = useState<DeviceCondition>({
     screen: 8,
     battery: 7,
     body: 8,
-    functionality: 9
+    functionality: 9,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<ValuationResult | null>(null);
 
   // 设备类型选项
   const deviceTypes = [
-    { value: "iphone", label: "iPhone", icon: Smartphone },
-    { value: "android", label: "Android手机", icon: Smartphone },
-    { value: "tablet", label: "平板电脑", icon: Smartphone },
-    { value: "laptop", label: "笔记本电脑", icon: Smartphone },
-    { value: "watch", label: "智能手表", icon: Smartphone }
+    { value: 'iphone', label: 'iPhone', icon: Smartphone },
+    { value: 'android', label: 'Android手机', icon: Smartphone },
+    { value: 'tablet', label: '平板电脑', icon: Smartphone },
+    { value: 'laptop', label: '笔记本电?, icon: Smartphone },
+    { value: 'watch', label: '智能手表', icon: Smartphone },
   ];
 
   // 品牌选项
   const brands = {
-    iphone: ["Apple"],
-    android: ["Samsung", "Huawei", "Xiaomi", "OPPO", "vivo", "OnePlus"],
-    tablet: ["Apple", "Samsung", "Huawei", "Lenovo", "Microsoft"],
-    laptop: ["Apple", "Dell", "HP", "Lenovo", "Asus", "Acer"],
-    watch: ["Apple", "Samsung", "Huawei", "Xiaomi"]
+    iphone: ['Apple'],
+    android: ['Samsung', 'Huawei', 'Xiaomi', 'OPPO', 'vivo', 'OnePlus'],
+    tablet: ['Apple', 'Samsung', 'Huawei', 'Lenovo', 'Microsoft'],
+    laptop: ['Apple', 'Dell', 'HP', 'Lenovo', 'Asus', 'Acer'],
+    watch: ['Apple', 'Samsung', 'Huawei', 'Xiaomi'],
   };
 
   // 常见型号
   const commonModels = {
-    "Apple|iPhone": ["iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro", "iPhone 14", "iPhone 13 Pro", "iPhone 13"],
-    "Samsung|Galaxy": ["Galaxy S24", "Galaxy S23 Ultra", "Galaxy S23", "Galaxy S22", "Galaxy Note 20"],
-    "Huawei|P/Mate": ["P60 Pro", "Mate 50 Pro", "P50 Pro", "Mate 40 Pro"],
-    "Xiaomi|Mi/Redmi": ["Xiaomi 13 Pro", "Xiaomi 13", "Redmi Note 12 Pro", "Mi 12"],
+    'Apple|iPhone': [
+      'iPhone 15 Pro',
+      'iPhone 15',
+      'iPhone 14 Pro',
+      'iPhone 14',
+      'iPhone 13 Pro',
+      'iPhone 13',
+    ],
+    'Samsung|Galaxy': [
+      'Galaxy S24',
+      'Galaxy S23 Ultra',
+      'Galaxy S23',
+      'Galaxy S22',
+      'Galaxy Note 20',
+    ],
+    'Huawei|P/Mate': ['P60 Pro', 'Mate 50 Pro', 'P50 Pro', 'Mate 40 Pro'],
+    'Xiaomi|Mi/Redmi': [
+      'Xiaomi 13 Pro',
+      'Xiaomi 13',
+      'Redmi Note 12 Pro',
+      'Mi 12',
+    ],
   };
 
   const calculateValuation = async () => {
     setIsLoading(true);
-    
+
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // 简化的估值算法
-      const basePrices: Record<string, number> = {
-        "iPhone 15 Pro": 8000,
-        "iPhone 15": 6500,
-        "iPhone 14 Pro": 7000,
-        "iPhone 14": 5500,
-        "Galaxy S24": 7500,
-        "Galaxy S23 Ultra": 8500,
-        "其他": 4000
+
+      // 简化的估值算?      const basePrices: Record<string, number> = {
+        'iPhone 15 Pro': 8000,
+        'iPhone 15': 6500,
+        'iPhone 14 Pro': 7000,
+        'iPhone 14': 5500,
+        'Galaxy S24': 7500,
+        'Galaxy S23 Ultra': 8500,
+        其他: 4000,
       };
 
-      const basePrice = basePrices[model] || basePrices["其他"];
+      const basePrice = basePrices[model] || basePrices['其他'];
       const yearsOld = new Date().getFullYear() - parseInt(purchaseYear);
-      
+
       // 折旧计算
-      const depreciationRate = Math.min(yearsOld * 0.15, 0.8); // 最大80%折旧
+      const depreciationRate = Math.min(yearsOld * 0.15, 0.8); // 最?0%折旧
       const depreciatedValue = basePrice * (1 - depreciationRate);
-      
+
       // 成色调整
-      const avgCondition = (condition.screen + condition.battery + condition.body + condition.functionality) / 40; // 转换为0-1
-      const conditionMultiplier = 0.5 + (avgCondition * 0.5); // 0.5-1.0倍
-      
+      const avgCondition =
+        (condition.screen +
+          condition.battery +
+          condition.body +
+          condition.functionality) /
+        40; // 转换?-1
+      const conditionMultiplier = 0.5 + avgCondition * 0.5; // 0.5-1.0�?
       const finalValue = depreciatedValue * conditionMultiplier;
-      
+
       const resultData: ValuationResult = {
         baseValue: basePrice,
         finalValue: Math.round(finalValue),
@@ -120,36 +144,36 @@ export default function ValuationPage() {
           screen: condition.screen,
           battery: condition.battery,
           body: condition.body,
-          functionality: condition.functionality
+          functionality: condition.functionality,
         },
-        confidence: 0.85
+        confidence: 0.85,
       };
-      
+
       setResult(resultData);
     } catch (error) {
-      console.error("估值计算失败:", error);
+      console.error('估值计算失?', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const getConditionLabel = (score: number) => {
-    if (score >= 9) return "全新";
-    if (score >= 7) return "良好";
-    if (score >= 5) return "一般";
-    if (score >= 3) return "较差";
-    return "很差";
+    if (score >= 9) return '全新';
+    if (score >= 7) return '良好';
+    if (score >= 5) return '一?;
+    if (score >= 3) return '较差';
+    return '很差';
   };
 
-  const ConditionSlider = ({ 
-    label, 
-    icon: Icon, 
-    value, 
-    onChange 
-  }: { 
-    label: string; 
-    icon: any; 
-    value: number; 
+  const ConditionSlider = ({
+    label,
+    icon: Icon,
+    value,
+    onChange,
+  }: {
+    label: string;
+    icon: any;
+    value: number;
     onChange: (value: number) => void;
   }) => (
     <div className="space-y-2">
@@ -159,7 +183,7 @@ export default function ValuationPage() {
           <Label className="text-sm font-medium">{label}</Label>
         </div>
         <span className="text-sm text-gray-600">
-          {value}分 ({getConditionLabel(value)})
+          {value}�?({getConditionLabel(value)})
         </span>
       </div>
       <input
@@ -167,7 +191,7 @@ export default function ValuationPage() {
         min="1"
         max="10"
         value={value}
-        onChange={(e) => onChange(parseInt(e.target.value))}
+        onChange={e => onChange(parseInt(e.target.value))}
         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
       />
       <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -211,7 +235,7 @@ export default function ValuationPage() {
                     <SelectValue placeholder="选择设备类型" />
                   </SelectTrigger>
                   <SelectContent>
-                    {deviceTypes.map((type) => {
+                    {deviceTypes.map(type => {
                       const Icon = type.icon;
                       return (
                         <SelectItem key={type.value} value={type.value}>
@@ -234,8 +258,10 @@ export default function ValuationPage() {
                     <SelectValue placeholder="选择品牌" />
                   </SelectTrigger>
                   <SelectContent>
-                    {brands[deviceType as keyof typeof brands]?.map((b) => (
-                      <SelectItem key={b} value={b}>{b}</SelectItem>
+                    {brands[deviceType as keyof typeof brands]?.map(b => (
+                      <SelectItem key={b} value={b}>
+                        {b}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -247,13 +273,13 @@ export default function ValuationPage() {
                 <Input
                   id="model"
                   value={model}
-                  onChange={(e) => setModel(e.target.value)}
+                  onChange={e => setModel(e.target.value)}
                   placeholder="例如: iPhone 15 Pro"
                   list="models"
                 />
                 <datalist id="models">
                   {Object.entries(commonModels).map(([key, models]) => {
-                    const [b, m] = key.split("|");
+                    const [b, m] = key.split('|');
                     if (brand.includes(b) || m.includes(brand)) {
                       return models.map(model => (
                         <option key={model} value={model} />
@@ -272,8 +298,12 @@ export default function ValuationPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
-                      <SelectItem key={year} value={year.toString()}>{year}年</SelectItem>
+                    {Array.from(
+                      { length: 10 },
+                      (_, i) => new Date().getFullYear() - i
+                    ).map(year => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}�?                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -285,38 +315,40 @@ export default function ValuationPage() {
                   <TrendingUp className="w-5 h-5 text-blue-600" />
                   <span>设备成色评估</span>
                 </h3>
-                
+
                 <ConditionSlider
                   label="屏幕状况"
                   icon={Smartphone}
                   value={condition.screen}
-                  onChange={(val) => setCondition({...condition, screen: val})}
+                  onChange={val => setCondition({ ...condition, screen: val })}
                 />
-                
+
                 <ConditionSlider
                   label="电池健康"
                   icon={Battery}
                   value={condition.battery}
-                  onChange={(val) => setCondition({...condition, battery: val})}
+                  onChange={val => setCondition({ ...condition, battery: val })}
                 />
-                
+
                 <ConditionSlider
                   label="外观成色"
                   icon={Camera}
                   value={condition.body}
-                  onChange={(val) => setCondition({...condition, body: val})}
+                  onChange={val => setCondition({ ...condition, body: val })}
                 />
-                
+
                 <ConditionSlider
-                  label="功能完整度"
+                  label="功能完整?
                   icon={Zap}
                   value={condition.functionality}
-                  onChange={(val) => setCondition({...condition, functionality: val})}
+                  onChange={val =>
+                    setCondition({ ...condition, functionality: val })
+                  }
                 />
               </div>
 
               {/* 估价按钮 */}
-              <Button 
+              <Button
                 className="w-full py-6 text-lg"
                 onClick={calculateValuation}
                 disabled={isLoading || !model}
@@ -353,17 +385,21 @@ export default function ValuationPage() {
                         ¥{result.finalValue.toLocaleString()}
                       </div>
                       <div className="text-sm text-gray-600">
-                        置信度: {(result.confidence * 100).toFixed(0)}%
+                        置信? {(result.confidence * 100).toFixed(0)}%
                       </div>
-                      
+
                       <div className="grid grid-cols-2 gap-4 pt-4">
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <div className="text-sm text-gray-600">原价</div>
-                          <div className="font-semibold text-gray-900">¥{result.baseValue.toLocaleString()}</div>
+                          <div className="font-semibold text-gray-900">
+                            ¥{result.baseValue.toLocaleString()}
+                          </div>
                         </div>
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <div className="text-sm text-gray-600">折旧</div>
-                          <div className="font-semibold text-red-600">-¥{result.depreciation.toLocaleString()}</div>
+                          <div className="font-semibold text-red-600">
+                            -¥{result.depreciation.toLocaleString()}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -378,24 +414,30 @@ export default function ValuationPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-gray-600">屏幕状况:</span>
-                        <span className="font-medium">{condition.screen}/10分</span>
+                        <span className="font-medium">
+                          {condition.screen}/10�?                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">电池健康:</span>
-                        <span className="font-medium">{condition.battery}/10分</span>
+                        <span className="font-medium">
+                          {condition.battery}/10�?                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">外观成色:</span>
-                        <span className="font-medium">{condition.body}/10分</span>
+                        <span className="font-medium">
+                          {condition.body}/10�?                        </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">功能完整度:</span>
-                        <span className="font-medium">{condition.functionality}/10分</span>
+                        <span className="text-gray-600">功能完整?</span>
+                        <span className="font-medium">
+                          {condition.functionality}/10�?                        </span>
                       </div>
                       <div className="pt-3 border-t">
                         <div className="flex justify-between">
                           <span className="text-gray-600">综合成色系数:</span>
-                          <span className="font-semibold">{(result.conditionAdjustment * 100).toFixed(0)}%</span>
+                          <span className="font-semibold">
+                            {(result.conditionAdjustment * 100).toFixed(0)}%
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -405,12 +447,11 @@ export default function ValuationPage() {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h4 className="font-semibold text-blue-900 mb-2 flex items-center">
                     <MapPin className="w-4 h-4 mr-2" />
-                    下一步建议
-                  </h4>
+                    下一步建?                  </h4>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• 可以前往附近的维修网点进行实物检测</li>
-                    <li>• 联系我们的回收合作伙伴获取报价</li>
-                    <li>• 参考多家回收商的价格对比</li>
+                    <li>�?可以前往附近的维修网点进行实物检?/li>
+                    <li>�?联系我们的回收合作伙伴获取报?/li>
+                    <li>�?参考多家回收商的价格对?/li>
                   </ul>
                 </div>
               </>
@@ -422,8 +463,7 @@ export default function ValuationPage() {
                     等待估价
                   </h3>
                   <p className="text-gray-600">
-                    填写设备信息并点击"立即估价"按钮获取精准的价格评估
-                  </p>
+                    填写设备信息并点?立即估价"按钮获取精准的价格评?                  </p>
                 </CardContent>
               </Card>
             )}
@@ -435,7 +475,7 @@ export default function ValuationPage() {
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
             为什么选择我们的智能估价系统？
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="text-center">
               <CardHeader>
@@ -446,8 +486,7 @@ export default function ValuationPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  基于机器学习和大数据分析，提供行业领先的估价准确性
-                </p>
+                  基于机器学习和大数据分析，提供行业领先的估价准确?                </p>
               </CardContent>
             </Card>
 
@@ -484,3 +523,4 @@ export default function ValuationPage() {
     </div>
   );
 }
+

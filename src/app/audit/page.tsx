@@ -1,18 +1,16 @@
-/**
- * 审计日志可视化页面
- * 提供日志查询、过滤、统计图表和异常检测功能
- */
+﻿/**
+ * 审计日志可视化页? * 提供日志查询、过滤、统计图表和异常检测功? */
 
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  FileText, 
-  Search, 
-  Filter, 
-  Download, 
-  BarChart3, 
-  PieChart, 
+import {
+  FileText,
+  Search,
+  Filter,
+  Download,
+  BarChart3,
+  PieChart,
   Activity,
   AlertTriangle,
   CheckCircle,
@@ -22,7 +20,7 @@ import {
   Server,
   Calendar,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
 } from 'lucide-react';
 
 interface AuditLog {
@@ -58,7 +56,7 @@ export default function AuditPage() {
     resourceType: '',
     severity: '',
     startDate: '',
-    endDate: ''
+    endDate: '',
   });
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportFormat, setExportFormat] = useState('json');
@@ -71,27 +69,26 @@ export default function AuditPage() {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const queryParams = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
         if (value) queryParams.append(key, value);
       });
 
       const response = await fetch(`/api/audit/logs?${queryParams.toString()}`);
-      
+
       if (!response.ok) {
         throw new Error('获取审计日志失败');
       }
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         setLogs(result.data);
         setStats(result.stats);
       } else {
         throw new Error(result.error || '获取数据失败');
       }
-      
     } catch (err: any) {
       console.error('加载审计日志失败:', err);
       setError(err.message);
@@ -102,21 +99,31 @@ export default function AuditPage() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'info': return 'bg-blue-100 text-blue-800';
-      case 'warning': return 'bg-yellow-100 text-yellow-800';
-      case 'error': return 'bg-red-100 text-red-800';
-      case 'critical': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'info':
+        return 'bg-blue-100 text-blue-800';
+      case 'warning':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'error':
+        return 'bg-red-100 text-red-800';
+      case 'critical':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'info': return <CheckCircle className="w-4 h-4" />;
-      case 'warning': return <AlertTriangle className="w-4 h-4" />;
-      case 'error': return <XCircle className="w-4 h-4" />;
-      case 'critical': return <AlertTriangle className="w-4 h-4" />;
-      default: return <FileText className="w-4 h-4" />;
+      case 'info':
+        return <CheckCircle className="w-4 h-4" />;
+      case 'warning':
+        return <AlertTriangle className="w-4 h-4" />;
+      case 'error':
+        return <XCircle className="w-4 h-4" />;
+      case 'critical':
+        return <AlertTriangle className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
     }
   };
 
@@ -133,8 +140,8 @@ export default function AuditPage() {
         },
         body: JSON.stringify({
           format: exportFormat,
-          filters: filters
-        })
+          filters: filters,
+        }),
       });
 
       if (!response.ok) {
@@ -150,7 +157,7 @@ export default function AuditPage() {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      
+
       setShowExportModal(false);
     } catch (err: any) {
       console.error('导出失败:', err);
@@ -158,7 +165,12 @@ export default function AuditPage() {
     }
   };
 
-  const renderStatCard = (title: string, value: number | string, icon: React.ReactNode, trend?: 'up' | 'down') => (
+  const renderStatCard = (
+    title: string,
+    value: number | string,
+    icon: React.ReactNode,
+    trend?: 'up' | 'down'
+  ) => (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
       <div className="flex items-center justify-between">
         <div>
@@ -171,38 +183,43 @@ export default function AuditPage() {
               ) : (
                 <TrendingDown className="w-4 h-4 text-red-500 mr-1" />
               )}
-              <span className={`text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+              <span
+                className={`text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}
+              >
                 {trend === 'up' ? '上升' : '下降'}
               </span>
             </div>
           )}
         </div>
-        <div className="p-3 bg-blue-100 rounded-lg">
-          {icon}
-        </div>
+        <div className="p-3 bg-blue-100 rounded-lg">{icon}</div>
       </div>
     </div>
   );
 
   const renderActionDistribution = () => {
     if (!stats?.actions) return null;
-    
-    const total = Object.values(stats.actions).reduce((sum, count) => sum + count, 0);
+
+    const total = Object.values(stats.actions).reduce(
+      (sum, count) => sum + count,
+      0
+    );
     const sortedActions = Object.entries(stats.actions)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 5);
 
     return (
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">操作类型分布</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          操作类型分布
+        </h3>
         <div className="space-y-3">
           {sortedActions.map(([action, count]) => (
             <div key={action} className="flex items-center justify-between">
               <span className="text-gray-700">{action}</span>
               <div className="flex items-center space-x-2">
                 <div className="w-24 bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full" 
+                  <div
+                    className="bg-blue-600 h-2 rounded-full"
                     style={{ width: `${(count / total) * 100}%` }}
                   ></div>
                 </div>
@@ -219,22 +236,26 @@ export default function AuditPage() {
 
   const renderSeverityChart = () => {
     if (!stats?.severities) return null;
-    
+
     const severityColors = {
       info: 'bg-blue-500',
       warning: 'bg-yellow-500',
       error: 'bg-red-500',
-      critical: 'bg-purple-500'
+      critical: 'bg-purple-500',
     };
 
     return (
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">严重程度分布</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          严重程度分布
+        </h3>
         <div className="space-y-3">
           {Object.entries(stats.severities).map(([severity, count]) => (
             <div key={severity} className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${severityColors[severity as keyof typeof severityColors]}`}></div>
+                <div
+                  className={`w-3 h-3 rounded-full ${severityColors[severity as keyof typeof severityColors]}`}
+                ></div>
                 <span className="text-gray-700 capitalize">{severity}</span>
               </div>
               <span className="text-sm font-medium text-gray-900">{count}</span>
@@ -250,7 +271,7 @@ export default function AuditPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载审计日志中...</p>
+          <p className="mt-4 text-gray-600">加载审计日志?..</p>
         </div>
       </div>
     );
@@ -284,7 +305,7 @@ export default function AuditPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">审计日志</h1>
-              <p className="text-gray-600 mt-1">系统操作审计和安全监控</p>
+              <p className="text-gray-600 mt-1">系统操作审计和安全监?/p>
             </div>
             <div className="flex items-center space-x-3">
               <button
@@ -296,15 +317,19 @@ export default function AuditPage() {
               </button>
             </div>
           </div>
-          
-          {/* 过滤器 */}
+
+          {/* 过滤?*/}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">操作类型</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                操作类型
+              </label>
               <select
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={filters.action}
-                onChange={(e) => setFilters({...filters, action: e.target.value})}
+                onChange={e =>
+                  setFilters({ ...filters, action: e.target.value })
+                }
               >
                 <option value="">全部操作</option>
                 <option value="login">登录</option>
@@ -315,13 +340,17 @@ export default function AuditPage() {
                 <option value="view">查看</option>
               </select>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">严重程度</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                严重程度
+              </label>
               <select
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={filters.severity}
-                onChange={(e) => setFilters({...filters, severity: e.target.value})}
+                onChange={e =>
+                  setFilters({ ...filters, severity: e.target.value })
+                }
               >
                 <option value="">全部级别</option>
                 <option value="info">信息</option>
@@ -330,24 +359,31 @@ export default function AuditPage() {
                 <option value="critical">严重</option>
               </select>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                开始日?              </label>
               <input
                 type="date"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={filters.startDate}
-                onChange={(e) => setFilters({...filters, startDate: e.target.value})}
+                onChange={e =>
+                  setFilters({ ...filters, startDate: e.target.value })
+                }
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">结束日期</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                结束日期
+              </label>
               <input
                 type="date"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={filters.endDate}
-                onChange={(e) => setFilters({...filters, endDate: e.target.value})}
+                onChange={e =>
+                  setFilters({ ...filters, endDate: e.target.value })
+                }
               />
             </div>
           </div>
@@ -359,60 +395,68 @@ export default function AuditPage() {
         {/* 统计卡片 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {renderStatCard(
-            '总日志数', 
-            stats?.totalLogs || 0, 
+            '总日志数',
+            stats?.totalLogs || 0,
             <FileText className="w-6 h-6 text-blue-600" />
           )}
           {renderStatCard(
-            '警告日志', 
-            stats?.severities.warning || 0, 
+            '警告日志',
+            stats?.severities.warning || 0,
             <AlertTriangle className="w-6 h-6 text-yellow-600" />,
             'up'
           )}
           {renderStatCard(
-            '错误日志', 
-            stats?.severities.error || 0, 
+            '错误日志',
+            stats?.severities.error || 0,
             <XCircle className="w-6 h-6 text-red-600" />,
             'down'
           )}
           {renderStatCard(
-            '活跃用户', 
-            Object.keys(stats?.userActivity || {}).length || 0, 
+            '活跃用户',
+            Object.keys(stats?.userActivity || {}).length || 0,
             <User className="w-6 h-6 text-green-600" />
           )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* 操作分布图表 */}
-          <div className="lg:col-span-2">
-            {renderActionDistribution()}
-          </div>
-          
+          <div className="lg:col-span-2">{renderActionDistribution()}</div>
+
           {/* 严重程度分布 */}
-          <div>
-            {renderSeverityChart()}
-          </div>
+          <div>{renderSeverityChart()}</div>
         </div>
 
-        {/* 最近活动 */}
+        {/* 最近活?*/}
         {stats?.recentActivity && stats.recentActivity.length > 0 && (
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">最近24小时活动</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              最?4小时活动
+            </h3>
             <div className="space-y-3">
               {stats.recentActivity.map((activity: any, index: number) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
                   <div className="flex items-center space-x-3">
-                    <div className={`p-2 rounded-lg ${getSeverityColor(activity.severity)}`}>
+                    <div
+                      className={`p-2 rounded-lg ${getSeverityColor(activity.severity)}`}
+                    >
                       {getSeverityIcon(activity.severity)}
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{activity.action}</p>
+                      <p className="font-medium text-gray-900">
+                        {activity.action}
+                      </p>
                       <p className="text-sm text-gray-500">
-                        资源: {activity.resourceId} | {formatDate(activity.timestamp)}
+                        资源: {activity.resourceId} |{' '}
+                        {formatDate(activity.timestamp)}
                       </p>
                     </div>
                   </div>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getSeverityColor(activity.severity)}`}>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getSeverityColor(activity.severity)}`}
+                  >
                     {activity.severity}
                   </span>
                 </div>
@@ -426,33 +470,42 @@ export default function AuditPage() {
           <div className="px-6 py-4 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">详细日志</h3>
           </div>
-          
+
           {logs.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
                 <FileText className="w-12 h-12 mx-auto" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无日志记录</h3>
-              <p className="text-gray-500">根据当前筛选条件没有找到相关日志</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                暂无日志记录
+              </h3>
+              <p className="text-gray-500">根据当前筛选条件没有找到相关日?/p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
-              {logs.map((log) => (
-                <div key={log.id} className="p-6 hover:bg-gray-50 transition-colors">
+              {logs.map(log => (
+                <div
+                  key={log.id}
+                  className="p-6 hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <div className={`p-2 rounded-lg ${getSeverityColor(log.severity)}`}>
+                        <div
+                          className={`p-2 rounded-lg ${getSeverityColor(log.severity)}`}
+                        >
                           {getSeverityIcon(log.severity)}
                         </div>
                         <div>
-                          <h4 className="font-semibold text-gray-900">{log.action}</h4>
+                          <h4 className="font-semibold text-gray-900">
+                            {log.action}
+                          </h4>
                           <p className="text-sm text-gray-500">
                             {log.resource_type} #{log.resource_id}
                           </p>
                         </div>
                       </div>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 mb-3">
                         <div className="flex items-center space-x-2">
                           <User className="w-4 h-4" />
@@ -468,22 +521,28 @@ export default function AuditPage() {
                         </div>
                         <div className="flex items-center space-x-2">
                           <Activity className="w-4 h-4" />
-                          <span className="capitalize">{log.user_agent?.substring(0, 30)}...</span>
+                          <span className="capitalize">
+                            {log?.substring(0, 30)}...
+                          </span>
                         </div>
                       </div>
-                      
+
                       {log.details && (
                         <div className="bg-gray-50 p-3 rounded-lg">
-                          <h5 className="text-sm font-medium text-gray-700 mb-2">详细信息:</h5>
+                          <h5 className="text-sm font-medium text-gray-700 mb-2">
+                            详细信息:
+                          </h5>
                           <pre className="text-xs text-gray-600 overflow-x-auto">
                             {JSON.stringify(log.details, null, 2)}
                           </pre>
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="flex items-center space-x-2 ml-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getSeverityColor(log.severity)}`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getSeverityColor(log.severity)}`}
+                      >
                         {log.severity}
                       </span>
                     </div>
@@ -499,9 +558,11 @@ export default function AuditPage() {
       {showExportModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">导出审计日志</h2>
-            <p className="text-gray-600 mb-6">选择导出格式和范围</p>
-            
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              导出审计日志
+            </h2>
+            <p className="text-gray-600 mb-6">选择导出格式和范?/p>
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -514,7 +575,7 @@ export default function AuditPage() {
                       name="format"
                       value="json"
                       checked={exportFormat === 'json'}
-                      onChange={(e) => setExportFormat(e.target.value)}
+                      onChange={e => setExportFormat(e.target.value)}
                       className="mr-2"
                     />
                     <span>JSON 格式</span>
@@ -525,24 +586,23 @@ export default function AuditPage() {
                       name="format"
                       value="csv"
                       checked={exportFormat === 'csv'}
-                      onChange={(e) => setExportFormat(e.target.value)}
+                      onChange={e => setExportFormat(e.target.value)}
                       className="mr-2"
                     />
                     <span>CSV 格式</span>
                   </label>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   导出范围
                 </label>
                 <p className="text-sm text-gray-500">
-                  将导出当前筛选条件下的所有日志记录
-                </p>
+                  将导出当前筛选条件下的所有日志记?                </p>
               </div>
             </div>
-            
+
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setShowExportModal(false)}
@@ -563,3 +623,4 @@ export default function AuditPage() {
     </div>
   );
 }
+

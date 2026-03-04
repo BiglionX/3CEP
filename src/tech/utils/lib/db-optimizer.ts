@@ -1,7 +1,6 @@
 /**
  * 数据库查询优化器
- * 提供查询性能监控和优化建议
- */
+ * 提供查询性能监控和优化建? */
 
 interface QueryMetrics {
   query: string;
@@ -21,8 +20,7 @@ export class DatabaseOptimizer {
   private static instance: DatabaseOptimizer;
   private queryHistory: QueryMetrics[] = [];
   private readonly MAX_HISTORY_SIZE = 1000;
-  private readonly SLOW_QUERY_THRESHOLD = 1000; // 1秒
-
+  private readonly SLOW_QUERY_THRESHOLD = 1000; // 1�?
   private constructor() {}
 
   static getInstance(): DatabaseOptimizer {
@@ -50,10 +48,9 @@ export class DatabaseOptimizer {
       this.queryHistory.shift();
     }
 
-    // 记录慢查询警告
-    if (executionTime > this.SLOW_QUERY_THRESHOLD) {
+    // 记录慢查询警?    if (executionTime > this.SLOW_QUERY_THRESHOLD) {
       console.warn(
-        `[DB Optimizer] 慢查询检测: ${executionTime}ms - ${query.substring(
+        `[DB Optimizer] 慢查询检? ${executionTime}ms - ${query.substring(
           0,
           100
         )}...`
@@ -91,7 +88,7 @@ export class DatabaseOptimizer {
     );
 
     return {
-      slowQueries: slowQueries.slice(-10), // 最近10个慢查询
+      slowQueries: slowQueries.slice(-10), // 最?0个慢查询
       averageExecutionTime,
       totalQueries: this.queryHistory.length,
       recommendations,
@@ -163,11 +160,10 @@ export class DatabaseOptimizer {
     }
 
     if (averageTime > 500) {
-      recommendations.push('平均查询时间较长，建议优化查询语句和数据库索引');
+      recommendations.push('平均查询时间较长，建议优化查询语句和数据库索?);
     }
 
-    // 分析常见慢查询模式
-    const queryPatterns = this.analyzeQueryPatterns(slowQueries);
+    // 分析常见慢查询模?    const queryPatterns = this.analyzeQueryPatterns(slowQueries);
     if (queryPatterns.missingJoins.length > 0) {
       recommendations.push('发现缺少JOIN优化的查询，请检查表关联关系');
     }
@@ -203,13 +199,11 @@ export class DatabaseOptimizer {
         missingJoins.push(metric.query.substring(0, 50));
       }
 
-      // 检查是否可能缺少索引
-      if (query.includes("like '%") || query.includes('order by')) {
+      // 检查是否可能缺少索?      if (query.includes("like '%") || query.includes('order by')) {
         missingIndexes.push(metric.query.substring(0, 50));
       }
 
-      // 检查复杂查询
-      const selectCount = (query.match(/select/gi) || []).length;
+      // 检查复杂查?      const selectCount = (query.match(/select/gi) || []).length;
       const joinCount = (query.match(/join/gi) || []).length;
       if (selectCount > 3 || joinCount > 2) {
         complexQueries.push(metric.query.substring(0, 50));
@@ -227,8 +221,7 @@ export class DatabaseOptimizer {
    * 清理查询语句（移除敏感信息）
    */
   private sanitizeQuery(query: string): string {
-    // 移除可能的敏感数据
-    return query
+    // 移除可能的敏感数?    return query
       .replace(/'(.*?)'/g, "'***'") // 替换字符串字面量
       .replace(/\d+/g, '*') // 替换数字
       .substring(0, 200); // 限制长度

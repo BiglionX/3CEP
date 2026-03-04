@@ -9,21 +9,20 @@ interface RoleGuardProps {
   roles: UserRole | UserRole[];
   /** 权限不足时显示的内容 */
   fallback?: ReactNode;
-  /** 子元素 */
+  /** 子元?*/
   children: ReactNode;
-  /** 是否需要满足所有角色 */
+  /** 是否需要满足所有角?*/
   requireAll?: boolean;
 }
 
 /**
  * 角色守卫组件
- * 根据用户角色控制组件的显示
- */
+ * 根据用户角色控制组件的显? */
 export function RoleGuard({
   roles,
   fallback = null,
   children,
-  requireAll = false
+  requireAll = false,
 }: RoleGuardProps) {
   const { roles: userRoles, isLoading } = useUser();
 
@@ -39,13 +38,11 @@ export function RoleGuard({
 
   const requiredRoles = Array.isArray(roles) ? roles : [roles];
 
-  // 检查角色权限
-  const hasAccess = requireAll
+  // 检查角色权?  const hasAccess = requireAll
     ? requiredRoles.every(role => userRoles.includes(role))
     : requiredRoles.some(role => userRoles.includes(role));
 
-  // 超级管理员拥有所有权限
-  const isAdmin = userRoles.includes('admin');
+  // 超级管理员拥有所有权?  const isAdmin = userRoles.includes('admin');
 
   if (!hasAccess && !isAdmin) {
     return <>{fallback}</>;
@@ -59,33 +56,32 @@ interface PermissionGuardProps {
   permissions: string | string[];
   /** 权限不足时显示的内容 */
   fallback?: ReactNode;
-  /** 子元素 */
+  /** 子元?*/
   children: ReactNode;
-  /** 是否需要满足所有权限 */
+  /** 是否需要满足所有权?*/
   requireAll?: boolean;
 }
 
 /**
  * 权限守卫组件
- * 根据用户权限控制组件的显示
- */
+ * 根据用户权限控制组件的显? */
 export function PermissionGuard({
   permissions,
   fallback = null,
   children,
-  requireAll = false
+  requireAll = false,
 }: PermissionGuardProps) {
   const { hasPermission, isLoading } = useUser();
 
-  // 如果还在加载中
-  if (isLoading) {
+  // 如果还在加载?  if (isLoading) {
     return null;
   }
 
-  const requiredPermissions = Array.isArray(permissions) ? permissions : [permissions];
+  const requiredPermissions = Array.isArray(permissions)
+    ? permissions
+    : [permissions];
 
-  // 检查权限
-  const hasAccess = requireAll
+  // 检查权?  const hasAccess = requireAll
     ? requiredPermissions.every(permission => hasPermission(permission))
     : requiredPermissions.some(permission => hasPermission(permission));
 
@@ -98,11 +94,11 @@ export function PermissionGuard({
 
 // 简化版本的守卫组件，用于常见的使用场景
 interface SimpleGuardProps {
-  /** 权限或角色要求 */
+  /** 权限或角色要?*/
   require: string | string[] | UserRole | UserRole[];
-  /** 子元素 */
+  /** 子元?*/
   children: ReactNode;
-  /** 无权限时显示的内容 */
+  /** 无权限时显示的内?*/
   fallback?: ReactNode;
 }
 
@@ -113,16 +109,21 @@ interface SimpleGuardProps {
 export function Guard({
   require,
   children,
-  fallback = null
+  fallback = null,
 }: SimpleGuardProps) {
   const requirements = Array.isArray(require) ? require : [require];
-  
+
   // 简单判断：如果包含点号(.)则认为是权限，否则是角色
-  const isPermission = requirements.some(req => typeof req === 'string' && req.includes('.'));
+  const isPermission = requirements.some(
+    req => typeof req === 'string' && req.includes('.')
+  );
 
   if (isPermission) {
     return (
-      <PermissionGuard permissions={requirements as string[]} fallback={fallback}>
+      <PermissionGuard
+        permissions={requirements as string[]}
+        fallback={fallback}
+      >
         {children}
       </PermissionGuard>
     );
@@ -136,74 +137,79 @@ export function Guard({
 }
 
 // 预定义的常用守卫组件
-export const AdminGuard: React.FC<{ children: ReactNode; fallback?: ReactNode }> = ({ 
-  children, 
-  fallback = null 
-}) => (
+export const AdminGuard: React.FC<{
+  children: ReactNode;
+  fallback?: ReactNode;
+}> = ({ children, fallback = null }) => (
   <RoleGuard roles="admin" fallback={fallback}>
     {children}
   </RoleGuard>
 );
 
-export const ContentReviewerGuard: React.FC<{ children: ReactNode; fallback?: ReactNode }> = ({ 
-  children, 
-  fallback = null 
-}) => (
+export const ContentReviewerGuard: React.FC<{
+  children: ReactNode;
+  fallback?: ReactNode;
+}> = ({ children, fallback = null }) => (
   <RoleGuard roles={['admin', 'content_reviewer']} fallback={fallback}>
     {children}
   </RoleGuard>
 );
 
-export const ShopReviewerGuard: React.FC<{ children: ReactNode; fallback?: ReactNode }> = ({ 
-  children, 
-  fallback = null 
-}) => (
+export const ShopReviewerGuard: React.FC<{
+  children: ReactNode;
+  fallback?: ReactNode;
+}> = ({ children, fallback = null }) => (
   <RoleGuard roles={['admin', 'shop_reviewer']} fallback={fallback}>
     {children}
   </RoleGuard>
 );
 
-export const FinanceGuard: React.FC<{ children: ReactNode; fallback?: ReactNode }> = ({ 
-  children, 
-  fallback = null 
-}) => (
+export const FinanceGuard: React.FC<{
+  children: ReactNode;
+  fallback?: ReactNode;
+}> = ({ children, fallback = null }) => (
   <RoleGuard roles={['admin', 'finance']} fallback={fallback}>
     {children}
   </RoleGuard>
 );
 
-// 使用示例和测试组件
-export function RoleGuardDemo() {
+// 使用示例和测试组?export function RoleGuardDemo() {
   return (
     <div className="p-4 space-y-4">
       <h2 className="text-xl font-bold">角色守卫演示</h2>
-      
+
       <div className="border p-4 rounded">
-        <h3 className="font-medium mb-2">管理员专区</h3>
+        <h3 className="font-medium mb-2">管理员专?/h3>
         <AdminGuard fallback={<div className="text-red-500">仅管理员可见</div>}>
-          <div className="text-green-600">欢迎管理员！这里是系统核心配置区域。</div>
+          <div className="text-green-600">
+            欢迎管理员！这里是系统核心配置区域?          </div>
         </AdminGuard>
       </div>
 
       <div className="border p-4 rounded">
         <h3 className="font-medium mb-2">内容审核专区</h3>
-        <ContentReviewerGuard fallback={<div className="text-red-500">仅内容审核员可见</div>}>
-          <div className="text-blue-600">内容审核面板 - 可以审核和管理用户提交的内容。</div>
+        <ContentReviewerGuard
+          fallback={<div className="text-red-500">仅内容审核员可见</div>}
+        >
+          <div className="text-blue-600">
+            内容审核面板 - 可以审核和管理用户提交的内容?          </div>
         </ContentReviewerGuard>
       </div>
 
       <div className="border p-4 rounded">
         <h3 className="font-medium mb-2">财务管理专区</h3>
-        <FinanceGuard fallback={<div className="text-red-500">仅财务人员可见</div>}>
-          <div className="text-purple-600">财务报表和支付管理功能。</div>
+        <FinanceGuard
+          fallback={<div className="text-red-500">仅财务人员可?/div>}
+        >
+          <div className="text-purple-600">财务报表和支付管理功能?/div>
         </FinanceGuard>
       </div>
 
       <div className="border p-4 rounded">
-        <h3 className="font-medium mb-2">通用权限检查</h3>
-        <Guard 
-          require="content.write" 
-          fallback={<div className="text-red-500">无内容编辑权限</div>}
+        <h3 className="font-medium mb-2">通用权限检?/h3>
+        <Guard
+          require="content.write"
+          fallback={<div className="text-red-500">无内容编辑权?/div>}
         >
           <div className="text-green-600">您有内容编辑权限</div>
         </Guard>

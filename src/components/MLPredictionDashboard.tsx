@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -138,7 +138,7 @@ export function MLPredictionDashboard() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">机器学习预测中心</h1>
-          <p className="text-gray-600">基于大语言模型的智能预测服务</p>
+          <p className="text-gray-600">基于大语言模型的智能预测服?/p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -217,7 +217,7 @@ function TabsComponent({
         }`}
       >
         <BarChart3 className="inline mr-2 h-4 w-4" />
-        需求预测
+        需求预?
       </button>
       <button
         onClick={() => onTabChange('price')}
@@ -255,7 +255,7 @@ function PredictionForm({
       platform: predictionType === 'price' ? formData.platform : undefined,
       horizonDays: parseInt(formData.horizonDays),
       options: {
-        seasonalFactors: ['周末效应', '节假日影响'],
+        seasonalFactors: ['周末效应', '节假日影?],
         externalEvents: ['促销活动']
       }
     };
@@ -303,7 +303,7 @@ function PredictionForm({
               <SelectItem value="taobao">淘宝</SelectItem>
               <SelectItem value="jd">京东</SelectItem>
               <SelectItem value="tmall">天猫</SelectItem>
-              <SelectItem value="pdd">拼多多</SelectItem>
+              <SelectItem value="pdd">拼多?/SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -319,10 +319,10 @@ function PredictionForm({
             <SelectValue placeholder="选择预测周期" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="7">7天</SelectItem>
-            <SelectItem value="15">15天</SelectItem>
-            <SelectItem value="30">30天</SelectItem>
-            <SelectItem value="60">60天</SelectItem>
+            <SelectItem value="7">7�?/SelectItem>
+            <SelectItem value="15">15�?/SelectItem>
+            <SelectItem value="30">30�?/SelectItem>
+            <SelectItem value="60">60�?/SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -335,10 +335,10 @@ function PredictionForm({
         {loading ? (
           <>
             <Clock className="mr-2 h-4 w-4 animate-spin" />
-            预测中...
+            预测?..
           </>
         ) : (
-          '开始预测'
+          '开始预?
         )}
       </Button>
     </form>
@@ -359,12 +359,12 @@ function SummaryCard({ result }: { result: PredictionResult }) {
             <>
               <SummaryItem 
                 label="总预测量" 
-                value={`${result.summary.totalQuantity?.toLocaleString()} 件`} 
+                value={`${result.summary?.toLocaleString()} 件`} 
                 icon={<BarChart3 className="h-5 w-5" />}
               />
               <SummaryItem 
                 label="日均预测" 
-                value={`${result.summary.averageDaily?.toFixed(1)} 件`} 
+                value={`${result.summary?.toFixed(1)} 件`} 
                 icon={<TrendingUp className="h-5 w-5" />}
               />
             </>
@@ -383,19 +383,19 @@ function SummaryCard({ result }: { result: PredictionResult }) {
               />
               <SummaryItem 
                 label="预期变化" 
-                value={`${result.summary.expectedChange?.toFixed(1) || '0'}%`} 
+                value={`${result.summary?.toFixed(1) || '0'}%`} 
                 icon={<BarChart3 className="h-5 w-5" />}
               />
             </>
           )}
           
           <SummaryItem 
-            label="整体置信度" 
+            label="整体置信? 
             value={`${(result.summary.confidence * 100).toFixed(1)}%`} 
             icon={<CheckCircle className="h-5 w-5 text-blue-500" />}
           />
           <SummaryItem 
-            label="波动性" 
+            label="波动? 
             value={result.summary.trend || '稳定'} 
             icon={<AlertCircle className="h-5 w-5 text-yellow-500" />}
           />
@@ -530,17 +530,17 @@ function DetailedPredictions({ result }: { result: PredictionResult }) {
                   日期
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {isDemand ? '预测销量' : '预测价格'}
+                  {isDemand ? '预测销? : '预测价格'}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  置信度
+                  置信?
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   置信区间
                 </th>
                 {!isDemand && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    销量影响
+                    销量影?
                   </th>
                 )}
               </tr>
@@ -553,8 +553,8 @@ function DetailedPredictions({ result }: { result: PredictionResult }) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {isDemand 
-                      ? `${prediction.quantity?.toLocaleString()} 件`
-                      : `¥${prediction.price?.toFixed(2)}`
+                      ? `${prediction?.toLocaleString()} 件`
+                      : `¥${prediction?.toFixed(2)}`
                     }
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -587,13 +587,13 @@ function ConfidenceBadge({ confidence }: { confidence: number }) {
 
   if (confidence >= 0.9) {
     variant = 'default';
-    text = '高';
+    text = '�?;
   } else if (confidence >= 0.7) {
     variant = 'secondary';
-    text = '中';
+    text = '�?;
   } else {
     variant = 'destructive';
-    text = '低';
+    text = '�?;
   }
 
   return (

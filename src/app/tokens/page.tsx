@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
@@ -111,7 +111,7 @@ export default function TokenPurchasePage() {
       }
 
       // 模拟支付流程
-      alert(`订单创建成功！\n订单号: ${payment?.id}\n请完成支付...`);
+      alert(`订单创建成功！\n订单? ${payment?.id}\n请完成支?..`);
       
       // 模拟支付成功后的处理
       setTimeout(async () => {
@@ -137,7 +137,7 @@ export default function TokenPurchasePage() {
     switch (type) {
       case 'purchase': return '购买';
       case 'consume': return '消费';
-      case 'refund': return '退款';
+      case 'refund': return '退?;
       case 'bonus': return '奖励';
       default: return type;
     }
@@ -163,7 +163,7 @@ export default function TokenPurchasePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">加载中...</p>
+            <p className="mt-4 text-gray-600">加载?..</p>
           </div>
         </div>
       </div>
@@ -176,7 +176,7 @@ export default function TokenPurchasePage() {
         {/* 页面标题 */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Token套餐购买</h1>
-          <p className="text-xl text-gray-600">选择适合您的套餐，享受智能诊断服务</p>
+          <p className="text-xl text-gray-600">选择适合您的套餐，享受智能诊断服?/p>
         </div>
 
         {/* 用户余额卡片 */}
@@ -214,7 +214,7 @@ export default function TokenPurchasePage() {
           </div>
         )}
 
-        {/* 标签页切换 */}
+        {/* 标签页切?*/}
         <div className="flex space-x-1 bg-white rounded-lg p-1 mb-8 shadow-sm max-w-md mx-auto">
           <button
             onClick={() => setActiveTab('packages')}
@@ -261,7 +261,7 @@ export default function TokenPurchasePage() {
                     <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-center py-2 px-4">
                       <div className="flex items-center justify-center">
                         <Star className="h-4 w-4 mr-1" />
-                        <span className="font-semibold text-sm">最受欢迎</span>
+                        <span className="font-semibold text-sm">最受欢?/span>
                       </div>
                     </div>
                   )}
@@ -271,7 +271,7 @@ export default function TokenPurchasePage() {
                     <h3 className="text-xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
                     <p className="text-gray-600 text-sm mb-6">{pkg.description}</p>
 
-                    {/* Token数量和价格 */}
+                    {/* Token数量和价?*/}
                     <div className="mb-6">
                       <div className="flex items-baseline mb-2">
                         <span className="text-4xl font-bold text-gray-900">{pkg.token_amount}</span>
@@ -306,7 +306,7 @@ export default function TokenPurchasePage() {
                       {processing === pkg.id ? (
                         <div className="flex items-center">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          处理中...
+                          处理?..
                         </div>
                       ) : (
                         <div className="flex items-center justify-center">
@@ -336,7 +336,7 @@ export default function TokenPurchasePage() {
               <div className="text-center py-12">
                 <Coins className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">暂无交易记录</h3>
-                <p className="text-gray-500">购买Token后会显示在这里</p>
+                <p className="text-gray-500">购买Token后会显示在这?/p>
               </div>
             ) : (
               <div className="divide-y divide-gray-200">
@@ -383,13 +383,13 @@ export default function TokenPurchasePage() {
 
         {/* 保障信息 */}
         <div className="mt-12 bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">为什么选择我们的Token服务？</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">为什么选择我们的Token服务?/h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <Shield className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">安全可靠</h3>
-              <p className="text-gray-600">采用银行级加密技术，保障您的资金和信息安全</p>
+              <p className="text-gray-600">采用银行级加密技术，保障您的资金和信息安?/p>
             </div>
             
             <div className="text-center">
@@ -400,8 +400,8 @@ export default function TokenPurchasePage() {
             
             <div className="text-center">
               <Gift className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">超值优惠</h3>
-              <p className="text-gray-600">多种套餐选择，大额购买享受更多折扣</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">超值优?/h3>
+              <p className="text-gray-600">多种套餐选择，大额购买享受更多折?/p>
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@
   "description": "n8n 工作流权限同步配置文件",
   "version": "1.0.0",
   "last_updated": "2026-02-21",
-  
+
   "n8n_connection": {
     "api_url": "http://localhost:5678",
     "api_token": "your-n8n-api-token-here",
@@ -51,7 +51,7 @@
       "execute_roles": ["admin", "manager", "agent_operator"],
       "manage_roles": ["admin", "manager"]
     },
-    
+
     "workflow_specific": {
       "b2b-procurement-advanced-workflow": {
         "read_roles": ["admin", "manager", "procurement_specialist"],
@@ -96,11 +96,7 @@
     "enabled": true,
     "log_level": "info",
     "retention_days": 90,
-    "sensitive_operations": [
-      "user_role_change",
-      "workflow_permission_update",
-      "workflow_execution"
-    ]
+    "sensitive_operations": ["user_role_change", "workflow_permission_update", "workflow_execution"]
   },
 
   "notification_settings": {

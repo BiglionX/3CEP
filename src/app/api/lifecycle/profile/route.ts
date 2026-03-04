@@ -1,18 +1,17 @@
-import { DeviceLifecycleService } from '@/services/device-lifecycle.service';
+﻿import { DeviceLifecycleService } from '@/services/device-lifecycle.service';
 import { DeviceProfileService } from '@/services/device-profile.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 const profileService = new DeviceProfileService();
 const lifecycleService = new DeviceLifecycleService();
 
-// API密钥验证中间件
-function validateApiKey(request: NextRequest): boolean {
+// API瀵嗛挜楠岃瘉涓棿?function validateApiKey(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
   const apiKey = process.env.LIFECYCLE_API_KEY;
 
-  // 开发环境下如果没有配置API密钥，则允许访问
+  // 寮€鍙戠幆澧冧笅濡傛灉娌℃湁閰嶇疆API瀵嗛挜锛屽垯鍏佽璁块棶
   if (!apiKey) {
-    console.warn('⚠️  LIFECYCLE_API_KEY 未配置，请在生产环境中设置');
+    console.warn('鈿狅笍  LIFECYCLE_API_KEY 鏈厤缃紝璇峰湪鐢熶骇鐜涓?);
     return true;
   }
 
@@ -24,15 +23,14 @@ function validateApiKey(request: NextRequest): boolean {
   return token === apiKey;
 }
 
-// GET /api/lifecycle/profile?qrcodeId=xxx - 查询设备档案和生命周期事件
-export async function GET(request: NextRequest) {
+// GET /api/lifecycle/profile?qrcodeId=xxx - 鏌ヨ璁惧妗ｆ鍜岀敓鍛藉懆鏈熶簨?export async function GET(request: NextRequest) {
   try {
-    // API密钥验证
+    // API瀵嗛挜楠岃瘉
     if (!validateApiKey(request)) {
       return NextResponse.json(
         {
           success: false,
-          error: '未授权访问，请提供有效的API密钥',
+          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -41,42 +39,40 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const qrcodeId = searchParams.get('qrcodeId');
 
-    // 验证必要参数
+    // 楠岃瘉蹇呰鍙傛暟
     if (!qrcodeId) {
       return NextResponse.json(
         {
           success: false,
-          error: '缺少必要参数: qrcodeId',
+          error: '缂哄皯蹇呰鍙傛暟: qrcodeId',
         },
         { status: 400 }
       );
     }
 
-    // 获取设备档案
+    // 鑾峰彇璁惧妗ｆ
     const profile = await profileService.getDeviceProfile(qrcodeId);
 
     if (!profile) {
       return NextResponse.json(
         {
           success: false,
-          error: '未找到设备档案',
+          error: '鏈壘鍒拌澶囨。?,
         },
         { status: 404 }
       );
     }
 
-    // 获取生命周期事件列表（按时间倒序）
-    const events = await lifecycleService.getDeviceLifecycleHistory(qrcodeId, {
-      limit: 100, // 获取最近100条记录
-      orderBy: 'timestamp',
+    // 鑾峰彇鐢熷懡鍛ㄦ湡浜嬩欢鍒楄〃锛堟寜鏃堕棿鍊掑簭?    const events = await lifecycleService.getDeviceLifecycleHistory(qrcodeId, {
+      limit: 100, // 鑾峰彇鏈€?00鏉¤?      orderBy: 'timestamp',
       sortOrder: 'desc',
     });
 
-    // 构建响应数据
+    // 鏋勫缓鍝嶅簲鏁版嵁
     const responseData = {
       success: true,
       data: {
-        // 设备摘要信息
+        // 璁惧鎽樿淇℃伅
         profile: {
           id: profile.id,
           qrcodeId: profile.qrcodeId,
@@ -99,7 +95,7 @@ export async function GET(request: NextRequest) {
           createdAt: profile.createdAt,
           updatedAt: profile.updatedAt,
         },
-        // 生命周期事件列表
+        // 鐢熷懡鍛ㄦ湡浜嬩欢鍒楄〃
         events: events.map(event => ({
           id: event.id,
           eventType: event.eventType,
@@ -117,26 +113,25 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseData);
   } catch (error) {
-    console.error('查询设备档案错误:', error);
+    console.error('鏌ヨ璁惧妗ｆ閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       },
       { status: 500 }
     );
   }
 }
 
-// POST /api/lifecycle/profile - 创建或更新设备档案
-export async function POST(request: NextRequest) {
+// POST /api/lifecycle/profile - 鍒涘缓鎴栨洿鏂拌澶囨。?export async function POST(request: NextRequest) {
   try {
-    // API密钥验证
+    // API瀵嗛挜楠岃瘉
     if (!validateApiKey(request)) {
       return NextResponse.json(
         {
           success: false,
-          error: '未授权访问，请提供有效的API密钥',
+          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -144,24 +139,24 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // 验证必要参数
+    // 楠岃瘉蹇呰鍙傛暟
     if (!body.qrcodeId) {
       return NextResponse.json(
         {
           success: false,
-          error: '缺少必要参数: qrcodeId',
+          error: '缂哄皯蹇呰鍙傛暟: qrcodeId',
         },
         { status: 400 }
       );
     }
 
-    // 检查档案是否已存在
+    // 妫€鏌ユ。妗堟槸鍚﹀凡瀛樺湪
     const existingProfile = await profileService.getDeviceProfile(
       body.qrcodeId
     );
 
     if (existingProfile) {
-      // 更新现有档案
+      // 鏇存柊鐜版湁妗ｆ
       const updatedProfile = await profileService.updateDeviceProfile(
         body.qrcodeId,
         {
@@ -182,7 +177,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: '设备档案更新成功',
+        message: '璁惧妗ｆ鏇存柊鎴愬姛',
         data: {
           id: updatedProfile.id,
           qrcodeId: updatedProfile.qrcodeId,
@@ -190,8 +185,7 @@ export async function POST(request: NextRequest) {
         },
       });
     } else {
-      // 创建新档案
-      const newProfile = await profileService.createDeviceProfile({
+      // 鍒涘缓鏂版。?      const newProfile = await profileService.createDeviceProfile({
         qrcodeId: body.qrcodeId,
         productModel: body.productModel,
         productCategory: body.productCategory,
@@ -207,7 +201,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: '设备档案创建成功',
+        message: '璁惧妗ｆ鍒涘缓鎴愬姛',
         data: {
           id: newProfile.id,
           qrcodeId: newProfile.qrcodeId,
@@ -216,13 +210,14 @@ export async function POST(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('处理设备档案错误:', error);
+    console.error('澶勭悊璁惧妗ｆ閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       },
       { status: 500 }
     );
   }
 }
+

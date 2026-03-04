@@ -32,41 +32,48 @@ src/services/
 ## 核心功能实现
 
 ### V-ML-01: 内部成交数据采集
+
 - 从LIFE档案和订单系统提取历史成交数据
 - 支持众筹支持记录、维修订单、FCX兑换等多种数据源
 - 自动关联设备档案和生命周期事件
 
 ### V-ML-02: 数据清洗与特征工程
+
 - 数据质量检查和异常值处理
 - 设备特征提取（年龄、品牌、存储、内存等）
 - 分类特征编码和数值特征标准化
 - 市场特征集成
 
 ### V-ML-03: 模型训练与调优
+
 - LightGBM和XGBoost双模型训练
 - 交叉验证和超参数调优
 - 多种评估指标（RMSE、MAE、R²）
 - 特征重要性分析
 
 ### V-ML-04: 模型部署（Python微服务）
+
 - 基于FastAPI的REST API服务
 - 单次和批量预测接口
 - 健康检查和模型管理接口
 - 自动重载机制
 
 ### V-ML-05: Node.js模型客户端
+
 - HTTP客户端封装，支持重试和超时
 - 请求拦截和统一错误处理
 - 数据验证和格式标准化
 - 与现有系统无缝集成
 
 ### V-ML-06: 市场特征增强
+
 - 实时集成市场均价数据
 - 市场衍生特征计算
 - 动态特征更新机制
 - 在线预测上下文增强
 
 ### V-ML-07: ML模型置信度评估
+
 - 多维度置信度因子计算
 - 综合置信度评分
 - 置信级别分类
@@ -123,11 +130,13 @@ node tests/integration/test-ml-integration.js
 ## API接口说明
 
 ### 健康检查
+
 ```
 GET /health
 ```
 
 ### 单次预测
+
 ```
 POST /predict
 Content-Type: application/json
@@ -151,6 +160,7 @@ Content-Type: application/json
 ```
 
 ### 批量预测
+
 ```
 POST /predict/batch
 Content-Type: application/json
@@ -183,8 +193,12 @@ if (result.success) {
 
 // 批量预测
 const batchResult = await mlClient.batchPredict([
-  { /* 设备1 */ },
-  { /* 设备2 */ }
+  {
+    /* 设备1 */
+  },
+  {
+    /* 设备2 */
+  },
 ]);
 ```
 
@@ -206,6 +220,7 @@ console.log(`建议: ${confidenceResult.recommendations.join(', ')}`);
 ## 部署配置
 
 ### 生产环境配置
+
 ```bash
 # .env.production
 DATABASE_URL=postgresql://prod_user:prod_pass@prod_host:5432/prod_db
@@ -217,6 +232,7 @@ LOG_LEVEL=INFO
 ```
 
 ### Docker部署
+
 ```dockerfile
 FROM python:3.9-slim
 
@@ -233,12 +249,14 @@ CMD ["python", "api/api_service.py"]
 ## 监控与维护
 
 ### 关键指标监控
+
 - API响应时间
 - 预测准确率
 - 模型置信度分布
 - 服务可用性
 
 ### 定期维护任务
+
 - 模型重新训练（建议每月一次）
 - 数据质量检查
 - 特征重要性分析
@@ -264,6 +282,7 @@ CMD ["python", "api/api_service.py"]
    - 分析置信度因子
 
 ### 日志查看
+
 ```bash
 # Python服务日志
 tail -f logs/ml-service.log
@@ -292,14 +311,17 @@ tail -f logs/application.log
 ## 版本更新
 
 ### 模型版本控制
+
 - 每次重新训练生成新版本号
 - 保留历史模型版本
 - 支持A/B测试不同版本
 
 ### 向后兼容性
+
 - 保持API接口稳定
 - 渐进式功能升级
 - 完善的错误降级机制
 
 ---
+
 **注意**: 本系统需要足够的历史成交数据才能产生有效的预测结果，建议在数据积累充足后再进行生产部署。

@@ -1,16 +1,16 @@
-// Token账户管理服务
+﻿// Token账户管理服务
 
 import { supabase, supabaseAdmin } from '@/lib/supabase';
-import { 
-  TokenAccount, 
-  TokenTransaction, 
-  TokenPackage, 
+import {
+  TokenAccount,
+  TokenTransaction,
+  TokenPackage,
   BillingRule,
   CreateTokenAccountDTO,
   TokenTransactionDTO,
   TokenTransactionQuery,
   AccountBalanceResponse,
-  ConsumeTokensDTO
+  ConsumeTokensDTO,
 } from '@/models/token-account.model';
 
 export class TokenAccountService {
@@ -23,14 +23,16 @@ export class TokenAccountService {
   async createAccount(dto: CreateTokenAccountDTO): Promise<TokenAccount> {
     const { data, error } = await this.supabase
       .from('token_accounts')
-      .insert([{
-        user_id: dto.userId,
-        brand_id: dto.brandId,
-        balance: 0,
-        total_consumed: 0,
-        total_purchased: 0,
-        status: 'active'
-      }])
+      .insert([
+        {
+          user_id: dto.userId,
+          brand_id: dto.brandId,
+          balance: 0,
+          total_consumed: 0,
+          total_purchased: 0,
+          status: 'active',
+        },
+      ])
       .select()
       .single();
 
@@ -51,7 +53,7 @@ export class TokenAccountService {
     if (error && error.code !== 'PGRST116') {
       throw new Error(`获取用户账户失败: ${error.message}`);
     }
-    
+
     return data || null;
   }
 
@@ -66,9 +68,9 @@ export class TokenAccountService {
       .single();
 
     if (error && error.code !== 'PGRST116') {
-      throw new Error(`获取品牌商账户失败: ${error.message}`);
+      throw new Error(`获取品牌商账户失? ${error.message}`);
     }
-    
+
     return data || null;
   }
 
@@ -83,10 +85,10 @@ export class TokenAccountService {
       .eq('id', accountId)
       .single();
 
-    if (accountError) throw new Error(`获取账户信息失败: ${accountError.message}`);
+    if (accountError)
+      throw new Error(`获取账户信息失败: ${accountError.message}`);
 
-    // 获取最近10笔交易记录
-    const { data: transactions, error: txError } = await this.supabase
+    // 获取最?0笔交易记?    const { data: transactions, error: txError } = await this.supabase
       .from('token_transactions')
       .select('*')
       .eq('account_id', accountId)
@@ -100,18 +102,20 @@ export class TokenAccountService {
       currentBalance: account.balance,
       totalConsumed: account.total_consumed,
       totalPurchased: account.total_purchased,
-      recentTransactions: transactions || []
+      recentTransactions: transactions || [],
     };
   }
 
   /**
    * 消费Token
    */
-  async consumeTokens(dto: ConsumeTokensDTO): Promise<{ success: boolean; remainingBalance: number }> {
+  async consumeTokens(
+    dto: ConsumeTokensDTO
+  ): Promise<{ success: boolean; remainingBalance: number }> {
     // 获取计费规则
     const billingRule = await this.getBillingRule(dto.serviceType);
     if (!billingRule) {
-      throw new Error(`未找到服务类型 ${dto.serviceType} 的计费规则`);
+      throw new Error(`未找到服务类?${dto.serviceType} 的计费规则`);
     }
 
     // 计算消耗的Token数量
@@ -123,30 +127,33 @@ export class TokenAccountService {
       amount: -tokensToConsume, // 负数表示消费
       transactionType: 'consumption',
       description: dto.description,
-      referenceId: undefined
+      referenceId: undefined,
     };
 
     const result = await this.createTransaction(transaction);
-    
-    // 获取最新余额
-    const balanceInfo = await this.getAccountBalance(dto.accountId);
-    
+
+    // 获取最新余?    const balanceInfo = await this.getAccountBalance(dto.accountId);
+
     return {
       success: result !== null,
-      remainingBalance: balanceInfo.currentBalance
+      remainingBalance: balanceInfo.currentBalance,
     };
   }
 
   /**
-   * 充值Token（通过购买套餐）
-   */
-  async addTokens(accountId: string, tokens: number, description: string, referenceId?: string): Promise<TokenTransaction | null> {
+   * 充值Token（通过购买套餐?   */
+  async addTokens(
+    accountId: string,
+    tokens: number,
+    description: string,
+    referenceId?: string
+  ): Promise<TokenTransaction | null> {
     const transaction: TokenTransactionDTO = {
       accountId,
       amount: tokens,
       transactionType: 'purchase',
       description,
-      referenceId
+      referenceId,
     };
 
     return this.createTransaction(transaction);
@@ -155,16 +162,20 @@ export class TokenAccountService {
   /**
    * 创建交易记录
    */
-  async createTransaction(dto: TokenTransactionDTO): Promise<TokenTransaction | null> {
+  async createTransaction(
+    dto: TokenTransactionDTO
+  ): Promise<TokenTransaction | null> {
     const { data, error } = await this.supabase
       .from('token_transactions')
-      .insert([{
-        account_id: dto.accountId,
-        amount: dto.amount,
-        transaction_type: dto.transactionType,
-        reference_id: dto.referenceId,
-        description: dto.description
-      }])
+      .insert([
+        {
+          account_id: dto.accountId,
+          amount: dto.amount,
+          transaction_type: dto.transactionType,
+          reference_id: dto.referenceId,
+          description: dto.description,
+        },
+      ])
       .select()
       .single();
 
@@ -179,22 +190,29 @@ export class TokenAccountService {
   /**
    * 获取交易记录
    */
-  async getTransactions(query: TokenTransactionQuery): Promise<TokenTransaction[]> {
+  async getTransactions(
+    query: TokenTransactionQuery
+  ): Promise<TokenTransaction[]> {
     let supabaseQuery = this.supabase
       .from('token_transactions')
-      .select(`
+      .select(
+        `
         *,
         token_accounts(user_id, brand_id)
-      `)
+      `
+      )
       .order('created_at', { ascending: false });
 
     // 应用查询条件
     if (query.accountId) {
       supabaseQuery = supabaseQuery.eq('account_id', query.accountId);
     }
-    
+
     if (query.transactionType) {
-      supabaseQuery = supabaseQuery.eq('transaction_type', query.transactionType);
+      supabaseQuery = supabaseQuery.eq(
+        'transaction_type',
+        query.transactionType
+      );
     }
 
     if (query.startDate) {
@@ -210,7 +228,10 @@ export class TokenAccountService {
     }
 
     if (query.offset) {
-      supabaseQuery = supabaseQuery.range(query.offset, query.offset + (query.limit || 10) - 1);
+      supabaseQuery = supabaseQuery.range(
+        query.offset,
+        query.offset + (query.limit || 10) - 1
+      );
     }
 
     const { data, error } = await supabaseQuery;
@@ -222,7 +243,9 @@ export class TokenAccountService {
   /**
    * 获取计费规则
    */
-  private async getBillingRule(serviceType: string): Promise<BillingRule | null> {
+  private async getBillingRule(
+    serviceType: string
+  ): Promise<BillingRule | null> {
     const { data, error } = await this.supabase
       .from('billing_rules')
       .select('*')
@@ -255,7 +278,10 @@ export class TokenAccountService {
   /**
    * 验证账户余额是否充足
    */
-  async hasSufficientBalance(accountId: string, requiredTokens: number): Promise<boolean> {
+  async hasSufficientBalance(
+    accountId: string,
+    requiredTokens: number
+  ): Promise<boolean> {
     const balanceInfo = await this.getAccountBalance(accountId);
     return balanceInfo.currentBalance >= requiredTokens;
   }

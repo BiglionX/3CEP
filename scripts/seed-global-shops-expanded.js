@@ -3,25 +3,24 @@
 
 async function seedExpandedGlobalShops() {
   console.log('🌍 开始填充扩展版全球维修店铺数据...');
-  
+
   const supabaseUrl = 'https://hrjqzbhqueleszkvnsen.supabase.co';
   const serviceKey = 'your_service_role_key_here';
-  
+
   const headers = {
-    'apikey': serviceKey,
-    'Authorization': `Bearer ${serviceKey}`,
-    'Content-Type': 'application/json'
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    'Content-Type': 'application/json',
   };
 
   try {
     // 填充扩展版国际维修店铺数据
     await seedExpandedInternationalShops(supabaseUrl, headers);
-    
+
     // 验证数据完整性
     await verifyExpandedShopData(supabaseUrl, headers);
-    
+
     console.log('\n🎉 扩展版全球维修店铺数据填充完成！');
-    
   } catch (error) {
     console.error('❌ 数据填充过程中发生错误:', error.message);
     console.error('详细错误:', error);
@@ -40,10 +39,10 @@ function generateSlug(name) {
 // 填充扩展版国际维修店铺数据
 async function seedExpandedInternationalShops(supabaseUrl, headers) {
   console.log('\n🏪 填充扩展版国际维修店铺数据...');
-  
+
   const expandedShops = [
     // ==================== 欧洲 ====================
-    
+
     // 英国 (United Kingdom)
     {
       name: 'Carphone Warehouse Repair Centre (London)',
@@ -60,16 +59,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3000',
       cover_image_url: 'https://picsum.photos/600/300?random=3001',
       business_license: 'UK-LON-BIZ-234567',
-      services: JSON.stringify(['Mobile Phone Repair', 'Tablet Repair', 'Accessory Sales', 'Insurance Claims', 'Unlocking Services']),
-      specialties: JSON.stringify(['Major Retailer', 'Nationwide Coverage', 'Competitive Pricing', 'Expert Technicians']),
+      services: JSON.stringify([
+        'Mobile Phone Repair',
+        'Tablet Repair',
+        'Accessory Sales',
+        'Insurance Claims',
+        'Unlocking Services',
+      ]),
+      specialties: JSON.stringify([
+        'Major Retailer',
+        'Nationwide Coverage',
+        'Competitive Pricing',
+        'Expert Technicians',
+      ]),
       languages: JSON.stringify(['English', 'French', 'German']),
       rating: 4.4,
       review_count: 1678,
       service_count: 18,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 德国 (Germany)
     {
       name: 'MediaMarkt Service Center (Berlin)',
@@ -86,16 +96,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3002',
       cover_image_url: 'https://picsum.photos/600/300?random=3003',
       business_license: 'DE-BER-BIZ-345678',
-      services: JSON.stringify(['Handyreparatur', 'Computerservice', 'TV-Reparatur', 'Datensicherung', 'Garantieleistungen']),
-      specialties: JSON.stringify(['Großhandelskette', 'Originalteile', 'Schneller Service', 'Fachkompetenz']),
+      services: JSON.stringify([
+        'Handyreparatur',
+        'Computerservice',
+        'TV-Reparatur',
+        'Datensicherung',
+        'Garantieleistungen',
+      ]),
+      specialties: JSON.stringify([
+        'Großhandelskette',
+        'Originalteile',
+        'Schneller Service',
+        'Fachkompetenz',
+      ]),
       languages: JSON.stringify(['德语', '英语']),
       rating: 4.5,
       review_count: 1342,
       service_count: 23,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 法国 (France)
     {
       name: 'Orange Assistance Technique (Paris)',
@@ -112,16 +133,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3004',
       cover_image_url: 'https://picsum.photos/600/300?random=3005',
       business_license: 'FR-PAR-BIZ-456789',
-      services: JSON.stringify(['Réparation Smartphone', 'Service Informatique', 'Installation Box', 'Assistance à Distance', 'Vente Accessoires']),
-      specialties: JSON.stringify(['Opérateur Télécom', 'Service Officiel', 'Techniciens Certifiés', 'Support Multilingue']),
+      services: JSON.stringify([
+        'Réparation Smartphone',
+        'Service Informatique',
+        'Installation Box',
+        'Assistance à Distance',
+        'Vente Accessoires',
+      ]),
+      specialties: JSON.stringify([
+        'Opérateur Télécom',
+        'Service Officiel',
+        'Techniciens Certifiés',
+        'Support Multilingue',
+      ]),
       languages: JSON.stringify(['法语', '英语', '阿拉伯语']),
       rating: 4.3,
       review_count: 1567,
       service_count: 21,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 意大利 (Italy)
     {
       name: 'Unieuro Service Center (Milano)',
@@ -134,20 +166,31 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       country: '意大利',
       postal_code: '20121',
       latitude: 45.4642,
-      longitude: 9.1900,
+      longitude: 9.19,
       logo_url: 'https://picsum.photos/200/200?random=3006',
       cover_image_url: 'https://picsum.photos/600/300?random=3007',
       business_license: 'IT-MI-BIZ-567890',
-      services: JSON.stringify(['Riparazione Smartphone', 'Assistenza Computer', 'Servizio TV', 'Recupero Dati', 'Garanzia']),
-      specialties: JSON.stringify(['Grande Distribuzione', 'Componenti Originali', 'Servizio Rapido', 'Esperti Tecnici']),
+      services: JSON.stringify([
+        'Riparazione Smartphone',
+        'Assistenza Computer',
+        'Servizio TV',
+        'Recupero Dati',
+        'Garanzia',
+      ]),
+      specialties: JSON.stringify([
+        'Grande Distribuzione',
+        'Componenti Originali',
+        'Servizio Rapido',
+        'Esperti Tecnici',
+      ]),
       languages: JSON.stringify(['意大利语', '英语']),
       rating: 4.2,
       review_count: 1123,
       service_count: 19,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 西班牙 (Spain)
     {
       name: 'El Corte Inglés Tecno Service (Madrid)',
@@ -164,16 +207,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3008',
       cover_image_url: 'https://picsum.photos/600/300?random=3009',
       business_license: 'ES-MD-BIZ-678901',
-      services: JSON.stringify(['Reparación Móvil', 'Servicio Informático', 'Reparación Electrodomésticos', 'Recuperación Datos', 'Venta Accesorios']),
-      specialties: JSON.stringify(['Gran Almacén', 'Piezas Originales', 'Servicio Integral', 'Técnicos Cualificados']),
+      services: JSON.stringify([
+        'Reparación Móvil',
+        'Servicio Informático',
+        'Reparación Electrodomésticos',
+        'Recuperación Datos',
+        'Venta Accesorios',
+      ]),
+      specialties: JSON.stringify([
+        'Gran Almacén',
+        'Piezas Originales',
+        'Servicio Integral',
+        'Técnicos Cualificados',
+      ]),
       languages: JSON.stringify(['西班牙语', '英语']),
       rating: 4.3,
       review_count: 1456,
       service_count: 20,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 荷兰 (Netherlands)
     {
       name: 'Vanden Borre Service Center (Amsterdam)',
@@ -190,16 +244,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3010',
       cover_image_url: 'https://picsum.photos/600/300?random=3011',
       business_license: 'NL-NH-BIZ-789012',
-      services: JSON.stringify(['Mobiel Reparatie', 'Computer Service', 'TV Reparatie', 'Data Herstel', 'Garantie Service']),
-      specialties: JSON.stringify(['Elektronica Specialist', 'Originele Onderdelen', 'Snelle Service', 'Deskundig Personeel']),
+      services: JSON.stringify([
+        'Mobiel Reparatie',
+        'Computer Service',
+        'TV Reparatie',
+        'Data Herstel',
+        'Garantie Service',
+      ]),
+      specialties: JSON.stringify([
+        'Elektronica Specialist',
+        'Originele Onderdelen',
+        'Snelle Service',
+        'Deskundig Personeel',
+      ]),
       languages: JSON.stringify(['荷兰语', '英语', '德语']),
       rating: 4.4,
       review_count: 1234,
       service_count: 18,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 瑞典 (Sweden)
     {
       name: 'Ellos Teknikservice (Stockholm)',
@@ -216,16 +281,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3012',
       cover_image_url: 'https://picsum.photos/600/300?random=3013',
       business_license: 'SE-ST-BIZ-890123',
-      services: JSON.stringify(['Mobilreparation', 'Datorservice', 'TV-reparation', 'Dataåterställning', 'Garantiservice']),
-      specialties: JSON.stringify(['Stor Elektronikbutik', 'Originaldelar', 'Snabb Service', 'Kunnig Personal']),
+      services: JSON.stringify([
+        'Mobilreparation',
+        'Datorservice',
+        'TV-reparation',
+        'Dataåterställning',
+        'Garantiservice',
+      ]),
+      specialties: JSON.stringify([
+        'Stor Elektronikbutik',
+        'Originaldelar',
+        'Snabb Service',
+        'Kunnig Personal',
+      ]),
       languages: JSON.stringify(['瑞典语', '英语']),
       rating: 4.3,
       review_count: 987,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 波兰 (Poland)
     {
       name: 'RTV Euro AGD Service (Warsaw)',
@@ -242,16 +318,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3014',
       cover_image_url: 'https://picsum.photos/600/300?random=3015',
       business_license: 'PL-MA-BIZ-901234',
-      services: JSON.stringify(['Naprawa Telefonów', 'Serwis Komputerowy', 'Naprawa RTV', 'Odzyskiwanie Danych', 'Serwis Gwarancyjny']),
-      specialties: JSON.stringify(['Duży Sklep RTV', 'Oryginalne Części', 'Szybka Obsługa', 'Wykwalifikowany Personel']),
+      services: JSON.stringify([
+        'Naprawa Telefonów',
+        'Serwis Komputerowy',
+        'Naprawa RTV',
+        'Odzyskiwanie Danych',
+        'Serwis Gwarancyjny',
+      ]),
+      specialties: JSON.stringify([
+        'Duży Sklep RTV',
+        'Oryginalne Części',
+        'Szybka Obsługa',
+        'Wykwalifikowany Personel',
+      ]),
       languages: JSON.stringify(['波兰语', '英语']),
       rating: 4.1,
       review_count: 1345,
       service_count: 19,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 比利时 (Belgium)
     {
       name: 'Colruyt Group Tech Service (Brussels)',
@@ -268,16 +355,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3016',
       cover_image_url: 'https://picsum.photos/600/300?random=3017',
       business_license: 'BE-BRU-BIZ-012345',
-      services: JSON.stringify(['Réparation Mobile', 'Service Informatique', 'Réparation Électroménager', 'Récupération Données', 'Service Garantie']),
-      specialties: JSON.stringify(['Grand Distributeur', 'Pièces d\'Origine', 'Service Rapide', 'Personnel Qualifié']),
+      services: JSON.stringify([
+        'Réparation Mobile',
+        'Service Informatique',
+        'Réparation Électroménager',
+        'Récupération Données',
+        'Service Garantie',
+      ]),
+      specialties: JSON.stringify([
+        'Grand Distributeur',
+        "Pièces d'Origine",
+        'Service Rapide',
+        'Personnel Qualifié',
+      ]),
       languages: JSON.stringify(['法语', '荷兰语', '英语']),
       rating: 4.2,
       review_count: 1123,
       service_count: 18,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 瑞士 (Switzerland)
     {
       name: 'Digitec Service Center (Zurich)',
@@ -294,16 +392,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3018',
       cover_image_url: 'https://picsum.photos/600/300?random=3019',
       business_license: 'CH-ZH-BIZ-123456',
-      services: JSON.stringify(['Mobile Reparatur', 'Computer Service', 'TV Reparatur', 'Datenrettung', 'Garantieservice']),
-      specialties: JSON.stringify(['Elektronik Spezialist', 'Originalteile', 'Schneller Service', 'Experten Team']),
+      services: JSON.stringify([
+        'Mobile Reparatur',
+        'Computer Service',
+        'TV Reparatur',
+        'Datenrettung',
+        'Garantieservice',
+      ]),
+      specialties: JSON.stringify([
+        'Elektronik Spezialist',
+        'Originalteile',
+        'Schneller Service',
+        'Experten Team',
+      ]),
       languages: JSON.stringify(['德语', '法语', '意大利语', '英语']),
       rating: 4.6,
       review_count: 1567,
       service_count: 20,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 奥地利 (Austria)
     {
       name: 'Tesla Service Center (Vienna)',
@@ -320,16 +429,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3020',
       cover_image_url: 'https://picsum.photos/600/300?random=3021',
       business_license: 'AT-VI-BIZ-234567',
-      services: JSON.stringify(['Handyreparatur', 'Computerservice', 'TV-Reparatur', 'Datenwiederherstellung', 'Garantieservice']),
-      specialties: JSON.stringify(['Elektronik Fachgeschäft', 'Originalersatzteile', 'Schnelle Abwicklung', 'Kompetentes Team']),
+      services: JSON.stringify([
+        'Handyreparatur',
+        'Computerservice',
+        'TV-Reparatur',
+        'Datenwiederherstellung',
+        'Garantieservice',
+      ]),
+      specialties: JSON.stringify([
+        'Elektronik Fachgeschäft',
+        'Originalersatzteile',
+        'Schnelle Abwicklung',
+        'Kompetentes Team',
+      ]),
       languages: JSON.stringify(['德语', '英语']),
       rating: 4.3,
       review_count: 1034,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 丹麦 (Denmark)
     {
       name: 'Proshop Service Center (Copenhagen)',
@@ -346,16 +466,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3022',
       cover_image_url: 'https://picsum.photos/600/300?random=3023',
       business_license: 'DK-KO-BIZ-345678',
-      services: JSON.stringify(['Mobilreparation', 'Computerservice', 'TV-reparation', 'Data gendannelse', 'Garantiservice']),
-      specialties: JSON.stringify(['Elektronikhuse', 'Originale dele', 'Hurtig service', 'Fagligt personale']),
+      services: JSON.stringify([
+        'Mobilreparation',
+        'Computerservice',
+        'TV-reparation',
+        'Data gendannelse',
+        'Garantiservice',
+      ]),
+      specialties: JSON.stringify([
+        'Elektronikhuse',
+        'Originale dele',
+        'Hurtig service',
+        'Fagligt personale',
+      ]),
       languages: JSON.stringify(['丹麦语', '英语']),
       rating: 4.2,
       review_count: 876,
       service_count: 16,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 芬兰 (Finland)
     {
       name: 'Verkkokauppa Service (Helsinki)',
@@ -372,16 +503,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3024',
       cover_image_url: 'https://picsum.photos/600/300?random=3025',
       business_license: 'FI-UU-BIZ-456789',
-      services: JSON.stringify(['Matkapuhelimen korjaus', 'Tietokonepalvelu', 'TV-korjaus', 'Tiedon palautus', 'Takuupalvelu']),
-      specialties: JSON.stringify(['Sähkökauppaketju', 'Alkuperäiset osat', 'Nopea palvelu', 'Asiantunteva henkilökunta']),
+      services: JSON.stringify([
+        'Matkapuhelimen korjaus',
+        'Tietokonepalvelu',
+        'TV-korjaus',
+        'Tiedon palautus',
+        'Takuupalvelu',
+      ]),
+      specialties: JSON.stringify([
+        'Sähkökauppaketju',
+        'Alkuperäiset osat',
+        'Nopea palvelu',
+        'Asiantunteva henkilökunta',
+      ]),
       languages: JSON.stringify(['芬兰语', '瑞典语', '英语']),
       rating: 4.4,
       review_count: 1234,
       service_count: 18,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 挪威 (Norway)
     {
       name: 'Elkjøp Service Center (Oslo)',
@@ -398,16 +540,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3026',
       cover_image_url: 'https://picsum.photos/600/300?random=3027',
       business_license: 'NO-OS-BIZ-567890',
-      services: JSON.stringify(['Mobilreparasjon', 'Dataservice', 'TV-reparasjon', 'Datareduksjon', 'Garantiservice']),
-      specialties: JSON.stringify(['Elektronikkspesialist', 'Originale deler', 'Rask service', 'Kvalifisert personale']),
+      services: JSON.stringify([
+        'Mobilreparasjon',
+        'Dataservice',
+        'TV-reparasjon',
+        'Datareduksjon',
+        'Garantiservice',
+      ]),
+      specialties: JSON.stringify([
+        'Elektronikkspesialist',
+        'Originale deler',
+        'Rask service',
+        'Kvalifisert personale',
+      ]),
       languages: JSON.stringify(['挪威语', '英语']),
       rating: 4.3,
       review_count: 956,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 葡萄牙 (Portugal)
     {
       name: 'Worten Service Center (Lisbon)',
@@ -424,16 +577,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3028',
       cover_image_url: 'https://picsum.photos/600/300?random=3029',
       business_license: 'PT-LI-BIZ-678901',
-      services: JSON.stringify(['Reparação de Telemóveis', 'Serviço Informático', 'Reparação de TV', 'Recuperação de Dados', 'Serviço de Garantia']),
-      specialties: JSON.stringify(['Grande Distribuidor', 'Peças Originais', 'Serviço Rápido', 'Pessoal Qualificado']),
+      services: JSON.stringify([
+        'Reparação de Telemóveis',
+        'Serviço Informático',
+        'Reparação de TV',
+        'Recuperação de Dados',
+        'Serviço de Garantia',
+      ]),
+      specialties: JSON.stringify([
+        'Grande Distribuidor',
+        'Peças Originais',
+        'Serviço Rápido',
+        'Pessoal Qualificado',
+      ]),
       languages: JSON.stringify(['葡萄牙语', '英语']),
       rating: 4.1,
       review_count: 1045,
       service_count: 16,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 捷克 (Czech Republic)
     {
       name: 'MobilMentor Service (Prague)',
@@ -450,16 +614,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3030',
       cover_image_url: 'https://picsum.photos/600/300?random=3031',
       business_license: 'CZ-PR-BIZ-789012',
-      services: JSON.stringify(['Oprava mobilů', 'Počítačový servis', 'Oprava televizí', 'Obnova dat', 'Záruční servis']),
-      specialties: JSON.stringify(['Specialista na elektroniku', 'Originální díly', 'Rychlý servis', 'Kvalifikovaný tým']),
+      services: JSON.stringify([
+        'Oprava mobilů',
+        'Počítačový servis',
+        'Oprava televizí',
+        'Obnova dat',
+        'Záruční servis',
+      ]),
+      specialties: JSON.stringify([
+        'Specialista na elektroniku',
+        'Originální díly',
+        'Rychlý servis',
+        'Kvalifikovaný tým',
+      ]),
       languages: JSON.stringify(['捷克语', '英语']),
       rating: 4.2,
       review_count: 890,
       service_count: 15,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 希腊 (Greece)
     {
       name: 'Plaisio Service Center (Athens)',
@@ -476,16 +651,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3032',
       cover_image_url: 'https://picsum.photos/600/300?random=3033',
       business_license: 'GR-AT-BIZ-890123',
-      services: JSON.stringify(['Επισκευή κινητών', 'Υπολογιστική υποστήριξη', 'Επισκευή τηλεοράσεων', 'Ανάκτηση δεδομένων', 'Εγγυητική εξυπηρέτηση']),
-      specialties: JSON.stringify(['Μεγάλο ηλεκτρονικό κατάστημα', 'Γνήσια ανταλλακτικά', 'Γρήγορη εξυπηρέτηση', 'Εξειδικευμένο προσωπικό']),
+      services: JSON.stringify([
+        'Επισκευή κινητών',
+        'Υπολογιστική υποστήριξη',
+        'Επισκευή τηλεοράσεων',
+        'Ανάκτηση δεδομένων',
+        'Εγγυητική εξυπηρέτηση',
+      ]),
+      specialties: JSON.stringify([
+        'Μεγάλο ηλεκτρονικό κατάστημα',
+        'Γνήσια ανταλλακτικά',
+        'Γρήγορη εξυπηρέτηση',
+        'Εξειδικευμένο προσωπικό',
+      ]),
       languages: JSON.stringify(['希腊语', '英语']),
       rating: 4.0,
       review_count: 765,
       service_count: 14,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 匈牙利 (Hungary)
     {
       name: 'Tesco Mobile Service (Budapest)',
@@ -502,23 +688,34 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3034',
       cover_image_url: 'https://picsum.photos/600/300?random=3035',
       business_license: 'HU-BU-BIZ-901234',
-      services: JSON.stringify(['Mobiltelefon javítás', 'Számítógép szerviz', 'TV javítás', 'Adatvisszaállítás', 'Garanciális szolgáltatás']),
-      specialties: JSON.stringify(['Nagy áruházlánc', 'Eredeti alkatrészek', 'Gyors kiszolgálás', 'Szakképzett személyzet']),
+      services: JSON.stringify([
+        'Mobiltelefon javítás',
+        'Számítógép szerviz',
+        'TV javítás',
+        'Adatvisszaállítás',
+        'Garanciális szolgáltatás',
+      ]),
+      specialties: JSON.stringify([
+        'Nagy áruházlánc',
+        'Eredeti alkatrészek',
+        'Gyors kiszolgálás',
+        'Szakképzett személyzet',
+      ]),
       languages: JSON.stringify(['匈牙利语', '英语']),
       rating: 4.1,
       review_count: 934,
       service_count: 16,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 爱尔兰 (Ireland)
     {
       name: 'Currys PC World Service (Dublin)',
       slug: generateSlug('currys-dublin'),
       contact_person: 'Sean Murphy',
       phone: '+353-1-555-0123',
-      address: 'O\'Connell Street Lower 1, Dublin 1',
+      address: "O'Connell Street Lower 1, Dublin 1",
       city: 'Dublin',
       province: 'Leinster',
       country: '爱尔兰',
@@ -528,18 +725,29 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3036',
       cover_image_url: 'https://picsum.photos/600/300?random=3037',
       business_license: 'IE-L-BIZ-012345',
-      services: JSON.stringify(['Mobile Phone Repair', 'Computer Service', 'TV Repair', 'Data Recovery', 'Warranty Service']),
-      specialties: JSON.stringify(['Major Retailer', 'Genuine Parts', 'Fast Service', 'Skilled Staff']),
+      services: JSON.stringify([
+        'Mobile Phone Repair',
+        'Computer Service',
+        'TV Repair',
+        'Data Recovery',
+        'Warranty Service',
+      ]),
+      specialties: JSON.stringify([
+        'Major Retailer',
+        'Genuine Parts',
+        'Fast Service',
+        'Skilled Staff',
+      ]),
       languages: JSON.stringify(['英语', '爱尔兰语']),
       rating: 4.2,
       review_count: 1156,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
 
     // ==================== 美洲 ====================
-    
+
     // 美国 (United States) - 已有2家，再添加2家
     {
       name: 'Sprint Repair Center (Los Angeles)',
@@ -556,16 +764,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3038',
       cover_image_url: 'https://picsum.photos/600/300?random=3039',
       business_license: 'US-CA-BIZ-234567',
-      services: JSON.stringify(['Cell Phone Repair', 'Tablet Service', 'Network Support', 'Device Upgrade', 'Insurance Claims']),
-      specialties: JSON.stringify(['Telecom Provider', 'Authorized Service', 'Multi-State Network', 'Technical Experts']),
+      services: JSON.stringify([
+        'Cell Phone Repair',
+        'Tablet Service',
+        'Network Support',
+        'Device Upgrade',
+        'Insurance Claims',
+      ]),
+      specialties: JSON.stringify([
+        'Telecom Provider',
+        'Authorized Service',
+        'Multi-State Network',
+        'Technical Experts',
+      ]),
       languages: JSON.stringify(['English', 'Spanish']),
       rating: 4.3,
       review_count: 1876,
       service_count: 20,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     {
       name: 'Verizon Wireless Repair (Chicago)',
       slug: generateSlug('verizon-chicago'),
@@ -581,16 +800,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3040',
       cover_image_url: 'https://picsum.photos/600/300?random=3041',
       business_license: 'US-IL-BIZ-345678',
-      services: JSON.stringify(['Mobile Repair', 'Home Phone Service', 'Internet Support', 'Device Trade-In', 'Protection Plans']),
-      specialties: JSON.stringify(['Leading Carrier', 'Nationwide Coverage', 'Same-Day Service', 'Customer Satisfaction']),
+      services: JSON.stringify([
+        'Mobile Repair',
+        'Home Phone Service',
+        'Internet Support',
+        'Device Trade-In',
+        'Protection Plans',
+      ]),
+      specialties: JSON.stringify([
+        'Leading Carrier',
+        'Nationwide Coverage',
+        'Same-Day Service',
+        'Customer Satisfaction',
+      ]),
       languages: JSON.stringify(['English', 'Spanish', 'Polish']),
       rating: 4.4,
       review_count: 2034,
       service_count: 22,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 加拿大 (Canada) - 已有1家，再添加1家
     {
       name: 'Bell Mobility Service (Montreal)',
@@ -607,16 +837,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3042',
       cover_image_url: 'https://picsum.photos/600/300?random=3043',
       business_license: 'CA-QC-BIZ-456789',
-      services: JSON.stringify(['Réparation Mobile', 'Service Internet', 'Support Technique', 'Échange d\'appareils', 'Plans de protection']),
-      specialties: JSON.stringify(['Grand Opérateur', 'Service Autorisé', 'Réseau National', 'Personnel Bilingue']),
+      services: JSON.stringify([
+        'Réparation Mobile',
+        'Service Internet',
+        'Support Technique',
+        "Échange d'appareils",
+        'Plans de protection',
+      ]),
+      specialties: JSON.stringify([
+        'Grand Opérateur',
+        'Service Autorisé',
+        'Réseau National',
+        'Personnel Bilingue',
+      ]),
       languages: JSON.stringify(['英语', '法语']),
       rating: 4.2,
       review_count: 1345,
       service_count: 18,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 墨西哥 (Mexico)
     {
       name: 'Telcel Service Center (Mexico City)',
@@ -633,16 +874,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3044',
       cover_image_url: 'https://picsum.photos/600/300?random=3045',
       business_license: 'MX-CDMX-BIZ-567890',
-      services: JSON.stringify(['Reparación de Celulares', 'Servicio de Internet', 'Soporte Técnico', 'Cambio de Equipos', 'Planes de Protección']),
-      specialties: JSON.stringify(['Operadora Líder', 'Servicio Oficial', 'Cobertura Nacional', 'Personal Calificado']),
+      services: JSON.stringify([
+        'Reparación de Celulares',
+        'Servicio de Internet',
+        'Soporte Técnico',
+        'Cambio de Equipos',
+        'Planes de Protección',
+      ]),
+      specialties: JSON.stringify([
+        'Operadora Líder',
+        'Servicio Oficial',
+        'Cobertura Nacional',
+        'Personal Calificado',
+      ]),
       languages: JSON.stringify(['西班牙语', '英语']),
       rating: 4.1,
       review_count: 2156,
       service_count: 19,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 巴西 (Brazil) - 已有1家，再添加1家
     {
       name: 'Casas Bahia Tech Service (Rio de Janeiro)',
@@ -659,16 +911,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3046',
       cover_image_url: 'https://picsum.photos/600/300?random=3047',
       business_license: 'BR-RJ-BIZ-678901',
-      services: JSON.stringify(['Reparo de Celular', 'Serviço de Computador', 'Conserto de TV', 'Recuperação de Dados', 'Venda de Peças']),
-      specialties: JSON.stringify(['Grande Varejista', 'Peças Originais', 'Atendimento Rápido', 'Suporte Técnico']),
+      services: JSON.stringify([
+        'Reparo de Celular',
+        'Serviço de Computador',
+        'Conserto de TV',
+        'Recuperação de Dados',
+        'Venda de Peças',
+      ]),
+      specialties: JSON.stringify([
+        'Grande Varejista',
+        'Peças Originais',
+        'Atendimento Rápido',
+        'Suporte Técnico',
+      ]),
       languages: JSON.stringify(['葡萄牙语', '英语']),
       rating: 4.0,
       review_count: 1678,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 阿根廷 (Argentina)
     {
       name: 'Fravega Service Center (Buenos Aires)',
@@ -685,23 +948,35 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3048',
       cover_image_url: 'https://picsum.photos/600/300?random=3049',
       business_license: 'AR-BA-BIZ-789012',
-      services: JSON.stringify(['Reparación de Celulares', 'Servicio Informático', 'Reparación de Electrodomésticos', 'Recuperación de Datos', 'Venta de Accesorios']),
-      specialties: JSON.stringify(['Gran Casa Comercial', 'Repuestos Originales', 'Servicio Integral', 'Técnicos Especializados']),
+      services: JSON.stringify([
+        'Reparación de Celulares',
+        'Servicio Informático',
+        'Reparación de Electrodomésticos',
+        'Recuperación de Datos',
+        'Venta de Accesorios',
+      ]),
+      specialties: JSON.stringify([
+        'Gran Casa Comercial',
+        'Repuestos Originales',
+        'Servicio Integral',
+        'Técnicos Especializados',
+      ]),
       languages: JSON.stringify(['西班牙语', '英语']),
       rating: 4.1,
       review_count: 1456,
       service_count: 18,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 智利 (Chile)
     {
       name: 'Ripley Tech Service (Santiago)',
       slug: generateSlug('ripley-santiago'),
       contact_person: 'Francisco Morales',
       phone: '+56-2-5555-8901',
-      address: 'Avenida Libertador Bernardo O\'Higgins 1111, Santiago, Región Metropolitana 8320000',
+      address:
+        "Avenida Libertador Bernardo O'Higgins 1111, Santiago, Región Metropolitana 8320000",
       city: 'Santiago',
       province: 'Santiago Metropolitan',
       country: '智利',
@@ -711,16 +986,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3050',
       cover_image_url: 'https://picsum.photos/600/300?random=3051',
       business_license: 'CL-RM-BIZ-890123',
-      services: JSON.stringify(['Reparación de Celulares', 'Servicio Computacional', 'Reparación de TV', 'Recuperación de Datos', 'Venta de Accesorios']),
-      specialties: JSON.stringify(['Gran Departamental', 'Piezas Originales', 'Servicio Rápido', 'Personal Experto']),
+      services: JSON.stringify([
+        'Reparación de Celulares',
+        'Servicio Computacional',
+        'Reparación de TV',
+        'Recuperación de Datos',
+        'Venta de Accesorios',
+      ]),
+      specialties: JSON.stringify([
+        'Gran Departamental',
+        'Piezas Originales',
+        'Servicio Rápido',
+        'Personal Experto',
+      ]),
       languages: JSON.stringify(['西班牙语', '英语']),
       rating: 4.0,
       review_count: 1234,
       service_count: 16,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 哥伦比亚 (Colombia)
     {
       name: 'Éxito Tech Service (Bogotá)',
@@ -732,21 +1018,32 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       province: 'Bogotá',
       country: '哥伦比亚',
       postal_code: '110221',
-      latitude: 4.7110,
+      latitude: 4.711,
       longitude: -74.0721,
       logo_url: 'https://picsum.photos/200/200?random=3052',
       cover_image_url: 'https://picsum.photos/600/300?random=3053',
       business_license: 'CO-BO-BIZ-901234',
-      services: JSON.stringify(['Reparación de Celulares', 'Servicio Informático', 'Reparación de Electrodomésticos', 'Recuperación de Datos', 'Venta de Accesorios']),
-      specialties: JSON.stringify(['Gran Cadena Comercial', 'Repuestos Originales', 'Servicio Integral', 'Técnicos Calificados']),
+      services: JSON.stringify([
+        'Reparación de Celulares',
+        'Servicio Informático',
+        'Reparación de Electrodomésticos',
+        'Recuperación de Datos',
+        'Venta de Accesorios',
+      ]),
+      specialties: JSON.stringify([
+        'Gran Cadena Comercial',
+        'Repuestos Originales',
+        'Servicio Integral',
+        'Técnicos Calificados',
+      ]),
       languages: JSON.stringify(['西班牙语', '英语']),
       rating: 3.9,
       review_count: 1045,
       service_count: 15,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 秘鲁 (Peru)
     {
       name: 'Saga Falabella Service (Lima)',
@@ -763,18 +1060,29 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3054',
       cover_image_url: 'https://picsum.photos/600/300?random=3055',
       business_license: 'PE-LI-BIZ-012345',
-      services: JSON.stringify(['Reparación de Celulares', 'Servicio Informático', 'Reparación de Electrodomésticos', 'Recuperación de Datos', 'Venta de Accesorios']),
-      specialties: JSON.stringify(['Gran Tienda Departamental', 'Repuestos Originales', 'Servicio Rápido', 'Personal Experto']),
+      services: JSON.stringify([
+        'Reparación de Celulares',
+        'Servicio Informático',
+        'Reparación de Electrodomésticos',
+        'Recuperación de Datos',
+        'Venta de Accesorios',
+      ]),
+      specialties: JSON.stringify([
+        'Gran Tienda Departamental',
+        'Repuestos Originales',
+        'Servicio Rápido',
+        'Personal Experto',
+      ]),
       languages: JSON.stringify(['西班牙语', '英语']),
       rating: 4.0,
       review_count: 956,
       service_count: 14,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
 
     // ==================== 亚洲 ====================
-    
+
     // 日本 (Japan) - 已有2家，再添加1家
     {
       name: 'ヨドバシカメラ サービスセンター (Yodobashi Camera Service)',
@@ -791,16 +1099,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3056',
       cover_image_url: 'https://picsum.photos/600/300?random=3057',
       business_license: 'JP-TOK-BIZ-123456',
-      services: JSON.stringify(['スマホ修理', 'パソコン修理', '家電修理', 'データ復旧', '保証対応']),
-      specialties: JSON.stringify(['大型家電量販店', '正規代理店', '即日修理', '純正部品']),
+      services: JSON.stringify([
+        'スマホ修理',
+        'パソコン修理',
+        '家電修理',
+        'データ復旧',
+        '保証対応',
+      ]),
+      specialties: JSON.stringify([
+        '大型家電量販店',
+        '正規代理店',
+        '即日修理',
+        '純正部品',
+      ]),
       languages: JSON.stringify(['日语', '英语', '中文']),
       rating: 4.6,
       review_count: 2345,
       service_count: 25,
       certification_level: 5,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 韩国 (South Korea) - 已有1家，再添加1家
     {
       name: '이마트 모바일센터 (E-Mart Mobile Center)',
@@ -818,16 +1137,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3058',
       cover_image_url: 'https://picsum.photos/600/300?random=3059',
       business_license: 'KR-ICN-BIZ-234567',
-      services: JSON.stringify(['스마트폰 수리', '컴퓨터 수리', '가전제품 수리', '데이터 복구', '보증 서비스']),
-      specialties: JSON.stringify(['대형 마트 체인', '정품 부품', '다국어 지원', '편리한 위치']),
+      services: JSON.stringify([
+        '스마트폰 수리',
+        '컴퓨터 수리',
+        '가전제품 수리',
+        '데이터 복구',
+        '보증 서비스',
+      ]),
+      specialties: JSON.stringify([
+        '대형 마트 체인',
+        '정품 부품',
+        '다국어 지원',
+        '편리한 위치',
+      ]),
       languages: JSON.stringify(['韩语', '英语', '中文']),
       rating: 4.3,
       review_count: 1567,
       service_count: 20,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 新加坡 (Singapore) - 已有1家，再添加1家
     {
       name: 'Courts Service Center',
@@ -844,16 +1174,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3060',
       cover_image_url: 'https://picsum.photos/600/300?random=3061',
       business_license: 'SG-SIN-BIZ-345678',
-      services: JSON.stringify(['Mobile Repair', 'Computer Service', 'Home Appliance Repair', 'Data Recovery', 'Warranty Claims']),
-      specialties: JSON.stringify(['Department Store Chain', 'Genuine Parts', 'Express Service', 'Multilingual Staff']),
+      services: JSON.stringify([
+        'Mobile Repair',
+        'Computer Service',
+        'Home Appliance Repair',
+        'Data Recovery',
+        'Warranty Claims',
+      ]),
+      specialties: JSON.stringify([
+        'Department Store Chain',
+        'Genuine Parts',
+        'Express Service',
+        'Multilingual Staff',
+      ]),
       languages: JSON.stringify(['英语', '中文', '马来语', '泰米尔语']),
       rating: 4.4,
       review_count: 1345,
       service_count: 18,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 印度 (India) - 已有1家，再添加2家
     {
       name: 'Croma Tech Service (Delhi)',
@@ -866,20 +1207,31 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       country: '印度',
       postal_code: '110001',
       latitude: 28.6139,
-      longitude: 77.2090,
+      longitude: 77.209,
       logo_url: 'https://picsum.photos/200/200?random=3062',
       cover_image_url: 'https://picsum.photos/600/300?random=3063',
       business_license: 'IN-DL-BIZ-456789',
-      services: JSON.stringify(['Mobile Repair', 'Electronics Service', 'Appliance Repair', 'Data Recovery', 'Upgrade Solutions']),
-      specialties: JSON.stringify(['Retail Giant', 'Wide Network', 'Skilled Technicians', 'Competitive Rates']),
+      services: JSON.stringify([
+        'Mobile Repair',
+        'Electronics Service',
+        'Appliance Repair',
+        'Data Recovery',
+        'Upgrade Solutions',
+      ]),
+      specialties: JSON.stringify([
+        'Retail Giant',
+        'Wide Network',
+        'Skilled Technicians',
+        'Competitive Rates',
+      ]),
       languages: JSON.stringify(['英语', '印地语']),
       rating: 4.1,
       review_count: 1876,
       service_count: 22,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     {
       name: 'Vijay Sales Service (Bangalore)',
       slug: generateSlug('vijay-sales-bangalore'),
@@ -895,23 +1247,35 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3064',
       cover_image_url: 'https://picsum.photos/600/300?random=3065',
       business_license: 'IN-KA-BIZ-567890',
-      services: JSON.stringify(['Mobile Repair', 'Computer Service', 'TV Repair', 'Data Recovery', 'Accessory Sales']),
-      specialties: JSON.stringify(['Established Retailer', 'Technical Expertise', 'Customer Centric', 'Quality Service']),
+      services: JSON.stringify([
+        'Mobile Repair',
+        'Computer Service',
+        'TV Repair',
+        'Data Recovery',
+        'Accessory Sales',
+      ]),
+      specialties: JSON.stringify([
+        'Established Retailer',
+        'Technical Expertise',
+        'Customer Centric',
+        'Quality Service',
+      ]),
       languages: JSON.stringify(['英语', '印地语', '卡纳达语']),
       rating: 4.0,
       review_count: 1654,
       service_count: 20,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 马来西亚 (Malaysia)
     {
       name: 'Senheng Service Center (Kuala Lumpur)',
       slug: generateSlug('senheng-kuala-lumpur'),
       contact_person: 'Lee Wei Ming',
       phone: '+60-3-5555-5678',
-      address: 'Lot G-08, Ground Floor, Mid Valley Megamall, Lingkaran Syed Putra, 59200 Kuala Lumpur',
+      address:
+        'Lot G-08, Ground Floor, Mid Valley Megamall, Lingkaran Syed Putra, 59200 Kuala Lumpur',
       city: 'Kuala Lumpur',
       province: 'Federal Territory',
       country: '马来西亚',
@@ -921,16 +1285,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3066',
       cover_image_url: 'https://picsum.photos/600/300?random=3067',
       business_license: 'MY-KL-BIZ-678901',
-      services: JSON.stringify(['Mobile Repair', 'Computer Service', 'Home Appliance Repair', 'Data Recovery', 'Warranty Service']),
-      specialties: JSON.stringify(['Electrical Retailer', 'Genuine Components', 'Fast Turnaround', 'Multilingual Support']),
+      services: JSON.stringify([
+        'Mobile Repair',
+        'Computer Service',
+        'Home Appliance Repair',
+        'Data Recovery',
+        'Warranty Service',
+      ]),
+      specialties: JSON.stringify([
+        'Electrical Retailer',
+        'Genuine Components',
+        'Fast Turnaround',
+        'Multilingual Support',
+      ]),
       languages: JSON.stringify(['英语', '中文', '马来语', '泰米尔语']),
       rating: 4.2,
       review_count: 1432,
       service_count: 19,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 泰国 (Thailand)
     {
       name: 'JAS Service Center (Bangkok)',
@@ -947,16 +1322,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3068',
       cover_image_url: 'https://picsum.photos/600/300?random=3069',
       business_license: 'TH-BKK-BIZ-789012',
-      services: JSON.stringify(['การซ่อมมือถือ', 'บริการคอมพิวเตอร์', 'ซ่อมเครื่องใช้ไฟฟ้า', 'กู้คืนข้อมูล', 'บริการรับประกัน']),
-      specialties: JSON.stringify(['ห้างสรรพสินค้าใหญ่', 'อะไหล่แท้', 'บริการรวดเร็ว', 'บุคลากรผู้เชี่ยวชาญ']),
+      services: JSON.stringify([
+        'การซ่อมมือถือ',
+        'บริการคอมพิวเตอร์',
+        'ซ่อมเครื่องใช้ไฟฟ้า',
+        'กู้คืนข้อมูล',
+        'บริการรับประกัน',
+      ]),
+      specialties: JSON.stringify([
+        'ห้างสรรพสินค้าใหญ่',
+        'อะไหล่แท้',
+        'บริการรวดเร็ว',
+        'บุคลากรผู้เชี่ยวชาญ',
+      ]),
       languages: JSON.stringify(['泰语', '英语', '中文']),
       rating: 4.1,
       review_count: 1256,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 菲律宾 (Philippines)
     {
       name: 'SM Appliance Center (Manila)',
@@ -973,16 +1359,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3070',
       cover_image_url: 'https://picsum.photos/600/300?random=3071',
       business_license: 'PH-MM-BIZ-890123',
-      services: JSON.stringify(['Mobile Repair', 'Computer Service', 'Appliance Repair', 'Data Recovery', 'Accessory Sales']),
-      specialties: JSON.stringify(['Shopping Mall Chain', 'Genuine Parts', 'Professional Service', 'Customer Focused']),
+      services: JSON.stringify([
+        'Mobile Repair',
+        'Computer Service',
+        'Appliance Repair',
+        'Data Recovery',
+        'Accessory Sales',
+      ]),
+      specialties: JSON.stringify([
+        'Shopping Mall Chain',
+        'Genuine Parts',
+        'Professional Service',
+        'Customer Focused',
+      ]),
       languages: JSON.stringify(['英语', '菲律宾语', '中文']),
       rating: 4.0,
       review_count: 1345,
       service_count: 18,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 印度尼西亚 (Indonesia)
     {
       name: 'Electronic Solution Service (Jakarta)',
@@ -999,23 +1396,35 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3072',
       cover_image_url: 'https://picsum.photos/600/300?random=3073',
       business_license: 'ID-JK-BIZ-901234',
-      services: JSON.stringify(['Perbaikan HP', 'Layanan Komputer', 'Perbaikan Elektronik', 'Pemulihan Data', 'Penjualan Aksesori']),
-      specialties: JSON.stringify(['Toko Elektronik Besar', 'Suku Cadang Asli', 'Layanan Cepat', 'Tenaga Ahli']),
+      services: JSON.stringify([
+        'Perbaikan HP',
+        'Layanan Komputer',
+        'Perbaikan Elektronik',
+        'Pemulihan Data',
+        'Penjualan Aksesori',
+      ]),
+      specialties: JSON.stringify([
+        'Toko Elektronik Besar',
+        'Suku Cadang Asli',
+        'Layanan Cepat',
+        'Tenaga Ahli',
+      ]),
       languages: JSON.stringify(['印尼语', '英语']),
       rating: 3.9,
       review_count: 1123,
       service_count: 16,
       certification_level: 3,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 越南 (Vietnam)
     {
       name: 'Điện Máy Xanh Service (Ho Chi Minh City)',
       slug: generateSlug('dien-may-xanh-hcmc'),
       contact_person: 'Nguyen Van Hai',
       phone: '+84-28-5555-9012',
-      address: '2B Phan Đình Phùng, Phường Nguyễn Chí Thanh, Quận Phú Nhuận, TP. Hồ Chí Minh',
+      address:
+        '2B Phan Đình Phùng, Phường Nguyễn Chí Thanh, Quận Phú Nhuận, TP. Hồ Chí Minh',
       city: 'Ho Chi Minh City',
       province: 'Ho Chi Minh City',
       country: '越南',
@@ -1025,16 +1434,27 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3074',
       cover_image_url: 'https://picsum.photos/600/300?random=3075',
       business_license: 'VN-HCM-BIZ-012345',
-      services: JSON.stringify(['Sửa chữa điện thoại', 'Dịch vụ máy tính', 'Sửa chữa thiết bị điện tử', 'Phục hồi dữ liệu', 'Bán phụ kiện']),
-      specialties: JSON.stringify(['Chuỗi siêu thị điện máy', 'Linh kiện chính hãng', 'Dịch vụ nhanh chóng', 'Nhân viên chuyên nghiệp']),
+      services: JSON.stringify([
+        'Sửa chữa điện thoại',
+        'Dịch vụ máy tính',
+        'Sửa chữa thiết bị điện tử',
+        'Phục hồi dữ liệu',
+        'Bán phụ kiện',
+      ]),
+      specialties: JSON.stringify([
+        'Chuỗi siêu thị điện máy',
+        'Linh kiện chính hãng',
+        'Dịch vụ nhanh chóng',
+        'Nhân viên chuyên nghiệp',
+      ]),
       languages: JSON.stringify(['越南语', '英语']),
       rating: 4.0,
       review_count: 1456,
       service_count: 17,
       certification_level: 4,
-      is_verified: true
+      is_verified: true,
     },
-    
+
     // 以色列 (Israel)
     {
       name: 'KSP Computers & Mobile (Tel Aviv)',
@@ -1051,15 +1471,26 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       logo_url: 'https://picsum.photos/200/200?random=3076',
       cover_image_url: 'https://picsum.photos/600/300?random=3077',
       business_license: 'IL-TA-BIZ-123456',
-      services: JSON.stringify(['Mobile Phone Repair', 'Computer Service', 'Electronics Repair', 'Data Recovery', 'Warranty Service']),
-      specialties: JSON.stringify(['Technology Specialists', 'Genuine Components', 'Fast Service', 'Expert Technicians']),
+      services: JSON.stringify([
+        'Mobile Phone Repair',
+        'Computer Service',
+        'Electronics Repair',
+        'Data Recovery',
+        'Warranty Service',
+      ]),
+      specialties: JSON.stringify([
+        'Technology Specialists',
+        'Genuine Components',
+        'Fast Service',
+        'Expert Technicians',
+      ]),
       languages: JSON.stringify(['希伯来语', '英语', '阿拉伯语']),
       rating: 4.5,
       review_count: 1234,
       service_count: 19,
       certification_level: 5,
-      is_verified: true
-    }
+      is_verified: true,
+    },
   ];
 
   let successCount = 0;
@@ -1068,9 +1499,9 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       const response = await fetch(`${supabaseUrl}/rest/v1/repair_shops`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify(shop)
+        body: JSON.stringify(shop),
       });
-      
+
       if (response.status === 201 || response.status === 409) {
         successCount++;
         console.log(`✅ 已添加: ${shop.name} (${shop.country})`);
@@ -1079,18 +1510,20 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
       console.log(`❌ 添加失败: ${shop.name}`);
     }
   }
-  
-  console.log(`\n✅ 扩展版国际维修店铺数据填充完成 (${successCount}/${expandedShops.length} 家)`);
+
+  console.log(
+    `\n✅ 扩展版国际维修店铺数据填充完成 (${successCount}/${expandedShops.length} 家)`
+  );
   console.log('🌍 覆盖国家和地区:');
-  
+
   const countryStats = {};
   expandedShops.forEach(shop => {
     const country = shop.country || '未知';
     countryStats[country] = (countryStats[country] || 0) + 1;
   });
-  
+
   Object.entries(countryStats)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([, a], [, b]) => b - a)
     .forEach(([country, count]) => {
       console.log(`  - ${country}: ${count} 家`);
     });
@@ -1099,37 +1532,86 @@ async function seedExpandedInternationalShops(supabaseUrl, headers) {
 // 验证扩展版店铺数据完整性
 async function verifyExpandedShopData(supabaseUrl, headers) {
   console.log('\n🔍 验证扩展版维修店铺数据完整性...');
-  
+
   try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/repair_shops?select=*,country&order=country`, {
-      headers: headers
-    });
-    
+    const response = await fetch(
+      `${supabaseUrl}/rest/v1/repair_shops?select=*,country&order=country`,
+      {
+        headers: headers,
+      }
+    );
+
     if (response.ok) {
       const shops = await response.json();
       console.log(`📊 总店铺数量: ${shops.length} 家`);
-      
+
       // 按大洲统计
       const continentStats = {
-        '欧洲': 0,
-        '美洲': 0,
-        '亚洲': 0,
-        '大洋洲': 0,
-        '非洲': 0,
-        '中东': 0
+        欧洲: 0,
+        美洲: 0,
+        亚洲: 0,
+        大洋洲: 0,
+        非洲: 0,
+        中东: 0,
       };
-      
+
       const countryStats = {};
       shops.forEach(shop => {
         const country = shop.country || '未知';
         countryStats[country] = (countryStats[country] || 0) + 1;
-        
+
         // 按大洲分类
-        if (['英国', '德国', '法国', '意大利', '西班牙', '荷兰', '瑞典', '波兰', '比利时', '瑞士', '奥地利', '丹麦', '芬兰', '挪威', '葡萄牙', '捷克', '希腊', '匈牙利', '爱尔兰'].includes(country)) {
+        if (
+          [
+            '英国',
+            '德国',
+            '法国',
+            '意大利',
+            '西班牙',
+            '荷兰',
+            '瑞典',
+            '波兰',
+            '比利时',
+            '瑞士',
+            '奥地利',
+            '丹麦',
+            '芬兰',
+            '挪威',
+            '葡萄牙',
+            '捷克',
+            '希腊',
+            '匈牙利',
+            '爱尔兰',
+          ].includes(country)
+        ) {
           continentStats['欧洲']++;
-        } else if (['美国', '加拿大', '墨西哥', '巴西', '阿根廷', '智利', '哥伦比亚', '秘鲁'].includes(country)) {
+        } else if (
+          [
+            '美国',
+            '加拿大',
+            '墨西哥',
+            '巴西',
+            '阿根廷',
+            '智利',
+            '哥伦比亚',
+            '秘鲁',
+          ].includes(country)
+        ) {
           continentStats['美洲']++;
-        } else if (['日本', '韩国', '新加坡', '印度', '马来西亚', '泰国', '菲律宾', '印度尼西亚', '越南', '以色列'].includes(country)) {
+        } else if (
+          [
+            '日本',
+            '韩国',
+            '新加坡',
+            '印度',
+            '马来西亚',
+            '泰国',
+            '菲律宾',
+            '印度尼西亚',
+            '越南',
+            '以色列',
+          ].includes(country)
+        ) {
           continentStats['亚洲']++;
         } else if (['澳大利亚'].includes(country)) {
           continentStats['大洋洲']++;
@@ -1137,40 +1619,41 @@ async function verifyExpandedShopData(supabaseUrl, headers) {
           continentStats['中东']++;
         }
       });
-      
+
       console.log('\n🌍 各大洲店铺分布:');
       Object.entries(continentStats)
-        .filter(([,count]) => count > 0)
+        .filter(([, count]) => count > 0)
         .forEach(([continent, count]) => {
           console.log(`  ${continent}: ${count} 家`);
         });
-      
+
       console.log('\n🇨🇳 各国店铺分布:');
       Object.entries(countryStats)
-        .sort(([,a], [,b]) => b - a)
+        .sort(([, a], [, b]) => b - a)
         .forEach(([country, count]) => {
           console.log(`  ${country}: ${count} 家`);
         });
-      
+
       // 认证等级统计
       const certStats = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
       shops.forEach(shop => {
         const level = shop.certification_level || 1;
         certStats[level]++;
       });
-      
+
       console.log('\n🏅 认证等级分布:');
       Object.entries(certStats)
-        .filter(([,count]) => count > 0)
+        .filter(([, count]) => count > 0)
         .forEach(([level, count]) => {
-          const stars = '★'.repeat(parseInt(level)) + '☆'.repeat(5 - parseInt(level));
+          const stars =
+            '★'.repeat(parseInt(level)) + '☆'.repeat(5 - parseInt(level));
           console.log(`  ${stars} (${level}级): ${count} 家`);
         });
-        
+
       // 平均评分
-      const avgRating = shops.reduce((sum, shop) => sum + (shop.rating || 0), 0) / shops.length;
+      const avgRating =
+        shops.reduce((sum, shop) => sum + (shop.rating || 0), 0) / shops.length;
       console.log(`\n⭐ 平均评分: ${avgRating.toFixed(1)}/5.0`);
-      
     } else {
       console.log('❌ 无法获取店铺数据');
     }

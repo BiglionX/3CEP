@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -50,7 +50,7 @@ export default function AgentCustomizationPage() {
     { id: "nlp", label: "自然语言处理", icon: Brain },
     { id: "ml", label: "机器学习", icon: Database },
     { id: "api", label: "API集成", icon: Globe },
-    { id: "automation", label: "流程自动化", icon: Zap },
+    { id: "automation", label: "流程自动?, icon: Zap },
     { id: "analytics", label: "数据分析", icon: TrendingUp },
     { id: "security", label: "安全防护", icon: Shield }
   ];
@@ -60,7 +60,7 @@ export default function AgentCustomizationPage() {
     { id: "crm", label: "CRM系统", icon: Users },
     { id: "wechat", label: "企业微信", icon: Globe },
     { id: "email", label: "邮件系统", icon: FileText },
-    { id: "database", label: "数据库", icon: Database },
+    { id: "database", label: "数据?, icon: Database },
     { id: "website", label: "网站/API", icon: Globe }
   ];
 
@@ -95,7 +95,7 @@ export default function AgentCustomizationPage() {
                 需求提交成功！
               </h2>
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                我们的AI专家团队将在24小时内与您联系，为您提供详细的定制方案和报价。
+                我们的AI专家团队将在24小时内与您联系，为您提供详细的定制方案和报价?
               </p>
               <Button onClick={() => setSubmitted(false)}>
                 <ArrowRight className="w-4 h-4 mr-2" />
@@ -117,14 +117,14 @@ export default function AgentCustomizationPage() {
             <Bot className="w-8 h-8 text-blue-600" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            AI智能体定制服务
+            AI智能体定制服?
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            为企业量身定制专属AI智能体，实现业务流程自动化和智能化升级
+            为企业量身定制专属AI智能体，实现业务流程自动化和智能化升?
           </p>
         </div>
 
-        {/* 进度指示器 */}
+        {/* 进度指示?*/}
         <div className="mb-12">
           <div className="flex items-center justify-center space-x-4">
             {[1, 2, 3, 4].map((num) => (
@@ -146,14 +146,14 @@ export default function AgentCustomizationPage() {
           </div>
           <div className="text-center mt-4 text-sm text-gray-600">
             {step === 1 && '基本信息'}
-            {step === 2 && '技术需求'}
+            {step === 2 && '技术需?}
             {step === 3 && '预期目标'}
             {step === 4 && '提交确认'}
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 左侧：服务介绍 */}
+          {/* 左侧：服务介?*/}
           <div className="lg:col-span-1 space-y-6">
             <Card className="shadow-lg">
               <CardHeader>
@@ -166,7 +166,7 @@ export default function AgentCustomizationPage() {
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">快速部署</h3>
+                    <h3 className="font-semibold text-gray-900">快速部?/h3>
                     <p className="text-sm text-gray-600">2-4周完成定制开发和部署上线</p>
                   </div>
                 </div>
@@ -174,14 +174,14 @@ export default function AgentCustomizationPage() {
                   <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900">灵活定制</h3>
-                    <p className="text-sm text-gray-600">根据企业具体需求量身定制功能</p>
+                    <p className="text-sm text-gray-600">根据企业具体需求量身定制功?/p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900">持续优化</h3>
-                    <p className="text-sm text-gray-600">提供长期维护和技术支持服务</p>
+                    <p className="text-sm text-gray-600">提供长期维护和技术支持服?/p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -198,21 +198,21 @@ export default function AgentCustomizationPage() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Calculator className="w-5 h-5 text-blue-600" />
-                  <span>价格参考</span>
+                  <span>价格参?/span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">基础版</span>
-                    <span className="font-semibold">¥20,000起</span>
+                    <span className="text-gray-600">基础?/span>
+                    <span className="font-semibold">¥20,000�?/span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">标准版</span>
-                    <span className="font-semibold">¥50,000起</span>
+                    <span className="text-gray-600">标准?/span>
+                    <span className="font-semibold">¥50,000�?/span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">企业版</span>
+                    <span className="text-gray-600">企业?/span>
                     <span className="font-semibold">¥100,000+</span>
                   </div>
                   <p className="text-xs text-gray-500 pt-2 border-t">
@@ -223,13 +223,13 @@ export default function AgentCustomizationPage() {
             </Card>
           </div>
 
-          {/* 右侧：定制表单 */}
+          {/* 右侧：定制表?*/}
           <div className="lg:col-span-2">
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle>
                   {step === 1 && '企业基本信息'}
-                  {step === 2 && '技术需求配置'}
+                  {step === 2 && '技术需求配?}
                   {step === 3 && '预期目标设定'}
                   {step === 4 && '确认提交'}
                 </CardTitle>
@@ -245,7 +245,7 @@ export default function AgentCustomizationPage() {
                             id="businessType"
                             value={requirements.businessType}
                             onChange={(e) => setRequirements({...requirements, businessType: e.target.value})}
-                            placeholder="如：制造业、零售业、服务业等"
+                            placeholder="如：制造业、零售业、服务业?
                             required
                           />
                         </div>
@@ -256,7 +256,7 @@ export default function AgentCustomizationPage() {
                             id="useCase"
                             value={requirements.useCase}
                             onChange={(e) => setRequirements({...requirements, useCase: e.target.value})}
-                            placeholder="如：客服机器人、数据分析、流程自动化等"
+                            placeholder="如：客服机器人、数据分析、流程自动化?
                             required
                           />
                         </div>
@@ -272,8 +272,8 @@ export default function AgentCustomizationPage() {
                         >
                           <option value="">请选择时间要求</option>
                           <option value="urgent">紧急（1-2周）</option>
-                          <option value="normal">标准（1-2个月）</option>
-                          <option value="flexible">灵活（2-3个月）</option>
+                          <option value="normal">标准?-2个月?/option>
+                          <option value="flexible">灵活?-3个月?/option>
                         </select>
                       </div>
                       
@@ -297,7 +297,7 @@ export default function AgentCustomizationPage() {
                   {step === 2 && (
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <Label>技术需求 *</Label>
+                        <Label>技术需?*</Label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {technicalOptions.map((option) => {
                             const Icon = option.icon;
@@ -331,7 +331,7 @@ export default function AgentCustomizationPage() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label>系统集成点</Label>
+                        <Label>系统集成?/Label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {integrationOptions.map((option) => {
                             const Icon = option.icon;
@@ -369,12 +369,12 @@ export default function AgentCustomizationPage() {
                   {step === 3 && (
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <Label htmlFor="expectedOutcomes">预期成果和收益 *</Label>
+                        <Label htmlFor="expectedOutcomes">预期成果和收?*</Label>
                         <Textarea
                           id="expectedOutcomes"
                           value={requirements.expectedOutcomes}
                           onChange={(e) => setRequirements({...requirements, expectedOutcomes: e.target.value})}
-                          placeholder="请详细描述希望通过AI智能体实现的具体目标和预期收益"
+                          placeholder="请详细描述希望通过AI智能体实现的具体目标和预期收?
                           rows={6}
                           required
                         />
@@ -384,8 +384,8 @@ export default function AgentCustomizationPage() {
                         <h4 className="font-semibold text-blue-900 mb-2">💡 专家建议</h4>
                         <p className="text-blue-800 text-sm">
                           建议详细描述具体的业务痛点和量化的目标指标，
-                          如"提升客服效率30%"、"降低人工成本20%"等，
-                          这有助于我们为您制定更精准的解决方案。
+                          �?提升客服效率30%"�?降低人工成本20%"等，
+                          这有助于我们为您制定更精准的解决方案?
                         </p>
                       </div>
                     </div>
@@ -395,16 +395,16 @@ export default function AgentCustomizationPage() {
                     <div className="space-y-6">
                       <Card className="border-2 border-blue-200">
                         <CardHeader>
-                          <CardTitle className="text-lg text-blue-900">需求确认</CardTitle>
+                          <CardTitle className="text-lg text-blue-900">需求确?/CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
-                              <span className="font-medium text-gray-700">企业类型：</span>
+                              <span className="font-medium text-gray-700">企业类型?/span>
                               <span className="text-gray-900">{requirements.businessType}</span>
                             </div>
                             <div>
-                              <span className="font-medium text-gray-700">应用场景：</span>
+                              <span className="font-medium text-gray-700">应用场景?/span>
                               <span className="text-gray-900">{requirements.useCase}</span>
                             </div>
                             <div>
@@ -412,7 +412,7 @@ export default function AgentCustomizationPage() {
                               <span className="text-gray-900">{requirements.technicalRequirements.join(', ')}</span>
                             </div>
                             <div>
-                              <span className="font-medium text-gray-700">预算范围：</span>
+                              <span className="font-medium text-gray-700">预算范围?/span>
                               <span className="text-gray-900">
                                 {requirements.budget === 'low' && '¥10,000-30,000'}
                                 {requirements.budget === 'medium' && '¥30,000-80,000'}
@@ -421,7 +421,7 @@ export default function AgentCustomizationPage() {
                             </div>
                           </div>
                           <div>
-                            <span className="font-medium text-gray-700">预期成果：</span>
+                            <span className="font-medium text-gray-700">预期成果?/span>
                             <p className="text-gray-900 mt-1">{requirements.expectedOutcomes}</p>
                           </div>
                         </CardContent>
@@ -441,7 +441,7 @@ export default function AgentCustomizationPage() {
                       onClick={prevStep}
                       disabled={step === 1}
                     >
-                      上一步
+                      上一?
                     </Button>
                     
                     {step < 4 ? (
@@ -453,7 +453,7 @@ export default function AgentCustomizationPage() {
                           step === 2 && requirements.technicalRequirements.length === 0
                         }
                       >
-                        下一步
+                        下一?
                       </Button>
                     ) : (
                       <Button
@@ -464,12 +464,12 @@ export default function AgentCustomizationPage() {
                         {isSubmitting ? (
                           <>
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            提交中...
+                            提交?..
                           </>
                         ) : (
                           <>
                             <CheckCircle className="w-4 h-4 mr-2" />
-                            提交需求
+                            提交需?
                           </>
                         )}
                       </Button>

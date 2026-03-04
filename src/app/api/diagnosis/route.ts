@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { AIDiagnosisService } from '@/services/ai-diagnosis-service';
 
 export async function POST(request: Request) {
@@ -6,22 +6,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { message, sessionId, productId } = body;
 
-    // 验证输入
+    // 楠岃瘉杈撳叆
     if (!message || typeof message !== 'string') {
-      return NextResponse.json(
-        { error: '消息内容不能为空' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '娑堟伅鍐呭涓嶈兘涓虹┖' }, { status: 400 });
     }
 
     if (!sessionId || typeof sessionId !== 'string') {
-      return NextResponse.json(
-        { error: '会话ID不能为空' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '浼氳瘽ID涓嶈兘涓虹┖' }, { status: 400 });
     }
 
-    // 处理诊断请求
+    // 澶勭悊璇婃柇璇锋眰
     const result = await AIDiagnosisService.processDiagnosis(
       sessionId,
       message,
@@ -33,16 +27,15 @@ export async function POST(request: Request) {
       data: {
         response: result.response,
         suggestions: result.suggestions,
-        sessionId: sessionId
-      }
+        sessionId: sessionId,
+      },
     });
-
   } catch (error) {
-    console.error('AI诊断API错误:', error);
+    console.error('AI璇婃柇API閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : '服务器内部错误' 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       },
       { status: 500 }
     );
@@ -55,26 +48,22 @@ export async function GET(request: Request) {
     const sessionId = searchParams.get('sessionId');
 
     if (!sessionId) {
-      return NextResponse.json(
-        { error: '缺少会话ID参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缂哄皯浼氳瘽ID鍙傛暟' }, { status: 400 });
     }
 
-    // 获取会话摘要
+    // 鑾峰彇浼氳瘽鎽樿
     const summary = AIDiagnosisService.getSessionSummary(sessionId);
 
     return NextResponse.json({
       success: true,
-      data: summary || { messageCount: 0, duration: '0秒' }
+      data: summary || { messageCount: 0, duration: '0锟? },
     });
-
   } catch (error) {
-    console.error('获取会话信息错误:', error);
+    console.error('鑾峰彇浼氳瘽淇℃伅閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : '服务器内部错误' 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       },
       { status: 500 }
     );
@@ -87,28 +76,25 @@ export async function DELETE(request: Request) {
     const sessionId = searchParams.get('sessionId');
 
     if (!sessionId) {
-      return NextResponse.json(
-        { error: '缺少会话ID参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缂哄皯浼氳瘽ID鍙傛暟' }, { status: 400 });
     }
 
-    // 清理会话
+    // 娓呯悊浼氳瘽
     AIDiagnosisService.clearSession(sessionId);
 
     return NextResponse.json({
       success: true,
-      message: '会话已清除'
+      message: '浼氳瘽宸叉竻?,
     });
-
   } catch (error) {
-    console.error('清除会话错误:', error);
+    console.error('娓呴櫎浼氳瘽閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : '服务器内部错误' 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
       },
       { status: 500 }
     );
   }
 }
+

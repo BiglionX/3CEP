@@ -88,12 +88,14 @@
 **功能描述**: 基于置信度的动态策略选择系统，融合ML模型、市场加权和规则引擎
 
 **关键技术**:
+
 - 多策略并行估值
 - 置信度评估算法
 - 动态权重调整
 - 决策过程透明化
 
 **接口规范**:
+
 ```
 POST /api/fusion-engine/evaluate
 {
@@ -108,12 +110,14 @@ POST /api/fusion-engine/evaluate
 **功能描述**: 设备全生命周期事件追踪和档案管理服务
 
 **核心能力**:
+
 - 生命周期事件记录
 - 设备状态自动推断
 - 保修期智能计算
 - 历史数据分析
 
 **数据模型**:
+
 ```
 DeviceLifecycleEvent {
   eventType: 'manufacture' | 'activation' | 'repair' | 'replacement' | 'recycle',
@@ -128,6 +132,7 @@ DeviceLifecycleEvent {
 **功能描述**: 多维度机器学习模型置信度计算和评估
 
 **评估因子**:
+
 - 数据完整性评分
 - 特征质量评估
 - 模型性能指标
@@ -135,6 +140,7 @@ DeviceLifecycleEvent {
 - 历史准确性验证
 
 **输出格式**:
+
 ```
 {
   "confidenceScore": 0.85,

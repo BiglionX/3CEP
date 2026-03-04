@@ -1,13 +1,13 @@
-'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { 
-  User, 
-  Settings, 
-  Shield, 
-  Bell, 
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  User,
+  Settings,
+  Shield,
+  Bell,
   CreditCard,
   LogOut,
   Menu,
@@ -21,37 +21,39 @@ import {
   Search,
   Star,
   Clock,
-  Bookmark
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useUnifiedAuth } from '@/hooks/use-unified-auth'
-import { Badge } from '@/components/ui/badge'
+  Bookmark,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import { Badge } from '@/components/ui/badge';
+import { useRouter } from 'next/navigation';
 
 interface ModuleConfig {
-  id: string
-  name: string
-  icon: string
-  path: string
-  permissions: string[]
-  category: 'business' | 'management' | 'personal'
-  priority: number
-  badge?: string
+  id: string;
+  name: string;
+  icon: string;
+  path: string;
+  permissions: string[];
+  category: 'business' | 'management' | 'personal';
+  priority: number;
+  badge?: string;
 }
 
 interface UserSidebarNavigationProps {
-  className?: string
-  onNavigate?: (path: string) => void
+  className?: string;
+  onNavigate?: (path: string) => void;
 }
 
-export default function UserSidebarNavigation({ 
-  className = '', 
-  onNavigate 
+export default function UserSidebarNavigation({
+  className = '',
+  onNavigate,
 }: UserSidebarNavigationProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const pathname = usePathname()
-  const { user, isAuthenticated, is_admin, roles } = useUnifiedAuth()
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const pathname = usePathname();
+  const router = useRouter();
+  const { user, isAuthenticated, is_admin, roles, logout } = useUnifiedAuth();
 
   // 模块注册配置
   const moduleRegistry: ModuleConfig[] = [
@@ -62,7 +64,7 @@ export default function UserSidebarNavigation({
       path: '/profile',
       permissions: [],
       category: 'personal',
-      priority: 1
+      priority: 1,
     },
     {
       id: 'settings',
@@ -71,7 +73,7 @@ export default function UserSidebarNavigation({
       path: '/profile/settings',
       permissions: [],
       category: 'personal',
-      priority: 2
+      priority: 2,
     },
     {
       id: 'security',
@@ -80,7 +82,7 @@ export default function UserSidebarNavigation({
       path: '/profile/security',
       permissions: [],
       category: 'personal',
-      priority: 3
+      priority: 3,
     },
     {
       id: 'repair_service',
@@ -90,7 +92,7 @@ export default function UserSidebarNavigation({
       permissions: ['repair.access'],
       category: 'business',
       priority: 4,
-      badge: 'new'
+      badge: 'new',
     },
     {
       id: 'parts_market',
@@ -99,7 +101,7 @@ export default function UserSidebarNavigation({
       path: '/parts-market',
       permissions: ['parts.access'],
       category: 'business',
-      priority: 5
+      priority: 5,
     },
     {
       id: 'device_management',
@@ -108,7 +110,7 @@ export default function UserSidebarNavigation({
       path: '/device',
       permissions: ['device.access'],
       category: 'business',
-      priority: 6
+      priority: 6,
     },
     {
       id: 'crowdfunding',
@@ -117,7 +119,7 @@ export default function UserSidebarNavigation({
       path: '/crowdfunding',
       permissions: ['crowdfunding.access'],
       category: 'business',
-      priority: 7
+      priority: 7,
     },
     {
       id: 'fcx_alliance',
@@ -126,7 +128,7 @@ export default function UserSidebarNavigation({
       path: '/fcx',
       permissions: ['fcx.access'],
       category: 'business',
-      priority: 8
+      priority: 8,
     },
     {
       id: 'system_dashboard',
@@ -135,7 +137,7 @@ export default function UserSidebarNavigation({
       path: '/admin/dashboard',
       permissions: ['admin.access'],
       category: 'management',
-      priority: 9
+      priority: 9,
     },
     {
       id: 'user_management',
@@ -144,9 +146,9 @@ export default function UserSidebarNavigation({
       path: '/admin/users',
       permissions: ['users.manage'],
       category: 'management',
-      priority: 10
-    }
-  ]
+      priority: 10,
+    },
+  ];
 
   // 获取图标组件
   const getIconComponent = (iconName: string) => {
@@ -164,61 +166,61 @@ export default function UserSidebarNavigation({
       MessageSquare,
       Star,
       Clock,
-      Bookmark
-    }
-    return icons[iconName] || User
-  }
+      Bookmark,
+    };
+    return icons[iconName] || User;
+  };
 
-  // 权限检查
-  const hasPermission = (permissions: string[]) => {
-    if (permissions.length === 0) return true
+  // 权限检?  const hasPermission = (permissions: string[]) => {
+    if (permissions.length === 0) return true;
     // 简化权限检查，实际应该集成RBAC系统
-    if (is_admin) return true
-    return false
-  }
+    if (is_admin) return true;
+    return false;
+  };
 
-  // 根据用户角色过滤可访问模块
-  const getAccessibleModules = () => {
+  // 根据用户角色过滤可访问模?  const getAccessibleModules = () => {
     return moduleRegistry
       .filter(module => hasPermission(module.permissions))
-      .sort((a, b) => a.priority - b.priority)
-  }
+      .sort((a, b) => a.priority - b.priority);
+  };
 
   // 搜索过滤
   const filteredModules = getAccessibleModules().filter(module =>
     module.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
 
-  // 按分类组织模块
-  const groupedModules = filteredModules.reduce((acc, module) => {
-    if (!acc[module.category]) {
-      acc[module.category] = []
-    }
-    acc[module.category].push(module)
-    return acc
-  }, {} as Record<string, ModuleConfig[]>)
+  // 按分类组织模?  const groupedModules = filteredModules.reduce(
+    (acc, module) => {
+      if (!acc[module.category]) {
+        acc[module.category] = [];
+      }
+      acc[module.category].push(module);
+      return acc;
+    },
+    {} as Record<string, ModuleConfig[]>
+  );
 
   const getCategoryName = (category: string) => {
     const names: Record<string, string> = {
       personal: '个人设置',
       business: '业务功能',
-      management: '管理系统'
-    }
-    return names[category] || category
-  }
+      management: '管理系统',
+    };
+    return names[category] || category;
+  };
 
-  const isActive = (path: string) => pathname === path
+  const isActive = (path: string) => pathname === path;
 
   const handleNavigation = (path: string) => {
     if (onNavigate) {
-      onNavigate(path)
+      onNavigate(path);
     }
-    setSidebarOpen(false)
-  }
+    setSidebarOpen(false);
+  };
 
   return (
     <>
-      {/* 移动端触发按钮 */}
+      {/* 移动端触发按?*/}
       <Button
         variant="ghost"
         size="sm"
@@ -228,8 +230,10 @@ export default function UserSidebarNavigation({
         <Menu className="w-5 h-5" />
       </Button>
 
-      {/* 侧边栏 */}
-      <aside className={`${className} ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:static inset-y-0 left-0 z-40 w-80 bg-white shadow-xl md:shadow-none transition-transform duration-300 ease-in-out`}>
+      {/* 侧边?*/}
+      <aside
+        className={`${className} ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:static inset-y-0 left-0 z-40 w-80 bg-white shadow-xl md:shadow-none transition-transform duration-300 ease-in-out`}
+      >
         <div className="h-full flex flex-col">
           {/* 头部 */}
           <div className="px-6 py-6 border-b border-gray-200">
@@ -244,7 +248,7 @@ export default function UserSidebarNavigation({
                 <X className="w-5 h-5" />
               </Button>
             </div>
-            
+
             {/* 用户信息卡片 */}
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -256,10 +260,13 @@ export default function UserSidebarNavigation({
                 </p>
                 <div className="flex items-center space-x-2">
                   <span className="text-xs text-gray-500">
-                    {is_admin ? '管理员' : '普通用户'}
+                    {is_admin ? '管理? : '普通用?}
                   </span>
                   {is_admin && (
-                    <Badge variant="destructive" className="text-xs px-1.5 py-0.5">
+                    <Badge
+                      variant="destructive"
+                      className="text-xs px-1.5 py-0.5"
+                    >
                       ADMIN
                     </Badge>
                   )}
@@ -267,14 +274,14 @@ export default function UserSidebarNavigation({
               </div>
             </div>
 
-            {/* 搜索框 */}
+            {/* 搜索?*/}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 type="text"
                 placeholder="搜索功能模块..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10 w-full text-sm"
               />
             </div>
@@ -288,8 +295,8 @@ export default function UserSidebarNavigation({
                   {getCategoryName(category)}
                 </h3>
                 <div className="space-y-1">
-                  {modules.map((module) => {
-                    const Icon = getIconComponent(module.icon)
+                  {modules.map(module => {
+                    const Icon = getIconComponent(module.icon);
                     return (
                       <Link
                         key={module.id}
@@ -304,12 +311,15 @@ export default function UserSidebarNavigation({
                         <Icon className="w-5 h-5 mr-3 flex-shrink-0" />
                         <span className="flex-1 truncate">{module.name}</span>
                         {module.badge && (
-                          <Badge variant="default" className="ml-2 text-xs px-1.5 py-0.5">
+                          <Badge
+                            variant="default"
+                            className="ml-2 text-xs px-1.5 py-0.5"
+                          >
                             {module.badge}
                           </Badge>
                         )}
                       </Link>
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -319,27 +329,33 @@ export default function UserSidebarNavigation({
           {/* 底部快捷操作 */}
           <div className="px-4 py-6 border-t border-gray-200">
             <div className="space-y-2">
-              <Link 
-                href="/help" 
+              <Link
+                href="/help"
                 className="flex items-center px-4 py-3 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <MessageSquare className="w-5 h-5 mr-3" />
                 帮助中心
               </Link>
-              <Link 
-                href="/feedback" 
+              <Link
+                href="/feedback"
                 className="flex items-center px-4 py-3 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <MessageSquare className="w-5 h-5 mr-3" />
                 意见反馈
               </Link>
-              <button 
-                onClick={() => {}} // TODO: 实现退出登录逻辑
+              <button
+                onClick={async () => {
+                  try {
+                    await logout();
+                    router.push('/login');
+                  } catch (error) {
+                    console.error('退出登录失?', error);
+                  }
+                }}
                 className="w-full flex items-center px-4 py-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
               >
                 <LogOut className="w-5 h-5 mr-3" />
-                退出登录
-              </button>
+                退出登?              </button>
             </div>
           </div>
         </div>
@@ -347,11 +363,11 @@ export default function UserSidebarNavigation({
 
       {/* 移动端遮罩层 */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
     </>
-  )
+  );
 }

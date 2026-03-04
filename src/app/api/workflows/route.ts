@@ -1,6 +1,6 @@
-/**
- * 工作流管理 API 端点
- * 提供工作流列表、详情、执行和回放功能
+﻿/**
+ * 宸ヤ綔娴佺?API 绔偣
+ * 鎻愪緵宸ヤ綔娴佸垪琛ㄣ€佽鎯呫€佹墽琛屽拰鍥炴斁鍔熻兘
  */
 
 import { NextResponse } from 'next/server';
@@ -14,12 +14,12 @@ export async function GET(request: Request) {
   );
 
   try {
-    // 验证用户认证
+    // 楠岃瘉鐢ㄦ埛璁よ瘉
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
 
     if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈? }, { status: 401 });
     }
 
     const {
@@ -28,22 +28,20 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛璁よ瘉澶辫触' }, { status: 401 });
     }
 
-    // 获取查询参数
+    // 鑾峰彇鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const status = searchParams.get('status');
     const search = searchParams.get('search');
 
-    // 构建查询
-    let query = supabase
-      .from('workflows')
-      .select('*', { count: 'exact' });
+    // 鏋勫缓鏌ヨ
+    let query = supabase.from('workflows').select('*', { count: 'exact' });
 
-    // 应用过滤条件
+    // 搴旂敤杩囨护鏉′欢
     if (status) {
       query = query.eq('status', status);
     }
@@ -52,17 +50,20 @@ export async function GET(request: Request) {
       query = query.ilike('name', `%${search}%`);
     }
 
-    // 分页
+    // 鍒嗛〉
     const offset = (page - 1) * limit;
     query = query.range(offset, offset + limit - 1);
 
-    const { data: workflows, error, count } = await query
-      .order('updated_at', { ascending: false });
+    const {
+      data: workflows,
+      error,
+      count,
+    } = await query.order('updated_at', { ascending: false });
 
     if (error) {
-      console.error('获取工作流列表失败:', error);
+      console.error('鑾峰彇宸ヤ綔娴佸垪琛ㄥけ?', error);
       return NextResponse.json(
-        { error: '获取工作流列表失败' }, 
+        { error: '鑾峰彇宸ヤ綔娴佸垪琛ㄥけ? },
         { status: 500 }
       );
     }
@@ -74,16 +75,12 @@ export async function GET(request: Request) {
         page,
         limit,
         total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit)
-      }
+        totalPages: Math.ceil((count || 0) / limit),
+      },
     });
-
   } catch (error: any) {
-    console.error('工作流 API 错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    console.error('宸ヤ綔?API 閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -94,12 +91,12 @@ export async function POST(request: Request) {
   );
 
   try {
-    // 验证用户认证
+    // 楠岃瘉鐢ㄦ埛璁よ瘉
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
 
     if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈? }, { status: 401 });
     }
 
     const {
@@ -108,54 +105,52 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛璁よ瘉澶辫触' }, { status: 401 });
     }
 
-    // 解析请求体
-    const body = await request.json();
-    
-    // 验证必要字段
+    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+
+    // 楠岃瘉蹇呰瀛楁
     if (!body.name || !body.workflow_data) {
       return NextResponse.json(
-        { error: '工作流名称和配置为必填项' }, 
+        { error: '宸ヤ綔娴佸悕绉板拰閰嶇疆涓哄繀濉」' },
         { status: 400 }
       );
     }
 
-    // 创建工作流
-    const { data: workflow, error } = await supabase
+    // 鍒涘缓宸ヤ綔?    const { data: workflow, error } = await supabase
       .from('workflows')
       .insert({
         name: body.name.trim(),
-        description: body.description?.trim() || null,
+        description: body?.trim() || null,
         workflow_data: body.workflow_data,
         status: body.status || 'draft',
         version: '1.0.0',
         created_by: user.id,
-        updated_by: user.id
+        updated_by: user.id,
       } as any)
       .select()
       .single();
 
     if (error) {
-      console.error('创建工作流失败:', error);
+      console.error('鍒涘缓宸ヤ綔娴佸け?', error);
       return NextResponse.json(
-        { error: '创建工作流失败', details: error.message }, 
+        { error: '鍒涘缓宸ヤ綔娴佸け?, details: error.message },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: '工作流创建成功',
-      data: workflow
-    }, { status: 201 });
-
-  } catch (error: any) {
-    console.error('创建工作流错误:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+      {
+        success: true,
+        message: '宸ヤ綔娴佸垱寤烘垚?,
+        data: workflow,
+      },
+      { status: 201 }
+    ) as any;
+  } catch (error: any) {
+    console.error('鍒涘缓宸ヤ綔娴侀敊?', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
+

@@ -1,4 +1,4 @@
-import AgentsDashboard from '@/components/admin/AgentsDashboard';
+﻿import AgentsDashboard from '@/components/admin/AgentsDashboard';
 
 export default function AgentsPage() {
   return (
@@ -7,3 +7,4 @@ export default function AgentsPage() {
     </div>
   );
 }
+

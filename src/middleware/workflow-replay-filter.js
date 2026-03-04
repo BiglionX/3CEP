@@ -7,7 +7,13 @@ const fs = require('fs');
 const path = require('path');
 
 // 加载白名单配置
-const ALLOWLIST_CONFIG_PATH = path.join(__dirname, '..', '..', 'config', 'workflow-replay-allowlist.json');
+const ALLOWLIST_CONFIG_PATH = path.join(
+  __dirname,
+  '..',
+  '..',
+  'config',
+  'workflow-replay-allowlist.json'
+);
 
 let allowlistConfig = null;
 
@@ -16,8 +22,7 @@ function loadAllowlistConfig() {
     try {
       const configContent = fs.readFileSync(ALLOWLIST_CONFIG_PATH, 'utf8');
       allowlistConfig = JSON.parse(configContent);
-      console.log('✅ 工作流回放白名单配置加载成功');
-    } catch (error) {
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('✅ 工作流回放白名单配置加载成功')} catch (error) {
       console.error('❌ 加载工作流回放白名单配置失败:', error.message);
       // 使用默认配置
       allowlistConfig = getDefaultAllowlistConfig();
@@ -29,16 +34,16 @@ function loadAllowlistConfig() {
 function getDefaultAllowlistConfig() {
   return {
     allowlist: {
-      common: { parameters: ['workflowId', 'executionId', 'input_data'] }
+      common: { parameters: ['workflowId', 'executionId', 'input_data'] },
     },
     denylist: {
-      credentials: { parameters: ['api_key', 'password', 'secret_key'] }
+      credentials: { parameters: ['api_key', 'password', 'secret_key'] },
     },
     role_based_rules: {
       admin: { allow_all_parameters: true },
       ops: { allowed_categories: ['common'] },
-      partner: { allowed_categories: ['common'] }
-    }
+      partner: { allowed_categories: ['common'] },
+    },
   };
 }
 
@@ -47,10 +52,11 @@ function getDefaultAllowlistConfig() {
  */
 function filterReplayParameters(parameters, userRole, workflowId) {
   const config = loadAllowlistConfig();
-  
+
   // 获取角色规则
-  const roleRules = config.role_based_rules[userRole] || config.role_based_rules.partner;
-  
+  const roleRules =
+    config.role_based_rules[userRole] || config.role_based_rules.partner;
+
   // 管理员允许所有参数
   if (roleRules.allow_all_parameters) {
     return {
@@ -62,8 +68,8 @@ function filterReplayParameters(parameters, userRole, workflowId) {
         action: 'replay',
         parameters_allowed: Object.keys(parameters).length,
         parameters_removed: 0,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     };
   }
 
@@ -89,7 +95,7 @@ function filterReplayParameters(parameters, userRole, workflowId) {
     }
 
     // 检查黑名单
-    const isInDenylist = Object.values(config.denylist || {}).some(category => 
+    const isInDenylist = Object.values(config.denylist || {}).some(category =>
       category.parameters.includes(key)
     );
 
@@ -97,20 +103,24 @@ function filterReplayParameters(parameters, userRole, workflowId) {
       removedParams.push({
         key,
         reason: 'blacklisted',
-        value_type: typeof value
+        value_type: typeof value,
       });
       return;
     }
 
     // 检查参数长度和深度限制
-    const validationResult = validateParameter(key, value, config.validation_rules);
+    const validationResult = validateParameter(
+      key,
+      value,
+      config.validation_rules
+    );
     if (validationResult.valid) {
       filteredParams[key] = validationResult.cleaned_value;
     } else {
       removedParams.push({
         key,
         reason: validationResult.reason,
-        value_type: typeof value
+        value_type: typeof value,
       });
     }
   });
@@ -123,13 +133,13 @@ function filterReplayParameters(parameters, userRole, workflowId) {
     parameters_allowed: Object.keys(filteredParams).length,
     parameters_removed: removedParams.length,
     removed_details: removedParams,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   return {
     filtered: filteredParams,
     removed: removedParams,
-    audit_log: auditLog
+    audit_log: auditLog,
   };
 }
 
@@ -138,14 +148,18 @@ function filterReplayParameters(parameters, userRole, workflowId) {
  */
 function validateParameter(key, value, validationRules = {}) {
   // 类型检查
-  const allowedTypes = validationRules.data_types?.allowed_types || ['string', 'number', 'boolean'];
+  const allowedTypes = validationRules.data_types?.allowed_types || [
+    'string',
+    'number',
+    'boolean',
+  ];
   const valueType = typeof value;
-  
+
   if (!allowedTypes.includes(valueType)) {
     return {
       valid: false,
       reason: `unsupported_type_${valueType}`,
-      cleaned_value: null
+      cleaned_value: null,
     };
   }
 
@@ -157,13 +171,13 @@ function validateParameter(key, value, validationRules = {}) {
         return {
           valid: true,
           reason: 'truncated',
-          cleaned_value: value.substring(0, maxLength)
+          cleaned_value: value.substring(0, maxLength),
         };
       } else {
         return {
           valid: false,
           reason: 'exceeds_max_length',
-          cleaned_value: null
+          cleaned_value: null,
         };
       }
     }
@@ -173,19 +187,19 @@ function validateParameter(key, value, validationRules = {}) {
   if (valueType === 'object' && validationRules.nested_depth) {
     const maxDepth = validationRules.nested_depth.max_depth || 5;
     const currentDepth = getObjectDepth(value);
-    
+
     if (currentDepth > maxDepth) {
       if (validationRules.nested_depth.flatten_if_exceeds) {
         return {
           valid: true,
           reason: 'flattened',
-          cleaned_value: flattenObject(value, maxDepth)
+          cleaned_value: flattenObject(value, maxDepth),
         };
       } else {
         return {
           valid: false,
           reason: 'exceeds_max_depth',
-          cleaned_value: null
+          cleaned_value: null,
         };
       }
     }
@@ -194,7 +208,7 @@ function validateParameter(key, value, validationRules = {}) {
   return {
     valid: true,
     reason: 'valid',
-    cleaned_value: value
+    cleaned_value: value,
   };
 }
 
@@ -205,11 +219,11 @@ function getObjectDepth(obj, currentDepth = 0) {
   if (typeof obj !== 'object' || obj === null) {
     return currentDepth;
   }
-  
+
   if (Array.isArray(obj)) {
     return Math.max(...obj.map(item => getObjectDepth(item, currentDepth + 1)));
   }
-  
+
   return Math.max(
     currentDepth,
     ...Object.values(obj).map(value => getObjectDepth(value, currentDepth + 1))
@@ -225,7 +239,7 @@ function flattenObject(obj, maxDepth, currentDepth = 0, prefix = '') {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item, index) => 
+    return obj.map((item, index) =>
       flattenObject(item, maxDepth, currentDepth + 1, `${prefix}[${index}]`)
     );
   }
@@ -233,8 +247,15 @@ function flattenObject(obj, maxDepth, currentDepth = 0, prefix = '') {
   const flattened = {};
   Object.entries(obj).forEach(([key, value]) => {
     const newKey = prefix ? `${prefix}.${key}` : key;
-    if (typeof value === 'object' && value !== null && currentDepth < maxDepth - 1) {
-      Object.assign(flattened, flattenObject(value, maxDepth, currentDepth + 1, newKey));
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      currentDepth < maxDepth - 1
+    ) {
+      Object.assign(
+        flattened,
+        flattenObject(value, maxDepth, currentDepth + 1, newKey)
+      );
     } else {
       flattened[newKey] = value;
     }
@@ -248,25 +269,32 @@ function flattenObject(obj, maxDepth, currentDepth = 0, prefix = '') {
  */
 function workflowReplayFilter(req, res, next) {
   // 检查是否为工作流回放请求
-  if (!req.path.includes('/api/workflows/replay') && !req.path.includes('/api/workflows/rollback')) {
+  if (
+    !req.path.includes('/api/workflows/replay') &&
+    !req.path.includes('/api/workflows/rollback')
+  ) {
     return next();
   }
 
   try {
     const userRole = req.user?.role || 'user';
     const workflowId = req.body?.workflowId || req.query?.workflowId;
-    
+
     if (!workflowId) {
       return res.status(400).json({
         error: '缺少工作流ID',
-        code: 'MISSING_WORKFLOW_ID'
+        code: 'MISSING_WORKFLOW_ID',
       });
     }
 
     // 过滤请求体中的参数
     if (req.body && typeof req.body === 'object') {
-      const filterResult = filterReplayParameters(req.body, userRole, workflowId);
-      
+      const filterResult = filterReplayParameters(
+        req.body,
+        userRole,
+        workflowId
+      );
+
       // 更新请求体
       req.filteredBody = filterResult.filtered;
       req.filterAudit = filterResult.audit_log;
@@ -278,10 +306,13 @@ function workflowReplayFilter(req, res, next) {
       }
 
       // 如果移除了太多参数，可能拒绝请求
-      const removalRate = filterResult.removed.length / 
-        (Object.keys(req.body).length || 1);
-      
-      if (removalRate > 0.5 && allowlistConfig?.audit_settings?.alert_threshold) {
+      const removalRate =
+        filterResult.removed.length / (Object.keys(req.body).length || 1);
+
+      if (
+        removalRate > 0.5 &&
+        allowlistConfig?.audit_settings?.alert_threshold
+      ) {
         console.warn(`⚠️ 高参数移除率警告: ${removalRate * 100}%`);
       }
     }
@@ -291,7 +322,7 @@ function workflowReplayFilter(req, res, next) {
     console.error('工作流回放参数过滤错误:', error);
     res.status(500).json({
       error: '参数过滤失败',
-      code: 'PARAMETER_FILTER_ERROR'
+      code: 'PARAMETER_FILTER_ERROR',
     });
   }
 }
@@ -301,8 +332,7 @@ function workflowReplayFilter(req, res, next) {
  */
 function logAuditEvent(auditData) {
   // 这里应该集成到实际的审计日志系统
-  console.log('🔒 审计日志:', JSON.stringify(auditData, null, 2));
-  
+  // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔒 审计日志:', JSON.stringify(auditData, null, 2));
   // 可以在这里添加到数据库或外部日志系统
   // 例如: auditService.log(auditData);
 }
@@ -310,5 +340,5 @@ function logAuditEvent(auditData) {
 module.exports = {
   workflowReplayFilter,
   filterReplayParameters,
-  loadAllowlistConfig
+  loadAllowlistConfig,
 };

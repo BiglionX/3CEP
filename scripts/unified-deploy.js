@@ -14,24 +14,26 @@ class UnifiedDeployer extends DeploymentFramework {
     super(options);
     this.deploymentTypes = {
       'n8n-workflows': this.deployN8nWorkflows.bind(this),
-      'database': this.deployDatabase.bind(this),
-      'development': this.deployDevelopment.bind(this),
-      'recommendation-engine': this.deployRecommendationEngine.bind(this)
+      database: this.deployDatabase.bind(this),
+      development: this.deployDevelopment.bind(this),
+      'recommendation-engine': this.deployRecommendationEngine.bind(this),
     };
   }
 
   async deploy(deploymentType, options = {}) {
     const deployFunction = this.deploymentTypes[deploymentType];
-    
+
     if (!deployFunction) {
       throw new Error(`Unknown deployment type: ${deploymentType}`);
     }
 
     this.logger.info(`Starting ${deploymentType} deployment...`);
-    
+
     try {
       await deployFunction(options);
-      this.logger.success(`${deploymentType} deployment completed successfully!`);
+      this.logger.success(
+        `${deploymentType} deployment completed successfully!`
+      );
     } catch (error) {
       this.logger.error(`Deployment failed: ${error.message}`);
       throw error;
@@ -45,17 +47,14 @@ class UnifiedDeployer extends DeploymentFramework {
 
     // 备份当前工作流
     const backupDir = path.join(__dirname, '../backups', `n8n-${Date.now()}`);
-    this.createBackup(
-      path.join(__dirname, '../n8n-workflows'),
-      backupDir
-    );
+    this.createBackup(path.join(__dirname, '../n8n-workflows'), backupDir);
 
     // 部署工作流
     const workflows = [
       'scan-flow.json',
       'tutorial-flow.json',
       'payment-success.json',
-      'ai-escalation.json'
+      'ai-escalation.json',
     ];
 
     for (const workflow of workflows) {
@@ -67,11 +66,14 @@ class UnifiedDeployer extends DeploymentFramework {
     }
 
     // 生成部署报告
-    this.generateReport({
-      type: 'n8n-workflows',
-      workflows: workflows,
-      config: config
-    }, path.join(backupDir, 'deployment-report.json'));
+    this.generateReport(
+      {
+        type: 'n8n-workflows',
+        workflows: workflows,
+        config: config,
+      },
+      path.join(backupDir, 'deployment-report.json')
+    );
   }
 
   async deployDatabase(options) {
@@ -84,7 +86,10 @@ class UnifiedDeployer extends DeploymentFramework {
     Validator.validateNotEmpty(dbPassword, 'SUPABASE_DB_PASSWORD');
 
     // 链接项目
-    await this.executeCommand('supabase', ['link', `--project-ref=${projectId}`]);
+    await this.executeCommand('supabase', [
+      'link',
+      `--project-ref=${projectId}`,
+    ]);
 
     // 执行迁移
     await this.executeCommand('supabase', ['db', 'push']);
@@ -94,24 +99,28 @@ class UnifiedDeployer extends DeploymentFramework {
       await this.executeCommand('psql', [
         process.env.DATABASE_URL,
         '-f',
-        path.join(__dirname, '../supabase/rls_policies.sql')
+        path.join(__dirname, '../supabase/rls_policies.sql'),
       ]);
     }
 
     // 验证部署
-    await this.executeCommand('node', [path.join(__dirname, 'verify-database.js')]);
+    await this.executeCommand('node', [
+      path.join(__dirname, 'verify-database.js'),
+    ]);
   }
 
   async deployDevelopment(options) {
     const deployMode = options.mode || 'auto';
-    
+
     this.logger.info(`Deploying development environment (${deployMode})...`);
 
     // 检查 Docker
     try {
       this.checkRequiredTools(['docker', 'docker-compose']);
     } catch (error) {
-      this.logger.warning('Docker not available, skipping container deployment');
+      this.logger.warning(
+        'Docker not available, skipping container deployment'
+      );
       return;
     }
 
@@ -132,8 +141,10 @@ class UnifiedDeployer extends DeploymentFramework {
     const composePath = path.join(__dirname, '..', composeFile);
     if (fs.existsSync(composePath)) {
       await this.executeCommand('docker-compose', [
-        '-f', composePath,
-        'up', '-d'
+        '-f',
+        composePath,
+        'up',
+        '-d',
       ]);
     } else {
       this.logger.warning(`Compose file not found: ${composePath}`);
@@ -142,10 +153,10 @@ class UnifiedDeployer extends DeploymentFramework {
 
   async deployRecommendationEngine(options) {
     this.logger.info('Deploying recommendation engine...');
-    
+
     // 这里添加推荐引擎的具体部署逻辑
     // 可以参考原有的 deploy-recommendation-engine.js
-    
+
     this.logger.success('Recommendation engine deployment completed');
   }
 }
@@ -153,7 +164,7 @@ class UnifiedDeployer extends DeploymentFramework {
 // CLI 处理
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
     showHelp();
     process.exit(0);
@@ -162,12 +173,12 @@ async function main() {
   const options = {
     verbose: args.includes('--verbose') || args.includes('-v'),
     dryRun: args.includes('--dry-run'),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
   };
 
   // 解析部署类型
   const deploymentType = args[0];
-  
+
   // 解析额外选项
   const extraArgs = args.slice(1).filter(arg => !arg.startsWith('-'));
   if (extraArgs.length > 0) {
@@ -175,7 +186,7 @@ async function main() {
   }
 
   const deployer = new UnifiedDeployer(options);
-  
+
   try {
     await deployer.deploy(deploymentType, options);
   } catch (error) {

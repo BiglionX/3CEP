@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: Request) {
@@ -14,52 +14,50 @@ export async function POST(request: Request) {
       source,
       utmSource,
       utmMedium,
-      utmCampaign
+      utmCampaign,
     } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!email || !name) {
       return NextResponse.json(
-        { error: '姓名和邮箱为必填项' },
+        { error: '濮撳悕鍜岄偖绠变负蹇呭～? },
         { status: 400 }
       );
     }
 
-    // 邮箱格式验证
+    // 閭鏍煎紡楠岃瘉
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: '请输入有效的邮箱地址' },
+        { error: '璇疯緭鍏ユ湁鏁堢殑閭鍦板潃' },
         { status: 400 }
       );
     }
 
-    // 创建Supabase客户端
-    const supabase = createClient(
+    // 鍒涘缓Supabase瀹㈡埛?    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 检查是否已存在相同邮箱的线索
-    const { data: existingLeads, error: checkError } = await supabase
+    // 妫€鏌ユ槸鍚﹀凡瀛樺湪鐩稿悓閭鐨勭嚎?    const { data: existingLeads, error: checkError } = await supabase
       .from('leads')
       .select('id')
       .eq('email', email)
       .limit(1);
 
     if (checkError) {
-      console.error('检查重复线索失败:', checkError);
+      console.error('妫€鏌ラ噸澶嶇嚎绱㈠け?', checkError);
     } else if (existingLeads && existingLeads.length > 0) {
       return NextResponse.json(
-        { 
-          error: '该邮箱已经提交过申请，请勿重复提交',
-          existing: true
+        {
+          error: '璇ラ偖绠卞凡缁忔彁浜よ繃鐢宠锛岃鍕块噸澶嶆彁?,
+          existing: true,
         },
         { status: 409 }
       );
     }
 
-    // 插入线索数据
+    // 鎻掑叆绾跨储鏁版嵁
     const { data, error } = await supabase
       .from('leads')
       .insert({
@@ -73,41 +71,36 @@ export async function POST(request: Request) {
         utm_source: utmSource || null,
         utm_medium: utmMedium || null,
         utm_campaign: utmCampaign || null,
-        status: 'new'
+        status: 'new',
       } as any)
       .select();
 
     if (error) {
-      console.error('插入线索失败:', error);
+      console.error('鎻掑叆绾跨储澶辫触:', error);
       return NextResponse.json(
-        { error: '提交失败，请稍后重试' },
+        { error: '鎻愪氦澶辫触锛岃绋嶅悗閲嶈瘯' },
         { status: 500 }
       );
     }
 
-    // 触发n8n工作流
-    const n8nIntegration = await import('@/lib/n8n-integration');
+    // 瑙﹀彂n8n宸ヤ綔?    const n8nIntegration = await import('@/lib/n8n-integration');
     await n8nIntegration.processLead(data[0]);
 
-    // 记录成功事件
-    await trackMarketingEvent('lead_submit', {
+    // 璁板綍鎴愬姛浜嬩欢
+    (await trackMarketingEvent('lead_submit', {
       role: role || 'other',
       source: source || 'landing_page',
-      utm_source: utmSource
-    });
+      utm_source: utmSource,
+    })) as any;
 
     return NextResponse.json({
       success: true,
-      message: '感谢您的关注！我们会尽快联系您。',
-      leadId: data[0].id
+      message: '鎰熻阿鎮ㄧ殑鍏虫敞锛佹垜浠細灏藉揩鑱旂郴鎮?,
+      leadId: data[0].id,
     });
-
   } catch (error) {
-    console.error('处理线索提交错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('澶勭悊绾跨储鎻愪氦閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -121,13 +114,12 @@ export async function GET(request: Request) {
 
     const offset = (page - 1) * limit;
 
-    // 创建Supabase客户端
-    const supabase = createClient(
+    // 鍒涘缓Supabase瀹㈡埛?    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 构建查询
+    // 鏋勫缓鏌ヨ
     let query = supabase
       .from('leads')
       .select('*', { count: 'exact' })
@@ -138,16 +130,15 @@ export async function GET(request: Request) {
       query = query.eq('role', role);
     }
 
-    // 分页
-    const { data, error, count } = await query
-      .range(offset, offset + limit - 1);
+    // 鍒嗛〉
+    const { data, error, count } = await query.range(
+      offset,
+      offset + limit - 1
+    );
 
     if (error) {
-      console.error('查询线索失败:', error);
-      return NextResponse.json(
-        { error: '查询失败' },
-        { status: 500 }
-      );
+      console.error('鏌ヨ绾跨储澶辫触:', error);
+      return NextResponse.json({ error: '鏌ヨ澶辫触' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -157,23 +148,17 @@ export async function GET(request: Request) {
         page,
         limit,
         total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit)
-      }
+        totalPages: Math.ceil((count || 0) / limit),
+      },
     });
-
   } catch (error) {
-    console.error('处理线索查询错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    );
+    console.error('澶勭悊绾跨储鏌ヨ閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
-
-
 async function trackMarketingEvent(
-  eventType: string, 
+  eventType: string,
   properties: Record<string, any> = {}
 ) {
   try {
@@ -182,20 +167,19 @@ async function trackMarketingEvent(
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    const { error } = await supabase
-      .from('marketing_events')
-      .insert({
-        event_type: eventType,
-        role: properties.role,
-        source: properties.source,
-        utm_source: properties.utm_source,
-        created_at: new Date().toISOString()
-      } as any);
+    const { error } = await supabase.from('marketing_events').insert({
+      event_type: eventType,
+      role: properties.role,
+      source: properties.source,
+      utm_source: properties.utm_source,
+      created_at: new Date().toISOString(),
+    } as any);
 
     if (error) {
-      console.error('记录营销事件失败:', error);
+      console.error('璁板綍钀ラ攢浜嬩欢澶辫触:', error);
     }
   } catch (error) {
-    console.error('记录营销事件异常:', error);
+    console.error('璁板綍钀ラ攢浜嬩欢寮傚父:', error);
   }
 }
+

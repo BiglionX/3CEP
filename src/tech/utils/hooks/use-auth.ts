@@ -15,7 +15,7 @@ export function useAuth() {
     error: null,
   });
 
-  // 监听认证状态变化
+  // 监听认证状态变?
   useEffect(() => {
     // 获取当前用户
     const getUser = async () => {
@@ -40,7 +40,7 @@ export function useAuth() {
 
     getUser();
 
-    // 监听认证状态变化
+    // 监听认证状态变?
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -154,14 +154,14 @@ export function useAuth() {
 
       return { success: true };
     } catch (error: any) {
-      const errorMessage = error.message || "发送重置邮件失败";
+      const errorMessage = error.message || "发送重置邮件失?;
       return { success: false, error: errorMessage };
     }
   }, []);
 
   // 更新用户信息
   const updateUser = useCallback(
-    async (userData: { email?: string; password?: string; data?: object }) => {
+    async (userData: any: { email?: string; password?: string; data?: object }) => {
       try {
         const { data, error } = await supabase.auth.updateUser(userData);
 
@@ -200,7 +200,7 @@ export function useCrowdfundingAuth() {
     if (!user) return false;
 
     try {
-      // 检查用户是否在admin_users表中有记录且激活
+      // 检查用户是否在admin_users表中有记录且激?
       const { data, error } = await supabase
         .from("admin_users")
         .select("id")
@@ -210,12 +210,12 @@ export function useCrowdfundingAuth() {
 
       return !error && data !== null;
     } catch (error) {
-      console.error("检查创建项目权限失败:", error);
+      console.error("检查创建项目权限失?", error);
       return false;
     }
   }, [user]);
 
-  // 检查用户是否是项目创建者
+  // 检查用户是否是项目创建?
   const isProjectCreator = useCallback(
     async (projectId: string): Promise<boolean> => {
       if (!user) return false;
@@ -231,7 +231,7 @@ export function useCrowdfundingAuth() {
 
         return data.creator_id === user.id;
       } catch (error) {
-        console.error("检查项目创建者身份失败:", error);
+        console.error("检查项目创建者身份失?", error);
         return false;
       }
     },

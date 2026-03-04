@@ -1,0 +1,121 @@
+{
+  "summary": {
+    "totalRequests": 30,
+    "successfulRequests": 30,
+    "failedRequests": 0,
+    "successRate": "100.0%",
+    "averageResponseTime": "242.07ms",
+    "minResponseTime": "145ms",
+    "maxResponseTime": "352ms",
+    "p50ResponseTime": "242ms",
+    "p95ResponseTime": "318ms",
+    "p99ResponseTime": "352ms",
+    "testTimestamp": "2026-02-26T14:11:34.998Z",
+    "systemInfo": {
+      "platform": "win32",
+      "arch": "x64",
+      "cpus": 4,
+      "totalMemory": "7.85GB"
+    }
+  },
+  "detailed": [
+    {
+      "testName": "基准性能测试",
+      "results": [
+        {
+          "endpoint": "供应商画像查询",
+          "averageResponseTime": 184,
+          "median": 194,
+          "p95": 210,
+          "p99": 210,
+          "successRate": "100.0%",
+          "sampleSize": 10
+        },
+        {
+          "endpoint": "市场趋势分析",
+          "averageResponseTime": 243,
+          "median": 242,
+          "p95": 257,
+          "p99": 257,
+          "successRate": "100.0%",
+          "sampleSize": 10
+        },
+        {
+          "endpoint": "创建供应商画像",
+          "averageResponseTime": 299,
+          "median": 289,
+          "p95": 352,
+          "p99": 352,
+          "successRate": "100.0%",
+          "sampleSize": 10
+        }
+      ],
+      "status": "completed"
+    },
+    {
+      "testName": "并发负载测试",
+      "results": [
+        {
+          "concurrency": 5,
+          "totalRequests": 5,
+          "successfulRequests": 5,
+          "failedRequests": 0,
+          "totalTime": 213,
+          "throughput": 23.47,
+          "successRate": "100.0%"
+        },
+        {
+          "concurrency": 10,
+          "totalRequests": 10,
+          "successfulRequests": 10,
+          "failedRequests": 0,
+          "totalTime": 243,
+          "throughput": 41.15,
+          "successRate": "100.0%"
+        },
+        {
+          "concurrency": 20,
+          "totalRequests": 20,
+          "successfulRequests": 20,
+          "failedRequests": 0,
+          "totalTime": 336,
+          "throughput": 59.52,
+          "successRate": "100.0%"
+        },
+        {
+          "concurrency": 50,
+          "totalRequests": 50,
+          "successfulRequests": 45,
+          "failedRequests": 5,
+          "totalTime": 532,
+          "throughput": 84.59,
+          "successRate": "90.0%"
+        }
+      ],
+      "status": "completed"
+    },
+    {
+      "testName": "压力测试",
+      "results": {
+        "totalRequests": 274,
+        "successfulRequests": 0,
+        "failedRequests": 274,
+        "totalTime": 30068,
+        "throughput": 9.11,
+        "successRate": "0.0%"
+      },
+      "status": "completed"
+    },
+    {
+      "testName": "稳定性测试",
+      "results": {
+        "totalRequests": 326,
+        "successfulRequests": 0,
+        "failedRequests": 326,
+        "testDuration": 60111,
+        "successRate": "0.0%"
+      },
+      "status": "completed"
+    }
+  ]
+}

@@ -6,29 +6,32 @@ function testDataCenterOverall() {
 
   // 1. 统计已完成的组件
   console.log('📊 组件完成度统计:');
-  
+
   const componentStats = {
-    '基础设施层': { total: 3, completed: 3, percentage: 100 },
-    '数据虚拟化层': { total: 3, completed: 3, percentage: 100 },
-    '查询优化层': { total: 1, completed: 1, percentage: 100 },
-    '数据分析层': { total: 3, completed: 1, percentage: 33 },
-    '监控管理层': { total: 3, completed: 0, percentage: 0 }
+    基础设施层: { total: 3, completed: 3, percentage: 100 },
+    数据虚拟化层: { total: 3, completed: 3, percentage: 100 },
+    查询优化层: { total: 1, completed: 1, percentage: 100 },
+    数据分析层: { total: 3, completed: 1, percentage: 33 },
+    监控管理层: { total: 3, completed: 0, percentage: 0 },
   };
 
   Object.entries(componentStats).forEach(([layer, stats]) => {
-    const status = stats.percentage === 100 ? '✅' : stats.percentage > 0 ? '⚡' : '🔲';
-    console.log(`  ${status} ${layer}: ${stats.completed}/${stats.total} (${stats.percentage}%)`);
+    const status =
+      stats.percentage === 100 ? '✅' : stats.percentage > 0 ? '⚡' : '🔲';
+    console.log(
+      `  ${status} ${layer}: ${stats.completed}/${stats.total} (${stats.percentage}%)`
+    );
   });
 
   // 2. 验证核心文件完整性
   console.log('\n📁 核心文件完整性检查:');
-  
+
   const coreDirectories = [
     'src/data-center/core',
-    'src/data-center/models', 
+    'src/data-center/models',
     'src/data-center/virtualization',
     'src/data-center/optimizer',
-    'src/data-center/analytics'
+    'src/data-center/analytics',
   ];
 
   coreDirectories.forEach(dir => {
@@ -40,12 +43,12 @@ function testDataCenterOverall() {
 
   // 3. API端点验证
   console.log('\n🌐 API端点状态:');
-  
+
   const apiEndpoints = [
     '/api/data-center',
     '/api/data-center/views',
-    '/api/data-center/optimizer', 
-    '/api/data-center/analytics'
+    '/api/data-center/optimizer',
+    '/api/data-center/analytics',
   ];
 
   apiEndpoints.forEach(endpoint => {
@@ -57,11 +60,11 @@ function testDataCenterOverall() {
 
   // 4. 配置文件检查
   console.log('\n⚙️ 配置文件状态:');
-  
+
   const configFiles = [
     'docker-compose.datacenter.yml',
     '.env.datacenter.example',
-    'package.json (scripts)'
+    'package.json (scripts)',
   ];
 
   configFiles.forEach(config => {
@@ -78,14 +81,14 @@ function testDataCenterOverall() {
 
   // 5. 测试脚本验证
   console.log('\n🧪 测试覆盖度:');
-  
+
   const testScripts = [
     'test-data-center-infrastructure.js',
     'test-db-config-logic.js',
     'test-unified-models.js',
     'test-virtual-views.js',
     'test-query-optimizer.js',
-    'test-data-analytics.js'
+    'test-data-analytics.js',
   ];
 
   const passedTests = testScripts.filter(script => {
@@ -102,7 +105,7 @@ function testDataCenterOverall() {
 
   // 6. 功能亮点展示
   console.log('\n✨ 已实现核心功能:');
-  
+
   const features = [
     '✅ 多源数据统一查询 (Trino引擎)',
     '✅ 跨数据源JOIN优化',
@@ -113,20 +116,20 @@ function testDataCenterOverall() {
     '✅ 价格趋势分析引擎',
     '✅ 统计预测建模',
     '✅ 批量数据处理',
-    '✅ RESTful API接口'
+    '✅ RESTful API接口',
   ];
 
   features.forEach(feature => console.log(`  ${feature}`));
 
   // 7. 性能指标预览
   console.log('\n⚡ 性能指标预览:');
-  
+
   const performanceIndicators = {
-    '查询响应时间': '< 2秒',
-    '缓存命中率': '> 70%',
-    '并发处理': '100+ QPS',
-    '数据新鲜度': '< 1小时',
-    '系统可用性': '> 99.9%'
+    查询响应时间: '< 2秒',
+    缓存命中率: '> 70%',
+    并发处理: '100+ QPS',
+    数据新鲜度: '< 1小时',
+    系统可用性: '> 99.9%',
   };
 
   Object.entries(performanceIndicators).forEach(([indicator, target]) => {
@@ -142,20 +145,23 @@ function testDataCenterOverall() {
   console.log(`  📊 完成任务: ${completedTasks}/${totalTasks}`);
   console.log(`  📈 完成进度: ${overallProgress}%`);
   console.log(`  🕐 预计剩余时间: ${(totalTasks - completedTasks) * 1.5} 周`);
-  
-  const statusEmoji = overallProgress >= 50 ? '🚀' : overallProgress >= 25 ? '🏃' : '起步';
-  console.log(`  ${statusEmoji} 项目状态: ${overallProgress >= 50 ? '进展良好' : overallProgress >= 25 ? '稳步推进' : '初期阶段'}`);
+
+  const statusEmoji =
+    overallProgress >= 50 ? '🚀' : overallProgress >= 25 ? '🏃' : '起步';
+  console.log(
+    `  ${statusEmoji} 项目状态: ${overallProgress >= 50 ? '进展良好' : overallProgress >= 25 ? '稳步推进' : '初期阶段'}`
+  );
 
   // 9. 下一步建议
   console.log('\n📋 下一步开发建议:');
-  
+
   const nextSteps = [
     '实现消息队列集成（Redis Streams/Kafka）',
     '开发实时数据处理管道',
     '构建监控告警系统',
     '集成机器学习推荐算法',
     '完善安全访问控制',
-    '进行压力测试和优化'
+    '进行压力测试和优化',
   ];
 
   nextSteps.forEach((step, index) => {

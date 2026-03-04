@@ -1,6 +1,5 @@
-/**
- * 工单管理API - 创建和查询工单
- */
+﻿/**
+ * 宸ュ崟绠＄悊API - 鍒涘缓鍜屾煡璇㈠伐? */
 
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
@@ -11,7 +10,7 @@ import { CreateRepairOrderDTO } from '@/fcx-system/models/fcx-account.model';
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const body = await request.json();
     const {
@@ -20,13 +19,20 @@ export async function POST(request: Request) {
       deviceInfo,
       faultDescription,
       fcxAmount,
-      factoryId
+      factoryId,
     } = body;
 
-    // 参数验证
-    if (!consumerId || !repairShopId || !deviceInfo || !faultDescription || !fcxAmount || !factoryId) {
+    // 鍙傛暟楠岃瘉
+    if (
+      !consumerId ||
+      !repairShopId ||
+      !deviceInfo ||
+      !faultDescription ||
+      !fcxAmount ||
+      !factoryId
+    ) {
       return NextResponse.json(
-        { success: false, error: '缺少必要参数' },
+        { success: false, error: '缂哄皯蹇呰鍙傛暟' },
         { status: 400 }
       );
     }
@@ -37,7 +43,7 @@ export async function POST(request: Request) {
       deviceInfo,
       faultDescription,
       fcxAmount,
-      factoryId
+      factoryId,
     };
 
     const orderService = new RepairOrderService();
@@ -46,16 +52,15 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: order,
-      message: '工单创建成功'
+      message: '宸ュ崟鍒涘缓鎴愬姛',
     });
-
   } catch (error) {
-    console.error('创建工单错误:', error);
+    console.error('鍒涘缓宸ュ崟閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '创建工单失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鍒涘缓宸ュ崟澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -64,7 +69,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const { searchParams } = new URL(request.url);
     const consumerId = searchParams.get('consumerId') || undefined;
@@ -75,24 +80,24 @@ export async function GET(request: Request) {
     const orders = await orderService.listOrders({
       consumerId,
       shopId,
-      status: status as any
+      status: status as any,
     });
 
     return NextResponse.json({
       success: true,
       data: orders,
-      count: orders.length
+      count: orders.length,
     });
-
   } catch (error) {
-    console.error('查询工单列表错误:', error);
+    console.error('鏌ヨ宸ュ崟鍒楄〃閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '查询工单失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鏌ヨ宸ュ崟澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

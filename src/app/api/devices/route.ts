@@ -1,12 +1,13 @@
-/**
- * 设备管理 API 端点（带租户验证）
- * 演示如何使用 requireTenant 中间件
- */
+﻿/**
+ * 璁惧绠＄悊 API 绔偣锛堝甫绉熸埛楠岃瘉? * 婕旂ず濡備綍浣跨敤 requireTenant 涓棿? */
 
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
-import { requireTenant, getUserTenantContext } from '@/middleware/require-tenant';
+import {
+  requireTenant,
+  getUserTenantContext,
+} from '@/middleware/require-tenant';
 
 export async function GET(request: Request) {
   const supabase = createClient(
@@ -15,38 +16,33 @@ export async function GET(request: Request) {
   );
 
   try {
-    // 获取租户上下文
-    const tenantContext = await getUserTenantContext(request);
-    
+    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+
     if (!tenantContext.success) {
-      return NextResponse.json(
-        { error: tenantContext.error }, 
-        { status: 401 }
-      );
+      return NextResponse.json({ error: tenantContext.error }, { status: 401 });
     }
 
     const { tenantId, userId, role } = tenantContext;
 
-    // 获取查询参数
+    // 鑾峰彇鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const offset = (page - 1) * limit;
 
-    // 查询该租户下的设备（自动应用租户过滤）
-    const { data: devices, error, count } = await supabase
+    // 鏌ヨ璇ョ鎴蜂笅鐨勮澶囷紙鑷姩搴旂敤绉熸埛杩囨护?    const {
+      data: devices,
+      error,
+      count,
+    } = await supabase
       .from('devices')
       .select('*', { count: 'exact' })
-      .eq('tenant_id', tenantId)  // 关键：只查询当前租户的数据
-      .range(offset, offset + limit - 1)
+      .eq('tenant_id', tenantId) // 鍏抽敭锛氬彧鏌ヨ褰撳墠绉熸埛鐨勬暟?      .range(offset, offset + limit - 1)
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('获取设备列表失败:', error);
-      return NextResponse.json(
-        { error: '获取设备列表失败' }, 
-        { status: 500 }
-      );
+      console.error('鑾峰彇璁惧鍒楄〃澶辫触:', error);
+      return NextResponse.json({ error: '鑾峰彇璁惧鍒楄〃澶辫触' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -56,20 +52,16 @@ export async function GET(request: Request) {
         page,
         limit,
         total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit)
+        totalPages: Math.ceil((count || 0) / limit),
       },
       tenantInfo: {
         tenantId,
-        userRole: role
-      }
+        userRole: role,
+      },
     });
-
   } catch (error: any) {
-    console.error('设备 API 错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    console.error('璁惧 API 閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -80,63 +72,57 @@ export async function POST(request: Request) {
   );
 
   try {
-    // 获取租户上下文
-    const tenantContext = await getUserTenantContext(request);
-    
+    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+
     if (!tenantContext.success) {
-      return NextResponse.json(
-        { error: tenantContext.error }, 
-        { status: 401 }
-      );
+      return NextResponse.json({ error: tenantContext.error }, { status: 401 });
     }
 
     const { tenantId, userId, role } = tenantContext;
 
-    // 解析请求体
-    const body = await request.json();
-    
-    // 验证必要字段
+    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+
+    // 楠岃瘉蹇呰瀛楁
     if (!body.name || !body.type) {
       return NextResponse.json(
-        { error: '设备名称和类型为必填项' }, 
+        { error: '璁惧鍚嶇О鍜岀被鍨嬩负蹇呭～? },
         { status: 400 }
       );
     }
 
-    // 创建设备记录（自动关联当前租户）
+    // 鍒涘缓璁惧璁板綍锛堣嚜鍔ㄥ叧鑱斿綋鍓嶇鎴凤級
     const { data: device, error } = await supabase
       .from('devices')
       .insert({
         name: body.name.trim(),
         type: body.type.trim(),
-        description: body.description?.trim() || null,
+        description: body?.trim() || null,
         status: body.status || 'active',
-        tenant_id: tenantId,  // 关键：自动设置租户ID
-        created_by: userId
+        tenant_id: tenantId, // 鍏抽敭锛氳嚜鍔ㄨ缃鎴稩D
+        created_by: userId,
       } as any)
       .select()
       .single();
 
     if (error) {
-      console.error('创建设备失败:', error);
+      console.error('鍒涘缓璁惧澶辫触:', error);
       return NextResponse.json(
-        { error: '创建设备失败', details: error.message }, 
+        { error: '鍒涘缓璁惧澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: '设备创建成功',
-      data: device
-    }, { status: 201 });
-
-  } catch (error: any) {
-    console.error('创建设备错误:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+      {
+        success: true,
+        message: '璁惧鍒涘缓鎴愬姛',
+        data: device,
+      },
+      { status: 201 }
+    ) as any;
+  } catch (error: any) {
+    console.error('鍒涘缓璁惧閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -147,76 +133,62 @@ export async function PUT(request: Request) {
   );
 
   try {
-    // 获取租户上下文
-    const tenantContext = await getUserTenantContext(request);
-    
+    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+
     if (!tenantContext.success) {
-      return NextResponse.json(
-        { error: tenantContext.error }, 
-        { status: 401 }
-      );
+      return NextResponse.json({ error: tenantContext.error }, { status: 401 });
     }
 
     const { tenantId, userId, role } = tenantContext;
 
-    // 解析请求体
-    const body = await request.json();
+    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
     const { id, ...updateData } = body;
 
     if (!id) {
-      return NextResponse.json(
-        { error: '设备ID为必填项' }, 
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '璁惧ID涓哄繀濉」' }, { status: 400 });
     }
 
-    // 验证用户是否有权更新该设备（必须属于同一租户）
-    const { data: existingDevice, error: checkError } = await supabase
+    // 楠岃瘉鐢ㄦ埛鏄惁鏈夋潈鏇存柊璇ヨ澶囷紙蹇呴』灞炰簬鍚屼竴绉熸埛?    const { data: existingDevice, error: checkError } = await supabase
       .from('devices')
       .select('id, tenant_id')
       .eq('id', id)
-      .eq('tenant_id', tenantId)  // 关键：确保设备属于当前租户
-      .single();
+      .eq('tenant_id', tenantId) // 鍏抽敭锛氱‘淇濊澶囧睘浜庡綋鍓嶇?      .single();
 
     if (checkError || !existingDevice) {
       return NextResponse.json(
-        { error: '设备不存在或无权访问' }, 
+        { error: '璁惧涓嶅瓨鍦ㄦ垨鏃犳潈璁块棶' },
         { status: 404 }
       );
     }
 
-    // 执行更新
+    // 鎵ц鏇存柊
     const { data: updatedDevice, error } = await supabase
       .from('devices')
       .update({
         ...updateData,
         updated_by: userId,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       } as any)
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      console.error('更新设备失败:', error);
+      console.error('鏇存柊璁惧澶辫触:', error);
       return NextResponse.json(
-        { error: '更新设备失败', details: error.message }, 
+        { error: '鏇存柊璁惧澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: '设备更新成功',
-      data: updatedDevice
+      message: '璁惧鏇存柊鎴愬姛',
+      data: updatedDevice,
     });
-
   } catch (error: any) {
-    console.error('更新设备错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    console.error('鏇存柊璁惧閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
 
@@ -227,31 +199,23 @@ export async function DELETE(request: Request) {
   );
 
   try {
-    // 获取租户上下文
-    const tenantContext = await getUserTenantContext(request);
-    
+    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+
     if (!tenantContext.success) {
-      return NextResponse.json(
-        { error: tenantContext.error }, 
-        { status: 401 }
-      );
+      return NextResponse.json({ error: tenantContext.error }, { status: 401 });
     }
 
     const { tenantId, userId, role } = tenantContext;
 
-    // 获取设备ID
+    // 鑾峰彇璁惧ID
     const { searchParams } = new URL(request.url);
     const deviceId = searchParams.get('id');
 
     if (!deviceId) {
-      return NextResponse.json(
-        { error: '设备ID为必填项' }, 
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '璁惧ID涓哄繀濉」' }, { status: 400 });
     }
 
-    // 验证用户是否有权删除该设备
-    const { data: existingDevice, error: checkError } = await supabase
+    // 楠岃瘉鐢ㄦ埛鏄惁鏈夋潈鍒犻櫎璇ヨ?    const { data: existingDevice, error: checkError } = await supabase
       .from('devices')
       .select('id, tenant_id')
       .eq('id', deviceId)
@@ -260,39 +224,35 @@ export async function DELETE(request: Request) {
 
     if (checkError || !existingDevice) {
       return NextResponse.json(
-        { error: '设备不存在或无权访问' }, 
+        { error: '璁惧涓嶅瓨鍦ㄦ垨鏃犳潈璁块棶' },
         { status: 404 }
       );
     }
 
-    // 执行软删除
-    const { error } = await supabase
+    // 鎵ц杞垹?    const { error } = await supabase
       .from('devices')
       .update({
         status: 'deleted',
         deleted_by: userId,
-        deleted_at: new Date().toISOString()
+        deleted_at: new Date().toISOString(),
       } as any)
       .eq('id', deviceId);
 
     if (error) {
-      console.error('删除设备失败:', error);
+      console.error('鍒犻櫎璁惧澶辫触:', error);
       return NextResponse.json(
-        { error: '删除设备失败', details: error.message }, 
+        { error: '鍒犻櫎璁惧澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: '设备删除成功'
+      message: '璁惧鍒犻櫎鎴愬姛',
     });
-
   } catch (error: any) {
-    console.error('删除设备错误:', error);
-    return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
-    );
+    console.error('鍒犻櫎璁惧閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
+

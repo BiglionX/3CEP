@@ -110,21 +110,21 @@ ADD CONSTRAINT chk_current_status CHECK (
 
 async function createTables() {
   console.log('🔧 开始创建设备生命周期表结构...\n');
-  
+
   try {
     // 1. 创建设备生命周期事件表
     console.log('1️⃣ 创建设备生命周期事件表...');
     const { error: eventError } = await supabase.rpc('execute_sql', {
-      sql: CREATE_LIFECYCLE_EVENTS_TABLE
+      sql: CREATE_LIFECYCLE_EVENTS_TABLE,
     });
-    
+
     if (eventError) {
       console.log('⚠️  通过RPC执行失败，尝试直接执行...');
       // 如果RPC失败，尝试其他方式
       const { data, error } = await supabase
         .from('device_lifecycle_events')
         .select('count(*)');
-      
+
       if (error && error.message.includes('does not exist')) {
         console.log('   表不存在，需要通过Supabase控制台手动创建');
       } else {
@@ -133,19 +133,19 @@ async function createTables() {
     } else {
       console.log('✅ 设备生命周期事件表创建成功');
     }
-    
+
     // 2. 创建设备档案表
     console.log('\n2️⃣ 创建设备档案表...');
     const { error: profileError } = await supabase.rpc('execute_sql', {
-      sql: CREATE_DEVICE_PROFILES_TABLE
+      sql: CREATE_DEVICE_PROFILES_TABLE,
     });
-    
+
     if (profileError) {
       console.log('⚠️  通过RPC执行失败，尝试直接执行...');
       const { data, error } = await supabase
         .from('device_profiles')
         .select('count(*)');
-      
+
       if (error && error.message.includes('does not exist')) {
         console.log('   表不存在，需要通过Supabase控制台手动创建');
       } else {
@@ -154,47 +154,52 @@ async function createTables() {
     } else {
       console.log('✅ 设备档案表创建成功');
     }
-    
+
     // 3. 验证表结构
     console.log('\n3️⃣ 验证表结构...');
-    
+
     // 检查设备生命周期事件表
     try {
       const { data: eventData, error: eventCheckError } = await supabase
         .from('device_lifecycle_events')
         .select('count(*)')
         .limit(1);
-      
+
       if (!eventCheckError) {
         console.log('✅ device_lifecycle_events 表结构正常');
       } else {
-        console.log('❌ device_lifecycle_events 表结构异常:', eventCheckError.message);
+        console.log(
+          '❌ device_lifecycle_events 表结构异常:',
+          eventCheckError.message
+        );
       }
     } catch (e) {
       console.log('❌ device_lifecycle_events 表检查失败');
     }
-    
+
     // 检查设备档案表
     try {
       const { data: profileData, error: profileCheckError } = await supabase
         .from('device_profiles')
         .select('count(*)')
         .limit(1);
-      
+
       if (!profileCheckError) {
         console.log('✅ device_profiles 表结构正常');
       } else {
-        console.log('❌ device_profiles 表结构异常:', profileCheckError.message);
+        console.log(
+          '❌ device_profiles 表结构异常:',
+          profileCheckError.message
+        );
       }
     } catch (e) {
       console.log('❌ device_profiles 表检查失败');
     }
-    
+
     console.log('\n📋 下一步建议:');
     console.log('   1. 如果表创建失败，请登录Supabase控制台手动执行SQL');
     console.log('   2. 或者运行: npx supabase db push');
     console.log('   3. 然后重新运行测试数据准备脚本');
-    
   } catch (error) {
     console.error('❌ 创建表结构时发生错误:', error);
     process.exit(1);

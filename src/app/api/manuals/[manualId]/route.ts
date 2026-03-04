@@ -18,7 +18,7 @@ export async function GET(
 ) {
   try {
     const manualId = params.manualId;
-    
+
     if (!manualId) {
       return NextResponse.json(
         { success: false, error: '缺少说明书ID参数' },
@@ -27,7 +27,7 @@ export async function GET(
     }
 
     const manual = await enhancedManualsService.getManualById(manualId);
-    
+
     if (!manual) {
       return NextResponse.json(
         { success: false, error: '说明书未找到' },
@@ -40,15 +40,14 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: manual
+      data: manual,
     });
-
   } catch (error) {
     console.error('获取说明书详情错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '获取说明书详情失败' 
+      {
+        success: false,
+        error: (error as Error).message || '获取说明书详情失败',
       },
       { status: 500 }
     );
@@ -66,7 +65,7 @@ export async function PUT(
   try {
     const manualId = params.manualId;
     const body = await request.json();
-    
+
     if (!manualId) {
       return NextResponse.json(
         { success: false, error: '缺少说明书ID参数' },
@@ -83,20 +82,22 @@ export async function PUT(
       );
     }
 
-    const updatedManual = await enhancedManualsService.updateManual(manualId, body);
+    const updatedManual = await enhancedManualsService.updateManual(
+      manualId,
+      body
+    );
 
     return NextResponse.json({
       success: true,
       data: updatedManual,
-      message: '说明书更新成功'
+      message: '说明书更新成功',
     });
-
   } catch (error) {
     console.error('更新说明书错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '更新说明书失败' 
+      {
+        success: false,
+        error: (error as Error).message || '更新说明书失败',
       },
       { status: 400 }
     );
@@ -113,7 +114,7 @@ export async function DELETE(
 ) {
   try {
     const manualId = params.manualId;
-    
+
     if (!manualId) {
       return NextResponse.json(
         { success: false, error: '缺少说明书ID参数' },
@@ -122,7 +123,9 @@ export async function DELETE(
     }
 
     // 验证权限（仅管理员可删除）
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) {
       return NextResponse.json(
         { success: false, error: '需要登录' },
@@ -155,15 +158,14 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: '说明书删除成功'
+      message: '说明书删除成功',
     });
-
   } catch (error) {
     console.error('删除说明书错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '删除说明书失败' 
+      {
+        success: false,
+        error: (error as Error).message || '删除说明书失败',
       },
       { status: 500 }
     );

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Upload, AlertCircle } from 'lucide-react';
@@ -63,7 +63,7 @@ export default function UploadForm({ existingUrls, onUploadSuccess }: UploadForm
       
       onUploadSuccess?.(url);
       setUrl('');
-      toast.success('上传成功！');
+      toast.success('上传成功?);
       
     } catch (err) {
       setError('上传失败，请重试');
@@ -109,7 +109,7 @@ export default function UploadForm({ existingUrls, onUploadSuccess }: UploadForm
         {isLoading ? (
           <>
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            上传中...
+            上传?..
           </>
         ) : (
           <>

@@ -3,20 +3,24 @@
 ## 🚀 快速入口
 
 ### 🎯 用户入口
+
 - [快速入门指南](./user-guides/getting-started.md) - 5分钟上手平台使用
 - [网站地图](./SITE_MAP.md) - 完整功能导航
 
 ### 👨‍💼 企业用户入口
+
 - [企业服务指南](./user-guides/enterprise-guide.md) - 企业客户使用手册
 - [产品服务官文档](./technical-docs/product-service-officer.md) - 售后服务管理说明
 - [企业管理后台](./technical-docs/enterprise-admin.md) - 企业管理系统文档
 
 ### 👨‍💻 开发者入口
+
 - [项目说明书](./project-overview/project-specification.md) - 完整项目概览
 - [技术架构文档](./technical-docs/system-architecture.md) - 系统设计详解
 - [API参考文档](./technical-docs/api-documentation.md) - 接口使用指南
 
 ### 🛠️ 运维入口
+
 - [部署操作手册](./technical-docs/deployment-guide.md) - 生产环境部署
 - [版本更新日志](./release-notes/changelog.md) - 版本变更记录
 - [安全管理指南](./technical-docs/security-guide.md) - 系统安全配置
@@ -54,7 +58,7 @@ npm run dev
 
 包含项目整体规划、商业模式和技术架构
 
-- [`project-specification.md`](./project-overview/project-specification.md) - 项目说明书 (整合版) ⭐ 新增
+- [`project-specification.md`](./project-overview/project-specification.md) - 项目说明书 (v5.3 智能化全面升级版) ⭐ 更新
 - [`development-roadmap.md`](./project-overview/development-roadmap.md) - 发展路线图
 - [`business-model.md`](./project-overview/business-model.md) - 商业模式
 - [`technical-architecture.md`](./project-overview/technical-architecture.md) - 技术架构
@@ -68,6 +72,10 @@ npm run dev
 - [`b2b-procurement-spec.md`](./modules/b2b-procurement/specification.md) - B2B采购模块规范
 - [`data-center-spec.md`](./modules/data-center/specification.md) - 数据中心模块规范
 - [`fcx-alliance-spec.md`](./modules/fcx-alliance/specification.md) - FCX联盟模块规范
+- [`foreign-trade-spec.md`](./modules/foreign-trade/specification.md) - 国际贸易管理平台 (FixCycle 4.0) ⭐ 新增
+- [`procurement-intelligence-index.md`](./modules/procurement-intelligence/index.md) - 采购智能体文档索引 ⭐ 新增
+- [`agent-marketplace-optimization-plan.md`](./project-planning/agent-marketplace-optimization-plan.md) - 智能体市场优化方案 (FixCycle 6.0) ✅ 已完成 ⭐ 更新
+- [`agent-marketplace-architecture.md`](./technical-docs/agent-marketplace-architecture.md) - 智能体市场技术架构 ⭐ 新增
 
 ### 👥 用户指南 (User Guides)
 
@@ -77,6 +85,10 @@ npm run dev
 - [`admin-guide.md`](./user-guides/admin-guide.md) - 管理员操作手册
 - [`developer-guide.md`](./user-guides/developer-guide.md) - 开发者使用指南
 - [`api-reference.md`](./user-guides/api-reference.md) - API接口参考
+- [`user-management-quick-reference.md`](./user-guides/user-management-quick-reference.md) - 智能用户管理快速参考 ⭐ 新增
+- [`procurement-intelligence-user-manual.md`](./user-guides/procurement-intelligence-user-manual.md) - 采购智能体用户手册 ⭐ 新增
+- [`foreign-trade-user-guide.md`](./user-guides/foreign-trade-user-guide.md) - 国际贸易管理用户指南 ⭐ 新增
+- [`agent-marketplace-user-guide.md`](./user-guides/agent-marketplace-user-guide.md) - 智能体市场用户指南 ✅ 已完成 ⭐ 更新
 
 ### ⚙️ 技术文档 (Technical Docs)
 
@@ -86,6 +98,9 @@ npm run dev
 - [`database-design.md`](./technical-docs/database-design.md) - 数据库设计方案
 - [`api-documentation.md`](./technical-docs/api-documentation.md) - API接口文档
 - [`deployment-guide.md`](./technical-docs/deployment-guide.md) - 部署操作手册 (整合版)
+- [`smart-user-management-specification.md`](./technical-docs/smart-user-management-specification.md) - 智能用户管理系统技术规范 (FixCycle 5.0) ⭐ 新增
+- [`management-console-optimization-summary.md`](./technical-docs/management-console-optimization-summary.md) - 管理后台优化总结报告 ⭐ 新增
+- [`agent-marketplace-architecture.md`](./technical-docs/agent-marketplace-architecture.md) - 智能体市场架构设计 ⭐ 预规划
 
 ### 📝 版本发布 (Release Notes)
 
@@ -110,8 +125,6 @@ npm run dev
 
 - [`historical-reports/`](./archived/historical-reports/) - 历史报告文档
 - [`legacy-docs/`](./archived/legacy-docs/) - 旧版技术文档
-
-
 
 ### ⚙️ 技术文档 (Technical Docs)
 
@@ -224,6 +237,31 @@ npm run dev
 - 使用 Git 进行版本管理
 - 重大变更需要审核
 
+## 🎯 新增功能模块快速导航
+
+### FixCycle 5.0 智能化升级
+
+- **智能用户管理系统**: [技术规范](./technical-docs/smart-user-management-specification.md) | [用户指南](./user-guides/user-management-quick-reference.md)
+- **管理后台全面优化**: [优化总结](./technical-docs/management-console-optimization-summary.md) | [项目报告](../reports/management-optimization-final-summary.md)
+
+### FixCycle 4.0 国际化扩展
+
+- **国际贸易管理平台**: [技术规范](./modules/foreign-trade/specification.md) | [用户指南](./user-guides/foreign-trade-user-guide.md)
+- **采购智能体升级**: [文档索引](./modules/procurement-intelligence/index.md) | [技术规范](./modules/procurement-intelligence/upgrade-specification.md)
+
+### FixCycle 6.0 智能体生态
+
+- **智能体市场平台**: [优化方案](./project-planning/agent-marketplace-optimization-plan.md) | [架构设计](./technical-docs/agent-marketplace-architecture.md)
+- **Token经济体系**: 预规划中 | [用户指南](./user-guides/agent-marketplace-user-guide.md)
+
+### 核心文档更新
+
+- **项目说明书**: [最新版本 v5.3](./project-overview/project-specification.md) - 智能化全面升级版
+- **网站地图**: [完整功能导航](./SITE_MAP.md) - 包含所有新功能模块
+- **API文档**: [OpenAPI规范](../OPENAPI_SPEC.yaml) - 最新接口定义
+
 ---
 
-_最后更新：2026 年 2 月 23 日_
+_最后更新：2026 年 3 月 1 日_
+_版本：v2.1 (智能体市场启动)_
+_新增：FixCycle 5.0智能用户管理、FixCycle 4.0国际贸易平台、FixCycle 6.0智能体市场_

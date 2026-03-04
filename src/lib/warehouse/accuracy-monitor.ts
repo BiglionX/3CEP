@@ -1,13 +1,11 @@
 /**
- * 库存准确性监控系统
- * 实现库存准确性监控、差异检测和告警机制
+ * 库存准确性监控系? * 实现库存准确性监控、差异检测和告警机制
  */
 
-import { InventoryMapper } from "@/lib/warehouse/inventory-mapper";
-import { createClient } from "@supabase/supabase-js";
+import { InventoryMapper } from '@/lib/warehouse/inventory-mapper';
+import { createClient } from '@supabase/supabase-js';
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 初始化Supabase客户?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -16,10 +14,7 @@ const inventoryMapper = new InventoryMapper();
 
 export interface AccuracyConfig {
   targetAccuracy: number; // 目标准确率百分比 (例如 99.0)
-  checkFrequency: "daily" | "weekly" | "monthly"; // 检查频率
-  alertThreshold: number; // 差异阈值
-  autoAdjustThreshold: number; // 自动调整阈值
-  notificationChannels: string[]; // 通知渠道
+  checkFrequency: 'daily' | 'weekly' | 'monthly'; // 检查频?  alertThreshold: number; // 差异阈?  autoAdjustThreshold: number; // 自动调整阈?  notificationChannels: string[]; // 通知渠道
 }
 
 export interface AccuracyReport {
@@ -49,62 +44,51 @@ export class InventoryAccuracyMonitor {
   constructor(config?: Partial<AccuracyConfig>) {
     this.config = {
       targetAccuracy: 99.0,
-      checkFrequency: "daily",
+      checkFrequency: 'daily',
       alertThreshold: 5,
       autoAdjustThreshold: 10,
-      notificationChannels: ["email", "system"],
+      notificationChannels: ['email', 'system'],
       ...config,
     };
   }
 
   /**
-   * 启动准确性监控
-   */
+   * 启动准确性监?   */
   startMonitoring(): void {
     if (this.monitoringInterval) {
-      console.log("🔄 库存准确性监控已在运行中");
-      return;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔄 库存准确性监控已在运行中')return;
     }
 
     const intervalMs = this.getCheckIntervalMs();
-    console.log(
-      `🚀 启动库存准确性监控，检查频率: ${this.config.checkFrequency}`
-    );
-
-    // 立即执行一次检查
-    this.performAccuracyCheck().catch((error) => {
-      console.error("首次准确性检查失败:", error);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `🚀 启动库存准确性监控，检查频? ${this.config.checkFrequency}`
+    )// 立即执行一次检?    this.performAccuracyCheck().catch(error => {
+      console.error('首次准确性检查失?', error);
     });
 
-    // 设置定期检查
-    this.monitoringInterval = setInterval(async () => {
+    // 设置定期检?    this.monitoringInterval = setInterval(async () => {
       try {
         await this.performAccuracyCheck();
       } catch (error) {
-        console.error("定期准确性检查失败:", error);
-        await this.sendAlert(`准确性检查失败: ${(error as Error).message}`);
+        console.error('定期准确性检查失?', error);
+        await this.sendAlert(`准确性检查失? ${(error as Error).message}`);
       }
     }, intervalMs);
   }
 
   /**
-   * 停止准确性监控
-   */
+   * 停止准确性监?   */
   stopMonitoring(): void {
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
-      console.log("🛑 库存准确性监控已停止");
-    }
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🛑 库存准确性监控已停止')}
   }
 
   /**
-   * 执行准确性检查
-   */
+   * 执行准确性检?   */
   private async performAccuracyCheck(): Promise<void> {
-    console.log("🔍 开始执行库存准确性检查...");
-
-    const startTime = new Date();
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔍 开始执行库存准确性检?..')const startTime = new Date();
     const periodEnd = new Date();
     const periodStart = this.getPeriodStartDate();
 
@@ -118,14 +102,12 @@ export class InventoryAccuracyMonitor {
         periodEnd
       );
 
-      // 3. 计算准确性指标
-      const accuracyMetrics = this.calculateAccuracyMetrics(
+      // 3. 计算准确性指?      const accuracyMetrics = this.calculateAccuracyMetrics(
         currentInventory,
         historicalData
       );
 
-      // 4. 识别差异项
-      const discrepancies = this.identifyDiscrepancies(
+      // 4. 识别差异?      const discrepancies = this.identifyDiscrepancies(
         currentInventory,
         historicalData
       );
@@ -151,17 +133,16 @@ export class InventoryAccuracyMonitor {
       // 6. 保存报告到数据库
       await this.saveAccuracyReport(report);
 
-      // 7. 检查是否需要告警
-      await this.evaluateAndAlert(report);
+      // 7. 检查是否需要告?      await this.evaluateAndAlert(report);
 
       // 8. 发送报告通知
       await this.sendReportNotification(report);
 
-      console.log(
-        `✅ 库存准确性检查完成，准确率: ${report.accuracyRate.toFixed(2)}%`
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `�?库存准确性检查完成，准确? ${report.accuracyRate.toFixed(2)}%`
       );
     } catch (error) {
-      console.error("❌ 准确性检查执行失败:", error);
+      console.error('�?准确性检查执行失?', error);
       throw error;
     }
   }
@@ -172,21 +153,21 @@ export class InventoryAccuracyMonitor {
   private async getCurrentInventorySnapshot(): Promise<Map<string, number>> {
     try {
       const { data, error } = await supabase
-        .from("wms_current_inventory")
-        .select("wms_sku, quantity");
+        .from('wms_current_inventory')
+        .select('wms_sku, quantity');
 
       if (error) {
         throw new Error(`获取当前库存失败: ${error.message}`);
       }
 
       const snapshot = new Map<string, number>();
-      data?.forEach((item) => {
+      data?.forEach(item => {
         snapshot.set(item.wms_sku, item.quantity);
       });
 
       return snapshot;
     } catch (error) {
-      console.error("获取库存快照异常:", error);
+      console.error('获取库存快照异常:', error);
       throw error;
     }
   }
@@ -200,39 +181,37 @@ export class InventoryAccuracyMonitor {
   ): Promise<Map<string, number[]>> {
     try {
       const { data, error } = await supabase
-        .from("wms_inventory_history")
-        .select("mapping_id, quantity_after, changed_at")
-        .gte("changed_at", startDate.toISOString())
-        .lte("changed_at", endDate.toISOString());
+        .from('wms_inventory_history')
+        .select('mapping_id, quantity_after, changed_at')
+        .gte('changed_at', startDate.toISOString())
+        .lte('changed_at', endDate.toISOString());
 
       if (error) {
         throw new Error(`获取历史库存数据失败: ${error.message}`);
       }
 
       // 获取SKU映射
-      const mappingIds = [
-        ...new Set(data?.map((item) => item.mapping_id) || []),
-      ];
+      const mappingIds = [...new Set(data?.map(item => item.mapping_id) || [])];
       if (mappingIds.length === 0) return new Map();
 
       const { data: mappings, error: mappingError } = await supabase
-        .from("wms_inventory_mapping")
-        .select("id, wms_sku")
-        .in("id", mappingIds);
+        .from('wms_inventory_mapping')
+        .select('id, wms_sku')
+        .in('id', mappingIds);
 
       if (mappingError) {
         throw new Error(`获取SKU映射失败: ${mappingError.message}`);
       }
 
       const skuMap = new Map<string, string>();
-      mappings?.forEach((mapping) => {
+      mappings?.forEach(mapping => {
         skuMap.set(mapping.id, mapping.wms_sku);
       });
 
       // 按SKU组织历史数据
       const historicalData = new Map<string, number[]>();
 
-      data?.forEach((item) => {
+      data?.forEach(item => {
         const sku = skuMap.get(item.mapping_id);
         if (sku) {
           if (!historicalData.has(sku)) {
@@ -244,14 +223,13 @@ export class InventoryAccuracyMonitor {
 
       return historicalData;
     } catch (error) {
-      console.error("获取历史库存数据异常:", error);
+      console.error('获取历史库存数据异常:', error);
       throw error;
     }
   }
 
   /**
-   * 计算准确性指标
-   */
+   * 计算准确性指?   */
   private calculateAccuracyMetrics(
     currentInventory: Map<string, number>,
     historicalData: Map<string, number[]>
@@ -273,15 +251,14 @@ export class InventoryAccuracyMonitor {
       ...historicalData.keys(),
     ]);
 
-    allSkus.forEach((sku) => {
+    allSkus.forEach(sku => {
       totalItems++;
 
       const currentQty = currentInventory.get(sku) || 0;
       const historicalQtys = historicalData.get(sku) || [];
 
       if (historicalQtys.length > 0) {
-        // 使用历史数据的平均值作为期望值
-        const expectedQty =
+        // 使用历史数据的平均值作为期望?        const expectedQty =
           historicalQtys.reduce((sum, qty) => sum + qty, 0) /
           historicalQtys.length;
         const difference = Math.abs(currentQty - expectedQty);
@@ -316,8 +293,7 @@ export class InventoryAccuracyMonitor {
   }
 
   /**
-   * 识别差异项
-   */
+   * 识别差异?   */
   private identifyDiscrepancies(
     currentInventory: Map<string, number>,
     historicalData: Map<string, number[]>
@@ -335,7 +311,7 @@ export class InventoryAccuracyMonitor {
       ...historicalData.keys(),
     ]);
 
-    allSkus.forEach((sku) => {
+    allSkus.forEach(sku => {
       const actual = currentInventory.get(sku) || 0;
       const historicalQtys = historicalData.get(sku) || [];
 
@@ -373,7 +349,7 @@ export class InventoryAccuracyMonitor {
 
     if (metrics.accuracyRate < this.config.targetAccuracy) {
       recommendations.push(
-        `当前准确率 ${metrics.accuracyRate.toFixed(2)}% 低于目标 ${
+        `当前准确?${metrics.accuracyRate.toFixed(2)}% 低于目标 ${
           this.config.targetAccuracy
         }%`
       );
@@ -381,7 +357,7 @@ export class InventoryAccuracyMonitor {
 
     if (discrepancies.length > 0) {
       const highDiscrepancyItems = discrepancies.filter(
-        (d) => d.percentage > this.config.autoAdjustThreshold
+        d => d.percentage > this.config.autoAdjustThreshold
       );
       if (highDiscrepancyItems.length > 0) {
         recommendations.push(
@@ -396,29 +372,26 @@ export class InventoryAccuracyMonitor {
       recommendations.push(`平均差异率偏高，建议检查库存管理流程`);
     }
 
-    recommendations.push("建议定期进行物理盘点以验证系统准确性");
+    recommendations.push('建议定期进行物理盘点以验证系统准确?);
 
     return recommendations;
   }
 
   /**
-   * 评估并发送告警
-   */
+   * 评估并发送告?   */
   private async evaluateAndAlert(report: AccuracyReport): Promise<void> {
     const alerts: string[] = [];
 
-    // 准确率告警
-    if (report.accuracyRate < this.config.targetAccuracy) {
+    // 准确率告?    if (report.accuracyRate < this.config.targetAccuracy) {
       alerts.push(
-        `库存准确率下降至 ${report.accuracyRate.toFixed(2)}%，低于目标 ${
+        `库存准确率下降至 ${report.accuracyRate.toFixed(2)}%，低于目?${
           this.config.targetAccuracy
         }%`
       );
     }
 
-    // 高差异商品告警
-    const highDiscrepancyItems = report.discrepancies.filter(
-      (d) => d.percentage > this.config.autoAdjustThreshold
+    // 高差异商品告?    const highDiscrepancyItems = report.discrepancies.filter(
+      d => d.percentage > this.config.autoAdjustThreshold
     );
     if (highDiscrepancyItems.length > 0) {
       alerts.push(
@@ -426,34 +399,30 @@ export class InventoryAccuracyMonitor {
       );
     }
 
-    // 发送告警
-    if (alerts.length > 0) {
+    // 发送告?    if (alerts.length > 0) {
       const alertMessage = `
-🚨 库存准确性告警
-
-${alerts.join("\n")}
+🚨 库存准确性告?
+${alerts.join('\n')}
 
 详细报告ID: ${report.reportId}
-检查时间: ${report.createdAt.toISOString()}
+检查时? ${report.createdAt.toISOString()}
 
-请相关人员及时处理。
-      `.trim();
+请相关人员及时处理?      `.trim();
 
       await this.sendAlert(alertMessage, {
-        type: "accuracy_warning",
-        severity: highDiscrepancyItems.length > 0 ? "high" : "medium",
+        type: 'accuracy_warning',
+        severity: highDiscrepancyItems.length > 0 ? 'high' : 'medium',
         reportId: report.reportId,
       });
     }
   }
 
   /**
-   * 保存准确性报告
-   */
+   * 保存准确性报?   */
   private async saveAccuracyReport(report: AccuracyReport): Promise<void> {
     try {
       const { error } = await supabase
-        .from("inventory_accuracy_reports")
+        .from('inventory_accuracy_reports')
         .insert({
           report_id: report.reportId,
           period_start: report.periodStart.toISOString(),
@@ -469,10 +438,10 @@ ${alerts.join("\n")}
         } as any);
 
       if (error) {
-        console.error("保存准确性报告失败:", error);
+        console.error('保存准确性报告失?', error);
       }
     } catch (error) {
-      console.error("保存准确性报告异常:", error);
+      console.error('保存准确性报告异?', error);
     }
   }
 
@@ -481,30 +450,29 @@ ${alerts.join("\n")}
    */
   private async sendReportNotification(report: AccuracyReport): Promise<void> {
     const message = `
-📊 库存准确性检查报告
-
-检查期间: ${report.periodStart.toLocaleDateString()} - ${report.periodEnd.toLocaleDateString()}
-准确率: ${report.accuracyRate.toFixed(2)}%
+📊 库存准确性检查报?
+检查期? ${report.periodStart.toLocaleDateString()} - ${report.periodEnd.toLocaleDateString()}
+准确? ${report.accuracyRate.toFixed(2)}%
 总商品数: ${report.totalItems}
-准确商品数: ${report.accurateItems}
-差异商品数: ${report.discrepancyItems}
-平均差异率: ${report.averageDiscrepancy.toFixed(2)}%
+准确商品? ${report.accurateItems}
+差异商品? ${report.discrepancyItems}
+平均差异? ${report.averageDiscrepancy.toFixed(2)}%
 
 ${
   report.recommendations.length > 0
-    ? `建议措施:\n${report.recommendations.map((r) => `- ${r}`).join("\n")}`
-    : "库存管理水平良好"
+    ? `建议措施:\n${report.recommendations.map(r => `- ${r}`).join('\n')}`
+    : '库存管理水平良好'
 }
 
 报告ID: ${report.reportId}
 生成时间: ${report.createdAt.toLocaleString()}
     `.trim();
 
-    await this.sendNotification("accuracy_report", message, {
-      type: "info",
+    (await this.sendNotification('accuracy_report', message, {
+      type: 'info',
       reportId: report.reportId,
       accuracyRate: report.accuracyRate,
-    });
+    })) as any;
   }
 
   /**
@@ -512,11 +480,11 @@ ${
    */
   private getCheckIntervalMs(): number {
     switch (this.config.checkFrequency) {
-      case "daily":
+      case 'daily':
         return 24 * 60 * 60 * 1000;
-      case "weekly":
+      case 'weekly':
         return 7 * 24 * 60 * 60 * 1000;
-      case "monthly":
+      case 'monthly':
         return 30 * 24 * 60 * 60 * 1000;
       default:
         return 24 * 60 * 60 * 1000;
@@ -526,11 +494,11 @@ ${
   private getPeriodStartDate(): Date {
     const now = new Date();
     switch (this.config.checkFrequency) {
-      case "daily":
+      case 'daily':
         return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-      case "weekly":
+      case 'weekly':
         return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-      case "monthly":
+      case 'monthly':
         return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
       default:
         return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
@@ -542,7 +510,7 @@ ${
   }
 
   private async sendAlert(message: string, data?: any): Promise<void> {
-    await this.sendNotification("accuracy_alert", message, data);
+    await this.sendNotification('accuracy_alert', message, data);
   }
 
   private async sendNotification(
@@ -550,23 +518,22 @@ ${
     message: string,
     data?: any
   ): Promise<void> {
-    console.log(`[${type.toUpperCase()}] ${message}`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`[${type.toUpperCase()}] ${message}`);
 
     try {
-      await supabase.from("notifications").insert({
+      await supabase.from('notifications').insert({
         type,
         message,
         data,
         created_at: new Date().toISOString(),
       } as any);
     } catch (error) {
-      console.warn("记录通知失败:", error);
+      console.warn('记录通知失败:', error);
     }
   }
 
   /**
-   * 获取监控状态
-   */
+   * 获取监控状?   */
   getStatus(): {
     isRunning: boolean;
     config: AccuracyConfig;
@@ -575,19 +542,14 @@ ${
     return {
       isRunning: !!this.monitoringInterval,
       config: this.config,
-      lastCheck: undefined, // 可以从数据库获取最后检查时间
-    };
+      lastCheck: undefined, // 可以从数据库获取最后检查时?    };
   }
 
   /**
-   * 手动触发准确性检查
-   */
+   * 手动触发准确性检?   */
   async triggerManualCheck(): Promise<AccuracyReport> {
-    console.log("🎯 手动触发库存准确性检查");
-
-    const periodEnd = new Date();
-    const periodStart = new Date(periodEnd.getTime() - 24 * 60 * 60 * 1000); // 24小时前
-
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🎯 手动触发库存准确性检?)const periodEnd = new Date();
+    const periodStart = new Date(periodEnd.getTime() - 24 * 60 * 60 * 1000); // 24小时?
     const currentInventory = await this.getCurrentInventorySnapshot();
     const historicalData = await this.getHistoricalInventoryData(
       periodStart,

@@ -26,7 +26,7 @@ export default function ExporterLoginPage() {
         router.push('/exporter/dashboard');
       }, 1500);
     } catch (err) {
-      setError('登录失败，请检查用户名和密码');
+      setError('登录失败，请检查用户名和密?);
       setIsLoading(false);
     }
   };
@@ -38,13 +38,13 @@ export default function ExporterLoginPage() {
           <div className="mx-auto w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4">
             <Globe className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">出口商管理系统</h1>
-          <p className="text-gray-600 mt-2">专业的国际贸易出口管理平台</p>
+          <h1 className="text-2xl font-bold text-gray-900">出口商管理系?/h1>
+          <p className="text-gray-600 mt-2">专业的国际贸易出口管理平?/p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>出口商登录</CardTitle>
+            <CardTitle>出口商登?/CardTitle>
             <CardDescription>
               输入您的账户信息访问出口贸易平台
             </CardDescription>
@@ -63,14 +63,14 @@ export default function ExporterLoginPage() {
                 <Input
                   id="company"
                   type="text"
-                  placeholder="请输入公司名称"
+                  placeholder="请输入公司名?
                   required
                   className="w-full"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="username">用户名</Label>
+                <Label htmlFor="username">用户?/Label>
                 <Input
                   id="username"
                   type="text"
@@ -86,7 +86,7 @@ export default function ExporterLoginPage() {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="请输入密码"
+                    placeholder="请输入密?
                     required
                     className="w-full pr-10"
                   />
@@ -107,14 +107,14 @@ export default function ExporterLoginPage() {
                     id="remember"
                     className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                   />
-                  <Label htmlFor="remember" className="text-sm">记住我</Label>
+                  <Label htmlFor="remember" className="text-sm">记住?/Label>
                 </div>
                 <button
                   type="button"
                   onClick={() => router.push('/exporter/forgot-password')}
                   className="text-sm text-purple-600 hover:text-purple-800"
                 >
-                  忘记密码？
+                  忘记密码?
                 </button>
               </div>
 
@@ -126,7 +126,7 @@ export default function ExporterLoginPage() {
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    登录中...
+                    登录?..
                   </>
                 ) : (
                   '登录'
@@ -136,7 +136,7 @@ export default function ExporterLoginPage() {
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-center text-sm text-gray-600">
-                还没有账户？{' '}
+                还没有账户{' '}
                 <button
                   onClick={() => router.push('/exporter/register')}
                   className="font-medium text-purple-600 hover:text-purple-800"
@@ -149,7 +149,7 @@ export default function ExporterLoginPage() {
         </Card>
 
         <div className="mt-8 text-center text-sm text-gray-500">
-          <p>© 2026 FixCycle Technologies. 保留所有权利。</p>
+          <p>© 2026 FixCycle Technologies. 保留所有权利?/p>
         </div>
       </div>
     </div>

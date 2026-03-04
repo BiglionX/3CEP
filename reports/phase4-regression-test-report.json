@@ -1,0 +1,205 @@
+{
+  "title": "Phase 4 回测验证报告",
+  "timestamp": "2026-03-01T13:26:02.239Z",
+  "summary": {
+    "totalTests": 24,
+    "passedTests": 24,
+    "failedTests": 0,
+    "passRate": 100
+  },
+  "testResults": [
+    {
+      "testName": "文件存在: docs/modules/agent-team-management-architecture.md",
+      "passed": true,
+      "expected": "文件应该存在",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.227Z"
+    },
+    {
+      "testName": "文件存在: src/types/team-management.types.ts",
+      "passed": true,
+      "expected": "文件应该存在",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.229Z"
+    },
+    {
+      "testName": "文件存在: supabase/migrations/021_agent_team_management_module.sql",
+      "passed": true,
+      "expected": "文件应该存在",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.229Z"
+    },
+    {
+      "testName": "文件存在: src/services/agent-orchestration.service.ts",
+      "passed": true,
+      "expected": "文件应该存在",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.230Z"
+    },
+    {
+      "testName": "文件存在: src/app/team/page.tsx",
+      "passed": true,
+      "expected": "文件应该存在",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.230Z"
+    },
+    {
+      "testName": "文件存在: src/app/team/[teamId]/page.tsx",
+      "passed": true,
+      "expected": "文件应该存在",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.231Z"
+    },
+    {
+      "testName": "表结构: team_teams",
+      "passed": true,
+      "expected": "应该包含表创建语句",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.232Z"
+    },
+    {
+      "testName": "表结构: team_members",
+      "passed": true,
+      "expected": "应该包含表创建语句",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.232Z"
+    },
+    {
+      "testName": "表结构: team_orchestrations",
+      "passed": true,
+      "expected": "应该包含表创建语句",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.233Z"
+    },
+    {
+      "testName": "表结构: team_execution_instances",
+      "passed": true,
+      "expected": "应该包含表创建语句",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.233Z"
+    },
+    {
+      "testName": "RLS安全策略",
+      "passed": true,
+      "expected": "应该启用行级安全",
+      "actual": "已启用",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.233Z"
+    },
+    {
+      "testName": "数据库触发器",
+      "passed": true,
+      "expected": "应该包含触发器定义",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.233Z"
+    },
+    {
+      "testName": "类型定义: Team",
+      "passed": true,
+      "expected": "应该定义该类型",
+      "actual": "已定义",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.234Z"
+    },
+    {
+      "testName": "类型定义: TeamMember",
+      "passed": true,
+      "expected": "应该定义该类型",
+      "actual": "已定义",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.235Z"
+    },
+    {
+      "testName": "类型定义: AgentOrchestration",
+      "passed": true,
+      "expected": "应该定义该类型",
+      "actual": "已定义",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.235Z"
+    },
+    {
+      "testName": "类型定义: WorkflowDefinition",
+      "passed": true,
+      "expected": "应该定义该类型",
+      "actual": "已定义",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.235Z"
+    },
+    {
+      "testName": "类型定义: PermissionSet",
+      "passed": true,
+      "expected": "应该定义该类型",
+      "actual": "已定义",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.235Z"
+    },
+    {
+      "testName": "页面功能: page.tsx",
+      "passed": true,
+      "expected": "应该包含所有必要功能",
+      "actual": "功能完整",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.237Z"
+    },
+    {
+      "testName": "页面功能: page.tsx",
+      "passed": true,
+      "expected": "应该包含所有必要功能",
+      "actual": "功能完整",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.237Z"
+    },
+    {
+      "testName": "文档章节: # 智能体团队管理架构设计...",
+      "passed": true,
+      "expected": "文档应该包含该章节",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.238Z"
+    },
+    {
+      "testName": "文档章节: ## 1. 系统概述...",
+      "passed": true,
+      "expected": "文档应该包含该章节",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.238Z"
+    },
+    {
+      "testName": "文档章节: ## 2. 核心概念...",
+      "passed": true,
+      "expected": "文档应该包含该章节",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.239Z"
+    },
+    {
+      "testName": "文档章节: ## 3. 技术架构...",
+      "passed": true,
+      "expected": "文档应该包含该章节",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.239Z"
+    },
+    {
+      "testName": "文档章节: ## 4. 核心功能模块...",
+      "passed": true,
+      "expected": "文档应该包含该章节",
+      "actual": "存在",
+      "error": null,
+      "timestamp": "2026-03-01T13:26:02.239Z"
+    }
+  ],
+  "recommendations": ["完善TypeScript类型定义"]
+}

@@ -1,0 +1,102 @@
+{
+  "title": "采购智能体安全测试报告",
+  "generatedAt": "2026-02-26T13:33:14.080Z",
+  "executiveSummary": {
+    "totalVulnerabilities": 1,
+    "criticalVulnerabilities": 0,
+    "highSeverityVulnerabilities": 1,
+    "mediumSeverityVulnerabilities": 0,
+    "lowSeverityVulnerabilities": 0,
+    "overallRiskLevel": "中等风险",
+    "securityPosture": "安全状况良好"
+  },
+  "detailedFindings": {
+    "scans": {
+      "authentication": [
+        {
+          "test": "弱密码策略检测",
+          "passed": false,
+          "severity": "high",
+          "message": "发现弱密码策略问题"
+        },
+        {
+          "test": "会话管理安全性",
+          "passed": true,
+          "severity": "none",
+          "message": "会话管理安全"
+        }
+      ],
+      "input-validation": [
+        {
+          "test": "SQL注入防护",
+          "passed": true,
+          "severity": "none",
+          "message": "SQL注入防护完善"
+        },
+        {
+          "test": "跨站脚本攻击(XSS)防护",
+          "passed": true,
+          "severity": "none",
+          "message": "XSS防护完善"
+        }
+      ],
+      "data-protection": [
+        {
+          "test": "敏感数据加密",
+          "passed": true,
+          "severity": "none",
+          "message": "敏感数据加密完善"
+        }
+      ],
+      "api-security": [
+        {
+          "test": "API速率限制",
+          "passed": true,
+          "severity": "none",
+          "message": "API速率限制完善"
+        }
+      ]
+    },
+    "vulnerabilities": [
+      {
+        "category": "authentication",
+        "test": "弱密码策略检测",
+        "severity": "high",
+        "message": "发现弱密码策略问题",
+        "details": [
+          "密码 \"123456\" 长度不足",
+          "密码 \"admin\" 长度不足",
+          "密码 \"qwerty\" 长度不足"
+        ],
+        "detectedAt": "2026-02-26T13:33:14.054Z"
+      }
+    ],
+    "recommendations": [],
+    "overall": {
+      "totalIssues": 1,
+      "criticalIssues": 0,
+      "highIssues": 1,
+      "mediumIssues": 0,
+      "lowIssues": 0,
+      "startTime": "2026-02-26T13:33:14.045Z",
+      "endTime": "2026-02-26T13:33:14.079Z"
+    }
+  },
+  "riskAssessment": "medium",
+  "remediationPlan": {
+    "immediateActions": [],
+    "shortTermActions": [
+      {
+        "issue": "发现弱密码策略问题",
+        "priority": "short-term",
+        "remediation": "请参考相关安全最佳实践进行整改"
+      }
+    ],
+    "generalImprovements": [
+      "实施全面的安全培训",
+      "建立安全监控体系",
+      "定期进行安全审计",
+      "完善应急响应计划"
+    ]
+  }
+}

@@ -1,5 +1,5 @@
-import { generateUUID } from "@/fcx-system/utils/helpers";
-import { createClient } from "@supabase/supabase-js";
+import { generateUUID } from '@/fcx-system/utils/helpers';
+import { createClient } from '@supabase/supabase-js';
 import {
   NegotiationHistory,
   NegotiationResult,
@@ -8,9 +8,9 @@ import {
   NegotiationStatus,
   SessionStatus,
   StartNegotiationDTO,
-} from "../models/negotiation.model";
-import { NegotiationStrategyService } from "./negotiation-strategy.service";
-import { SupplierRecommendationService } from "./supplier-recommendation.service";
+} from '../models/negotiation.model';
+import { NegotiationStrategyService } from './negotiation-strategy.service';
+import { SupplierRecommendationService } from './supplier-recommendation.service';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -42,7 +42,7 @@ export class SmartNegotiationEngine {
       if (!validation.isValid) {
         return {
           success: false,
-          errorMessage: validation.errors.join("; "),
+          errorMessage: validation.errors.join('; '),
         };
       }
 
@@ -53,7 +53,7 @@ export class SmartNegotiationEngine {
       if (!supplier) {
         return {
           success: false,
-          errorMessage: "供应商信息不存在",
+          errorMessage: '供应商信息不存在',
         };
       }
 
@@ -71,7 +71,7 @@ export class SmartNegotiationEngine {
       const session = await this.createNegotiationSession({
         ...dto,
         sessionId,
-        createdBy: "system", // TODO: 从认证中获取实际用户ID
+        createdBy: 'system', // TODO: 从认证中获取实际用户ID
       });
 
       // 5. 记录初始议价历史
@@ -83,7 +83,7 @@ export class SmartNegotiationEngine {
         ourCounterOffer: advice.recommendedPrice,
         strategyUsed: advice.strategyToUse,
         confidenceLevel: advice.confidence,
-        remarks: "初始议价回合",
+        remarks: '初始议价回合',
       });
 
       return {
@@ -93,7 +93,7 @@ export class SmartNegotiationEngine {
         advice,
       };
     } catch (error) {
-      console.error("启动议价会话错误:", error);
+      console.error('启动议价会话错误:', error);
       return {
         success: false,
         errorMessage: `启动议价会话失败: ${(error as Error).message}`,
@@ -117,14 +117,14 @@ export class SmartNegotiationEngine {
       if (!session) {
         return {
           success: false,
-          errorMessage: "议价会话不存在",
+          errorMessage: '议价会话不存?,
         };
       }
 
       if (session.status !== SessionStatus.NEGOTIATING) {
         return {
           success: false,
-          errorMessage: "议价会话不在进行中状态",
+          errorMessage: '议价会话不在进行中状?,
         };
       }
 
@@ -132,8 +132,7 @@ export class SmartNegotiationEngine {
       const history = await this.getNegotiationHistory(dto.sessionId);
       const currentRound = history.length;
 
-      // 3. 检查是否达到最大轮次
-      if (currentRound >= session.maxRounds) {
+      // 3. 检查是否达到最大轮?      if (currentRound >= session.maxRounds) {
         const result = await this.endNegotiation(
           dto.sessionId,
           NegotiationStatus.FAILED
@@ -145,19 +144,18 @@ export class SmartNegotiationEngine {
             status: NegotiationStatus.FAILED,
             totalRounds: currentRound,
             success: false,
-            message: "已达最大议价轮次限制",
+            message: '已达最大议价轮次限?,
           },
         };
       }
 
-      // 4. 获取供应商信息
-      const supplier = await this.recommendationService.getSupplierWithRating(
+      // 4. 获取供应商信?      const supplier = await this.recommendationService.getSupplierWithRating(
         session.supplierId
       );
       if (!supplier) {
         return {
           success: false,
-          errorMessage: "供应商信息不存在",
+          errorMessage: '供应商信息不存在',
         };
       }
 
@@ -181,14 +179,13 @@ export class SmartNegotiationEngine {
         remarks: dto.roundRemarks,
       });
 
-      // 7. 检查是否达成协议
-      const priceGap =
+      // 7. 检查是否达成协?      const priceGap =
         Math.abs(dto.supplierQuote - advice.recommendedPrice) /
         advice.recommendedPrice;
       let negotiationStatus: NegotiationStatus;
 
       if (priceGap <= 0.02) {
-        // 价格差距在2%以内视为达成协议
+        // 价格差距?%以内视为达成协议
         negotiationStatus = NegotiationStatus.SUCCESS;
         await this.endNegotiation(
           dto.sessionId,
@@ -200,8 +197,7 @@ export class SmartNegotiationEngine {
         await this.endNegotiation(dto.sessionId, NegotiationStatus.FAILED);
       } else {
         negotiationStatus = NegotiationStatus.ONGOING;
-        // 更新会话状态为进行中
-        await this.updateSessionStatus(
+        // 更新会话状态为进行?        await this.updateSessionStatus(
           dto.sessionId,
           SessionStatus.NEGOTIATING
         );
@@ -237,7 +233,7 @@ export class SmartNegotiationEngine {
         },
       };
     } catch (error) {
-      console.error("执行议价回合错误:", error);
+      console.error('执行议价回合错误:', error);
       return {
         success: false,
         errorMessage: `执行议价回合失败: ${(error as Error).message}`,
@@ -246,8 +242,7 @@ export class SmartNegotiationEngine {
   }
 
   /**
-   * 获取议价会话状态
-   */
+   * 获取议价会话状?   */
   async getNegotiationStatus(sessionId: string): Promise<{
     session?: NegotiationSession;
     history: NegotiationHistory[];
@@ -257,7 +252,7 @@ export class SmartNegotiationEngine {
     try {
       const session = await this.getNegotiationSession(sessionId);
       if (!session) {
-        throw new Error("议价会话不存在");
+        throw new Error('议价会话不存?);
       }
 
       const history = await this.getNegotiationHistory(sessionId);
@@ -273,14 +268,13 @@ export class SmartNegotiationEngine {
         statistics,
       };
     } catch (error) {
-      console.error("获取议价状态错误:", error);
+      console.error('获取议价状态错?', error);
       throw error;
     }
   }
 
   /**
-   * 接受最终报价
-   */
+   * 接受最终报?   */
   async acceptFinalOffer(sessionId: string): Promise<{
     success: boolean;
     result?: NegotiationResult;
@@ -291,7 +285,7 @@ export class SmartNegotiationEngine {
       if (!session) {
         return {
           success: false,
-          errorMessage: "议价会话不存在",
+          errorMessage: '议价会话不存?,
         };
       }
 
@@ -301,12 +295,11 @@ export class SmartNegotiationEngine {
       if (!lastRound || !lastRound.ourCounterOffer) {
         return {
           success: false,
-          errorMessage: "没有有效的报价可供接受",
+          errorMessage: '没有有效的报价可供接?,
         };
       }
 
-      // 结束议价并记录成功
-      const result = await this.endNegotiation(
+      // 结束议价并记录成?      const result = await this.endNegotiation(
         sessionId,
         NegotiationStatus.SUCCESS,
         lastRound.ourCounterOffer
@@ -326,16 +319,16 @@ export class SmartNegotiationEngine {
           totalTimeMinutes: Math.floor(
             (Date.now() - session.startTime.getTime()) / 60000
           ),
-          strategyUsed: lastRound.strategyUsed || "",
+          strategyUsed: lastRound.strategyUsed || '',
           success: true,
-          message: "成功接受最终报价",
+          message: '成功接受最终报?,
         },
       };
     } catch (error) {
-      console.error("接受最终报价错误:", error);
+      console.error('接受最终报价错?', error);
       return {
         success: false,
-        errorMessage: `接受最终报价失败: ${(error as Error).message}`,
+        errorMessage: `接受最终报价失? ${(error as Error).message}`,
       };
     }
   }
@@ -354,23 +347,23 @@ export class SmartNegotiationEngine {
       if (reason) {
         const session = await this.getNegotiationSession(sessionId);
         if (session) {
-          await supabase.from("negotiation_history").insert({
+          (await supabase.from('negotiation_history').insert({
             id: generateUUID(),
             procurement_request_id: session.procurementRequestId,
             supplier_id: session.supplierId,
             quotation_request_id: session.quotationRequestId,
             session_id: sessionId,
             round_number: 0,
-            negotiation_status: "cancelled",
+            negotiation_status: 'cancelled',
             remarks: `议价取消: ${reason} as any`,
             created_at: new Date(),
-          });
+          })) as any;
         }
       }
 
       return true;
     } catch (error) {
-      console.error("取消议价会话错误:", error);
+      console.error('取消议价会话错误:', error);
       return false;
     }
   }
@@ -387,23 +380,23 @@ export class SmartNegotiationEngine {
     const errors: string[] = [];
 
     if (!dto.procurementRequestId) {
-      errors.push("采购需求ID不能为空");
+      errors.push('采购需求ID不能为空');
     }
 
     if (!dto.supplierId) {
-      errors.push("供应商ID不能为空");
+      errors.push('供应商ID不能为空');
     }
 
     if (!dto.targetPrice || dto.targetPrice <= 0) {
-      errors.push("目标价格必须大于0");
+      errors.push('目标价格必须大于0');
     }
 
     if (!dto.initialQuote || dto.initialQuote <= 0) {
-      errors.push("初始报价必须大于0");
+      errors.push('初始报价必须大于0');
     }
 
     if (dto.maxRounds && dto.maxRounds < 1) {
-      errors.push("最大议价轮次必须至少为1");
+      errors.push('最大议价轮次必须至少为1');
     }
 
     return {
@@ -422,7 +415,7 @@ export class SmartNegotiationEngine {
     const now = new Date();
 
     const { data, error } = await supabase
-      .from("negotiation_sessions")
+      .from('negotiation_sessions')
       .insert({
         id: sessionId,
         session_id: dto.sessionId,
@@ -451,7 +444,7 @@ export class SmartNegotiationEngine {
    * 记录议价回合
    */
   private async recordNegotiationRound(round: any): Promise<void> {
-    const { error } = await supabase.from("negotiation_history").insert({
+    const { error } = await supabase.from('negotiation_history').insert({
       id: generateUUID(),
       procurement_request_id: null, // 可以从会话中获取
       supplier_id: null, // 可以从会话中获取
@@ -461,7 +454,7 @@ export class SmartNegotiationEngine {
       our_initial_offer: round.ourInitialOffer,
       supplier_quote: round.supplierQuote,
       our_counter_offer: round.ourCounterOffer,
-      negotiation_status: "ongoing",
+      negotiation_status: 'ongoing',
       discount_rate:
         round.ourCounterOffer && round.supplierQuote
           ? ((round.supplierQuote - round.ourCounterOffer) /
@@ -487,16 +480,15 @@ export class SmartNegotiationEngine {
     finalPrice?: number
   ): Promise<NegotiationResult> {
     const session = await this.getNegotiationSession(sessionId);
-    if (!session) throw new Error("议价会话不存在");
+    if (!session) throw new Error('议价会话不存?);
 
     const history = await this.getNegotiationHistory(sessionId);
     const duration = Math.floor(
       (Date.now() - session.startTime.getTime()) / 60000
     );
 
-    // 更新会话状态
-    const { error: sessionError } = await supabase
-      .from("negotiation_sessions")
+    // 更新会话状?    const { error: sessionError } = await supabase
+      .from('negotiation_sessions')
       .update({
         status:
           status === NegotiationStatus.SUCCESS
@@ -509,22 +501,21 @@ export class SmartNegotiationEngine {
           : null,
         updated_at: new Date(),
       } as any)
-      .eq("session_id", sessionId);
+      .eq('session_id', sessionId);
 
     if (sessionError)
-      throw new Error(`更新会话状态失败: ${sessionError.message}`);
+      throw new Error(`更新会话状态失? ${sessionError.message}`);
 
-    // 更新最后一条历史记录的状态
-    if (history.length > 0) {
+    // 更新最后一条历史记录的状?    if (history.length > 0) {
       const lastHistory = history[history.length - 1];
       const { error: historyError } = await supabase
-        .from("negotiation_history")
+        .from('negotiation_history')
         .update({
           negotiation_status: status,
           final_price: finalPrice,
           updated_at: new Date(),
         } as any)
-        .eq("id", lastHistory.id);
+        .eq('id', lastHistory.id);
 
       if (historyError)
         throw new Error(`更新历史记录失败: ${historyError.message}`);
@@ -550,22 +541,21 @@ export class SmartNegotiationEngine {
   }
 
   /**
-   * 更新会话状态
-   */
+   * 更新会话状?   */
   private async updateSessionStatus(
     sessionId: string,
     status: SessionStatus
   ): Promise<void> {
     const { error } = await supabase
-      .from("negotiation_sessions")
+      .from('negotiation_sessions')
       .update({
         status,
-        current_round: supabase.rpc("current_round + 1"),
+        current_round: supabase.rpc('current_round + 1'),
         updated_at: new Date(),
       } as any)
-      .eq("session_id", sessionId);
+      .eq('session_id', sessionId);
 
-    if (error) throw new Error(`更新会话状态失败: ${error.message}`);
+    if (error) throw new Error(`更新会话状态失? ${error.message}`);
   }
 
   /**
@@ -575,13 +565,13 @@ export class SmartNegotiationEngine {
     sessionId: string
   ): Promise<NegotiationSession | null> {
     const { data, error } = await supabase
-      .from("negotiation_sessions")
-      .select("*")
-      .eq("session_id", sessionId)
+      .from('negotiation_sessions')
+      .select('*')
+      .eq('session_id', sessionId)
       .single();
 
     if (error) {
-      if (error.code === "PGRST116") return null;
+      if (error.code === 'PGRST116') return null;
       throw new Error(`获取议价会话失败: ${error.message}`);
     }
 
@@ -594,11 +584,11 @@ export class SmartNegotiationEngine {
   private async getNegotiationHistory(
     sessionId: string
   ): Promise<NegotiationHistory[]> {
-    const { data, error } = await supabase
-      .from("negotiation_history")
-      .select("*")
-      .eq("session_id", sessionId)
-      .order("round_number", { ascending: true });
+    const { data, error } = (await supabase
+      .from('negotiation_history')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('round_number', { ascending: true })) as any;
 
     if (error) throw new Error(`获取议价历史失败: ${error.message}`);
 
@@ -614,7 +604,7 @@ export class SmartNegotiationEngine {
   ): any {
     const totalRounds = history.length;
     const successfulRounds = history.filter(
-      (h) => h.negotiationStatus === NegotiationStatus.SUCCESS
+      h => h.negotiationStatus === NegotiationStatus.SUCCESS
     ).length;
     const avgDiscount =
       history.reduce((sum, h) => sum + (h.discountRate || 0), 0) /
@@ -629,7 +619,7 @@ export class SmartNegotiationEngine {
         (Date.now() - session.startTime.getTime()) / 60000
       ),
       strategiesUsed: [
-        ...new Set(history.map((h) => h.strategyUsed).filter(Boolean)),
+        ...new Set(history.map(h => h.strategyUsed).filter(Boolean)),
       ],
     };
   }
@@ -643,13 +633,13 @@ export class SmartNegotiationEngine {
   ): string {
     switch (status) {
       case NegotiationStatus.SUCCESS:
-        return `议价成功，获得${discountRate.toFixed(2)}%折扣`;
+        return `议价成功，获?{discountRate.toFixed(2)}%折扣`;
       case NegotiationStatus.FAILED:
-        return "议价失败，未能达成协议";
+        return '议价失败，未能达成协?;
       case NegotiationStatus.CANCELLED:
-        return "议价已取消";
+        return '议价已取?;
       default:
-        return "议价进行中";
+        return '议价进行?;
     }
   }
 

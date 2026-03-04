@@ -15,6 +15,7 @@
 ### 系统要求
 
 #### 服务器配置
+
 ```yaml
 最低配置:
   CPU: 2核
@@ -30,11 +31,13 @@
 ```
 
 #### 操作系统支持
+
 - Ubuntu 20.04 LTS+
 - CentOS 8+
 - Debian 11+
 
 #### 必需软件
+
 ```bash
 # Node.js 环境
 node --version  # >= 18.0.0
@@ -52,6 +55,7 @@ redis-cli --version  # Redis客户端
 ### 依赖服务
 
 #### 数据库服务
+
 ```yaml
 Supabase PostgreSQL:
   版本: 15.x
@@ -65,6 +69,7 @@ Lionfix 数据库:
 ```
 
 #### 缓存服务
+
 ```yaml
 Redis:
   版本: 6.0+
@@ -73,6 +78,7 @@ Redis:
 ```
 
 #### 第三方服务
+
 ```yaml
 对象存储:
   - AWS S3 或阿里云OSS
@@ -92,6 +98,7 @@ Redis:
 ### 环境变量配置
 
 #### 核心配置文件
+
 ```bash
 # .env.production
 NODE_ENV=production
@@ -129,6 +136,7 @@ SMTP_PASSWORD=app-specific-password
 ```
 
 #### 配置验证脚本
+
 ```bash
 #!/bin/bash
 # scripts/validate-config.sh
@@ -156,6 +164,7 @@ echo "✅ 配置验证通过"
 ### 数据库初始化
 
 #### 迁移脚本执行
+
 ```bash
 # 执行数据库迁移
 npm run db:migrate
@@ -168,6 +177,7 @@ npm run seed:enhanced
 ```
 
 #### 数据库备份策略
+
 ```bash
 #!/bin/bash
 # scripts/backup-database.sh
@@ -195,6 +205,7 @@ find "$BACKUP_DIR" -name "*.sql.gz" -mtime +7 -delete
 ### 1. 本地开发部署
 
 #### 快速启动
+
 ```bash
 # 克隆代码仓库
 git clone https://github.com/your-org/fixcycle.git
@@ -215,6 +226,7 @@ open http://localhost:3001
 ```
 
 #### 开发环境健康检查
+
 ```bash
 # 运行健康检查
 npm run check:health
@@ -229,6 +241,7 @@ npm run verify:database
 ### 2. 容器化部署
 
 #### Docker Compose 部署
+
 ```yaml
 # docker-compose.prod.yml
 version: '3.8'
@@ -237,7 +250,7 @@ services:
   app:
     build: .
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
       - NODE_ENV=production
     env_file:
@@ -249,7 +262,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
@@ -258,8 +271,8 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./nginx/prod:/etc/nginx/conf.d
       - ./ssl:/etc/nginx/ssl
@@ -272,6 +285,7 @@ volumes:
 ```
 
 #### 部署命令
+
 ```bash
 # 构建并启动服务
 docker-compose -f docker-compose.prod.yml up -d
@@ -289,6 +303,7 @@ docker-compose -f docker-compose.prod.yml down
 ### 3. 云平台部署
 
 #### Vercel 部署
+
 ```bash
 # 安装Vercel CLI
 npm install -g vercel
@@ -302,6 +317,7 @@ vercel env add SUPABASE_SERVICE_ROLE_KEY
 ```
 
 #### 阿里云部署
+
 ```bash
 # 使用阿里云容器服务ACK
 aliyun cs kubernetes create \
@@ -315,11 +331,140 @@ kubectl apply -f k8s/service.yaml
 kubectl apply -f k8s/ingress.yaml
 ```
 
+## ⚙️ 新增配置要求
+
+### 权限系统配置
+
+```env
+# 权限管理配置
+PERMISSION_CACHE_TTL=300000
+PERMISSION_SYNC_INTERVAL=30000
+AUDIT_ENABLED=true
+TENANT_ISOLATION_ENABLED=true
+
+# 角色配置
+DEFAULT_ADMIN_ROLE=admin
+DEFAULT_USER_ROLE=user
+
+# 权限同步配置
+PERMISSION_SYNC_AUTO_START=true
+PERMISSION_SYNC_RETRY_COUNT=3
+PERMISSION_SYNC_RETRY_DELAY=5000
+```
+
+### 缓存系统配置
+
+```env
+# 智能缓存配置
+CACHE_DEFAULT_TTL=300000
+CACHE_MAX_SIZE=1000
+CACHE_EVICTION_POLICY=LRU
+CACHE_STATS_ENABLED=true
+
+# Redis配置
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+REDIS_DB=0
+
+# 缓存预热配置
+CACHE_WARMUP_ENABLED=true
+CACHE_WARMUP_INTERVAL=3600000
+CACHE_WARMUP_IMMEDIATE=true
+```
+
+### 错误处理配置
+
+```env
+# 错误处理配置
+ERROR_CAPTURE_CONSOLE=true
+ERROR_CAPTURE_UNHANDLED=true
+ERROR_SEND_TO_MONITORING=false
+ERROR_LOG_TO_FILE=true
+ERROR_IGNORE_PATTERNS=/health-check/,/favicon.ico/
+
+# 告警配置
+ALERT_EMAIL=admin@example.com
+ALERT_SLACK_WEBHOOK=https://hooks.slack.com/services/xxx
+ALERT_THRESHOLD_CRITICAL=5
+ALERT_THRESHOLD_HIGH=10
+ALERT_TIME_WINDOW=300000
+
+# 重试策略配置
+RETRY_MAX_ATTEMPTS=3
+RETRY_BASE_DELAY=1000
+RETRY_EXPONENTIAL_FACTOR=2
+RETRY_MAX_DELAY=30000
+```
+
+## 🔧 部署后验证
+
+### 权限系统验证
+
+```bash
+# 检查权限配置加载
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/permissions/config
+
+# 验证用户权限
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/permissions/user/test-user/permissions
+
+# 测试权限同步
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  /api/permissions/sync
+
+# 验证审计功能
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/permissions/audit/logs?days=1
+```
+
+### 缓存系统验证
+
+```bash
+# 检查缓存状态
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/cache/stats
+
+# 测试缓存功能
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/cache/test?key=test_value
+
+# 验证缓存清理
+curl -X DELETE -H "Authorization: Bearer $TOKEN" \
+  /api/cache/clear?tags=test
+
+# 检查缓存预热
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/cache/warmup/status
+```
+
+### 错误处理验证
+
+```bash
+# 检查错误统计
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/errors/stats
+
+# 测试错误捕获
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/errors/test?type=network
+
+# 验证告警配置
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/errors/alerts/status
+
+# 检查重试机制
+curl -H "Authorization: Bearer $TOKEN" \
+  /api/errors/retry/policies
+```
+
 ## 📊 监控与告警
 
 ### 系统监控配置
 
 #### Prometheus 监控
+
 ```yaml
 # prometheus.yml
 global:
@@ -341,6 +486,7 @@ scrape_configs:
 ```
 
 #### Grafana 仪表板
+
 ```json
 {
   "dashboard": {
@@ -356,10 +502,7 @@ scrape_configs:
       {
         "title": "系统资源使用率",
         "type": "gauge",
-        "targets": [
-          "node_cpu_seconds_total",
-          "node_memory_bytes_total"
-        ]
+        "targets": ["node_cpu_seconds_total", "node_memory_bytes_total"]
       }
     ]
   }
@@ -369,6 +512,7 @@ scrape_configs:
 ### 告警规则设置
 
 #### 关键指标告警
+
 ```yaml
 # alert-rules.yml
 groups:
@@ -381,8 +525,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "API错误率过高"
-          description: "{{ $labels.instance }} API错误率超过1%"
+          summary: 'API错误率过高'
+          description: '{{ $labels.instance }} API错误率超过1%'
 
       # 响应时间告警
       - alert: SlowResponseTime
@@ -391,8 +535,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "API响应时间过慢"
-          description: "{{ $labels.instance }} 95%请求响应时间超过1秒"
+          summary: 'API响应时间过慢'
+          description: '{{ $labels.instance }} 95%请求响应时间超过1秒'
 
       # 系统资源告警
       - alert: HighMemoryUsage
@@ -401,13 +545,14 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "内存使用率过高"
-          description: "{{ $labels.instance }} 内存使用率超过80%"
+          summary: '内存使用率过高'
+          description: '{{ $labels.instance }} 内存使用率超过80%'
 ```
 
 ### 日志管理
 
 #### 应用日志配置
+
 ```javascript
 // src/lib/logger.js
 import winston from 'winston';
@@ -421,21 +566,24 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' })
-  ]
+    new winston.transports.File({ filename: 'logs/combined.log' }),
+  ],
 });
 
 // 生产环境添加阿里云SLS
 if (process.env.NODE_ENV === 'production') {
-  logger.add(new winston.transports.Http({
-    host: 'cn-hangzhou.log.aliyuncs.com',
-    path: '/logstores/fixcycle-app',
-    ssl: true
-  }));
+  logger.add(
+    new winston.transports.Http({
+      host: 'cn-hangzhou.log.aliyuncs.com',
+      path: '/logstores/fixcycle-app',
+      ssl: true,
+    })
+  );
 }
 ```
 
 #### 日志轮转配置
+
 ```bash
 # /etc/logrotate.d/fixcycle
 /var/log/fixcycle/*.log {
@@ -454,6 +602,7 @@ if (process.env.NODE_ENV === 'production') {
 ### 日常维护任务
 
 #### 健康检查脚本
+
 ```bash
 #!/bin/bash
 # scripts/health-check.sh
@@ -482,6 +631,7 @@ echo "✅ 所有服务正常运行"
 ```
 
 #### 数据备份任务
+
 ```bash
 #!/bin/bash
 # crontab 配置
@@ -497,6 +647,7 @@ echo "✅ 所有服务正常运行"
 #### 常见问题诊断
 
 **应用启动失败**
+
 ```bash
 # 检查端口占用
 lsof -i :3001
@@ -509,6 +660,7 @@ printenv | grep NEXT_PUBLIC
 ```
 
 **数据库连接问题**
+
 ```bash
 # 测试数据库连接
 PGPASSWORD=$SUPABASE_PASSWORD psql -h $SUPABASE_HOST -U $SUPABASE_USER -d $SUPABASE_DB -c "SELECT 1;"
@@ -518,6 +670,7 @@ SELECT count(*) FROM pg_stat_activity WHERE datname = 'your_database';
 ```
 
 **性能问题排查**
+
 ```bash
 # 查看系统资源使用
 htop
@@ -531,6 +684,7 @@ SELECT query, mean_time, calls FROM pg_stat_statements ORDER BY mean_time DESC L
 ### 版本升级流程
 
 #### 灰度发布策略
+
 ```bash
 # 1. 部署新版本到灰度环境
 kubectl set image deployment/fixcycle-app app=fixcycle:v2.1.0-beta
@@ -549,6 +703,7 @@ kubectl set image deployment/fixcycle-app app=fixcycle:v2.1.0
 ```
 
 #### 回滚操作
+
 ```bash
 # 回滚到上一个版本
 kubectl rollout undo deployment/fixcycle-app
@@ -565,49 +720,52 @@ kubectl get pods -l app=fixcycle-app
 ### 应用层优化
 
 #### 缓存策略实施
+
 ```javascript
 // Redis缓存中间件
 export async function cacheMiddleware(req, res, next) {
   const cacheKey = `${req.method}:${req.url}`;
-  
+
   // 尝试从缓存获取
   const cached = await redis.get(cacheKey);
   if (cached) {
     res.setHeader('X-Cache', 'HIT');
     return res.json(JSON.parse(cached));
   }
-  
+
   // 执行原逻辑并缓存结果
   const originalJson = res.json;
-  res.json = function(data) {
+  res.json = function (data) {
     redis.setex(cacheKey, 300, JSON.stringify(data)); // 5分钟缓存
     res.setHeader('X-Cache', 'MISS');
     return originalJson.call(this, data);
   };
-  
+
   next();
 }
 ```
 
 #### 数据库查询优化
+
 ```sql
 -- 添加复合索引
 CREATE INDEX idx_orders_user_status_created ON orders(user_id, status, created_at DESC);
 
 -- 优化慢查询
-EXPLAIN ANALYZE 
-SELECT o.*, u.name as user_name, s.name as shop_name 
-FROM orders o 
-JOIN users u ON o.user_id = u.id 
-JOIN shops s ON o.shop_id = s.id 
-WHERE o.created_at > NOW() - INTERVAL '30 days' 
-ORDER BY o.created_at DESC 
+EXPLAIN ANALYZE
+SELECT o.*, u.name as user_name, s.name as shop_name
+FROM orders o
+JOIN users u ON o.user_id = u.id
+JOIN shops s ON o.shop_id = s.id
+WHERE o.created_at > NOW() - INTERVAL '30 days'
+ORDER BY o.created_at DESC
 LIMIT 20;
 ```
 
 ### 基础设施优化
 
 #### CDN配置
+
 ```nginx
 # nginx.conf
 location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
@@ -623,6 +781,7 @@ location /api/ {
 ```
 
 #### 负载均衡配置
+
 ```haproxy
 # haproxy.cfg
 frontend fixcycle_frontend
@@ -641,6 +800,7 @@ backend fixcycle_backend
 ## 🛡️ 安全加固
 
 ### 网络安全
+
 ```bash
 # 防火墙配置
 ufw default deny incoming
@@ -656,38 +816,43 @@ iptables -A INPUT -p tcp --dport 3001 -j DROP
 ```
 
 ### 应用安全
+
 ```javascript
 // 安全头设置
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"]
-    }
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  }
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+  })
+);
 ```
 
 ## 📞 运维支持
 
 ### 紧急联系方式
+
 - **系统管理员**：admin@fixcycle.com
 - **技术支持**：support@fixcycle.com
 - **值班电话**：400-XXX-XXXX
 
 ### 文档资源
+
 - **操作手册**：https://docs.fixcycle.com/ops
 - **故障处理**：https://docs.fixcycle.com/troubleshooting
 - **API文档**：https://docs.fixcycle.com/api
 
 ---
 
-*部署版本: v3.0*  
-*最后更新: 2024年2月21日*  
-*适用环境: 生产环境*
+_部署版本: v3.0_  
+_最后更新: 2024年2月21日_  
+_适用环境: 生产环境_

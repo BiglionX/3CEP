@@ -1,0 +1,491 @@
+{
+  "summary": {
+    "total": 80,
+    "passed": 80,
+    "failed": 0,
+    "passRate": "100.00%"
+  },
+  "tests": [
+    {
+      "name": "文件存在性检查：src/modules/sales-agent/types/index.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.829Z"
+    },
+    {
+      "name": "文件存在性检查：src/modules/sales-agent/services/customer.service.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.829Z"
+    },
+    {
+      "name": "文件存在性检查：src/modules/sales-agent/services/quotation.service.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.829Z"
+    },
+    {
+      "name": "文件存在性检查：src/modules/sales-agent/services/contract.service.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.830Z"
+    },
+    {
+      "name": "文件存在性检查：src/modules/sales-agent/services/order.service.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.830Z"
+    },
+    {
+      "name": "文件存在性检查：src/modules/sales-agent/index.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.830Z"
+    },
+    {
+      "name": "文件存在性检查：src/app/api/sales/customers/route.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.831Z"
+    },
+    {
+      "name": "文件存在性检查：src/app/api/sales/customers/[id]/route.ts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.831Z"
+    },
+    {
+      "name": "文件存在性检查：sql/sales-agent-schema.sql",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.832Z"
+    },
+    {
+      "name": "文件存在性检查：docs/modules/sales-agent/README.md",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.835Z"
+    },
+    {
+      "name": "客户服务方法：getCustomers",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.836Z"
+    },
+    {
+      "name": "客户服务方法：getCustomer",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.836Z"
+    },
+    {
+      "name": "客户服务方法：createCustomer",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.837Z"
+    },
+    {
+      "name": "客户服务方法：updateCustomer",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.837Z"
+    },
+    {
+      "name": "客户服务方法：deleteCustomer",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.838Z"
+    },
+    {
+      "name": "客户服务方法：evaluateCustomerGrade",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.838Z"
+    },
+    {
+      "name": "客户服务方法：batchEvaluateCustomerGrades",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.838Z"
+    },
+    {
+      "name": "客户服务方法：searchCustomers",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.839Z"
+    },
+    {
+      "name": "客户服务方法：getCustomerStatistics",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.839Z"
+    },
+    {
+      "name": "客户评估算法实现",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.839Z"
+    },
+    {
+      "name": "报价服务方法：getQuotations",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.842Z"
+    },
+    {
+      "name": "报价服务方法：getQuotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.842Z"
+    },
+    {
+      "name": "报价服务方法：createQuotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.843Z"
+    },
+    {
+      "name": "报价服务方法：updateQuotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.843Z"
+    },
+    {
+      "name": "报价服务方法：sendQuotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.843Z"
+    },
+    {
+      "name": "报价服务方法：acceptQuotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.844Z"
+    },
+    {
+      "name": "报价服务方法：rejectQuotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.844Z"
+    },
+    {
+      "name": "报价服务方法：deleteQuotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.844Z"
+    },
+    {
+      "name": "报价服务方法：getQuotationStatistics",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.844Z"
+    },
+    {
+      "name": "智能定价算法实现",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.845Z"
+    },
+    {
+      "name": "合同服务方法：getContracts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.846Z"
+    },
+    {
+      "name": "合同服务方法：getContract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.846Z"
+    },
+    {
+      "name": "合同服务方法：createContract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.847Z"
+    },
+    {
+      "name": "合同服务方法：updateContract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.847Z"
+    },
+    {
+      "name": "合同服务方法：submitForNegotiation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.847Z"
+    },
+    {
+      "name": "合同服务方法：signContract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.847Z"
+    },
+    {
+      "name": "合同服务方法：completeContract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.848Z"
+    },
+    {
+      "name": "合同服务方法：terminateContract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.848Z"
+    },
+    {
+      "name": "合同服务方法：deleteContract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.849Z"
+    },
+    {
+      "name": "合同服务方法：getContractStatistics",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.851Z"
+    },
+    {
+      "name": "合同服务方法：getExpiringContracts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.853Z"
+    },
+    {
+      "name": "订单服务方法：getOrders",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.854Z"
+    },
+    {
+      "name": "订单服务方法：getOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.854Z"
+    },
+    {
+      "name": "订单服务方法：createOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.854Z"
+    },
+    {
+      "name": "订单服务方法：updateOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.855Z"
+    },
+    {
+      "name": "订单服务方法：processOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.855Z"
+    },
+    {
+      "name": "订单服务方法：shipOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.855Z"
+    },
+    {
+      "name": "订单服务方法：deliverOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.855Z"
+    },
+    {
+      "name": "订单服务方法：completeOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.856Z"
+    },
+    {
+      "name": "订单服务方法：cancelOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.856Z"
+    },
+    {
+      "name": "订单服务方法：submitFeedback",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.856Z"
+    },
+    {
+      "name": "订单服务方法：deleteOrder",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.856Z"
+    },
+    {
+      "name": "订单服务方法：getOrderStatistics",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.857Z"
+    },
+    {
+      "name": "订单服务方法：getOrderTrackingRecords",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.857Z"
+    },
+    {
+      "name": "订单服务方法：getOverdueRiskOrders",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.857Z"
+    },
+    {
+      "name": "类型定义：Customer",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.858Z"
+    },
+    {
+      "name": "类型定义：CreateCustomerInput",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.858Z"
+    },
+    {
+      "name": "类型定义：UpdateCustomerInput",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.859Z"
+    },
+    {
+      "name": "类型定义：Quotation",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.859Z"
+    },
+    {
+      "name": "类型定义：CreateQuotationInput",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.859Z"
+    },
+    {
+      "name": "类型定义：Contract",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.859Z"
+    },
+    {
+      "name": "类型定义：CreateContractInput",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.860Z"
+    },
+    {
+      "name": "类型定义：Order",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.860Z"
+    },
+    {
+      "name": "类型定义：CreateOrderInput",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.860Z"
+    },
+    {
+      "name": "类型定义：CustomerGrade",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.861Z"
+    },
+    {
+      "name": "类型定义：QuotationStatus",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.861Z"
+    },
+    {
+      "name": "类型定义：ContractStatus",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.861Z"
+    },
+    {
+      "name": "类型定义：OrderStatus",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.861Z"
+    },
+    {
+      "name": "数据库表：sales_customers",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.862Z"
+    },
+    {
+      "name": "数据库表：sales_quotations",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.862Z"
+    },
+    {
+      "name": "数据库表：sales_contracts",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.863Z"
+    },
+    {
+      "name": "数据库表：sales_orders",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.863Z"
+    },
+    {
+      "name": "数据库索引定义",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.863Z"
+    },
+    {
+      "name": "文档章节：# 销售智能体模块",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.864Z"
+    },
+    {
+      "name": "文档章节：核心功能",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.864Z"
+    },
+    {
+      "name": "文档章节：技术架构",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.864Z"
+    },
+    {
+      "name": "文档章节：API接口",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.865Z"
+    },
+    {
+      "name": "文档章节：数据库表设计",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.865Z"
+    },
+    {
+      "name": "文档章节：核心算法",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.865Z"
+    },
+    {
+      "name": "文档章节：验收标准",
+      "passed": true,
+      "error": null,
+      "timestamp": "2026-03-02T14:10:09.865Z"
+    }
+  ],
+  "timestamp": "2026-03-02T14:10:09.871Z"
+}

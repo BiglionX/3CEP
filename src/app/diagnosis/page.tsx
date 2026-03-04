@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,23 +39,23 @@ export default function AIDiagnosisChat() {
 
   // 常见问题快捷按钮
   const quickQuestions = [
-    { icon: Smartphone, text: "手机无法开机怎么办？", keyword: "手机无法开机" },
+    { icon: Smartphone, text: "手机无法开机怎么办？", keyword: "手机无法开? },
     { icon: MessageSquare, text: "屏幕显示异常", keyword: "屏幕显示异常" },
     { icon: Wrench, text: "设备发热严重", keyword: "设备发热严重" },
     { icon: Laptop, text: "无法充电", keyword: "手机充不进电" },
   ];
 
-  // 自动滚动到底部
+  // 自动滚动到底?
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // 发送消息
-  const sendMessage = async (messageText?: string) => {
+  // 发送消?
+  const sendMessage = async (messageText?: any: string) => {
     const textToSend = messageText || inputValue.trim();
     if (!textToSend) return;
 
@@ -92,7 +92,7 @@ export default function AIDiagnosisChat() {
       const result = await response.json();
 
       if (result.success) {
-        // 格式化诊断结果为易读的消息
+        // 格式化诊断结果为易读的消?
         const formattedResponse = formatDiagnosisResponse(
           result.data.diagnosisResult
         );
@@ -119,12 +119,12 @@ export default function AIDiagnosisChat() {
         throw new Error(result.error || "诊断服务出错");
       }
     } catch (error) {
-      console.error("发送消息失败:", error);
+      console.error("发送消息失?", error);
       // 添加错误消息
       const errorMessage: Message = {
         id: `msg_${Date.now()}_error`,
         role: "assistant",
-        content: "抱歉，诊断服务暂时不可用。请稍后再试或联系人工客服。",
+        content: "抱歉，诊断服务暂时不可用。请稍后再试或联系人工客服?,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -145,7 +145,7 @@ export default function AIDiagnosisChat() {
 
   // 清空对话
   const clearConversation = async () => {
-    const confirmed = window.confirm("确定要清空当前对话吗？");
+    const confirmed = window.confirm("确定要清空当前对话吗?);
     if (!confirmed) return;
 
     try {
@@ -169,8 +169,7 @@ export default function AIDiagnosisChat() {
       const result = await response.json();
 
       if (result.success) {
-        console.log("会话信息:", result.data);
-      }
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log("会话信息:", result.data)}
     } catch (error) {
       console.error("获取会话信息失败:", error);
     }
@@ -186,7 +185,7 @@ export default function AIDiagnosisChat() {
       diagnosisResult.faultCauses.forEach((cause: any, index: number) => {
         response += `${index + 1}. ${cause.reason} (${
           cause.probability
-        }, 置信度: ${(cause.confidence * 100).toFixed(0)}%)\n`;
+        }, 置信? ${(cause.confidence * 100).toFixed(0)}%)\n`;
         if (cause.description) {
           response += `   说明: ${cause.description}\n`;
         }
@@ -196,7 +195,7 @@ export default function AIDiagnosisChat() {
 
     // 添加解决方案
     if (diagnosisResult.solutions && diagnosisResult.solutions.length > 0) {
-      response += "🔧 **建议解决方案：**\n";
+      response += "🔧 **建议解决方案?*\n";
       diagnosisResult.solutions.forEach((solution: any, index: number) => {
         response += `**${index + 1}. ${solution.title}**\n`;
         response += `难度等级: ${solution.difficulty}/5\n`;
@@ -217,9 +216,9 @@ export default function AIDiagnosisChat() {
       diagnosisResult.recommendedParts &&
       diagnosisResult.recommendedParts.length > 0
     ) {
-      response += "📦 **可能需要的配件：**\n";
+      response += "📦 **可能需要的配件?*\n";
       diagnosisResult.recommendedParts.forEach((part: any) => {
-        response += `• ${part.partName}`;
+        response += `�?${part.partName}`;
         if (part.partNumber) {
           response += ` (${part.partNumber})`;
         }
@@ -232,10 +231,10 @@ export default function AIDiagnosisChat() {
     }
 
     // 添加总体预估
-    response += "📊 **总体预估：**\n";
+    response += "📊 **总体预估?*\n";
     response += `总耗时: ${diagnosisResult.estimatedTotalTime}分钟\n`;
-    response += `总费用: ¥${diagnosisResult.estimatedTotalCost.min}-${diagnosisResult.estimatedTotalCost.max}\n`;
-    response += `诊断置信度: ${diagnosisResult.confidenceLevel}\n`;
+    response += `总费? ¥${diagnosisResult.estimatedTotalCost.min}-${diagnosisResult.estimatedTotalCost.max}\n`;
+    response += `诊断置信? ${diagnosisResult.confidenceLevel}\n`;
     if (diagnosisResult.severityLevel) {
       response += `故障严重程度: ${diagnosisResult.severityLevel}\n`;
     }
@@ -253,7 +252,7 @@ export default function AIDiagnosisChat() {
             <div>
               <h1 className="text-xl font-bold">AI智能诊断助手</h1>
               <p className="text-blue-100 text-sm">
-                为您提供专业的设备故障诊断服务
+                为您提供专业的设备故障诊断服?
               </p>
             </div>
           </div>
@@ -299,7 +298,7 @@ export default function AIDiagnosisChat() {
         <div className="p-4 bg-yellow-50 border-b">
           <div className="flex items-center mb-2">
             <Lightbulb className="h-5 w-5 text-yellow-600 mr-2" />
-            <h3 className="text-sm font-medium text-yellow-800">相关建议：</h3>
+            <h3 className="text-sm font-medium text-yellow-800">相关建议?/h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {suggestions.map((suggestion) => (
@@ -324,7 +323,7 @@ export default function AIDiagnosisChat() {
               您好！我是AI诊断助手
             </h3>
             <p className="text-gray-500 max-w-md mx-auto">
-              请描述您遇到的设备问题，我会尽力为您提供专业的诊断建议和解决方案。
+              请描述您遇到的设备问题，我会尽力为您提供专业的诊断建议和解决方案?
             </p>
           </div>
         ) : (
@@ -381,7 +380,7 @@ export default function AIDiagnosisChat() {
           ))
         )}
 
-        {/* 加载指示器 */}
+        {/* 加载指示?*/}
         {isLoading && (
           <div className="flex justify-start">
             <div className="flex items-start space-x-3">
@@ -434,9 +433,10 @@ export default function AIDiagnosisChat() {
           </Button>
         </div>
         <p className="text-xs text-gray-500 mt-2 text-center">
-          按 Enter 发送，Shift + Enter 换行
+          �?Enter 发送，Shift + Enter 换行
         </p>
       </div>
     </div>
   );
 }
+

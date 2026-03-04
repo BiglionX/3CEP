@@ -1,4 +1,4 @@
-// 说明书审核API路由
+﻿// 璇存槑涔﹀鏍窤PI璺敱
 
 import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -11,16 +11,18 @@ const manualService = new ManualUploadService();
 export async function GET(request: Request) {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       return NextResponse.json(
-        { success: false, error: '需要登录' },
+        { success: false, error: '闇€瑕佺櫥? },
         { status: 401 }
       );
     }
 
-    // 检查用户是否有审核权限
+    // 妫€鏌ョ敤鎴锋槸鍚︽湁瀹℃牳鏉冮檺
     const { data: userProfile } = await supabase
       .from('user_profiles_ext')
       .select('role')
@@ -29,26 +31,24 @@ export async function GET(request: Request) {
 
     if (!userProfile || (userProfile as any).role !== 'admin') {
       return NextResponse.json(
-        { success: false, error: '无审核权限' },
+        { success: false, error: '鏃犲鏍告潈? },
         { status: 403 }
       );
     }
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || 'pending_review';
-    
-    // 获取待审核的说明书列表
-    const manuals = await manualService.getUserManuals('', [status]);
+
+    // 鑾峰彇寰呭鏍哥殑璇存槑涔﹀垪?    const manuals = await manualService.getUserManuals('', [status]);
 
     return NextResponse.json({
       success: true,
-      data: manuals
+      data: manuals,
     });
-
   } catch (error) {
-    console.error('获取审核列表失败:', error);
+    console.error('鑾峰彇瀹℃牳鍒楄〃澶辫触:', error);
     return NextResponse.json(
-      { success: false, error: '获取审核列表失败' },
+      { success: false, error: '鑾峰彇瀹℃牳鍒楄〃澶辫触' },
       { status: 500 }
     );
   }
@@ -57,17 +57,18 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       return NextResponse.json(
-        { success: false, error: '需要登录' },
+        { success: false, error: '闇€瑕佺櫥? },
         { status: 401 }
       );
     }
 
-    // 检查审核权限
-    const { data: userProfile } = await supabase
+    // 妫€鏌ュ鏍告潈?    const { data: userProfile } = await supabase
       .from('user_profiles_ext')
       .select('role')
       .eq('user_id', session.user.id)
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
 
     if (!userProfile || (userProfile as any).role !== 'admin') {
       return NextResponse.json(
-        { success: false, error: '无审核权限' },
+        { success: false, error: '鏃犲鏍告潈? },
         { status: 403 }
       );
     }
@@ -85,14 +86,14 @@ export async function POST(request: Request) {
 
     if (!manualId || !action) {
       return NextResponse.json(
-        { success: false, error: '缺少必要参数' },
+        { success: false, error: '缂哄皯蹇呰鍙傛暟' },
         { status: 400 }
       );
     }
 
     if (!['approve', 'reject'].includes(action)) {
       return NextResponse.json(
-        { success: false, error: '无效的操作类型' },
+        { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
         { status: 400 }
       );
     }
@@ -107,21 +108,21 @@ export async function POST(request: Request) {
 
     if (!success) {
       return NextResponse.json(
-        { success: false, error: '审核操作失败' },
+        { success: false, error: '瀹℃牳鎿嶄綔澶辫触' },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: `说明书${action === 'approve' ? '已通过' : '已拒绝'}审核`
+      message: `璇存槑?{action === 'approve' ? '宸查€氳繃' : '宸叉嫆?}瀹℃牳`,
     });
-
   } catch (error: any) {
-    console.error('审核操作失败:', error);
+    console.error('瀹℃牳鎿嶄綔澶辫触:', error);
     return NextResponse.json(
-      { success: false, error: error.message || '审核操作失败' },
+      { success: false, error: error.message || '瀹℃牳鎿嶄綔澶辫触' },
       { status: 500 }
     );
   }
 }
+

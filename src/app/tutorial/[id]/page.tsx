@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { StepByStepTutorial } from "@/components/tutorial/StepByStepTutorial";
-import { Button } from "@/components/ui/button";
-import { 
-  ArrowLeft, 
-  Clock, 
-  Users, 
-  Star, 
-  Hammer, 
+import { useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { StepByStepTutorial } from '@/components/tutorial/StepByStepTutorial';
+import { Button } from '@/components/ui/button';
+import {
+  ArrowLeft,
+  Clock,
+  Users,
+  Star,
+  Hammer,
   Wrench,
-  AlertCircle
-} from "lucide-react";
+  AlertCircle,
+} from 'lucide-react';
 
 interface TutorialStep {
   id: string;
@@ -41,7 +41,7 @@ interface Tutorial {
   estimated_time: number;
   view_count: number;
   like_count: number;
-  status: "draft" | "published" | "archived";
+  status: 'draft' | 'published' | 'archived';
   created_at: string;
 }
 
@@ -49,8 +49,8 @@ export default function TutorialStepByStepPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const tutorialId = params.id as string;
-  const deviceModel = searchParams.get("model");
-  const faultType = searchParams.get("fault");
+  const deviceModel = searchParams.get('model');
+  const faultType = searchParams.get('fault');
 
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [loading, setLoading] = useState(true);
@@ -61,8 +61,8 @@ export default function TutorialStepByStepPage() {
       try {
         setLoading(true);
         setError(null);
-        
-        let apiUrl = "";
+
+        let apiUrl = '';
         if (tutorialId) {
           // 通过ID获取教程
           apiUrl = `/api/tutorials/${tutorialId}`;
@@ -72,7 +72,7 @@ export default function TutorialStepByStepPage() {
         }
 
         if (!apiUrl) {
-          throw new Error("缺少必要的参数");
+          throw new Error('缺少必要的参数');
         }
 
         const response = await fetch(apiUrl);
@@ -87,15 +87,15 @@ export default function TutorialStepByStepPage() {
             if (tutorials.length > 0) {
               setTutorial(tutorials[0]);
             } else {
-              throw new Error("未找到匹配的教程");
+              throw new Error('未找到匹配的教程');
             }
           }
         } else {
-          throw new Error(result.error || "获取教程失败");
+          throw new Error(result.error || '获取教程失败');
         }
       } catch (err: any) {
-        console.error("获取教程失败:", err);
-        setError(err.message || "获取教程时发生错误");
+        console.error('获取教程失败:', err);
+        setError(err.message || '获取教程时发生错误');
       } finally {
         setLoading(false);
       }
@@ -107,19 +107,19 @@ export default function TutorialStepByStepPage() {
   }, [tutorialId, deviceModel, faultType]);
 
   const getDifficultyText = (level: number) => {
-    const difficulties = ["入门", "简单", "中等", "困难", "专家"];
-    return difficulties[level - 1] || "未知";
+    const difficulties = ['入门', '简单', '中等', '困难', '专家'];
+    return difficulties[level - 1] || '未知';
   };
 
   const getDifficultyColor = (level: number) => {
     const colors = [
-      "bg-green-100 text-green-800",
-      "bg-blue-100 text-blue-800", 
-      "bg-yellow-100 text-yellow-800",
-      "bg-orange-100 text-orange-800",
-      "bg-red-100 text-red-800"
+      'bg-green-100 text-green-800',
+      'bg-blue-100 text-blue-800',
+      'bg-yellow-100 text-yellow-800',
+      'bg-orange-100 text-orange-800',
+      'bg-red-100 text-red-800',
     ];
-    return colors[level - 1] || "bg-gray-100 text-gray-800";
+    return colors[level - 1] || 'bg-gray-100 text-gray-800';
   };
 
   if (loading) {
@@ -142,7 +142,7 @@ export default function TutorialStepByStepPage() {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">教程未找到</h1>
           <p className="text-gray-600 mb-6">
-            {error || "抱歉，您要查找的教程不存在或已被删除。"}
+            {error || '抱歉，您要查找的教程不存在或已被删除。'}
           </p>
           <div className="space-y-3">
             <Link href="/tutorials">
@@ -169,7 +169,10 @@ export default function TutorialStepByStepPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/tutorials" className="flex items-center text-gray-600 hover:text-gray-900">
+              <Link
+                href="/tutorials"
+                className="flex items-center text-gray-600 hover:text-gray-900"
+              >
                 <ArrowLeft className="w-5 h-5 mr-1" />
                 教程中心
               </Link>
@@ -194,7 +197,9 @@ export default function TutorialStepByStepPage() {
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1">
               <div className="flex flex-wrap gap-2 mb-3">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(tutorial.difficulty_level)}`}>
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(tutorial.difficulty_level)}`}
+                >
                   {getDifficultyText(tutorial.difficulty_level)}
                 </span>
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
@@ -204,13 +209,13 @@ export default function TutorialStepByStepPage() {
                   {tutorial.fault_type}
                 </span>
               </div>
-              
+
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
                 {tutorial.title}
               </h1>
-              
+
               <p className="text-gray-600 mb-4">{tutorial.description}</p>
-              
+
               <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-1" />
@@ -230,11 +235,11 @@ export default function TutorialStepByStepPage() {
                 </div>
               </div>
             </div>
-            
+
             {tutorial.cover_image && (
               <div className="lg:w-64 flex-shrink-0">
-                <img 
-                  src={tutorial.cover_image} 
+                <img
+                  src={tutorial.cover_image}
                   alt={tutorial.title}
                   className="w-full h-48 object-cover rounded-lg shadow-md"
                 />
@@ -247,11 +252,10 @@ export default function TutorialStepByStepPage() {
       {/* 主要内容区域 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <StepByStepTutorial 
+          <StepByStepTutorial
             tutorial={tutorial}
             onComplete={() => {
-              console.log("教程完成!");
-              // 可以在这里添加完成后的逻辑，比如显示完成弹窗、更新用户进度等
+              // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('教程完成!')// 可以在这里添加完成后的逻辑，比如显示完成弹窗、更新用户进度等
             }}
           />
         </div>

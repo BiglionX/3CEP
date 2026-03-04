@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 
@@ -27,12 +27,12 @@ export default function UltimateLoginTest() {
         try {
           const response = await fetch('/api/health');
           if (response.ok) {
-            addResult(1, '✅', '网络连接正常');
+            addResult(1, '�?, '网络连接正常');
           } else {
-            addResult(1, '❌', `网络连接异常: ${response.status}`);
+            addResult(1, '�?, `网络连接异常: ${response.status}`);
           }
         } catch (error: any) {
-          addResult(1, '❌', `网络连接失败: ${error.message}`);
+          addResult(1, '�?, `网络连接失败: ${error.message}`);
         }
         break;
 
@@ -52,29 +52,29 @@ export default function UltimateLoginTest() {
           const result = await response.json();
           
           if (response.ok) {
-            addResult(2, '✅', `登录API成功 - 用户: ${result.user?.email}, 管理员: ${result.user?.is_admin}`);
+            addResult(2, '�?, `登录API成功 - 用户: ${result?.email}, 管理? ${result?.is_admin}`);
           } else {
-            addResult(2, '❌', `登录API失败: ${result.error}`);
+            addResult(2, '�?, `登录API失败: ${result.error}`);
           }
         } catch (error: any) {
-          addResult(2, '❌', `登录API错误: ${error.message}`);
+          addResult(2, '�?, `登录API错误: ${error.message}`);
         }
         break;
 
       case 3:
-        // 测试3: 会话状态检查
-        addResult(3, '🟡', '测试会话状态...');
+        // 测试3: 会话状态检?
+        addResult(3, '🟡', '测试会话状?..');
         try {
           const response = await fetch('/api/auth/check-session');
           const result = await response.json();
           
           if (response.ok) {
-            addResult(3, '✅', `会话检查成功 - 已登录: ${result.authenticated}, 管理员: ${result.is_admin}`);
+            addResult(3, '�?, `会话检查成?- 已登? ${result.authenticated}, 管理? ${result.is_admin}`);
           } else {
-            addResult(3, '❌', `会话检查失败: ${response.status}`);
+            addResult(3, '�?, `会话检查失? ${response.status}`);
           }
         } catch (error: any) {
-          addResult(3, '❌', `会话检查错误: ${error.message}`);
+          addResult(3, '�?, `会话检查错? ${error.message}`);
         }
         break;
 
@@ -84,9 +84,9 @@ export default function UltimateLoginTest() {
         try {
           // 使用原生JavaScript进行跳转测试
           window.location.href = '/admin/dashboard';
-          addResult(4, '✅', '跳转指令已发送');
+          addResult(4, '�?, '跳转指令已发?);
         } catch (error: any) {
-          addResult(4, '❌', `跳转失败: ${error.message}`);
+          addResult(4, '�?, `跳转失败: ${error.message}`);
         }
         break;
 
@@ -118,13 +118,13 @@ export default function UltimateLoginTest() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-gray-700 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4 text-blue-400">自动化测试</h2>
+              <h2 className="text-xl font-semibold mb-4 text-blue-400">自动化测?/h2>
               <button
                 onClick={runAllTests}
                 disabled={currentStep > 0}
                 className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors disabled:opacity-50"
               >
-                {currentStep > 0 ? `执行中... (${currentStep}/4)` : '运行所有测试'}
+                {currentStep > 0 ? `执行?.. (${currentStep}/4)` : '运行所有测?}
               </button>
             </div>
             
@@ -176,31 +176,31 @@ export default function UltimateLoginTest() {
           )}
 
           <div className="bg-red-900/30 border border-red-700 rounded-lg p-6">
-            <h3 className="font-semibold text-red-400 mb-3">🚨 紧急故障排除</h3>
+            <h3 className="font-semibold text-red-400 mb-3">🚨 紧急故障排?/h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <h4 className="font-medium text-red-300 mb-2">如果测试失败:</h4>
                 <ul className="space-y-1 text-red-200">
-                  <li>• 检查服务器控制台错误</li>
-                  <li>• 验证环境变量配置</li>
-                  <li>• 确认Supabase连接</li>
-                  <li>• 检查网络连接状态</li>
+                  <li>�?检查服务器控制台错?/li>
+                  <li>�?验证环境变量配置</li>
+                  <li>�?确认Supabase连接</li>
+                  <li>�?检查网络连接状?/li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium text-red-300 mb-2">浏览器调试:</h4>
+                <h4 className="font-medium text-red-300 mb-2">浏览器调?</h4>
                 <ul className="space-y-1 text-red-200">
-                  <li>• 打开F12开发者工具</li>
-                  <li>• 查看Console所有错误</li>
-                  <li>• 检查Network请求详情</li>
-                  <li>• 验证JavaScript执行</li>
+                  <li>�?打开F12开发者工?/li>
+                  <li>�?查看Console所有错?/li>
+                  <li>�?检查Network请求详情</li>
+                  <li>�?验证JavaScript执行</li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div className="mt-8 text-center text-gray-400 text-sm">
-            <p>请运行测试并提供完整的错误信息用于进一步诊断</p>
+            <p>请运行测试并提供完整的错误信息用于进一步诊?/p>
             <p className="mt-2">当前时间: {new Date().toLocaleString()}</p>
           </div>
         </div>

@@ -1,16 +1,14 @@
-/**
- * WMS连接管理API路由
- * 处理WMS连接的增删改查操作
- */
+﻿/**
+ * WMS杩炴帴绠＄悊API璺敱
+ * 澶勭悊WMS杩炴帴鐨勫鍒犳敼鏌ユ搷? */
 
-import { WMSManager } from "@/lib/warehouse/wms-manager";
-import { createClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
+import { WMSManager } from '@/lib/warehouse/wms-manager';
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
 const wmsManager = new WMSManager();
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -18,17 +16,16 @@ const supabase = createClient(
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const connectionId = searchParams.get("connectionId");
+    const connectionId = searchParams.get('connectionId');
 
     if (connectionId) {
-      // 获取单个连接详情
+      // 鑾峰彇鍗曚釜杩炴帴璇︽儏
       const connection = wmsManager.getConnection(connectionId);
       if (!connection) {
-        return NextResponse.json({ error: "连接不存在" }, { status: 404 });
+        return NextResponse.json({ error: '杩炴帴涓嶅瓨? }, { status: 404 });
       }
 
-      // 获取连接健康状态
-      const healthResult = wmsManager.getConnectionHealth(connectionId);
+      // 鑾峰彇杩炴帴鍋ュ悍鐘?      const healthResult = wmsManager.getConnectionHealth(connectionId);
 
       return NextResponse.json({
         success: true,
@@ -38,21 +35,19 @@ export async function GET(request: Request) {
         },
       });
     } else {
-      // 获取所有连接列表
-      const connections = wmsManager.getConnections();
+      // 鑾峰彇鎵€鏈夎繛鎺ュ垪?      const connections = wmsManager.getConnections();
 
-      // 补充数据库中的详细信息
-      const connectionIds = connections.map((conn) => conn.id);
+      // 琛ュ厖鏁版嵁搴撲腑鐨勮缁嗕俊?      const connectionIds = connections.map(conn => conn.id);
       if (connectionIds.length > 0) {
         const { data: dbConnections, error } = await supabase
-          .from("wms_connections")
-          .select("*")
-          .in("id", connectionIds);
+          .from('wms_connections')
+          .select('*')
+          .in('id', connectionIds);
 
         if (!error && dbConnections) {
-          // 合并内存和数据库信息
-          const enrichedConnections = connections.map((conn) => {
-            const dbConn = dbConnections.find((db) => db.id === conn.id);
+          // 鍚堝苟鍐呭瓨鍜屾暟鎹簱淇℃伅
+          const enrichedConnections = connections.map(conn => {
+            const dbConn = dbConnections.find(db => db.id === conn.id);
             return {
               ...conn,
               ...dbConn,
@@ -74,9 +69,9 @@ export async function GET(request: Request) {
       });
     }
   } catch (error) {
-    console.error("获取WMS连接列表失败:", error);
+    console.error('鑾峰彇WMS杩炴帴鍒楄〃澶辫触:', error);
     return NextResponse.json(
-      { error: "获取连接列表失败", details: (error as Error).message },
+      { error: '鑾峰彇杩炴帴鍒楄〃澶辫触', details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -96,7 +91,7 @@ export async function POST(request: Request) {
       syncFrequency = 5,
     } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (
       !name ||
       !provider ||
@@ -108,27 +103,26 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "缺少必要参数: name, provider, warehouseId, baseUrl, clientId, clientSecret",
+            '缂哄皯蹇呰鍙傛暟: name, provider, warehouseId, baseUrl, clientId, clientSecret',
         },
         { status: 400 }
       );
     }
 
-    // 验证提供商
-    const validProviders = ["goodcang", "4px", "winit", "custom"];
+    // 楠岃瘉鎻愪緵?    const validProviders = ['goodcang', '4px', 'winit', 'custom'];
     if (!validProviders.includes(provider)) {
       return NextResponse.json(
-        { error: `不支持的提供商: ${provider}` },
+        { error: `涓嶆敮鎸佺殑鎻愪緵? ${provider}` },
         { status: 400 }
       );
     }
 
-    // 加密密钥（简化处理，实际应该使用更强的加密）
-    const encryptedSecret = Buffer.from(clientSecret).toString("base64");
+    // 鍔犲瘑瀵嗛挜锛堢畝鍖栧鐞嗭紝瀹為檯搴旇浣跨敤鏇村己鐨勫姞瀵嗭級
+    const encryptedSecret = Buffer.from(clientSecret).toString('base64');
 
-    // 保存到数据库
+    // 淇濆瓨鍒版暟鎹簱
     const { data: dbConnection, error: dbError } = await supabase
-      .from("wms_connections")
+      .from('wms_connections')
       .insert({
         name,
         provider,
@@ -139,18 +133,17 @@ export async function POST(request: Request) {
         is_active: isActive,
         sync_frequency: syncFrequency,
       } as any)
-      .select("id")
+      .select('id')
       .single();
 
     if (dbError) {
       return NextResponse.json(
-        { error: "保存连接配置失败", details: dbError.message },
+        { error: '淇濆瓨杩炴帴閰嶇疆澶辫触', details: dbError.message },
         { status: 500 }
       );
     }
 
-    // 添加到WMS管理器
-    const config = {
+    // 娣诲姞鍒癢MS绠＄悊?    const config = {
       provider: provider as any,
       baseUrl,
       clientId,
@@ -168,11 +161,11 @@ export async function POST(request: Request) {
     const result = await wmsManager.addConnection(connectionInfo, config);
 
     if (!result.success) {
-      // 如果添加失败，回滚数据库记录
-      await supabase.from("wms_connections").delete().eq("id", dbConnection.id);
+      // 濡傛灉娣诲姞澶辫触锛屽洖婊氭暟鎹簱璁板綍
+      await supabase.from('wms_connections').delete().eq('id', dbConnection.id);
 
       return NextResponse.json(
-        { error: "连接测试失败", details: result.error },
+        { error: '杩炴帴娴嬭瘯澶辫触', details: result.error },
         { status: 400 }
       );
     }
@@ -181,13 +174,13 @@ export async function POST(request: Request) {
       success: true,
       data: {
         connectionId: result.data,
-        message: "WMS连接创建成功",
+        message: 'WMS杩炴帴鍒涘缓鎴愬姛',
       },
-    });
+    }) as any;
   } catch (error) {
-    console.error("创建WMS连接失败:", error);
+    console.error('鍒涘缓WMS杩炴帴澶辫触:', error);
     return NextResponse.json(
-      { error: "创建连接失败", details: (error as Error).message },
+      { error: '鍒涘缓杩炴帴澶辫触', details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -196,10 +189,10 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const connectionId = searchParams.get("connectionId");
+    const connectionId = searchParams.get('connectionId');
 
     if (!connectionId) {
-      return NextResponse.json({ error: "缺少连接ID参数" }, { status: 400 });
+      return NextResponse.json({ error: '缂哄皯杩炴帴ID鍙傛暟' }, { status: 400 });
     }
 
     const body = await request.json();
@@ -207,53 +200,49 @@ export async function PUT(request: Request) {
       name,
       isActive,
       syncFrequency,
-      clientSecret, // 可选更新
-    } = body;
+      clientSecret, // 鍙€夋洿?    } = body;
 
-    // 检查连接是否存在
-    const existingConnection = wmsManager.getConnection(connectionId);
+    // 妫€鏌ヨ繛鎺ユ槸鍚﹀瓨?    const existingConnection = wmsManager.getConnection(connectionId);
     if (!existingConnection) {
-      return NextResponse.json({ error: "连接不存在" }, { status: 404 });
+      return NextResponse.json({ error: '杩炴帴涓嶅瓨? }, { status: 404 });
     }
 
-    // 构建更新数据
+    // 鏋勫缓鏇存柊鏁版嵁
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;
     if (isActive !== undefined) updateData.is_active = isActive;
     if (syncFrequency !== undefined) updateData.sync_frequency = syncFrequency;
     if (clientSecret) {
       updateData.client_secret_encrypted =
-        Buffer.from(clientSecret).toString("base64");
+        Buffer.from(clientSecret).toString('base64');
     }
 
-    // 更新数据库
-    const { error: dbError } = await supabase
-      .from("wms_connections")
+    // 鏇存柊鏁版嵁?    const { error: dbError } = await supabase
+      .from('wms_connections')
       .update(updateData)
-      .eq("id", connectionId);
+      .eq('id', connectionId);
 
     if (dbError) {
       return NextResponse.json(
-        { error: "更新连接配置失败", details: dbError.message },
+        { error: '鏇存柊杩炴帴閰嶇疆澶辫触', details: dbError.message },
         { status: 500 }
       );
     }
 
-    // 更新内存中的连接状态
-    if (isActive !== undefined) {
+    // 鏇存柊鍐呭瓨涓殑杩炴帴鐘?    if (isActive !== undefined) {
       wmsManager.toggleConnection(connectionId, isActive);
     }
 
     return NextResponse.json({
       success: true,
       data: {
-        message: "WMS连接更新成功",
+        message: 'WMS杩炴帴鏇存柊鎴愬姛',
       },
     });
   } catch (error) {
-    console.error("更新WMS连接失败:", error);
+    console.error('鏇存柊WMS杩炴帴澶辫触:', error);
     return NextResponse.json(
-      { error: "更新连接失败", details: (error as Error).message },
+      { error: '鏇存柊杩炴帴澶辫触', details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -262,37 +251,36 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const connectionId = searchParams.get("connectionId");
+    const connectionId = searchParams.get('connectionId');
 
     if (!connectionId) {
-      return NextResponse.json({ error: "缺少连接ID参数" }, { status: 400 });
+      return NextResponse.json({ error: '缂哄皯杩炴帴ID鍙傛暟' }, { status: 400 });
     }
 
-    // 检查连接是否存在
-    const existingConnection = wmsManager.getConnection(connectionId);
+    // 妫€鏌ヨ繛鎺ユ槸鍚﹀瓨?    const existingConnection = wmsManager.getConnection(connectionId);
     if (!existingConnection) {
-      return NextResponse.json({ error: "连接不存在" }, { status: 404 });
+      return NextResponse.json({ error: '杩炴帴涓嶅瓨? }, { status: 404 });
     }
 
-    // 从数据库删除
+    // 浠庢暟鎹簱鍒犻櫎
     const { error: dbError } = await supabase
-      .from("wms_connections")
+      .from('wms_connections')
       .delete()
-      .eq("id", connectionId);
+      .eq('id', connectionId);
 
     if (dbError) {
       return NextResponse.json(
-        { error: "删除连接配置失败", details: dbError.message },
+        { error: '鍒犻櫎杩炴帴閰嶇疆澶辫触', details: dbError.message },
         { status: 500 }
       );
     }
 
-    // 从内存中移除
+    // 浠庡唴瀛樹腑绉婚櫎
     const result = wmsManager.removeConnection(connectionId);
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "移除连接失败", details: result.error },
+        { error: '绉婚櫎杩炴帴澶辫触', details: result.error },
         { status: 500 }
       );
     }
@@ -300,14 +288,15 @@ export async function DELETE(request: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        message: "WMS连接删除成功",
+        message: 'WMS杩炴帴鍒犻櫎鎴愬姛',
       },
     });
   } catch (error) {
-    console.error("删除WMS连接失败:", error);
+    console.error('鍒犻櫎WMS杩炴帴澶辫触:', error);
     return NextResponse.json(
-      { error: "删除连接失败", details: (error as Error).message },
+      { error: '鍒犻櫎杩炴帴澶辫触', details: (error as Error).message },
       { status: 500 }
     );
   }
 }
+

@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-02-28T11:38:13.050Z",
+  "summary": {
+    "totalTests": 72,
+    "passedTests": 61,
+    "passRate": "84.72%",
+    "overallStatus": "FAILED"
+  },
+  "moduleResults": [
+    {
+      "module": "用户管理模块",
+      "status": "PASSED"
+    },
+    {
+      "module": "设备管理模块",
+      "status": "PASSED"
+    },
+    {
+      "module": "系统概览模块",
+      "status": "PASSED"
+    }
+  ],
+  "details": {
+    "modulesTested": ["用户管理模块", "设备管理模块", "系统概览模块"],
+    "testCategories": [
+      "文件存在性",
+      "语法正确性",
+      "导入依赖",
+      "权限控制",
+      "UI组件",
+      "功能完整性",
+      "路由冲突",
+      "权限冲突"
+    ]
+  }
+}

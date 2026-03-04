@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useCrowdfundingAuth } from "@/hooks/use-auth";
-import { CrowdfundingFcxPaymentService } from "@/services/crowdfunding/fcx-payment.service";
-import { CrowdfundingPledgeService } from "@/services/crowdfunding/pledge-service";
-import { CrowdfundingProjectService } from "@/services/crowdfunding/project-service";
-import { CrowdfundingRewardService } from "@/services/crowdfunding/reward-service";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCrowdfundingAuth } from '@/hooks/use-auth';
+import { CrowdfundingFcxPaymentService } from '@/services/crowdfunding/fcx-payment.service';
+import { CrowdfundingPledgeService } from '@/services/crowdfunding/pledge-service';
+import { CrowdfundingProjectService } from '@/services/crowdfunding/project-service';
+import { CrowdfundingRewardService } from '@/services/crowdfunding/reward-service';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface Project {
   id: string;
@@ -55,7 +55,7 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState("");
+  const [selectedAmount, setSelectedAmount] = useState('');
   const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
   const [bookingLoading, setBookingLoading] = useState(false);
 
@@ -73,9 +73,9 @@ export default function ProjectDetailPage() {
     if (!isAuthenticated || !user) return;
 
     try {
-      const response = await fetch("/api/users/fcx-balance", {
+      const response = await fetch('/api/users/fcx-balance', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("crowdfunding-token")}`,
+          Authorization: `Bearer ${localStorage.getItem('crowdfunding-token')}`,
         },
       });
 
@@ -86,7 +86,7 @@ export default function ProjectDetailPage() {
         }
       }
     } catch (error) {
-      console.error("获取FCX余额失败:", error);
+      console.error('获取FCX余额失败:', error);
     }
   };
 
@@ -96,15 +96,13 @@ export default function ProjectDetailPage() {
       setLoading(true);
       setError(null);
 
-      const projectData = await CrowdfundingProjectService.getProjectById(
-        projectId
-      );
+      const projectData =
+        await CrowdfundingProjectService.getProjectById(projectId);
       setProject(projectData);
 
       // 获取回报设置
-      const rewardsData = await CrowdfundingRewardService.getProjectRewards(
-        projectId
-      );
+      const rewardsData =
+        await CrowdfundingRewardService.getProjectRewards(projectId);
       setRewards(rewardsData);
 
       // 设置默认金额
@@ -115,8 +113,8 @@ export default function ProjectDetailPage() {
         setSelectedAmount(projectData.min_pledge_amount.toString());
       }
     } catch (err: any) {
-      setError(err.message || "获取项目详情失败");
-      console.error("获取项目详情失败:", err);
+      setError(err.message || '获取项目详情失败');
+      console.error('获取项目详情失败:', err);
     } finally {
       setLoading(false);
     }
@@ -137,11 +135,11 @@ export default function ProjectDetailPage() {
 
     setPaymentProcessing(true);
     try {
-      const response = await fetch("/api/crowdfunding/payments/fcx", {
-        method: "POST",
+      const response = await fetch('/api/crowdfunding/payments/fcx', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("crowdfunding-token")}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('crowdfunding-token')}`,
         },
         body: JSON.stringify({
           pledgeId: (window as any).currentPledgeId,
@@ -164,8 +162,8 @@ export default function ProjectDetailPage() {
         alert(`支付失败: ${result.message}`);
       }
     } catch (error) {
-      console.error("FCX支付错误:", error);
-      alert("支付处理失败，请重试");
+      console.error('FCX支付错误:', error);
+      alert('支付处理失败，请重试');
     } finally {
       setPaymentProcessing(false);
     }
@@ -174,12 +172,12 @@ export default function ProjectDetailPage() {
   // 处理预定
   const handleBooking = async () => {
     if (!isAuthenticated || !user) {
-      router.push("/login");
+      router.push('/login');
       return;
     }
 
     if (!selectedAmount || parseFloat(selectedAmount) <= 0) {
-      alert("请输入有效的支持金额");
+      alert('请输入有效的支持金额');
       return;
     }
 
@@ -214,7 +212,7 @@ export default function ProjectDetailPage() {
       const pledgeData = {
         project_id: projectId,
         amount: amount,
-        pledge_type: "reservation" as const,
+        pledge_type: 'reservation' as const,
         reward_level: selectedReward?.title,
       };
 
@@ -245,8 +243,8 @@ export default function ProjectDetailPage() {
         router.push(`/crowdfunding/success?pledgeId=${result.id}`);
       }
     } catch (err: any) {
-      alert(err.message || "预定失败，请重试");
-      console.error("预定失败:", err);
+      alert(err.message || '预定失败，请重试');
+      console.error('预定失败:', err);
     } finally {
       setBookingLoading(false);
     }
@@ -254,9 +252,9 @@ export default function ProjectDetailPage() {
 
   // 格式化货币显示
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("zh-CN", {
-      style: "currency",
-      currency: "CNY",
+    return new Intl.NumberFormat('zh-CN', {
+      style: 'currency',
+      currency: 'CNY',
       minimumFractionDigits: 0,
     }).format(amount);
   };
@@ -300,7 +298,7 @@ export default function ProjectDetailPage() {
           </svg>
           <h3 className="mt-2 text-sm font-medium text-gray-900">项目不存在</h3>
           <p className="mt-1 text-sm text-gray-500">
-            {error || "找不到该项目"}
+            {error || '找不到该项目'}
           </p>
           <div className="mt-6">
             <Link
@@ -435,14 +433,14 @@ export default function ProjectDetailPage() {
                     <input
                       type="number"
                       value={selectedAmount}
-                      onChange={(e) => {
+                      onChange={e => {
                         setSelectedAmount(e.target.value);
                         // 自动选择合适的回报
                         const amount = parseFloat(e.target.value);
                         if (!isNaN(amount)) {
                           const suitableReward = rewards
-                            .filter((r) => r.is_available)
-                            .find((r) => amount >= r.minimum_amount);
+                            .filter(r => r.is_available)
+                            .find(r => amount >= r.minimum_amount);
                           setSelectedReward(suitableReward || null);
                         }
                       }}
@@ -467,8 +465,8 @@ export default function ProjectDetailPage() {
                       </label>
                       <div className="space-y-2 max-h-40 overflow-y-auto">
                         {rewards
-                          .filter((r) => r.is_available)
-                          .map((reward) => (
+                          .filter(r => r.is_available)
+                          .map(reward => (
                             <div
                               key={reward.id}
                               onClick={() => {
@@ -479,8 +477,8 @@ export default function ProjectDetailPage() {
                               }}
                               className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                                 selectedReward?.id === reward.id
-                                  ? "border-blue-500 bg-blue-50"
-                                  : "border-gray-200 hover:border-gray-300"
+                                  ? 'border-blue-500 bg-blue-50'
+                                  : 'border-gray-200 hover:border-gray-300'
                               }`}
                             >
                               <div className="flex justify-between items-start">
@@ -493,10 +491,10 @@ export default function ProjectDetailPage() {
                                   </p>
                                   {reward.delivery_estimate && (
                                     <p className="text-xs text-gray-500 mt-1">
-                                      预计交付:{" "}
+                                      预计交付:{' '}
                                       {new Date(
                                         reward.delivery_estimate
-                                      ).toLocaleDateString("zh-CN")}
+                                      ).toLocaleDateString('zh-CN')}
                                     </p>
                                   )}
                                 </div>
@@ -519,8 +517,8 @@ export default function ProjectDetailPage() {
                           onClick={() => setSelectedReward(null)}
                           className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                             !selectedReward
-                              ? "border-blue-500 bg-blue-50"
-                              : "border-gray-200 hover:border-gray-300"
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
                           <div className="text-center">
@@ -550,7 +548,7 @@ export default function ProjectDetailPage() {
                           <input
                             type="checkbox"
                             checked={useFcxPayment}
-                            onChange={(e) => setUseFcxPayment(e.target.checked)}
+                            onChange={e => setUseFcxPayment(e.target.checked)}
                             className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                           />
                           <span className="ml-2 text-sm text-gray-700">
@@ -568,7 +566,7 @@ export default function ProjectDetailPage() {
                             <input
                               type="number"
                               value={fcxPaymentAmount}
-                              onChange={(e) =>
+                              onChange={e =>
                                 setFcxPaymentAmount(
                                   parseFloat(e.target.value) || 0
                                 )
@@ -579,12 +577,12 @@ export default function ProjectDetailPage() {
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                             <p className="mt-1 text-sm text-gray-500">
-                              约 {(fcxPaymentAmount / 10).toFixed(2)}{" "}
-                              USD，剩余法币需支付{" "}
+                              约 {(fcxPaymentAmount / 10).toFixed(2)}{' '}
+                              USD，剩余法币需支付{' '}
                               {(
                                 parseFloat(selectedAmount) -
                                 fcxPaymentAmount / 10
-                              ).toFixed(2)}{" "}
+                              ).toFixed(2)}{' '}
                               USD
                             </p>
                           </div>
@@ -632,7 +630,7 @@ export default function ProjectDetailPage() {
                   <div>
                     <span className="font-medium text-gray-700">兼容机型:</span>
                     <span className="ml-2 text-gray-900">
-                      {project.old_models.join(", ")}
+                      {project.old_models.join(', ')}
                     </span>
                   </div>
                 )}
@@ -640,14 +638,14 @@ export default function ProjectDetailPage() {
                 <div>
                   <span className="font-medium text-gray-700">开始时间:</span>
                   <span className="ml-2 text-gray-900">
-                    {new Date(project.start_date).toLocaleDateString("zh-CN")}
+                    {new Date(project.start_date).toLocaleDateString('zh-CN')}
                   </span>
                 </div>
 
                 <div>
                   <span className="font-medium text-gray-700">结束时间:</span>
                   <span className="ml-2 text-gray-900">
-                    {new Date(project.end_date).toLocaleDateString("zh-CN")}
+                    {new Date(project.end_date).toLocaleDateString('zh-CN')}
                   </span>
                 </div>
 
@@ -656,7 +654,7 @@ export default function ProjectDetailPage() {
                     <span className="font-medium text-gray-700">预计交付:</span>
                     <span className="ml-2 text-gray-900">
                       {new Date(project.delivery_date).toLocaleDateString(
-                        "zh-CN"
+                        'zh-CN'
                       )}
                     </span>
                   </div>
@@ -721,7 +719,7 @@ export default function ProjectDetailPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">FCX支付:</span>
                   <span className="font-medium text-green-600">
-                    {fcxPaymentAmount} FCX ({(fcxPaymentAmount / 10).toFixed(2)}{" "}
+                    {fcxPaymentAmount} FCX ({(fcxPaymentAmount / 10).toFixed(2)}{' '}
                     USD)
                   </span>
                 </div>
@@ -747,7 +745,7 @@ export default function ProjectDetailPage() {
                     处理中...
                   </>
                 ) : (
-                  "确认预定"
+                  '确认预定'
                 )}
               </button>
             </div>
@@ -789,7 +787,7 @@ export default function ProjectDetailPage() {
                       {(
                         parseFloat(selectedAmount) -
                         fcxPaymentAmount / 10
-                      ).toFixed(2)}{" "}
+                      ).toFixed(2)}{' '}
                       USD
                     </span>
                   </div>
@@ -822,7 +820,7 @@ export default function ProjectDetailPage() {
                     支付中...
                   </>
                 ) : (
-                  "确认支付"
+                  '确认支付'
                 )}
               </button>
             </div>

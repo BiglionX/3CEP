@@ -15,36 +15,41 @@ class EmailAlert {
       smtp: {
         host: process.env.SMTP_HOST || config.smtp?.host || 'smtp.gmail.com',
         port: parseInt(process.env.SMTP_PORT || config.smtp?.port || '587'),
-        secure: process.env.SMTP_SECURE === 'true' || config.smtp?.secure || false,
+        secure:
+          process.env.SMTP_SECURE === 'true' || config.smtp?.secure || false,
         auth: {
           user: process.env.SMTP_USER || config.smtp?.auth?.user || '',
-          pass: process.env.SMTP_PASS || config.smtp?.auth?.pass || ''
-        }
+          pass: process.env.SMTP_PASS || config.smtp?.auth?.pass || '',
+        },
       },
       defaults: {
-        from: process.env.ALERT_FROM_EMAIL || config.defaults?.from || 'FixCycle监控系统 <noreply@fixcycle.com>',
-        to: process.env.ALERT_TO_EMAILS?.split(',') || config.defaults?.to || ['admin@fixcycle.com']
+        from:
+          process.env.ALERT_FROM_EMAIL ||
+          config.defaults?.from ||
+          'FixCycle监控系统 <noreply@fixcycle.com>',
+        to: process.env.ALERT_TO_EMAILS?.split(',') ||
+          config.defaults?.to || ['admin@fixcycle.com'],
       },
       templates: {
         alert: {
           subject: '[{{level}}] {{title}} - 系统告警通知',
-          body: this.getDefaultAlertTemplate()
+          body: this.getDefaultAlertTemplate(),
         },
         recovery: {
           subject: '[恢复] {{title}} - 系统恢复正常',
-          body: this.getDefaultRecoveryTemplate()
+          body: this.getDefaultRecoveryTemplate(),
         },
         report: {
           subject: '[报告] {{title}} - 系统运行报告',
-          body: this.getDefaultReportTemplate()
-        }
+          body: this.getDefaultReportTemplate(),
+        },
       },
-      ...config
+      ...config,
     };
 
     // 初始化邮件传输器
     this.transporter = this.createTransporter();
-    
+
     // 验证配置
     this.validateConfig();
   }
@@ -59,8 +64,8 @@ class EmailAlert {
       secure: this.config.smtp.secure,
       auth: this.config.smtp.auth.user ? this.config.smtp.auth : undefined,
       tls: {
-        rejectUnauthorized: false // 对于自签名证书
-      }
+        rejectUnauthorized: false, // 对于自签名证书
+      },
     };
 
     // 如果使用OAuth2认证
@@ -70,7 +75,7 @@ class EmailAlert {
         user: this.config.smtp.oauth2.user,
         clientId: this.config.smtp.oauth2.clientId,
         clientSecret: this.config.smtp.oauth2.clientSecret,
-        refreshToken: this.config.smtp.oauth2.refreshToken
+        refreshToken: this.config.smtp.oauth2.refreshToken,
       };
     }
 
@@ -93,7 +98,10 @@ class EmailAlert {
       throw new Error('发件人邮箱未配置');
     }
 
-    if (!Array.isArray(this.config.defaults.to) || this.config.defaults.to.length === 0) {
+    if (
+      !Array.isArray(this.config.defaults.to) ||
+      this.config.defaults.to.length === 0
+    ) {
       throw new Error('收件人列表未配置');
     }
   }
@@ -111,17 +119,18 @@ class EmailAlert {
         source = 'unknown',
         metadata = {},
         recipients = null,
-        template = 'alert'
+        template = 'alert',
       } = alertData;
 
       // 选择模板
-      const templateConfig = this.config.templates[template] || this.config.templates.alert;
-      
+      const templateConfig =
+        this.config.templates[template] || this.config.templates.alert;
+
       // 格式化邮件内容
       const subject = this.formatTemplate(templateConfig.subject, {
         level: level.toUpperCase(),
         title,
-        timestamp: timestamp.toLocaleString()
+        timestamp: timestamp.toLocaleString(),
       });
 
       const htmlBody = this.formatTemplate(templateConfig.body, {
@@ -130,7 +139,7 @@ class EmailAlert {
         message,
         timestamp: timestamp.toLocaleString(),
         source,
-        metadata: JSON.stringify(metadata, null, 2)
+        metadata: JSON.stringify(metadata, null, 2),
       });
 
       // 准备邮件选项
@@ -140,27 +149,28 @@ class EmailAlert {
         subject: subject,
         html: htmlBody,
         text: this.htmlToText(htmlBody),
-        priority: this.getPriority(level)
+        priority: this.getPriority(level),
       };
 
       // 添加附件（如果有）
       if (alertData.attachments) {
-        mailOptions.attachments = await this.processAttachments(alertData.attachments);
+        mailOptions.attachments = await this.processAttachments(
+          alertData.attachments
+        );
       }
 
       // 发送邮件
       const info = await this.transporter.sendMail(mailOptions);
-      
+
       console.log(`✅ 邮件告警发送成功: ${info.messageId}`);
       console.log(`   收件人: ${mailOptions.to.join(', ')}`);
       console.log(`   主题: ${mailOptions.subject}`);
-      
+
       return {
         success: true,
         messageId: info.messageId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-
     } catch (error) {
       console.error(`❌ 邮件发送失败: ${error.message}`);
       throw error;
@@ -172,21 +182,21 @@ class EmailAlert {
    */
   async sendBulkAlerts(alerts) {
     const results = [];
-    
+
     for (const alert of alerts) {
       try {
         const result = await this.sendAlert(alert);
         results.push({ ...result, alert, status: 'success' });
       } catch (error) {
-        results.push({ 
-          alert, 
-          status: 'failed', 
+        results.push({
+          alert,
+          status: 'failed',
           error: error.message,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
     }
-    
+
     return results;
   }
 
@@ -199,14 +209,14 @@ class EmailAlert {
       period = 'daily',
       metrics = {},
       charts = [],
-      recipients = null
+      recipients = null,
     } = reportData;
 
     const htmlReport = this.generateReportHtml({
       title,
       period,
       metrics,
-      charts
+      charts,
     });
 
     const mailOptions = {
@@ -214,7 +224,7 @@ class EmailAlert {
       to: recipients || this.config.defaults.to,
       subject: `[报告] ${title} - ${new Date().toLocaleDateString()}`,
       html: htmlReport,
-      text: this.htmlToText(htmlReport)
+      text: this.htmlToText(htmlReport),
     };
 
     if (charts.length > 0) {
@@ -222,7 +232,7 @@ class EmailAlert {
     }
 
     const info = await this.transporter.sendMail(mailOptions);
-    
+
     console.log(`✅ 报告邮件发送成功: ${info.messageId}`);
     return info;
   }
@@ -235,7 +245,7 @@ class EmailAlert {
       // 验证SMTP连接
       await this.transporter.verify();
       console.log('✅ SMTP服务器连接验证成功');
-      
+
       // 发送测试邮件
       const testAlert = {
         level: 'info',
@@ -244,14 +254,13 @@ class EmailAlert {
         source: 'EmailAlert.test',
         metadata: {
           test: true,
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       };
 
       const result = await this.sendAlert(testAlert);
       console.log('✅ 测试邮件发送成功');
       return result;
-      
     } catch (error) {
       console.error(`❌ 邮件配置测试失败: ${error.message}`);
       throw error;
@@ -272,10 +281,10 @@ class EmailAlert {
    */
   getPriority(level) {
     const priorities = {
-      'emergency': 'high',
-      'critical': 'high',
-      'warning': 'normal',
-      'info': 'low'
+      emergency: 'high',
+      critical: 'high',
+      warning: 'normal',
+      info: 'low',
     };
     return priorities[level.toLowerCase()] || 'normal';
   }
@@ -285,8 +294,8 @@ class EmailAlert {
    */
   htmlToText(html) {
     return html
-      .replace(/<[^>]*>/g, '')  // 移除HTML标签
-      .replace(/\s+/g, ' ')     // 合并空白字符
+      .replace(/<[^>]*>/g, '') // 移除HTML标签
+      .replace(/\s+/g, ' ') // 合并空白字符
       .trim();
   }
 
@@ -295,24 +304,24 @@ class EmailAlert {
    */
   async processAttachments(attachments) {
     const processed = [];
-    
+
     for (const attachment of attachments) {
       if (attachment.path) {
         // 文件路径附件
         processed.push({
           filename: attachment.filename || path.basename(attachment.path),
-          path: attachment.path
+          path: attachment.path,
         });
       } else if (attachment.content) {
         // 内容附件
         processed.push({
           filename: attachment.filename,
           content: attachment.content,
-          encoding: attachment.encoding || 'utf-8'
+          encoding: attachment.encoding || 'utf-8',
         });
       }
     }
-    
+
     return processed;
   }
 
@@ -321,18 +330,18 @@ class EmailAlert {
    */
   async processChartAttachments(charts) {
     const attachments = [];
-    
+
     for (const chart of charts) {
       if (chart.imageData) {
         attachments.push({
           filename: `${chart.name || 'chart'}.png`,
           content: chart.imageData,
           encoding: 'base64',
-          cid: chart.cid || chart.name
+          cid: chart.cid || chart.name,
         });
       }
     }
-    
+
     return attachments;
   }
 
@@ -341,7 +350,7 @@ class EmailAlert {
    */
   generateReportHtml(reportData) {
     const { title, period, metrics, charts } = reportData;
-    
+
     let html = `
     <!DOCTYPE html>
     <html>
@@ -536,38 +545,40 @@ class EmailAlert {
 // 命令行接口
 if (require.main === module) {
   const args = process.argv.slice(2);
-  
+
   // 从环境变量或配置文件加载配置
   const config = {};
-  
+
   const emailAlert = new EmailAlert(config);
-  
+
   switch (args[0]) {
     case 'test':
-      emailAlert.testConfiguration()
+      emailAlert
+        .testConfiguration()
         .then(() => console.log('✅ 邮件配置测试完成'))
         .catch(err => {
           console.error('❌ 测试失败:', err.message);
           process.exit(1);
         });
       break;
-      
+
     case 'send':
       const alertData = {
         level: args[1] || 'warning',
         title: args[2] || '测试告警',
         message: args[3] || '这是一条测试消息',
-        source: 'command-line'
+        source: 'command-line',
       };
-      
-      emailAlert.sendAlert(alertData)
+
+      emailAlert
+        .sendAlert(alertData)
         .then(result => console.log('✅ 告警邮件发送成功:', result.messageId))
         .catch(err => {
           console.error('❌ 发送失败:', err.message);
           process.exit(1);
         });
       break;
-      
+
     default:
       console.log(`
 FixCycle 邮件告警工具

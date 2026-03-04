@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登录界面闪烁测试</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .warning {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+      }
+      .info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .flash-test-area {
+        height: 300px;
+        border: 2px dashed #ccc;
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .flash-indicator {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        background: #ff6b6b;
+        color: white;
+        border-radius: 3px;
+        font-size: 12px;
+        display: none;
+      }
+      .flash-indicator.active {
+        display: block;
+        animation: blink 0.5s ease-in-out;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔍 登录界面闪烁问题测试</h1>
+
+      <div class="test-section info">
+        <h3>测试说明</h3>
+        <p>本页面用于测试登录界面的闪烁问题修复效果。</p>
+        <p>观察红色闪烁指示器来判断是否存在界面重绘问题。</p>
+      </div>
+
+      <div class="test-section">
+        <h3>1. 模拟登录状态检查</h3>
+        <button onclick="simulateAuthCheck()">模拟认证检查</button>
+        <button onclick="resetTest()">重置测试</button>
+        <div id="auth-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>2. 闪烁检测区域</h3>
+        <div class="flash-test-area" id="flashArea">
+          <div>观察此区域是否出现闪烁</div>
+          <div class="flash-indicator" id="flashIndicator">检测到闪烁!</div>
+        </div>
+        <div>
+          <p><strong>闪烁次数:</strong> <span id="flashCount">0</span></p>
+          <p>
+            <strong>最后闪烁时间:</strong> <span id="lastFlashTime">-</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>3. 性能监控</h3>
+        <button onclick="startPerformanceMonitor()">开始性能监控</button>
+        <button onclick="stopPerformanceMonitor()">停止监控</button>
+        <div id="performance-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>4. 实际登录测试</h3>
+        <button onclick="testRealLogin()">测试真实登录流程</button>
+        <div id="login-test-result"></div>
+      </div>
+    </div>
+
+    <script>
+      let flashCount = 0;
+      let monitorInterval = null;
+      let startTime = null;
+
+      // 模拟认证检查（可能引起闪烁的操作）
+      function simulateAuthCheck() {
+        const resultEl = document.getElementById('auth-result');
+        resultEl.innerHTML = '<p>正在模拟认证检查...</p>';
+
+        // 模拟快速的状态变更
+        setTimeout(() => {
+          detectFlash();
+          resultEl.innerHTML = `
+                    <div class="info">
+                        <h4>ℹ️ 认证检查模拟完成</h4>
+                        <p>执行了可能导致闪烁的操作序列</p>
+                    </div>
+                `;
+        }, 300);
+      }
+
+      // 检测闪烁
+      function detectFlash() {
+        const indicator = document.getElementById('flashIndicator');
+        const countEl = document.getElementById('flashCount');
+        const timeEl = document.getElementById('lastFlashTime');
+
+        flashCount++;
+        countEl.textContent = flashCount;
+        timeEl.textContent = new Date().toLocaleTimeString();
+
+        indicator.classList.add('active');
+        setTimeout(() => {
+          indicator.classList.remove('active');
+        }, 300);
+      }
+
+      // 重置测试
+      function resetTest() {
+        flashCount = 0;
+        document.getElementById('flashCount').textContent = '0';
+        document.getElementById('lastFlashTime').textContent = '-';
+        document.getElementById('auth-result').innerHTML = '';
+        document.getElementById('performance-result').innerHTML = '';
+        document.getElementById('login-test-result').innerHTML = '';
+
+        if (monitorInterval) {
+          clearInterval(monitorInterval);
+          monitorInterval = null;
+        }
+
+        console.log('测试已重置');
+      }
+
+      // 性能监控
+      function startPerformanceMonitor() {
+        const resultEl = document.getElementById('performance-result');
+        startTime = performance.now();
+
+        resultEl.innerHTML = '<p>开始监控页面性能...</p>';
+
+        monitorInterval = setInterval(() => {
+          const currentTime = performance.now();
+          const elapsed = ((currentTime - startTime) / 1000).toFixed(2);
+
+          // 检查页面重绘
+          const paintEntries = performance.getEntriesByType('paint');
+          const layoutShifts = performance.getEntriesByType('layout-shift');
+
+          resultEl.innerHTML = `
+                    <div class="info">
+                        <h4>📊 性能监控中 (${elapsed}s)</h4>
+                        <p>Paint entries: ${paintEntries.length}</p>
+                        <p>Layout shifts: ${layoutShifts.length}</p>
+                        <p>当前闪烁次数: ${flashCount}</p>
+                    </div>
+                `;
+        }, 1000);
+      }
+
+      function stopPerformanceMonitor() {
+        if (monitorInterval) {
+          clearInterval(monitorInterval);
+          monitorInterval = null;
+
+          const endTime = performance.now();
+          const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+
+          document.getElementById('performance-result').innerHTML = `
+                    <div class="success">
+                        <h4>✅ 性能监控结束</h4>
+                        <p>总监控时间: ${totalTime}秒</p>
+                        <p>总闪烁次数: ${flashCount}</p>
+                        <p>平均每分钟闪烁: ${(flashCount / (totalTime / 60)).toFixed(2)}次</p>
+                    </div>
+                `;
+        }
+      }
+
+      // 测试真实登录流程
+      function testRealLogin() {
+        const resultEl = document.getElementById('login-test-result');
+        resultEl.innerHTML = '<p>正在测试真实登录流程...</p>';
+
+        // 模拟完整的登录流程
+        const steps = [
+          '1. 页面加载完成',
+          '2. 检查认证状态',
+          '3. 显示登录表单',
+          '4. 用户输入凭据',
+          '5. 提交登录请求',
+          '6. 验证凭据',
+          '7. 设置用户会话',
+          '8. 执行页面跳转',
+        ];
+
+        let currentStep = 0;
+
+        const executeStep = () => {
+          if (currentStep < steps.length) {
+            resultEl.innerHTML = `
+                        <div class="info">
+                            <h4>🔄 登录流程测试中</h4>
+                            <p>当前步骤: ${steps[currentStep]}</p>
+                            <p>进度: ${currentStep + 1}/${steps.length}</p>
+                        </div>
+                    `;
+
+            // 模拟每个步骤可能引起的重绘
+            if (currentStep % 2 === 0) {
+              detectFlash();
+            }
+
+            currentStep++;
+            setTimeout(executeStep, 800);
+          } else {
+            resultEl.innerHTML = `
+                        <div class="success">
+                            <h4>✅ 登录流程测试完成</h4>
+                            <p>总步骤: ${steps.length}</p>
+                            <p>检测到闪烁次数: ${flashCount}</p>
+                            <p>建议: ${flashCount > 3 ? '存在明显闪烁问题' : '闪烁问题已改善'}</p>
+                            <button onclick="window.open('/login?redirect=/admin/dashboard', '_blank')">实际测试登录</button>
+                        </div>
+                    `;
+          }
+        };
+
+        executeStep();
+      }
+
+      // 页面加载完成后的初始化
+      window.addEventListener('load', function () {
+        console.log('登录闪烁测试页面加载完成');
+
+        // 模拟一些可能引起闪烁的操作
+        setTimeout(() => {
+          console.log('执行初始化闪烁检测');
+          detectFlash();
+        }, 1000);
+      });
+
+      // 监听可能引起重绘的事件
+      window.addEventListener('resize', () => {
+        console.log('窗口大小改变，可能引起重绘');
+        detectFlash();
+      });
+
+      // 监听滚动事件
+      window.addEventListener('scroll', () => {
+        // 避免过于频繁的检测
+        if (Math.random() > 0.8) {
+          console.log('滚动事件触发重绘检测');
+          detectFlash();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -3,8 +3,7 @@
  * 正确演示如何导入 @/lib/database.types 模块
  */
 
-// 正确的模块导入方式
-import type { Database } from '@/lib/database.types';
+// 正确的模块导入方?import type { Database } from '@/lib/database.types';
 import supabase from '@/lib/supabase';
 
 // 类型使用示例
@@ -15,17 +14,13 @@ interface TenantApiTest {
   isActive: boolean;
 }
 
-// 使用数据库类型
-type TenantRow = Database['public']['Tables']['tenants']['Row'];
+// 使用数据库类?type TenantRow = Database['public']['Tables']['tenants']['Row'];
 type UserTenantRow = Database['public']['Tables']['user_tenants']['Row'];
 
 // 测试函数
 async function testTenantApi(): Promise<void> {
   try {
-    console.log('开始测试租户 API...');
-
-    // 使用已创建的 Supabase 客户端实例
-    const client = supabase;
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('开始测试租?API...')// 使用已创建的 Supabase 客户端实?    const client = supabase;
 
     // 查询租户数据示例
     const { data: tenants, error } = await client
@@ -39,23 +34,20 @@ async function testTenantApi(): Promise<void> {
     }
 
     console.log('成功获取租户数据:', tenants);
-
     // 类型安全的数据处理
     const activeTenants: TenantRow[] = tenants || [];
     activeTenants.forEach((tenant: TenantRow) => {
-      console.log(`租户: ${tenant.name} (${tenant.code})`);
+      console.log(`租户：${tenant.name} (${tenant.code})`);
     });
   } catch (error) {
-    console.error('测试过程中发生错误:', error);
+    console.error('测试过程中发生错?', error);
   }
 }
 
 // 用户租户关系测试
 async function testUserTenantRelationship(): Promise<void> {
   try {
-    console.log('测试用户租户关系...');
-
-    const client = supabase;
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('测试用户租户关系...')const client = supabase;
 
     // 查询用户租户关系
     const { data: userTenants, error } = await client
@@ -75,12 +67,11 @@ async function testUserTenantRelationship(): Promise<void> {
     }
 
     console.log('用户租户关系数据:', userTenants);
-
     // 类型安全的数据访问
     const relationships: UserTenantRow[] = userTenants || [];
     relationships.forEach((relation: UserTenantRow) => {
       console.log(
-        `用户 ${relation.user_id} 在租户 ${relation.tenant_id} 中的角色: ${relation.role}`
+        `用户 ${relation.user_id} 在租户${relation.tenant_id} 中的角色：${relation.role}`
       );
     });
   } catch (error) {

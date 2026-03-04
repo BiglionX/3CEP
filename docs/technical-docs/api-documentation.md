@@ -7,12 +7,14 @@
 ## 🔐 认证授权
 
 ### JWT Token 认证
+
 ```http
 Authorization: Bearer <jwt-token>
 Content-Type: application/json
 ```
 
 ### 获取访问令牌
+
 ```http
 POST /api/auth/login
 Content-Type: application/json
@@ -24,6 +26,7 @@ Content-Type: application/json
 ```
 
 **响应示例:**
+
 ```json
 {
   "success": true,
@@ -43,12 +46,14 @@ Content-Type: application/json
 ### 1. 设备管理接口
 
 #### 获取用户设备列表
+
 ```http
 GET /api/devices?userId={userId}&page=1&limit=10
 Authorization: Bearer <token>
 ```
 
 **响应示例:**
+
 ```json
 {
   "success": true,
@@ -74,6 +79,7 @@ Authorization: Bearer <token>
 ```
 
 #### 创建设备档案
+
 ```http
 POST /api/devices
 Authorization: Bearer <token>
@@ -95,6 +101,7 @@ Content-Type: application/json
 ### 2. 智能估价接口
 
 #### 设备估价请求
+
 ```http
 POST /api/valuation/estimate
 Authorization: Bearer <token>
@@ -114,6 +121,7 @@ Content-Type: application/json
 ```
 
 **响应示例:**
+
 ```json
 {
   "success": true,
@@ -129,10 +137,7 @@ Content-Type: application/json
       "averagePrice": 2900,
       "trend": "stable"
     },
-    "recommendations": [
-      "建议通过官方渠道回收",
-      "当前市场价格较为稳定"
-    ]
+    "recommendations": ["建议通过官方渠道回收", "当前市场价格较为稳定"]
   }
 }
 ```
@@ -140,12 +145,14 @@ Content-Type: application/json
 ### 3. 维修服务接口
 
 #### 搜索附近维修店
+
 ```http
 GET /api/repair/shops?lat=39.9042&lng=116.4074&radius=5&page=1
 Authorization: Bearer <token>
 ```
 
 #### 创建维修订单
+
 ```http
 POST /api/repair/orders
 Authorization: Bearer <token>
@@ -168,12 +175,14 @@ Content-Type: application/json
 ### 4. 众筹平台接口
 
 #### 获取众筹项目列表
+
 ```http
 GET /api/crowdfunding/projects?category=smartphone&page=1&limit=12
 Authorization: Bearer <token>
 ```
 
 **响应示例:**
+
 ```json
 {
   "success": true,
@@ -207,6 +216,7 @@ Authorization: Bearer <token>
 ```
 
 #### 支持众筹项目
+
 ```http
 POST /api/crowdfunding/pledges
 Authorization: Bearer <token>
@@ -228,12 +238,14 @@ Content-Type: application/json
 ### 5. FCX积分系统接口
 
 #### 查询用户FCX余额
+
 ```http
 GET /api/fcx/balance?userId={userId}
 Authorization: Bearer <token>
 ```
 
 **响应示例:**
+
 ```json
 {
   "success": true,
@@ -247,6 +259,7 @@ Authorization: Bearer <token>
 ```
 
 #### FCX积分消费
+
 ```http
 POST /api/fcx/spend
 Authorization: Bearer <token>
@@ -264,12 +277,14 @@ Content-Type: application/json
 ### 1. 设备生命周期查询
 
 #### 获取设备完整生命周期
+
 ```http
 GET /api/lifecycle/device/{deviceId}
 Authorization: Bearer <token>
 ```
 
 **响应示例:**
+
 ```json
 {
   "success": true,
@@ -312,9 +327,271 @@ Authorization: Bearer <token>
 ### 2. 市场数据分析
 
 #### 获取配件价格趋势
+
 ```http
 GET /api/market/prices?partId={partId}&period=30d
 Authorization: Bearer <token>
+```
+
+## 🔐 权限管理API
+
+### 获取用户权限
+
+```http
+GET /api/permissions/user/{userId}/permissions
+Authorization: Bearer <token>
+
+Query Parameters:
+- includeDetails: boolean (是否包含详细信息)
+- category: string (权限分类筛选)
+
+Response:
+{
+  "success": true,
+  "data": {
+    "userId": "user123",
+    "permissions": ["dashboard_read", "users_manage"],
+    "accessibleResources": ["dashboard", "users"],
+    "userRoles": ["admin"]
+  }
+}
+```
+
+### 权限检查
+
+```http
+POST /api/permissions/user/{userId}/check
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "permissions": ["dashboard_read", "users_create"],
+  "resource": "users",
+  "action": "manage"
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "hasPermission": true,
+    "missingPermissions": [],
+    "reason": "用户拥有相应权限"
+  }
+}
+```
+
+### 获取可访问资源
+
+```http
+GET /api/permissions/user/{userId}/accessible-resources
+Authorization: Bearer <token>
+
+Query Parameters:
+- category: string (资源分类)
+
+Response:
+{
+  "success": true,
+  "data": {
+    "userId": "user123",
+    "resources": ["dashboard", "users", "orders"],
+    "resourceDetails": [
+      {
+        "name": "users",
+        "permissions": [
+          {"id": "users_read", "name": "查看用户", "action": "read"},
+          {"id": "users_create", "name": "创建用户", "action": "create"}
+        ]
+      }
+    ]
+  }
+}
+```
+
+### 批量权限检查
+
+```http
+POST /api/permissions/user/{userId}/bulk-check
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "permissionChecks": [
+    {"permission": "dashboard_read"},
+    {"resource": "users", "action": "manage"},
+    {"permission": "orders_create"}
+  ]
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "userId": "user123",
+    "totalChecks": 3,
+    "passedChecks": 2,
+    "failedChecks": 1,
+    "results": [
+      {"index": 0, "hasPermission": true},
+      {"index": 1, "hasPermission": true},
+      {"index": 2, "hasPermission": false, "missingPermissions": ["orders_create"]}
+    ]
+  }
+}
+```
+
+## 💾 缓存管理API
+
+### 获取缓存统计
+
+```http
+GET /api/cache/stats
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": {
+    "hitRate": 85.5,
+    "size": 1250,
+    "maxSize": 2000,
+    "memoryUsage": 256000,
+    "avgAccessTime": 15.2
+  }
+}
+```
+
+### 设置缓存项
+
+```http
+POST /api/cache/set
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "key": "user_profile_123",
+  "value": {"name": "张三", "email": "zhang@example.com"},
+  "ttl": 300000,
+  "tags": ["user", "profile"]
+}
+```
+
+### 获取缓存项
+
+```http
+GET /api/cache/get?key=user_profile_123
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": {
+    "key": "user_profile_123",
+    "value": {"name": "张三", "email": "zhang@example.com"},
+    "expiresAt": 1708963200000,
+    "accessCount": 5
+  }
+}
+```
+
+### 清理缓存
+
+```http
+DELETE /api/cache/clear
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "tags": ["user", "permissions"]
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "deletedCount": 15,
+    "remainingCount": 1235
+  }
+}
+```
+
+## ⚠️ 错误处理API
+
+### 获取错误统计
+
+```http
+GET /api/errors/stats
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": {
+    "totalErrors": 45,
+    "byType": {
+      "AUTHENTICATION": 12,
+      "NETWORK": 8,
+      "DATABASE": 5
+    },
+    "bySeverity": {
+      "HIGH": 15,
+      "MEDIUM": 25,
+      "LOW": 5
+    },
+    "recentErrors": [
+      {
+        "id": "err_123456",
+        "type": "NETWORK",
+        "severity": "MEDIUM",
+        "message": "网络连接超时",
+        "timestamp": 1708963200000
+      }
+    ]
+  }
+}
+```
+
+### 获取错误详情
+
+```http
+GET /api/errors/{errorId}
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": {
+    "id": "err_123456",
+    "type": "NETWORK",
+    "severity": "MEDIUM",
+    "message": "网络连接超时",
+    "stack": "Error: Network timeout...",
+    "context": {
+      "userId": "user123",
+      "requestId": "req_789012",
+      "endpoint": "/api/users"
+    },
+    "timestamp": 1708963200000
+  }
+}
+```
+
+### 重试错误处理
+
+```http
+POST /api/errors/{errorId}/retry
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": {
+    "status": "retry_initiated",
+    "retryCount": 1,
+    "nextRetryTime": 1708963260000
+  }
+}
 ```
 
 ## ⚙️ 系统管理 API
@@ -322,12 +599,14 @@ Authorization: Bearer <token>
 ### 1. 用户管理
 
 #### 获取用户列表
+
 ```http
 GET /api/admin/users?page=1&limit=20&status=active
 Authorization: Bearer <admin-token>
 ```
 
 #### 更新用户状态
+
 ```http
 PATCH /api/admin/users/{userId}
 Authorization: Bearer <admin-token>
@@ -342,6 +621,7 @@ Content-Type: application/json
 ### 2. 维修店管理
 
 #### 审核维修店入驻申请
+
 ```http
 POST /api/admin/shops/{shopId}/approve
 Authorization: Bearer <admin-token>
@@ -356,11 +636,13 @@ Content-Type: application/json
 ### 3. 系统监控
 
 #### 获取系统健康状态
+
 ```http
 GET /api/health
 ```
 
 **响应示例:**
+
 ```json
 {
   "status": "healthy",
@@ -381,6 +663,7 @@ GET /api/health
 ## 📞 错误处理
 
 ### 标准错误响应格式
+
 ```json
 {
   "success": false,
@@ -396,23 +679,26 @@ GET /api/health
 ```
 
 ### 常见错误码
-| 错误码 | 说明 | HTTP状态码 |
-|--------|------|------------|
-| AUTH_REQUIRED | 需要身份认证 | 401 |
-| PERMISSION_DENIED | 权限不足 | 403 |
-| RESOURCE_NOT_FOUND | 资源不存在 | 404 |
-| VALIDATION_ERROR | 参数验证失败 | 400 |
-| RATE_LIMIT_EXCEEDED | 请求频率超限 | 429 |
-| INTERNAL_ERROR | 服务器内部错误 | 500 |
+
+| 错误码              | 说明           | HTTP状态码 |
+| ------------------- | -------------- | ---------- |
+| AUTH_REQUIRED       | 需要身份认证   | 401        |
+| PERMISSION_DENIED   | 权限不足       | 403        |
+| RESOURCE_NOT_FOUND  | 资源不存在     | 404        |
+| VALIDATION_ERROR    | 参数验证失败   | 400        |
+| RATE_LIMIT_EXCEEDED | 请求频率超限   | 429        |
+| INTERNAL_ERROR      | 服务器内部错误 | 500        |
 
 ## 🔄 分页和过滤
 
 ### 分页参数
+
 ```http
 GET /api/resources?page=1&limit=20&sort=createdAt:desc
 ```
 
 ### 过滤参数
+
 ```http
 GET /api/devices?brand=Apple&model=iPhone*&status=active
 ```
@@ -420,8 +706,9 @@ GET /api/devices?brand=Apple&model=iPhone*&status=active
 ## 📈 速率限制
 
 API调用频率限制：
+
 - 普通用户：100次/分钟
-- 认证用户：500次/分钟  
+- 认证用户：500次/分钟
 - 管理员：2000次/分钟
 
 ## 🛡️ 安全最佳实践
@@ -435,11 +722,12 @@ API调用频率限制：
 ## 📞 技术支持
 
 如有API使用问题，请联系：
+
 - **技术支持邮箱**：tech@fixcycle.com
 - **开发者文档**：https://docs.fixcycle.com
 - **API状态页面**：https://status.fixcycle.com
 
 ---
 
-*API版本: v1.0*  
-*最后更新: 2024年2月21日*
+_API版本: v1.0_  
+_最后更新: 2024年2月21日_

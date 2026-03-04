@@ -1,30 +1,38 @@
-/**
- * FCX转账API
+﻿/**
+ * FCX杞处API
  */
 
 import { NextResponse } from 'next/server';
 import { FcxAccountService } from '@/fcx-system';
-import { FcxTransferDTO, FcxTransactionType } from '@/fcx-system/models/fcx-account.model';
+import {
+  FcxTransferDTO,
+  FcxTransactionType,
+} from '@/fcx-system/models/fcx-account.model';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { fromAccountId, toAccountId, amount, transactionType, referenceId, memo } = body;
+    const {
+      fromAccountId,
+      toAccountId,
+      amount,
+      transactionType,
+      referenceId,
+      memo,
+    } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!fromAccountId || !toAccountId || !amount || !transactionType) {
-      return NextResponse.json(
-        { error: '缺少必要参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '缂哄皯蹇呰鍙傛暟' }, { status: 400 });
     }
 
-    // 验证交易类型
-    if (!Object.values(FcxTransactionType).includes(transactionType as FcxTransactionType)) {
-      return NextResponse.json(
-        { error: '无效的交易类型' },
-        { status: 400 }
-      );
+    // 楠岃瘉浜ゆ槗绫诲瀷
+    if (
+      !Object.values(FcxTransactionType).includes(
+        transactionType as FcxTransactionType
+      )
+    ) {
+      return NextResponse.json({ error: '鏃犳晥鐨勪氦鏄撶被? }, { status: 400 });
     }
 
     const dto: FcxTransferDTO = {
@@ -33,7 +41,7 @@ export async function POST(request: Request) {
       amount,
       transactionType: transactionType as FcxTransactionType,
       referenceId,
-      memo
+      memo,
     };
 
     const accountService = new FcxAccountService();
@@ -41,17 +49,17 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      data: transaction
+      data: transaction,
     });
-
   } catch (error) {
-    console.error('FCX转账错误:', error);
+    console.error('FCX杞处閿欒:', error);
     return NextResponse.json(
-      { 
-        error: '转账失败',
-        details: (error as Error).message 
+      {
+        error: '杞处澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

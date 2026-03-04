@@ -16,7 +16,7 @@ console.log('=====================================\n');
 function checkDocker() {
   try {
     const result = spawnSync('docker', ['--version'], {
-      stdio: 'pipe'
+      stdio: 'pipe',
     });
     return result.status === 0;
   } catch (error) {
@@ -28,7 +28,7 @@ function checkDocker() {
 function checkDockerCompose() {
   try {
     const result = spawnSync('docker-compose', ['--version'], {
-      stdio: 'pipe'
+      stdio: 'pipe',
     });
     return result.status === 0;
   } catch (error) {
@@ -38,8 +38,11 @@ function checkDockerCompose() {
 
 // 解析命令行参数
 const args = process.argv.slice(2);
-const deployMode = args.includes('--datacenter') ? 'datacenter' : 
-                  args.includes('--n8n') ? 'n8n' : 'auto';
+const deployMode = args.includes('--datacenter')
+  ? 'datacenter'
+  : args.includes('--n8n')
+    ? 'n8n'
+    : 'auto';
 
 console.log('🔧 部署环境检查:\n');
 
@@ -48,7 +51,9 @@ const hasDocker = checkDocker();
 const hasDockerCompose = checkDockerCompose();
 
 console.log(`  Docker: ${hasDocker ? '✅ 可用' : '❌ 未安装或不可用'}`);
-console.log(`  Docker Compose: ${hasDockerCompose ? '✅ 可用' : '❌ 未安装或不可用'}`);
+console.log(
+  `  Docker Compose: ${hasDockerCompose ? '✅ 可用' : '❌ 未安装或不可用'}`
+);
 
 if (!hasDocker || !hasDockerCompose) {
   console.log('\n❌ 错误: Docker 环境不完整');
@@ -62,7 +67,7 @@ console.log('\n📄 配置文件检查:');
 const configFiles = {
   'docker-compose.datacenter.yml': './docker-compose.datacenter.yml',
   'docker-compose.n8n-minimal.yml': './docker-compose.n8n-minimal.yml',
-  '.env': './.env'
+  '.env': './.env',
 };
 
 Object.entries(configFiles).forEach(([fileName, filePath]) => {
@@ -75,9 +80,17 @@ Object.entries(configFiles).forEach(([fileName, filePath]) => {
 let selectedMode = deployMode;
 if (selectedMode === 'auto') {
   // 自动选择模式：优先选择 datacenter（如果配置存在）
-  const datacenterConfig = path.join(__dirname, '..', 'docker-compose.datacenter.yml');
-  const n8nConfig = path.join(__dirname, '..', 'docker-compose.n8n-minimal.yml');
-  
+  const datacenterConfig = path.join(
+    __dirname,
+    '..',
+    'docker-compose.datacenter.yml'
+  );
+  const n8nConfig = path.join(
+    __dirname,
+    '..',
+    'docker-compose.n8n-minimal.yml'
+  );
+
   if (fs.existsSync(datacenterConfig)) {
     selectedMode = 'datacenter';
     console.log('\n🎯 自动选择部署模式: DataCenter (完整版)');
@@ -89,7 +102,9 @@ if (selectedMode === 'auto') {
     process.exit(1);
   }
 } else {
-  console.log(`\n🎯 选定部署模式: ${selectedMode === 'datacenter' ? 'DataCenter' : 'n8n Minimal'}`);
+  console.log(
+    `\n🎯 选定部署模式: ${selectedMode === 'datacenter' ? 'DataCenter' : 'n8n Minimal'}`
+  );
 }
 
 // 执行部署
@@ -101,31 +116,38 @@ let deployedServices = [];
 try {
   if (selectedMode === 'datacenter') {
     console.log('🐳 部署 DataCenter 环境...');
-    const result = spawnSync('docker-compose', [
-      '-f', 'docker-compose.datacenter.yml',
-      'up', '-d'
-    ], {
-      cwd: path.join(__dirname, '..'),
-      stdio: 'inherit'
-    });
-    
+    const result = spawnSync(
+      'docker-compose',
+      ['-f', 'docker-compose.datacenter.yml', 'up', '-d'],
+      {
+        cwd: path.join(__dirname, '..'),
+        stdio: 'inherit',
+      }
+    );
+
     if (result.status === 0) {
       deploySuccess = true;
-      deployedServices = ['trino-coordinator', 'trino-worker-1', 'redis-cache', 'data-center-ui'];
+      deployedServices = [
+        'trino-coordinator',
+        'trino-worker-1',
+        'redis-cache',
+        'data-center-ui',
+      ];
       console.log('✅ DataCenter 部署成功');
     } else {
       console.log('❌ DataCenter 部署失败');
     }
   } else {
     console.log('🐳 部署 n8n Minimal 环境...');
-    const result = spawnSync('docker-compose', [
-      '-f', 'docker-compose.n8n-minimal.yml',
-      'up', '-d'
-    ], {
-      cwd: path.join(__dirname, '..'),
-      stdio: 'inherit'
-    });
-    
+    const result = spawnSync(
+      'docker-compose',
+      ['-f', 'docker-compose.n8n-minimal.yml', 'up', '-d'],
+      {
+        cwd: path.join(__dirname, '..'),
+        stdio: 'inherit',
+      }
+    );
+
     if (result.status === 0) {
       deploySuccess = true;
       deployedServices = ['n8n-postgres', 'n8n'];
@@ -148,7 +170,7 @@ if (deploySuccess) {
   deployedServices.forEach(service => {
     console.log(`  ✅ ${service}`);
   });
-  
+
   console.log('\n🔗 访问地址:');
   if (selectedMode === 'datacenter') {
     console.log('  DataCenter UI: http://localhost:3002');
@@ -158,20 +180,21 @@ if (deploySuccess) {
     console.log('  n8n 界面: http://localhost:5678');
     console.log('  PostgreSQL: localhost:5432');
   }
-  
+
   console.log('\n📝 后续操作建议:');
   console.log('1. 运行 npm run check:health 验证服务状态');
   console.log('2. 运行 npm run seed 初始化数据');
   console.log('3. 启动开发服务器: npm run dev');
-  console.log('4. 查看日志: npm run data-center:logs (DataCenter) 或 docker-compose logs n8n (n8n)');
-  
+  console.log(
+    '4. 查看日志: npm run data-center:logs (DataCenter) 或 docker-compose logs n8n (n8n)'
+  );
+
   console.log('\n🛑 停止服务:');
   if (selectedMode === 'datacenter') {
     console.log('  npm run data-center:stop');
   } else {
     console.log('  docker-compose -f docker-compose.n8n-minimal.yml down');
   }
-  
 } else {
   console.log('❌ 部署失败');
   console.log('\n🔧 排障建议:');

@@ -3,23 +3,25 @@
  * 处理库存查询、调整、预警等核心功能
  */
 
-import { 
-  InventoryRecord, 
+import {
+  InventoryRecord,
   InventoryMovement,
   AdjustInventoryDTO,
   InventoryQueryParams,
-  InventoryStatus
+  InventoryStatus,
 } from '../models/inventory.model';
 import { IInventoryService } from './interfaces';
 import { supabase } from '@/lib/supabase';
 import { generateUUID } from '@/fcx-system/utils/helpers';
 
 export class InventoryService implements IInventoryService {
-  
   /**
    * 获取库存记录
    */
-  async getInventory(productId: string, warehouseId: string): Promise<InventoryRecord | null> {
+  async getInventory(
+    productId: string,
+    warehouseId: string
+  ): Promise<InventoryRecord | null> {
     try {
       const { data, error } = await supabase
         .from('inventory_records')
@@ -30,8 +32,7 @@ export class InventoryService implements IInventoryService {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          return null; // 库存记录不存在
-        }
+          return null; // 库存记录不存?        }
         throw new Error(`查询库存记录失败: ${error.message}`);
       }
 
@@ -45,11 +46,11 @@ export class InventoryService implements IInventoryService {
   /**
    * 查询库存列表
    */
-  async listInventory(params: InventoryQueryParams): Promise<InventoryRecord[]> {
+  async listInventory(
+    params: InventoryQueryParams
+  ): Promise<InventoryRecord[]> {
     try {
-      let query = supabase
-        .from('inventory_records')
-        .select(`
+      let query = supabase.from('inventory_records').select(`
           *,
           products(name, sku),
           warehouses(name, code)
@@ -80,11 +81,10 @@ export class InventoryService implements IInventoryService {
         query = query.lte('quantity', params.maxQuantity);
       }
 
-      // 排序和分页
-      query = query
+      // 排序和分?      query = query
         .order('updated_at', { ascending: false })
         .range(
-          params.offset || 0, 
+          params.offset || 0,
           (params.offset || 0) + (params.limit || 50) - 1
         );
 
@@ -108,12 +108,11 @@ export class InventoryService implements IInventoryService {
     try {
       // 1. 验证参数
       if (dto.quantityChange === 0) {
-        throw new Error('库存调整数量不能为0');
+        throw new Error('库存调整数量不能?');
       }
 
-      // 2. 获取或创建库存记录
-      let inventory = await this.getInventory(dto.productId, dto.warehouseId);
-      
+      // 2. 获取或创建库存记?      let inventory = await this.getInventory(dto.productId, dto.warehouseId);
+
       if (!inventory) {
         // 创建新的库存记录
         const newInventoryId = generateUUID();
@@ -127,11 +126,10 @@ export class InventoryService implements IInventoryService {
             reserved_quantity: 0,
             available_quantity: 0,
             safety_stock: 10, // 默认安全库存
-            reorder_point: 5, // 默认重新订购点
-            last_restocked_at: new Date(),
+            reorder_point: 5, // 默认重新订购?            last_restocked_at: new Date(),
             status: InventoryStatus.OUT_OF_STOCK,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
           } as any);
 
         if (createError) {
@@ -140,19 +138,25 @@ export class InventoryService implements IInventoryService {
 
         inventory = await this.getInventory(dto.productId, dto.warehouseId);
         if (!inventory) {
-          throw new Error('创建库存记录后查询失败');
+          throw new Error('创建库存记录后查询失?);
         }
       }
 
       // 3. 计算新的库存数量
       const newQuantity = inventory.quantity + dto.quantityChange;
       if (newQuantity < 0) {
-        throw new Error('库存不足，无法完成调整');
+        throw new Error('库存不足，无法完成调?);
       }
 
       // 4. 更新库存记录
-      const newStatus = this.determineInventoryStatus(newQuantity, inventory.safetyStock);
-      const newAvailableQuantity = Math.max(0, newQuantity - inventory.reservedQuantity);
+      const newStatus = this.determineInventoryStatus(
+        newQuantity,
+        inventory.safetyStock
+      );
+      const newAvailableQuantity = Math.max(
+        0,
+        newQuantity - inventory.reservedQuantity
+      );
 
       const { error: updateError } = await supabase
         .from('inventory_records')
@@ -160,7 +164,7 @@ export class InventoryService implements IInventoryService {
           quantity: newQuantity,
           available_quantity: newAvailableQuantity,
           status: newStatus,
-          updated_at: new Date()
+          updated_at: new Date(),
         } as any)
         .eq('id', inventory.id);
 
@@ -171,7 +175,7 @@ export class InventoryService implements IInventoryService {
       // 5. 创建库存变动记录
       const movementId = generateUUID();
       const movementType = dto.quantityChange > 0 ? 'in' : 'out';
-      
+
       const { error: movementError } = await supabase
         .from('inventory_movements')
         .insert({
@@ -183,7 +187,7 @@ export class InventoryService implements IInventoryService {
           reason: dto.reason,
           reference_number: dto.referenceNumber,
           created_by: 'system', // 实际应用中应该是当前用户ID
-          created_at: new Date()
+          created_at: new Date(),
         } as any);
 
       if (movementError) {
@@ -200,9 +204,8 @@ export class InventoryService implements IInventoryService {
         reason: dto.reason,
         referenceNumber: dto.referenceNumber,
         createdBy: 'system',
-        createdAt: new Date()
+        createdAt: new Date(),
       };
-
     } catch (error) {
       console.error('调整库存错误:', error);
       throw error;
@@ -210,9 +213,12 @@ export class InventoryService implements IInventoryService {
   }
 
   /**
-   * 检查库存是否充足
-   */
-  async checkAvailability(productId: string, warehouseId: string, requiredQuantity: number): Promise<boolean> {
+   * 检查库存是否充?   */
+  async checkAvailability(
+    productId: string,
+    warehouseId: string,
+    requiredQuantity: number
+  ): Promise<boolean> {
     try {
       const inventory = await this.getInventory(productId, warehouseId);
       if (!inventory) {
@@ -221,14 +227,13 @@ export class InventoryService implements IInventoryService {
 
       return inventory.availableQuantity >= requiredQuantity;
     } catch (error) {
-      console.error('检查库存可用性错误:', error);
+      console.error('检查库存可用性错?', error);
       return false;
     }
   }
 
   /**
-   * 获取商品总库存
-   */
+   * 获取商品总库?   */
   async getTotalInventory(productId: string): Promise<number> {
     try {
       const { data, error } = await supabase
@@ -237,12 +242,12 @@ export class InventoryService implements IInventoryService {
         .eq('product_id', productId);
 
       if (error) {
-        throw new Error(`查询商品总库存失败: ${error.message}`);
+        throw new Error(`查询商品总库存失? ${error.message}`);
       }
 
       return data.reduce((sum, record) => sum + record.quantity, 0);
     } catch (error) {
-      console.error('获取商品总库存错误:', error);
+      console.error('获取商品总库存错?', error);
       throw error;
     }
   }
@@ -250,35 +255,41 @@ export class InventoryService implements IInventoryService {
   /**
    * 生成库存预警
    */
-  async generateLowStockAlerts(): Promise<Array<{
-    productId: string;
-    productName: string;
-    warehouseId: string;
-    currentQuantity: number;
-    safetyStock: number;
-  }>> {
+  async generateLowStockAlerts(): Promise<
+    Array<{
+      productId: string;
+      productName: string;
+      warehouseId: string;
+      currentQuantity: number;
+      safetyStock: number;
+    }>
+  > {
     try {
       const { data, error } = await supabase
         .from('inventory_records')
-        .select(`
+        .select(
+          `
           *,
           products(name),
           warehouses(name)
-        `)
+        `
+        )
         .or('status.eq.low_stock,status.eq.out_of_stock');
 
       if (error) {
-        throw new Error(`查询低库存预警失败: ${error.message}`);
+        throw new Error(`查询低库存预警失? ${error.message}`);
       }
 
-      return data.map(record => ({
-        productId: record.product_id,
-        productName: record.products?.name || '未知商品',
-        warehouseId: record.warehouse_id,
-        currentQuantity: record.quantity,
-        safetyStock: record.safety_stock
-      }));
-
+      return data.map(
+        record =>
+          ({
+            productId: record.product_id,
+            productName: record?.name || '未知商品',
+            warehouseId: record.warehouse_id,
+            currentQuantity: record.quantity,
+            safetyStock: record.safety_stock,
+          }) as any
+      );
     } catch (error) {
       console.error('生成库存预警错误:', error);
       throw error;
@@ -288,20 +299,24 @@ export class InventoryService implements IInventoryService {
   /**
    * 智能补货建议
    */
-  async getReplenishmentSuggestions(): Promise<Array<{
-    productId: string;
-    productName: string;
-    suggestedQuantity: number;
-    reason: string;
-  }>> {
+  async getReplenishmentSuggestions(): Promise<
+    Array<{
+      productId: string;
+      productName: string;
+      suggestedQuantity: number;
+      reason: string;
+    }>
+  > {
     try {
       // 查询需要补货的商品
       const { data, error } = await supabase
         .from('inventory_records')
-        .select(`
+        .select(
+          `
           *,
           products(name, sku)
-        `)
+        `
+        )
         .lt('quantity', 'reorder_point');
 
       if (error) {
@@ -310,18 +325,16 @@ export class InventoryService implements IInventoryService {
 
       return data.map(record => {
         const suggestedQuantity = Math.max(
-          record.reorder_point * 2 - record.quantity, // 建议补货到2倍重新订购点
-          record.safety_stock * 3 - record.quantity   // 至少保证3倍安全库存
-        );
+          record.reorder_point * 2 - record.quantity, // 建议补货?倍重新订购点
+          record.safety_stock * 3 - record.quantity // 至少保证3倍安全库?        );
 
         return {
           productId: record.product_id,
-          productName: record.products?.name || '未知商品',
+          productName: record?.name || '未知商品',
           suggestedQuantity: Math.max(suggestedQuantity, 0),
-          reason: `当前库存${record.quantity}低于重新订购点${record.reorder_point}`
+          reason: `当前库存${record.quantity}低于重新订购?{record.reorder_point}`,
         };
       });
-
     } catch (error) {
       console.error('获取补货建议错误:', error);
       throw error;
@@ -329,9 +342,11 @@ export class InventoryService implements IInventoryService {
   }
 
   /**
-   * 根据库存数量和安全库存确定库存状态
-   */
-  private determineInventoryStatus(quantity: number, safetyStock: number): InventoryStatus {
+   * 根据库存数量和安全库存确定库存状?   */
+  private determineInventoryStatus(
+    quantity: number,
+    safetyStock: number
+  ): InventoryStatus {
     if (quantity <= 0) {
       return InventoryStatus.OUT_OF_STOCK;
     } else if (quantity <= safetyStock) {
@@ -357,7 +372,7 @@ export class InventoryService implements IInventoryService {
       lastRestockedAt: new Date(data.last_restocked_at),
       status: data.status,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at)
+      updatedAt: new Date(data.updated_at),
     };
   }
 }

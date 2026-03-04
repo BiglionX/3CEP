@@ -237,7 +237,6 @@ docker-compose logs trino-coordinator
    ```
 
 2. **编写代码**
-
    - 修改源代码
    - Next.js 自动热重载
 
@@ -254,10 +253,10 @@ docker-compose logs trino-coordinator
    ```bash
    # 测试机器学习估值功能
    npm run test -- tests/integration/test-ml-integration.js
-   
+
    # 测试设备生命周期功能
    npm run test -- tests/integration/test-device-lifecycle.js
-   
+
    # 验证智能融合引擎
    npm run test -- tests/integration/test-fusion-engine-v2.js
    ```

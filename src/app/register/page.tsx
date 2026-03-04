@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -30,31 +30,31 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     if (!formData.name.trim()) {
-      setError('请输入姓名')
+      setError('请输入姓?)
       return false
     }
     if (!formData.email.trim()) {
-      setError('请输入邮箱')
+      setError('请输入邮?)
       return false
     }
     
     // 更严格的邮箱格式验证
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     if (!emailRegex.test(formData.email)) {
-      setError('请输入有效的邮箱地址（例如：user@example.com）')
+      setError('请输入有效的邮箱地址（例如：user@example.com�?)
       return false
     }
     
     if (!formData.password) {
-      setError('请输入密码')
+      setError('请输入密?)
       return false
     }
     if (formData.password.length < 6) {
-      setError('密码长度至少6位')
+      setError('密码长度至少6�?)
       return false
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('两次输入的密码不一致')
+      setError('两次输入的密码不一?)
       return false
     }
     return true
@@ -86,12 +86,12 @@ export default function RegisterPage() {
 
       if (response.ok) {
         setSuccess(true)
-        // 3秒后自动跳转到登录页面
+        // 3秒后自动跳转到登录页?
         setTimeout(() => {
           router.push(`/login?redirect=${encodeURIComponent(redirect)}`)
         }, 3000)
       } else {
-        // 显示具体的错误信息
+        // 显示具体的错误信?
         setError(result.error || '注册失败')
       }
     } catch (err) {
@@ -110,12 +110,12 @@ export default function RegisterPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">注册成功！</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">注册成功?/h1>
           <p className="text-gray-600 mb-6">
-            我们已向您的邮箱发送了确认邮件，请查收并激活账户。
+            我们已向您的邮箱发送了确认邮件，请查收并激活账户?
           </p>
           <p className="text-sm text-gray-500">
-            即将跳转到登录页面...
+            即将跳转到登录页?..
           </p>
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function RegisterPage() {
           </div>
           <h1 className="text-2xl font-bold text-gray-900">创建账户</h1>
           <p className="text-gray-600 mt-2">
-            加入FixCycle平台，开启您的数字体验之旅
+            加入FixCycle平台，开启您的数字体验之?
           </p>
         </div>
 
@@ -158,7 +158,7 @@ export default function RegisterPage() {
               value={formData.name}
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="请输入您的姓名"
+              placeholder="请输入您的姓?
               required
             />
           </div>
@@ -190,11 +190,11 @@ export default function RegisterPage() {
               value={formData.password}
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="至少6位字符"
+              placeholder="至少6位字?
               required
             />
             <p className="mt-1 text-xs text-gray-500">
-              密码长度至少6位，建议包含字母和数字
+              密码长度至少6位，建议包含字母和数?
             </p>
           </div>
 
@@ -209,7 +209,7 @@ export default function RegisterPage() {
               value={formData.confirmPassword}
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="请再次输入密码"
+              placeholder="请再次输入密?
               required
             />
           </div>
@@ -234,7 +234,7 @@ export default function RegisterPage() {
             {isLoading ? (
               <div className="flex items-center justify-center">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                注册中...
+                注册?..
               </div>
             ) : (
               '创建账户'
@@ -244,7 +244,7 @@ export default function RegisterPage() {
 
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-center text-sm text-gray-600">
-            已有账户？{' '}
+            已有账户{' '}
             <button
               onClick={() => router.push(`/login?redirect=${encodeURIComponent(redirect)}`)}
               className="font-medium text-blue-600 hover:text-blue-800"

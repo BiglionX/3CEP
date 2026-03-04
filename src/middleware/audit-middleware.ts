@@ -46,7 +46,7 @@ export async function auditMiddleware(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('审计中间件错误:', error);
+    console.error('审计中间件错?', error);
   }
 
   return NextResponse.next();
@@ -100,12 +100,11 @@ function parseAction(
   };
 }
 
-// 导出中间件配置
-export const config = {
+// 导出中间件配?export const config = {
   matcher: [
     /*
      * 匹配所有请求路径，除了:
-     * - _next/static (静态文件)
+     * - _next/static (静态文?
      * - _next/image (图片优化文件)
      * - favicon.ico (favicon文件)
      */

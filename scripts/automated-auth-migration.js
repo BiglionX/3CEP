@@ -20,44 +20,44 @@ const migrationConfig = {
       path: 'src/app/admin/login/page.tsx',
       type: 'admin',
       priority: 'high',
-      backup: true
+      backup: true,
     },
     {
       path: 'src/app/brand/login/page.tsx',
       type: 'brand',
       priority: 'medium',
-      backup: true
+      backup: true,
     },
     {
       path: 'src/app/repair-shop/login/page.tsx',
       type: 'repair',
       priority: 'medium',
-      backup: true
+      backup: true,
     },
     {
       path: 'src/app/importer/login/page.tsx',
       type: 'trade',
       priority: 'medium',
-      backup: true
+      backup: true,
     },
     {
       path: 'src/app/exporter/login/page.tsx',
       type: 'trade',
       priority: 'medium',
-      backup: true
+      backup: true,
     },
     {
       path: 'src/modules/auth/app/page.tsx',
       type: 'default',
       priority: 'low',
-      backup: false
+      backup: false,
     },
     {
       path: 'src/modules/admin-panel/app/login/page.tsx',
       type: 'admin',
       priority: 'medium',
-      backup: true
-    }
+      backup: true,
+    },
   ],
 
   // 主题配置映射
@@ -67,43 +67,43 @@ const migrationConfig = {
       title: '管理后台登录',
       subtitle: '请输入您的管理员凭证',
       primaryColor: '#3b82f6',
-      backgroundColor: 'from-blue-50 to-indigo-100'
+      backgroundColor: 'from-blue-50 to-indigo-100',
     },
     brand: {
       theme: 'brand',
       title: '品牌商平台',
       subtitle: '专业的电子产品回收解决方案',
       primaryColor: '#0ea5e9',
-      backgroundColor: 'from-cyan-50 to-sky-100'
+      backgroundColor: 'from-cyan-50 to-sky-100',
     },
     repair: {
       theme: 'repair',
       title: '维修师平台',
       subtitle: '一站式设备维修服务管理',
       primaryColor: '#10b981',
-      backgroundColor: 'from-emerald-50 to-green-100'
+      backgroundColor: 'from-emerald-50 to-green-100',
     },
     trade: {
       theme: 'trade',
       title: '贸易平台',
       subtitle: '高效的进出口业务管理系统',
       primaryColor: '#8b5cf6',
-      backgroundColor: 'from-purple-50 to-violet-100'
+      backgroundColor: 'from-purple-50 to-violet-100',
     },
     default: {
       theme: 'default',
       title: '欢迎登录',
       subtitle: '请输入您的账户信息',
       primaryColor: '#6366f1',
-      backgroundColor: 'from-indigo-50 to-purple-100'
-    }
-  }
+      backgroundColor: 'from-indigo-50 to-purple-100',
+    },
+  },
 };
 
 // 工具函数
 const utils = {
   // 创建备份文件
-  createBackup: (filePath) => {
+  createBackup: filePath => {
     const backupPath = `${filePath}.backup.${Date.now()}`;
     try {
       fs.copyFileSync(filePath, backupPath);
@@ -116,7 +116,7 @@ const utils = {
   },
 
   // 读取文件内容
-  readFile: (filePath) => {
+  readFile: filePath => {
     try {
       return fs.readFileSync(filePath, 'utf8');
     } catch (error) {
@@ -138,14 +138,14 @@ const utils = {
   },
 
   // 检查文件是否存在
-  fileExists: (filePath) => {
+  fileExists: filePath => {
     return fs.existsSync(filePath);
   },
 
   // 获取相对路径
-  getRelativePath: (absolutePath) => {
+  getRelativePath: absolutePath => {
     return path.relative(process.cwd(), absolutePath);
-  }
+  },
 };
 
 // 迁移处理器
@@ -157,7 +157,7 @@ class MigrationProcessor {
       success: 0,
       failed: 0,
       skipped: 0,
-      details: []
+      details: [],
     };
   }
 
@@ -198,7 +198,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
   )
 }`;
 
-    return imports + '\n' + component;
+    return `${imports}\n${component}`;
   }
 
   // 获取默认重定向路径
@@ -208,7 +208,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
       brand: '/brand/dashboard',
       repair: '/repair-shop/dashboard',
       trade: '/dashboard',
-      default: '/'
+      default: '/',
     };
     return redirects[type] || '/';
   }
@@ -228,7 +228,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
       this.results.details.push({
         page: relativePath,
         status: 'skipped',
-        reason: 'file_not_found'
+        reason: 'file_not_found',
       });
       return;
     }
@@ -243,7 +243,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
         this.results.details.push({
           page: relativePath,
           status: 'failed',
-          reason: 'backup_failed'
+          reason: 'backup_failed',
         });
         return;
       }
@@ -252,10 +252,10 @@ import { useSearchParams, useRouter } from 'next/navigation'
     try {
       // 获取主题配置
       const themeConfig = this.config.themeMapping[pageConfig.type];
-      
+
       // 生成新内容
       const newContent = this.generateNewLoginPage(pageConfig, themeConfig);
-      
+
       // 写入新文件
       if (utils.writeFile(fullPath, newContent)) {
         console.log(`✅ 迁移成功`);
@@ -264,12 +264,11 @@ import { useSearchParams, useRouter } from 'next/navigation'
           page: relativePath,
           status: 'success',
           backup: backupPath,
-          theme: themeConfig.theme
+          theme: themeConfig.theme,
         });
       } else {
         throw new Error('写入文件失败');
       }
-
     } catch (error) {
       console.log(`❌ 迁移失败: ${error.message}`);
       this.results.failed++;
@@ -277,7 +276,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
         page: relativePath,
         status: 'failed',
         reason: error.message,
-        backup: backupPath
+        backup: backupPath,
       });
 
       // 如果有备份，尝试恢复
@@ -313,24 +312,27 @@ import { useSearchParams, useRouter } from 'next/navigation'
 
   // 打印迁移结果摘要
   printSummary() {
-    console.log('\n' + '='.repeat(50));
+    console.log(`\n${'='.repeat(50)}`);
     console.log('📊 迁移结果摘要');
     console.log('='.repeat(50));
     console.log(`总计页面: ${this.results.total}`);
     console.log(`✅ 成功: ${this.results.success}`);
     console.log(`❌ 失败: ${this.results.failed}`);
     console.log(`⚠️  跳过: ${this.results.skipped}`);
-    console.log(`成功率: ${((this.results.success / this.results.total) * 100).toFixed(1)}%`);
+    console.log(
+      `成功率: ${((this.results.success / this.results.total) * 100).toFixed(1)}%`
+    );
 
     if (this.results.details.length > 0) {
       console.log('\n📋 详细结果:');
       this.results.details.forEach((detail, index) => {
-        const statusIcon = {
-          success: '✅',
-          failed: '❌',
-          skipped: '⚠️'
-        }[detail.status] || '❓';
-        
+        const statusIcon =
+          {
+            success: '✅',
+            failed: '❌',
+            skipped: '⚠️',
+          }[detail.status] || '❓';
+
         console.log(`${index + 1}. ${statusIcon} ${detail.page}`);
         if (detail.reason) {
           console.log(`   原因: ${detail.reason}`);
@@ -356,8 +358,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
         success: this.results.success,
         failed: this.results.failed,
         skipped: this.results.skipped,
-        successRate: (this.results.success / this.results.total * 100).toFixed(2) + '%'
-      }
+        successRate: `${((this.results.success / this.results.total) * 100).toFixed(2)}%`,
+      },
     };
 
     const reportPath = path.join(process.cwd(), 'migration-report.json');
@@ -379,20 +381,20 @@ class MigrationValidator {
     const validationTests = [
       {
         name: '文件存在性检查',
-        test: () => this.checkFileExistence()
+        test: () => this.checkFileExistence(),
       },
       {
         name: '组件导入检查',
-        test: () => this.checkComponentImports()
+        test: () => this.checkComponentImports(),
       },
       {
         name: '语法正确性检查',
-        test: () => this.checkSyntax()
+        test: () => this.checkSyntax(),
       },
       {
         name: '功能完整性检查',
-        test: () => this.checkFunctionality()
-      }
+        test: () => this.checkFunctionality(),
+      },
     ];
 
     for (const { name, test } of validationTests) {
@@ -402,9 +404,9 @@ class MigrationValidator {
         this.validationResults.push({
           test: name,
           passed: result.passed,
-          details: result.details
+          details: result.details,
         });
-        
+
         const status = result.passed ? '✅ 通过' : '❌ 失败';
         console.log(`   ${status} (${result.details.length} 项检查)`);
       } catch (error) {
@@ -412,7 +414,7 @@ class MigrationValidator {
         this.validationResults.push({
           test: name,
           passed: false,
-          details: [`执行错误: ${error.message}`]
+          details: [`执行错误: ${error.message}`],
         });
       }
       console.log('');
@@ -431,13 +433,13 @@ class MigrationValidator {
       results.push({
         item: page.path,
         status: exists ? '存在' : '缺失',
-        passed: exists
+        passed: exists,
       });
     }
 
     return {
       passed: results.every(r => r.passed),
-      details: results
+      details: results,
     };
   }
 
@@ -450,76 +452,80 @@ class MigrationValidator {
       if (!utils.fileExists(fullPath)) continue;
 
       const content = utils.readFile(fullPath);
-      const hasUnifiedLoginImport = content.includes("import { UnifiedLogin }");
-      const hasRequiredHooks = content.includes("useSearchParams") && content.includes("useRouter");
+      const hasUnifiedLoginImport = content.includes('import { UnifiedLogin }');
+      const hasRequiredHooks =
+        content.includes('useSearchParams') && content.includes('useRouter');
 
       results.push({
         item: page.path,
         checks: {
-          'UnifiedLogin导入': hasUnifiedLoginImport,
-          '必要Hook导入': hasRequiredHooks
+          UnifiedLogin导入: hasUnifiedLoginImport,
+          必要Hook导入: hasRequiredHooks,
         },
-        passed: hasUnifiedLoginImport && hasRequiredHooks
+        passed: hasUnifiedLoginImport && hasRequiredHooks,
       });
     }
 
     return {
       passed: results.every(r => r.passed),
-      details: results
+      details: results,
     };
   }
 
   checkSyntax() {
     const results = [];
-    
+
     try {
       execSync('npx tsc --noEmit', { stdio: 'pipe' });
       results.push({
         item: 'TypeScript编译',
         status: '通过',
-        passed: true
+        passed: true,
       });
     } catch (error) {
       results.push({
         item: 'TypeScript编译',
         status: '失败',
         details: error.stdout?.toString() || error.message,
-        passed: false
+        passed: false,
       });
     }
 
     return {
       passed: results.every(r => r.passed),
-      details: results
+      details: results,
     };
   }
 
   checkFunctionality() {
     const results = [];
-    
+
     // 检查统一组件是否存在
-    const unifiedComponentPath = path.join(process.cwd(), 'src/components/auth/UnifiedLogin.tsx');
+    const unifiedComponentPath = path.join(
+      process.cwd(),
+      'src/components/auth/UnifiedLogin.tsx'
+    );
     const componentExists = utils.fileExists(unifiedComponentPath);
-    
+
     results.push({
       item: '统一登录组件',
       status: componentExists ? '存在' : '缺失',
-      passed: componentExists
+      passed: componentExists,
     });
 
     // 检查Hook是否存在
     const hookPath = path.join(process.cwd(), 'src/hooks/use-unified-auth.ts');
     const hookExists = utils.fileExists(hookPath);
-    
+
     results.push({
       item: '统一认证Hook',
       status: hookExists ? '存在' : '缺失',
-      passed: hookExists
+      passed: hookExists,
     });
 
     return {
       passed: results.every(r => r.passed),
-      details: results
+      details: results,
     };
   }
 
@@ -535,7 +541,7 @@ class MigrationValidator {
     this.validationResults.forEach((result, index) => {
       const status = result.passed ? '✅' : '❌';
       console.log(`${index + 1}. ${status} ${result.test}`);
-      
+
       if (!result.passed) {
         result.details.forEach(detail => {
           if (typeof detail === 'object' && detail.item) {
@@ -554,10 +560,10 @@ async function main() {
   try {
     // 创建迁移处理器
     const processor = new MigrationProcessor(migrationConfig);
-    
+
     // 执行迁移
     await processor.executeMigration();
-    
+
     // 执行验证
     const validator = new MigrationValidator();
     await validator.validateMigration();
@@ -568,7 +574,6 @@ async function main() {
     console.log('2. 访问各个登录页面进行手动测试');
     console.log('3. 检查控制台是否有错误信息');
     console.log('4. 验证登录功能是否正常工作');
-
   } catch (error) {
     console.error('\n❌ 执行过程中发生错误:', error.message);
     process.exit(1);

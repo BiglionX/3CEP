@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -6,33 +6,33 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 收藏/取消收藏接口
+// 鏀惰棌/鍙栨秷鏀惰棌鎺ュ彛
 export async function POST(request: Request) {
   try {
-    // 获取认证信息
+    // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '未授权访问',
+          message: '鏈巿鏉冭?,
           data: null,
         },
         { status: 401 }
       );
     }
 
-    // 获取请求体
+    // 鑾峰彇璇锋眰?
     const body = await request.json();
     const { target_id, target_type } = body;
 
-    // 验证参数
+    // 楠岃瘉鍙傛暟
     if (!target_id || !target_type) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '缺少必要参数',
+          message: '缂哄皯蹇呰鍙傛暟',
           data: null,
         },
         { status: 400 }
@@ -43,17 +43,17 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '不支持的目标类型',
+          message: '涓嶆敮鎸佺殑鐩爣绫诲瀷',
           data: null,
         },
         { status: 400 }
       );
     }
 
-    // 模拟用户ID - 实际应该从JWT中解析
+    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇浠嶫WT涓В?
     const userId = 'user_123';
 
-    // 检查是否已经收藏
+    // 妫€鏌ユ槸鍚﹀凡缁忔敹?
     const { data: existingFavorite, error: checkError } = await supabase
       .from('user_favorites')
       .select('id, is_favorite')
@@ -65,12 +65,12 @@ export async function POST(request: Request) {
     let isFavorite = false;
 
     if (checkError && checkError.code !== 'PGRST116') {
-      // PGRST116表示未找到记录
-      console.error('检查收藏状态失败:', checkError);
+      // PGRST116琛ㄧず鏈壘鍒拌?
+      console.error('妫€鏌ユ敹钘忕姸鎬佸け?', checkError);
       return NextResponse.json(
         {
           code: 50001,
-          message: '查询失败',
+          message: '鏌ヨ澶辫触',
           data: null,
         },
         { status: 500 }
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     }
 
     if (existingFavorite) {
-      // 已有收藏记录，执行取消收藏或重新收藏
+      // 宸叉湁鏀惰棌璁板綍锛屾墽琛屽彇娑堟敹钘忔垨閲嶆柊鏀惰棌
       isFavorite = !existingFavorite.is_favorite;
 
       const { error: updateError } = await supabase
@@ -90,18 +90,18 @@ export async function POST(request: Request) {
         .eq('id', existingFavorite.id);
 
       if (updateError) {
-        console.error('更新收藏状态失败:', updateError);
+        console.error('鏇存柊鏀惰棌鐘舵€佸け?', updateError);
         return NextResponse.json(
           {
             code: 50001,
-            message: '操作失败',
+            message: '鎿嶄綔澶辫触',
             data: null,
           },
           { status: 500 }
         );
       }
     } else {
-      // 首次收藏
+      // 棣栨鏀惰棌
       isFavorite = true;
 
       const { error: insertError } = await supabase
@@ -116,11 +116,11 @@ export async function POST(request: Request) {
         } as any);
 
       if (insertError) {
-        console.error('创建收藏记录失败:', insertError);
+        console.error('鍒涘缓鏀惰棌璁板綍澶辫触:', insertError);
         return NextResponse.json(
           {
             code: 50001,
-            message: '操作失败',
+            message: '鎿嶄綔澶辫触',
             data: null,
           },
           { status: 500 }
@@ -128,7 +128,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // 更新统计信息
+    // 鏇存柊缁熻淇℃伅
     await updateFavoriteStats(target_id, target_type, isFavorite);
 
     return NextResponse.json({
@@ -136,16 +136,16 @@ export async function POST(request: Request) {
       message: 'ok',
       data: {
         is_favorite: isFavorite,
-        action: isFavorite ? '收藏成功' : '取消收藏成功',
+        action: isFavorite ? '鏀惰棌鎴愬姛' : '鍙栨秷鏀惰棌鎴愬姛',
       },
       timestamp: new Date().toISOString(),
-    });
+    }) as any;
   } catch (error) {
-    console.error('收藏API错误:', error);
+    console.error('鏀惰棌API閿欒:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '服务器内部错误',
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         data: null,
       },
       { status: 500 }
@@ -153,17 +153,17 @@ export async function POST(request: Request) {
   }
 }
 
-// 获取用户收藏列表
+// 鑾峰彇鐢ㄦ埛鏀惰棌鍒楄〃
 export async function GET(request: Request) {
   try {
-    // 获取认证信息
+    // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '未授权访问',
+          message: '鏈巿鏉冭?,
           data: null,
         },
         { status: 401 }
@@ -175,10 +175,10 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('page_size') || '20');
 
-    // 模拟用户ID - 实际应该从JWT中解析
+    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇浠嶫WT涓В?
     const userId = 'user_123';
 
-    // 构建查询
+    // 鏋勫缓鏌ヨ
     let query = supabase
       .from('user_favorites')
       .select(
@@ -195,30 +195,30 @@ export async function GET(request: Request) {
       .eq('is_favorite', true)
       .order('created_at', { ascending: false });
 
-    // 按类型筛选
+    // 鎸夌被鍨嬬瓫?
     if (targetType !== 'all') {
       query = query.eq('target_type', targetType);
     }
 
-    // 分页
+    // 鍒嗛〉
     const offset = (page - 1) * pageSize;
     query = query.range(offset, offset + pageSize - 1);
 
     const { data: favorites, error, count } = await query;
 
     if (error) {
-      console.error('获取收藏列表失败:', error);
+      console.error('鑾峰彇鏀惰棌鍒楄〃澶辫触:', error);
       return NextResponse.json(
         {
           code: 50001,
-          message: '获取数据失败',
+          message: '鑾峰彇鏁版嵁澶辫触',
           data: null,
         },
         { status: 500 }
       );
     }
 
-    // 获取详细信息
+    // 鑾峰彇璇︾粏淇℃伅
     const detailedFavorites = await Promise.all(
       (favorites || []).map(async (fav: any) => {
         let details = null;
@@ -255,7 +255,7 @@ export async function GET(request: Request) {
               break;
           }
         } catch (error) {
-          console.warn(`获取${fav.target_type}详情失败:`, error);
+          console.warn(`鑾峰彇${fav.target_type}璇︽儏澶辫触:`, error);
         }
 
         return {
@@ -278,11 +278,11 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('获取收藏列表API错误:', error);
+    console.error('鑾峰彇鏀惰棌鍒楄〃API閿欒:', error);
     return NextResponse.json(
       {
         code: 50001,
-        message: '服务器内部错误',
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
         data: null,
       },
       { status: 500 }
@@ -290,7 +290,7 @@ export async function GET(request: Request) {
   }
 }
 
-// 更新收藏统计
+// 鏇存柊鏀惰棌缁熻
 async function updateFavoriteStats(
   targetId: string,
   targetType: string,
@@ -300,7 +300,7 @@ async function updateFavoriteStats(
     const targetTable = getTargetTable(targetType);
     const statField = 'favorite_count';
 
-    // 获取当前统计数
+    // 鑾峰彇褰撳墠缁熻?
     const { data: targetData, error: targetError } = await supabase
       .from(targetTable)
       .select(statField)
@@ -319,11 +319,11 @@ async function updateFavoriteStats(
         .eq('id', targetId);
     }
   } catch (error) {
-    console.warn('更新收藏统计失败:', error);
+    console.warn('鏇存柊鏀惰棌缁熻澶辫触:', error);
   }
 }
 
-// 获取目标表名
+// 鑾峰彇鐩爣琛ㄥ悕
 function getTargetTable(targetType: string): string {
   const tableMap: Record<string, string> = {
     article: 'articles',
@@ -332,3 +332,4 @@ function getTargetTable(targetType: string): string {
   };
   return tableMap[targetType] || targetType;
 }
+

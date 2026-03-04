@@ -3,20 +3,20 @@
  * 负责询价请求的创建、发送、状态跟踪和管理
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 import {
   EmailService,
   getDefaultEmailService,
-} from "../../services/email.service";
-import { Supplier } from "../../supply-chain/models/supplier.model";
+} from '../../services/email.service';
+import { Supplier } from '../../supply-chain/models/supplier.model';
 import {
   CreateQuotationRequestDTO,
   EmailStatus,
   QuotationRequest,
   QuotationRequestStatus,
   SendQuotationDTO,
-} from "../models/quotation.model";
-import { quotationTemplateService } from "./quotation-template.service";
+} from '../models/quotation.model';
+import { quotationTemplateService } from './quotation-template.service';
 
 export class QuotationRequestService {
   private supabase: any;
@@ -24,8 +24,8 @@ export class QuotationRequestService {
 
   constructor() {
     this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-      process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
     );
     this.emailService = getDefaultEmailService();
   }
@@ -42,7 +42,7 @@ export class QuotationRequestService {
       const requestNumber = this.generateRequestNumber();
 
       const { data, error } = await this.supabase
-        .from("quotation_requests")
+        .from('quotation_requests')
         .insert([
           {
             request_number: requestNumber,
@@ -53,7 +53,7 @@ export class QuotationRequestService {
             delivery_deadline: dto.deliveryDeadline,
             response_deadline: dto.responseDeadline,
             special_requirements: dto.specialRequirements,
-            status: "draft",
+            status: 'draft',
             created_by: userId,
           },
         ])
@@ -64,7 +64,7 @@ export class QuotationRequestService {
 
       return this.mapToQuotationRequest(data);
     } catch (error) {
-      console.error("创建询价请求错误:", error);
+      console.error('创建询价请求错误:', error);
       throw error;
     }
   }
@@ -78,7 +78,7 @@ export class QuotationRequestService {
   ): Promise<QuotationRequest[]> {
     try {
       let query = this.supabase
-        .from("quotation_requests")
+        .from('quotation_requests')
         .select(
           `
           *,
@@ -87,27 +87,27 @@ export class QuotationRequestService {
           )
         `
         )
-        .order("created_at", { ascending: false });
+        .order('created_at', { ascending: false });
 
       // 应用查询参数
       if (params.status) {
-        query = query.eq("status", params.status);
+        query = query.eq('status', params.status);
       }
 
       if (params.procurementRequestId) {
-        query = query.eq("procurement_request_id", params.procurementRequestId);
+        query = query.eq('procurement_request_id', params.procurementRequestId);
       }
 
       if (params.startDate) {
-        query = query.gte("created_at", params.startDate);
+        query = query.gte('created_at', params.startDate);
       }
 
       if (params.endDate) {
-        query = query.lte("created_at", params.endDate);
+        query = query.lte('created_at', params.endDate);
       }
 
       if (params.keyword) {
-        query = query.ilike("request_number", `%${params.keyword}%`);
+        query = query.ilike('request_number', `%${params.keyword}%`);
       }
 
       const { data, error } = await query;
@@ -116,7 +116,7 @@ export class QuotationRequestService {
 
       return data.map((item: any) => this.mapToQuotationRequest(item));
     } catch (error) {
-      console.error("获取询价请求列表错误:", error);
+      console.error('获取询价请求列表错误:', error);
       throw error;
     }
   }
@@ -127,26 +127,25 @@ export class QuotationRequestService {
   async getQuotationRequestById(id: string): Promise<QuotationRequest | null> {
     try {
       const { data, error } = await this.supabase
-        .from("quotation_requests")
-        .select("*")
-        .eq("id", id)
+        .from('quotation_requests')
+        .select('*')
+        .eq('id', id)
         .single();
 
       if (error) {
-        if (error.code === "PGRST116") return null;
+        if (error.code === 'PGRST116') return null;
         throw new Error(`获取询价请求失败: ${error.message}`);
       }
 
       return this.mapToQuotationRequest(data);
     } catch (error) {
-      console.error("获取询价请求错误:", error);
+      console.error('获取询价请求错误:', error);
       throw error;
     }
   }
 
   /**
-   * 发送询价请求
-   */
+   * 发送询价请?   */
   async sendQuotation(
     dto: SendQuotationDTO,
     userId: string
@@ -161,19 +160,18 @@ export class QuotationRequestService {
         dto.quotationRequestId
       );
       if (!quotationRequest) {
-        throw new Error("询价请求不存在");
+        throw new Error('询价请求不存?);
       }
 
-      if (quotationRequest.status !== "draft") {
-        throw new Error("只能发送草稿状态的询价请求");
+      if (quotationRequest.status !== 'draft') {
+        throw new Error('只能发送草稿状态的询价请求');
       }
 
-      // 获取供应商信息
-      const suppliers = await this.getSuppliersByIds(
+      // 获取供应商信?      const suppliers = await this.getSuppliersByIds(
         quotationRequest.supplierIds
       );
       if (suppliers.length === 0) {
-        throw new Error("未找到有效的供应商");
+        throw new Error('未找到有效的供应?);
       }
 
       // 获取模板
@@ -184,15 +182,14 @@ export class QuotationRequestService {
         : (await quotationTemplateService.getSystemTemplates())[0];
 
       if (!template) {
-        throw new Error("未找到可用的询价模板");
+        throw new Error('未找到可用的询价模板');
       }
 
       let sentCount = 0;
       let failedCount = 0;
       const errors: string[] = [];
 
-      // 批量发送邮件
-      for (const supplier of suppliers) {
+      // 批量发送邮?      for (const supplier of suppliers) {
         try {
           // 准备模板变量
           const templateVariables = this.prepareTemplateVariables(
@@ -207,22 +204,20 @@ export class QuotationRequestService {
             templateVariables
           );
 
-          // 发送邮件
-          const emailResult = await this.emailService.sendEmail({
+          // 发送邮?          const emailResult = await this.emailService.sendEmail({
             to: supplier.email,
             subject: rendered.subject,
             html: rendered.content,
           });
 
           if (emailResult.success) {
-            // 记录邮件发送日志
-            await this.logEmailSending(
+            // 记录邮件发送日?            await this.logEmailSending(
               quotationRequest.id,
               supplier.id,
               supplier.email,
               rendered.subject,
               rendered.content,
-              "sent",
+              'sent',
               emailResult.messageId
             );
             sentCount++;
@@ -233,7 +228,7 @@ export class QuotationRequestService {
               supplier.email,
               rendered.subject,
               rendered.content,
-              "failed",
+              'failed',
               undefined,
               emailResult.error
             );
@@ -242,29 +237,27 @@ export class QuotationRequestService {
           }
         } catch (error) {
           failedCount++;
-          const errorMsg = `发送给 ${supplier.name} 时发生错误: ${
+          const errorMsg = `发送给 ${supplier.name} 时发生错? ${
             (error as Error).message
           }`;
           errors.push(errorMsg);
 
-          // 记录发送失败日志
-          await this.logEmailSending(
+          // 记录发送失败日?          await this.logEmailSending(
             quotationRequest.id,
             supplier.id,
             supplier.email,
-            "", // 主题将在后续补充
-            "", // 内容将在后续补充
-            "failed",
+            '', // 主题将在后续补充
+            '', // 内容将在后续补充
+            'failed',
             undefined,
             errorMsg
           );
         }
       }
 
-      // 更新询价请求状态
-      if (sentCount > 0) {
+      // 更新询价请求状?      if (sentCount > 0) {
         const newStatus =
-          sentCount === suppliers.length ? "sent" : "partial_response";
+          sentCount === suppliers.length ? 'sent' : 'partial_response';
         await this.updateQuotationRequestStatus(quotationRequest.id, newStatus);
       }
 
@@ -275,14 +268,13 @@ export class QuotationRequestService {
         errors,
       };
     } catch (error) {
-      console.error("发送询价请求错误:", error);
+      console.error('发送询价请求错?', error);
       throw error;
     }
   }
 
   /**
-   * 更新询价请求状态
-   */
+   * 更新询价请求状?   */
   async updateQuotationRequestStatus(
     id: string,
     status: QuotationRequestStatus
@@ -293,22 +285,22 @@ export class QuotationRequestService {
         updated_at: new Date(),
       };
 
-      if (status === "sent" && !updateData.sent_at) {
+      if (status === 'sent' && !updateData.sent_at) {
         updateData.sent_at = new Date();
       }
 
-      if (status === "completed") {
+      if (status === 'completed') {
         updateData.completed_at = new Date();
       }
 
       const { error } = await this.supabase
-        .from("quotation_requests")
+        .from('quotation_requests')
         .update(updateData)
-        .eq("id", id);
+        .eq('id', id);
 
-      if (error) throw new Error(`更新询价请求状态失败: ${error.message}`);
+      if (error) throw new Error(`更新询价请求状态失? ${error.message}`);
     } catch (error) {
-      console.error("更新询价请求状态错误:", error);
+      console.error('更新询价请求状态错?', error);
       throw error;
     }
   }
@@ -319,17 +311,17 @@ export class QuotationRequestService {
   async cancelQuotationRequest(id: string, userId: string): Promise<void> {
     try {
       const { error } = await this.supabase
-        .from("quotation_requests")
+        .from('quotation_requests')
         .update({
-          status: "cancelled",
+          status: 'cancelled',
           updated_at: new Date(),
         } as any)
-        .eq("id", id)
-        .eq("created_by", userId);
+        .eq('id', id)
+        .eq('created_by', userId);
 
       if (error) throw new Error(`取消询价请求失败: ${error.message}`);
     } catch (error) {
-      console.error("取消询价请求错误:", error);
+      console.error('取消询价请求错误:', error);
       throw error;
     }
   }
@@ -346,9 +338,9 @@ export class QuotationRequestService {
   }> {
     try {
       const { data, error } = await this.supabase
-        .from("quotation_requests")
-        .select("status")
-        .eq("created_by", userId);
+        .from('quotation_requests')
+        .select('status')
+        .eq('created_by', userId);
 
       if (error) throw new Error(`获取询价统计失败: ${error.message}`);
 
@@ -362,16 +354,16 @@ export class QuotationRequestService {
 
       data.forEach((item: any) => {
         switch (item.status) {
-          case "draft":
+          case 'draft':
             stats.draft++;
             break;
-          case "sent":
+          case 'sent':
             stats.sent++;
             break;
-          case "completed":
+          case 'completed':
             stats.completed++;
             break;
-          case "cancelled":
+          case 'cancelled':
             stats.cancelled++;
             break;
         }
@@ -379,7 +371,7 @@ export class QuotationRequestService {
 
       return stats;
     } catch (error) {
-      console.error("获取询价统计错误:", error);
+      console.error('获取询价统计错误:', error);
       throw error;
     }
   }
@@ -390,28 +382,27 @@ export class QuotationRequestService {
   private generateRequestNumber(): string {
     const date = new Date();
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     const random = Math.random().toString(36).substr(2, 6).toUpperCase();
     return `QO-${year}${month}${day}-${random}`;
   }
 
   /**
-   * 根据ID获取供应商列表
-   */
+   * 根据ID获取供应商列?   */
   private async getSuppliersByIds(supplierIds: string[]): Promise<Supplier[]> {
     try {
       const { data, error } = await this.supabase
-        .from("suppliers")
-        .select("*")
-        .in("id", supplierIds)
-        .eq("status", "approved");
+        .from('suppliers')
+        .select('*')
+        .in('id', supplierIds)
+        .eq('status', 'approved');
 
-      if (error) throw new Error(`获取供应商信息失败: ${error.message}`);
+      if (error) throw new Error(`获取供应商信息失? ${error.message}`);
 
       return data || [];
     } catch (error) {
-      console.error("获取供应商错误:", error);
+      console.error('获取供应商错?', error);
       return [];
     }
   }
@@ -424,16 +415,16 @@ export class QuotationRequestService {
     supplier: Supplier,
     senderInfo: any
   ): any {
-    const items = quotationRequest.items.map((item) => ({
+    const items = quotationRequest.items.map(item => ({
       name: item.productName,
-      specifications: item.specifications || "",
+      specifications: item.specifications || '',
       quantity: item.quantity,
       unit: item.unit,
     }));
 
     return {
       quotationNumber: quotationRequest.requestNumber,
-      sendDate: new Date().toLocaleDateString("zh-CN"),
+      sendDate: new Date().toLocaleDateString('zh-CN'),
       supplierName: supplier.name,
       companyName: senderInfo.companyName,
       contactPerson: senderInfo.contactPerson,
@@ -441,12 +432,12 @@ export class QuotationRequestService {
       contactEmail: senderInfo.contactEmail,
       deliveryDeadline: quotationRequest.deliveryDeadline
         ? new Date(quotationRequest.deliveryDeadline).toLocaleDateString(
-            "zh-CN"
+            'zh-CN'
           )
-        : "面议",
+        : '面议',
       responseDeadline: new Date(
         quotationRequest.responseDeadline
-      ).toLocaleDateString("zh-CN"),
+      ).toLocaleDateString('zh-CN'),
       validityDays: 30, // 默认30天有效期
       specialRequirements: quotationRequest.specialRequirements,
       items,
@@ -454,8 +445,7 @@ export class QuotationRequestService {
   }
 
   /**
-   * 记录邮件发送日志
-   */
+   * 记录邮件发送日?   */
   private async logEmailSending(
     quotationRequestId: string,
     supplierId: string,
@@ -467,7 +457,7 @@ export class QuotationRequestService {
     errorMessage?: string
   ): Promise<void> {
     try {
-      const { error } = await this.supabase.from("email_logs").insert([
+      const { error } = await this.supabase.from('email_logs').insert([
         {
           quotation_request_id: quotationRequestId,
           supplier_id: supplierId,
@@ -475,17 +465,17 @@ export class QuotationRequestService {
           subject,
           content,
           status,
-          sent_at: status === "sent" ? new Date() : null,
+          sent_at: status === 'sent' ? new Date() : null,
           error_message: errorMessage,
           retry_count: 0,
         },
       ]);
 
       if (error) {
-        console.error("记录邮件日志失败:", error);
+        console.error('记录邮件日志失败:', error);
       }
     } catch (error) {
-      console.error("记录邮件日志错误:", error);
+      console.error('记录邮件日志错误:', error);
     }
   }
 

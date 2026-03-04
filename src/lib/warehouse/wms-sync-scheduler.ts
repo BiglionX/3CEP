@@ -1,18 +1,15 @@
 /**
  * WMS定时同步任务
- * 实现每5分钟的库存同步任务
- */
+ * 实现?分钟的库存同步任? */
 
-import { InventoryMapper } from "@/lib/warehouse/inventory-mapper";
-import { WMSManager } from "@/lib/warehouse/wms-manager";
-import { createClient } from "@supabase/supabase-js";
+import { InventoryMapper } from '@/lib/warehouse/inventory-mapper';
+import { WMSManager } from '@/lib/warehouse/wms-manager';
+import { createClient } from '@supabase/supabase-js';
 
-// 初始化服务
-const wmsManager = new WMSManager();
+// 初始化服?const wmsManager = new WMSManager();
 const inventoryMapper = new InventoryMapper();
 
-// 初始化Supabase客户端
-const supabase = createClient(
+// 初始化Supabase客户?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -22,8 +19,7 @@ export interface SyncTaskConfig {
   intervalMinutes: number;
   batchSize: number;
   retryAttempts: number;
-  alertThreshold: number; // 库存预警阈值
-}
+  alertThreshold: number; // 库存预警阈?}
 
 export class WMSSyncScheduler {
   private isRunning = false;
@@ -33,8 +29,7 @@ export class WMSSyncScheduler {
   constructor(config?: Partial<SyncTaskConfig>) {
     this.config = {
       enabled: true,
-      intervalMinutes: 5, // 每5分钟同步一次
-      batchSize: 50,
+      intervalMinutes: 5, // �?分钟同步一?      batchSize: 50,
       retryAttempts: 3,
       alertThreshold: 10,
       ...config,
@@ -46,34 +41,32 @@ export class WMSSyncScheduler {
    */
   async start(): Promise<void> {
     if (this.isRunning) {
-      console.log("🔄 WMS同步任务已在运行中");
-      return;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔄 WMS同步任务已在运行?)return;
     }
 
     if (!this.config.enabled) {
-      console.log("⏭️ WMS同步任务已禁用");
-      return;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('⏭️ WMS同步任务已禁?)return;
     }
 
     this.isRunning = true;
-    console.log(
-      `🚀 启动WMS定时同步任务，间隔: ${this.config.intervalMinutes}分钟`
-    );
-
-    // 立即执行一次同步
-    await this.executeSync();
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+      `🚀 启动WMS定时同步任务，间? ${this.config.intervalMinutes}分钟`
+    )// 立即执行一次同?    await this.executeSync();
 
     // 设置定时任务
-    this.syncInterval = setInterval(async () => {
-      try {
-        await this.executeSync();
-      } catch (error) {
-        console.error("⏰ 定时同步任务执行失败:", error);
-        await this.sendAlert(
-          `定时同步任务执行失败: ${(error as Error).message}`
-        );
-      }
-    }, this.config.intervalMinutes * 60 * 1000);
+    this.syncInterval = setInterval(
+      async () => {
+        try {
+          await this.executeSync();
+        } catch (error) {
+          console.error('�?定时同步任务执行失败:', error);
+          await this.sendAlert(
+            `定时同步任务执行失败: ${(error as Error).message}`
+          );
+        }
+      },
+      this.config.intervalMinutes * 60 * 1000
+    );
   }
 
   /**
@@ -85,38 +78,31 @@ export class WMSSyncScheduler {
       this.syncInterval = null;
     }
     this.isRunning = false;
-    console.log("🛑 WMS定时同步任务已停止");
-  }
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🛑 WMS定时同步任务已停?)}
 
   /**
    * 执行同步任务
    */
   private async executeSync(): Promise<void> {
-    console.log("🔄 开始执行WMS库存同步任务...");
-
-    const startTime = new Date();
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔄 开始执行WMS库存同步任务...')const startTime = new Date();
 
     try {
       // 1. 获取所有活跃的WMS连接
       const connections = wmsManager
         .getConnections()
-        .filter((conn) => conn.isActive);
+        .filter(conn => conn.isActive);
 
       if (connections.length === 0) {
-        console.log("ℹ️ 没有活跃的WMS连接，跳过同步");
-        return;
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('ℹ️ 没有活跃的WMS连接，跳过同?)return;
       }
 
-      console.log(`📊 发现 ${connections.length} 个活跃连接`);
-
-      // 2. 为每个连接创建同步记录
-      const syncRecords = new Map<string, string>();
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📊 发现 ${connections.length} 个活跃连接`)// 2. 为每个连接创建同步记?      const syncRecords = new Map<string, string>();
 
       for (const connection of connections) {
         const recordId = await inventoryMapper.createSyncRecord({
           connectionId: connection.id,
-          syncType: "incremental",
-          status: "started",
+          syncType: 'incremental',
+          status: 'started',
           itemsCount: 0,
           successCount: 0,
           errorCount: 0,
@@ -124,8 +110,7 @@ export class WMSSyncScheduler {
 
         if (recordId) {
           syncRecords.set(connection.id, recordId);
-          console.log(`📝 为连接 ${connection.name} 创建同步记录: ${recordId}`);
-        }
+          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📝 为连?${connection.name} 创建同步记录: ${recordId}`)}
       }
 
       // 3. 执行批量同步
@@ -134,7 +119,7 @@ export class WMSSyncScheduler {
       const endTime = new Date();
       const duration = (endTime.getTime() - startTime.getTime()) / 1000;
 
-      console.log(`⏱️ 同步任务完成，耗时: ${duration.toFixed(2)}秒`);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`⏱️ 同步任务完成，耗时: ${duration.toFixed(2)}秒`);
 
       // 4. 更新同步记录
       for (const [connectionId, recordId] of syncRecords) {
@@ -143,7 +128,7 @@ export class WMSSyncScheduler {
         const success = syncResult.success && connectionResult !== undefined;
 
         await inventoryMapper.updateSyncRecord(recordId, {
-          status: success ? "completed" : "failed",
+          status: success ? 'completed' : 'failed',
           itemsCount,
           successCount: success ? itemsCount : 0,
           errorCount: success ? 0 : itemsCount,
@@ -151,39 +136,35 @@ export class WMSSyncScheduler {
           errorDetails: success ? undefined : syncResult.error,
         });
 
-        // 更新连接的最后同步时间
-        await this.updateConnectionSyncTime(
+        // 更新连接的最后同步时?        await this.updateConnectionSyncTime(
           connectionId,
           success ? endTime : undefined
         );
       }
 
-      // 5. 检查库存预警
-      await this.checkInventoryAlerts();
+      // 5. 检查库存预?      await this.checkInventoryAlerts();
 
-      // 6. 发送执行报告
-      await this.sendExecutionReport(syncResult, duration);
+      // 6. 发送执行报?      await this.sendExecutionReport(syncResult, duration);
     } catch (error) {
-      console.error("❌ 同步任务执行异常:", error);
+      console.error('�?同步任务执行异常:', error);
       throw error;
     }
   }
 
   /**
-   * 更新连接的同步时间
-   */
+   * 更新连接的同步时?   */
   private async updateConnectionSyncTime(
     connectionId: string,
     syncTime?: Date
   ): Promise<void> {
     try {
       const { error } = await supabase
-        .from("wms_connections")
+        .from('wms_connections')
         .update({
           last_synced_at: syncTime?.toISOString(),
-          sync_status: syncTime ? "success" : "failed",
+          sync_status: syncTime ? 'success' : 'failed',
         } as any)
-        .eq("id", connectionId);
+        .eq('id', connectionId);
 
       if (error) {
         console.error(`更新连接 ${connectionId} 同步时间失败:`, error);
@@ -194,8 +175,7 @@ export class WMSSyncScheduler {
   }
 
   /**
-   * 检查库存预警
-   */
+   * 检查库存预?   */
   private async checkInventoryAlerts(): Promise<void> {
     try {
       const lowInventoryItems = await inventoryMapper.getLowInventoryAlerts(
@@ -203,17 +183,13 @@ export class WMSSyncScheduler {
       );
 
       if (lowInventoryItems.length > 0) {
-        console.log(`⚠️ 发现 ${lowInventoryItems.length} 个低库存项目`);
-
-        // 发送预警通知
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`⚠️ 发现 ${lowInventoryItems.length} 个低库存项目`)// 发送预警通知
         await this.sendInventoryAlert(lowInventoryItems);
 
-        // 可以在这里触发其他业务逻辑，比如自动生成补货申请
-      } else {
-        console.log("✅ 库存水平正常");
-      }
+        // 可以在这里触发其他业务逻辑，比如自动生成补货申?      } else {
+        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?库存水平正常')}
     } catch (error) {
-      console.error("检查库存预警失败:", error);
+      console.error('检查库存预警失?', error);
     }
   }
 
@@ -226,33 +202,30 @@ export class WMSSyncScheduler {
       const alertMessage = `
 🔔 WMS库存预警通知
 
-发现 ${lowInventoryItems.length} 个商品库存低于预警阈值 (${
+发现 ${lowInventoryItems.length} 个商品库存低于预警阈?(${
         this.config.alertThreshold
-      })：
-
+      })�?
 ${lowInventoryItems
   .map(
-    (item) =>
-      `- ${item.warehouseName}: ${item.sku} (${item.productName}) - 可用量: ${item.availableQuantity}`
+    item =>
+      `- ${item.warehouseName}: ${item.sku} (${item.productName}) - 可用? ${item.availableQuantity}`
   )
-  .join("\n")}
+  .join('\n')}
 
-请及时处理补货事宜。
-      `.trim();
+请及时处理补货事宜?      `.trim();
 
       // 发送到通知系统（这里可以根据实际需求实现）
-      await this.sendNotification("inventory_alert", alertMessage, {
-        type: "warning",
+      await this.sendNotification('inventory_alert', alertMessage, {
+        type: 'warning',
         items: lowInventoryItems,
       });
     } catch (error) {
-      console.error("发送库存预警通知失败:", error);
+      console.error('发送库存预警通知失败:', error);
     }
   }
 
   /**
-   * 发送执行报告
-   */
+   * 发送执行报?   */
   private async sendExecutionReport(
     syncResult: any,
     duration: number
@@ -264,24 +237,23 @@ ${lowInventoryItems
 📊 WMS同步任务执行报告
 
 执行时间: ${new Date().toISOString()}
-执行耗时: ${duration.toFixed(2)}秒
-连接总数: ${stats.totalConnections}
+执行耗时: ${duration.toFixed(2)}�?连接总数: ${stats.totalConnections}
 活跃连接: ${stats.activeConnections}
 成功同步: ${stats.successfulSyncs}
 失败同步: ${stats.failedSyncs}
-最后同步: ${stats.lastSyncTime?.toISOString() || "N/A"}
+最后同? ${stats?.toISOString() || 'N/A'}
 
-同步结果: ${syncResult.success ? "✅ 成功" : "❌ 失败"}
-${syncResult.error ? `错误信息: ${syncResult.error.message}` : ""}
+同步结果: ${syncResult.success ? '�?成功' : '�?失败'}
+${syncResult.error ? `错误信息: ${syncResult.error.message}` : ''}
       `.trim();
 
-      await this.sendNotification("sync_report", reportMessage, {
-        type: syncResult.success ? "info" : "error",
+      await this.sendNotification('sync_report', reportMessage, {
+        type: syncResult.success ? 'info' : 'error',
         stats,
         duration,
       });
     } catch (error) {
-      console.error("发送执行报告失败:", error);
+      console.error('发送执行报告失?', error);
     }
   }
 
@@ -290,34 +262,30 @@ ${syncResult.error ? `错误信息: ${syncResult.error.message}` : ""}
    */
   private async sendAlert(message: string): Promise<void> {
     try {
-      await this.sendNotification("system_alert", message, {
-        type: "error",
+      await this.sendNotification('system_alert', message, {
+        type: 'error',
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("发送告警通知失败:", error);
+      console.error('发送告警通知失败:', error);
     }
   }
 
   /**
-   * 发送通知（通用方法）
-   */
+   * 发送通知（通用方法?   */
   private async sendNotification(
     type: string,
     message: string,
     data?: any
   ): Promise<void> {
-    // 这里可以集成各种通知渠道：
-    // - 邮件通知
-    // - Slack/钉钉机器人
-    // - 短信通知
+    // 这里可以集成各种通知渠道?    // - 邮件通知
+    // - Slack/钉钉机器?    // - 短信通知
     // - 系统内部消息
 
-    console.log(`[${type.toUpperCase()}] ${message}`);
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`[${type.toUpperCase()}] ${message}`);
 
-    // 示例：记录到数据库
-    try {
-      await supabase.from("notifications").insert({
+    // 示例：记录到数据?    try {
+      await supabase.from('notifications').insert({
         type,
         message,
         data,
@@ -325,7 +293,7 @@ ${syncResult.error ? `错误信息: ${syncResult.error.message}` : ""}
       } as any);
     } catch (error) {
       // 通知记录失败不影响主流程
-      console.warn("记录通知失败:", error);
+      console.warn('记录通知失败:', error);
     }
   }
 
@@ -334,11 +302,10 @@ ${syncResult.error ? `错误信息: ${syncResult.error.message}` : ""}
    */
   async triggerManualSync(): Promise<{ success: boolean; message: string }> {
     try {
-      console.log("🎯 手动触发WMS同步任务");
-      await this.executeSync();
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🎯 手动触发WMS同步任务')await this.executeSync();
       return {
         success: true,
-        message: "手动同步任务执行成功",
+        message: '手动同步任务执行成功',
       };
     } catch (error) {
       const errorMessage = `手动同步任务执行失败: ${(error as Error).message}`;
@@ -352,8 +319,7 @@ ${syncResult.error ? `错误信息: ${syncResult.error.message}` : ""}
   }
 
   /**
-   * 获取任务状态
-   */
+   * 获取任务状?   */
   getStatus(): {
     isRunning: boolean;
     config: SyncTaskConfig;
@@ -371,9 +337,7 @@ ${syncResult.error ? `错误信息: ${syncResult.error.message}` : ""}
    */
   updateConfig(newConfig: Partial<SyncTaskConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    console.log("🔧 WMS同步任务配置已更新:", this.config);
-
-    // 如果正在运行且间隔改变，重启定时任务
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔧 WMS同步任务配置已更?', this.config)// 如果正在运行且间隔改变，重启定时任务
     if (this.isRunning && newConfig.intervalMinutes !== undefined) {
       this.stop();
       this.start();
@@ -390,7 +354,7 @@ if (require.main === module) {
   const config: Partial<SyncTaskConfig> = {};
 
   if (process.env.WMS_SYNC_ENABLED !== undefined) {
-    config.enabled = process.env.WMS_SYNC_ENABLED === "true";
+    config.enabled = process.env.WMS_SYNC_ENABLED === 'true';
   }
 
   if (process.env.WMS_SYNC_INTERVAL) {
@@ -404,21 +368,19 @@ if (require.main === module) {
   const scheduler = new WMSSyncScheduler(config);
 
   // 启动任务
-  scheduler.start().catch((error) => {
-    console.error("启动WMS同步任务失败:", error);
+  scheduler.start().catch(error => {
+    console.error('启动WMS同步任务失败:', error);
     process.exit(1);
-  });
+  }) as any;
 
   // 优雅关闭
-  process.on("SIGTERM", () => {
-    console.log("收到SIGTERM信号，正在关闭...");
-    scheduler.stop();
+  process.on('SIGTERM', () => {
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('收到SIGTERM信号，正在关?..')scheduler.stop();
     process.exit(0);
   });
 
-  process.on("SIGINT", () => {
-    console.log("收到SIGINT信号，正在关闭...");
-    scheduler.stop();
+  process.on('SIGINT', () => {
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('收到SIGINT信号，正在关?..')scheduler.stop();
     process.exit(0);
   });
 }

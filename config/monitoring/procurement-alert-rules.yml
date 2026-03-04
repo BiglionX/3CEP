@@ -1,0 +1,205 @@
+groups:
+  - name: procurement-intelligence.rules
+    rules:
+      # 系统健康度告警
+      - alert: ProcurementServiceDown
+        expr: up{job=~"procurement.*"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: procurement-intelligence
+        annotations:
+          summary: '采购智能体服务不可用'
+          description: '{{ $labels.instance }} 上的 {{ $labels.job }} 服务已停止响应'
+
+      - alert: HighCPUUsage
+        expr: rate(procurement_cpu_usage_percent[5m]) > 85
+        for: 2m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+        annotations:
+          summary: 'CPU使用率过高'
+          description: '{{ $labels.instance }} CPU使用率超过85% (当前: {{ $value }}%)'
+
+      - alert: HighMemoryUsage
+        expr: procurement_memory_usage_percent > 85
+        for: 2m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+        annotations:
+          summary: '内存使用率过高'
+          description: '{{ $labels.instance }} 内存使用率超过85% (当前: {{ $value }}%)'
+
+      # 业务指标告警
+      - alert: LowSupplierMatchingAccuracy
+        expr: procurement_supplier_matching_accuracy < 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: business
+        annotations:
+          summary: '供应商匹配准确率偏低'
+          description: '供应商智能匹配准确率低于80% (当前: {{ $value }}%)'
+
+      - alert: PriceOptimizationFailure
+        expr: procurement_price_optimization_success_rate < 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: business
+        annotations:
+          summary: '价格优化成功率偏低'
+          description: '采购价格优化成功率低于90% (当前: {{ $value }}%)'
+
+      - alert: DecisionEngineSlow
+        expr: procurement_decision_engine_response_time_seconds > 2
+        for: 2m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: performance
+        annotations:
+          summary: '决策引擎响应缓慢'
+          description: '采购决策引擎平均响应时间超过2秒 (当前: {{ $value }}s)'
+
+      - alert: RiskAssessmentErrorRate
+        expr: procurement_risk_assessment_error_rate > 0.05
+        for: 3m
+        labels:
+          severity: critical
+          service: procurement-intelligence
+          category: business
+        annotations:
+          summary: '风险评估错误率过高'
+          description: '供应商风险评估错误率超过5% (当前: {{ $value }}%)'
+
+      # 数据质量告警
+      - alert: SupplierDataQualityLow
+        expr: procurement_supplier_data_quality_score < 0.7
+        for: 10m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: data-quality
+        annotations:
+          summary: '供应商数据质量偏低'
+          description: '供应商画像数据质量评分低于0.7 (当前: {{ $value }})'
+
+      - alert: MarketDataStale
+        expr: time() - procurement_market_data_last_updated_timestamp > 3600
+        for: 5m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: data-quality
+        annotations:
+          summary: '市场数据过期'
+          description: '国际市场价格数据超过1小时未更新'
+
+      # 集成服务告警
+      - alert: ExternalAPIUnavailable
+        expr: procurement_external_api_availability < 0.95
+        for: 3m
+        labels:
+          severity: critical
+          service: procurement-intelligence
+          category: integration
+        annotations:
+          summary: '外部API不可用'
+          description: '外部数据源API可用性低于95% (当前: {{ $value }}%)'
+
+      # 容量规划告警
+      - alert: HighDatabaseConnectionUsage
+        expr: procurement_database_connection_pool_usage > 0.8
+        for: 3m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: capacity
+        annotations:
+          summary: '数据库连接池使用率过高'
+          description: '数据库连接池使用率超过80% (当前: {{ $value }}%)'
+
+      - alert: CacheHitRateLow
+        expr: procurement_cache_hit_rate < 0.7
+        for: 5m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: performance
+        annotations:
+          summary: '缓存命中率偏低'
+          description: '系统缓存命中率低于70% (当前: {{ $value }}%)'
+
+      # 算法效果告警
+      - alert: AlgorithmAccuracyDecline
+        expr: procurement_algorithm_accuracy_trend < -0.1
+        for: 15m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: algorithm
+        annotations:
+          summary: '算法准确率下降'
+          description: '核心算法准确率出现显著下降趋势 (变化: {{ $value }})'
+
+      - alert: ContractClauseRelevanceLow
+        expr: procurement_contract_clause_relevance < 0.75
+        for: 5m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: business
+        annotations:
+          summary: '合同条款相关性偏低'
+          description: '智能合同条款推荐相关性低于75% (当前: {{ $value }}%)'
+
+      # 用户体验告警
+      - alert: DashboardLoadTimeSlow
+        expr: procurement_dashboard_load_time_seconds > 3
+        for: 2m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: user-experience
+        annotations:
+          summary: '仪表板加载缓慢'
+          description: '采购智能仪表板加载时间超过3秒 (当前: {{ $value }}s)'
+
+      - alert: HighUserErrorRate
+        expr: procurement_user_interface_error_rate > 0.02
+        for: 5m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: user-experience
+        annotations:
+          summary: '用户界面错误率偏高'
+          description: '前端用户界面错误率超过2% (当前: {{ $value }}%)'
+
+      # 安全告警
+      - alert: UnauthorizedAccessAttempts
+        expr: rate(procurement_unauthorized_access_attempts[5m]) > 10
+        for: 1m
+        labels:
+          severity: critical
+          service: procurement-intelligence
+          category: security
+        annotations:
+          summary: '未授权访问尝试频繁'
+          description: '检测到大量未授权访问尝试 (速率: {{ $value }}/分钟)'
+
+      - alert: DataExportVolumeHigh
+        expr: rate(procurement_sensitive_data_export_volume_bytes[1h]) > 104857600
+        for: 10m
+        labels:
+          severity: warning
+          service: procurement-intelligence
+          category: security
+        annotations:
+          summary: '敏感数据导出量异常'
+          description: '1小时内敏感数据导出量超过100MB (当前: {{ $value }} bytes/hour)'

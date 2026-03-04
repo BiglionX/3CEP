@@ -3,7 +3,10 @@
 import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { ManualUploadService, ManualUploadDTO } from '@/services/manual-upload.service';
+import {
+  ManualUploadService,
+  ManualUploadDTO,
+} from '@/services/manual-upload.service';
 import { Database } from '@/lib/database.types';
 
 const manualService = new ManualUploadService();
@@ -16,9 +19,9 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status')?.split(',') || ['published'];
     const includeDrafts = searchParams.get('includeDrafts') === 'true';
-    
+
     const productId = params.productId;
-    
+
     if (!productId) {
       return NextResponse.json(
         { success: false, error: '产品ID不能为空' },
@@ -30,15 +33,17 @@ export async function GET(
     if (includeDrafts) {
       // 如果请求包含草稿，则需要认证
       const supabase = createRouteHandlerClient<Database>({ cookies });
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       if (!session) {
         return NextResponse.json(
           { success: false, error: '需要登录才能查看草稿' },
           { status: 401 }
         );
       }
-      
+
       manuals = await manualService.getProductManuals(productId);
     } else {
       // 只返回已发布的说明书
@@ -47,9 +52,8 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: manuals
+      data: manuals,
     });
-
   } catch (error) {
     console.error('获取说明书列表失败:', error);
     return NextResponse.json(
@@ -65,8 +69,10 @@ export async function POST(
 ) {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       return NextResponse.json(
         { success: false, error: '需要登录才能上传说明书' },
@@ -76,14 +82,14 @@ export async function POST(
 
     const productId = params.productId;
     const body = await request.json();
-    
+
     const uploadDTO: ManualUploadDTO = {
       productId,
       title: body.title,
       content: body.content,
       languageCodes: body.languageCodes,
       versionNotes: body.versionNotes,
-      createdBy: session.user.id
+      createdBy: session.user.id,
     };
 
     const manual = await manualService.uploadManual(uploadDTO);
@@ -91,9 +97,8 @@ export async function POST(
     return NextResponse.json({
       success: true,
       data: manual,
-      message: '说明书上传成功'
+      message: '说明书上传成功',
     });
-
   } catch (error: any) {
     console.error('上传说明书失败:', error);
     return NextResponse.json(
@@ -109,8 +114,10 @@ export async function PUT(
 ) {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       return NextResponse.json(
         { success: false, error: '需要登录才能更新说明书' },
@@ -120,7 +127,7 @@ export async function PUT(
 
     const manualId = params.manualId;
     const body = await request.json();
-    
+
     // 验证用户权限（只能更新自己创建的说明书）
     const existingManual = await manualService.getManualById(manualId);
     if (!existingManual) {
@@ -141,15 +148,14 @@ export async function PUT(
       title: body.title,
       content: body.content,
       languageCodes: body.languageCodes,
-      versionNotes: body.versionNotes
+      versionNotes: body.versionNotes,
     });
 
     return NextResponse.json({
       success: true,
       data: manual,
-      message: '说明书更新成功'
+      message: '说明书更新成功',
     });
-
   } catch (error: any) {
     console.error('更新说明书失败:', error);
     return NextResponse.json(
@@ -165,8 +171,10 @@ export async function DELETE(
 ) {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       return NextResponse.json(
         { success: false, error: '需要登录才能删除说明书' },
@@ -175,7 +183,7 @@ export async function DELETE(
     }
 
     const manualId = params.manualId;
-    
+
     // 验证用户权限
     const existingManual = await manualService.getManualById(manualId);
     if (!existingManual) {
@@ -202,9 +210,8 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: '说明书删除成功'
+      message: '说明书删除成功',
     });
-
   } catch (error: any) {
     console.error('删除说明书失败:', error);
     return NextResponse.json(

@@ -18,8 +18,10 @@ export async function POST(
 ) {
   try {
     const manualId = params.manualId;
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       return NextResponse.json(
         { success: false, error: '需要登录' },
@@ -45,15 +47,14 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      message: '说明书已提交审核'
+      message: '说明书已提交审核',
     });
-
   } catch (error) {
     console.error('提交审核错误:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: (error as Error).message || '提交审核失败' 
+      {
+        success: false,
+        error: (error as Error).message || '提交审核失败',
       },
       { status: 500 }
     );

@@ -2,9 +2,10 @@ const { createClient } = require('@supabase/supabase-js');
 
 async function executeMarketingMigration() {
   console.log('🚀 执行营销数据库迁移...\n');
-  
+
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hrjqzbhqueleszkvnsen.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      'https://hrjqzbhqueleszkvnsen.supabase.co',
     process.env.SUPABASE_SERVICE_ROLE_KEY || 'your_service_key_here'
   );
 
@@ -83,7 +84,7 @@ async function executeMarketingMigration() {
   try {
     // 由于Supabase REST API限制，我们分步执行
     console.log('📋 正在创建表结构...');
-    
+
     // 创建leads表
     const leadsSql = `
       CREATE TABLE IF NOT EXISTS leads (
@@ -104,14 +105,16 @@ async function executeMarketingMigration() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `;
-    
-    const { error: leadsError } = await supabase.rpc('execute_sql', { sql: leadsSql });
+
+    const { error: leadsError } = await supabase.rpc('execute_sql', {
+      sql: leadsSql,
+    });
     if (leadsError) {
       console.log('⚠️  leads表创建可能需要手动执行');
     } else {
       console.log('✅ leads表创建成功');
     }
-    
+
     // 创建marketing_events表
     const eventsSql = `
       CREATE TABLE IF NOT EXISTS marketing_events (
@@ -129,14 +132,16 @@ async function executeMarketingMigration() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `;
-    
-    const { error: eventsError } = await supabase.rpc('execute_sql', { sql: eventsSql });
+
+    const { error: eventsError } = await supabase.rpc('execute_sql', {
+      sql: eventsSql,
+    });
     if (eventsError) {
       console.log('⚠️  marketing_events表创建可能需要手动执行');
     } else {
       console.log('✅ marketing_events表创建成功');
     }
-    
+
     // 插入测试数据
     console.log('\n🧪 插入测试数据...');
     const { data: testData, error: insertError } = await supabase
@@ -149,7 +154,7 @@ async function executeMarketingMigration() {
         phone: '13800138000',
         use_case: '测试营销系统功能',
         source: 'migration_script',
-        status: 'new'
+        status: 'new',
       })
       .select();
 
@@ -190,7 +195,6 @@ async function executeMarketingMigration() {
     console.log('1. 登录Supabase控制台 (https://app.supabase.com)');
     console.log('2. 进入SQL Editor');
     console.log('3. 执行上方提供的完整SQL脚本');
-
   } catch (error) {
     console.error('❌ 数据库迁移执行出错:', error.message);
     console.log('\n📋 请手动执行SQL迁移:');

@@ -18,36 +18,36 @@ const PRODUCT_SERVICES = [
     path: '/diagnosis',
     expectedFile: 'src/app/diagnosis/page.tsx',
     status: 'active',
-    description: 'AI智能诊断和维修服务页面'
+    description: 'AI智能诊断和维修服务页面',
   },
   {
     name: '配件商城',
     path: '/parts-market',
     expectedFile: 'src/app/parts-market/page.tsx',
     status: 'active',
-    description: '手机配件和维修配件购买平台'
+    description: '手机配件和维修配件购买平台',
   },
   {
     name: '智能估价',
     path: '/valuation', // 注意：目前可能不存在
     expectedFile: 'src/app/valuation/page.tsx',
     status: 'missing',
-    description: '设备回收和维修估价服务'
+    description: '设备回收和维修估价服务',
   },
   {
     name: '维修网点',
     path: '/repair-shop',
     expectedFile: 'src/app/repair-shop/page.tsx',
     status: 'active',
-    description: '附近维修店铺查找和服务'
+    description: '附近维修店铺查找和服务',
   },
   {
     name: '企业服务',
     path: '/enterprise', // 注意：目前可能不存在
     expectedFile: 'src/app/enterprise/page.tsx',
     status: 'missing',
-    description: '面向企业的批量维修和定制服务'
-  }
+    description: '面向企业的批量维修和定制服务',
+  },
 ];
 
 // 检查文件是否存在
@@ -58,12 +58,18 @@ function checkFileExists(relativePath) {
 
 // 检查路由配置
 function checkRouteConfiguration() {
-  const navbarPath = path.join(PROJECT_ROOT, 'src/components/layout/UnifiedNavbar.tsx');
-  const footerPath = path.join(PROJECT_ROOT, 'src/components/layout/UnifiedFooter.tsx');
-  
+  const navbarPath = path.join(
+    PROJECT_ROOT,
+    'src/components/layout/UnifiedNavbar.tsx'
+  );
+  const footerPath = path.join(
+    PROJECT_ROOT,
+    'src/components/layout/UnifiedFooter.tsx'
+  );
+
   const results = {
     navbar: { exists: false, hasCorrectRoutes: false },
-    footer: { exists: false, hasCorrectLinks: false }
+    footer: { exists: false, hasCorrectLinks: false },
   };
 
   // 检查导航栏配置
@@ -75,8 +81,9 @@ function checkRouteConfiguration() {
       const hasDiagnosisRoute = navbarContent.includes('/diagnosis');
       const hasPartsMarketRoute = navbarContent.includes('/parts-market');
       const hasRepairShopRoute = navbarContent.includes('/repair-shop');
-      
-      results.navbar.hasCorrectRoutes = hasDiagnosisRoute && hasPartsMarketRoute && hasRepairShopRoute;
+
+      results.navbar.hasCorrectRoutes =
+        hasDiagnosisRoute && hasPartsMarketRoute && hasRepairShopRoute;
     } catch (error) {
       console.error('读取导航栏文件失败:', error.message);
     }
@@ -90,7 +97,7 @@ function checkRouteConfiguration() {
       // 检查页脚链接配置
       const hasDiagnosisLink = footerContent.includes('/diagnosis');
       const hasPlaceholderLinks = footerContent.includes("href: '#'");
-      
+
       results.footer.hasCorrectLinks = hasDiagnosisLink;
     } catch (error) {
       console.error('读取页脚文件失败:', error.message);
@@ -104,19 +111,19 @@ function checkRouteConfiguration() {
 function checkApiEndpoints() {
   const apiDir = path.join(PROJECT_ROOT, 'src/app/api');
   const endpoints = [];
-  
+
   if (fs.existsSync(apiDir)) {
     const apiFiles = fs.readdirSync(apiDir, { recursive: true });
     apiFiles.forEach(file => {
       if (file.endsWith('route.ts') || file.endsWith('page.tsx')) {
         endpoints.push({
           path: `/api/${path.dirname(file)}`,
-          file: `src/app/api/${file}`
+          file: `src/app/api/${file}`,
         });
       }
     });
   }
-  
+
   return endpoints;
 }
 
@@ -130,7 +137,7 @@ function generateReport() {
   // 1. 检查各产品服务页面状态
   console.log('📋 产品服务页面状态检查:');
   console.log('-'.repeat(40));
-  
+
   let activeServices = 0;
   let missingServices = 0;
 
@@ -138,7 +145,7 @@ function generateReport() {
     const fileExists = checkFileExists(service.expectedFile);
     const status = fileExists ? '✅ 存在' : '❌ 缺失';
     const statusSymbol = fileExists ? '🟢' : '🔴';
-    
+
     console.log(`${statusSymbol} ${service.name}`);
     console.log(`   路径: ${service.path}`);
     console.log(`   文件: ${service.expectedFile}`);
@@ -156,35 +163,42 @@ function generateReport() {
   // 2. 检查路由配置
   console.log('🧭 路由配置检查:');
   console.log('-'.repeat(40));
-  
+
   const routeConfig = checkRouteConfiguration();
-  
-  console.log(`导航栏配置: ${routeConfig.navbar.exists ? '✅ 存在' : '❌ 缺失'}`);
+
+  console.log(
+    `导航栏配置: ${routeConfig.navbar.exists ? '✅ 存在' : '❌ 缺失'}`
+  );
   if (routeConfig.navbar.exists) {
-    console.log(`  路由配置正确: ${routeConfig.navbar.hasCorrectRoutes ? '✅ 是' : '❌ 否'}`);
+    console.log(
+      `  路由配置正确: ${routeConfig.navbar.hasCorrectRoutes ? '✅ 是' : '❌ 否'}`
+    );
   }
-  
+
   console.log(`页脚配置: ${routeConfig.footer.exists ? '✅ 存在' : '❌ 缺失'}`);
   if (routeConfig.footer.exists) {
-    console.log(`  链接配置正确: ${routeConfig.footer.hasCorrectLinks ? '✅ 是' : '❌ 否'}`);
+    console.log(
+      `  链接配置正确: ${routeConfig.footer.hasCorrectLinks ? '✅ 是' : '❌ 否'}`
+    );
   }
   console.log();
 
   // 3. 检查API端点
   console.log('🔌 API端点检查:');
   console.log('-'.repeat(40));
-  
+
   const apiEndpoints = checkApiEndpoints();
   console.log(`发现 ${apiEndpoints.length} 个API端点`);
-  
+
   // 查找相关的API端点
-  const relevantApis = apiEndpoints.filter(endpoint => 
-    endpoint.path.includes('diagnosis') || 
-    endpoint.path.includes('parts') ||
-    endpoint.path.includes('repair') ||
-    endpoint.path.includes('valuation')
+  const relevantApis = apiEndpoints.filter(
+    endpoint =>
+      endpoint.path.includes('diagnosis') ||
+      endpoint.path.includes('parts') ||
+      endpoint.path.includes('repair') ||
+      endpoint.path.includes('valuation')
   );
-  
+
   if (relevantApis.length > 0) {
     console.log('相关API端点:');
     relevantApis.forEach(api => {
@@ -205,12 +219,14 @@ function generateReport() {
   if (missingServices > 0) {
     console.log('🔧 建议改进措施:');
     console.log('-'.repeat(20));
-    
-    PRODUCT_SERVICES.filter(s => !checkFileExists(s.expectedFile)).forEach(service => {
-      console.log(`• 创建 ${service.name} 页面 (${service.path})`);
-      console.log(`  建议路径: ${service.expectedFile}`);
-    });
-    
+
+    PRODUCT_SERVICES.filter(s => !checkFileExists(s.expectedFile)).forEach(
+      service => {
+        console.log(`• 创建 ${service.name} 页面 (${service.path})`);
+        console.log(`  建议路径: ${service.expectedFile}`);
+      }
+    );
+
     console.log();
     console.log('💡 开发建议:');
     console.log('1. 对于"智能估价"页面，可以参考现有诊断页面的结构');

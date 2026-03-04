@@ -3,10 +3,12 @@ const { createClient } = require('@supabase/supabase-js');
 
 async function verifyAffiliateTables() {
   console.log('🔍 验证联盟链接表结构...\n');
-  
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hrjqzbhqueleszkvnsen.supabase.co';
+
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    'https://hrjqzbhqueleszkvnsen.supabase.co';
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
+
   if (!supabaseUrl || !serviceKey) {
     console.error('❌ 缺少Supabase配置');
     return;
@@ -20,7 +22,7 @@ async function verifyAffiliateTables() {
       'part_affiliate_links',
       'part_affiliate_mappings',
       'affiliate_click_tracking',
-      'affiliate_revenue_tracking'
+      'affiliate_revenue_tracking',
     ];
 
     console.log('📋 检查表存在性:');
@@ -30,7 +32,7 @@ async function verifyAffiliateTables() {
           .from(tableName)
           .select('count')
           .limit(1);
-        
+
         if (error) {
           console.log(`❌ ${tableName}: ${error.message}`);
         } else {
@@ -48,7 +50,7 @@ async function verifyAffiliateTables() {
         .from('part_affiliate_links')
         .select('*')
         .limit(5);
-      
+
       if (error) {
         console.log('❌ 无法查询初始数据:', error.message);
       } else {
@@ -56,7 +58,9 @@ async function verifyAffiliateTables() {
         if (data && data.length > 0) {
           console.log('📋 示例数据:');
           data.forEach((item, index) => {
-            console.log(`   ${index + 1}. ${item.part_name} (${item.platform})`);
+            console.log(
+              `   ${index + 1}. ${item.part_name} (${item.platform})`
+            );
           });
         }
       }
@@ -74,7 +78,7 @@ async function verifyAffiliateTables() {
         affiliate_params: { test: 'param' },
         template_url: 'https://test.jd.com/{product_id}',
         is_active: true,
-        priority: 1
+        priority: 1,
       };
 
       const { data, error } = await supabase
@@ -89,7 +93,7 @@ async function verifyAffiliateTables() {
         if (data && data.length > 0) {
           const insertedId = data[0].id;
           console.log(`   插入ID: ${insertedId}`);
-          
+
           // 清理测试数据
           await supabase
             .from('part_affiliate_links')
@@ -101,7 +105,6 @@ async function verifyAffiliateTables() {
     } catch (error) {
       console.log('❌ 插入测试异常:', error.message);
     }
-
   } catch (error) {
     console.error('❌ 验证过程出错:', error.message);
   }

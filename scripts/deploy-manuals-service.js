@@ -17,7 +17,7 @@ const requiredFiles = [
   'src/app/admin/manuals/page.tsx',
   'src/components/RichTextEditor.tsx',
   'supabase/migrations/019_enhance_manuals_system.sql',
-  'scripts/test-manuals-service.js'
+  'scripts/test-manuals-service.js',
 ];
 
 let allFilesExist = true;
@@ -37,7 +37,7 @@ console.log('\n📋 第二步：检查依赖安装状态...');
 const dependencies = [
   { name: '@supabase/supabase-js', package: '@supabase/supabase-js' },
   { name: 'react', package: 'react' },
-  { name: 'next', package: 'next' }
+  { name: 'next', package: 'next' },
 ];
 
 let allDepsInstalled = true;
@@ -54,8 +54,8 @@ dependencies.forEach(dep => {
 // 3. 检查package.json配置
 console.log('\n📋 第三步：检查package.json配置...');
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const hasRequiredDeps = packageJson.dependencies && 
-  packageJson.dependencies['@supabase/supabase-js'];
+const hasRequiredDeps =
+  packageJson.dependencies && packageJson.dependencies['@supabase/supabase-js'];
 
 console.log(`   ${hasRequiredDeps ? '✅' : '❌'} package.json中已配置必要依赖`);
 
@@ -116,7 +116,7 @@ const acceptanceCriteria = [
   '✅ 富文本编辑器功能正常',
   '✅ 多语言切换功能正常',
   '✅ 权限控制准确有效',
-  '✅ 版本管理和审核流程完整'
+  '✅ 版本管理和审核流程完整',
 ];
 
 console.log('\n🎯 验收检查项:');

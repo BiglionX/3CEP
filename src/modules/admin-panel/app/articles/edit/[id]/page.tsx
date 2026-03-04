@@ -58,7 +58,7 @@ export default function EditArticlePage() {
   }
 
   // 保存文章
-  const handleSave = async (articleData: any) => {
+  const handleSave = async (articleData: any: any) => {
     try {
       const { error } = await supabase
         .from('articles')
@@ -80,7 +80,7 @@ export default function EditArticlePage() {
   }
 
   // 发布文章
-  const handlePublish = async (articleData: any) => {
+  const handlePublish = async (articleData: any: any) => {
     try {
       const { error } = await supabase
         .from('articles')

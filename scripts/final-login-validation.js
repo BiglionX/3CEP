@@ -17,7 +17,7 @@ const requiredFiles = [
   'src/app/admin/login/page.tsx',
   'src/components/GoogleLoginButton.tsx',
   'src/components/admin/EnhancedAdminLayout.tsx',
-  'src/app/api/auth/check-session/route.ts'
+  'src/app/api/auth/check-session/route.ts',
 ];
 
 let allFilesExist = true;
@@ -35,13 +35,16 @@ requiredFiles.forEach(file => {
 console.log('\n2️⃣ 验证认证工具函数');
 
 try {
-  const authUtilsContent = fs.readFileSync(path.join(process.cwd(), 'src/lib/auth-utils.ts'), 'utf8');
+  const authUtilsContent = fs.readFileSync(
+    path.join(process.cwd(), 'src/lib/auth-utils.ts'),
+    'utf8'
+  );
   const hasKeyFunctions = [
     'handleLoginSuccess',
-    'checkAdminPermission', 
-    'getCurrentUser'
+    'checkAdminPermission',
+    'getCurrentUser',
   ].every(func => authUtilsContent.includes(func));
-  
+
   if (hasKeyFunctions) {
     console.log('✅ 认证工具函数完整');
   } else {
@@ -55,13 +58,14 @@ try {
 console.log('\n3️⃣ 验证登录页面逻辑');
 
 try {
-  const loginPageContent = fs.readFileSync(path.join(process.cwd(), 'src/app/admin/login/page.tsx'), 'utf8');
-  const hasKeyLogic = [
-    'checkAuth',
-    'is_admin',
-    'router.push(redirect)'
-  ].every(logic => loginPageContent.includes(logic));
-  
+  const loginPageContent = fs.readFileSync(
+    path.join(process.cwd(), 'src/app/admin/login/page.tsx'),
+    'utf8'
+  );
+  const hasKeyLogic = ['checkAuth', 'is_admin', 'router.push(redirect)'].every(
+    logic => loginPageContent.includes(logic)
+  );
+
   if (hasKeyLogic) {
     console.log('✅ 登录页面逻辑正确');
   } else {
@@ -75,9 +79,14 @@ try {
 console.log('\n4️⃣ 验证管理布局');
 
 try {
-  const layoutContent = fs.readFileSync(path.join(process.cwd(), 'src/components/admin/EnhancedAdminLayout.tsx'), 'utf8');
-  const hasCorrectLoginLink = layoutContent.includes("router.push('/login?redirect=/admin/dashboard')");
-  
+  const layoutContent = fs.readFileSync(
+    path.join(process.cwd(), 'src/components/admin/EnhancedAdminLayout.tsx'),
+    'utf8'
+  );
+  const hasCorrectLoginLink = layoutContent.includes(
+    "router.push('/login?redirect=/admin/dashboard')"
+  );
+
   if (hasCorrectLoginLink) {
     console.log('✅ 管理布局登录链接正确');
   } else {
@@ -91,14 +100,17 @@ try {
 console.log('\n5️⃣ 验证认证API接口');
 
 try {
-  const apiContent = fs.readFileSync(path.join(process.cwd(), 'src/app/api/auth/check-session/route.ts'), 'utf8');
+  const apiContent = fs.readFileSync(
+    path.join(process.cwd(), 'src/app/api/auth/check-session/route.ts'),
+    'utf8'
+  );
   const hasKeyLogic = [
     'authenticated',
     'is_admin',
     'user.id',
-    'user.email'
+    'user.email',
   ].every(logic => apiContent.includes(logic));
-  
+
   if (hasKeyLogic) {
     console.log('✅ 认证API接口完整');
   } else {

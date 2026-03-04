@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 初始化Supabase客户端
+// 鍒濆鍖朣upabase瀹㈡埛?
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// GET /api/affiliate/analytics/clicks - 获取点击统计
+// GET /api/affiliate/analytics/clicks - 鑾峰彇鐐瑰嚮缁熻
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     const endDate = searchParams.get('endDate');
     const groupBy = searchParams.get('groupBy') || 'day'; // day, week, month
 
-    // 构建基础查询
+    // 鏋勫缓鍩虹鏌ヨ
     let query = supabase
       .from('affiliate_click_tracking')
       .select(`
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         part_affiliate_links(part_name, platform)
       `);
 
-    // 添加过滤条件
+    // 娣诲姞杩囨护鏉′欢
     if (affiliateLinkId) {
       query = query.eq('affiliate_link_id', affiliateLinkId);
     }
@@ -56,14 +56,14 @@ export async function GET(request: Request) {
     const { data: clicks, error } = await query.order('clicked_at', { ascending: false });
 
     if (error) {
-      console.error('获取点击数据失败:', error);
+      console.error('鑾峰彇鐐瑰嚮鏁版嵁澶辫触:', error);
       return NextResponse.json(
-        { error: '获取点击数据失败' },
+        { error: '鑾峰彇鐐瑰嚮鏁版嵁澶辫触' },
         { status: 500 }
       );
     }
 
-    // 计算统计数据
+    // 璁＄畻缁熻鏁版嵁
     const stats = calculateClickStats(clicks || [], groupBy);
 
     return NextResponse.json({
@@ -71,20 +71,20 @@ export async function GET(request: Request) {
       data: {
         totalClicks: clicks?.length || 0,
         stats,
-        recentClicks: clicks?.slice(0, 50) || [] // 返回最近50条记录
+        recentClicks: clicks?.slice(0, 50) || [] // 杩斿洖鏈€?0鏉¤?
       }
     });
 
   } catch (error) {
-    console.error('API错误:', error);
+    console.error('API閿欒:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
       { status: 500 }
     );
   }
 }
 
-// 计算点击统计数据
+// 璁＄畻鐐瑰嚮缁熻鏁版嵁
 function calculateClickStats(clicks: any[], groupBy: string) {
   const stats: any = {
     byPlatform: {},
@@ -96,24 +96,24 @@ function calculateClickStats(clicks: any[], groupBy: string) {
   };
 
   clicks.forEach(click => {
-    // 按平台统计
-    const platform = click.part_affiliate_links?.platform || 'unknown';
+    // 鎸夊钩鍙扮粺?
+    const platform = click?.platform || 'unknown';
     stats.byPlatform[platform] = (stats.byPlatform[platform] || 0) + 1;
 
-    // 按配件统计
-    const partName = click.part_affiliate_links?.part_name || 'unknown';
+    // 鎸夐厤浠剁粺?
+    const partName = click?.part_name || 'unknown';
     stats.byPart[partName] = (stats.byPart[partName] || 0) + 1;
 
-    // 按来源统计
+    // 鎸夋潵婧愮粺?
     const source = click.utm_source || 'direct';
     stats.bySource[source] = (stats.bySource[source] || 0) + 1;
 
-    // 统计唯一访客
+    // 缁熻鍞竴璁垮
     if (click.ip_address) {
       stats.totalUniqueVisitors.add(click.ip_address);
     }
 
-    // 按时间分组
+    // 鎸夋椂闂村垎?
     const date = new Date(click.clicked_at);
     let timeKey: string;
     
@@ -146,17 +146,17 @@ function calculateClickStats(clicks: any[], groupBy: string) {
     
     stats.byTime[timeKey].count++;
     
-    // 时间分组内的平台分布
+    // 鏃堕棿鍒嗙粍鍐呯殑骞冲彴鍒嗗竷
     stats.byTime[timeKey].platforms[platform] = 
       (stats.byTime[timeKey].platforms[platform] || 0) + 1;
     
-    // 时间分组内的来源分布
+    // 鏃堕棿鍒嗙粍鍐呯殑鏉ユ簮鍒嗗竷
     stats.byTime[timeKey].sources[source] = 
       (stats.byTime[timeKey].sources[source] || 0) + 1;
   });
 
-  // 计算转化率（如果有收入数据的话）
-  // 这里简化处理，实际应该关联收入表计算
+  // 璁＄畻杞寲鐜囷紙濡傛灉鏈夋敹鍏ユ暟鎹殑璇濓級
+  // 杩欓噷绠€鍖栧鐞嗭紝瀹為檯搴旇鍏宠仈鏀跺叆琛ㄨ?
   stats.conversionRate = stats.totalUniqueVisitors.size > 0 
     ? ((clicks.length * 0.02) / stats.totalUniqueVisitors.size * 100).toFixed(2)
     : 0;
@@ -166,7 +166,7 @@ function calculateClickStats(clicks: any[], groupBy: string) {
   return stats;
 }
 
-// POST /api/affiliate/analytics/clicks - 批量获取多个链接的统计
+// POST /api/affiliate/analytics/clicks - 鎵归噺鑾峰彇澶氫釜閾炬帴鐨勭粺?
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -174,12 +174,12 @@ export async function POST(request: Request) {
 
     if (!affiliateLinkIds || !Array.isArray(affiliateLinkIds)) {
       return NextResponse.json(
-        { error: '缺少必要参数: affiliateLinkIds数组' },
+        { error: '缂哄皯蹇呰鍙傛暟: affiliateLinkIds鏁扮粍' },
         { status: 400 }
       );
     }
 
-    // 批量查询每个链接的统计
+    // 鎵归噺鏌ヨ姣忎釜閾炬帴鐨勭粺?
     const promises = affiliateLinkIds.map(async (linkId: string) => {
       const { data: clicks, error } = await supabase
         .from('affiliate_click_tracking')
@@ -189,7 +189,7 @@ export async function POST(request: Request) {
         .lte('clicked_at', endDate || new Date().toISOString());
 
       if (error) {
-        console.error(`获取链接${linkId}统计失败:`, error);
+        console.error(`鑾峰彇閾炬帴${linkId}缁熻澶辫触:`, error);
         return { affiliateLinkId: linkId, error: error.message, totalClicks: 0 };
       }
 
@@ -208,9 +208,9 @@ export async function POST(request: Request) {
     });
 
   } catch (error) {
-    console.error('批量统计API错误:', error);
+    console.error('鎵归噺缁熻API閿欒:', error);
     return NextResponse.json(
-      { error: '批量统计失败' },
+      { error: '鎵归噺缁熻澶辫触' },
       { status: 500 }
     );
   }

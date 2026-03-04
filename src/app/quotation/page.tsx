@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -67,28 +67,28 @@ export default function QuotationManagementPage() {
     }
   };
 
-  // 创建新模板
+  // 创建新模?
   const handleCreateTemplate = async () => {
     try {
       const newTemplate = {
-        name: "新询价模板",
-        subject: "【询价】关于{{productName}}的采购询价",
-        content: `<p>尊敬的{{supplierName}}：</p>
+        name: "新询价模?,
+        subject: "【询价】关于{{productName}}的采购询?,
+        content: `<p>尊敬的{{supplierName}}�?/p>
                   <p>我们是{{companyName}}，现就以下商品进行采购询价：</p>
                   <ul>
                     {{#each items}}
                     <li>{{this.name}} - {{this.quantity}}{{this.unit}}</li>
                     {{/each}}
                   </ul>
-                  <p>请提供含税价格，报价有效期{{validityDays}}天。</p>
+                  <p>请提供含税价格，报价有效期{{validityDays}}天?/p>
                   <p>回复截止时间：{{responseDeadline}}</p>`,
         contentType: "html",
         language: "zh",
         variables: {
           productName: "商品名称",
-          supplierName: "供应商名称",
+          supplierName: "供应商名?,
           companyName: "公司名称",
-          validityDays: "有效期天数",
+          validityDays: "有效期天?,
           responseDeadline: "回复截止时间",
         },
       };
@@ -101,18 +101,18 @@ export default function QuotationManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert("模板创建成功！");
+        alert("模板创建成功?);
         fetchTemplates();
       } else {
-        alert("模板创建失败：" + result.error);
+        alert("模板创建失败? + result.error);
       }
     } catch (error) {
       console.error("创建模板错误:", error);
-      alert("创建模板时发生错误");
+      alert("创建模板时发生错?);
     }
   };
 
-  // 创建新询价请求
+  // 创建新询价请?
   const handleCreateRequest = async () => {
     try {
       const newRequest = {
@@ -123,7 +123,7 @@ export default function QuotationManagementPage() {
             productName: "智能手机屏幕",
             category: "电子元件",
             quantity: 100,
-            unit: "块",
+            unit: "�?,
             specifications: "6.1英寸 OLED",
             estimatedUnitPrice: 150,
           },
@@ -131,8 +131,8 @@ export default function QuotationManagementPage() {
             productName: "手机电池",
             category: "电子元件",
             quantity: 200,
-            unit: "块",
-            specifications: "4000mAh锂离子",
+            unit: "�?,
+            specifications: "4000mAh锂离?,
             estimatedUnitPrice: 80,
           },
         ],
@@ -152,22 +152,22 @@ export default function QuotationManagementPage() {
         alert("询价请求创建成功！单号：" + result.data.requestNumber);
         fetchRequests();
       } else {
-        alert("询价请求创建失败：" + result.error);
+        alert("询价请求创建失败? + result.error);
       }
     } catch (error) {
       console.error("创建询价请求错误:", error);
-      alert("创建询价请求时发生错误");
+      alert("创建询价请求时发生错?);
     }
   };
 
-  // 发送询价
+  // 发送询?
   const handleSendQuotation = async (requestId: string) => {
     try {
       const sendInfo = {
         quotationRequestId: requestId,
         senderInfo: {
           companyName: "测试科技有限公司",
-          contactPerson: "张经理",
+          contactPerson: "张经?,
           contactPhone: "13800138000",
           contactEmail: "zhang@test.com",
         },
@@ -190,7 +190,7 @@ export default function QuotationManagementPage() {
         alert("询价发送失败：" + result.error);
       }
     } catch (error) {
-      console.error("发送询价错误:", error);
+      console.error("发送询价错?", error);
       alert("发送询价时发生错误");
     }
   };
@@ -206,13 +206,13 @@ export default function QuotationManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert("比价报告生成成功！");
+        alert("比价报告生成成功?);
       } else {
-        alert("比价报告生成失败：" + result.error);
+        alert("比价报告生成失败? + result.error);
       }
     } catch (error) {
       console.error("生成报告错误:", error);
-      alert("生成报告时发生错误");
+      alert("生成报告时发生错?);
     }
   };
 
@@ -230,7 +230,7 @@ export default function QuotationManagementPage() {
           <p className="mt-2 text-gray-600">管理询价模板和发送供应商询价请求</p>
         </div>
 
-        {/* 标签页导航 */}
+        {/* 标签页导?*/}
         <div className="border-b border-gray-200 mb-6">
           <nav className="-mb-px flex space-x-8">
             <button
@@ -277,7 +277,7 @@ export default function QuotationManagementPage() {
               {loading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                  <p className="mt-4 text-gray-600">加载中...</p>
+                  <p className="mt-4 text-gray-600">加载?..</p>
                 </div>
               ) : templates.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -297,7 +297,7 @@ export default function QuotationManagementPage() {
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {template.isActive ? "激活" : "未激活"}
+                          {template.isActive ? "激? : "未激?}
                         </span>
                       </div>
 
@@ -337,7 +337,7 @@ export default function QuotationManagementPage() {
                     暂无模板
                   </h3>
                   <p className="text-gray-500 mb-6">
-                    创建第一个询价模板开始使用
+                    创建第一个询价模板开始使?
                   </p>
                   <button
                     onClick={handleCreateTemplate}
@@ -372,7 +372,7 @@ export default function QuotationManagementPage() {
               {loading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="mt-4 text-gray-600">加载中...</p>
+                  <p className="mt-4 text-gray-600">加载?..</p>
                 </div>
               ) : requests.length > 0 ? (
                 <div className="space-y-4">
@@ -405,9 +405,9 @@ export default function QuotationManagementPage() {
                           {request.status === "draft"
                             ? "草稿"
                             : request.status === "sent"
-                            ? "已发送"
+                            ? "已发?
                             : request.status === "completed"
-                            ? "已完成"
+                            ? "已完?
                             : "未知"}
                         </span>
                       </div>
@@ -436,7 +436,7 @@ export default function QuotationManagementPage() {
                               : "bg-gray-300 text-gray-500 cursor-not-allowed"
                           }`}
                         >
-                          发送询价
+                          发送询?
                         </button>
 
                         <button
@@ -475,7 +475,7 @@ export default function QuotationManagementPage() {
                     暂无询价请求
                   </h3>
                   <p className="text-gray-500 mb-6">
-                    创建第一个询价请求开始使用
+                    创建第一个询价请求开始使?
                   </p>
                   <button
                     onClick={handleCreateRequest}
@@ -564,3 +564,4 @@ export default function QuotationManagementPage() {
     </div>
   );
 }
+

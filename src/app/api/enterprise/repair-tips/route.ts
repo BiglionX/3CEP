@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// GET /api/enterprise/repair-tips - 获取维修技巧列表
+// GET /api/enterprise/repair-tips - 鑾峰彇缁翠慨鎶€宸у垪?
 export async function GET(request: Request) {
   try {
     const supabase = createClient(
@@ -9,19 +9,19 @@ export async function GET(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
     
-    // 获取认证用户
+    // 鑾峰彇璁よ瘉鐢ㄦ埛
     const authHeader = request.headers.get('authorization')
     if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ success: false, error: '未授权访问' }, { status: 401 })
+      return NextResponse.json({ success: false, error: '鏈巿鏉冭? }, { status: 401 })
     }
 
     const token = authHeader.substring(7)
     const { data: { user }, error: authError } = await supabase.auth.getUser(token)
     if (authError || !user) {
-      return NextResponse.json({ success: false, error: '身份验证失败' }, { status: 401 })
+      return NextResponse.json({ success: false, error: '韬唤楠岃瘉澶辫触' }, { status: 401 })
     }
 
-    // 获取用户对应的企业ID
+    // 鑾峰彇鐢ㄦ埛瀵瑰簲鐨勪紒涓欼D
     const { data: enterpriseUser, error: enterpriseError } = await supabase
       .from('enterprise_users')
       .select('id')
@@ -29,23 +29,23 @@ export async function GET(request: Request) {
       .single()
 
     if (enterpriseError || !enterpriseUser) {
-      return NextResponse.json({ success: false, error: '企业账户不存在' }, { status: 404 })
+      return NextResponse.json({ success: false, error: '浼佷笟璐︽埛涓嶅瓨? }, { status: 404 })
     }
 
-    // 解析查询参数
+    // 瑙ｆ瀽鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url)
     const search = searchParams.get('search') || ''
     const status = searchParams.get('status') || 'all'
     const contentType = searchParams.get('content_type') || ''
     const difficulty = searchParams.get('difficulty') || ''
 
-    // 构建查询
+    // 鏋勫缓鏌ヨ
     let query = supabase
       .from('enterprise_repair_tips')
       .select('*')
       .eq('enterprise_id', enterpriseUser.id)
 
-    // 添加搜索条件
+    // 娣诲姞鎼滅储鏉′欢
     if (search) {
       query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`)
     }
@@ -62,24 +62,24 @@ export async function GET(request: Request) {
       query = query.eq('difficulty_level', parseInt(difficulty))
     }
 
-    // 排序
+    // 鎺掑簭
     query = query.order('created_at', { ascending: false })
 
     const { data: repairTips, error } = await query
 
     if (error) {
-      console.error('获取维修技巧列表错误:', error)
-      return NextResponse.json({ success: false, error: '获取维修技巧列表失败' }, { status: 500 })
+      console.error('鑾峰彇缁翠慨鎶€宸у垪琛ㄩ敊?', error)
+      return NextResponse.json({ success: false, error: '鑾峰彇缁翠慨鎶€宸у垪琛ㄥけ? }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, data: repairTips })
   } catch (error) {
-    console.error('服务器错误:', error)
-    return NextResponse.json({ success: false, error: '服务器内部错误' }, { status: 500 })
+    console.error('鏈嶅姟鍣ㄩ敊?', error)
+    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 })
   }
 }
 
-// POST /api/enterprise/repair-tips - 创建新维修技巧
+// POST /api/enterprise/repair-tips - 鍒涘缓鏂扮淮淇妧?
 export async function POST(request: Request) {
   try {
     const supabase = createClient(
@@ -89,13 +89,13 @@ export async function POST(request: Request) {
     
     const authHeader = request.headers.get('authorization')
     if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ success: false, error: '未授权访问' }, { status: 401 })
+      return NextResponse.json({ success: false, error: '鏈巿鏉冭? }, { status: 401 })
     }
 
     const token = authHeader.substring(7)
     const { data: { user }, error: authError } = await supabase.auth.getUser(token)
     if (authError || !user) {
-      return NextResponse.json({ success: false, error: '身份验证失败' }, { status: 401 })
+      return NextResponse.json({ success: false, error: '韬唤楠岃瘉澶辫触' }, { status: 401 })
     }
 
     const { data: enterpriseUser, error: enterpriseError } = await supabase
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
       .single()
 
     if (enterpriseError || !enterpriseUser) {
-      return NextResponse.json({ success: false, error: '企业账户不存在' }, { status: 404 })
+      return NextResponse.json({ success: false, error: '浼佷笟璐︽埛涓嶅瓨? }, { status: 404 })
     }
 
     const body = await request.json()
@@ -124,15 +124,15 @@ export async function POST(request: Request) {
       parts_required
     } = body
 
-    // 验证必填字段
+    // 楠岃瘉蹇呭～瀛楁
     if (!title || !content_type) {
-      return NextResponse.json({ success: false, error: '缺少必要字段' }, { status: 400 })
+      return NextResponse.json({ success: false, error: '缂哄皯蹇呰瀛楁' }, { status: 400 })
     }
 
-    // 验证内容类型
+    // 楠岃瘉鍐呭绫诲瀷
     const validContentTypes = ['article', 'video', 'image_gallery']
     if (!validContentTypes.includes(content_type)) {
-      return NextResponse.json({ success: false, error: '无效的内容类型' }, { status: 400 })
+      return NextResponse.json({ success: false, error: '鏃犳晥鐨勫唴瀹圭被? }, { status: 400 })
     }
 
     const { data: repairTip, error } = await supabase
@@ -153,18 +153,18 @@ export async function POST(request: Request) {
         parts_required: parts_required || {} as any,
         created_by: user.id,
         status: 'draft'
-      })
+      }) as any
       .select()
       .single()
 
     if (error) {
-      console.error('创建维修技巧错误:', error)
-      return NextResponse.json({ success: false, error: '创建维修技巧失败' }, { status: 500 })
+      console.error('鍒涘缓缁翠慨鎶€宸ч敊?', error)
+      return NextResponse.json({ success: false, error: '鍒涘缓缁翠慨鎶€宸уけ? }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, data: repairTip })
   } catch (error) {
-    console.error('服务器错误:', error)
-    return NextResponse.json({ success: false, error: '服务器内部错误' }, { status: 500 })
+    console.error('鏈嶅姟鍣ㄩ敊?', error)
+    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 })
   }
 }

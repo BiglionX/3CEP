@@ -1,33 +1,33 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 
-// 模拟文档API端点
+// 妯℃嫙鏂囨。API绔偣
 export async function GET() {
   try {
-    // 模拟文档数据
+    // 妯℃嫙鏂囨。鏁版嵁
     const documents = [
       {
         id: '1',
-        title: 'iPhone 15 Pro 使用说明书',
-        content: '欢迎使用 iPhone 15 Pro...',
+        title: 'iPhone 15 Pro 浣跨敤璇存槑?,
+        content: '娆㈣繋浣跨敤 iPhone 15 Pro...',
         language: 'zh-CN',
-        category: '手机',
+        category: '鎵嬫満',
         views: 1234,
         likes: 89,
         created_at: '2024-01-15T10:00:00Z',
         updated_at: '2024-01-15T10:00:00Z',
-        status: 'published'
-      }
+        status: 'published',
+      },
     ];
 
     return NextResponse.json({
       success: true,
-      data: documents
+      data: documents,
     });
-
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: '获取文档失败' },
+      { success: false, error: '鑾峰彇鏂囨。澶辫触' },
       { status: 500 }
     );
   }
 }
+

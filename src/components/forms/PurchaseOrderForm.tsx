@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 表单验证使用示例组件
  * 展示如何在企业服务中使用验证系统
  */
@@ -128,9 +128,7 @@ export function PurchaseOrderForm() {
       await new Promise(resolve => setTimeout(resolve, 2000))
       
       // 这里应该调用实际的API
-      console.log('提交采购订单:', validation.data)
-      
-      setSubmitStatus('success')
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('提交采购订单:', validation.data)setSubmitStatus('success')
       
       // 3秒后重置表单
       setTimeout(() => {
@@ -161,7 +159,7 @@ export function PurchaseOrderForm() {
       <CardHeader>
         <CardTitle>创建采购订单</CardTitle>
         <CardDescription>
-          填写采购订单信息，系统将自动验证数据有效性
+          填写采购订单信息，系统将自动验证数据有效?
         </CardDescription>
       </CardHeader>
       
@@ -192,7 +190,7 @@ export function PurchaseOrderForm() {
           {/* 基本信息 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="orderNumber">订单号 *</Label>
+              <Label htmlFor="orderNumber">订单?*</Label>
               <Input
                 id="orderNumber"
                 {...register('orderNumber')}
@@ -205,11 +203,11 @@ export function PurchaseOrderForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="supplier">供应商 *</Label>
+              <Label htmlFor="supplier">供应?*</Label>
               <Input
                 id="supplier"
                 {...register('supplier')}
-                placeholder="供应商名称"
+                placeholder="供应商名?
                 disabled={isSubmitting}
               />
               {getFieldError('supplier') && (
@@ -231,7 +229,7 @@ export function PurchaseOrderForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="priority">优先级 *</Label>
+              <Label htmlFor="priority">优先?*</Label>
               <Select 
                 value={formData.priority} 
                 onValueChange={(value) => setValue('priority', value as any)}
@@ -240,10 +238,10 @@ export function PurchaseOrderForm() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">低</SelectItem>
-                  <SelectItem value="medium">中</SelectItem>
-                  <SelectItem value="high">高</SelectItem>
-                  <SelectItem value="urgent">紧急</SelectItem>
+                  <SelectItem value="low">�?/SelectItem>
+                  <SelectItem value="medium">�?/SelectItem>
+                  <SelectItem value="high">�?/SelectItem>
+                  <SelectItem value="urgent">紧?/SelectItem>
                 </SelectContent>
               </Select>
               {getFieldError('priority') && (
@@ -268,7 +266,7 @@ export function PurchaseOrderForm() {
               </Button>
             </div>
 
-            {formData.items?.map((item, index) => (
+            {formData?.map((item, index) => (
               <div key={index} className="p-4 border rounded-lg space-y-3">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">商品 #{index + 1}</h4>
@@ -338,7 +336,7 @@ export function PurchaseOrderForm() {
             ))}
           </div>
 
-          {/* 总金额 */}
+          {/* 总金?*/}
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex justify-between items-center">
               <span className="font-medium">订单总金额：</span>
@@ -354,7 +352,7 @@ export function PurchaseOrderForm() {
             <Textarea
               id="description"
               {...register('description')}
-              placeholder="请输入订单详细描述..."
+              placeholder="请输入订单详细描?.."
               rows={3}
               disabled={isSubmitting}
             />
@@ -373,7 +371,7 @@ export function PurchaseOrderForm() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  提交中...
+                  提交?..
                 </>
               ) : (
                 '创建订单'

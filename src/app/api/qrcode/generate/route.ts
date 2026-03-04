@@ -1,17 +1,16 @@
-import {
+﻿import {
   ProductInfo,
   QRCodeConfig,
   qrcodeService,
-} from "@/services/qrcode.service";
-import { NextRequest, NextResponse } from "next/server";
+} from '@/services/qrcode.service';
+import { NextRequest, NextResponse } from 'next/server';
 
-// 产品二维码生成API
+// 浜у搧浜岀淮鐮佺敓鎴怉PI
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // 支持单个产品和批量产品
-    const {
+    // 鏀寔鍗曚釜浜у搧鍜屾壒閲忎骇?    const {
       productId,
       brandId,
       productName,
@@ -25,22 +24,20 @@ export async function POST(request: NextRequest) {
       config = {},
     } = body;
 
-    // 如果是批量请求
-    if (products && Array.isArray(products)) {
+    // 濡傛灉鏄壒閲忚?    if (products && Array.isArray(products)) {
       return await handleBatchGeneration(products, config);
     }
 
-    // 单个产品生成
-    // 验证必要参数
+    // 鍗曚釜浜у搧鐢熸垚
+    // 楠岃瘉蹇呰鍙傛暟
     if (!productId || !brandId || !productName) {
       return NextResponse.json(
-        { error: "缺少必要参数：productId、brandId 和 productName" },
+        { error: '缂哄皯蹇呰鍙傛暟锛歱roductId銆乥randId 锟?productName' },
         { status: 400 }
       );
     }
 
-    // 构造产品信息
-    const productInfo: ProductInfo = {
+    // 鏋勯€犱骇鍝佷俊?    const productInfo: ProductInfo = {
       productId,
       brandId,
       productName,
@@ -52,8 +49,7 @@ export async function POST(request: NextRequest) {
       specifications,
     };
 
-    // 生成二维码
-    const result = await qrcodeService.generateQRCode(productInfo, config);
+    // 鐢熸垚浜岀淮?    const result = await qrcodeService.generateQRCode(productInfo, config);
 
     return NextResponse.json({
       success: true,
@@ -63,22 +59,22 @@ export async function POST(request: NextRequest) {
       qrImageBase64: result.qrImageBase64,
       format: result.format,
       size: result.size,
-      message: "二维码生成成功",
+      message: '浜岀淮鐮佺敓鎴愭垚?,
     });
   } catch (error) {
-    console.error("二维码生成错误:", error);
+    console.error('浜岀淮鐮佺敓鎴愰敊?', error);
     return NextResponse.json(
-      { error: (error as Error).message || "服务器内部错误" },
+      { error: (error as Error).message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
       { status: 500 }
     );
   }
 }
 
-// 处理批量生成
+// 澶勭悊鎵归噺鐢熸垚
 async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
   if (!Array.isArray(products) || products.length === 0) {
     return NextResponse.json(
-      { error: "请提供有效的产品列表" },
+      { error: '璇锋彁渚涙湁鏁堢殑浜у搧鍒楄〃' },
       { status: 400 }
     );
   }
@@ -87,18 +83,17 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
 
   for (const product of products) {
     try {
-      // 验证必要参数
+      // 楠岃瘉蹇呰鍙傛暟
       if (!product.productId || !product.brandId || !product.productName) {
         results.push({
           productId: product.productId,
           success: false,
-          error: "缺少必要参数",
+          error: '缂哄皯蹇呰鍙傛暟',
         });
         continue;
       }
 
-      // 构造产品信息
-      const productInfo: ProductInfo = {
+      // 鏋勯€犱骇鍝佷俊?      const productInfo: ProductInfo = {
         productId: product.productId,
         brandId: product.brandId,
         productName: product.productName,
@@ -110,8 +105,7 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
         specifications: product.specifications,
       };
 
-      // 生成二维码
-      const result = await qrcodeService.generateQRCode(productInfo, config);
+      // 鐢熸垚浜岀淮?      const result = await qrcodeService.generateQRCode(productInfo, config);
 
       results.push({
         productId: result.productId,
@@ -126,7 +120,7 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
       results.push({
         productId: product.productId,
         success: false,
-        error: err instanceof Error ? err.message : "未知错误",
+        error: err instanceof Error ? err.message : '鏈煡閿欒',
       });
     }
   }
@@ -136,31 +130,30 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
     results,
     summary: {
       total: results.length,
-      success: results.filter((r) => r.success).length,
-      failed: results.filter((r) => !r.success).length,
+      success: results.filter(r => r.success).length,
+      failed: results.filter(r => !r.success).length,
     },
-    message: `批量处理完成，成功 ${
-      results.filter((r) => r.success).length
-    } 个，失败 ${results.filter((r) => !r.success).length} 个`,
+    message: `鎵归噺澶勭悊瀹屾垚锛屾垚?${
+      results.filter(r => r.success).length
+    } 涓紝澶辫触 ${results.filter(r => !r.success).length} 涓猔,
   });
 }
 
-// 获取二维码信息
-export async function GET(request: NextRequest) {
+// 鑾峰彇浜岀淮鐮佷俊?export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const qrCodeId = searchParams.get("qrCodeId");
-    const productId = searchParams.get("productId");
+    const qrCodeId = searchParams.get('qrCodeId');
+    const productId = searchParams.get('productId');
 
     if (qrCodeId) {
-      // 根据二维码ID获取信息
+      // 鏍规嵁浜岀淮鐮両D鑾峰彇淇℃伅
       const qrCode = await qrcodeService.getQRCodeById(qrCodeId);
       return NextResponse.json({
         success: true,
         data: qrCode,
       });
     } else if (productId) {
-      // 获取产品所有二维码
+      // 鑾峰彇浜у搧鎵€鏈変簩缁寸爜
       const qrcodes = await qrcodeService.getProductQRCodes(productId);
       return NextResponse.json({
         success: true,
@@ -168,15 +161,16 @@ export async function GET(request: NextRequest) {
       });
     } else {
       return NextResponse.json(
-        { error: "请提供 qrCodeId 或 productId 参数" },
+        { error: '璇锋彁?qrCodeId 锟?productId 鍙傛暟' },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error("获取二维码信息错误:", error);
+    console.error('鑾峰彇浜岀淮鐮佷俊鎭敊?', error);
     return NextResponse.json(
-      { error: (error as Error).message || "服务器内部错误" },
+      { error: (error as Error).message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
       { status: 500 }
     );
   }
 }
+

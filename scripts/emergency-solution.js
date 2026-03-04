@@ -141,10 +141,7 @@ if (!fs.existsSync(emergencyDir)) {
   fs.mkdirSync(emergencyDir, { recursive: true });
 }
 
-fs.writeFileSync(
-  path.join(emergencyDir, 'page.tsx'),
-  emergencyAdminPage
-);
+fs.writeFileSync(path.join(emergencyDir, 'page.tsx'), emergencyAdminPage);
 
 console.log('✅ 创建了紧急管理模式页面: /emergency-admin');
 
@@ -196,10 +193,7 @@ setTimeout(() => {
 }, 3000);
 `;
 
-fs.writeFileSync(
-  path.join(process.cwd(), 'temp-auth-fix.js'),
-  tempFixScript
-);
+fs.writeFileSync(path.join(process.cwd(), 'temp-auth-fix.js'), tempFixScript);
 
 console.log('\n✅ 创建了临时修复脚本: temp-auth-fix.js');
 

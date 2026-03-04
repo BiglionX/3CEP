@@ -1,7 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 
-// 初始化 Supabase 客户端
-const supabase = createClient(
+// 初始?Supabase 客户?const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -24,8 +23,7 @@ export interface FileInfo {
 }
 
 /**
- * 文件上传服务类
- */
+ * 文件上传服务? */
 export class FileStorageService {
   private static readonly BUCKET_NAME = 'enterprise-files';
   private static readonly ALLOWED_TYPES = [
@@ -37,7 +35,7 @@ export class FileStorageService {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/vnd.ms-excel',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'text/plain'
+    'text/plain',
   ];
   private static readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -45,19 +43,17 @@ export class FileStorageService {
    * 验证文件
    */
   static validateFile(file: File): { valid: boolean; error?: string } {
-    // 检查文件大小
-    if (file.size > this.MAX_FILE_SIZE) {
-      return { 
-        valid: false, 
-        error: `文件大小超过限制 (${this.formatFileSize(this.MAX_FILE_SIZE)})` 
+    // 检查文件大?    if (file.size > this.MAX_FILE_SIZE) {
+      return {
+        valid: false,
+        error: `文件大小超过限制 (${this.formatFileSize(this.MAX_FILE_SIZE)})`,
       };
     }
 
-    // 检查文件类型
-    if (!this.ALLOWED_TYPES.includes(file.type)) {
-      return { 
-        valid: false, 
-        error: '不支持的文件类型' 
+    // 检查文件类?    if (!this.ALLOWED_TYPES.includes(file.type)) {
+      return {
+        valid: false,
+        error: '不支持的文件类型',
       };
     }
 
@@ -65,7 +61,7 @@ export class FileStorageService {
   }
 
   /**
-   * 上传文件到 Supabase Storage
+   * 上传文件?Supabase Storage
    */
   static async uploadFile(
     file: File,
@@ -79,8 +75,7 @@ export class FileStorageService {
         return { success: false, error: validation.error };
       }
 
-      // 生成唯一文件名
-      const fileExtension = file.name.split('.').pop();
+      // 生成唯一文件?      const fileExtension = file.name.split('.').pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
       const filePath = `${folderPath}/${fileName}`;
 
@@ -89,7 +84,7 @@ export class FileStorageService {
         .from(this.BUCKET_NAME)
         .upload(filePath, file, {
           cacheControl: '3600',
-          upsert: false
+          upsert: false,
         });
 
       if (error) {
@@ -105,14 +100,13 @@ export class FileStorageService {
       return {
         success: true,
         fileUrl: publicUrlData.publicUrl,
-        fileId: data.path
+        fileId: data.path,
       };
-
     } catch (error) {
       console.error('文件上传异常:', error);
-      return { 
-        success: false, 
-        error: '上传过程中发生错误' 
+      return {
+        success: false,
+        error: '上传过程中发生错?,
       };
     }
   }
@@ -159,9 +153,7 @@ export class FileStorageService {
         type: data.type,
         url: URL.createObjectURL(data),
         uploadedAt: new Date().toISOString(),
-        uploadedBy: 'current_user' // 实际应用中应从认证获取
-      };
-
+        uploadedBy: 'current_user', // 实际应用中应从认证获?      };
     } catch (error) {
       console.error('获取文件信息异常:', error);
       return null;
@@ -169,8 +161,7 @@ export class FileStorageService {
   }
 
   /**
-   * 列出文件夹中的文件
-   */
+   * 列出文件夹中的文?   */
   static async listFiles(folderPath: string = ''): Promise<FileInfo[]> {
     try {
       const { data, error } = await supabase.storage
@@ -185,13 +176,12 @@ export class FileStorageService {
       return data.map(file => ({
         id: file.name,
         name: file.name,
-        size: file.metadata?.size || 0,
+        size: file?.size || 0,
         type: this.getFileTypeFromName(file.name),
         url: '',
         uploadedAt: file.updated_at,
-        uploadedBy: 'system'
+        uploadedBy: 'system',
       }));
-
     } catch (error) {
       console.error('列出文件异常:', error);
       return [];
@@ -199,29 +189,27 @@ export class FileStorageService {
   }
 
   /**
-   * 根据文件名推断文件类型
-   */
+   * 根据文件名推断文件类?   */
   private static getFileTypeFromName(fileName: string): string {
     const extension = fileName.split('.').pop()?.toLowerCase();
     const mimeTypes: Record<string, string> = {
-      'jpg': 'image/jpeg',
-      'jpeg': 'image/jpeg',
-      'png': 'image/png',
-      'gif': 'image/gif',
-      'pdf': 'application/pdf',
-      'doc': 'application/msword',
-      'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'xls': 'application/vnd.ms-excel',
-      'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'txt': 'text/plain'
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      png: 'image/png',
+      gif: 'image/gif',
+      pdf: 'application/pdf',
+      doc: 'application/msword',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      xls: 'application/vnd.ms-excel',
+      xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      txt: 'text/plain',
     };
 
     return mimeTypes[extension || ''] || 'application/octet-stream';
   }
 
   /**
-   * 格式化文件大小
-   */
+   * 格式化文件大?   */
   private static formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -231,36 +219,32 @@ export class FileStorageService {
   }
 
   /**
-   * 创建文件夹
-   */
+   * 创建文件?   */
   static async createFolder(folderPath: string): Promise<boolean> {
     try {
-      // Supabase Storage 不直接支持创建空文件夹
-      // 我们可以通过上传一个占位文件来创建文件夹结构
-      const placeholderPath = `${folderPath}/.gitkeep`;
-      
+      // Supabase Storage 不直接支持创建空文件?      // 我们可以通过上传一个占位文件来创建文件夹结?      const placeholderPath = `${folderPath}/.gitkeep`;
+
       const { error } = await supabase.storage
         .from(this.BUCKET_NAME)
         .upload(placeholderPath, new Blob(['']), {
           cacheControl: '3600',
-          upsert: true
+          upsert: true,
         });
 
       if (error) {
-        console.error('创建文件夹失败:', error);
+        console.error('创建文件夹失?', error);
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error('创建文件夹异常:', error);
+      console.error('创建文件夹异?', error);
       return false;
     }
   }
 
   /**
-   * 获取存储桶信息
-   */
+   * 获取存储桶信?   */
   static async getBucketInfo() {
     try {
       const { data, error } = await supabase.storage
@@ -268,18 +252,17 @@ export class FileStorageService {
         .list();
 
       if (error) {
-        console.error('获取存储桶信息失败:', error);
+        console.error('获取存储桶信息失?', error);
         return null;
       }
 
       return {
         bucket: this.BUCKET_NAME,
         fileCount: (data as any)?.data.length,
-        maxSize: this.MAX_FILE_SIZE
+        maxSize: this.MAX_FILE_SIZE,
       };
-
     } catch (error) {
-      console.error('获取存储桶信息异常:', error);
+      console.error('获取存储桶信息异?', error);
       return null;
     }
   }
@@ -322,10 +305,9 @@ export class EnterpriseDocumentService {
       }
 
       return { success: true, data };
-
     } catch (error) {
       console.error('保存文档记录异常:', error);
-      return { success: false, error: '保存记录时发生错误' };
+      return { success: false, error: '保存记录时发生错? };
     }
   }
 
@@ -346,16 +328,14 @@ export class EnterpriseDocumentService {
       }
 
       return { success: true, data };
-
     } catch (error) {
       console.error('获取文档列表异常:', error);
-      return { success: false, error: '获取文档时发生错误', data: [] };
+      return { success: false, error: '获取文档时发生错?, data: [] };
     }
   }
 
   /**
-   * 更新文档状态
-   */
+   * 更新文档状?   */
   static async updateDocumentStatus(
     documentId: string,
     status: string,
@@ -364,12 +344,12 @@ export class EnterpriseDocumentService {
   ) {
     try {
       const updateData: any = { status };
-      
+
       if (reviewerId) {
         updateData.reviewed_by = reviewerId;
         updateData.reviewed_at = new Date().toISOString();
       }
-      
+
       if (rejectionReason) {
         updateData.rejection_reason = rejectionReason;
       }
@@ -382,26 +362,23 @@ export class EnterpriseDocumentService {
         .single();
 
       if (error) {
-        console.error('更新文档状态失败:', error);
+        console.error('更新文档状态失?', error);
         return { success: false, error: error.message };
       }
 
       return { success: true, data };
-
     } catch (error) {
-      console.error('更新文档状态异常:', error);
+      console.error('更新文档状态异?', error);
       return { success: false, error: '更新状态时发生错误' };
     }
   }
 
   /**
-   * 删除文档记录和文件
-   */
+   * 删除文档记录和文?   */
   static async deleteDocument(documentId: string, filePath: string) {
     try {
-      // 先删除存储中的文件
-      const fileDeleted = await FileStorageService.deleteFile(filePath);
-      
+      // 先删除存储中的文?      const fileDeleted = await FileStorageService.deleteFile(filePath);
+
       if (!fileDeleted) {
         return { success: false, error: '文件删除失败' };
       }
@@ -418,10 +395,9 @@ export class EnterpriseDocumentService {
       }
 
       return { success: true };
-
     } catch (error) {
       console.error('删除文档异常:', error);
-      return { success: false, error: '删除文档时发生错误' };
+      return { success: false, error: '删除文档时发生错? };
     }
   }
 }

@@ -1,6 +1,6 @@
 /**
  * 角色感知的顶部导航栏组件
- * 显示用户信息、通知和快速操作
+ * 显示用户信息、通知和快速操?
  */
 
 'use client';
@@ -28,23 +28,23 @@ export function RoleAwareTopbar() {
   const notifications = [
     {
       id: 1,
-      title: '新用户注册',
-      message: '有3个新用户等待审核',
-      time: '5分钟前',
+      title: '新用户注?,
+      message: '�?个新用户等待审核',
+      time: '5分钟?,
       unread: true,
     },
     {
       id: 2,
-      title: '内容待审核',
-      message: '有5篇新文章需要审核',
-      time: '1小时前',
+      title: '内容待审?,
+      message: '�?篇新文章需要审?,
+      time: '1小时?,
       unread: true,
     },
     {
       id: 3,
       title: '系统更新',
-      message: '系统将在今晚12点进行维护',
-      time: '2小时前',
+      message: '系统将在今晚12点进行维?,
+      time: '2小时?,
       unread: false,
     },
   ];
@@ -53,7 +53,7 @@ export function RoleAwareTopbar() {
 
   const handleLogout = () => {
     logout();
-    // 这里应该跳转到登录页面
+    // 这里应该跳转到登录页?
     window.location.href = '/login';
   };
 
@@ -63,7 +63,7 @@ export function RoleAwareTopbar() {
         <div className="flex items-center justify-between h-16">
           {/* 左侧标题区域 */}
           <div className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-900">管理控制台</h1>
+            <h1 className="text-xl font-semibold text-gray-900">管理控制?/h1>
             {userInfo && (
               <Badge className="ml-3">{userInfo.roles?.[0] || '访客'}</Badge>
             )}
@@ -135,7 +135,7 @@ export function RoleAwareTopbar() {
                   <User className="w-4 h-4 text-gray-600" />
                 </div>
                 <span className="hidden md:inline text-sm font-medium text-gray-700">
-                  {userInfo?.email || '未登录'}
+                  {userInfo?.email || '未登?}
                 </span>
                 <ChevronDown className="w-4 h-4" />
               </Button>
@@ -145,10 +145,10 @@ export function RoleAwareTopbar() {
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                   <div className="p-3 border-b">
                     <p className="text-sm font-medium text-gray-900">
-                      {userInfo?.email || '未登录用户'}
+                      {userInfo?.email || '未登录用?}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {userInfo?.roles?.map(role => role).join(', ') ||
+                      {userInfo??.map(role => role).join(', ') ||
                         '访客角色'}
                     </p>
                   </div>
@@ -188,7 +188,7 @@ export function RoleAwareTopbar() {
                       className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       <LogOut className="w-4 h-4 mr-3" />
-                      退出登录
+                      退出登?
                     </button>
                   </div>
                 </div>

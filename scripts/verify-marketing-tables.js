@@ -2,9 +2,10 @@ const { createClient } = require('@supabase/supabase-js');
 
 async function verifyMarketingTables() {
   console.log('🔍 验证营销数据表结构...\n');
-  
+
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hrjqzbhqueleszkvnsen.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      'https://hrjqzbhqueleszkvnsen.supabase.co',
     process.env.SUPABASE_SERVICE_ROLE_KEY || 'your_service_key_here'
   );
 
@@ -42,7 +43,7 @@ async function verifyMarketingTables() {
     // 如果表存在，插入测试数据
     if (!leadsError && !eventsError) {
       console.log('\n🧪 插入测试数据...');
-      
+
       // 插入测试线索
       const { data: leadData, error: insertError } = await supabase
         .from('leads')
@@ -54,7 +55,7 @@ async function verifyMarketingTables() {
           phone: '13800138000',
           use_case: '测试用例',
           source: 'test_script',
-          status: 'new'
+          status: 'new',
         })
         .select();
 
@@ -62,7 +63,7 @@ async function verifyMarketingTables() {
         console.log('❌ 插入测试线索失败:', insertError.message);
       } else {
         console.log('✅ 测试线索插入成功');
-        
+
         // 插入测试事件
         const { error: eventError } = await supabase
           .from('marketing_events')
@@ -70,7 +71,7 @@ async function verifyMarketingTables() {
             event_type: 'page_view',
             role: 'ops',
             page_path: '/landing/overview',
-            source: 'test_script'
+            source: 'test_script',
           });
 
         if (eventError) {
@@ -98,7 +99,6 @@ async function verifyMarketingTables() {
     }
 
     console.log('\n🎉 验证完成！');
-    
   } catch (error) {
     console.error('❌ 验证过程出错:', error.message);
   }

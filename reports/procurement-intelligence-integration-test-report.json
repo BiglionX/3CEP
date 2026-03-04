@@ -1,0 +1,203 @@
+{
+  "timestamp": "2026-02-26T13:33:10.828Z",
+  "summary": {
+    "totalTests": 7,
+    "passedTests": 3,
+    "failedTests": 4,
+    "totalTime": 4563
+  },
+  "modules": {
+    "supplier-profiling": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "创建供应商画像",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "查询供应商画像",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "供应商搜索功能",
+          "status": "failed",
+          "details": "API调用失败"
+        }
+      ],
+      "startTime": 1772112786273,
+      "endTime": 1772112787090,
+      "duration": 817
+    },
+    "market-intelligence": {
+      "status": "passed",
+      "tests": [
+        {
+          "name": "获取最新市场报告",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "价格指数查询",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "供需分析",
+          "status": "passed",
+          "details": "API调用成功"
+        }
+      ],
+      "startTime": 1772112787091,
+      "endTime": 1772112787711,
+      "duration": 620
+    },
+    "risk-analysis": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "供应商风险评估",
+          "status": "failed",
+          "details": "API调用失败"
+        },
+        {
+          "name": "风险历史查询",
+          "status": "failed",
+          "details": "API调用失败"
+        },
+        {
+          "name": "批量风险评估",
+          "status": "passed",
+          "details": "API调用成功"
+        }
+      ],
+      "startTime": 1772112787714,
+      "endTime": 1772112788523,
+      "duration": 809
+    },
+    "decision-engine": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "采购决策生成",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "供应商评估",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "决策历史查询",
+          "status": "failed",
+          "details": "API调用失败"
+        }
+      ],
+      "startTime": 1772112788527,
+      "endTime": 1772112789258,
+      "duration": 731
+    },
+    "price-optimization": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "采购时机优化",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "价格趋势分析",
+          "status": "failed",
+          "details": "API调用失败"
+        },
+        {
+          "name": "成本节省计算",
+          "status": "failed",
+          "details": "API调用失败"
+        }
+      ],
+      "startTime": 1772112789261,
+      "endTime": 1772112789883,
+      "duration": 622
+    },
+    "frontend-components": {
+      "status": "passed",
+      "tests": [
+        {
+          "name": "页面文件存在: page.tsx",
+          "status": "passed",
+          "details": "文件存在且可访问"
+        },
+        {
+          "name": "页面文件存在: page.tsx",
+          "status": "passed",
+          "details": "文件存在且可访问"
+        },
+        {
+          "name": "API路由存在: supplier-profiling",
+          "status": "passed",
+          "details": "路由文件存在且可访问"
+        },
+        {
+          "name": "API路由存在: market-intelligence",
+          "status": "passed",
+          "details": "路由文件存在且可访问"
+        },
+        {
+          "name": "API路由存在: risk-analysis",
+          "status": "passed",
+          "details": "路由文件存在且可访问"
+        },
+        {
+          "name": "API路由存在: decision-engine",
+          "status": "passed",
+          "details": "路由文件存在且可访问"
+        },
+        {
+          "name": "API路由存在: price-optimization",
+          "status": "passed",
+          "details": "路由文件存在且可访问"
+        }
+      ],
+      "startTime": 1772112789885,
+      "endTime": 1772112789896,
+      "duration": 11
+    },
+    "api-health": {
+      "status": "passed",
+      "tests": [
+        {
+          "name": "供应商画像健康检查",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "市场情报健康检查",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "风险分析健康检查",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "决策引擎健康检查",
+          "status": "passed",
+          "details": "API调用成功"
+        },
+        {
+          "name": "价格优化健康检查",
+          "status": "passed",
+          "details": "API调用成功"
+        }
+      ],
+      "startTime": 1772112789899,
+      "endTime": 1772112790825,
+      "duration": 926
+    }
+  },
+  "overallStatus": "FAILURE"
+}

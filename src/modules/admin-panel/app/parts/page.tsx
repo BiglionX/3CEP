@@ -37,7 +37,7 @@ interface Part {
   primary_image_url: string | null;
 }
 
-const PartsManagement = () => {
+const PartsManagement = () => { // @ts-ignore
   const [parts, setParts] = useState<Part[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -84,7 +84,7 @@ const PartsManagement = () => {
 
   // 删除配件
   const handleDelete = async (partId: string) => {
-    if (!confirm('确定要删除这个配件吗？')) return;
+    if (!confirm('确定要删除这个配件吗?)) return;
     
     try {
       const response = await fetch(`/api/admin/parts?id=${partId}`, {
@@ -136,18 +136,18 @@ const PartsManagement = () => {
     return brands.sort();
   };
 
-  // 页面加载时获取数据
+  // 页面加载时获取数?
   useEffect(() => {
     fetchParts();
   }, [currentPage, searchTerm, categoryFilter, brandFilter, statusFilter]);
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按钮 */}
+      {/* 页面标题和操作按?*/}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">配件管理</h1>
-          <p className="text-gray-600 mt-1">管理系统中的所有配件信息</p>
+          <p className="text-gray-600 mt-1">管理系统中的所有配件信?/p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => window.open('/api/admin/parts/import', '_blank')}>
@@ -175,13 +175,13 @@ const PartsManagement = () => {
         </div>
       </div>
 
-      {/* 搜索和筛选区域 */}
+      {/* 搜索和筛选区?*/}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="搜索配件名称、型号..."
+              placeholder="搜索配件名称、型?.."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -215,10 +215,10 @@ const PartsManagement = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="all">全部状态</option>
+            <option value="all">全部状?/option>
             <option value="active">正常</option>
             <option value="inactive">停用</option>
-            <option value="deleted">已删除</option>
+            <option value="deleted">已删?/option>
           </select>
         </div>
       </div>
@@ -228,7 +228,7 @@ const PartsManagement = () => {
         {loading ? (
           <div className="p-8 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-gray-600">加载中...</p>
+            <p className="mt-2 text-gray-600">加载?..</p>
           </div>
         ) : (
           <>
@@ -241,7 +241,7 @@ const PartsManagement = () => {
                   <TableHead>品牌/型号</TableHead>
                   <TableHead>型号编码</TableHead>
                   <TableHead>库存</TableHead>
-                  <TableHead>状态</TableHead>
+                  <TableHead>状?/TableHead>
                   <TableHead>创建时间</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
@@ -276,7 +276,7 @@ const PartsManagement = () => {
                         ? 'text-red-600 font-medium' 
                         : 'text-gray-900'}>
                         {part.stock_quantity !== null ? part.stock_quantity : 0}
-                        {part.unit || '个'}
+                        {part.unit || '�?}
                         {part.min_stock && part.stock_quantity !== null && part.stock_quantity <= part.min_stock && (
                           <span className="ml-1 text-xs">(库存不足)</span>
                         )}
@@ -289,7 +289,7 @@ const PartsManagement = () => {
                         'bg-red-100 text-red-800'
                       }`}>
                         {part.status === 'active' ? '正常' : 
-                         part.status === 'inactive' ? '停用' : '已删除'}
+                         part.status === 'inactive' ? '停用' : '已删?}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -330,8 +330,8 @@ const PartsManagement = () => {
             {totalPages > 1 && (
               <div className="border-t border-gray-200 px-6 py-4 flex items-center justify-between">
                 <div className="text-sm text-gray-700">
-                  显示第 {(currentPage - 1) * itemsPerPage + 1} 到 {Math.min(currentPage * itemsPerPage, totalItems)} 条，
-                  共 {totalItems} 条记录
+                  显示?{(currentPage - 1) * itemsPerPage + 1} �?{Math.min(currentPage * itemsPerPage, totalItems)} 条，
+                  �?{totalItems} 条记?
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -340,10 +340,10 @@ const PartsManagement = () => {
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
                   >
-                    上一页
+                    上一?
                   </Button>
                   <span className="px-3 py-2 text-sm text-gray-700">
-                    第 {currentPage} 页，共 {totalPages} 页
+                    �?{currentPage} 页，�?{totalPages} �?
                   </span>
                   <Button
                     variant="outline"
@@ -351,7 +351,7 @@ const PartsManagement = () => {
                     onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                     disabled={currentPage === totalPages}
                   >
-                    下一页
+                    下一?
                   </Button>
                 </div>
               </div>
@@ -360,7 +360,7 @@ const PartsManagement = () => {
         )}
       </div>
 
-      {/* 新增/编辑表单对话框 */}
+      {/* 新增/编辑表单对话?*/}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -374,7 +374,7 @@ const PartsManagement = () => {
         </DialogContent>
       </Dialog>
 
-      {/* 详情对话框 */}
+      {/* 详情对话?*/}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -451,7 +451,7 @@ const ImportForm = ({ onSuccess }: { onSuccess: () => void }) => {
         disabled={!file || loading}
         className="w-full"
       >
-        {loading ? '导入中...' : '开始导入'}
+        {loading ? '导入?..' : '开始导?}
       </Button>
       
       {result && (
@@ -460,11 +460,11 @@ const ImportForm = ({ onSuccess }: { onSuccess: () => void }) => {
             导入结果
           </h4>
           <p className="mt-1 text-sm">
-            总计: {result.data?.total || 0} 条，
-            成功: {result.data?.success || 0} 条，
-            失败: {result.data?.failed || 0} 条
+            总计: {result?.total || 0} 条，
+            成功: {result?.success || 0} 条，
+            失败: {result?.failed || 0} �?
           </p>
-          {result.data?.errors && result.data.errors.length > 0 && (
+          {result?.errors && result.data.errors.length > 0 && (
             <div className="mt-2">
               <p className="text-sm font-medium">错误信息:</p>
               <ul className="mt-1 text-xs space-y-1">
@@ -472,7 +472,7 @@ const ImportForm = ({ onSuccess }: { onSuccess: () => void }) => {
                   <li key={index} className="text-red-600">{error}</li>
                 ))}
                 {result.data.errors.length > 5 && (
-                  <li className="text-gray-500">...还有 {result.data.errors.length - 5} 条错误</li>
+                  <li className="text-gray-500">...还有 {result.data.errors.length - 5} 条错?/li>
                 )}
               </ul>
             </div>

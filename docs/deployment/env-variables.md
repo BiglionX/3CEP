@@ -74,6 +74,7 @@ AUDIT_LOG_RETENTION_DAYS=90
 ## 环境隔离策略
 
 ### 开发环境 (Development)
+
 ```bash
 NODE_ENV=development
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -81,6 +82,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 ### 预发布环境 (Staging)
+
 ```bash
 NODE_ENV=production
 NEXT_PUBLIC_SITE_URL=https://stage.fixcycle.com
@@ -88,6 +90,7 @@ NEXT_PUBLIC_SITE_URL=https://stage.fixcycle.com
 ```
 
 ### 生产环境 (Production)
+
 ```bash
 NODE_ENV=production
 NEXT_PUBLIC_SITE_URL=https://fixcycle.com
@@ -99,6 +102,7 @@ NEXT_PUBLIC_SITE_URL=https://fixcycle.com
 ### 1. 本地开发安全
 
 **.env.local 文件管理：**
+
 ```bash
 # 本地开发专用配置
 .env.local          # 本地环境变量（不提交到仓库）
@@ -108,6 +112,7 @@ NEXT_PUBLIC_SITE_URL=https://fixcycle.com
 ```
 
 **Git 忽略配置：**
+
 ```gitignore
 # 环境变量文件
 .env.local
@@ -124,6 +129,7 @@ logs/
 ### 2. CI/CD 密钥管理
 
 **GitHub Actions Secrets 配置：**
+
 ```yaml
 # 在 GitHub 仓库设置中配置以下 Secrets：
 SUPABASE_SERVICE_ROLE_KEY
@@ -137,6 +143,7 @@ PROD_APPROVERS
 ```
 
 **CI 环境变量注入：**
+
 ```yaml
 # .github/workflows/ci.yml
 env:
@@ -149,11 +156,13 @@ env:
 ### 3. 密钥轮换策略
 
 **定期轮换：**
+
 - JWT 密钥：每 90 天轮换一次
 - API 密钥：每 6 个月轮换一次
 - 数据库密码：每年轮换一次
 
 **轮换流程：**
+
 1. 生成新密钥
 2. 在 CI/CD 中更新 Secrets
 3. 部署新配置
@@ -177,12 +186,12 @@ const requiredEnvVars = [
 
 function validateEnvironment() {
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-  
+
   if (missingVars.length > 0) {
     console.error('❌ 缺少必要的环境变量:', missingVars);
     process.exit(1);
   }
-  
+
   console.log('✅ 环境变量配置验证通过');
 }
 
@@ -206,16 +215,19 @@ validateEnvironment();
 ## 安全最佳实践
 
 ### 1. 访问控制
+
 - 限制对 Secrets 配置的访问权限
 - 使用最小权限原则
 - 启用双因素认证
 
 ### 2. 监控告警
+
 - 监控密钥使用情况
 - 设置异常访问告警
 - 定期安全审计
 
 ### 3. 备份恢复
+
 - 定期备份密钥配置
 - 建立紧急恢复流程
 - 测试恢复程序

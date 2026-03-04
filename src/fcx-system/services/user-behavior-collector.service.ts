@@ -1,16 +1,15 @@
 /**
  * 用户行为数据收集服务
- * 负责收集、存储和管理用户在FCX生态系统中的各种行为数据
- */
+ * 负责收集、存储和管理用户在FCX生态系统中的各种行为数? */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 import {
   RecommendationItemType,
   UserActionType,
   UserBehavior,
-} from "../models/recommendation.model";
-import { generateUUID } from "../utils/helpers";
-import { UserBehaviorCollector } from "./recommendation.interfaces";
+} from '../models/recommendation.model';
+import { generateUUID } from '../utils/helpers';
+import { UserBehaviorCollector } from './recommendation.interfaces';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -39,7 +38,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
     try {
       // 验证必填字段
       if (!behavior.userId || !behavior.itemId || !behavior.actionType) {
-        throw new Error("缺少必要的行为数据字段");
+        throw new Error('缺少必要的行为数据字?);
       }
 
       // 自动补充字段
@@ -57,7 +56,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
       };
 
       // 保存到数据库
-      const { error } = await supabase.from("user_behaviors").insert({
+      const { error } = await supabase.from('user_behaviors').insert({
         id: behaviorWithDefaults.id,
         user_id: behaviorWithDefaults.userId,
         item_id: behaviorWithDefaults.itemId,
@@ -74,15 +73,14 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
       } as any);
 
       if (error) {
-        console.error("保存用户行为失败:", error);
+        console.error('保存用户行为失败:', error);
         throw new Error(`保存用户行为失败: ${error.message}`);
       }
 
-      console.log(
-        `✅ 用户行为记录成功: ${behaviorWithDefaults.userId} -> ${behaviorWithDefaults.actionType} -> ${behaviorWithDefaults.itemId}`
-      );
-    } catch (error) {
-      console.error("记录用户行为错误:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+        `�?用户行为记录成功: ${behaviorWithDefaults.userId} -> ${behaviorWithDefaults.actionType} -> ${behaviorWithDefaults.itemId}`
+      )} catch (error) {
+      console.error('记录用户行为错误:', error);
       throw error;
     }
   }
@@ -97,23 +95,30 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
       // 分批处理大量数据
       for (let i = 0; i < behaviors.length; i += this.BATCH_SIZE) {
         const batch = behaviors.slice(i, i + this.BATCH_SIZE);
-        const batchData = batch.map((behavior) => ({
-          id: behavior.id || generateUUID(),
-          user_id: behavior.userId,
-          item_id: behavior.itemId,
-          item_type: behavior.itemType || RecommendationItemType.REPAIR_SHOP,
-          action_type: behavior.actionType,
-          timestamp: behavior.timestamp || new Date().toISOString(),
-          score:
-            behavior.score || this.calculateBehaviorScore(behavior.actionType),
-          context: behavior.context ? JSON.stringify(behavior.context) : null,
-          metadata: behavior.metadata
-            ? JSON.stringify(behavior.metadata)
-            : null,
-        }));
+        const batchData = batch.map(
+          behavior =>
+            ({
+              id: behavior.id || generateUUID(),
+              user_id: behavior.userId,
+              item_id: behavior.itemId,
+              item_type:
+                behavior.itemType || RecommendationItemType.REPAIR_SHOP,
+              action_type: behavior.actionType,
+              timestamp: behavior.timestamp || new Date().toISOString(),
+              score:
+                behavior.score ||
+                this.calculateBehaviorScore(behavior.actionType),
+              context: behavior.context
+                ? JSON.stringify(behavior.context)
+                : null,
+              metadata: behavior.metadata
+                ? JSON.stringify(behavior.metadata)
+                : null,
+            }) as any
+        );
 
         const { error } = await supabase
-          .from("user_behaviors")
+          .from('user_behaviors')
           .insert(batchData);
 
         if (error) {
@@ -127,9 +132,8 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
         }
       }
 
-      console.log(`✅ 批量用户行为记录成功 (${behaviors.length} 条)`);
-    } catch (error) {
-      console.error("批量记录用户行为错误:", error);
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?批量用户行为记录成功 (${behaviors.length} �?`)} catch (error) {
+      console.error('批量记录用户行为错误:', error);
       throw error;
     }
   }
@@ -143,18 +147,18 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
   ): Promise<UserBehavior[]> {
     try {
       const { data, error } = await supabase
-        .from("user_behaviors")
-        .select("*")
-        .eq("user_id", userId)
-        .order("timestamp", { ascending: false })
+        .from('user_behaviors')
+        .select('*')
+        .eq('user_id', userId)
+        .order('timestamp', { ascending: false })
         .limit(limit);
 
       if (error) {
-        console.error("获取用户行为失败:", error);
+        console.error('获取用户行为失败:', error);
         throw new Error(`获取用户行为失败: ${error.message}`);
       }
 
-      return (data || []).map((record) => ({
+      return (data || []).map(record => ({
         id: record.id,
         userId: record.user_id,
         itemId: record.item_id,
@@ -166,7 +170,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
         metadata: record.metadata ? JSON.parse(record.metadata) : undefined,
       }));
     } catch (error) {
-      console.error("获取用户行为错误:", error);
+      console.error('获取用户行为错误:', error);
       throw error;
     }
   }
@@ -182,12 +186,12 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
   ): Promise<UserBehavior[]> {
     try {
       let query = supabase
-        .from("user_behaviors")
-        .select("*")
-        .eq("user_id", userId)
-        .gte("timestamp", startDate.toISOString())
-        .lte("timestamp", endDate.toISOString())
-        .order("timestamp", { ascending: false });
+        .from('user_behaviors')
+        .select('*')
+        .eq('user_id', userId)
+        .gte('timestamp', startDate.toISOString())
+        .lte('timestamp', endDate.toISOString())
+        .order('timestamp', { ascending: false });
 
       if (limit) {
         query = query.limit(limit);
@@ -196,10 +200,10 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
       const { data, error } = await query;
 
       if (error) {
-        throw new Error(`获取时间范围内用户行为失败: ${error.message}`);
+        throw new Error(`获取时间范围内用户行为失? ${error.message}`);
       }
 
-      return (data || []).map((record) => ({
+      return (data || []).map(record => ({
         id: record.id,
         userId: record.user_id,
         itemId: record.item_id,
@@ -211,7 +215,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
         metadata: record.metadata ? JSON.parse(record.metadata) : undefined,
       }));
     } catch (error) {
-      console.error("获取时间范围内用户行为错误:", error);
+      console.error('获取时间范围内用户行为错?', error);
       throw error;
     }
   }
@@ -225,21 +229,19 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
       cutoffDate.setDate(cutoffDate.getDate() - days);
 
       const { data, error } = await supabase
-        .from("user_behaviors")
+        .from('user_behaviors')
         .delete()
-        .lt("timestamp", cutoffDate.toISOString())
+        .lt('timestamp', cutoffDate.toISOString())
         .select();
 
       if (error) {
         throw new Error(`清理过期行为数据失败: ${error.message}`);
       }
 
-      const deletedCount = (data as any)?.data?.length || 0;
-      console.log(`✅ 清理过期行为数据完成: 删除 ${deletedCount} 条记录`);
-
-      return deletedCount;
+      const deletedCount = (data as any)?.(data as any)?.length || 0;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?清理过期行为数据完成: 删除 ${deletedCount} 条记录`)return deletedCount;
     } catch (error) {
-      console.error("清理过期行为数据错误:", error);
+      console.error('清理过期行为数据错误:', error);
       throw error;
     }
   }
@@ -254,8 +256,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
     favoriteCategories: string[];
   }> {
     try {
-      // 获取用户所有行为
-      const behaviors = await this.getUserBehaviors(userId, 1000);
+      // 获取用户所有行?      const behaviors = await this.getUserBehaviors(userId, 1000);
 
       if (behaviors.length === 0) {
         return {
@@ -275,7 +276,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
       let recentActivityDays = 0;
       const activeDates = new Set<string>();
 
-      behaviors.forEach((behavior) => {
+      behaviors.forEach(behavior => {
         // 动作分布统计
         actionDistribution[behavior.actionType] =
           (actionDistribution[behavior.actionType] || 0) + 1;
@@ -283,7 +284,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
         // 活跃天数统计
         const behaviorDate = new Date(behavior.timestamp)
           .toISOString()
-          .split("T")[0];
+          .split('T')[0];
         activeDates.add(behaviorDate);
 
         if (new Date(behavior.timestamp) > recentCutoff) {
@@ -292,8 +293,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
       });
 
       // 计算最喜欢的类别（需要从物品信息中获取）
-      // 这里简化处理，实际应该关联物品表获取类别信息
-      const favoriteCategories = Object.keys(categoryCount)
+      // 这里简化处理，实际应该关联物品表获取类别信?      const favoriteCategories = Object.keys(categoryCount)
         .sort((a, b) => categoryCount[b] - categoryCount[a])
         .slice(0, 5);
 
@@ -304,7 +304,7 @@ export class UserBehaviorCollectorService implements UserBehaviorCollector {
         favoriteCategories,
       };
     } catch (error) {
-      console.error("获取用户行为统计错误:", error);
+      console.error('获取用户行为统计错误:', error);
       throw error;
     }
   }

@@ -1,120 +1,123 @@
-'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { 
-  Plus, 
-  Edit3, 
-  Eye, 
-  Trash2, 
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import {
+  Plus,
+  Edit3,
+  Eye,
+  Trash2,
   Filter,
   Search,
   Calendar,
-  BarChart3
-} from 'lucide-react'
+  BarChart3,
+} from 'lucide-react';
 
 interface Article {
-  id: string
-  title: string
-  summary: string
-  status: 'draft' | 'published' | 'archived'
-  view_count: number
-  like_count: number
-  comment_count: number
-  created_at: string
-  updated_at: string
+  id: string;
+  title: string;
+  summary: string;
+  status: 'draft' | 'published' | 'archived';
+  view_count: number;
+  like_count: number;
+  comment_count: number;
+  created_at: string;
+  updated_at: string;
   authors: {
-    name: string
-  } | null
+    name: string;
+  } | null;
   article_categories: {
-    name: string
-  } | null
+    name: string;
+  } | null;
 }
 
 interface Stats {
-  total: number
-  published: number
-  draft: number
-  todayViews: number
+  total: number;
+  published: number;
+  draft: number;
+  todayViews: number;
 }
 
 export default function ArticlesOverviewPage() {
-  const [articles, setArticles] = useState<Article[]>([])
-  const [loading, setLoading] = useState(true)
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<Stats>({
     total: 0,
     published: 0,
     draft: 0,
-    todayViews: 0
-  })
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [sortBy, setSortBy] = useState('updated_at')
+    todayViews: 0,
+  });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('updated_at');
 
   // 获取文章统计数据
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/admin/articles/stats')
-      const result = await response.json()
-      
+      const response = await fetch('/api/admin/articles/stats');
+      const result = await response.json();
+
       if (response.ok) {
-        setStats(result.data)
+        setStats(result.data);
       }
     } catch (error) {
-      console.error('获取统计失败:', error)
+      console.error('获取统计失败:', error);
     }
-  }
+  };
 
   // 获取文章列表
   const fetchArticles = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const params = new URLSearchParams({
         search: searchTerm,
         status: statusFilter === 'all' ? '' : statusFilter,
-        sortBy
-      })
+        sortBy,
+      });
 
-      const response = await fetch(`/api/admin/articles?${params.toString()}`)
-      const result = await response.json()
+      const response = await fetch(`/api/admin/articles?${params.toString()}`);
+      const result = await response.json();
 
       if (response.ok) {
-        setArticles(result.data || [])
+        setArticles(result.data || []);
       }
     } catch (error) {
-      console.error('获取文章列表失败:', error)
+      console.error('获取文章列表失败:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchStats()
-    fetchArticles()
-  }, [])
+    fetchStats();
+    fetchArticles();
+  }, []);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      fetchArticles()
-    }, 500)
+      fetchArticles();
+    }, 500);
 
-    return () => clearTimeout(delayDebounceFn)
-  }, [searchTerm, statusFilter, sortBy])
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, statusFilter, sortBy]);
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       draft: { text: '草稿', color: 'bg-yellow-100 text-yellow-800' },
-      published: { text: '已发布', color: 'bg-green-100 text-green-800' },
-      archived: { text: '已归档', color: 'bg-gray-100 text-gray-800' }
-    }
+      published: { text: '已发?, color: 'bg-green-100 text-green-800' },
+      archived: { text: '已归?, color: 'bg-gray-100 text-gray-800' },
+    };
 
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft
+    const config =
+      statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
     return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
+      <span
+        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}
+      >
         {config.text}
       </span>
-    )
-  }
+    );
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-CN', {
@@ -122,9 +125,9 @@ export default function ArticlesOverviewPage() {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+      minute: '2-digit',
+    });
+  };
 
   if (loading && articles.length === 0) {
     return (
@@ -138,18 +141,17 @@ export default function ArticlesOverviewPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="p-6">
-      {/* 页面标题和操作按钮 */}
+      {/* 页面标题和操作按?*/}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">文章管理</h1>
           <p className="mt-1 text-sm text-gray-500">
-            管理和维护平台的所有文章内容
-          </p>
+            管理和维护平台的所有文章内?          </p>
         </div>
         <div className="mt-4 sm:mt-0">
           <Link
@@ -172,9 +174,13 @@ export default function ArticlesOverviewPage() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">总文章数</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    总文章数
+                  </dt>
                   <dd className="flex items-baseline">
-                    <div className="text-2xl font-semibold text-gray-900">{stats.total}</div>
+                    <div className="text-2xl font-semibold text-gray-900">
+                      {stats.total}
+                    </div>
                   </dd>
                 </dl>
               </div>
@@ -190,9 +196,12 @@ export default function ArticlesOverviewPage() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">已发布</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    已发?                  </dt>
                   <dd className="flex items-baseline">
-                    <div className="text-2xl font-semibold text-gray-900">{stats.published}</div>
+                    <div className="text-2xl font-semibold text-gray-900">
+                      {stats.published}
+                    </div>
                   </dd>
                 </dl>
               </div>
@@ -208,9 +217,13 @@ export default function ArticlesOverviewPage() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">草稿</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    草稿
+                  </dt>
                   <dd className="flex items-baseline">
-                    <div className="text-2xl font-semibold text-gray-900">{stats.draft}</div>
+                    <div className="text-2xl font-semibold text-gray-900">
+                      {stats.draft}
+                    </div>
                   </dd>
                 </dl>
               </div>
@@ -226,9 +239,13 @@ export default function ArticlesOverviewPage() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">今日浏览</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    今日浏览
+                  </dt>
                   <dd className="flex items-baseline">
-                    <div className="text-2xl font-semibold text-gray-900">{stats.todayViews}</div>
+                    <div className="text-2xl font-semibold text-gray-900">
+                      {stats.todayViews}
+                    </div>
                   </dd>
                 </dl>
               </div>
@@ -241,7 +258,7 @@ export default function ArticlesOverviewPage() {
       <div className="bg-white shadow rounded-lg mb-6">
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* 搜索框 */}
+            {/* 搜索?*/}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -251,32 +268,32 @@ export default function ArticlesOverviewPage() {
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="搜索文章标题..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
 
-            {/* 状态筛选 */}
+            {/* 状态筛?*/}
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={e => setStatusFilter(e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="all">所有状态</option>
-              <option value="published">已发布</option>
+              <option value="all">所有状?/option>
+              <option value="published">已发?/option>
               <option value="draft">草稿</option>
-              <option value="archived">已归档</option>
+              <option value="archived">已归?/option>
             </select>
 
             {/* 排序方式 */}
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={e => setSortBy(e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="updated_at">最近更新</option>
+              <option value="updated_at">最近更?/option>
               <option value="created_at">创建时间</option>
-              <option value="view_count">浏览量</option>
-              <option value="like_count">点赞数</option>
+              <option value="view_count">浏览?/option>
+              <option value="like_count">点赞?/option>
             </select>
           </div>
         </div>
@@ -289,7 +306,9 @@ export default function ArticlesOverviewPage() {
             <li className="px-6 py-12 text-center">
               <div className="text-gray-400">
                 <Edit3 className="mx-auto h-12 w-12" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">暂无文章</h3>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                  暂无文章
+                </h3>
                 <p className="mt-1 text-sm text-gray-500">
                   开始创建您的第一篇文章吧
                 </p>
@@ -305,7 +324,7 @@ export default function ArticlesOverviewPage() {
               </div>
             </li>
           ) : (
-            articles.map((article) => (
+            articles.map(article => (
               <li key={article.id}>
                 <div className="px-6 py-4">
                   <div className="flex items-center justify-between">
@@ -322,15 +341,15 @@ export default function ArticlesOverviewPage() {
                         {article.summary || '暂无摘要'}
                       </p>
                       <div className="mt-2 flex items-center text-xs text-gray-500">
-                        <span>{article.authors?.name || '未知作者'}</span>
-                        <span className="mx-2">•</span>
-                        <span>{article.article_categories?.name || '未分类'}</span>
-                        <span className="mx-2">•</span>
-                        <span>创建于 {formatDate(article.created_at)}</span>
+                        <span>{article?.name || '未知作?}</span>
+                        <span className="mx-2">�?/span>
+                        <span>{article?.name || '未分?}</span>
+                        <span className="mx-2">�?/span>
+                        <span>创建?{formatDate(article.created_at)}</span>
                         {article.updated_at !== article.created_at && (
                           <>
-                            <span className="mx-2">•</span>
-                            <span>更新于 {formatDate(article.updated_at)}</span>
+                            <span className="mx-2">�?/span>
+                            <span>更新?{formatDate(article.updated_at)}</span>
                           </>
                         )}
                       </div>
@@ -379,5 +398,6 @@ export default function ArticlesOverviewPage() {
         </ul>
       </div>
     </div>
-  )
+  );
 }
+

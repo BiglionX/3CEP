@@ -10,10 +10,7 @@
       "name": "教程浏览监控入口",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -50,10 +47,7 @@
       "name": "行为数据分析",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
@@ -77,10 +71,7 @@
       "name": "用户画像查询",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        650,
-        200
-      ]
+      "position": [650, 200]
     },
     {
       "parameters": {
@@ -102,10 +93,7 @@
       "name": "配件推荐服务",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        150
-      ]
+      "position": [850, 150]
     },
     {
       "parameters": {
@@ -127,10 +115,7 @@
       "name": "附近店铺查询",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        350
-      ]
+      "position": [850, 350]
     },
     {
       "parameters": {
@@ -150,10 +135,7 @@
       "name": "促销活动查询",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        500
-      ]
+      "position": [850, 500]
     },
     {
       "parameters": {
@@ -194,10 +176,7 @@
       "name": "推荐结果聚合",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        1050,
-        300
-      ]
+      "position": [1050, 300]
     },
     {
       "parameters": {
@@ -207,10 +186,7 @@
       "name": "智能触发逻辑",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1250,
-        300
-      ]
+      "position": [1250, 300]
     },
     {
       "parameters": {
@@ -246,10 +222,7 @@
       "name": "推送通知服务",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        1450,
-        300
-      ]
+      "position": [1450, 300]
     },
     {
       "parameters": {
@@ -259,10 +232,7 @@
       "name": "日志记录服务",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1650,
-        300
-      ]
+      "position": [1650, 300]
     }
   ],
   "connections": {

@@ -1,7 +1,6 @@
-/**
- * 库存预留API路由
- * 处理库存预留和释放请求
- */
+﻿/**
+ * 搴撳瓨棰勭暀API璺敱
+ * 澶勭悊搴撳瓨棰勭暀鍜岄噴鏀捐? */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -10,31 +9,30 @@ import { InventoryReservationService } from '@/supply-chain/services/inventory-r
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const body = await request.json();
     const { items, action } = body;
 
-    // 参数验证
+    // 鍙傛暟楠岃瘉
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { success: false, error: '请提供有效的预留商品列表' },
+        { success: false, error: '璇锋彁渚涙湁鏁堢殑棰勭暀鍟嗗搧鍒楄〃' },
         { status: 400 }
       );
     }
 
-    // 验证每个商品项
-    for (const item of items) {
+    // 楠岃瘉姣忎釜鍟嗗搧?    for (const item of items) {
       if (!item.partId || !item.warehouseId || !item.quantity) {
         return NextResponse.json(
-          { success: false, error: '商品信息不完整' },
+          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬? },
           { status: 400 }
         );
       }
-      
+
       if (item.quantity <= 0) {
         return NextResponse.json(
-          { success: false, error: '商品数量必须大于0' },
+          { success: false, error: '鍟嗗搧鏁伴噺蹇呴』澶т簬0' },
           { status: 400 }
         );
       }
@@ -43,13 +41,13 @@ export async function POST(request: Request) {
     const reservationService = new InventoryReservationService();
 
     if (action === 'reserve') {
-      // 批量预留库存
+      // 鎵归噺棰勭暀搴撳瓨
       const result = await reservationService.reserveMultipleItems(
         items.map(item => ({
           partId: item.partId,
           warehouseId: item.warehouseId,
           quantity: item.quantity,
-          orderId: item.orderId
+          orderId: item.orderId,
         }))
       );
 
@@ -57,51 +55,50 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           reservationIds: result.reservationIds,
-          message: `成功预留 ${result.reservationIds.length} 个库存项`
+          message: `鎴愬姛棰勭暀 ${result.reservationIds.length} 涓簱瀛橀」`,
         });
       } else {
         return NextResponse.json(
-          { 
-            success: false, 
-            error: '库存预留失败',
-            failedItems: result.failedItems
+          {
+            success: false,
+            error: '搴撳瓨棰勭暀澶辫触',
+            failedItems: result.failedItems,
           },
           { status: 400 }
         );
       }
-
     } else if (action === 'release') {
-      // 批量释放预留
-      const reservationIds = items.map(item => item.reservationId).filter(Boolean);
-      
+      // 鎵归噺閲婃斁棰勭暀
+      const reservationIds = items
+        .map(item => item.reservationId)
+        .filter(Boolean);
+
       if (reservationIds.length === 0) {
         return NextResponse.json(
-          { success: false, error: '请提供有效的预留ID列表' },
+          { success: false, error: '璇锋彁渚涙湁鏁堢殑棰勭暀ID鍒楄〃' },
           { status: 400 }
         );
       }
 
       await reservationService.releaseMultipleReservations(reservationIds);
-      
+
       return NextResponse.json({
         success: true,
-        message: `成功释放 ${reservationIds.length} 个预留项`
+        message: `鎴愬姛閲婃斁 ${reservationIds.length} 涓鐣欓」`,
       });
-
     } else {
       return NextResponse.json(
-        { success: false, error: '无效的操作类型' },
+        { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
         { status: 400 }
       );
     }
-
   } catch (error) {
-    console.error('库存预留API错误:', error);
+    console.error('搴撳瓨棰勭暀API閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '库存预留处理失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '搴撳瓨棰勭暀澶勭悊澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
@@ -110,7 +107,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-  
+
   try {
     const { searchParams } = new URL(request.url);
     const partId = searchParams.get('partId');
@@ -119,12 +116,12 @@ export async function GET(request: Request) {
 
     if (!partId || !warehouseId) {
       return NextResponse.json(
-        { success: false, error: '请提供配件ID和仓库ID' },
+        { success: false, error: '璇锋彁渚涢厤浠禝D鍜屼粨搴揑D' },
         { status: 400 }
       );
     }
 
-    // 查询库存预留情况
+    // 鏌ヨ搴撳瓨棰勭暀鎯呭喌
     const { data, error } = await supabase
       .from('inventory_reservations')
       .select('*')
@@ -137,27 +134,27 @@ export async function GET(request: Request) {
       throw new Error(error.message);
     }
 
-    // 计算总预留数量
-    const totalReserved = data?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    // 璁＄畻鎬婚鐣欐暟?    const totalReserved =
+      data?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
     return NextResponse.json({
       success: true,
       data: {
         reservations: data || [],
         totalReserved,
-        reservationCount: (data as any)?.data?.length || 0
-      }
+        reservationCount: (data as any)?.(data as any)?.length || 0,
+      },
     });
-
   } catch (error) {
-    console.error('查询库存预留错误:', error);
+    console.error('鏌ヨ搴撳瓨棰勭暀閿欒:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '查询库存预留失败',
-        details: (error as Error).message 
+      {
+        success: false,
+        error: '鏌ヨ搴撳瓨棰勭暀澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

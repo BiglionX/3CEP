@@ -1,60 +1,60 @@
-/**
- * 供应商入驻申请API
+﻿/**
+ * 渚涘簲鍟嗗叆椹荤敵璇稟PI
  */
 
 import { NextResponse } from 'next/server';
-// import { SupplierService } from '@/supply-chain'; // 后续实现
+// import { SupplierService } from '@/supply-chain'; // 鍚庣画瀹炵幇
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { 
-      name, 
-      contactPerson, 
-      phone, 
-      email, 
-      address, 
-      country, 
-      businessLicense, 
-      companyProfile 
+    const {
+      name,
+      contactPerson,
+      phone,
+      email,
+      address,
+      country,
+      businessLicense,
+      companyProfile,
     } = body;
 
-    // 参数验证
-    const requiredFields = ['name', 'contactPerson', 'phone', 'email', 'address', 'country'];
+    // 鍙傛暟楠岃瘉
+    const requiredFields = [
+      'name',
+      'contactPerson',
+      'phone',
+      'email',
+      'address',
+      'country',
+    ];
     for (const field of requiredFields) {
       if (!body[field]) {
         return NextResponse.json(
-          { error: `缺少必要参数: ${field}` },
+          { error: `缂哄皯蹇呰鍙傛暟: ${field}` },
           { status: 400 }
         );
       }
     }
 
-    // 验证邮箱格式
+    // 楠岃瘉閭鏍煎紡
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: '邮箱格式不正确' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '閭鏍煎紡涓嶆? }, { status: 400 });
     }
 
-    // 验证手机号格式（简单验证）
+    // 楠岃瘉鎵嬫満鍙锋牸寮忥紙绠€鍗曢獙璇侊級
     const phoneRegex = /^[\d\s\-\+\(\)]+$/;
     if (!phoneRegex.test(phone)) {
-      return NextResponse.json(
-        { error: '手机号格式不正确' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '鎵嬫満鍙锋牸寮忎笉姝ｇ‘' }, { status: 400 });
     }
 
-    // 模拟供应商申请处理（实际应该调用SupplierService）
-    const applicationId = `APP_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // 模拟处理时间
+    // 妯℃嫙渚涘簲鍟嗙敵璇峰鐞嗭紙瀹為檯搴旇璋冪敤SupplierService锟?    const applicationId = `APP_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    // 妯℃嫙澶勭悊鏃堕棿
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // 模拟90%的成功率
+    // 妯℃嫙90%鐨勬垚鍔熺巼
     const isSuccess = Math.random() > 0.1;
 
     if (isSuccess) {
@@ -63,27 +63,27 @@ export async function POST(request: Request) {
         data: {
           applicationId,
           status: 'pending_review',
-          message: '供应商入驻申请已提交，请等待审核'
-        }
+          message: '渚涘簲鍟嗗叆椹荤敵璇峰凡鎻愪氦锛岃绛夊緟瀹℃牳',
+        },
       });
     } else {
       return NextResponse.json(
-        { 
-          error: '申请提交失败',
-          details: '系统繁忙，请稍后重试' 
+        {
+          error: '鐢宠鎻愪氦澶辫触',
+          details: '绯荤粺绻佸繖锛岃绋嶅悗閲嶈瘯',
         },
         { status: 500 }
       );
     }
-
   } catch (error) {
-    console.error('供应商申请错误:', error);
+    console.error('渚涘簲鍟嗙敵璇烽敊?', error);
     return NextResponse.json(
-      { 
-        error: '申请处理失败',
-        details: (error as Error).message 
+      {
+        error: '鐢宠澶勭悊澶辫触',
+        details: (error as Error).message,
       },
       { status: 500 }
     );
   }
 }
+

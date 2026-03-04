@@ -73,7 +73,7 @@ export class EnterpriseTestReporter {
       failedTests,
       skippedTests,
       duration: totalDuration,
-      testResults: results
+      testResults: results,
     });
   }
 
@@ -99,14 +99,30 @@ export class EnterpriseTestReporter {
     const totalDuration = endTime - this.startTime;
 
     // 计算总体统计
-    const totalTests = this.results.reduce((sum, suite) => sum + suite.totalTests, 0);
-    const totalPassed = this.results.reduce((sum, suite) => sum + suite.passedTests, 0);
-    const totalFailed = this.results.reduce((sum, suite) => sum + suite.failedTests, 0);
-    const totalSkipped = this.results.reduce((sum, suite) => sum + suite.skippedTests, 0);
+    const totalTests = this.results.reduce(
+      (sum, suite) => sum + suite.totalTests,
+      0
+    );
+    const totalPassed = this.results.reduce(
+      (sum, suite) => sum + suite.passedTests,
+      0
+    );
+    const totalFailed = this.results.reduce(
+      (sum, suite) => sum + suite.failedTests,
+      0
+    );
+    const totalSkipped = this.results.reduce(
+      (sum, suite) => sum + suite.skippedTests,
+      0
+    );
     const passRate = totalTests > 0 ? (totalPassed / totalTests) * 100 : 0;
 
     // 执行质量门禁检查
-    const qualityGates = this.checkQualityGates(totalTests, totalPassed, totalFailed);
+    const qualityGates = this.checkQualityGates(
+      totalTests,
+      totalPassed,
+      totalFailed
+    );
 
     // 生成报告对象
     const report = {
@@ -114,7 +130,7 @@ export class EnterpriseTestReporter {
         timestamp: new Date().toISOString(),
         duration: totalDuration,
         environment: process.env.NODE_ENV || 'test',
-        version: '1.0.0'
+        version: '1.0.0',
       },
       summary: {
         totalTests,
@@ -122,13 +138,17 @@ export class EnterpriseTestReporter {
         failedTests: totalFailed,
         skippedTests: totalSkipped,
         passRate: parseFloat(passRate.toFixed(2)),
-        totalSuites: this.results.length
+        totalSuites: this.results.length,
       },
       suites: this.results,
       performance: this.performanceMetrics,
       security: this.securityFindings,
       qualityGates,
-      recommendations: this.generateRecommendations(totalTests, totalPassed, totalFailed)
+      recommendations: this.generateRecommendations(
+        totalTests,
+        totalPassed,
+        totalFailed
+      ),
     };
 
     return report;
@@ -137,37 +157,53 @@ export class EnterpriseTestReporter {
   /**
    * 执行质量门禁检查
    */
-  private checkQualityGates(totalTests: number, passed: number, failed: number): QualityGateResult[] {
+  private checkQualityGates(
+    totalTests: number,
+    passed: number,
+    failed: number
+  ): QualityGateResult[] {
     const gates: QualityGateResult[] = [];
     const passRate = totalTests > 0 ? (passed / totalTests) * 100 : 0;
 
     // 通过率门禁
     gates.push({
       name: 'Minimum Pass Rate',
-      status: passRate >= REPORT_CONFIG.qualityGates.minimumPassRate ? 'passed' : 'failed',
+      status:
+        passRate >= REPORT_CONFIG.qualityGates.minimumPassRate
+          ? 'passed'
+          : 'failed',
       threshold: `${REPORT_CONFIG.qualityGates.minimumPassRate}%`,
       actual: `${passRate.toFixed(2)}%`,
-      message: `测试通过率应≥${REPORT_CONFIG.qualityGates.minimumPassRate}%`
+      message: `测试通过率应≥${REPORT_CONFIG.qualityGates.minimumPassRate}%`,
     });
 
     // 失败用例数量门禁
     gates.push({
       name: 'Maximum Failure Count',
-      status: failed <= REPORT_CONFIG.qualityGates.maximumFailureCount ? 'passed' : 'failed',
+      status:
+        failed <= REPORT_CONFIG.qualityGates.maximumFailureCount
+          ? 'passed'
+          : 'failed',
       threshold: REPORT_CONFIG.qualityGates.maximumFailureCount,
       actual: failed,
-      message: `失败用例数应≤${REPORT_CONFIG.qualityGates.maximumFailureCount}`
+      message: `失败用例数应≤${REPORT_CONFIG.qualityGates.maximumFailureCount}`,
     });
 
     // 安全漏洞门禁
     if (this.securityFindings) {
-      const highSeverityVulns = this.securityFindings.vulnerabilities.filter(v => v.severity === 'high').length;
+      const highSeverityVulns = this.securityFindings.vulnerabilities.filter(
+        v => v.severity === 'high'
+      ).length;
       gates.push({
         name: 'Security Vulnerabilities',
-        status: highSeverityVulns <= REPORT_CONFIG.qualityGates.securityVulnerabilities ? 'passed' : 'failed',
+        status:
+          highSeverityVulns <=
+          REPORT_CONFIG.qualityGates.securityVulnerabilities
+            ? 'passed'
+            : 'failed',
         threshold: REPORT_CONFIG.qualityGates.securityVulnerabilities,
         actual: highSeverityVulns,
-        message: `高危安全漏洞数应≤${REPORT_CONFIG.qualityGates.securityVulnerabilities}`
+        message: `高危安全漏洞数应≤${REPORT_CONFIG.qualityGates.securityVulnerabilities}`,
       });
     }
 
@@ -175,10 +211,14 @@ export class EnterpriseTestReporter {
     if (this.performanceMetrics) {
       gates.push({
         name: 'Page Load Time',
-        status: this.performanceMetrics.avgResponseTime <= REPORT_CONFIG.qualityGates.performanceThreshold.pageLoadThreshold ? 'passed' : 'failed',
+        status:
+          this.performanceMetrics.avgResponseTime <=
+          REPORT_CONFIG.qualityGates.performanceThreshold.pageLoadThreshold
+            ? 'passed'
+            : 'failed',
         threshold: `${REPORT_CONFIG.qualityGates.performanceThreshold.pageLoadThreshold}ms`,
         actual: `${this.performanceMetrics.avgResponseTime.toFixed(2)}ms`,
-        message: `平均页面加载时间应≤${REPORT_CONFIG.qualityGates.performanceThreshold.pageLoadThreshold}ms`
+        message: `平均页面加载时间应≤${REPORT_CONFIG.qualityGates.performanceThreshold.pageLoadThreshold}ms`,
       });
     }
 
@@ -188,7 +228,11 @@ export class EnterpriseTestReporter {
   /**
    * 生成改进建议
    */
-  private generateRecommendations(totalTests: number, passed: number, failed: number): string[] {
+  private generateRecommendations(
+    totalTests: number,
+    passed: number,
+    failed: number
+  ): string[] {
     const recommendations: string[] = [];
     const passRate = totalTests > 0 ? (passed / totalTests) * 100 : 0;
 
@@ -197,19 +241,31 @@ export class EnterpriseTestReporter {
     }
 
     if (failed > 0) {
-      recommendations.push(`存在 ${failed} 个失败的测试用例，需要分析失败原因并修复`);
+      recommendations.push(
+        `存在 ${failed} 个失败的测试用例，需要分析失败原因并修复`
+      );
     }
 
-    if (this.securityFindings && this.securityFindings.vulnerabilities.length > 0) {
-      const highVulns = this.securityFindings.vulnerabilities.filter(v => v.severity === 'high').length;
+    if (
+      this.securityFindings &&
+      this.securityFindings.vulnerabilities.length > 0
+    ) {
+      const highVulns = this.securityFindings.vulnerabilities.filter(
+        v => v.severity === 'high'
+      ).length;
       if (highVulns > 0) {
         recommendations.push(`发现 ${highVulns} 个高危安全漏洞，建议立即修复`);
       }
     }
 
     if (this.performanceMetrics) {
-      if (this.performanceMetrics.avgResponseTime > PERFORMANCE_BENCHMARKS.pageLoadThreshold) {
-        recommendations.push('页面加载性能未达标，建议优化前端资源加载和后端响应');
+      if (
+        this.performanceMetrics.avgResponseTime >
+        PERFORMANCE_BENCHMARKS.pageLoadThreshold
+      ) {
+        recommendations.push(
+          '页面加载性能未达标，建议优化前端资源加载和后端响应'
+        );
       }
     }
 
@@ -310,7 +366,9 @@ export class EnterpriseTestReporter {
 
         <div class="quality-gates">
             <h2>质量门禁检查</h2>
-            ${report.qualityGates.map((gate: any) => `
+            ${report.qualityGates
+              .map(
+                (gate: any) => `
                 <div class="gate-item ${gate.status === 'passed' ? 'gate-passed' : 'gate-failed'}">
                     <span>${gate.name}: ${gate.message}</span>
                     <span>
@@ -318,17 +376,23 @@ export class EnterpriseTestReporter {
                         实际: ${gate.actual} | 阈值: ${gate.threshold}
                     </span>
                 </div>
-            `).join('')}
+            `
+              )
+              .join('')}
         </div>
 
-        ${report.recommendations.length > 0 ? `
+        ${
+          report.recommendations.length > 0
+            ? `
         <div class="recommendations">
             <h3>改进建议</h3>
             <ul>
                 ${report.recommendations.map((rec: string) => `<li>${rec}</li>`).join('')}
             </ul>
         </div>
-        ` : ''}
+        `
+            : ''
+        }
 
         <div style="margin-top: 30px; text-align: center; color: #6c757d;">
             <p>报告生成时间: ${new Date().toLocaleString('zh-CN')}</p>

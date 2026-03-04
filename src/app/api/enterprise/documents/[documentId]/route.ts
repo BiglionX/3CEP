@@ -8,10 +8,12 @@ export async function GET(
   { params }: { params: { documentId: string } }
 ) {
   const supabase = createRouteHandlerClient({ cookies });
-  
+
   try {
     // 验证用户身份
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
         { success: false, error: '用户未登录' },
@@ -23,7 +25,7 @@ export async function GET(
 
     // 这里应该从数据库获取文档信息并验证权限
     // 为了简化，我们直接使用文件路径
-    
+
     // 获取文件信息
     const fileInfo = await FileStorageService.getFileInfo(documentId);
 
@@ -40,10 +42,9 @@ export async function GET(
       data: {
         url: fileInfo.url,
         name: fileInfo.name,
-        size: fileInfo.size
-      }
+        size: fileInfo.size,
+      },
     });
-
   } catch (error) {
     console.error('文件下载API错误:', error);
     return NextResponse.json(

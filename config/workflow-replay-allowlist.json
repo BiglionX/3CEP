@@ -59,12 +59,7 @@
     },
     "logging": {
       "description": "日志相关参数",
-      "parameters": [
-        "log_level",
-        "trace_id",
-        "span_id",
-        "correlation_id"
-      ],
+      "parameters": ["log_level", "trace_id", "span_id", "correlation_id"],
       "sensitive": false
     }
   },
@@ -116,12 +111,25 @@
     },
     "partner": {
       "allowed_categories": ["common", "business_data"],
-      "denied_categories": ["credentials", "personal_data", "internal_config", "user_context", "system_config"],
+      "denied_categories": [
+        "credentials",
+        "personal_data",
+        "internal_config",
+        "user_context",
+        "system_config"
+      ],
       "audit_required": true
     },
     "user": {
       "allowed_categories": ["common"],
-      "denied_categories": ["credentials", "personal_data", "internal_config", "user_context", "system_config", "business_data"],
+      "denied_categories": [
+        "credentials",
+        "personal_data",
+        "internal_config",
+        "user_context",
+        "system_config",
+        "business_data"
+      ],
       "audit_required": false
     }
   },

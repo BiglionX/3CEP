@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts'
@@ -7,7 +7,7 @@ import { useUnifiedAuth } from '@/hooks/use-unified-auth'
 export default function DashboardPage() {
   const { isAuthenticated, is_admin } = useUnifiedAuth()
   
-  // 保护管理员路由
+  // 保护管理员路?
   useEffect(() => {
     if (!isAuthenticated || !is_admin) {
       window.location.href = '/login?redirect=/admin/dashboard'
@@ -25,7 +25,7 @@ export default function DashboardPage() {
             </svg>
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">访问受限</h2>
-          <p className="text-gray-600 mb-4">请先登录管理员账户</p>
+          <p className="text-gray-600 mb-4">请先登录管理员账?/p>
           <button 
             onClick={() => window.location.href = '/login?redirect=/admin/dashboard'}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -112,7 +112,7 @@ export default function DashboardPage() {
             {exportLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2"></div>
-                导出中...
+                导出?..
               </>
             ) : (
               <>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">本周新增文章数</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">本周新增文章?/dt>
                   <dd className="flex items-baseline">
                     <div className="text-2xl font-semibold text-gray-900">{stats.weekArticles}</div>
                   </dd>
@@ -207,7 +207,7 @@ export default function DashboardPage() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">总注册工程师数</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">总注册工程师?/dt>
                   <dd className="flex items-baseline">
                     <div className="text-2xl font-semibold text-gray-900">{stats.totalEngineers}</div>
                   </dd>
@@ -240,9 +240,9 @@ export default function DashboardPage() {
 
       {/* 图表区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 预约趋势图 */}
+        {/* 预约趋势?*/}
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">近7天预约量趋势</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">�?天预约量趋势</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={stats.appointmentTrends}>
@@ -265,7 +265,7 @@ export default function DashboardPage() {
                 <Line 
                   type="monotone" 
                   dataKey="confirmed" 
-                  name="已确认" 
+                  name="已确? 
                   stroke="#10b981" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
@@ -273,7 +273,7 @@ export default function DashboardPage() {
                 <Line 
                   type="monotone" 
                   dataKey="pending" 
-                  name="待确认" 
+                  name="待确? 
                   stroke="#f59e0b" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
@@ -283,9 +283,9 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 预约状态分布 */}
+        {/* 预约状态分?*/}
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">预约状态分布</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">预约状态分?/h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats.appointmentTrends.slice(-7)}>
@@ -297,26 +297,26 @@ export default function DashboardPage() {
                   labelFormatter={(label) => `日期: ${label}`}
                 />
                 <Legend />
-                <Bar dataKey="confirmed" name="已确认" fill="#10b981" />
-                <Bar dataKey="pending" name="待确认" fill="#f59e0b" />
-                <Bar dataKey="cancelled" name="已取消" fill="#ef4444" />
+                <Bar dataKey="confirmed" name="已确? fill="#10b981" />
+                <Bar dataKey="pending" name="待确? fill="#f59e0b" />
+                <Bar dataKey="cancelled" name="已取? fill="#ef4444" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* 数据汇总 */}
+      {/* 数据汇?*/}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">数据汇总</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">数据汇?/h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="border-l-4 border-blue-500 pl-4">
             <p className="text-sm text-gray-600">今日热点链接增长</p>
             <p className="text-2xl font-bold text-gray-900">{stats.todayHotLinks}</p>
-            <p className="text-sm text-gray-500">较昨日 +{stats.todayHotLinks > 0 ? Math.floor(stats.todayHotLinks * 0.1) : 0}</p>
+            <p className="text-sm text-gray-500">较昨?+{stats.todayHotLinks > 0 ? Math.floor(stats.todayHotLinks * 0.1) : 0}</p>
           </div>
           <div className="border-l-4 border-yellow-500 pl-4">
-            <p className="text-sm text-gray-600">待审核内容积压</p>
+            <p className="text-sm text-gray-600">待审核内容积?/p>
             <p className="text-2xl font-bold text-gray-900">{stats.pendingLinks}</p>
             <p className="text-sm text-gray-500">建议及时处理</p>
           </div>

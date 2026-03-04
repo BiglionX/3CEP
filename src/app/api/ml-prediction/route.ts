@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { mlPredictionService } from '@/services/ml-prediction.service';
 
 export async function POST(request: NextRequest) {
@@ -9,26 +9,32 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'predict-demand':
         return await handleDemandPrediction(params);
-      
+
       case 'predict-price':
         return await handlePricePrediction(params);
-      
+
       case 'batch-predict':
         return await handleBatchPrediction(params);
-      
+
       default:
         return NextResponse.json(
-          { error: '未知的操作类型', supportedActions: ['predict-demand', 'predict-price', 'batch-predict'] },
+          {
+            error: '鏈煡鐨勬搷浣滅被?,
+            supportedActions: [
+              'predict-demand',
+              'predict-price',
+              'batch-predict',
+            ],
+          },
           { status: 400 }
         );
     }
-
   } catch (error: any) {
-    console.error('ML预测API错误:', error);
+    console.error('ML棰勬祴API閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
@@ -39,61 +45,58 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'status';
-    
+
     switch (action) {
       case 'status':
         return await handleStatusCheck();
-      
+
       case 'history':
         return await handlePredictionHistory(searchParams);
-      
+
       case 'models':
         return await handleModelList();
-      
+
       default:
         return NextResponse.json(
-          { error: '未知的操作类型', supportedActions: ['status', 'history', 'models'] },
+          {
+            error: '鏈煡鐨勬搷浣滅被?,
+            supportedActions: ['status', 'history', 'models'],
+          },
           { status: 400 }
         );
     }
-
   } catch (error: any) {
-    console.error('ML预测API错误:', error);
+    console.error('ML棰勬祴API閿欒:', error);
     return NextResponse.json(
-      { 
-        error: error.message || '内部服务器错误',
-        timestamp: new Date().toISOString()
+      {
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
   }
 }
 
-// 需求预测处理器
+// 闇€姹傞娴嬪鐞嗗櫒
 async function handleDemandPrediction(params: any) {
-  const {
-    productId,
-    warehouseId,
-    horizonDays = 30,
-    options = {}
-  } = params;
+  const { productId, warehouseId, horizonDays = 30, options = {} } = params;
 
-  // 参数验证
+  // 鍙傛暟楠岃瘉
   if (!productId) {
     return NextResponse.json(
-      { error: '缺少必需参数: productId' },
+      { error: '缂哄皯蹇呴渶鍙傛暟: productId' },
       { status: 400 }
     );
   }
 
   if (!warehouseId) {
     return NextResponse.json(
-      { error: '缺少必需参数: warehouseId' },
+      { error: '缂哄皯蹇呴渶鍙傛暟: warehouseId' },
       { status: 400 }
     );
   }
 
-  // 执行预测
+  // 鎵ц棰勬祴
   const result = await mlPredictionService.predictDemand(
     productId,
     warehouseId,
@@ -109,29 +112,23 @@ async function handleDemandPrediction(params: any) {
       productId,
       warehouseId,
       horizonDays: parseInt(horizonDays as string) || 30,
-      predictionType: 'demand'
-    }
+      predictionType: 'demand',
+    },
   });
 }
 
-// 价格预测处理器
-async function handlePricePrediction(params: any) {
-  const {
-    productId,
-    platform,
-    horizonDays = 30,
-    options = {}
-  } = params;
+// 浠锋牸棰勬祴澶勭悊?async function handlePricePrediction(params: any) {
+  const { productId, platform, horizonDays = 30, options = {} } = params;
 
-  // 参数验证
+  // 鍙傛暟楠岃瘉
   if (!productId) {
     return NextResponse.json(
-      { error: '缺少必需参数: productId' },
+      { error: '缂哄皯蹇呴渶鍙傛暟: productId' },
       { status: 400 }
     );
   }
 
-  // 执行预测
+  // 鎵ц棰勬祴
   const result = await mlPredictionService.predictPrice(
     productId,
     platform,
@@ -147,30 +144,26 @@ async function handlePricePrediction(params: any) {
       productId,
       platform,
       horizonDays: parseInt(horizonDays as string) || 30,
-      predictionType: 'price'
-    }
+      predictionType: 'price',
+    },
   });
 }
 
-// 批量预测处理器
-async function handleBatchPrediction(params: any) {
-  const {
-    predictions,
-    parallel = false
-  } = params;
+// 鎵归噺棰勬祴澶勭悊?async function handleBatchPrediction(params: any) {
+  const { predictions, parallel = false } = params;
 
   if (!Array.isArray(predictions) || predictions.length === 0) {
     return NextResponse.json(
-      { error: 'predictions必须是非空数组' },
+      { error: 'predictions蹇呴』鏄潪绌烘暟? },
       { status: 400 }
     );
   }
 
   try {
     let results: any[] = [];
-    
+
     if (parallel) {
-      // 并行处理
+      // 骞惰澶勭悊
       results = await Promise.all(
         predictions.map(async (pred, index) => {
           try {
@@ -194,20 +187,20 @@ async function handleBatchPrediction(params: any) {
               index,
               success: true,
               data: result,
-              metadata: { ...pred }
+              metadata: { ...pred },
             };
           } catch (error: any) {
             return {
               index,
               success: false,
               error: error.message,
-              metadata: { ...pred }
+              metadata: { ...pred },
             };
           }
         })
       );
     } else {
-      // 串行处理
+      // 涓茶澶勭悊
       for (let i = 0; i < predictions.length; i++) {
         const pred = predictions[i];
         try {
@@ -231,14 +224,14 @@ async function handleBatchPrediction(params: any) {
             index: i,
             success: true,
             data: result,
-            metadata: { ...pred }
+            metadata: { ...pred },
           });
         } catch (error: any) {
           results.push({
             index: i,
             success: false,
             error: error.message,
-            metadata: { ...pred }
+            metadata: { ...pred },
           });
         }
       }
@@ -255,32 +248,30 @@ async function handleBatchPrediction(params: any) {
           total: predictions.length,
           successful,
           failed,
-          successRate: (successful / predictions.length * 100).toFixed(2) + '%'
-        }
+          successRate:
+            ((successful / predictions.length) * 100).toFixed(2) + '%',
+        },
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error: any) {
     return NextResponse.json(
-      { 
-        error: `批量预测失败: ${error.message}`,
-        timestamp: new Date().toISOString()
+      {
+        error: `鎵归噺棰勬祴澶辫触: ${error.message}`,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
   }
 }
 
-// 状态检查处理器
+// 鐘舵€佹鏌ュ鐞嗗櫒
 async function handleStatusCheck() {
   try {
-    // 检查大模型API连接状态
-    const modelStatus = await checkModelConnection();
-    
-    // 检查数据库连接状态
-    const dbStatus = await checkDatabaseConnection();
-    
+    // 妫€鏌ュぇ妯″瀷API杩炴帴鐘?    const modelStatus = await checkModelConnection();
+
+    // 妫€鏌ユ暟鎹簱杩炴帴鐘?    const dbStatus = await checkDatabaseConnection();
+
     return NextResponse.json({
       success: true,
       data: {
@@ -289,30 +280,34 @@ async function handleStatusCheck() {
         databaseConnection: dbStatus,
         supportedModels: ['deepseek-chat', 'qwen-plus'],
         supportedPredictionTypes: ['demand', 'price'],
-        version: '1.0.0'
+        version: '1.0.0',
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error: any) {
     return NextResponse.json({
       success: false,
-      error: `状态检查失败: ${error.message}`,
-      timestamp: new Date().toISOString()
+      error: `鐘舵€佹鏌ュけ? ${error.message}`,
+      timestamp: new Date().toISOString(),
     });
   }
 }
 
-// 预测历史处理器
-async function handlePredictionHistory(searchParams: URLSearchParams) {
+// 棰勬祴鍘嗗彶澶勭悊?async function handlePredictionHistory(searchParams: URLSearchParams) {
   try {
     const productId = searchParams.get('productId') || undefined;
-    const predictionType = (searchParams.get('type') as 'demand' | 'price' | undefined) || undefined;
+    const predictionType =
+      (searchParams.get('type') as 'demand' | 'price' | undefined) || undefined;
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    // 从数据库获取预测历史
-    const history = await getPredictionHistory(productId, predictionType, limit, offset);
+    // 浠庢暟鎹簱鑾峰彇棰勬祴鍘嗗彶
+    const history = await getPredictionHistory(
+      productId,
+      predictionType,
+      limit,
+      offset
+    );
 
     return NextResponse.json({
       success: true,
@@ -320,22 +315,20 @@ async function handlePredictionHistory(searchParams: URLSearchParams) {
       pagination: {
         limit,
         offset,
-        total: history.length
+        total: history.length,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error: any) {
     return NextResponse.json({
       success: false,
-      error: `获取预测历史失败: ${error.message}`,
-      timestamp: new Date().toISOString()
+      error: `鑾峰彇棰勬祴鍘嗗彶澶辫触: ${error.message}`,
+      timestamp: new Date().toISOString(),
     });
   }
 }
 
-// 模型列表处理器
-async function handleModelList() {
+// 妯″瀷鍒楄〃澶勭悊?async function handleModelList() {
   return NextResponse.json({
     success: true,
     data: {
@@ -344,67 +337,80 @@ async function handleModelList() {
           id: 'deepseek-chat',
           name: 'DeepSeek Chat',
           type: 'demand',
-          description: '适用于需求预测的大语言模型',
-          capabilities: ['时间序列分析', '趋势预测', '季节性分析']
+          description: '閫傜敤浜庨渶姹傞娴嬬殑澶ц瑷€妯″瀷',
+          capabilities: ['鏃堕棿搴忓垪鍒嗘瀽', '瓒嬪娍棰勬祴', '瀛ｈ妭鎬у垎?],
         },
         {
           id: 'local-arima',
-          name: '本地ARIMA',
+          name: '鏈湴ARIMA',
           type: 'demand',
-          description: '传统统计学预测模型（降级方案）',
-          capabilities: ['基础趋势预测', '简单季节性分析']
-        }
+          description: '浼犵粺缁熻瀛﹂娴嬫ā鍨嬶紙闄嶇骇鏂规?,
+          capabilities: ['鍩虹瓒嬪娍棰勬祴', '绠€鍗曞鑺傛€у垎?],
+        },
       ],
       priceModels: [
         {
           id: 'deepseek-chat',
           name: 'DeepSeek Chat',
           type: 'price',
-          description: '适用于价格预测的大语言模型',
-          capabilities: ['价格趋势分析', '竞争分析', '市场洞察']
+          description: '閫傜敤浜庝环鏍奸娴嬬殑澶ц瑷€妯″瀷',
+          capabilities: ['浠锋牸瓒嬪娍鍒嗘瀽', '绔炰簤鍒嗘瀽', '甯傚満娲炲療'],
         },
         {
           id: 'local-prophet',
-          name: '本地Prophet',
+          name: '鏈湴Prophet',
           type: 'price',
-          description: 'Facebook开源的时间序列预测工具（降级方案）',
-          capabilities: ['价格趋势预测', '节假日效应']
-        }
-      ]
+          description: 'Facebook寮€婧愮殑鏃堕棿搴忓垪棰勬祴宸ュ叿锛堥檷绾ф柟妗堬級',
+          capabilities: ['浠锋牸瓒嬪娍棰勬祴', '鑺傚亣鏃ユ晥?],
+        },
+      ],
     },
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 }
 
-// 辅助函数
-async function checkModelConnection(): Promise<{ connected: boolean; model?: string; error?: string }> {
+// 杈呭姪鍑芥暟
+async function checkModelConnection(): Promise<{
+  connected: boolean;
+  model?: string;
+  error?: string;
+}> {
   try {
     const apiKey = process.env.DEEPSEEK_API_KEY || process.env.TONGYI_API_KEY;
     if (!apiKey) {
-      return { connected: false, error: '未配置API密钥' };
+      return { connected: false, error: '鏈厤缃瓵PI瀵嗛挜' };
     }
-    
-    // 简单的连接测试
-    const testPrompt = "请回复'连接成功'";
-    const response = await mlPredictionService['callLargeModel'](testPrompt, 'demand');
-    
-    return { 
-      connected: true, 
-      model: process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'qwen-plus' 
+
+    // 绠€鍗曠殑杩炴帴娴嬭瘯
+    const testPrompt = "璇峰洖?杩炴帴鎴愬姛'";
+    const response = await mlPredictionService['callLargeModel'](
+      testPrompt,
+      'demand'
+    );
+
+    return {
+      connected: true,
+      model: process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'qwen-plus',
     };
   } catch (error: any) {
     return { connected: false, error: error.message };
   }
 }
 
-async function checkDatabaseConnection(): Promise<{ connected: boolean; error?: string }> {
+async function checkDatabaseConnection(): Promise<{
+  connected: boolean;
+  error?: string;
+}> {
   try {
-    // 简单的数据库查询测试
-    const { data, error } = await (await import('@supabase/supabase-js')).createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    ).from('ml_predictions').select('count').limit(1);
-    
+    // 绠€鍗曠殑鏁版嵁搴撴煡璇㈡祴?    const { data, error } = await (await import('@supabase/supabase-js'))
+      .createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      )
+      .from('ml_predictions')
+      .select('count')
+      .limit(1);
+
     return { connected: !error };
   } catch (error: any) {
     return { connected: false, error: error.message };
@@ -438,12 +444,12 @@ async function getPredictionHistory(
     }
 
     const { data, error } = await query;
-    
+
     if (error) throw error;
-    
+
     return data || [];
   } catch (error) {
-    console.warn('获取预测历史失败:', error);
-    return []; // 返回空数组而不是抛出错误
-  }
+    console.warn('鑾峰彇棰勬祴鍘嗗彶澶辫触:', error);
+    return []; // 杩斿洖绌烘暟缁勮€屼笉鏄姏鍑洪敊?  }
 }
+

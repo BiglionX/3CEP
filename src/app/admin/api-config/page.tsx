@@ -1,4 +1,4 @@
-import ApiConfigManager from '@/components/admin/ApiConfigManager';
+﻿import ApiConfigManager from '@/components/admin/ApiConfigManager';
 
 export default function ApiConfigPage() {
   return (
@@ -7,3 +7,4 @@ export default function ApiConfigPage() {
     </div>
   );
 }
+

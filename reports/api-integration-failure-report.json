@@ -1,0 +1,49 @@
+{
+  "error": "this.integrateAdminConsole is not a function",
+  "stack": "TypeError: this.integrateAdminConsole is not a function\n    at Object.fn (D:\\BigLionX\\3cep\\scripts\\api-integration-executor.js:104:40)\n    at ApiIntegrationExecutor.executePhase (D:\\BigLionX\\3cep\\scripts\\api-integration-executor.js:135:20)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ApiIntegrationExecutor.phase3BusinessIntegration (D:\\BigLionX\\3cep\\scripts\\api-integration-executor.js:108:5)\n    at async ApiIntegrationExecutor.executeFullIntegration (D:\\BigLionX\\3cep\\scripts\\api-integration-executor.js:52:7)",
+  "failedAt": "2026-02-27T14:20:48.506Z",
+  "completedTasks": [
+    {
+      "task": "系统架构分析",
+      "completedAt": "2026-02-27T14:20:48.482Z",
+      "status": "success"
+    },
+    {
+      "task": "环境配置准备",
+      "completedAt": "2026-02-27T14:20:48.483Z",
+      "status": "success"
+    },
+    {
+      "task": "依赖项检查",
+      "completedAt": "2026-02-27T14:20:48.492Z",
+      "status": "success"
+    },
+    {
+      "task": "认证授权适配",
+      "completedAt": "2026-02-27T14:20:48.499Z",
+      "status": "success"
+    },
+    {
+      "task": "数据模型适配",
+      "completedAt": "2026-02-27T14:20:48.500Z",
+      "status": "success"
+    },
+    {
+      "task": "实时通信集成",
+      "completedAt": "2026-02-27T14:20:48.500Z",
+      "status": "success"
+    },
+    {
+      "task": "n8n工作流集成",
+      "completedAt": "2026-02-27T14:20:48.501Z",
+      "status": "success"
+    }
+  ],
+  "pendingTasks": [
+    "auth-middleware",
+    "data-models",
+    "websocket-service",
+    "notification-channels",
+    "n8n-nodes"
+  ]
+}

@@ -25,18 +25,18 @@ async function testTenantAPI(): Promise<TenantAPIResponse> {
         id: '1',
         name: '测试租户',
         tenant_id: 'test-tenant-123',
-        created_at: new Date().toISOString()
-      }
+        created_at: new Date().toISOString(),
+      },
     ];
 
     return {
       success: true,
-      data: mockData
+      data: mockData,
     };
   } catch (error) {
     return {
       success: false,
-      error: (error as Error).message
+      error: (error as Error).message,
     };
   }
 }

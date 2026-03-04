@@ -1,6 +1,6 @@
-/**
- * 租户管理 API 路由
- * 提供租户创建、管理、用户分配等功能
+﻿/**
+ * 绉熸埛绠＄悊 API 璺敱
+ * 鎻愪緵绉熸埛鍒涘缓銆佺鐞嗐€佺敤鎴峰垎閰嶇瓑鍔熻兘
  */
 
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -11,22 +11,21 @@ export async function GET(request: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
-    // 验证用户权限
+    // 楠岃瘉鐢ㄦ埛鏉冮檺
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
 
-    // 检查是否为管理员
-    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
-      return NextResponse.json({ error: '权限不足' }, { status: 403 });
+      return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 获取查询参数
+    // 鑾峰彇鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
     const includeUsers = searchParams.get('includeUsers') === 'true';
     const activeOnly = searchParams.get('activeOnly') === 'true';
@@ -51,13 +50,12 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       return NextResponse.json(
-        { error: '获取租户列表失败', details: error.message },
+        { error: '鑾峰彇绉熸埛鍒楄〃澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
-    // 如果需要包含用户信息
-    if (includeUsers && tenants.length > 0) {
+    // 濡傛灉闇€瑕佸寘鍚敤鎴蜂俊?    if (includeUsers && tenants.length > 0) {
       const tenantIds = tenants.map((t: any) => t.id);
 
       const { data: userTenants, error: userError } = await supabase
@@ -78,14 +76,14 @@ export async function GET(request: NextRequest) {
         .eq('is_active', true);
 
       if (!userError) {
-        // 将用户信息关联到租户
+        // 灏嗙敤鎴蜂俊鎭叧鑱斿埌绉熸埛
         tenants.forEach((tenant: any) => {
           tenant.users = userTenants
             .filter((ut: any) => ut.tenant_id === tenant.id)
             .map((ut: any) => ({
               id: ut.user_id,
-              username: ut.profiles?.username || '未知用户',
-              email: ut.profiles?.email || '未知邮箱',
+              username: ut?.username || '鏈煡鐢ㄦ埛',
+              email: ut?.email || '鏈煡閭',
               role: ut.role,
               is_primary: ut.is_primary,
             }));
@@ -99,9 +97,9 @@ export async function GET(request: NextRequest) {
       count: tenants.length,
     });
   } catch (error) {
-    console.error('租户列表获取错误:', error);
+    console.error('绉熸埛鍒楄〃鑾峰彇閿欒:', error);
     return NextResponse.json(
-      { error: '服务器内部错误', details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -111,45 +109,42 @@ export async function POST(request: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
-    // 验证用户权限
+    // 楠岃瘉鐢ㄦ埛鏉冮檺
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
 
-    // 检查是否为管理员
-    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
-      return NextResponse.json({ error: '权限不足' }, { status: 403 });
+      return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 解析请求体
-    const body = await request.json();
+    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
     const { name, code, description } = body;
 
-    // 验证必填字段
+    // 楠岃瘉蹇呭～瀛楁
     if (!name || !code) {
       return NextResponse.json(
-        { error: '租户名称和编码为必填项' },
+        { error: '绉熸埛鍚嶇О鍜岀紪鐮佷负蹇呭～? },
         { status: 400 }
       );
     }
 
-    // 检查编码唯一性
-    const { data: existingTenant } = await supabase
+    // 妫€鏌ョ紪鐮佸敮涓€?    const { data: existingTenant } = await supabase
       .from('tenants')
       .select('id')
       .eq('code', code)
       .single();
 
     if (existingTenant) {
-      return NextResponse.json({ error: '租户编码已存在' }, { status: 409 });
+      return NextResponse.json({ error: '绉熸埛缂栫爜宸插瓨? }, { status: 409 });
     }
 
-    // 创建租户
+    // 鍒涘缓绉熸埛
     const { data: tenant, error } = await supabase
       .from('tenants')
       .insert({
@@ -163,12 +158,12 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json(
-        { error: '创建租户失败', details: error.message },
+        { error: '鍒涘缓绉熸埛澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
-    // 自动将创建者设为租户管理员
+    // 鑷姩灏嗗垱寤鸿€呰涓虹鎴风鐞嗗憳
     const { error: assignError } = await supabase.from('user_tenants').insert({
       user_id: user.id,
       tenant_id: tenant.id,
@@ -178,10 +173,10 @@ export async function POST(request: NextRequest) {
     } as any);
 
     if (assignError) {
-      console.warn('自动分配租户管理员失败:', assignError);
+      console.warn('鑷姩鍒嗛厤绉熸埛绠＄悊鍛樺け?', assignError);
     }
 
-    // 记录审计日志
+    // 璁板綍瀹¤鏃ュ織
     await logAuditEvent(
       'tenant_create',
       user.id,
@@ -193,56 +188,54 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: '租户创建成功',
+        message: '绉熸埛鍒涘缓鎴愬姛',
         data: tenant,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error('租户创建错误:', error);
+    console.error('绉熸埛鍒涘缓閿欒:', error);
     return NextResponse.json(
-      { error: '服务器内部错误', details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/admin/tenants/[id] - 更新租户
+// PUT /api/admin/tenants/[id] - 鏇存柊绉熸埛
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = createRouteHandlerClient({ cookies }) as any;
   const tenantId = params.id;
 
   try {
-    // 验证用户权限
+    // 楠岃瘉鐢ㄦ埛鏉冮檺
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
 
-    // 检查是否为管理员
-    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
-      return NextResponse.json({ error: '权限不足' }, { status: 403 });
+      return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 解析请求体
-    const body = await request.json();
+    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
     const { name, description, is_active } = body;
 
-    // 构建更新数据
+    // 鏋勫缓鏇存柊鏁版嵁
     const updateData = {};
     if (name !== undefined) updateData.name = name.trim();
     if (description !== undefined)
       updateData.description = description?.trim() || null;
     if (is_active !== undefined) updateData.is_active = Boolean(is_active);
 
-    // 更新租户
+    // 鏇存柊绉熸埛
     const { data: tenant, error } = await supabase
       .from('tenants')
       .update(updateData)
@@ -252,16 +245,16 @@ export async function PUT(
 
     if (error) {
       return NextResponse.json(
-        { error: '更新租户失败', details: error.message },
+        { error: '鏇存柊绉熸埛澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
     if (!tenant) {
-      return NextResponse.json({ error: '租户不存在' }, { status: 404 });
+      return NextResponse.json({ error: '绉熸埛涓嶅瓨? }, { status: 404 });
     }
 
-    // 记录审计日志
+    // 璁板綍瀹¤鏃ュ織
     await logAuditEvent(
       'tenant_update',
       user.id,
@@ -272,57 +265,53 @@ export async function PUT(
 
     return NextResponse.json({
       success: true,
-      message: '租户更新成功',
+      message: '绉熸埛鏇存柊鎴愬姛',
       data: tenant,
     });
   } catch (error) {
-    console.error('租户更新错误:', error);
+    console.error('绉熸埛鏇存柊閿欒:', error);
     return NextResponse.json(
-      { error: '服务器内部错误', details: error.message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: error.message },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/admin/tenants/[id] - 删除租户
+// DELETE /api/admin/tenants/[id] - 鍒犻櫎绉熸埛
 export async function DELETE(request, { params }) {
   const supabase = createRouteHandlerClient({ cookies });
   const tenantId = params.id;
 
   try {
-    // 验证用户权限
+    // 楠岃瘉鐢ㄦ埛鏉冮檺
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
     }
 
-    // 检查是否为管理员
-    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
-      return NextResponse.json({ error: '权限不足' }, { status: 403 });
+      return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 检查租户是否存在
-    const { data: tenant } = await supabase
+    // 妫€鏌ョ鎴锋槸鍚﹀瓨?    const { data: tenant } = await supabase
       .from('tenants')
       .select('name, code')
       .eq('id', tenantId)
       .single();
 
     if (!tenant) {
-      return NextResponse.json({ error: '租户不存在' }, { status: 404 });
+      return NextResponse.json({ error: '绉熸埛涓嶅瓨? }, { status: 404 });
     }
 
-    // 检查是否为主租户
-    if (tenant.code === 'MAIN') {
-      return NextResponse.json({ error: '不能删除主租户' }, { status: 400 });
+    // 妫€鏌ユ槸鍚︿负涓荤?    if (tenant.code === 'MAIN') {
+      return NextResponse.json({ error: '涓嶈兘鍒犻櫎涓荤? }, { status: 400 });
     }
 
-    // 检查租户是否还有活跃用户
-    const { data: activeUsers } = await supabase
+    // 妫€鏌ョ鎴锋槸鍚﹁繕鏈夋椿璺冪敤?    const { data: activeUsers } = await supabase
       .from('user_tenants')
       .select('count()', { count: 'exact', head: true })
       .eq('tenant_id', tenantId)
@@ -330,12 +319,12 @@ export async function DELETE(request, { params }) {
 
     if (activeUsers && activeUsers.count > 0) {
       return NextResponse.json(
-        { error: '租户仍有活跃用户，不能删除' },
+        { error: '绉熸埛浠嶆湁娲昏穬鐢ㄦ埛锛屼笉鑳藉垹? },
         { status: 400 }
       );
     }
 
-    // 软删除：标记为非活跃
+    // 杞垹闄わ細鏍囪涓洪潪娲昏穬
     const { error } = await supabase
       .from('tenants')
       .update({ is_active: false } as any)
@@ -343,12 +332,12 @@ export async function DELETE(request, { params }) {
 
     if (error) {
       return NextResponse.json(
-        { error: '删除租户失败', details: error.message },
+        { error: '鍒犻櫎绉熸埛澶辫触', details: error.message },
         { status: 500 }
       );
     }
 
-    // 记录审计日志
+    // 璁板綍瀹¤鏃ュ織
     await logAuditEvent(
       'tenant_delete',
       user.id,
@@ -359,18 +348,18 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      message: '租户删除成功',
+      message: '绉熸埛鍒犻櫎鎴愬姛',
     });
   } catch (error) {
-    console.error('租户删除错误:', error);
+    console.error('绉熸埛鍒犻櫎閿欒:', error);
     return NextResponse.json(
-      { error: '服务器内部错误', details: error.message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: error.message },
       { status: 500 }
     );
   }
 }
 
-// 辅助函数
+// 杈呭姪鍑芥暟
 async function checkAdminUser(userId, supabase) {
   try {
     const { data, error } = await supabase
@@ -382,16 +371,17 @@ async function checkAdminUser(userId, supabase) {
 
     return !error && data !== null;
   } catch (error) {
-    console.error('检查管理员身份失败:', error);
+    console.error('妫€鏌ョ鐞嗗憳韬唤澶辫触:', error);
     return false;
   }
 }
 
 async function logAuditEvent(action, userId, resource, changes, supabase) {
   try {
-    // 这里应该调用审计日志系统
-    console.log(`审计日志: ${action} by ${userId} on ${resource}`, changes);
+    // 杩欓噷搴旇璋冪敤瀹¤鏃ュ織绯荤粺
+    console.log(`瀹¤鏃ュ織: ${action} by ${userId} on ${resource}`, changes);
   } catch (error) {
-    console.error('记录审计日志失败:', error);
+    console.error('璁板綍瀹¤鏃ュ織澶辫触:', error);
   }
 }
+

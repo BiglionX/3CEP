@@ -1,112 +1,106 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+﻿import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+);
 
 export async function POST(request: Request) {
   try {
-    const { email, password, confirmPassword, name } = await request.json()
+    const { email, password, confirmPassword, name } = await request.json();
 
-    // 验证输入参数
+    // 楠岃瘉杈撳叆鍙傛暟
     if (!email || !password || !confirmPassword) {
       return NextResponse.json(
-        { error: '邮箱、密码和确认密码不能为空' },
+        { error: '閭銆佸瘑鐮佸拰纭瀵嗙爜涓嶈兘涓虹┖' },
         { status: 400 }
-      )
+      );
     }
 
-    // 严格的邮箱格式验证
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    // 涓ユ牸鐨勯偖绠辨牸寮忛獙?    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: '请输入有效的邮箱地址（例如：user@example.com）' },
+        { error: '璇疯緭鍏ユ湁鏁堢殑閭鍦板潃锛堜緥濡傦細user@example.com锟? },
         { status: 400 }
-      )
+      );
     }
 
     if (password !== confirmPassword) {
       return NextResponse.json(
-        { error: '两次输入的密码不一致' },
+        { error: '涓ゆ杈撳叆鐨勫瘑鐮佷笉涓€? },
         { status: 400 }
-      )
+      );
     }
 
     if (password.length < 6) {
-      return NextResponse.json(
-        { error: '密码长度至少6位' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: '瀵嗙爜闀垮害鑷冲皯6锟? }, { status: 400 });
     }
 
-    // 使用Supabase进行用户注册
+    // 浣跨敤Supabase杩涜鐢ㄦ埛娉ㄥ唽
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           name: name || '',
-        }
-      }
-    })
+        },
+      },
+    });
 
     if (error) {
-      console.error('注册失败:', error)
-      
-      // 处理具体错误信息
-      let errorMessage = '注册失败'
+      console.error('娉ㄥ唽澶辫触:', error);
+
+      // 澶勭悊鍏蜂綋閿欒淇℃伅
+      let errorMessage = '娉ㄥ唽澶辫触';
       if (error.code === 'email_address_invalid') {
-        errorMessage = '邮箱格式不正确'
+        errorMessage = '閭鏍煎紡涓嶆?;
       } else if (error.code === 'over_email_send_rate_limit') {
-        errorMessage = '系统邮件发送繁忙，请稍后再试或检查垃圾邮件（这不是您的邮箱问题）'
-      } else if (error.message.includes('already registered') || error.code === 'user_already_exists') {
-        errorMessage = '该邮箱已被注册'
-      } else if (error.message.includes('weak password') || error.code === 'weak_password') {
-        errorMessage = '密码强度不够'
+        errorMessage =
+          '绯荤粺閭欢鍙戦€佺箒蹇欙紝璇风◢鍚庡啀璇曟垨妫€鏌ュ瀮鍦鹃偖浠讹紙杩欎笉鏄偍鐨勯偖绠遍棶棰橈級';
+      } else if (
+        error.message.includes('already registered') ||
+        error.code === 'user_already_exists'
+      ) {
+        errorMessage = '璇ラ偖绠卞凡琚敞?;
+      } else if (
+        error.message.includes('weak password') ||
+        error.code === 'weak_password'
+      ) {
+        errorMessage = '瀵嗙爜寮哄害涓嶅';
       } else if (error.message.includes('invalid email')) {
-        errorMessage = '邮箱格式不正确'
+        errorMessage = '閭鏍煎紡涓嶆?;
       } else if (error.code) {
-        errorMessage = `注册失败: ${error.message || error.code}`
+        errorMessage = `娉ㄥ唽澶辫触: ${error.message || error.code}`;
       }
-      
-      return NextResponse.json(
-        { error: errorMessage },
-        { status: 400 }
-      )
+
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
 
-    // 注册成功后，可以选择将用户信息存储到自定义表中
-    if (data.user) {
+    // 娉ㄥ唽鎴愬姛鍚庯紝鍙互閫夋嫨灏嗙敤鎴蜂俊鎭瓨鍌ㄥ埌鑷畾涔夎〃?    if (data.user) {
       try {
-        // 存储额外的用户信息
-        await supabase.from('profiles').insert({
+        // 瀛樺偍棰濆鐨勭敤鎴蜂俊?        await supabase.from('profiles').insert({
           id: data.user.id,
           email: data.user.email,
           name: name || '',
           created_at: new Date().toISOString(),
-        } as any)
+        } as any);
       } catch (profileError) {
-        console.warn('存储用户档案信息失败:', profileError)
-        // 不影响主要注册流程
-      }
+        console.warn('瀛樺偍鐢ㄦ埛妗ｆ淇℃伅澶辫触:', profileError);
+        // 涓嶅奖鍝嶄富瑕佹敞鍐屾祦?      }
     }
 
     return NextResponse.json({
       success: true,
       user: {
-        id: data.user?.id,
-        email: data.user?.email,
+        id: data?.id,
+        email: data?.email,
       },
-      message: '注册成功，请检查邮箱确认账户'
-    })
-
+      message: '娉ㄥ唽鎴愬姛锛岃妫€鏌ラ偖绠辩‘璁よ处?,
+    }) as any;
   } catch (error) {
-    console.error('注册接口错误:', error)
-    return NextResponse.json(
-      { error: '服务器内部错误' },
-      { status: 500 }
-    )
+    console.error('娉ㄥ唽鎺ュ彛閿欒:', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
   }
 }
+

@@ -11,9 +11,9 @@ const path = require('path');
 // 需要修复的文件列表
 const targetFiles = [
   'src/lib/auth-service.ts',
-  'src/lib/admin-user-service.ts', 
+  'src/lib/admin-user-service.ts',
   'src/tech/api/services/market-data.service.ts',
-  'src/tech/api/services/manual-upload.service.ts'
+  'src/tech/api/services/manual-upload.service.ts',
 ];
 
 // 常见错误模式和修复方案
@@ -21,46 +21,46 @@ const fixPatterns = [
   {
     // Supabase insert类型推断错误
     pattern: /\.insert\(\{[\s\S]*?\}\)/g,
-    replacement: (match) => {
+    replacement: match => {
       if (!match.includes('as any') && !match.includes('as const')) {
         return match.replace(/\}(?=\)$)/, '} as any');
       }
       return match;
-    }
+    },
   },
   {
     // 导入路径错误修复
     pattern: /from\s+'\.\/e2e-config'/g,
-    replacement: "from '../tests/e2e-config'"
+    replacement: "from '../tests/e2e-config'",
   },
   {
     // 类型不匹配修复
     pattern: /\|\s*undefined/g,
     replacement: (match, offset, string) => {
       // 只在特定上下文中替换
-      if (string.substring(offset-20, offset).includes('null')) {
+      if (string.substring(offset - 20, offset).includes('null')) {
         return '| null | undefined';
       }
       return match;
-    }
-  }
+    },
+  },
 ];
 
 function fixFile(filePath) {
   console.log(`🔧 正在修复文件: ${filePath}`);
-  
+
   try {
     const fullPath = path.join(process.cwd(), filePath);
-    
+
     if (!fs.existsSync(fullPath)) {
       console.log(`⚠️  文件不存在: ${filePath}`);
       return false;
     }
-    
+
     let content = fs.readFileSync(fullPath, 'utf8');
-    let originalContent = content;
+    const originalContent = content;
     let fixesApplied = 0;
-    
+
     // 应用所有修复模式
     fixPatterns.forEach(({ pattern, replacement }) => {
       const matches = content.match(pattern);
@@ -69,14 +69,14 @@ function fixFile(filePath) {
         fixesApplied += matches.length;
       }
     });
-    
+
     // 如果有修改，保存文件
     if (content !== originalContent) {
       // 创建备份
-      const backupPath = fullPath + '.backup';
+      const backupPath = `${fullPath}.backup`;
       fs.writeFileSync(backupPath, originalContent);
       console.log(`💾 已创建备份: ${backupPath}`);
-      
+
       // 保存修复后的文件
       fs.writeFileSync(fullPath, content);
       console.log(`✅ 已应用 ${fixesApplied} 个修复`);
@@ -85,7 +85,6 @@ function fixFile(filePath) {
       console.log('ℹ️  文件无需修复');
       return false;
     }
-    
   } catch (error) {
     console.error(`❌ 修复文件失败 ${filePath}:`, error.message);
     return false;
@@ -94,7 +93,7 @@ function fixFile(filePath) {
 
 function createTypeDeclarations() {
   console.log('🔧 创建TypeScript类型声明文件...');
-  
+
   const typeDeclaration = `
 // Supabase类型增强声明
 declare module '*.svg' {
@@ -138,7 +137,7 @@ interface ManualVersion {
   if (!fs.existsSync(typesDir)) {
     fs.mkdirSync(typesDir, { recursive: true });
   }
-  
+
   const declarationPath = path.join(typesDir, 'supabase.d.ts');
   fs.writeFileSync(declarationPath, typeDeclaration);
   console.log(`✅ 类型声明文件已创建: ${declarationPath}`);
@@ -146,10 +145,10 @@ interface ManualVersion {
 
 function main() {
   console.log('🚀 开始TypeScript错误自动修复...\n');
-  
+
   // 创建类型声明文件
   createTypeDeclarations();
-  
+
   // 修复目标文件
   let fixedCount = 0;
   targetFiles.forEach(file => {
@@ -157,11 +156,11 @@ function main() {
       fixedCount++;
     }
   });
-  
+
   console.log(`\n📊 修复完成统计:`);
   console.log(`✅ 成功修复文件: ${fixedCount}/${targetFiles.length}`);
   console.log(`⚠️  建议手动检查备份文件`);
-  
+
   console.log('\n🧪 建议后续验证命令:');
   console.log('npx tsc --noEmit  # 验证TypeScript编译');
   console.log('npm run lint     # 验证代码规范');

@@ -15,7 +15,7 @@ const CONFIG = {
   headless: process.env.HEADLESS !== 'false',
   baseUrl: process.env.TEST_BASE_URL || 'http://localhost:3003',
   concurrency: parseInt(process.env.CONCURRENCY || '4'),
-  timeout: parseInt(process.env.TIMEOUT || '30000')
+  timeout: parseInt(process.env.TIMEOUT || '30000'),
 };
 
 // 测试套件配置
@@ -23,42 +23,42 @@ const TEST_SUITES = {
   functional: {
     name: '功能测试',
     pattern: 'tests/e2e/enterprise/**/*functional*.spec.ts',
-    description: '企业服务核心功能验证'
+    description: '企业服务核心功能验证',
   },
   permission: {
     name: '权限测试',
     pattern: 'tests/e2e/enterprise/**/*permission*.spec.ts',
-    description: 'RBAC权限控制系统验证'
+    description: 'RBAC权限控制系统验证',
   },
   api: {
     name: 'API测试',
     pattern: 'tests/e2e/enterprise/**/*api*.spec.ts',
-    description: '核心业务接口测试'
+    description: '核心业务接口测试',
   },
   performance: {
     name: '性能测试',
     pattern: 'tests/e2e/enterprise/**/*performance*.spec.ts',
-    description: '性能基准和负载测试'
+    description: '性能基准和负载测试',
   },
   security: {
     name: '安全测试',
     pattern: 'tests/e2e/enterprise/**/*security*.spec.ts',
-    description: 'Web安全防护验证'
+    description: 'Web安全防护验证',
   },
   all: {
     name: '完整测试套件',
     pattern: 'tests/e2e/enterprise/**/*.spec.ts',
-    description: '执行所有企业端到端测试'
-  }
+    description: '执行所有企业端到端测试',
+  },
 };
 
 async function main() {
   const args = process.argv.slice(2);
   const command = args[0] || 'help';
-  
+
   console.log('🔧 企业用户端E2E测试执行器');
   console.log('='.repeat(50));
-  
+
   switch (command) {
     case 'run':
       await runTests(args.slice(1));
@@ -82,15 +82,15 @@ async function main() {
 
 async function runTests(suiteNames) {
   console.log('🚀 开始执行企业用户端E2E测试');
-  
+
   // 如果没有指定套件，默认运行所有测试
   if (suiteNames.length === 0) {
     suiteNames = ['all'];
   }
-  
+
   // 验证测试环境
   await validateEnvironment();
-  
+
   // 执行每个测试套件
   for (const suiteName of suiteNames) {
     if (!TEST_SUITES[suiteName]) {
@@ -99,12 +99,12 @@ async function runTests(suiteNames) {
       listTestSuites();
       process.exit(1);
     }
-    
+
     const suite = TEST_SUITES[suiteName];
     console.log(`\n🧪 执行测试套件: ${suite.name}`);
     console.log(`   ${suite.description}`);
     console.log('-'.repeat(40));
-    
+
     try {
       await executePlaywrightTest(suite.pattern);
       console.log(`✅ ${suite.name} 执行完成`);
@@ -114,11 +114,11 @@ async function runTests(suiteNames) {
       process.exitCode = 1;
     }
   }
-  
+
   // 生成综合报告
   console.log('\n📊 生成测试报告...');
   await generateReport();
-  
+
   console.log('\n🏁 测试执行完成');
 }
 
@@ -128,9 +128,9 @@ async function executePlaywrightTest(pattern) {
     TEST_ENV: CONFIG.testEnv,
     HEADLESS: CONFIG.headless.toString(),
     TEST_BASE_URL: CONFIG.baseUrl,
-    TIMEOUT: CONFIG.timeout.toString()
+    TIMEOUT: CONFIG.timeout.toString(),
   };
-  
+
   const cmd = 'npx';
   const args = [
     'playwright',
@@ -138,24 +138,24 @@ async function executePlaywrightTest(pattern) {
     pattern,
     '--config=playwright.config.ts',
     `--workers=${CONFIG.concurrency}`,
-    '--reporter=html,json,junit'
+    '--reporter=html,json,junit',
   ];
-  
+
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, {
       env,
-      stdio: 'inherit'
+      stdio: 'inherit',
     });
-    
-    child.on('close', (code) => {
+
+    child.on('close', code => {
       if (code === 0) {
         resolve();
       } else {
         reject(new Error(`测试执行失败，退出码: ${code}`));
       }
     });
-    
-    child.on('error', (error) => {
+
+    child.on('error', error => {
       reject(error);
     });
   });
@@ -164,12 +164,12 @@ async function executePlaywrightTest(pattern) {
 function listTestSuites() {
   console.log('\n📋 可用的测试套件:');
   console.log('='.repeat(40));
-  
+
   Object.entries(TEST_SUITES).forEach(([key, suite]) => {
     console.log(`${key.padEnd(12)} - ${suite.name}`);
     console.log(`               ${suite.description}`);
   });
-  
+
   console.log('\n💡 使用示例:');
   console.log('   npm run test:e2e:enterprise run functional');
   console.log('   npm run test:e2e:enterprise run api performance');
@@ -178,30 +178,29 @@ function listTestSuites() {
 
 async function setupEnvironment() {
   console.log('⚙️  初始化测试环境...');
-  
+
   try {
     // 检查必要的目录
     const requiredDirs = [
       './test-results',
       './test-results/screenshots',
       './test-results/videos',
-      './test-results/logs'
+      './test-results/logs',
     ];
-    
+
     for (const dir of requiredDirs) {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
         console.log(`   ✓ 创建目录: ${dir}`);
       }
     }
-    
+
     // 检查Playwright安装
     console.log('   检查Playwright浏览器...');
     const { execSync } = require('child_process');
     execSync('npx playwright install --with-deps', { stdio: 'inherit' });
-    
+
     console.log('✅ 测试环境初始化完成');
-    
   } catch (error) {
     console.error('❌ 环境初始化失败:', error.message);
     process.exit(1);
@@ -210,11 +209,11 @@ async function setupEnvironment() {
 
 async function validateEnvironment() {
   console.log('🔍 验证测试环境...');
-  
+
   try {
     // 检查服务是否运行
     const { execSync } = require('child_process');
-    
+
     try {
       execSync(`curl -s ${CONFIG.baseUrl}/health`, { timeout: 5000 });
       console.log('   ✓ 应用服务运行正常');
@@ -222,7 +221,7 @@ async function validateEnvironment() {
       console.warn('   ⚠ 无法访问应用服务，测试可能失败');
       console.warn(`     请确保服务在 ${CONFIG.baseUrl} 正常运行`);
     }
-    
+
     // 检查必要的环境变量
     const requiredVars = ['NODE_ENV'];
     for (const envVar of requiredVars) {
@@ -230,7 +229,6 @@ async function validateEnvironment() {
         console.warn(`   ⚠ 环境变量 ${envVar} 未设置`);
       }
     }
-    
   } catch (error) {
     console.warn('   ⚠ 环境验证出现警告:', error.message);
   }
@@ -239,7 +237,9 @@ async function validateEnvironment() {
 async function generateReport() {
   try {
     console.log('   生成综合测试报告...');
-    const { main: generateReportMain } = require('./generate-enterprise-test-report.js');
+    const {
+      main: generateReportMain,
+    } = require('./generate-enterprise-test-report.js');
     await generateReportMain();
   } catch (error) {
     console.error('   ❌ 报告生成失败:', error.message);
@@ -248,20 +248,20 @@ async function generateReport() {
 
 async function cleanArtifacts() {
   console.log('🧹 清理测试产物...');
-  
+
   const cleanupPaths = [
     './test-results',
     './playwright-report',
-    './test-results.tmp'
+    './test-results.tmp',
   ];
-  
+
   for (const cleanupPath of cleanupPaths) {
     if (fs.existsSync(cleanupPath)) {
       fs.rmSync(cleanupPath, { recursive: true, force: true });
       console.log(`   ✓ 清理: ${cleanupPath}`);
     }
   }
-  
+
   console.log('✅ 清理完成');
 }
 

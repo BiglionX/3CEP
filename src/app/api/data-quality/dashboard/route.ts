@@ -1,38 +1,38 @@
-import { dataQualityCronService } from "@/data-center/monitoring/data-quality-cron";
-import { dataQualityService } from "@/data-center/monitoring/data-quality-service";
-import { monitoringService } from "@/data-center/monitoring/monitoring-service";
-import { NextRequest, NextResponse } from "next/server";
+﻿import { dataQualityCronService } from '@/data-center/monitoring/data-quality-cron';
+import { dataQualityService } from '@/data-center/monitoring/data-quality-service';
+import { monitoringService } from '@/data-center/monitoring/monitoring-service';
+import { NextRequest, NextResponse } from 'next/server';
 
-// GET请求处理 - 数据质量看板
+// GET璇锋眰澶勭悊 - 鏁版嵁璐ㄩ噺鐪嬫澘
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const view = searchParams.get("view") || "overview";
+    const view = searchParams.get('view') || 'overview';
 
     switch (view) {
-      case "overview":
+      case 'overview':
         return await getOverviewDashboard();
 
-      case "details":
+      case 'details':
         return await getDetailedDashboard();
 
-      case "trends":
+      case 'trends':
         return await getTrendDashboard();
 
-      case "alerts":
+      case 'alerts':
         return await getAlertsDashboard();
 
       default:
         return NextResponse.json(
-          { error: "未知的看板视图类型" },
+          { error: '鏈煡鐨勭湅鏉胯鍥剧被? },
           { status: 400 }
         );
     }
   } catch (error: any) {
-    console.error("数据质量看板API错误:", error);
+    console.error('鏁版嵁璐ㄩ噺鐪嬫澘API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || "内部服务器错误",
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -40,44 +40,43 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST请求处理 - 看板操作
+// POST璇锋眰澶勭悊 - 鐪嬫澘鎿嶄綔
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { action, ...params } = body;
 
     switch (action) {
-      case "refresh":
-        // 刷新看板数据
+      case 'refresh':
+        // 鍒锋柊鐪嬫澘鏁版嵁
         return await refreshDashboard();
 
-      case "trigger-check":
-        // 触发特定检查
-        const { ruleId } = params;
+      case 'trigger-check':
+        // 瑙﹀彂鐗瑰畾妫€?        const { ruleId } = params;
         if (!ruleId) {
           return NextResponse.json(
-            { error: "缺少检查规则ID" },
+            { error: '缂哄皯妫€鏌ヨ鍒橧D' },
             { status: 400 }
           );
         }
         return await triggerSpecificCheck(ruleId);
 
-      case "trigger-job":
-        // 触发定时任务
+      case 'trigger-job':
+        // 瑙﹀彂瀹氭椂浠诲姟
         const { jobId } = params;
         if (!jobId) {
-          return NextResponse.json({ error: "缺少任务ID" }, { status: 400 });
+          return NextResponse.json({ error: '缂哄皯浠诲姟ID' }, { status: 400 });
         }
         return await triggerCronJob(jobId);
 
       default:
-        return NextResponse.json({ error: "未知的操作类型" }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
     }
   } catch (error: any) {
-    console.error("数据质量看板操作错误:", error);
+    console.error('鏁版嵁璐ㄩ噺鐪嬫澘鎿嶄綔閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || "内部服务器错误",
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -85,19 +84,18 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// 获取概览看板数据
+// 鑾峰彇姒傝鐪嬫澘鏁版嵁
 async function getOverviewDashboard() {
-  // 获取最新的质量报告
+  // 鑾峰彇鏈€鏂扮殑璐ㄩ噺鎶ュ憡
   const qualityReport = await dataQualityService.generateQualityReport();
 
-  // 获取定时任务状态
-  const cronJobs = dataQualityCronService.getAllJobs();
+  // 鑾峰彇瀹氭椂浠诲姟鐘?  const cronJobs = dataQualityCronService.getAllJobs();
   const runningJobs = dataQualityCronService.getRunningJobs();
 
-  // 获取监控统计数据
+  // 鑾峰彇鐩戞帶缁熻鏁版嵁
   const monitoringStats = monitoringService.getMonitoringStats();
 
-  // 获取最近的告警
+  // 鑾峰彇鏈€杩戠殑鍛婅
   const recentAlerts = monitoringService.getActiveAlerts().slice(0, 5);
 
   const dashboardData = {
@@ -114,7 +112,7 @@ async function getOverviewDashboard() {
     cronJobs: {
       total: cronJobs.length,
       running: runningJobs.length,
-      configs: cronJobs.map((job) => ({
+      configs: cronJobs.map(job => ({
         id: job.id,
         name: job.name,
         schedule: job.schedule,
@@ -129,7 +127,7 @@ async function getOverviewDashboard() {
       totalAlertRules: monitoringStats.totalAlertRules,
     },
 
-    recentAlerts: recentAlerts.map((alert) => ({
+    recentAlerts: recentAlerts.map(alert => ({
       id: alert.id,
       name: alert.ruleName,
       severity: alert.severity,
@@ -145,22 +143,20 @@ async function getOverviewDashboard() {
   return NextResponse.json(dashboardData);
 }
 
-// 获取详细看板数据
+// 鑾峰彇璇︾粏鐪嬫澘鏁版嵁
 async function getDetailedDashboard() {
-  // 获取所有检查规则和最新结果
-  const allRules = dataQualityService.getAllCheckRules();
+  // 鑾峰彇鎵€鏈夋鏌ヨ鍒欏拰鏈€鏂扮粨?  const allRules = dataQualityService.getAllCheckRules();
   const latestResults = dataQualityService.getCheckHistory(50);
 
-  // 按表分组的结果
-  const resultsByTable: Record<string, any[]> = {};
-  latestResults.forEach((result) => {
+  // 鎸夎〃鍒嗙粍鐨勭粨?  const resultsByTable: Record<string, any[]> = {};
+  latestResults.forEach(result => {
     if (!resultsByTable[result.tableName]) {
       resultsByTable[result.tableName] = [];
     }
     resultsByTable[result.tableName].push(result);
   });
 
-  // 计算每个表的质量分数
+  // 璁＄畻姣忎釜琛ㄧ殑璐ㄩ噺鍒嗘暟
   const tableScores: Record<string, number> = {};
   Object.entries(resultsByTable).forEach(([tableName, results]) => {
     const latestResult = results[results.length - 1];
@@ -168,7 +164,7 @@ async function getDetailedDashboard() {
   });
 
   const detailedData = {
-    tables: Object.keys(resultsByTable).map((tableName) => ({
+    tables: Object.keys(resultsByTable).map(tableName => ({
       name: tableName,
       score: Math.round(tableScores[tableName] || 0),
       checkCount: resultsByTable[tableName].length,
@@ -176,8 +172,8 @@ async function getDetailedDashboard() {
         resultsByTable[tableName][resultsByTable[tableName].length - 1]
           ?.timestamp,
       issues: resultsByTable[tableName]
-        .filter((r) => r.status !== "passed")
-        .map((r) => ({
+        .filter(r => r.status !== 'passed')
+        .map(r => ({
           ruleName: r.ruleName,
           issueType: r.checkType,
           issueCount: r.issueCount,
@@ -186,7 +182,7 @@ async function getDetailedDashboard() {
         })),
     })),
 
-    rules: allRules.map((rule) => {
+    rules: allRules.map(rule => {
       const ruleResults = dataQualityService.getRuleCheckResults(rule.id, 5);
       const latestResult = ruleResults[ruleResults.length - 1];
 
@@ -213,15 +209,14 @@ async function getDetailedDashboard() {
   return NextResponse.json(detailedData);
 }
 
-// 获取趋势看板数据
+// 鑾峰彇瓒嬪娍鐪嬫澘鏁版嵁
 async function getTrendDashboard() {
   const history = dataQualityService.getCheckHistory(100);
 
-  // 按日期分组计算每日平均质量分数
-  const dailyScores: Record<string, number[]> = {};
+  // 鎸夋棩鏈熷垎缁勮绠楁瘡鏃ュ钩鍧囪川閲忓垎?  const dailyScores: Record<string, number[]> = {};
 
-  history.forEach((result) => {
-    const date = result.timestamp.split("T")[0]; // YYYY-MM-DD
+  history.forEach(result => {
+    const date = result.timestamp.split('T')[0]; // YYYY-MM-DD
     if (!dailyScores[date]) {
       dailyScores[date] = [];
     }
@@ -249,23 +244,22 @@ async function getTrendDashboard() {
   return NextResponse.json(trendData);
 }
 
-// 获取告警看板数据
+// 鑾峰彇鍛婅鐪嬫澘鏁版嵁
 async function getAlertsDashboard() {
   const allAlerts = monitoringService.getActiveAlerts();
 
-  // 按严重程度分类
-  const alertsBySeverity: Record<string, any[]> = {
+  // 鎸変弗閲嶇▼搴﹀垎?  const alertsBySeverity: Record<string, any[]> = {
     critical: [],
     emergency: [],
     warning: [],
     info: [],
   };
 
-  allAlerts.forEach((alert) => {
+  allAlerts.forEach(alert => {
     alertsBySeverity[alert.severity].push({
       id: alert.id,
       name: alert.ruleName,
-      description: `规则: ${alert.ruleName} - 当前值: ${alert.currentValue}`,
+      description: `瑙勫垯: ${alert.ruleName} - 褰撳墠? ${alert.currentValue}`,
       severity: alert.severity,
       triggeredAt: alert.triggeredAt,
       resolved: !!alert.resolvedAt,
@@ -276,8 +270,8 @@ async function getAlertsDashboard() {
   const alertsData = {
     bySeverity: alertsBySeverity,
     total: allAlerts.length,
-    unresolved: allAlerts.filter((a) => !a.resolvedAt).length,
-    recent: allAlerts.slice(0, 20).map((alert) => ({
+    unresolved: allAlerts.filter(a => !a.resolvedAt).length,
+    recent: allAlerts.slice(0, 20).map(alert => ({
       ...alert,
       timeSinceTriggered: getTimeSince(alert.triggeredAt),
     })),
@@ -288,43 +282,42 @@ async function getAlertsDashboard() {
   return NextResponse.json(alertsData);
 }
 
-// 刷新看板数据
+// 鍒锋柊鐪嬫澘鏁版嵁
 async function refreshDashboard() {
-  // 执行快速检查以更新数据
+  // 鎵ц蹇€熸鏌ヤ互鏇存柊鏁版嵁
   const quickResults = await dataQualityService.runAllChecks();
 
   return NextResponse.json({
-    message: "看板数据刷新完成",
+    message: '鐪嬫澘鏁版嵁鍒锋柊瀹屾垚',
     refreshedChecks: quickResults.length,
     timestamp: new Date().toISOString(),
   });
 }
 
-// 触发特定检查
-async function triggerSpecificCheck(ruleId: string) {
+// 瑙﹀彂鐗瑰畾妫€?async function triggerSpecificCheck(ruleId: string) {
   const result = await dataQualityService.executeCheckRule(ruleId);
 
   if (!result) {
     return NextResponse.json(
-      { error: "检查规则不存在或未启用" },
+      { error: '妫€鏌ヨ鍒欎笉瀛樺湪鎴栨湭鍚敤' },
       { status: 404 }
     );
   }
 
   return NextResponse.json({
-    message: "检查执行完成",
+    message: '妫€鏌ユ墽琛屽畬?,
     result,
     timestamp: new Date().toISOString(),
   });
 }
 
-// 触发定时任务
+// 瑙﹀彂瀹氭椂浠诲姟
 async function triggerCronJob(jobId: string) {
   try {
     await dataQualityCronService.triggerJob(jobId);
 
     return NextResponse.json({
-      message: "定时任务触发成功",
+      message: '瀹氭椂浠诲姟瑙﹀彂鎴愬姛',
       jobId,
       timestamp: new Date().toISOString(),
     });
@@ -333,17 +326,17 @@ async function triggerCronJob(jobId: string) {
   }
 }
 
-// 生成质量趋势数据
+// 鐢熸垚璐ㄩ噺瓒嬪娍鏁版嵁
 function generateQualityTrends(results: any[]) {
   const trends: Record<string, { dates: string[]; scores: number[] }> = {};
 
-  results.forEach((result) => {
+  results.forEach(result => {
     const checkType = result.checkType;
     if (!trends[checkType]) {
       trends[checkType] = { dates: [], scores: [] };
     }
 
-    const date = result.timestamp.split("T")[0];
+    const date = result.timestamp.split('T')[0];
     if (!trends[checkType].dates.includes(date)) {
       trends[checkType].dates.push(date);
       trends[checkType].scores.push(100 - result.issuePercentage);
@@ -353,11 +346,11 @@ function generateQualityTrends(results: any[]) {
   return trends;
 }
 
-// 生成问题趋势数据
+// 鐢熸垚闂瓒嬪娍鏁版嵁
 function generateIssueTrends(results: any[]) {
   const issueCounts: Record<string, number> = {};
 
-  results.forEach((result) => {
+  results.forEach(result => {
     if (result.issueCount > 0) {
       const issueType = result.checkType;
       issueCounts[issueType] =
@@ -368,9 +361,9 @@ function generateIssueTrends(results: any[]) {
   return issueCounts;
 }
 
-// 生成性能趋势数据
+// 鐢熸垚鎬ц兘瓒嬪娍鏁版嵁
 function generatePerformanceTrends(results: any[]) {
-  const executionTimes: number[] = results.map((r) => r.executionTime);
+  const executionTimes: number[] = results.map(r => r.executionTime);
 
   return {
     average: Math.round(
@@ -382,14 +375,13 @@ function generatePerformanceTrends(results: any[]) {
     trend:
       executionTimes.length > 1
         ? executionTimes[executionTimes.length - 1] > executionTimes[0]
-          ? "increasing"
-          : "decreasing"
-        : "stable",
+          ? 'increasing'
+          : 'decreasing'
+        : 'stable',
   };
 }
 
-// 计算时间差
-function getTimeSince(timestamp: string): string {
+// 璁＄畻鏃堕棿?function getTimeSince(timestamp: string): string {
   const now = new Date();
   const then = new Date(timestamp);
   const diffMs = now.getTime() - then.getTime();
@@ -398,8 +390,9 @@ function getTimeSince(timestamp: string): string {
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffDays > 0) return `${diffDays}天前`;
-  if (diffHours > 0) return `${diffHours}小时前`;
-  if (diffMinutes > 0) return `${diffMinutes}分钟前`;
-  return "刚刚";
+  if (diffDays > 0) return `${diffDays}澶╁墠`;
+  if (diffHours > 0) return `${diffHours}灏忔椂鍓峘;
+  if (diffMinutes > 0) return `${diffMinutes}鍒嗛挓鍓峘;
+  return '鍒氬垰';
 }
+

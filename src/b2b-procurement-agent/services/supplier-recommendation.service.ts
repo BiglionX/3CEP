@@ -1,10 +1,10 @@
-import { generateUUID } from "@/fcx-system/utils/helpers";
-import { createClient } from "@supabase/supabase-js";
+import { generateUUID } from '@/fcx-system/utils/helpers';
+import { createClient } from '@supabase/supabase-js';
 import {
   SupplierRating,
   SupplierRecommendation,
   SupplierWithRating,
-} from "../models/negotiation.model";
+} from '../models/negotiation.model';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,29 +13,26 @@ const supabase = createClient(
 
 export class SupplierRecommendationService {
   /**
-   * 获取带评分的供应商信息
-   */
+   * 获取带评分的供应商信?   */
   async getSupplierWithRating(
     supplierId: string
   ): Promise<SupplierWithRating | null> {
     try {
-      // 获取供应商基本信息
-      const { data: supplierData, error: supplierError } = await supabase
-        .from("suppliers")
-        .select("*")
-        .eq("id", supplierId)
+      // 获取供应商基本信?      const { data: supplierData, error: supplierError } = await supabase
+        .from('suppliers')
+        .select('*')
+        .eq('id', supplierId)
         .single();
 
       if (supplierError) {
-        if (supplierError.code === "PGRST116") return null;
-        throw new Error(`获取供应商信息失败: ${supplierError.message}`);
+        if (supplierError.code === 'PGRST116') return null;
+        throw new Error(`获取供应商信息失? ${supplierError.message}`);
       }
 
-      // 获取供应商评分信息
-      const { data: ratingData, error: ratingError } = await supabase
-        .from("supplier_ratings")
-        .select("*")
-        .eq("supplier_id", supplierId)
+      // 获取供应商评分信?      const { data: ratingData, error: ratingError } = await supabase
+        .from('supplier_ratings')
+        .select('*')
+        .eq('supplier_id', supplierId)
         .single();
 
       const rating = ratingError ? undefined : this.mapToRating(ratingData);
@@ -49,7 +46,7 @@ export class SupplierRecommendationService {
         rating,
       };
     } catch (error) {
-      console.error("获取供应商评分信息错误:", error);
+      console.error('获取供应商评分信息错?', error);
       throw error;
     }
   }
@@ -68,7 +65,7 @@ export class SupplierRecommendationService {
 
       // 计算每个供应商的推荐得分
       const recommendations: SupplierRecommendation[] = suppliers.map(
-        (supplier) => {
+        supplier => {
           const score = this.calculateRecommendationScore(
             supplier,
             procurementItems,
@@ -80,28 +77,26 @@ export class SupplierRecommendationService {
             supplierId: supplier.id,
             supplierName: supplier.name,
             score,
-            transactionCount: supplier.rating?.transactionCount || 0,
-            averageDiscountRate: supplier.rating?.averageDiscountRate || 0,
-            afterSalesRate: supplier.rating?.afterSalesRate || 0,
-            priceCompetitiveness: supplier.rating?.priceCompetitiveness || 0,
+            transactionCount: supplier?.transactionCount || 0,
+            averageDiscountRate: supplier?.averageDiscountRate || 0,
+            afterSalesRate: supplier?.afterSalesRate || 0,
+            priceCompetitiveness: supplier?.priceCompetitiveness || 0,
             reasons,
           };
         }
       );
 
-      // 按得分降序排列并返回前N个
-      return recommendations
+      // 按得分降序排列并返回前N�?      return recommendations
         .sort((a, b) => b.score - a.score)
         .slice(0, maxRecommendations);
     } catch (error) {
-      console.error("推荐供应商错误:", error);
+      console.error('推荐供应商错?', error);
       throw error;
     }
   }
 
   /**
-   * 更新供应商评分
-   */
+   * 更新供应商评?   */
   async updateSupplierRating(
     supplierId: string,
     transactionData: {
@@ -117,8 +112,7 @@ export class SupplierRecommendationService {
       let currentRating = await this.getCurrentRating(supplierId);
 
       if (!currentRating) {
-        // 如果没有评分记录，创建新的
-        currentRating = {
+        // 如果没有评分记录，创建新?        currentRating = {
           id: generateUUID(),
           supplierId,
           transactionCount: 0,
@@ -139,8 +133,7 @@ export class SupplierRecommendationService {
         currentRating.successfulNegotiations +
         (transactionData.isSuccess ? 1 : 0);
 
-      // 计算新的平均值（移动平均）
-      const newAvgDiscountRate = this.calculateMovingAverage(
+      // 计算新的平均值（移动平均?      const newAvgDiscountRate = this.calculateMovingAverage(
         currentRating.averageDiscountRate,
         currentRating.transactionCount,
         transactionData.discountRate
@@ -158,7 +151,7 @@ export class SupplierRecommendationService {
         transactionData.qualityScore
       );
 
-      // 计算交付可靠性 (假设标准交付时间为30天)
+      // 计算交付可靠?(假设标准交付时间?0�?
       const deliveryReliability = Math.max(
         0,
         100 - Math.abs(transactionData.deliveryTime - 30)
@@ -169,7 +162,7 @@ export class SupplierRecommendationService {
         deliveryReliability
       );
 
-      // 价格竞争力评分 (基于折扣率)
+      // 价格竞争力评?(基于折扣?
       const priceCompetitiveness = Math.min(
         100,
         transactionData.discountRate * 10
@@ -191,8 +184,7 @@ export class SupplierRecommendationService {
         qualityScore: newQualityScore,
       });
 
-      // 更新数据库
-      const { error } = await supabase.from("supplier_ratings").upsert(
+      // 更新数据?      const { error } = await supabase.from('supplier_ratings').upsert(
         {
           id: currentRating.id,
           supplier_id: supplierId,
@@ -208,22 +200,21 @@ export class SupplierRecommendationService {
           last_updated: new Date(),
         },
         {
-          onConflict: "supplier_id",
+          onConflict: 'supplier_id',
         }
       );
 
-      if (error) throw new Error(`更新供应商评分失败: ${error.message}`);
+      if (error) throw new Error(`更新供应商评分失? ${error.message}`);
 
       return true;
     } catch (error) {
-      console.error("更新供应商评分错误:", error);
+      console.error('更新供应商评分错?', error);
       return false;
     }
   }
 
   /**
-   * 获取供应商排名
-   */
+   * 获取供应商排?   */
   async getSupplierRankings(limit: number = 10): Promise<
     Array<{
       supplier: SupplierWithRating;
@@ -234,23 +225,18 @@ export class SupplierRecommendationService {
     try {
       const suppliers = await this.getAllSuppliersWithRatings();
 
-      // 按综合评分排序
-      const rankedSuppliers = suppliers
-        .filter((s) => s.rating && s.rating.transactionCount >= 5) // 至少5笔交易才有意义
-        .sort(
-          (a, b) =>
-            (b.rating?.overallRating || 0) - (a.rating?.overallRating || 0)
-        )
+      // 按综合评分排?      const rankedSuppliers = suppliers
+        .filter(s => s.rating && s.rating.transactionCount >= 5) // 至少5笔交易才有意?        .sort((a, b) => (b?.overallRating || 0) - (a?.overallRating || 0))
         .slice(0, limit)
         .map((supplier, index) => ({
           supplier,
           rank: index + 1,
-          score: supplier.rating?.overallRating || 0,
+          score: supplier?.overallRating || 0,
         }));
 
       return rankedSuppliers;
     } catch (error) {
-      console.error("获取供应商排名错误:", error);
+      console.error('获取供应商排名错?', error);
       throw error;
     }
   }
@@ -262,21 +248,21 @@ export class SupplierRecommendationService {
     try {
       const supplier = await this.getSupplierWithRating(supplierId);
       if (!supplier?.rating) {
-        throw new Error("供应商评分信息不存在");
+        throw new Error('供应商评分信息不存在');
       }
 
       // 获取议价历史统计
       const { data: historyData, error: historyError } = await supabase
-        .from("negotiation_history")
-        .select("*")
-        .eq("supplier_id", supplierId);
+        .from('negotiation_history')
+        .select('*')
+        .eq('supplier_id', supplierId);
 
       if (historyError)
         throw new Error(`获取议价历史失败: ${historyError.message}`);
 
       const totalNegotiations = historyData?.length || 0;
       const successfulNegotiations =
-        historyData?.filter((h) => h.negotiation_status === "success").length ||
+        historyData?.filter(h => h.negotiation_status === 'success').length ||
         0;
       const avgDiscount =
         historyData?.reduce((sum, h) => sum + (h.discount_rate || 0), 0) /
@@ -312,7 +298,7 @@ export class SupplierRecommendationService {
         },
       };
     } catch (error) {
-      console.error("获取供应商性能统计错误:", error);
+      console.error('获取供应商性能统计错误:', error);
       throw error;
     }
   }
@@ -326,25 +312,24 @@ export class SupplierRecommendationService {
     try {
       // 获取所有供应商
       const { data: suppliers, error: suppliersError } = await supabase
-        .from("suppliers")
-        .select("*")
-        .eq("status", "approved");
+        .from('suppliers')
+        .select('*')
+        .eq('status', 'approved');
 
       if (suppliersError)
-        throw new Error(`获取供应商列表失败: ${suppliersError.message}`);
+        throw new Error(`获取供应商列表失? ${suppliersError.message}`);
 
-      // 获取所有评分
-      const { data: ratings, error: ratingsError } = await supabase
-        .from("supplier_ratings")
-        .select("*");
+      // 获取所有评?      const { data: ratings, error: ratingsError } = await supabase
+        .from('supplier_ratings')
+        .select('*');
 
       if (ratingsError)
-        throw new Error(`获取供应商评分失败: ${ratingsError.message}`);
+        throw new Error(`获取供应商评分失? ${ratingsError.message}`);
 
       // 合并数据
       return (
-        suppliers?.map((supplier) => {
-          const rating = ratings?.find((r) => r.supplier_id === supplier.id);
+        suppliers?.map(supplier => {
+          const rating = ratings?.find(r => r.supplier_id === supplier.id);
           return {
             id: supplier.id,
             name: supplier.name,
@@ -356,7 +341,7 @@ export class SupplierRecommendationService {
         }) || []
       );
     } catch (error) {
-      console.error("获取所有供应商评分错误:", error);
+      console.error('获取所有供应商评分错误:', error);
       throw error;
     }
   }
@@ -380,7 +365,7 @@ export class SupplierRecommendationService {
     );
     score += transactionScore * 0.3;
 
-    // 成功议价率权重 (25%)
+    // 成功议价率权?(25%)
     const successRate =
       supplier.rating.transactionCount > 0
         ? (supplier.rating.successfulNegotiations /
@@ -389,13 +374,13 @@ export class SupplierRecommendationService {
         : 0;
     score += successRate * 0.25;
 
-    // 平均折扣率权重 (20%)
+    // 平均折扣率权?(20%)
     score += supplier.rating.averageDiscountRate * 0.2;
 
     // 售后服务评分权重 (15%)
-    score += supplier.rating.afterSalesRate * 3 * 0.15; // 转换为100分制
+    score += supplier.rating.afterSalesRate * 3 * 0.15; // 转换?00分制
 
-    // 价格竞争力权重 (10%)
+    // 价格竞争力权?(10%)
     score += supplier.rating.priceCompetitiveness * 0.1;
 
     return Math.round(score);
@@ -411,12 +396,12 @@ export class SupplierRecommendationService {
     const reasons: string[] = [];
 
     if (!supplier.rating) {
-      reasons.push("新供应商，缺乏历史数据");
+      reasons.push('新供应商，缺乏历史数?);
       return reasons;
     }
 
     if (supplier.rating.transactionCount >= 50) {
-      reasons.push("经验丰富（50+笔交易）");
+      reasons.push('经验丰富?0+笔交易）');
     }
 
     if (
@@ -424,25 +409,25 @@ export class SupplierRecommendationService {
         Math.max(supplier.rating.transactionCount, 1) >=
       0.8
     ) {
-      reasons.push("议价成功率高");
+      reasons.push('议价成功率高');
     }
 
     if (supplier.rating.averageDiscountRate >= 10) {
       reasons.push(
-        `平均折扣率高达${supplier.rating.averageDiscountRate.toFixed(1)}%`
+        `平均折扣率高?{supplier.rating.averageDiscountRate.toFixed(1)}%`
       );
     }
 
     if (supplier.rating.afterSalesRate >= 4.0) {
-      reasons.push("售后服务评价优秀");
+      reasons.push('售后服务评价优秀');
     }
 
     if (supplier.rating.priceCompetitiveness >= 4.0) {
-      reasons.push("价格具有竞争力");
+      reasons.push('价格具有竞争?);
     }
 
     if (reasons.length === 0) {
-      reasons.push(`综合评分为${score}分`);
+      reasons.push(`综合评分?{score}分`);
     }
 
     return reasons;
@@ -455,13 +440,13 @@ export class SupplierRecommendationService {
     supplierId: string
   ): Promise<SupplierRating | null> {
     const { data, error } = await supabase
-      .from("supplier_ratings")
-      .select("*")
-      .eq("supplier_id", supplierId)
+      .from('supplier_ratings')
+      .select('*')
+      .eq('supplier_id', supplierId)
       .single();
 
     if (error) {
-      if (error.code === "PGRST116") return null;
+      if (error.code === 'PGRST116') return null;
       throw new Error(`获取当前评分失败: ${error.message}`);
     }
 
@@ -469,8 +454,7 @@ export class SupplierRecommendationService {
   }
 
   /**
-   * 计算移动平均值
-   */
+   * 计算移动平均?   */
   private calculateMovingAverage(
     currentAvg: number,
     count: number,
@@ -504,8 +488,8 @@ export class SupplierRecommendationService {
       weights.transactionCount;
     score += successRate * weights.successRate;
     score += metrics.averageDiscountRate * weights.avgDiscount;
-    score += metrics.afterSalesRate * 20 * weights.afterSales; // 转换为100分制
-    score += metrics.priceCompetitiveness * 20 * weights.priceCompetitive; // 转换为100分制
+    score += metrics.afterSalesRate * 20 * weights.afterSales; // 转换?00分制
+    score += metrics.priceCompetitiveness * 20 * weights.priceCompetitive; // 转换?00分制
     score += metrics.deliveryReliability * weights.deliveryReliable;
 
     return Math.min(100, Math.max(0, score));

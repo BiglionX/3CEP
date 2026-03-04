@@ -7,6 +7,7 @@
 ## 🌿 分支策略
 
 ### 核心分支
+
 ```
 main                    # 生产环境分支
 develop                 # 开发主分支
@@ -15,6 +16,7 @@ hotfix/bug-fix-name     # 紧急修复分支
 ```
 
 ### 功能分支命名规范
+
 ```
 feature/JIRA-123-short-description     # 新功能开发
 bugfix/JIRA-124-bug-description        # Bug修复
@@ -24,6 +26,7 @@ docs/JIRA-127-documentation-update     # 文档更新
 ```
 
 ### 分支生命周期
+
 ```mermaid
 graph LR
     A[main] --> B[develop]
@@ -34,7 +37,7 @@ graph LR
     F --> G[main]
     G --> H[Tag版本]
     H --> I[生产部署]
-    
+
     G --> J[hotfix/*]
     J --> K[main]
     K --> L[develop]
@@ -43,6 +46,7 @@ graph LR
 ## 🎯 提交规范
 
 ### 提交信息格式
+
 ```
 <type>(<scope>): <subject>
 
@@ -52,6 +56,7 @@ graph LR
 ```
 
 ### Type 类型说明
+
 - `feat`: 新功能
 - `fix`: Bug修复
 - `docs`: 文档更新
@@ -64,6 +69,7 @@ graph LR
 - `revert`: 回滚提交
 
 ### Scope 范围说明
+
 - `auth`: 认证模块
 - `repair`: 维修服务模块
 - `procurement`: 采购模块
@@ -73,6 +79,7 @@ graph LR
 - `workflow`: 工作流相关
 
 ### 提交示例
+
 ```bash
 # ✅ 推荐的提交信息
 feat(auth): 添加微信登录功能
@@ -97,33 +104,34 @@ refactor(database): 优化查询性能
 ```
 
 ### 提交检查脚本
+
 ```bash
 #!/bin/bash
 # scripts/commit-validator.sh
 
 validate_commit_message() {
     local message="$1"
-    
+
     # 检查格式
     if ! echo "$message" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|chore|ci|revert)\(.+\): .+"; then
         echo "❌ 提交信息格式不正确"
         echo "正确的格式: type(scope): subject"
         return 1
     fi
-    
+
     # 检查长度
     local subject=$(echo "$message" | head -n1)
     if [ ${#subject} -gt 72 ]; then
         echo "❌ 提交主题过长（超过72字符）"
         return 1
     fi
-    
+
     # 检查结尾标点
     if echo "$subject" | grep -qE "[.]$"; then
         echo "❌ 提交主题不应以句号结尾"
         return 1
     fi
-    
+
     echo "✅ 提交信息验证通过"
     return 0
 }
@@ -138,6 +146,7 @@ validate_commit_message "$COMMIT_MSG"
 ## 🔧 Git Hook 配置
 
 ### Pre-commit Hook
+
 ```javascript
 // .husky/pre-commit
 #!/bin/sh
@@ -163,6 +172,7 @@ echo "✅ 所有检查通过，准备提交"
 ```
 
 ### Commit-msg Hook
+
 ```javascript
 // .husky/commit-msg
 #!/bin/sh
@@ -172,6 +182,7 @@ npx --no-install commitlint --edit "$1"
 ```
 
 ### Pre-push Hook
+
 ```javascript
 // .husky/pre-push
 #!/bin/sh
@@ -199,6 +210,7 @@ echo "✅ 推送检查通过"
 ## 🔄 合并策略
 
 ### Pull Request 流程
+
 ```mermaid
 graph TB
     A[创建功能分支] --> B[开发实现]
@@ -217,34 +229,40 @@ graph TB
 ```
 
 ### 代码审查清单
+
 ```markdown
 ## 📋 PR审查清单
 
 ### 代码质量
+
 - [ ] 代码符合编码规范
 - [ ] 类型定义完整准确
 - [ ] 没有未使用的代码
 - [ ] 注释清晰必要
 
 ### 功能实现
+
 - [ ] 功能按需求实现
 - [ ] 边界条件处理完整
 - [ ] 错误处理机制健全
 - [ ] 性能影响可接受
 
 ### 测试覆盖
+
 - [ ] 单元测试完整
 - [ ] 集成测试通过
 - [ ] 测试覆盖率达标
 - [ ] 测试用例合理
 
 ### 安全性
+
 - [ ] 输入验证完整
 - [ ] 没有安全漏洞
 - [ ] 敏感信息处理得当
 - [ ] 权限控制正确
 
 ### 文档更新
+
 - [ ] 相关文档已更新
 - [ ] API文档同步更新
 - [ ] 注释和README完善
@@ -252,6 +270,7 @@ graph TB
 ```
 
 ### 合并要求
+
 - 至少2个批准的审查意见
 - 所有自动化检查通过
 - 测试覆盖率不低于85%
@@ -261,6 +280,7 @@ graph TB
 ## 🚀 发布流程
 
 ### 版本号规范
+
 采用语义化版本控制(SemVer): `MAJOR.MINOR.PATCH`
 
 - **MAJOR**: 不兼容的API变更
@@ -268,6 +288,7 @@ graph TB
 - **PATCH**: 向后兼容的问题修复
 
 ### 发布分支流程
+
 ```bash
 # 1. 创建发布分支
 git checkout develop
@@ -299,6 +320,7 @@ git push origin main develop --tags
 ```
 
 ### 热修复流程
+
 ```bash
 # 1. 从main创建热修复分支
 git checkout main
@@ -324,6 +346,7 @@ git push origin main develop --tags
 ## 📊 Git 工具和配置
 
 ### 有用的 Git 别名
+
 ```bash
 # .gitconfig
 [alias]
@@ -334,14 +357,14 @@ git push origin main develop --tags
     ci = commit
     df = diff
     lg = log --oneline --graph --decorate --all
-    
+
     # 实用组合命令
     undo = reset --soft HEAD~1
     amend = commit --amend --no-edit
     unstage = reset HEAD --
     last = log -1 HEAD
     publish = "!f() { git push -u origin $(git rev-parse --abbrev-ref HEAD); }; f"
-    
+
     # 状态查看
     stats = diff --stat
     changes = diff --name-status
@@ -349,6 +372,7 @@ git push origin main develop --tags
 ```
 
 ### Git 配置建议
+
 ```bash
 # 全局配置
 git config --global user.name "Your Name"
@@ -367,21 +391,25 @@ git config --global color.diff.frag "magenta bold"
 ## 📈 最佳实践
 
 ### 提交频率
+
 - **小步快跑**: 频繁的小提交优于大的批量提交
 - **原子性**: 每个提交只解决一个问题
 - **及时推送**: 本地完成的提交应及时推送到远程
 
 ### 分支管理
+
 - **及时清理**: 删除已合并的功能分支
 - **定期同步**: 保持与develop分支的同步
 - **避免长时间分支**: 功能分支不应超过一周
 
 ### 协作规范
+
 - **沟通先行**: 复杂变更提前讨论
 - **及时审查**: 24小时内完成代码审查
 - **建设性反馈**: 提供具体的改进建议
 
 ### 问题处理
+
 ```bash
 # 撤销最后一次提交（保留更改）
 git reset --soft HEAD~1
@@ -407,6 +435,7 @@ git bisect good <good_commit_hash>
 ## 🛡️ 安全注意事项
 
 ### 凭据保护
+
 ```bash
 # 避免提交敏感信息
 echo ".env*" >> .gitignore
@@ -423,12 +452,14 @@ git filter-branch --force --index-filter \
 ```
 
 ### 权限管理
+
 - 限制main分支的直接推送权限
 - 设置分支保护规则
 - 要求PR审查和状态检查
 - 定期审查仓库访问权限
 
 ---
+
 _规范版本: v1.5_
 _最后更新: 2026年2月21日_
 _维护团队: DevOps团队_

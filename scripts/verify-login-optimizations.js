@@ -18,23 +18,31 @@ console.log('🔍 开始验证登录优化功能...\n');
 // 1. 验证重定向上下文提示
 console.log('1️⃣ 验证重定向上下文提示功能');
 
-const unifiedLoginPath = path.join(process.cwd(), 'src', 'components', 'auth', 'UnifiedLogin.tsx');
+const unifiedLoginPath = path.join(
+  process.cwd(),
+  'src',
+  'components',
+  'auth',
+  'UnifiedLogin.tsx'
+);
 let hasRedirectInfo = false;
 let hasTargetDescription = false;
 
 if (fs.existsSync(unifiedLoginPath)) {
   const content = fs.readFileSync(unifiedLoginPath, 'utf8');
-  
+
   // 检查是否有重定向信息组件
-  hasRedirectInfo = content.includes('RedirectInfo') && content.includes('redirectUrl');
-  
+  hasRedirectInfo =
+    content.includes('RedirectInfo') && content.includes('redirectUrl');
+
   // 检查是否有目标页面类型识别
-  hasTargetDescription = content.includes('getTargetDescription') && 
-                        (content.includes('管理后台') || 
-                         content.includes('品牌商平台') || 
-                         content.includes('维修师平台') || 
-                         content.includes('贸易平台'));
-  
+  hasTargetDescription =
+    content.includes('getTargetDescription') &&
+    (content.includes('管理后台') ||
+      content.includes('品牌商平台') ||
+      content.includes('维修师平台') ||
+      content.includes('贸易平台'));
+
   console.log(`   重定向信息组件: ${hasRedirectInfo ? '✅' : '❌'}`);
   console.log(`   目标页面识别: ${hasTargetDescription ? '✅' : '❌'}`);
 } else {
@@ -45,24 +53,26 @@ if (fs.existsSync(unifiedLoginPath)) {
 console.log('\n2️⃣ 验证智能目标识别功能');
 
 const targetTypes = ['管理后台', '品牌商平台', '维修师平台', '贸易平台'];
-let identifiedTargets = [];
+const identifiedTargets = [];
 
 if (fs.existsSync(unifiedLoginPath)) {
   const content = fs.readFileSync(unifiedLoginPath, 'utf8');
-  
+
   targetTypes.forEach(target => {
     if (content.includes(target)) {
       identifiedTargets.push(target);
     }
   });
-  
+
   console.log(`   识别的目标页面类型: ${identifiedTargets.length}种`);
   identifiedTargets.forEach(target => {
     console.log(`     • ${target}`);
   });
-  
+
   const hasSmartDetection = identifiedTargets.length >= 3;
-  console.log(`   智能识别完整度: ${hasSmartDetection ? '✅' : '⚠️'} (${identifiedTargets.length}/4)`);
+  console.log(
+    `   智能识别完整度: ${hasSmartDetection ? '✅' : '⚠️'} (${identifiedTargets.length}/4)`
+  );
 }
 
 // 3. 验证登录成功倒计时
@@ -75,12 +85,15 @@ let hasCountdownDisplay = false;
 
 if (fs.existsSync(unifiedLoginPath)) {
   const content = fs.readFileSync(unifiedLoginPath, 'utf8');
-  
-  hasCountdownState = content.includes('const [countdown, setCountdown] = useState(3)');
-  hasCountdownEffect = content.includes('useEffect') && content.includes('countdown > 0');
+
+  hasCountdownState = content.includes(
+    'const [countdown, setCountdown] = useState(3)'
+  );
+  hasCountdownEffect =
+    content.includes('useEffect') && content.includes('countdown > 0');
   hasCountdownDisplay = content.includes('${countdown} 秒后跳转');
   hasCountdown = hasCountdownState && hasCountdownEffect && hasCountdownDisplay;
-  
+
   console.log(`   倒计时状态管理: ${hasCountdownState ? '✅' : '❌'}`);
   console.log(`   倒计时效果钩子: ${hasCountdownEffect ? '✅' : '❌'}`);
   console.log(`   倒计时显示: ${hasCountdownDisplay ? '✅' : '❌'}`);
@@ -96,11 +109,12 @@ let hasJumpHandler = false;
 
 if (fs.existsSync(unifiedLoginPath)) {
   const content = fs.readFileSync(unifiedLoginPath, 'utf8');
-  
+
   hasJumpButton = content.includes('立即跳转') && content.includes('<button');
-  hasJumpHandler = content.includes('performRedirect') && content.includes('onClick');
+  hasJumpHandler =
+    content.includes('performRedirect') && content.includes('onClick');
   hasImmediateJump = hasJumpButton && hasJumpHandler;
-  
+
   console.log(`   立即跳转按钮: ${hasJumpButton ? '✅' : '❌'}`);
   console.log(`   跳转处理函数: ${hasJumpHandler ? '✅' : '❌'}`);
   console.log(`   完整立即跳转: ${hasImmediateJump ? '✅' : '❌'}`);
@@ -116,12 +130,16 @@ let hasIconFeedback = false;
 
 if (fs.existsSync(unifiedLoginPath)) {
   const content = fs.readFileSync(unifiedLoginPath, 'utf8');
-  
-  hasSuccessAnimation = content.includes('AnimatePresence') && content.includes('motion.div');
-  hasColorFeedback = content.includes('bg-green-50') && content.includes('text-green-');
-  hasIconFeedback = content.includes('CheckCircle') && content.includes('w-8 h-8');
-  hasVisualFeedback = hasSuccessAnimation && hasColorFeedback && hasIconFeedback;
-  
+
+  hasSuccessAnimation =
+    content.includes('AnimatePresence') && content.includes('motion.div');
+  hasColorFeedback =
+    content.includes('bg-green-50') && content.includes('text-green-');
+  hasIconFeedback =
+    content.includes('CheckCircle') && content.includes('w-8 h-8');
+  hasVisualFeedback =
+    hasSuccessAnimation && hasColorFeedback && hasIconFeedback;
+
   console.log(`   成功动画效果: ${hasSuccessAnimation ? '✅' : '❌'}`);
   console.log(`   颜色反馈机制: ${hasColorFeedback ? '✅' : '❌'}`);
   console.log(`   图标反馈显示: ${hasIconFeedback ? '✅' : '❌'}`);
@@ -131,18 +149,29 @@ if (fs.existsSync(unifiedLoginPath)) {
 // 6. 验证API层面的支持
 console.log('\n6️⃣ 验证API层面支持');
 
-const loginApiPath = path.join(process.cwd(), 'src', 'app', 'api', 'auth', 'login', 'route.ts');
+const loginApiPath = path.join(
+  process.cwd(),
+  'src',
+  'app',
+  'api',
+  'auth',
+  'login',
+  'route.ts'
+);
 let hasApiSupport = false;
 
 if (fs.existsSync(loginApiPath)) {
   const content = fs.readFileSync(loginApiPath, 'utf8');
-  
-  const hasRedirectHandling = content.includes('redirect') || content.includes('targetRedirect');
-  const hasAdminCheck = content.includes('is_admin') || content.includes('admin');
-  const hasSessionManagement = content.includes('session') || content.includes('token');
-  
+
+  const hasRedirectHandling =
+    content.includes('redirect') || content.includes('targetRedirect');
+  const hasAdminCheck =
+    content.includes('is_admin') || content.includes('admin');
+  const hasSessionManagement =
+    content.includes('session') || content.includes('token');
+
   hasApiSupport = hasRedirectHandling && hasAdminCheck && hasSessionManagement;
-  
+
   console.log(`   重定向处理支持: ${hasRedirectHandling ? '✅' : '❌'}`);
   console.log(`   管理员权限检查: ${hasAdminCheck ? '✅' : '❌'}`);
   console.log(`   会话管理机制: ${hasSessionManagement ? '✅' : '❌'}`);
@@ -153,19 +182,21 @@ if (fs.existsSync(loginApiPath)) {
 console.log('\n📊 总体评估报告');
 
 const features = {
-  '重定向上下文提示': hasRedirectInfo && hasTargetDescription,
-  '智能目标识别': identifiedTargets.length >= 3,
-  '登录成功倒计时': hasCountdown,
-  '立即跳转按钮': hasImmediateJump,
-  '视觉反馈优化': hasVisualFeedback,
-  'API层面支持': hasApiSupport
+  重定向上下文提示: hasRedirectInfo && hasTargetDescription,
+  智能目标识别: identifiedTargets.length >= 3,
+  登录成功倒计时: hasCountdown,
+  立即跳转按钮: hasImmediateJump,
+  视觉反馈优化: hasVisualFeedback,
+  API层面支持: hasApiSupport,
 };
 
 const completedFeatures = Object.values(features).filter(Boolean).length;
 const totalFeatures = Object.keys(features).length;
 const completionRate = Math.round((completedFeatures / totalFeatures) * 100);
 
-console.log(`\n✅ 已完成功能: ${completedFeatures}/${totalFeatures} (${completionRate}%)`);
+console.log(
+  `\n✅ 已完成功能: ${completedFeatures}/${totalFeatures} (${completionRate}%)`
+);
 
 Object.entries(features).forEach(([feature, completed]) => {
   console.log(`   ${completed ? '✅' : '❌'} ${feature}`);

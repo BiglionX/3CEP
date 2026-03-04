@@ -20,7 +20,7 @@ const TEST_SUITES = {
     args: ['test', '--', '--coverage', '--testPathPattern=tests/unit'],
     description: '运行 Jest 单元测试并生成覆盖率报告',
     required: true,
-    timeout: 300000 // 5分钟
+    timeout: 300000, // 5分钟
   },
   integration: {
     name: '集成测试',
@@ -28,7 +28,7 @@ const TEST_SUITES = {
     args: ['test', '--', '--testPathPattern=tests/integration'],
     description: '运行集成测试套件',
     required: false,
-    timeout: 600000 // 10分钟
+    timeout: 600000, // 10分钟
   },
   e2e: {
     name: '端到端测试',
@@ -36,29 +36,29 @@ const TEST_SUITES = {
     args: ['run', 'test:e2e'],
     description: '运行 Playwright 端到端测试',
     required: false,
-    timeout: 900000 // 15分钟
+    timeout: 900000, // 15分钟
   },
   n8n: {
     name: 'n8n流程测试',
     script: 'tests/n8n/test-n8n-workflows.js',
     description: '验证 n8n 工作流功能',
     required: false,
-    timeout: 300000 // 5分钟
+    timeout: 300000, // 5分钟
   },
   perf: {
     name: '性能测试',
     script: 'tests/perf/comprehensive-performance-test.js',
     description: '运行性能基准测试',
     required: false,
-    timeout: 600000 // 10分钟
+    timeout: 600000, // 10分钟
   },
   security: {
     name: '安全检查',
     script: 'tests/security/security-check.js',
     description: '执行安全扫描和配置检查',
     required: false,
-    timeout: 120000 // 2分钟
-  }
+    timeout: 120000, // 2分钟
+  },
 };
 
 // 解析命令行参数
@@ -69,7 +69,7 @@ const options = {
   ci: args.includes('--ci') || process.env.CI === 'true',
   coverageThreshold: process.env.COVERAGE_THRESHOLD || 80,
   include: [],
-  exclude: []
+  exclude: [],
 };
 
 // 处理包含/排除特定测试类型
@@ -93,8 +93,10 @@ if (options.quick) {
   console.log('⚡ 运行快速测试套件\n');
 } else if (options.full) {
   // 完整模式：运行所有测试
-  selectedSuites = Object.entries(TEST_SUITES)
-    .map(([key, suite]) => ({ key, ...suite }));
+  selectedSuites = Object.entries(TEST_SUITES).map(([key, suite]) => ({
+    key,
+    ...suite,
+  }));
   console.log('🔬 运行完整测试套件\n');
 } else if (options.include.length > 0) {
   // 包含指定测试类型
@@ -119,7 +121,9 @@ if (options.quick) {
 
 // 过滤掉被排除的测试
 if (options.exclude.length > 0) {
-  selectedSuites = selectedSuites.filter(suite => !options.exclude.includes(suite.key));
+  selectedSuites = selectedSuites.filter(
+    suite => !options.exclude.includes(suite.key)
+  );
 }
 
 console.log(`🎯 计划执行 ${selectedSuites.length} 个测试套件\n`);
@@ -133,7 +137,7 @@ const results = {
   details: [],
   startTime: new Date(),
   endTime: null,
-  coverage: null
+  coverage: null,
 };
 
 // 创建测试结果目录
@@ -144,20 +148,22 @@ if (!fs.existsSync(testResultsDir)) {
 
 // 运行单个测试套件
 async function runTestSuite(suite) {
-  console.log(`[${results.passed + results.failed + results.skipped + 1}/${results.total}] ${suite.name}`);
+  console.log(
+    `[${results.passed + results.failed + results.skipped + 1}/${results.total}] ${suite.name}`
+  );
   console.log(`📝 ${suite.description}`);
   console.log('----------------------------------------');
-  
+
   try {
     let result;
-    
+
     if (suite.command) {
       // 运行命令
       result = spawnSync(suite.command, suite.args, {
         cwd: process.cwd(),
         stdio: 'inherit',
         timeout: suite.timeout,
-        env: { ...process.env, FORCE_COLOR: '1' }
+        env: { ...process.env, FORCE_COLOR: '1' },
       });
     } else if (suite.script) {
       // 运行脚本文件
@@ -168,26 +174,26 @@ async function runTestSuite(suite) {
         results.details.push({
           name: suite.name,
           status: 'skipped',
-          reason: '脚本文件不存在'
+          reason: '脚本文件不存在',
         });
         return;
       }
-      
+
       result = spawnSync('node', [scriptPath], {
         cwd: process.cwd(),
         stdio: 'inherit',
         timeout: suite.timeout,
-        env: { ...process.env, FORCE_COLOR: '1' }
+        env: { ...process.env, FORCE_COLOR: '1' },
       });
     }
-    
+
     if (result && result.status === 0) {
       console.log(`✅ ${suite.name} 通过\n`);
       results.passed++;
       results.details.push({
         name: suite.name,
         status: 'passed',
-        duration: result.duration || 0
+        duration: result.duration || 0,
       });
     } else {
       console.log(`❌ ${suite.name} 失败\n`);
@@ -196,9 +202,9 @@ async function runTestSuite(suite) {
         name: suite.name,
         status: 'failed',
         exitCode: result?.status,
-        error: result?.error?.message
+        error: result?.error?.message,
       });
-      
+
       if (suite.required && !options.ci) {
         console.log('🛑 必需的测试失败，停止执行');
         process.exit(1);
@@ -210,9 +216,9 @@ async function runTestSuite(suite) {
     results.details.push({
       name: suite.name,
       status: 'error',
-      error: error.message
+      error: error.message,
     });
-    
+
     if (suite.required && !options.ci) {
       console.log('🛑 必需的测试出错，停止执行');
       process.exit(1);
@@ -225,16 +231,17 @@ async function runAllTests() {
   for (const suite of selectedSuites) {
     await runTestSuite(suite);
   }
-  
+
   results.endTime = new Date();
   generateSummaryReport();
   saveDetailedReport();
-  
+
   // CI模式下根据覆盖率和通过率决定退出码
   if (options.ci) {
     const passRate = (results.passed / results.total) * 100;
-    const coverageOk = !results.coverage || results.coverage >= options.coverageThreshold;
-    
+    const coverageOk =
+      !results.coverage || results.coverage >= options.coverageThreshold;
+
     if (passRate < 80 || !coverageOk) {
       console.log('\n❌ CI检查失败 - 不满足质量门禁要求');
       process.exit(1);
@@ -246,10 +253,10 @@ async function runAllTests() {
 function generateSummaryReport() {
   console.log('=====================================');
   console.log('🏆 测试汇总报告\n');
-  
+
   const passRate = Math.round((results.passed / results.total) * 100);
   const duration = results.endTime - results.startTime;
-  
+
   console.log(`📊 测试执行概览:`);
   console.log(`   总测试套件: ${results.total}`);
   console.log(`   通过: ${results.passed}`);
@@ -257,14 +264,14 @@ function generateSummaryReport() {
   console.log(`   跳过: ${results.skipped}`);
   console.log(`   通过率: ${passRate}%`);
   console.log(`   执行时间: ${Math.round(duration / 1000)}秒`);
-  
+
   if (results.coverage) {
     console.log(`   代码覆盖率: ${results.coverage}%`);
     console.log(`   覆盖率门槛: ${options.coverageThreshold}%`);
   }
-  
+
   console.log('');
-  
+
   // 通过率评级
   if (passRate === 100) {
     console.log('🎉 所有测试通过！');
@@ -279,23 +286,26 @@ function generateSummaryReport() {
     console.log('❌ 测试失败较多');
     console.log('🚨 存在严重质量问题，需要立即修复');
   }
-  
+
   // 显示详细结果
   console.log('\n📋 详细测试结果:');
   results.details.forEach(detail => {
-    const statusIcon = {
-      'passed': '✅',
-      'failed': '❌',
-      'error': '💥',
-      'skipped': '⏭️'
-    }[detail.status] || '❓';
-    
-    console.log(`  ${statusIcon} ${detail.name} [${detail.status.toUpperCase()}]`);
+    const statusIcon =
+      {
+        passed: '✅',
+        failed: '❌',
+        error: '💥',
+        skipped: '⏭️',
+      }[detail.status] || '❓';
+
+    console.log(
+      `  ${statusIcon} ${detail.name} [${detail.status.toUpperCase()}]`
+    );
     if (detail.error) {
       console.log(`     错误: ${detail.error}`);
     }
   });
-  
+
   // 提供建议
   console.log('\n📝 后续建议:');
   if (passRate >= 80) {
@@ -307,12 +317,12 @@ function generateSummaryReport() {
     console.log('2. 重新运行相关测试验证修复效果');
     console.log('3. 暂停新功能开发，专注质量改进');
   }
-  
+
   if (passRate === 100) {
     console.log('4. 考虑运行性能测试和安全扫描');
     console.log('5. 准备发布候选版本');
   }
-  
+
   console.log('\n✨ 测试套件执行完成！');
 }
 
@@ -325,19 +335,19 @@ function saveDetailedReport() {
     environment: {
       nodeVersion: process.version,
       platform: process.platform,
-      ci: options.ci
-    }
+      ci: options.ci,
+    },
   };
-  
+
   const reportPath = path.join(testResultsDir, 'test-summary-report.json');
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-  
+
   // 生成JUnit格式报告（用于CI集成）
   generateJUnitReport(report);
-  
+
   // 生成HTML报告
   generateHTMLReport(report);
-  
+
   console.log(`\n📄 详细报告已保存到: ${reportPath}`);
 }
 
@@ -350,15 +360,22 @@ function generateJUnitReport(report) {
              failures="${report.failed}" 
              skipped="${report.skipped}" 
              time="${(report.endTime - report.startTime) / 1000}">
-    ${report.details.map(detail => `
+    ${report.details
+      .map(
+        detail => `
     <testcase name="${detail.name}" classname="FixCycle.${detail.name.replace(/\s+/g, '')}" time="0">
-      ${detail.status === 'failed' || detail.status === 'error' ? 
-        `<failure message="${detail.error || 'Test failed'}">${detail.error || 'Test failed'}</failure>` : ''}
+      ${
+        detail.status === 'failed' || detail.status === 'error'
+          ? `<failure message="${detail.error || 'Test failed'}">${detail.error || 'Test failed'}</failure>`
+          : ''
+      }
       ${detail.status === 'skipped' ? `<skipped/>` : ''}
-    </testcase>`).join('')}
+    </testcase>`
+      )
+      .join('')}
   </testsuite>
 </testsuites>`;
-  
+
   const junitPath = path.join(testResultsDir, 'junit-report.xml');
   fs.writeFileSync(junitPath, junitReport);
   console.log(`📄 JUnit报告已保存到: ${junitPath}`);
@@ -411,24 +428,28 @@ function generateHTMLReport(report) {
         </div>
         <div class="metric">
             <h3>通过率</h3>
-            <div class="value ${(report.passed / report.total * 100) >= 80 ? 'passed' : 'failed'}">
-                ${Math.round(report.passed / report.total * 100)}%
+            <div class="value ${(report.passed / report.total) * 100 >= 80 ? 'passed' : 'failed'}">
+                ${Math.round((report.passed / report.total) * 100)}%
             </div>
         </div>
     </div>
     
     <div class="details">
         <h2>详细测试结果</h2>
-        ${report.details.map(detail => `
+        ${report.details
+          .map(
+            detail => `
         <div class="test-item ${detail.status}">
             <strong>${detail.name}</strong> - ${detail.status.toUpperCase()}
             ${detail.error ? `<br><small style="color: #666;">错误: ${detail.error}</small>` : ''}
         </div>
-        `).join('')}
+        `
+          )
+          .join('')}
     </div>
 </body>
 </html>`;
-  
+
   const htmlPath = path.join(testResultsDir, 'test-report.html');
   fs.writeFileSync(htmlPath, htmlReport);
   console.log(`📄 HTML报告已保存到: ${htmlPath}`);

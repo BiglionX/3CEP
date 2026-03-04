@@ -10,10 +10,7 @@
       "name": "扫码服务入口",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -44,10 +41,7 @@
       "name": "设备信息解析",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
@@ -79,10 +73,7 @@
       "name": "调用AI诊断服务",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        650,
-        200
-      ]
+      "position": [650, 200]
     },
     {
       "parameters": {
@@ -103,10 +94,7 @@
       "name": "教程推荐服务",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        150
-      ]
+      "position": [850, 150]
     },
     {
       "parameters": {
@@ -127,10 +115,7 @@
       "name": "新机推荐服务",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        850,
-        350
-      ]
+      "position": [850, 350]
     },
     {
       "parameters": {
@@ -171,10 +156,7 @@
       "name": "结果聚合器",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        1050,
-        300
-      ]
+      "position": [1050, 300]
     },
     {
       "parameters": {
@@ -184,10 +166,7 @@
       "name": "错误处理器",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1250,
-        300
-      ]
+      "position": [1250, 300]
     }
   ],
   "connections": {

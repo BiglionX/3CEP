@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
@@ -15,20 +15,20 @@ export default function AutomationPage() {
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
   useEffect(() => {
-    // 从环境变量获取 n8n URL
+    // 从环境变量获?n8n URL
     const urlFromEnv = process.env.NEXT_PUBLIC_N8N_URL
     if (urlFromEnv) {
       setN8nUrl(urlFromEnv)
     }
     
-    // 检查 URL 可访问性
+    // 检?URL 可访问?
     checkUrlAccessibility(urlFromEnv || 'https://n8n.yourdomain.com')
   }, [])
 
   const checkUrlAccessibility = async (url: string) => {
     try {
       setIsLoading(true)
-      // 简单的可达性检查
+      // 简单的可达性检?
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 5000)
       
@@ -43,8 +43,8 @@ export default function AutomationPage() {
       setError(null)
     } catch (err) {
       setIsLoading(false)
-      setError('无法连接到 n8n 服务，请检查服务状态')
-      console.warn('n8n 服务连接检查失败:', err)
+      setError('无法连接?n8n 服务，请检查服务状?)
+      console.warn('n8n 服务连接检查失?', err)
     }
   }
 
@@ -54,7 +54,7 @@ export default function AutomationPage() {
 
   const handleIframeError = () => {
     setIsLoading(false)
-    setError('iframe 加载失败，请检查 n8n 服务配置')
+    setError('iframe 加载失败，请检?n8n 服务配置')
   }
 
   const copyToClipboard = async (text: string, field: string) => {
@@ -74,12 +74,12 @@ export default function AutomationPage() {
           <div>
             <h1 className="text-2xl font-bold text-foreground">自动化工作流</h1>
             <p className="text-muted-foreground mt-1">
-              通过 n8n 平台管理和执行自动化工作流
+              通过 n8n 平台管理和执行自动化工作?
             </p>
           </div>
           <Badge variant="secondary" className="flex items-center gap-1">
             <Info className="w-3 h-3" />
-            需要登录
+            需要登?
           </Badge>
         </div>
       </div>
@@ -91,18 +91,18 @@ export default function AutomationPage() {
             <span>🔑 n8n 登录指引</span>
           </CardTitle>
           <CardDescription>
-            首次使用需要登录 n8n 平台才能访问工作流编辑器
+            首次使用需要登?n8n 平台才能访问工作流编辑器
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="text-sm text-muted-foreground">
-              <p className="mb-2">在 iframe 中打开的 n8n 界面需要独立登录。请使用以下预配置账号：</p>
+              <p className="mb-2">�?iframe 中打开?n8n 界面需要独立登录。请使用以下预配置账号：</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">用户名</label>
+                <label className="text-sm font-medium">用户?/label>
                 <div className="flex items-center gap-2">
                   <input 
                     type="text" 
@@ -117,7 +117,7 @@ export default function AutomationPage() {
                     className="flex items-center gap-1"
                   >
                     {copiedField === 'username' ? (
-                      <span className="text-xs">✓ 已复制</span>
+                      <span className="text-xs">�?已复?/span>
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
@@ -144,7 +144,7 @@ export default function AutomationPage() {
                     className="flex items-center gap-1"
                   >
                     {copiedField === 'password' ? (
-                      <span className="text-xs">✓ 已复制</span>
+                      <span className="text-xs">�?已复?/span>
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
@@ -166,12 +166,12 @@ export default function AutomationPage() {
             
             <div className="pt-2 border-t">
               <p className="text-xs text-muted-foreground mb-2">
-                <strong>💡 使用提示：</strong>
+                <strong>💡 使用提示?/strong>
               </p>
               <ul className="text-xs text-muted-foreground space-y-1 ml-4 list-disc">
-                <li>在 iframe 中首次访问时会跳转到 n8n 登录页面</li>
-                <li>使用上方提供的账号信息登录</li>
-                <li>登录成功后即可访问工作流编辑器</li>
+                <li>�?iframe 中首次访问时会跳转到 n8n 登录页面</li>
+                <li>使用上方提供的账号信息登?/li>
+                <li>登录成功后即可访问工作流编辑?/li>
                 <li>会话期间无需重复登录</li>
               </ul>
             </div>
@@ -229,7 +229,7 @@ export default function AutomationPage() {
           <div className="absolute inset-0 bg-background/80 flex items-center justify-center pointer-events-none opacity-0 transition-opacity">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p className="text-sm text-muted-foreground">页面加载中...</p>
+              <p className="text-sm text-muted-foreground">页面加载?..</p>
             </div>
           </div>
         </div>
@@ -243,7 +243,7 @@ export default function AutomationPage() {
           <div className="flex items-center space-x-4">
             <span className={`flex items-center ${isLoading ? 'text-yellow-600' : error ? 'text-red-600' : 'text-green-600'}`}>
               <span className={`w-2 h-2 rounded-full mr-2 ${isLoading ? 'bg-yellow-500 animate-pulse' : error ? 'bg-red-500' : 'bg-green-500'}`}></span>
-              {isLoading ? '连接中' : error ? '连接失败' : '已连接'}
+              {isLoading ? '连接? : error ? '连接失败' : '已连?}
             </span>
           </div>
         </div>

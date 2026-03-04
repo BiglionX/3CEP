@@ -17,12 +17,12 @@ const envExamplePath = path.join(__dirname, '..', '.env.example');
 // 1. 检查现有 .env 文件
 console.log('📋 环境文件检查:');
 let hasEnvFile = false;
-let envVars = {};
+const envVars = {};
 
 if (fs.existsSync(envPath)) {
   console.log('  ✅ .env 文件已存在');
   hasEnvFile = true;
-  
+
   // 读取现有环境变量
   const envContent = fs.readFileSync(envPath, 'utf8');
   envContent.split('\n').forEach(line => {
@@ -33,7 +33,7 @@ if (fs.existsSync(envPath)) {
       }
     }
   });
-  
+
   console.log(`  📦 已配置 ${Object.keys(envVars).length} 个环境变量`);
 } else {
   console.log('  ❌ .env 文件不存在');
@@ -55,7 +55,7 @@ const requiredVars = [
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'SUPABASE_SERVICE_ROLE_KEY',
   'DATABASE_URL',
-  'NEXT_PUBLIC_SITE_URL'
+  'NEXT_PUBLIC_SITE_URL',
 ];
 
 const missingVars = [];
@@ -79,7 +79,7 @@ if (missingVars.length === 0) {
 } else {
   console.log(`  ⚠️  缺失 ${missingVars.length} 个必需环境变量`);
   console.log('\n📝 解决方案:');
-  
+
   if (!hasEnvFile) {
     console.log('  1. 生成 .env 文件:');
     console.log('     cp .env.example .env');
@@ -90,9 +90,11 @@ if (missingVars.length === 0) {
       console.log(`     ${index + 1}. ${varName}=your_value_here`);
     });
   }
-  
+
   console.log('\n🔑 获取配置值的方法:');
-  console.log('  - Supabase 配置: https://app.supabase.com/project/_/settings/api');
+  console.log(
+    '  - Supabase 配置: https://app.supabase.com/project/_/settings/api'
+  );
   console.log('  - 数据库 URL: 从 Supabase 项目设置中获取');
   console.log('  - 其他 API 密钥: 根据对应服务商文档配置');
 }

@@ -9,7 +9,10 @@ interface UploadFormProps {
   onUploadSuccess?: (url: string) => void;
 }
 
-export default function UploadForm({ existingUrls, onUploadSuccess }: UploadFormProps) {
+export default function UploadForm({
+  existingUrls,
+  onUploadSuccess,
+}: UploadFormProps) {
   const [url, setUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -34,7 +37,7 @@ export default function UploadForm({ existingUrls, onUploadSuccess }: UploadForm
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!url.trim()) {
       setError('请输入URL');
       return;
@@ -60,11 +63,10 @@ export default function UploadForm({ existingUrls, onUploadSuccess }: UploadForm
     try {
       // 模拟上传过程
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       onUploadSuccess?.(url);
       setUrl('');
-      toast.success('上传成功！');
-      
+      toast.success('上传成功?);
     } catch (err) {
       setError('上传失败，请重试');
       toast.error('上传失败，请重试');
@@ -84,7 +86,7 @@ export default function UploadForm({ existingUrls, onUploadSuccess }: UploadForm
             id="url"
             type="url"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={e => setUrl(e.target.value)}
             placeholder="https://example.com/content"
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             data-testid="url-input"
@@ -94,7 +96,10 @@ export default function UploadForm({ existingUrls, onUploadSuccess }: UploadForm
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 text-red-600 text-sm" data-testid="error-message">
+        <div
+          className="flex items-center gap-2 text-red-600 text-sm"
+          data-testid="error-message"
+        >
           <AlertCircle className="w-4 h-4" />
           {error}
         </div>
@@ -109,7 +114,7 @@ export default function UploadForm({ existingUrls, onUploadSuccess }: UploadForm
         {isLoading ? (
           <>
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            上传中...
+            上传?..
           </>
         ) : (
           <>

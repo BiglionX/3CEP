@@ -12,145 +12,65 @@
         "name": "auth",
         "path": "src/modules/auth",
         "exists": true,
-        "dependencies": [
-          "common"
-        ],
-        "exports": [
-          "AuthService",
-          "AuthHooks",
-          "AuthComponents"
-        ],
-        "routes": [
-          "/login",
-          "/register",
-          "/auth/*"
-        ]
+        "dependencies": ["common"],
+        "exports": ["AuthService", "AuthHooks", "AuthComponents"],
+        "routes": ["/login", "/register", "/auth/*"]
       },
       {
         "name": "repair-service",
         "path": "src/modules/repair-service",
         "exists": true,
-        "dependencies": [
-          "auth",
-          "common",
-          "data-center"
-        ],
-        "exports": [
-          "RepairService",
-          "WorkOrderService",
-          "DiagnosticService"
-        ],
-        "routes": [
-          "/repair-shop/*",
-          "/diagnosis/*"
-        ]
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["RepairService", "WorkOrderService", "DiagnosticService"],
+        "routes": ["/repair-shop/*", "/diagnosis/*"]
       },
       {
         "name": "parts-market",
         "path": "src/modules/parts-market",
         "exists": true,
-        "dependencies": [
-          "auth",
-          "common"
-        ],
-        "exports": [
-          "PartsService",
-          "MarketplaceService"
-        ],
-        "routes": [
-          "/parts/*",
-          "/marketplace/*"
-        ]
+        "dependencies": ["auth", "common"],
+        "exports": ["PartsService", "MarketplaceService"],
+        "routes": ["/parts/*", "/marketplace/*"]
       },
       {
         "name": "b2b-procurement",
         "path": "src/modules/b2b-procurement",
         "exists": true,
-        "dependencies": [
-          "auth",
-          "common",
-          "data-center"
-        ],
-        "exports": [
-          "ProcurementService",
-          "SupplierService",
-          "LogisticsService"
-        ],
-        "routes": [
-          "/importer/*",
-          "/exporter/*",
-          "/procurement/*"
-        ]
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["ProcurementService", "SupplierService", "LogisticsService"],
+        "routes": ["/importer/*", "/exporter/*", "/procurement/*"]
       },
       {
         "name": "data-center",
         "path": "src/modules/data-center",
         "exists": true,
-        "dependencies": [
-          "common"
-        ],
-        "exports": [
-          "DataService",
-          "AnalyticsService",
-          "ReportingService"
-        ],
-        "routes": [
-          "/data-center/*",
-          "/analytics/*"
-        ]
+        "dependencies": ["common"],
+        "exports": ["DataService", "AnalyticsService", "ReportingService"],
+        "routes": ["/data-center/*", "/analytics/*"]
       },
       {
         "name": "fcx-alliance",
         "path": "src/modules/fcx-alliance",
         "exists": true,
-        "dependencies": [
-          "auth",
-          "common",
-          "data-center"
-        ],
-        "exports": [
-          "AllianceService",
-          "StakingService",
-          "RewardService"
-        ],
-        "routes": [
-          "/fcx/*",
-          "/alliance/*"
-        ]
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["AllianceService", "StakingService", "RewardService"],
+        "routes": ["/fcx/*", "/alliance/*"]
       },
       {
         "name": "admin-panel",
         "path": "src/modules/admin-panel",
         "exists": true,
-        "dependencies": [
-          "auth",
-          "common",
-          "data-center"
-        ],
-        "exports": [
-          "AdminService",
-          "UserManagementService"
-        ],
-        "routes": [
-          "/admin/*",
-          "/management/*"
-        ]
+        "dependencies": ["auth", "common", "data-center"],
+        "exports": ["AdminService", "UserManagementService"],
+        "routes": ["/admin/*", "/management/*"]
       },
       {
         "name": "common",
         "path": "src/modules/common",
         "exists": true,
         "dependencies": [],
-        "exports": [
-          "UIComponents",
-          "CommonHooks",
-          "Utils",
-          "Constants"
-        ],
-        "routes": [
-          "/",
-          "/dashboard"
-        ]
+        "exports": ["UIComponents", "CommonHooks", "Utils", "Constants"],
+        "routes": ["/", "/dashboard"]
       }
     ],
     "techModules": [
@@ -159,60 +79,35 @@
         "path": "src/tech/database",
         "exists": true,
         "dependencies": [],
-        "exports": [
-          "DatabaseModels",
-          "ConnectionManager",
-          "QueryHelpers"
-        ]
+        "exports": ["DatabaseModels", "ConnectionManager", "QueryHelpers"]
       },
       {
         "name": "api",
         "path": "src/tech/api",
         "exists": true,
-        "dependencies": [
-          "database",
-          "middleware"
-        ],
-        "exports": [
-          "APIControllers",
-          "Services",
-          "RouteHandlers"
-        ]
+        "dependencies": ["database", "middleware"],
+        "exports": ["APIControllers", "Services", "RouteHandlers"]
       },
       {
         "name": "middleware",
         "path": "src/tech/middleware",
         "exists": true,
-        "dependencies": [
-          "utils"
-        ],
-        "exports": [
-          "AuthMiddleware",
-          "LoggingMiddleware",
-          "ErrorMiddleware"
-        ]
+        "dependencies": ["utils"],
+        "exports": ["AuthMiddleware", "LoggingMiddleware", "ErrorMiddleware"]
       },
       {
         "name": "utils",
         "path": "src/tech/utils",
         "exists": true,
         "dependencies": [],
-        "exports": [
-          "HelperFunctions",
-          "ValidationUtils",
-          "FormattingUtils"
-        ]
+        "exports": ["HelperFunctions", "ValidationUtils", "FormattingUtils"]
       },
       {
         "name": "types",
         "path": "src/tech/types",
         "exists": true,
         "dependencies": [],
-        "exports": [
-          "TypeDefinitions",
-          "InterfaceDeclarations",
-          "EnumTypes"
-        ]
+        "exports": ["TypeDefinitions", "InterfaceDeclarations", "EnumTypes"]
       }
     ],
     "overall": {

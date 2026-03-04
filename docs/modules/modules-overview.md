@@ -11,16 +11,19 @@
 5. [数据中心模块 (data-center)](#数据中心模块)
 6. [FCX联盟模块 (fcx-alliance)](#fcx联盟模块)
 7. [管理后台模块 (admin-panel)](#管理后台模块)
-8. [公共组件模块 (common)](#公共组件模块)
+8. [智能体SDK模块 (agent-sdk)](#智能体sdk模块)
+9. [公共组件模块 (common)](#公共组件模块)
 
 ---
 
 ## 认证授权模块
 
 ### 模块概述
+
 负责用户身份验证、权限管理和会话控制的核心模块。
 
 ### 目录结构
+
 ```
 src/modules/auth/
 ├── app/                 # 路由组件
@@ -34,6 +37,7 @@ src/modules/auth/
 ```
 
 ### 核心功能
+
 - 用户登录/注册
 - JWT令牌管理
 - OAuth第三方登录
@@ -41,12 +45,14 @@ src/modules/auth/
 - 会话管理和超时处理
 
 ### 技术实现
+
 - **认证协议**: JWT + OAuth 2.0
 - **加密算法**: bcrypt + AES-256
 - **存储方式**: HttpOnly Cookie + Redis Session
 - **安全措施**: CSRF保护 + Rate Limiting
 
 ### API接口
+
 ```typescript
 // 登录接口
 POST /api/auth/login
@@ -59,7 +65,7 @@ POST /api/auth/login
 POST /api/auth/register
 {
   "email": "string",
-  "username": "string", 
+  "username": "string",
   "password": "string"
 }
 
@@ -72,9 +78,11 @@ POST /api/auth/refresh
 ## 维修服务模块
 
 ### 模块概述
+
 提供设备维修预约、工单管理和技师调度的完整解决方案。
 
 ### 目录结构
+
 ```
 src/modules/repair-service/
 ├── app/
@@ -93,6 +101,7 @@ src/modules/repair-service/
 ```
 
 ### 核心功能
+
 - 设备故障诊断
 - 维修工单创建和跟踪
 - 技师资源调度
@@ -101,6 +110,7 @@ src/modules/repair-service/
 - 维修历史记录
 
 ### 业务流程
+
 ```mermaid
 graph LR
     A[客户预约] --> B[创建工单]
@@ -112,6 +122,7 @@ graph LR
 ```
 
 ### 数据模型
+
 ```typescript
 interface WorkOrder {
   id: string;
@@ -133,9 +144,11 @@ interface WorkOrder {
 ## 配件商城模块
 
 ### 模块概述
+
 3C数码配件在线交易平台，支持比价和智能推荐。
 
 ### 目录结构
+
 ```
 src/modules/parts-market/
 ├── app/
@@ -154,6 +167,7 @@ src/modules/parts-market/
 ```
 
 ### 核心功能
+
 - 商品搜索和筛选
 - 价格比较和趋势分析
 - 智能推荐算法
@@ -162,7 +176,9 @@ src/modules/parts-market/
 - 库存实时同步
 
 ### 推荐算法
+
 采用协同过滤 + 内容推荐混合算法：
+
 - 基于用户行为的协同过滤
 - 基于商品特征的内容推荐
 - 实时热度加权计算
@@ -172,9 +188,11 @@ src/modules/parts-market/
 ## B2B采购模块
 
 ### 模块概述
+
 为企业用户提供进出口贸易和供应链管理服务。
 
 ### 目录结构
+
 ```
 src/modules/b2b-procurement/
 ├── app/
@@ -193,6 +211,7 @@ src/modules/b2b-procurement/
 ```
 
 ### 核心功能
+
 - 供应商寻源和评估
 - 采购订单管理
 - 国际物流跟踪
@@ -201,13 +220,14 @@ src/modules/b2b-procurement/
 - 风险控制和合规
 
 ### 贸易流程
+
 ```mermaid
 sequenceDiagram
     participant Buyer
     participant Platform
     participant Supplier
     participant Logistics
-    
+
     Buyer->>Platform: 发布采购需求
     Platform->>Supplier: 匹配合适供应商
     Supplier->>Platform: 提交报价
@@ -223,9 +243,11 @@ sequenceDiagram
 ## 数据中心模块
 
 ### 模块概述
+
 提供数据分析、报表生成和业务洞察的智能化平台。
 
 ### 目录结构
+
 ```
 src/modules/data-center/
 ├── app/
@@ -242,6 +264,7 @@ src/modules/data-center/
 ```
 
 ### 核心功能
+
 - 实时数据监控
 - 多维度数据分析
 - 自定义报表生成
@@ -250,6 +273,7 @@ src/modules/data-center/
 - BI报表集成
 
 ### 技术特点
+
 - **数据处理**: 实时流处理 + 批处理
 - **存储引擎**: PostgreSQL + Redis + 文件存储
 - **可视化**: Recharts + D3.js
@@ -260,9 +284,11 @@ src/modules/data-center/
 ## FCX联盟模块
 
 ### 模块概述
+
 基于区块链的代币经济和社区治理平台。
 
 ### 目录结构
+
 ```
 src/modules/fcx-alliance/
 ├── app/
@@ -280,6 +306,7 @@ src/modules/fcx-alliance/
 ```
 
 ### 核心功能
+
 - FCX代币质押和收益
 - 社区贡献奖励机制
 - 去中心化治理投票
@@ -287,6 +314,7 @@ src/modules/fcx-alliance/
 - 代币流通和销毁机制
 
 ### 经济模型
+
 ```
 总发行量: 1,000,000,000 FCX
 质押奖励: 年化 8-12%
@@ -301,9 +329,11 @@ src/modules/fcx-alliance/
 ## 管理后台模块
 
 ### 模块概述
+
 系统管理和运营监控的统一平台。
 
 ### 目录结构
+
 ```
 src/modules/admin-panel/
 ├── app/
@@ -323,6 +353,7 @@ src/modules/admin-panel/
 ```
 
 ### 核心功能
+
 - 用户账户管理
 - 商家资质审核
 - 内容审核和发布
@@ -331,7 +362,9 @@ src/modules/admin-panel/
 - 系统配置管理
 
 ### 权限体系
+
 采用RBAC模型：
+
 - **超级管理员**: 系统最高权限
 - **运营管理员**: 业务运营管理
 - **客服专员**: 客户服务权限
@@ -340,12 +373,115 @@ src/modules/admin-panel/
 
 ---
 
+## 智能体SDK模块
+
+### 模块概述
+
+为开发者提供完整的智能体开发工具包，支持快速创建、测试和部署智能体到FixCycle市场。
+
+### 目录结构
+
+```
+src/modules/agent-sdk/
+├── src/
+│   ├── core/             # 核心类库
+│   │   └── base-agent.ts  # 基础智能体类
+│   ├── decorators/        # 装饰器系统
+│   │   └── agent.ts       # 智能体装饰器
+│   ├── client/            # 客户端工具
+│   │   └── http-client.ts # HTTP客户端
+│   ├── types/             # 类型定义
+│   │   └── index.ts       # 核心类型
+│   ├── utils/             # 工具函数
+│   │   └── validation.ts  # 验证工具
+│   └── index.ts           # 主入口文件
+├── bin/                   # CLI工具
+│   └── cli.js             # 命令行接口
+├── examples/              # 示例代码
+│   └── sales-assistant.ts # 销售助手示例
+├── docs/                  # 技术文档
+│   ├── API_REFERENCE.md   # API参考手册
+│   └── DEVELOPER_GUIDE.md # 开发者指南
+├── __tests__/             # 测试文件
+├── package.json           # 包配置
+└── tsconfig.json          # TypeScript配置
+```
+
+### 核心功能
+
+- **智能体框架**: 提供标准化的智能体基类和生命周期管理
+- **装饰器系统**: 简化开发流程的各类实用装饰器
+- **类型安全**: 完整的TypeScript类型定义和验证
+- **CLI工具链**: 命令行工具支持项目初始化、测试、构建和部署
+- **文档体系**: 完整的API文档和开发者指南
+
+### 技术特点
+
+- **现代化架构**: 基于TypeScript和ES模块
+- **事件驱动**: 内置EventEmitter事件系统
+- **可扩展性**: 插件化设计，易于功能扩展
+- **开发友好**: 丰富的工具链和详尽的文档
+
+### 核心API示例
+
+```typescript
+import { BaseAgent, Agent } from '@fixcycle/agent-sdk';
+
+@Agent({
+  name: 'My Agent',
+  version: '1.0.0',
+  description: '我的智能体',
+  category: 'utility',
+})
+export class MyAgent extends BaseAgent {
+  protected async onInitialize(): Promise<void> {
+    // 初始化逻辑
+  }
+
+  protected async onProcess(input: AgentInput): Promise<AgentOutput> {
+    // 处理逻辑
+    return {
+      content: `处理结果: ${input.content}`,
+      metadata: { processed: true },
+    };
+  }
+
+  protected async onDestroy(): Promise<void> {
+    // 清理逻辑
+  }
+}
+```
+
+### CLI工具使用
+
+```bash
+# 安装CLI工具
+npm install -g @fixcycle/agent-sdk
+
+# 初始化新项目
+fixcycle-agent init --name my-agent --category utility
+
+# 运行测试
+cd my-agent
+npm test
+
+# 构建项目
+npm run build
+
+# 部署到市场
+fixcycle-agent deploy --api-key YOUR_API_KEY
+```
+
+---
+
 ## 公共组件模块
 
 ### 模块概述
+
 提供可复用的UI组件、工具函数和基础服务。
 
 ### 目录结构
+
 ```
 src/modules/common/
 ├── components/         # 共享组件
@@ -360,6 +496,7 @@ src/modules/common/
 ```
 
 ### 核心组件
+
 - **UI组件库**: 基于shadcn/ui的组件集合
 - **表单系统**: 统一的表单验证和提交
 - **表格组件**: 支持排序、筛选、分页
@@ -367,6 +504,7 @@ src/modules/common/
 - **上传组件**: 文件上传和管理
 
 ### 工具函数
+
 ```typescript
 // 格式化工具
 formatCurrency(amount: number): string
@@ -385,5 +523,6 @@ encryptData(data: string): string
 ```
 
 ---
+
 _文档维护: 技术文档团队_
 _更新频率: 每月定期更新_
