@@ -224,8 +224,8 @@ export default function ContentManagementPage() {
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
       draft: { text: '草稿', className: 'bg-gray-100 text-gray-800' },
-      published: { text: '已发?, className: 'bg-green-100 text-green-800' },
-      archived: { text: '已归?, className: 'bg-yellow-100 text-yellow-800' },
+      published: { text: '已发布', className: 'bg-green-100 text-green-800' },
+      archived: { text: '已归档', className: 'bg-yellow-100 text-yellow-800' },
     };
 
     const config = statusMap[status] || {
@@ -297,9 +297,9 @@ export default function ContentManagementPage() {
             onChange={e => setStatusFilter(e.target.value)}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="all">全部状?/option>
+            <option value="all">全部状态</option>
             <option value="draft">草稿</option>
-            <option value="published">已发?/option>
+            <option value="published">已发布</option>
             <option value="archived">已归?/option>
           </select>
 
