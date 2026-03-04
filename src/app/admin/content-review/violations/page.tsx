@@ -105,7 +105,7 @@ const PenaltyStatusBadge: React.FC<{ status: string }> = ({ status }) => {
         ? '生效中'
         : status === 'expired'
           ? '已过期'
-          : '已解除'
+          : '已解除'}
     </Badge>
   );
 };
@@ -143,7 +143,6 @@ const ViolationListItem: React.FC<{
             <ViolationSeverityBadge severity={violation.severity} />
             <Badge variant="outline" className="text-xs capitalize">
               {violation.status === 'pending'
-              {violation.status === 'pending'
                 ? '待处理'
                 : violation.status === 'processing'
                   ? '处理中'
@@ -152,6 +151,7 @@ const ViolationListItem: React.FC<{
                     : violation.status === 'appealed'
                       ? '申诉中'
                       : '已驳回'}
+            </Badge>
           </div>
 
           <h3 className="font-medium text-gray-900 mb-1">
@@ -294,15 +294,16 @@ export default function ViolationManagementPage() {
           contentId: 'content_123',
           violationType: 'spam',
           severity: 'moderate',
-          description: '发布垃圾营销内容，包含大量无关链?,
+          description: '发布垃圾营销内容，包含大量无关链接',
           evidence: ['截图1.jpg', '链接列表.txt'],
           detectionMethod: 'auto',
           detectedAt: Date.now() - 86400000, // 1天前
           status: 'processing',
           resolution: {
             action: 'content_removed',
-            reason: '违规内容已移?,
-            resolvedAt: Date.now() - 43200000, // 12小时?            resolverId: 'moderator_001',
+            reason: '违规内容已移除',
+            resolvedAt: Date.now() - 43200000, // 12 小时前
+            resolverId: 'moderator_001',
           },
           reporterId: 'user_spammer123',
           userName: '营销推广账号',
@@ -320,7 +321,7 @@ export default function ViolationManagementPage() {
           status: 'pending',
           reporterId: 'user_harasser456',
           userName: '恶意用户账号',
-          contentTitle: '威胁性言?,
+          contentTitle: '威胁性言论',
         },
         {
           id: 'vio_3',
@@ -339,7 +340,7 @@ export default function ViolationManagementPage() {
             resolverId: 'legal_team',
           },
           reporterId: 'user_copyright789',
-          userName: '侵权内容发布?,
+          userName: '侵权内容发布者',
           contentTitle: '盗版软件分享',
         },
       ];
@@ -434,7 +435,7 @@ export default function ViolationManagementPage() {
               <Shield className="w-8 h-8 mr-3 text-red-600" />
               违规处理中心
             </h1>
-            <p className="mt-2 text-gray-600">统一管理和处理平台违规行?/p>
+            <p className="mt-2 text-gray-600">统一管理和处理平台违规行为</p>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -480,7 +481,7 @@ export default function ViolationManagementPage() {
                   <Clock className="w-5 h-5 text-yellow-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">待处?/p>
+                  <p className="text-sm text-gray-600">待处理</p>
                   <p className="text-xl font-bold text-yellow-600">
                     {stats.pending}
                   </p>
@@ -496,7 +497,7 @@ export default function ViolationManagementPage() {
                   <Hammer className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">处理?/p>
+                  <p className="text-sm text-gray-600">处理中</p>
                   <p className="text-xl font-bold text-blue-600">
                     {stats.processing}
                   </p>
@@ -512,7 +513,7 @@ export default function ViolationManagementPage() {
                   <CheckCircle className="w-5 h-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">已解?/p>
+                  <p className="text-sm text-gray-600">已解决</p>
                   <p className="text-xl font-bold text-green-600">
                     {stats.resolved}
                   </p>
@@ -528,7 +529,7 @@ export default function ViolationManagementPage() {
                   <Scale className="w-5 h-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">申诉?/p>
+                  <p className="text-sm text-gray-600">申诉中</p>
                   <p className="text-xl font-bold text-purple-600">
                     {stats.appealed}
                   </p>
@@ -550,7 +551,8 @@ export default function ViolationManagementPage() {
                   违规记录列表
                 </span>
                 <span className="text-sm text-gray-500">
-                  {filteredViolations.length} 条记?                </span>
+                  {filteredViolations.length} 条记录
+                </span>
               </CardTitle>
 
               {/* 搜索和筛?*/}
@@ -570,7 +572,7 @@ export default function ViolationManagementPage() {
                     <SelectValue placeholder="违规类型" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">所有类?/SelectItem>
+                    <SelectItem value="all">所有类型</SelectItem>
                     <SelectItem value="spam">垃圾信息</SelectItem>
                     <SelectItem value="harassment">骚扰行为</SelectItem>
                     <SelectItem value="copyright">版权侵犯</SelectItem>
@@ -580,14 +582,14 @@ export default function ViolationManagementPage() {
 
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger>
-                    <SelectValue placeholder="处理状? />
+                    <SelectValue placeholder="处理状态" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">所有状?/SelectItem>
-                    <SelectItem value="pending">待处?/SelectItem>
-                    <SelectItem value="processing">处理?/SelectItem>
-                    <SelectItem value="resolved">已解?/SelectItem>
-                    <SelectItem value="appealed">申诉?/SelectItem>
+                    <SelectItem value="all">所有状态</SelectItem>
+                    <SelectItem value="pending">待处理</SelectItem>
+                    <SelectItem value="processing">处理中</SelectItem>
+                    <SelectItem value="resolved">已解决</SelectItem>
+                    <SelectItem value="appealed">申诉中</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -601,7 +603,7 @@ export default function ViolationManagementPage() {
                     <SelectValue placeholder="严重程度" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">所?/SelectItem>
+                    <SelectItem value="all">所有程度</SelectItem>
                     <SelectItem value="minor">轻微</SelectItem>
                     <SelectItem value="moderate">中度</SelectItem>
                     <SelectItem value="serious">重度</SelectItem>
@@ -666,10 +668,10 @@ export default function ViolationManagementPage() {
                     </div>
 
                     <div>
-                      <Label className="text-sm font-medium">检测方?/Label>
+                      <Label className="text-sm font-medium">检测方式</Label>
                       <Badge variant="outline" className="capitalize">
                         {selectedViolation.detectionMethod === 'auto'
-                          ? '自动检?
+                          ? '自动检测'
                           : selectedViolation.detectionMethod === 'manual'
                             ? '人工审核'
                             : '用户举报'}

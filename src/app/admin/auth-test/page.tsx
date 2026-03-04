@@ -53,7 +53,8 @@ export default function AuthTestPage() {
             前端权限系统测试
           </h1>
           <p className="text-gray-600">
-            验证 useAuth Hook、RoleGuard 组件和路由守卫功?          </p>
+            验证 useAuth Hook、RoleGuard 组件和路由守卫功?{' '}
+          </p>
         </div>
 
         {/* 用户信息显示 */}
@@ -165,7 +166,8 @@ export default function AuthTestPage() {
           <div className="text-sm text-gray-500">
             <p>
               <strong>说明:</strong>{' '}
-              点击角色按钮会设置模拟token，刷新页面后可以看到不同角色的权限效?            </p>
+              点击角色按钮会设置模拟token，刷新页面后可以看到不同角色的权限效?{' '}
+            </p>
           </div>
         </div>
 
@@ -186,7 +188,8 @@ export default function AuthTestPage() {
                 }
               >
                 <div className="text-green-600 bg-green-50 p-3 rounded">
-                  �?欢迎管理员！这里是系统核心配置区域?                </div>
+                  �?欢迎管理员！这里是系统核心配置区域?{' '}
+                </div>
               </RoleGuard>
             </div>
 
@@ -202,7 +205,8 @@ export default function AuthTestPage() {
                 }
               >
                 <div className="text-blue-600 bg-blue-50 p-3 rounded">
-                  �?内容审核面板 - 可以审核和管理用户提交的内容?                </div>
+                  �?内容审核面板 - 可以审核和管理用户提交的内容?{' '}
+                </div>
               </RoleGuard>
             </div>
 
@@ -218,7 +222,8 @@ export default function AuthTestPage() {
                 }
               >
                 <div className="text-purple-600 bg-purple-50 p-3 rounded">
-                  �?商店管理面板 - 可以审核和管理商家信息?                </div>
+                  �?商店管理面板 - 可以审核和管理商家信息?{' '}
+                </div>
               </RoleGuard>
             </div>
 
@@ -229,11 +234,13 @@ export default function AuthTestPage() {
                 roles={['admin', 'finance']}
                 fallback={
                   <div className="text-red-500 bg-red-50 p-3 rounded">
-                    �?仅管理员和财务人员可?                  </div>
+                    �?仅管理员和财务人员可?{' '}
+                  </div>
                 }
               >
                 <div className="text-orange-600 bg-orange-50 p-3 rounded">
-                  �?财务管理面板 - 可以查看和处理财务相关事务?                </div>
+                  �?财务管理面板 - 可以查看和处理财务相关事务?{' '}
+                </div>
               </RoleGuard>
             </div>
           </div>
@@ -257,7 +264,8 @@ export default function AuthTestPage() {
                 }
               >
                 <div className="text-green-600 bg-green-50 p-3 rounded">
-                  �?您有仪表板访问权?                </div>
+                  �?您有仪表板访问权?{' '}
+                </div>
               </PermissionGuard>
             </div>
 
@@ -267,7 +275,8 @@ export default function AuthTestPage() {
                 permissions="content.write"
                 fallback={
                   <div className="text-red-500 bg-red-50 p-3 rounded">
-                    �?无内容编辑权?                  </div>
+                    �?无内容编辑权?{' '}
+                  </div>
                 }
               >
                 <div className="text-green-600 bg-green-50 p-3 rounded">
@@ -282,7 +291,8 @@ export default function AuthTestPage() {
                 permissions="users.read"
                 fallback={
                   <div className="text-red-500 bg-red-50 p-3 rounded">
-                    �?无用户管理权?                  </div>
+                    �?无用户管理权?{' '}
+                  </div>
                 }
               >
                 <div className="text-green-600 bg-green-50 p-3 rounded">
@@ -317,10 +327,13 @@ export default function AuthTestPage() {
                   &#125;;
                 </div>
                 <div className="font-mono bg-white p-2 rounded">
-                  // 检查具体权?                  <br />
-                  // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('当前角色:', {roles})<br />
-                  // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('租户ID:', {tenantId})<br />
-                  // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('是否有仪表板权限:',
+                  // 检查具体权? <br />
+                  // TODO: 移除调试日志 - // TODO: 移除调试日志 -
+                  console.log('当前角色:', {roles})<br />
+                  // TODO: 移除调试日志 - // TODO: 移除调试日志 -
+                  console.log('租户ID:', {tenantId})<br />
+                  // TODO: 移除调试日志 - // TODO: 移除调试日志 -
+                  console.log('是否有仪表板权限:',
                   hasPermission('dashboard.view'));
                 </div>
               </div>
@@ -329,7 +342,8 @@ export default function AuthTestPage() {
             <div className="text-sm text-gray-500">
               <p>
                 <strong>预期结果:</strong>{' '}
-                在控制台中应该能够看到当前的用户角色、租户ID以及权限检查结?              </p>
+                在控制台中应该能够看到当前的用户角色、租户ID以及权限检查结?{' '}
+              </p>
             </div>
           </div>
         </div>
@@ -337,4 +351,3 @@ export default function AuthTestPage() {
     </div>
   );
 }
-

@@ -274,7 +274,7 @@ export default function ContentManagementPage() {
 
         <div className="flex gap-2 flex-wrap">
           <Input
-            placeholder="搜索标题或作?.."
+            placeholder="搜索标题或作者..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             className="w-64"
@@ -300,7 +300,7 @@ export default function ContentManagementPage() {
             <option value="all">全部状态</option>
             <option value="draft">草稿</option>
             <option value="published">已发布</option>
-            <option value="archived">已归?/option>
+            <option value="archived">已归档</option>
           </select>
 
           <Button onClick={handleCreateContent}>新建内容</Button>
@@ -318,7 +318,7 @@ export default function ContentManagementPage() {
         {loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-2 text-gray-600">加载?..</span>
+            <span className="ml-2 text-gray-600">加载中...</span>
           </div>
         ) : (
           <Table>
@@ -337,10 +337,10 @@ export default function ContentManagementPage() {
                 </TableHead>
                 <TableHead>标题</TableHead>
                 <TableHead>类型</TableHead>
-                <TableHead>作?/TableHead>
+                <TableHead>作者</TableHead>
                 <TableHead>分类</TableHead>
                 <TableHead>浏览/点赞</TableHead>
-                <TableHead>状?/TableHead>
+                <TableHead>状态</TableHead>
                 <TableHead>更新时间</TableHead>
                 <TableHead className="text-right">操作</TableHead>
               </TableRow>
@@ -374,7 +374,7 @@ export default function ContentManagementPage() {
                   </TableCell>
                   <TableCell>
                     <span className="text-sm text-gray-600">
-                      {content.category || '未分?}
+                      {content.category || '未分类'}
                     </span>
                   </TableCell>
                   <TableCell>
@@ -421,7 +421,7 @@ export default function ContentManagementPage() {
         {pagination.totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t">
             <div className="text-sm text-gray-700">
-              显示?{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
+              显示从 {(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
               {Math.min(
                 pagination.page * pagination.pageSize,
                 pagination.total
@@ -437,7 +437,7 @@ export default function ContentManagementPage() {
                 variant="outline"
                 size="sm"
               >
-                上一?
+                上一页
               </Button>
               <Button
                 onClick={() =>
@@ -447,7 +447,7 @@ export default function ContentManagementPage() {
                 variant="outline"
                 size="sm"
               >
-                下一?
+                下一页
               </Button>
             </div>
           </div>
@@ -531,7 +531,7 @@ export default function ContentManagementPage() {
                         category: e.target.value,
                       })
                     }
-                    placeholder="请输入分?
+                    placeholder="请输入分类"
                   />
                 </div>
 

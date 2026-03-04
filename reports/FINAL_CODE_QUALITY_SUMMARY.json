@@ -36,10 +36,7 @@
     {
       "priority": "P1",
       "task": "手动修复 TypeScript 类型错误",
-      "files": [
-        "src/types/*.ts",
-        "src/utils/*.ts"
-      ],
+      "files": ["src/types/*.ts", "src/utils/*.ts"],
       "estimatedHours": 4
     },
     {

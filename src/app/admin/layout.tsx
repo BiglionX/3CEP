@@ -7,4 +7,3 @@ export default function AdminRootLayout({
 }) {
   return <RoleAwareLayout>{children}</RoleAwareLayout>;
 }
-

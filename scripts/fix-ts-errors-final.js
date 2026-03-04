@@ -147,18 +147,18 @@ const fixPatterns = [
 // 处理单个文件
 function processFile(filePath) {
   const fullPath = path.join(process.cwd(), filePath);
-  
+
   if (!fs.existsSync(fullPath)) {
     console.log(`⚠️  文件不存在：${filePath}`);
     return 0;
   }
-  
+
   console.log(`📄 处理文件：${filePath}`);
-  
+
   let content = fs.readFileSync(fullPath, 'utf8');
   const originalContent = content;
   let fileFixes = 0;
-  
+
   // 应用所有修复模式
   fixPatterns.forEach(({ pattern, replacement }) => {
     const matches = content.match(pattern);
@@ -171,13 +171,13 @@ function processFile(filePath) {
       }
     }
   });
-  
+
   // 如果内容有变化，保存文件
   if (content !== originalContent) {
     // 创建备份
-    const backupPath = fullPath + '.bak';
+    const backupPath = `${fullPath}.bak`;
     fs.writeFileSync(backupPath, originalContent);
-    
+
     // 保存修复后的内容
     fs.writeFileSync(fullPath, content);
     console.log(`   💾 已保存修复（备份：${path.basename(backupPath)}）\n`);
@@ -185,7 +185,7 @@ function processFile(filePath) {
   } else {
     console.log(`   ✓ 无需修复\n`);
   }
-  
+
   return fileFixes;
 }
 
@@ -194,16 +194,16 @@ function main() {
   console.log('📋 待处理文件列表:');
   filesToProcess.forEach(file => console.log(`   - ${file}`));
   console.log('\n');
-  
+
   // 处理每个文件
   filesToProcess.forEach(processFile);
-  
+
   console.log('='.repeat(60));
   console.log(`📊 修复完成统计:`);
   console.log(`✅ 共修复：${totalFixes} 处`);
   console.log(`📁 处理文件：${filesToProcess.length} 个`);
   console.log('='.repeat(60));
-  
+
   console.log('\n🧪 建议验证命令:');
   console.log('   npx tsc --noEmit  # 验证 TypeScript 编译');
   console.log('   npm run test     # 运行测试用例\n');

@@ -60,10 +60,10 @@ class Logger {
     };
 
     const formattedMessage = this.formatMessage(entry);
-    
+
     // 发送到日志服务（实际项目中实现）
     this.sendToLogService(entry);
-    
+
     // 控制台输出
     if (this.enableConsole) {
       switch (level) {

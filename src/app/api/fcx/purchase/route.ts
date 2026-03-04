@@ -20,7 +20,10 @@ export async function POST(request: Request) {
     }
 
     if (amountUSD <= 0) {
-      return NextResponse.json({ error: '璐拱閲戦蹇呴』澶т簬0' }, { status: 400 });
+      return NextResponse.json(
+        { error: '璐拱閲戦蹇呴』澶т簬0' },
+        { status: 400 }
+      );
     }
 
     const dto: PurchaseFcxDTO = {
@@ -61,4 +64,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

@@ -166,18 +166,18 @@ export default function AdminAccessTestPage() {
 
     try {
       // 测试 1: 当前用户
-      const user = await testCurrentUser()
-      
+      const user = await testCurrentUser();
+
       // 测试 2: 管理员权限检查
-      await testAdminPermissions(user)
-      
+      await testAdminPermissions(user);
+
       // 测试 3: 页面访问
-      await testAdminPageAccess()
-      
+      await testAdminPageAccess();
+
       // 测试 4: 响应头
-      await testMiddlewareHeaders()
-      
-      addTestResult('综合测试完成', 'info', '所有测试项目已完成')
+      await testMiddlewareHeaders();
+
+      addTestResult('综合测试完成', 'info', '所有测试项目已完成');
     } catch (error: any) {
       addTestResult('测试执行错误', 'fail', { error: error.message });
     } finally {

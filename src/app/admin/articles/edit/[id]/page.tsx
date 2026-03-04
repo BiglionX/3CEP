@@ -50,7 +50,7 @@ export default function EditArticlePage() {
 
       setArticle(data);
     } catch (err) {
-      setError('加载文章失败: ' + (err as Error).message);
+      setError(`加载文章失败: ${(err as Error).message}`);
       console.error('加载文章失败:', err);
     } finally {
       setLoading(false);

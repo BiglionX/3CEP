@@ -2,18 +2,29 @@ import { marketDataService } from '@/services/market-data.service';
 import { DeviceProfile } from '@/lib/constants/lifecycle';
 import { AggregatedMarketData } from '@/lib/types/market.types';
 
-// 置信度评估配?interface ConfidenceConfig {
+// 置信度评估配置
+interface ConfidenceConfig {
   minSampleCount: number; // 最小样本量
   maxDataAgeDays: number; // 最大数据年龄（天）
   minFreshnessScore: number; // 最低新鲜度分数
-  priceStabilityThreshold: number; // 价格稳定性阈?  weightSampleCount: number; // 样本量权?  weightFreshness: number; // 新鲜度权?  weightStability: number; // 稳定性权?}
+  priceStabilityThreshold: number; // 价格稳定性阈值
+  weightSampleCount: number; // 样本量权重
+  weightFreshness: number; // 新鲜度权重
+  weightStability: number; // 稳定性权重
+}
 
-// 置信度评估结?interface ConfidenceAssessment {
-  overallConfidence: number; // 总体置信?(0-1)
+// 置信度评估结果
+interface ConfidenceAssessment {
+  overallConfidence: number; // 总体置信度 (0-1)
   breakdown: {
-    sampleCountScore: number; // 样本量得?    freshnessScore: number; // 新鲜度得?    stabilityScore: number; // 稳定性得?    sourceReliability: number; // 数据源可靠?  };
+    sampleCountScore: number; // 样本量得分
+    freshnessScore: number; // 新鲜度得分
+    stabilityScore: number; // 稳定性得分
+    sourceReliability: number; // 数据源可靠性
+  };
   recommendations: string[]; // 建议
-  shouldFallback: boolean; // 是否应回退到规则引?  fallbackReason?: string; // 回退原因
+  shouldFallback: boolean; // 是否应回退到规则引擎
+  fallbackReason?: string; // 回退原因
 }
 
 // 回退策略
@@ -49,7 +60,8 @@ export class ConfidenceService {
       const stabilityScore = this.calculateStabilityScore(marketData);
       const sourceReliability = this.calculateSourceReliability(marketData);
 
-      // 计算总体置信?      const overallConfidence = this.calculateOverallConfidence({
+      // 计算总体置信度
+      const overallConfidence = this.calculateOverallConfidence({
         sampleCountScore,
         freshnessScore,
         stabilityScore,
@@ -85,7 +97,7 @@ export class ConfidenceService {
         fallbackReason,
       };
     } catch (error) {
-      console.error('置信度评估失?', error);
+      console.error('置信度评估失败', error);
       // 出错时保守回退
       return {
         overallConfidence: 0.2,
@@ -95,7 +107,7 @@ export class ConfidenceService {
           stabilityScore: 0,
           sourceReliability: 0,
         },
-        recommendations: ['数据获取失败，建议使用规则引?],
+        recommendations: ['数据获取失败，建议使用规则引擎'],
         shouldFallback: true,
         fallbackReason: '数据获取异常',
       };
@@ -103,7 +115,8 @@ export class ConfidenceService {
   }
 
   /**
-   * 计算样本量得?   */
+   * 计算样本量得分
+   */
   private calculateSampleCountScore(marketData: AggregatedMarketData): number {
     const sampleCounts = [
       marketData?.sampleCount || 0,
@@ -122,7 +135,8 @@ export class ConfidenceService {
   }
 
   /**
-   * 计算新鲜度得?   */
+   * 计算新鲜度得分
+   */
   private calculateFreshnessScore(marketData: AggregatedMarketData): number {
     const freshnessScores = [
       marketData?.freshnessScore || 0,
@@ -139,11 +153,13 @@ export class ConfidenceService {
   }
 
   /**
-   * 计算价格稳定性得?   */
+   * 计算价格稳定性得分
+   */
   private calculateStabilityScore(marketData: AggregatedMarketData): number {
     const priceRanges: number[] = [];
 
-    // 计算各数据源的价格区?    [marketData.xianyuData, marketData.zhuanTurnData, marketData.aggregateData]
+    // 计算各数据源的价格区间
+    [marketData.xianyuData, marketData.zhuanTurnData, marketData.aggregateData]
       .filter(Boolean)
       .forEach(data => {
         if (data && data.maxPrice > 0 && data.minPrice > 0) {
@@ -152,16 +168,21 @@ export class ConfidenceService {
         }
       });
 
-    if (priceRanges.length === 0) return 0.5; // 默认中等稳定?
+    if (priceRanges.length === 0) return 0.5; // 默认中等稳定
     const avgRange =
       priceRanges.reduce((sum, range) => sum + range, 0) / priceRanges.length;
 
-    // 价格区间越小越稳?    if (avgRange <= 0.1) return 1.0; // 非常稳定
+    // 价格区间越小越稳定
+    if (avgRange <= 0.1) return 1.0; // 非常稳定
     if (avgRange <= 0.2) return 0.8; // 稳定
-    if (avgRange <= this.config.priceStabilityThreshold) return 0.6; // 一?    if (avgRange <= 0.5) return 0.3; // 不稳?    return 0.1; // 非常不稳?  }
+    if (avgRange <= this.config.priceStabilityThreshold) return 0.6; // 一般
+    if (avgRange <= 0.5) return 0.3; // 不稳定
+    return 0.1; // 非常不稳定
+  }
 
   /**
-   * 计算数据源可靠?   */
+   * 计算数据源可靠性
+   */
   private calculateSourceReliability(marketData: AggregatedMarketData): number {
     let reliability = 0;
     let sourceCount = 0;
@@ -172,7 +193,8 @@ export class ConfidenceService {
     }
 
     if (marketData.zhuanTurnData) {
-      reliability += 0.8; // 转转数据较可?      sourceCount++;
+      reliability += 0.8; // 转转数据较可靠
+      sourceCount++;
     }
 
     if (marketData.aggregateData) {
@@ -184,7 +206,8 @@ export class ConfidenceService {
   }
 
   /**
-   * 计算总体置信?   */
+   * 计算总体置信度
+   */
   private calculateOverallConfidence(scores: {
     sampleCountScore: number;
     freshnessScore: number;
@@ -195,27 +218,31 @@ export class ConfidenceService {
       scores.sampleCountScore * this.config.weightSampleCount +
       scores.freshnessScore * this.config.weightFreshness +
       scores.stabilityScore * this.config.weightStability +
-      scores.sourceReliability * 0.1 // 数据源可靠性权重较?    );
+      scores.sourceReliability * 0.1 // 数据源可靠性权重较低
+    );
   }
 
   /**
-   * 判断是否需要回退到规则引?   */
+   * 判断是否需要回退到规则引擎
+   */
   private shouldFallbackToRuleEngine(
     overallConfidence: number,
     sampleCountScore: number,
     freshnessScore: number
   ): { shouldFallback: boolean; fallbackReason?: string } {
-    // 置信度太?    if (overallConfidence < 0.4) {
+    // 置信度太低
+    if (overallConfidence < 0.4) {
       return {
         shouldFallback: true,
-        fallbackReason: '总体置信度过?,
+        fallbackReason: '总体置信度过低',
       };
     }
 
-    // 样本量不?    if (sampleCountScore < 0.4) {
+    // 样本量不足
+    if (sampleCountScore < 0.4) {
       return {
         shouldFallback: true,
-        fallbackReason: '市场样本量不?,
+        fallbackReason: '市场样本量不足',
       };
     }
 
@@ -250,17 +277,17 @@ export class ConfidenceService {
     }
 
     if (scores.stabilityScore < 0.5) {
-      recommendations.push('市场价格波动较大，建议谨慎使用市场数?);
+      recommendations.push('市场价格波动较大，建议谨慎使用市场数据');
     }
 
     if (scores.overallConfidence > 0.8) {
-      recommendations.push('置信度较高，可放心使用估值结?);
+      recommendations.push('置信度较高，可放心使用估值结果');
     } else if (scores.overallConfidence > 0.6) {
       recommendations.push('置信度中等，建议结合其他信息综合判断');
     }
 
     if (recommendations.length === 0) {
-      recommendations.push('当前估值基于充足且新鲜的市场数?);
+      recommendations.push('当前估值基于充足且新鲜的市场数据');
     }
 
     return recommendations;
@@ -273,8 +300,10 @@ export class ConfidenceService {
     if (assessment.overallConfidence < 0.3) {
       return 'rule_engine'; // 置信度很低，完全回退
     } else if (assessment.overallConfidence < 0.5) {
-      return 'depreciation_only'; // 中等置信度，使用折旧估?    } else {
-      return 'market_estimate'; // 较高置信度，仍可使用市场估?    }
+      return 'depreciation_only'; // 中等置信度，使用折旧估价
+    } else {
+      return 'market_estimate'; // 较高置信度，仍可使用市场估价
+    }
   }
 
   /**
@@ -282,7 +311,8 @@ export class ConfidenceService {
    */
   updateConfig(newConfig: Partial<ConfidenceConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('⚙️ 置信度评估配置已更新:', this.config)}
+    console.log('⚙️ 置信度评估配置已更新:', this.config);
+  }
 
   /**
    * 获取当前配置
@@ -292,7 +322,8 @@ export class ConfidenceService {
   }
 
   /**
-   * 批量评估置信?   */
+   * 批量评估置信度
+   */
   async batchAssessConfidence(
     deviceModels: string[]
   ): Promise<Array<{ deviceModel: string; assessment: ConfidenceAssessment }>> {
@@ -306,7 +337,7 @@ export class ConfidenceService {
         const assessment = await this.assessConfidence(model);
         results.push({ deviceModel: model, assessment });
       } catch (error) {
-        console.warn(`评估设备型号 ${model} 置信度失?`, error);
+        console.warn(`评估设备型号 ${model} 置信度失败`, error);
         results.push({
           deviceModel: model,
           assessment: {
@@ -329,13 +360,14 @@ export class ConfidenceService {
   }
 
   /**
-   * 获取置信度统计报?   */
+   * 获取置信度统计报表
+   */
   async getConfidenceReport(deviceModels: string[]): Promise<{
     summary: {
       totalModels: number;
-      highConfidence: number; // 置信?> 0.8
-      mediumConfidence: number; // 置信?0.5-0.8
-      lowConfidence: number; // 置信?< 0.5
+      highConfidence: number; // 置信度 > 0.8
+      mediumConfidence: number; // 置信度 0.5-0.8
+      lowConfidence: number; // 置信度 < 0.5
       avgConfidence: number;
     };
     details: Array<{ deviceModel: string; confidence: number; status: string }>;

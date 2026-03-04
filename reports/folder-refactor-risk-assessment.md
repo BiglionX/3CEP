@@ -11,6 +11,7 @@
 ### 1. 目录使用情况
 
 #### src/middleware/ (12 个文件)
+
 ```bash
 ✅ 正在使用中的中间件:
 - admin-access-fix.ts
@@ -26,7 +27,8 @@
 - workflow-replay-filter.js
 ```
 
-**影响范围**: 
+**影响范围**:
+
 - ✅ 11 处导入 `@/middleware/`
 - ✅ 主要在 API 路由和测试文件中使用
 - ⚠️ **风险**: 直接移动会导致所有导入失效
@@ -34,6 +36,7 @@
 ---
 
 #### src/utils/ (6 个文件)
+
 ```bash
 ✅ 正在使用中的工具函数:
 - cache-manager.js             ← 被多个 API 路由引用
@@ -44,6 +47,7 @@
 ```
 
 **影响范围**:
+
 - ✅ 10+ 处导入 `@/utils/`
 - ✅ 涉及缓存、日志、性能监控等核心功能
 - ⚠️ **高风险**: logger 是核心依赖，移动后影响巨大
@@ -51,24 +55,28 @@
 ---
 
 #### src/controllers/ (1 个文件)
+
 ```bash
 ⚠️ 低使用率:
 - api-examples.js              ← 示例代码，可能可以删除
 ```
 
 **影响范围**:
+
 - ✅ 0 处导入 `@/controllers/`
 - ✅ **低风险**: 可以直接删除或移动
 
 ---
 
 #### src/models/ (1 个文件)
+
 ```bash
 ⚠️ 中等使用率:
 - token-account.model.ts       ← 被 4 处引用
 ```
 
 **影响范围**:
+
 - ✅ 4 处导入 `@/models/`
 - ✅ 涉及计费和 token 账户
 - ⚠️ **中风险**: 移动后需要更新 4 个导入
@@ -85,6 +93,7 @@
 ```
 
 **⚠️ 关键发现**:
+
 - 项目**当前已有编译错误**
 - 如果在有错误的情况下重构，会**雪上加霜**
 - 建议:**先修复现有错误，再执行重构**
@@ -96,24 +105,29 @@
 ### Risk 1: logger.ts 移动风险
 
 **当前引用**:
+
 ```typescript
 // 10+ 处引用包括:
-src/app/api/moderation/auto/route.ts
-src/app/api/monitoring/route.ts
-src/app/api/monitoring/alerts/route.ts
-src/modules/procurement-intelligence/services/log-analyzer.service.ts
-src/lib/monitoring-service.ts
-src/lib/alert-manager.ts
+src / app / api / moderation / auto / route.ts;
+src / app / api / monitoring / route.ts;
+src / app / api / monitoring / alerts / route.ts;
+src / modules / procurement -
+  intelligence / services / log -
+  analyzer.service.ts;
+src / lib / monitoring - service.ts;
+src / lib / alert - manager.ts;
 ```
 
 **风险等级**: 🔴 **极高**
 
 **潜在问题**:
+
 1. 如果移动后导入路径更新不完整，会导致**日志系统全面失效**
 2. 影响监控、告警、审计等核心功能
 3. 生产环境可能出现**静默失败**
 
 **缓解措施**:
+
 ```bash
 # Step 1: 先创建新目录的副本
 Copy-Item src/utils/logger.ts src/tech/utils/logger.ts
@@ -133,20 +147,23 @@ export { logger } from '../tech/utils/logger';
 ### Risk 2: middleware/permissions.js 风险
 
 **当前引用**:
+
 ```typescript
-src/app/api/agents/invoke/route.ts
-src/app/api/tools/execute/route.ts
-src/app/api/n8n/replay/route.ts
+src / app / api / agents / invoke / route.ts;
+src / app / api / tools / execute / route.ts;
+src / app / api / n8n / replay / route.ts;
 ```
 
 **风险等级**: 🔴 **高**
 
 **潜在问题**:
+
 1. 权限校验失效可能导致**安全漏洞**
 2. API 接口可能被未授权访问
 3. 影响 Agent 调用和工具执行
 
 **缓解措施**:
+
 ```bash
 # 保持文件名不变
 Move-Item src/middleware/permissions.js src/tech/middleware/permissions.js
@@ -165,21 +182,24 @@ import { requirePermission } from '@/middleware/permissions';
 ### Risk 3: cache-manager.js 风险
 
 **当前引用**:
+
 ```typescript
-src/app/api/v1/points/route.ts
-src/app/api/v1/parts/prices/route.ts
-src/app/api/v1/recommend/personalized/route.ts
-scripts/response-time-optimization.js
+src / app / api / v1 / points / route.ts;
+src / app / api / v1 / parts / prices / route.ts;
+src / app / api / v1 / recommend / personalized / route.ts;
+scripts / response - time - optimization.js;
 ```
 
 **风险等级**: 🟡 **中高**
 
 **潜在问题**:
+
 1. 缓存失效导致**API 响应变慢**
 2. 数据库查询压力增加
 3. 用户体验下降
 
 **缓解措施**:
+
 ```bash
 # 使用渐进式迁移
 # Step 1: 在新位置创建文件
@@ -195,27 +215,31 @@ Copy-Item src/utils/cache-manager.js src/tech/utils/cache-manager.js
 ### Risk 4: models/token-account.model.ts 风险
 
 **当前引用**:
+
 ```typescript
-src/tech/api/services/token-account.service.ts
-src/services/token-account.service.ts
-src/services/billing-engine.service.ts
-src/tech/api/services/billing-engine.service.ts
+src / tech / api / services / token - account.service.ts;
+src / services / token - account.service.ts;
+src / services / billing - engine.service.ts;
+src / tech / api / services / billing - engine.service.ts;
 ```
 
 **风险等级**: 🟡 **中**
 
 **潜在问题**:
+
 1. 计费逻辑错误
 2. Token 账户数据异常
 3. 影响收入统计
 
 **观察**:
+
 - ⚠️ 存在**循环依赖**迹象:
-  - `src/services/token-account.service.ts` 
+  - `src/services/token-account.service.ts`
   - `src/tech/api/services/token-account.service.ts`
   - 两者都导入同一个 model
 
 **建议**:
+
 ```bash
 # 移动到 tech/database/models/
 Move-Item src/models src/tech/database/models
@@ -228,14 +252,14 @@ Move-Item src/models src/tech/database/models
 
 ## 🎯 综合风险评级
 
-| 风险项 | 等级 | 影响范围 | 发生概率 | 严重程度 |
-|--------|------|---------|---------|---------|
-| logger 移动 | 🔴 极高 | 全系统 | 高 | 致命 |
-| permissions 移动 | 🔴 高 | 安全 | 中 | 严重 |
-| cache-manager 移动 | 🟡 中高 | 性能 | 中 | 一般 |
-| models 移动 | 🟡 中 | 计费 | 低 | 一般 |
-| controllers 移动 | 🟢 低 | 示例代码 | 无 | 轻微 |
-| 现有编译错误 | 🔴 高 | 构建 | 100% | 严重 |
+| 风险项             | 等级    | 影响范围 | 发生概率 | 严重程度 |
+| ------------------ | ------- | -------- | -------- | -------- |
+| logger 移动        | 🔴 极高 | 全系统   | 高       | 致命     |
+| permissions 移动   | 🔴 高   | 安全     | 中       | 严重     |
+| cache-manager 移动 | 🟡 中高 | 性能     | 中       | 一般     |
+| models 移动        | 🟡 中   | 计费     | 低       | 一般     |
+| controllers 移动   | 🟢 低   | 示例代码 | 无       | 轻微     |
+| 现有编译错误       | 🔴 高   | 构建     | 100%     | 严重     |
 
 ---
 
@@ -254,12 +278,14 @@ Move-Item src/models src/tech/database/models
 ### 影响分析
 
 **如果不修复就执行重构**:
+
 1. ❌ 无法通过编译验证重构是否成功
 2. ❌ 新增错误和原有错误混在一起
 3. ❌ 难以定位问题是重构引入还是原有的
 4. ❌ 团队信心受挫
 
 **强烈建议**:
+
 ```
 ✅ 先修复现有编译错误 (预计 1-2 小时)
 ✅ 确保 TypeScript 编译通过
@@ -278,7 +304,7 @@ graph TD
     B --> C[Phase 2: 中风险目录合并]
     C --> D[Phase 3: 高风险目录合并]
     D --> E[Phase 4: 全面验证]
-    
+
     style A fill:#ffcccc
     style B fill:#ccffcc
     style C fill:#ffffcc
@@ -287,28 +313,33 @@ graph TD
 ```
 
 **Phase 0: 修复现有错误 (优先级：🔴 紧急)**
+
 - 修复 articles 相关页面的 JSX 错误
 - 确保 `npm run build` 通过
 - 预计时间：1-2 小时
 
 **Phase 1: 低风险清理 (优先级：🟢 安全)**
+
 - 删除空目录
 - 删除 controllers/(仅 1 个示例文件)
 - 删除临时文件
 - 预计时间：0.5 天
 
 **Phase 2: 中风险合并 (优先级：🟡 注意)**
+
 - 合并 models → tech/database/models
 - 使用路径别名过渡
 - 预计时间：0.5 天
 
 **Phase 3: 高风险合并 (优先级：🔴 谨慎)**
+
 - 合并 utils → tech/utils (保留 logger 最后处理)
 - 合并 middleware → tech/middleware
 - 使用双写过渡策略
 - 预计时间：1 天
 
 **Phase 4: 全面验证 (优先级：🔴 必须)**
+
 - TypeScript 编译检查
 - 运行测试套件
 - 手动测试关键功能
@@ -351,6 +382,7 @@ graph TD
 ```
 
 **优势**:
+
 - ✅ 无需修改任何导入语句
 - ✅ 支持渐进式迁移
 - ✅ 随时可以回滚
@@ -380,6 +412,7 @@ import { logger } from '@/tech/utils/logger';  # ✅ 新方式
 ```
 
 **优势**:
+
 - ✅ 零停机迁移
 - ✅ 可以随时暂停
 - ✅ 降低回滚成本
@@ -428,6 +461,7 @@ Move-Item src/controllers src/tech/
 ```
 
 **后果**:
+
 - 💥 100+ 个导入路径失效
 - 💥 编译完全失败
 - 💥 无法定位具体问题
@@ -444,6 +478,7 @@ npm run build  # 看到 50+ 错误
 ```
 
 **后果**:
+
 - 💥 新增错误和原有错误混杂
 - 💥 无法验证重构是否成功
 - 💥 问题越积越多
@@ -459,6 +494,7 @@ git status  # 显示 20+ 个修改的文件
 ```
 
 **后果**:
+
 - 💥 Git 历史记录混乱
 - 💥 无法清晰回滚
 - 💥 团队协作困难
@@ -507,15 +543,17 @@ npm run test:e2e
 
 ### 回答你的问题：**是否会导致程序出问题？**
 
-**答案**: 
+**答案**:
 
 **如果不按正确方法执行** → 🔴 **一定会出大问题**
+
 - 编译失败
 - 运行时错误
 - 安全漏洞
 - 性能下降
 
 **如果按正确方法执行** → 🟢 **风险可控，收益大于成本**
+
 - 分阶段进行
 - 使用路径别名
 - 充分测试验证
@@ -528,6 +566,7 @@ npm run test:e2e
 ### 选项 A: 立即执行 (条件：必须先修复现有错误)
 
 **适合场景**:
+
 - ✅ 团队有时间专注重构
 - ✅ 有充分的测试覆盖
 - ✅ 可以快速回滚
@@ -540,12 +579,14 @@ npm run test:e2e
 ### 选项 B: 延后执行 (推荐 ⭐⭐⭐⭐)
 
 **适合场景**:
+
 - ⚠️ 当前有编译错误
 - ⚠️ 测试覆盖率不足
 - ⚠️ 团队资源紧张
 - ⚠️ 临近发版
 
 **建议**:
+
 1. 先修复现有编译错误
 2. 补充关键功能的测试
 3. 选择发版后的空窗期执行
@@ -556,12 +597,14 @@ npm run test:e2e
 ### 选项 C: 简化执行 (折中方案 ⭐⭐⭐⭐⭐)
 
 **只执行低风险部分**:
+
 - ✅ 删除空目录和临时文件
 - ✅ 删除 controllers/(仅示例文件)
 - ❌ 暂不合并 middleware 和 utils
 - ❌ 等待更好的时机
 
 **优势**:
+
 - ✅ 风险极低
 - ✅ 立即可执行
 - ✅ 为后续完整重构探路
@@ -586,6 +629,7 @@ npm run test:e2e
 ```
 
 **是否需要我帮你:**
+
 1. 先修复现有的编译错误？
 2. 或者先执行简化的低风险清理？
 

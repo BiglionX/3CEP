@@ -29,19 +29,32 @@ const fileExtensions = ['.ts', '.tsx'];
 
 function scanAndFixDirectory(dirPath, depth = 0) {
   if (depth > 10) return;
-  
+
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-  
+
   for (const entry of entries) {
     const fullPath = path.join(dirPath, entry.name);
-    
-    if (['node_modules', '.next', 'out', 'public', 'dist', 'coverage', '.git'].includes(entry.name)) {
+
+    if (
+      [
+        'node_modules',
+        '.next',
+        'out',
+        'public',
+        'dist',
+        'coverage',
+        '.git',
+      ].includes(entry.name)
+    ) {
       continue;
     }
-    
+
     if (entry.isDirectory()) {
       scanAndFixDirectory(fullPath, depth + 1);
-    } else if (entry.isFile() && fileExtensions.includes(path.extname(entry.name))) {
+    } else if (
+      entry.isFile() &&
+      fileExtensions.includes(path.extname(entry.name))
+    ) {
       fixFile(fullPath);
     }
   }
@@ -49,10 +62,10 @@ function scanAndFixDirectory(dirPath, depth = 0) {
 
 function fixFile(filePath) {
   try {
-    let content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, 'utf8');
     let newContent = content;
     let fileChanged = false;
-    
+
     encodingFixes.forEach(({ pattern, replacement }) => {
       const matches = newContent.match(pattern);
       if (matches) {
@@ -61,7 +74,7 @@ function fixFile(filePath) {
         totalReplacements += matches.length;
       }
     });
-    
+
     if (fileChanged) {
       fs.writeFileSync(filePath, newContent, 'utf8');
       filesFixed++;
@@ -75,27 +88,29 @@ function fixFile(filePath) {
 // 主函数
 function main() {
   console.log('📂 开始扫描 src 目录...\n');
-  
+
   const dirsToScan = ['src/app', 'src/components', 'src/modules'];
-  
+
   dirsToScan.forEach(dir => {
     const dirPath = path.join(__dirname, '..', dir);
     if (fs.existsSync(dirPath)) {
       scanAndFixDirectory(dirPath);
     }
   });
-  
+
   console.log('\n===================================');
   console.log('📊 修复总结:');
   console.log('===================================');
   console.log(`✅ 已修复文件数：${filesFixed}`);
   console.log(`✅ 总替换次数：${totalReplacements}`);
   console.log('===================================\n');
-  
+
   if (filesFixed === 0) {
     console.log('✨ 未发现乱码字符，所有文件编码正常！\n');
   } else {
-    console.log('💡 建议：运行 `npx tsc --noEmit` 验证 TypeScript 错误是否减少\n');
+    console.log(
+      '💡 建议：运行 `npx tsc --noEmit` 验证 TypeScript 错误是否减少\n'
+    );
   }
 }
 

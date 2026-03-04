@@ -71,21 +71,21 @@ export class WmsShipmentService {
 
       // 2. 构造WMS发货单数据
       const wmsShipmentData = this.buildWmsShipmentData(request);
-      
+
       // 3. 调用 WMS 系统 API 创建发货单
       const wmsResult = await this.callWmsApi(
         warehouseConnection,
         '/api/orders/create-outbound',
         wmsShipmentData
       );
-      
+
       if (!wmsResult.success) {
         return {
           success: false,
           errorMessage: wmsResult.errorMessage || 'WMS 系统创建发货单失败',
         };
       }
-      
+
       // 4. 更新本地订单状态
       const updateResult = await this.updateLocalOrderStatus(
         request.orderId,
@@ -228,7 +228,7 @@ export class WmsShipmentService {
         console.error('更新发货跟踪失败:', updateError.message);
         return false;
       }
-      
+
       // 2. 更新关联的兑换订单状态
       await this.updateRelatedExchangeOrderStatus(
         trackingData.wmsOrderId,
@@ -258,7 +258,7 @@ export class WmsShipmentService {
         console.error('WMS 回调签名验证失败');
         return false;
       }
-      
+
       // 处理不同的回调事件类型
       switch (callbackData.eventType) {
         case 'ORDER_CREATED':

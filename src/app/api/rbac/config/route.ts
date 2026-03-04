@@ -16,7 +16,9 @@ export async function GET() {
     return NextResponse.json(rbacConfig);
   } catch (error) {
     console.error('璇诲彇 RBAC 閰嶇疆澶辫触:', error);
-    return NextResponse.json({ error: '鏃犳硶鍔犺浇 RBAC 閰嶇疆' }, { status: 500 });
+    return NextResponse.json(
+      { error: '鏃犳硶鍔犺浇 RBAC 閰嶇疆' },
+      { status: 500 }
+    );
   }
 }
-

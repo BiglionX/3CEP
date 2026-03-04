@@ -49,6 +49,7 @@ backups/migrations/    # 空备份目录
 ```
 
 **验收标准**:
+
 - [ ] 所有空目录已删除
 - [ ] Git 状态正常
 - [ ] 项目能正常启动
@@ -75,6 +76,7 @@ Remove-Item -Path ".\test-n8n-iframe.html" -Force
 ```
 
 **验收标准**:
+
 - [ ] 根目录无 0KB 文件
 - [ ] Git diff 正常
 - [ ] 不影响任何功能
@@ -130,6 +132,7 @@ Remove-Item -Path ".\src\middleware" -Recurse -Force
 ```
 
 **导入路径更新示例**:
+
 ```typescript
 // Before
 import { authMiddleware } from '@/middleware/auth.middleware';
@@ -139,6 +142,7 @@ import { authMiddleware } from '@/tech/middleware/auth.middleware';
 ```
 
 **验收标准**:
+
 - [ ] 所有文件已移动
 - [ ] 导入路径已更新
 - [ ] TypeScript 编译通过
@@ -167,6 +171,7 @@ Remove-Item -Path ".\src\utils" -Recurse -Force
 ```
 
 **验收标准**:
+
 - [ ] utils 已合并到 tech/utils/
 - [ ] 所有导入已更新
 - [ ] 编译通过
@@ -192,6 +197,7 @@ Remove-Item -Path ".\src\controllers" -Recurse -Force
 ```
 
 **验收标准**:
+
 - [ ] controllers 已移动到 tech/api/controllers/
 - [ ] 导入路径已更新
 
@@ -216,6 +222,7 @@ Remove-Item -Path ".\src\models" -Recurse -Force
 ```
 
 **验收标准**:
+
 - [ ] models 已移动到 tech/database/models/
 - [ ] 导入路径已更新
 
@@ -242,6 +249,7 @@ if (Test-Path ".\src\modules\data-center") {
 ```
 
 **验收标准**:
+
 - [ ] data-center 已在 modules/下
 - [ ] 导入路径已更新
 - [ ] 功能正常
@@ -261,7 +269,7 @@ if ($config.moduleStructure.businessModules.name -contains "fcx-alliance") {
     if (Test-Path ".\src\fcx-system") {
         Rename-Item -Path ".\src\fcx-system" -NewName "fcx-alliance" -Force
     }
-    
+
     # 更新导入路径
     # 全局搜索：@/fcx-system/
     # 替换为：@/modules/fcx-alliance/
@@ -269,6 +277,7 @@ if ($config.moduleStructure.businessModules.name -contains "fcx-alliance") {
 ```
 
 **验收标准**:
+
 - [ ] 目录名与配置一致
 - [ ] 导入路径已更新
 
@@ -288,7 +297,7 @@ if (Test-Path ".\src\b2b-procurement-agent") {
 if (Test-Path ".\src\test-agent") {
     # 选项 A: 删除 (如果无用)
     # Remove-Item -Path ".\src\test-agent" -Recurse -Force
-    
+
     # 选项 B: 移动到 tests/
     New-Item -ItemType Directory -Path ".\tests\agents" -Force
     Move-Item -Path ".\src\test-agent" -Destination ".\tests\agents\" -Force
@@ -296,6 +305,7 @@ if (Test-Path ".\src\test-agent") {
 ```
 
 **验收标准**:
+
 - [ ] b2b-procurement-agent 已合并
 - [ ] test-agent 已处理
 
@@ -313,12 +323,12 @@ if (Test-Path ".\src\test-agent") {
     "businessModules": [
       {
         "name": "data-center",
-        "path": "src/modules/data-center",  // ✅ 确认路径正确
+        "path": "src/modules/data-center" // ✅ 确认路径正确
         // ... 其他配置
       },
       {
-        "name": "fcx-alliance",             // ✅ 名称统一
-        "path": "src/modules/fcx-alliance",
+        "name": "fcx-alliance", // ✅ 名称统一
+        "path": "src/modules/fcx-alliance"
         // ... 其他配置
       }
     ]
@@ -327,6 +337,7 @@ if (Test-Path ".\src\test-agent") {
 ```
 
 **操作**:
+
 1. 打开 `project-structure-config.json`
 2. 核对每个模块的 path 是否与实际目录一致
 3. 更新不一致的路径
@@ -341,7 +352,7 @@ if (Test-Path ".\src\test-agent") {
     "paths": {
       "@/modules/*": ["./src/modules/*"],
       "@/tech/*": ["./src/tech/*"],
-      "@/data-center/*": ["./src/modules/data-center/*"],  // ✅ 更新
+      "@/data-center/*": ["./src/modules/data-center/*"], // ✅ 更新
       "@/fcx-alliance/*": ["./src/modules/fcx-alliance/*"] // ✅ 更新
     }
   }
@@ -365,6 +376,7 @@ npx tsc --noEmit
 ```
 
 **验收标准**:
+
 - [ ] 无编译错误
 - [ ] 无类型错误
 
@@ -385,6 +397,7 @@ npm run test:repair-shop
 ```
 
 **验收标准**:
+
 - [ ] 所有测试通过
 - [ ] 覆盖率不下降
 
@@ -393,6 +406,7 @@ npm run test:repair-shop
 #### Step 5.3: 手动测试关键功能
 
 **测试清单**:
+
 - [ ] 登录注册功能
 - [ ] 维修服务流程
 - [ ] 配件商城浏览
@@ -413,6 +427,7 @@ npm run test:perf
 ```
 
 **验收标准**:
+
 - [ ] 性能指标无明显下降
 - [ ] 加载时间无明显增加
 
@@ -469,14 +484,14 @@ npm run test:perf
 
 ## 🚀 执行时间规划
 
-| 阶段 | 任务 | 预计时间 | 负责人 |
-|------|------|---------|--------|
-| Day 1 上午 | Task 1: 清理空目录 | 0.5 天 | 前端团队 |
-| Day 1 下午 | Task 2.1-2.2: 合并 middleware/utils | 0.5 天 | 前端团队 |
-| Day 2 上午 | Task 2.3-2.5: 合并 controllers/models | 0.5 天 | 前端团队 |
-| Day 2 下午 | Task 3: 业务模块归类 | 0.5 天 | 前端团队 |
-| Day 3 上午 | Task 4: 更新配置文件 | 0.5 天 | 技术负责人 |
-| Day 3 下午 - Day 5 | Task 5: 全面测试验证 | 1.5-2 天 | 测试团队 |
+| 阶段               | 任务                                  | 预计时间 | 负责人     |
+| ------------------ | ------------------------------------- | -------- | ---------- |
+| Day 1 上午         | Task 1: 清理空目录                    | 0.5 天   | 前端团队   |
+| Day 1 下午         | Task 2.1-2.2: 合并 middleware/utils   | 0.5 天   | 前端团队   |
+| Day 2 上午         | Task 2.3-2.5: 合并 controllers/models | 0.5 天   | 前端团队   |
+| Day 2 下午         | Task 3: 业务模块归类                  | 0.5 天   | 前端团队   |
+| Day 3 上午         | Task 4: 更新配置文件                  | 0.5 天   | 技术负责人 |
+| Day 3 下午 - Day 5 | Task 5: 全面测试验证                  | 1.5-2 天 | 测试团队   |
 
 ---
 

@@ -21,6 +21,7 @@ import {
   Shield,
   Award,
   TrendingUp,
+  RefreshCw,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -111,7 +112,7 @@ const ContentPreview: React.FC<{
 
         <div className="flex items-center text-xs text-gray-500 pt-2 border-t">
           <User className="w-3 h-3 mr-1" />
-          作? {content.authorId.substring(0, 8)}
+          作者 {content.authorId.substring(0, 8)}
           <Clock className="w-3 h-3 ml-3 mr-1" />
           {new Date(content.submittedAt).toLocaleString()}
         </div>
@@ -178,7 +179,7 @@ const AutoReviewResult: React.FC<{ result: ModerationResult }> = ({
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">置信?/span>
+            <span className="text-sm text-gray-600">置信度</span>
             <span className="text-sm font-medium">
               {(result.confidence * 100).toFixed(1)}%
             </span>
@@ -194,7 +195,7 @@ const AutoReviewResult: React.FC<{ result: ModerationResult }> = ({
           {result.issues.length > 0 && (
             <div>
               <div className="text-sm font-medium text-gray-900 mb-2">
-                检测到的问?
+                检测到的问题
               </div>
               <div className="space-y-2">
                 {result.issues.map((issue, index) => (
@@ -313,24 +314,26 @@ export default function ManualReviewTool() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 30000); // 30秒刷新一?    return () => clearInterval(interval);
+    const interval = setInterval(loadData, 30000); // 30 秒刷新一次
+    return () => clearInterval(interval);
   }, []);
 
   const loadData = async () => {
     try {
       setLoading(true);
 
-      // 模拟获取待审核任?      const mockTasks: ReviewTask[] = [
+      // 模拟获取待审核任务
+      const mockTasks: ReviewTask[] = [
         {
           id: 'task_1',
           content: {
             id: 'content_1',
             type: 'text',
             content:
-              '这是一个关于人工智能发展的深度分析文章，探讨了AI技术在各个领域的应用前?..',
-            title: 'AI技术发展趋势分?,
-            description: '专业级AI技术分析文?,
-            tags: ['人工智能', '技术分?, '未来发展'],
+              '这是一个关于人工智能发展的深度分析文章，探讨了 AI 技术在各个领域的应用前景...',
+            title: 'AI 技术发展趋势分析',
+            description: '专业级 AI 技术分析文章',
+            tags: ['人工智能', '技术分析', '未来发展'],
             authorId: 'user_abc123',
             submittedAt: Date.now() - 3600000,
           },
@@ -343,7 +346,7 @@ export default function ManualReviewTool() {
             issues: [
               {
                 type: 'sensitive_topic',
-                description: '涉及敏感技术话题讨?,
+                description: '涉及敏感技术话题讨论',
                 severity: 'medium',
                 confidence: 0.8,
               },
@@ -389,12 +392,13 @@ export default function ManualReviewTool() {
         },
       ];
 
-      // 模拟审核员数?      const mockReviewers: Reviewer[] = [
+      // 模拟审核员数据
+      const mockReviewers: Reviewer[] = [
         {
           id: 'rev_1',
           name: '张审核员',
           level: 'senior',
-          specialization: ['技术内?, '专业文章'],
+          specialization: ['技术内容', '专业文章'],
           performance: {
             accuracy: 0.95,
             speed: 0.88,
@@ -432,7 +436,8 @@ export default function ManualReviewTool() {
     decision: 'approve' | 'reject' | 'modify',
     notes: string
   ) => {
-    // 更新任务状?    setTasks(prev =>
+    // 更新任务状态
+    setTasks(prev =>
       prev.map(task =>
         task.id === taskId
           ? {
@@ -447,10 +452,12 @@ export default function ManualReviewTool() {
     );
 
     setSelectedTask(null);
-
-    // 实际应用中会调用API保存审核结果
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`Task ${taskId} decided: ${decision}`, { notes })};
-
+  
+    // 实际应用中会调用 API 保存审核结果
+    // TODO: 移除调试日志
+    console.log(`Task ${taskId} decided: ${decision}`, { notes });
+  };
+  
   const filteredTasks = tasks.filter(task => {
     const matchesSearch =
       task.content.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -497,7 +504,7 @@ export default function ManualReviewTool() {
               <Eye className="w-8 h-8 mr-3 text-blue-600" />
               人工审核工具
             </h1>
-            <p className="mt-2 text-gray-600">专业内容审核和质量把控平?/p>
+            <p className="mt-2 text-gray-600">专业内容审核和质量把控平台</p>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -508,7 +515,8 @@ export default function ManualReviewTool() {
                 onCheckedChange={setShowCompleted}
               />
               <Label htmlFor="show-completed" className="text-sm text-gray-600">
-                显示已完?              </Label>
+                显示已完成
+              </Label>
             </div>
 
             <Button variant="outline" onClick={loadData}>
@@ -527,7 +535,7 @@ export default function ManualReviewTool() {
                   <Eye className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">待审?/p>
+                  <p className="text-sm text-gray-600">待审核</p>
                   <p className="text-xl font-bold text-blue-600">
                     {tasks.filter(t => t.status === 'pending').length}
                   </p>
@@ -543,7 +551,7 @@ export default function ManualReviewTool() {
                   <Clock className="w-5 h-5 text-yellow-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">审核?/p>
+                  <p className="text-sm text-gray-600">审核中</p>
                   <p className="text-xl font-bold text-yellow-600">
                     {tasks.filter(t => t.status === 'reviewing').length}
                   </p>
@@ -559,7 +567,7 @@ export default function ManualReviewTool() {
                   <CheckCircle className="w-5 h-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">已完?/p>
+                  <p className="text-sm text-gray-600">已完成</p>
                   <p className="text-xl font-bold text-green-600">
                     {tasks.filter(t => t.status === 'completed').length}
                   </p>
@@ -575,7 +583,7 @@ export default function ManualReviewTool() {
                   <Award className="w-5 h-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">审核?/p>
+                  <p className="text-sm text-gray-600">审核员</p>
                   <p className="text-xl font-bold text-purple-600">
                     {reviewers.length}
                   </p>
@@ -597,10 +605,11 @@ export default function ManualReviewTool() {
                   审核任务列表
                 </span>
                 <span className="text-sm text-gray-500">
-                  {filteredTasks.length} 个任?                </span>
+                  {filteredTasks.length} 个任务
+                </span>
               </CardTitle>
 
-              {/* 搜索和筛?*/}
+              {/* 搜索和筛选 */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -614,19 +623,19 @@ export default function ManualReviewTool() {
 
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger>
-                    <SelectValue placeholder="状态筛? />
+                    <SelectValue placeholder="状态筛选" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">所有状?/SelectItem>
-                    <SelectItem value="pending">待审?/SelectItem>
-                    <SelectItem value="reviewing">审核?/SelectItem>
-                    <SelectItem value="completed">已完?/SelectItem>
+                    <SelectItem value="all">所有状态</SelectItem>
+                    <SelectItem value="pending">待审核</SelectItem>
+                    <SelectItem value="reviewing">审核中</SelectItem>
+                    <SelectItem value="completed">已完成</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select>
                   <SelectTrigger>
-                    <SelectValue placeholder="优先? />
+                    <SelectValue placeholder="优先级" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">所有优先级</SelectItem>
@@ -660,14 +669,15 @@ export default function ManualReviewTool() {
                                     : 'secondary'
                               }
                             >
-                              {priority.toUpperCase()} 优先?                            </Badge>
+                              {priority.toUpperCase()} 优先级
+                            </Badge>
 
                             <Badge variant="outline" className="text-xs">
                               {task.status === 'pending'
-                                ? '待审?
+                                ? '待审核'
                                 : task.status === 'reviewing'
-                                  ? '审核?
-                                  : '已完?}
+                                  ? '审核中'
+                                  : '已完成'}
                             </Badge>
 
                             {task.autoResult && (
@@ -678,7 +688,7 @@ export default function ManualReviewTool() {
                           </div>
 
                           <h3 className="font-medium text-gray-900 mb-1">
-                            {task.content.title || '无标题内?}
+                            {task.content.title || '无标题内容'}
                           </h3>
 
                           <p className="text-sm text-gray-600 line-clamp-2 mb-3">
@@ -710,7 +720,7 @@ export default function ManualReviewTool() {
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
                       暂无审核任务
                     </h3>
-                    <p className="text-gray-600">所有任务都已处理完?/p>
+                    <p className="text-gray-600">所有任务都已处理完成</p>
                   </div>
                 )}
               </div>
@@ -740,19 +750,22 @@ export default function ManualReviewTool() {
               <CardContent className="p-8 text-center">
                 <Eye className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  选择任务开始审?                </h3>
+                  选择任务开始审核
+                </h3>
                 <p className="text-gray-600">
-                  从左侧列表中选择一个任务进行详细审?                </p>
+                  从左侧列表中选择一个任务进行详细审核
+                </p>
               </CardContent>
             </Card>
           )}
 
-          {/* 审核员信?*/}
+          {/* 审核员信息 */}
           <Card className="mt-6">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <User className="w-5 h-5 mr-2" />
-                在线审核?              </CardTitle>
+                在线审核员
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -766,15 +779,16 @@ export default function ManualReviewTool() {
                         {reviewer.name}
                       </div>
                       <div className="text-xs text-gray-600 capitalize">
-                        {reviewer.level} �?{reviewer.specialization.join(', ')}
+                        {reviewer.level} - {reviewer.specialization.join(', ')}
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-gray-600">
-                        准确?{reviewer.performance.accuracy * 100}%
+                        准确率 {(reviewer.performance.accuracy * 100).toFixed(0)}%
                       </div>
                       <div className="text-xs text-gray-600">
-                        处理 {reviewer.performance.workload} �?                      </div>
+                        处理 {reviewer.performance.workload} 个任务
+                      </div>
                     </div>
                   </div>
                 ))}

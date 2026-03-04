@@ -56,7 +56,7 @@ interface Device {
   device_id: string;
   model: string;
   brand: string;
-  category: '手机' | '平板' | '笔记? | '其他';
+  category: '手机' | '平板' | '笔记本' | '其他';
   os_version: string;
   serial_number: string;
   imei: string | null;
@@ -164,7 +164,7 @@ export default function DeviceManager() {
           owner_id: 'user_001',
           owner_name: '张三',
           shop_id: 'shop_001',
-          shop_name: '苹果官方维修?,
+          shop_name: '苹果官方维修店',
           last_seen: '2024-01-20T16:30:00Z',
           battery_level: 85,
           storage_used: 45,
@@ -307,7 +307,7 @@ export default function DeviceManager() {
   };
 
   const handleDeleteGroup = async (groupId: string) => {
-    if (!confirm('确定要删除这个分组吗?)) return;
+    if (!confirm('确定要删除这个分组吗？')) return;
 
     try {
       const response = await fetch(`/api/admin/devices/groups/${groupId}`, {
@@ -367,7 +367,7 @@ export default function DeviceManager() {
   };
 
   const handleDeleteTag = async (tagId: string) => {
-    if (!confirm('确定要删除这个标签吗?)) return;
+    if (!confirm('确定要删除这个标签吗？')) return;
 
     try {
       const response = await fetch(`/api/admin/devices/tags/${tagId}`, {
@@ -444,7 +444,7 @@ export default function DeviceManager() {
       },
       retired: {
         variant: 'destructive' as const,
-        text: '已退?,
+        text: '已退役',
         color: 'bg-red-100 text-red-800',
       },
     };
@@ -465,7 +465,7 @@ export default function DeviceManager() {
   const getCategoryOptions = () => [
     { value: '手机', label: '手机' },
     { value: '平板', label: '平板' },
-    { value: '笔记?, label: '笔记? },
+    { value: '笔记本', label: '笔记本' },
     { value: '其他', label: '其他' },
   ];
 
@@ -518,8 +518,8 @@ export default function DeviceManager() {
   const getStatusOptions = () => [
     { value: 'online', label: '在线' },
     { value: 'offline', label: '离线' },
-    { value: 'maintenance', label: '维修? },
-    { value: 'retired', label: '已退? },
+    { value: 'maintenance', label: '维修中' },
+    { value: 'retired', label: '已退役' },
   ];
 
   // 品牌选项
@@ -542,12 +542,12 @@ export default function DeviceManager() {
     { key: 'category', title: '分类', width: '80px' },
     { key: 'group', title: '分组', width: '120px' },
     { key: 'tags', title: '标签', width: '150px' },
-    { key: 'owner', title: '所有?, width: '100px' },
-    { key: 'shop', title: '所属店?, width: '120px' },
-    { key: 'status', title: '状?, width: '100px' },
+    { key: 'owner', title: '所有者', width: '100px' },
+    { key: 'shop', title: '所属店铺', width: '120px' },
+    { key: 'status', title: '状态', width: '100px' },
     { key: 'battery', title: '电量', width: '80px' },
     { key: 'storage', title: '存储', width: '100px' },
-    { key: 'last_seen', title: '最后在?, width: '160px' },
+    { key: 'last_seen', title: '最后在线', width: '160px' },
     { key: 'actions', title: '操作', width: '150px' },
   ];
 

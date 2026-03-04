@@ -72,12 +72,12 @@ export default function AdminDemoPage() {
 
   return (
     <div className="space-y-6">
-      {/* 面包屑导?*/}
+      {/* 面包屑导航 */}
       <div className="bg-card border rounded-lg p-4">
         <BreadcrumbNav />
       </div>
 
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按钮 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">用户管理</h1>
@@ -103,7 +103,7 @@ export default function AdminDemoPage() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>添加新用户</DialogTitle>
-                <DialogDescription>请输入新用户的信？</DialogDescription>
+                <DialogDescription>请输入新用户的信息</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div>
@@ -143,7 +143,7 @@ export default function AdminDemoPage() {
         </div>
       </div>
 
-      {/* 动态菜单演?*/}
+      {/* 动态菜单演示 */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1">
           <div className="bg-card border rounded-lg p-4">
@@ -189,7 +189,7 @@ export default function AdminDemoPage() {
                             : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {user.status === 'active' ? '活跃' : '非活?}
+                        {user.status === 'active' ? '活跃' : '非活跃'}
                       </span>
                     </TableCell>
                     <TableCell>{user.createdAt}</TableCell>
@@ -211,7 +211,7 @@ export default function AdminDemoPage() {
         </div>
       </div>
 
-      {/* 组件展示?*/}
+      {/* 组件展示演示 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-card border rounded-lg p-6">
           <h3 className="font-medium mb-4">按钮变体</h3>
@@ -227,9 +227,9 @@ export default function AdminDemoPage() {
         <div className="bg-card border rounded-lg p-6">
           <h3 className="font-medium mb-4">按钮尺寸</h3>
           <div className="space-y-3">
-            <Button size="sm">小按?/Button>
+            <Button size="sm">小按钮</Button>
             <Button>默认按钮</Button>
-            <Button size="lg">大按?/Button>
+            <Button size="lg">大按钮</Button>
             <Button size="icon">
               <Plus className="w-4 h-4" />
             </Button>
@@ -237,11 +237,11 @@ export default function AdminDemoPage() {
         </div>
 
         <div className="bg-card border rounded-lg p-6">
-          <h3 className="font-medium mb-4">输入?/h3>
+          <h3 className="font-medium mb-4">输入框</h3>
           <div className="space-y-3">
-            <Input placeholder="默认输入? />
-            <Input placeholder="禁用状? disabled />
-            <Input type="password" placeholder="密码输入? />
+            <Input placeholder="默认输入框" />
+            <Input placeholder="禁用状态" disabled />
+            <Input type="password" placeholder="密码输入框" />
           </div>
         </div>
       </div>

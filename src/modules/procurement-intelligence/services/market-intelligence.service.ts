@@ -1,6 +1,7 @@
 ﻿import { createClient } from '@supabase/supabase-js';
 
-// 初始?Supabase 客户?const supabase = createClient(
+// 初始化 Supabase 客户端
+const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -74,7 +75,9 @@ interface IntelligenceConfig {
   analysis_parameters: {
     lookback_period: number; // 天数
     forecast_horizon: number; // 天数
-    volatility_window: number; // 计算波动率的窗口?    correlation_threshold: number; // 相关性阈?  };
+    volatility_window: number; // 计算波动率的窗口
+    correlation_threshold: number; // 相关性阈值
+  };
   reporting: {
     frequency: 'daily' | 'weekly' | 'monthly';
     include_forecasts: boolean;
@@ -121,7 +124,9 @@ export class MarketIntelligenceService {
     regions?: string[]
   ): Promise<MarketIntelligenceReport> {
     try {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('📊 开始生成市场情报报?..')const reportId = this.generateReportId();
+      // TODO: 移除调试日志
+      console.log('📊 开始生成市场情报报告...');
+      const reportId = this.generateReportId();
       const currentTime = new Date().toISOString();
       const coveragePeriod = this.calculateCoveragePeriod();
 
@@ -164,9 +169,11 @@ export class MarketIntelligenceService {
       // 8. 存储报告
       await this.storeMarketReport(report);
 
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?市场情报报告生成完成: ${reportId}`)return report;
+      // TODO: 移除调试日志
+      console.log(`✅ 市场情报报告生成完成：${reportId}`);
+      return report;
     } catch (error) {
-      console.error('�?市场情报报告生成失败:', error);
+      console.error('❌ 市场情报报告生成失败:', error);
       throw error;
     }
   }
@@ -178,7 +185,10 @@ export class MarketIntelligenceService {
     commodities?: string[],
     regions?: string[]
   ): Promise<MarketDataPoint[]> {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔍 收集市场价格数据...')// 查询国际价格指数?    let query = supabase
+    // TODO: 移除调试日志
+    // console.log('🔍 收集市场价格数据...');
+    // 查询国际价格指数
+    let query = supabase
       .from('international_price_indices')
       .select('*')
       .order('recorded_at', { ascending: false })
@@ -200,7 +210,8 @@ export class MarketIntelligenceService {
       throw new Error(`收集市场数据失败: ${error.message}`);
     }
 
-    // 转换为标准格?    const marketData: MarketDataPoint[] = data.map(item => ({
+    // 转换为标准格式
+    const marketData: MarketDataPoint[] = data.map(item => ({
       commodity: item.commodity,
       region: item.region,
       price: item.price,
@@ -212,26 +223,33 @@ export class MarketIntelligenceService {
       volume: item.trading_volume,
     }));
 
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📋 收集?${marketData.length} 条市场价格数据`)return marketData;
+    // TODO: 移除调试日志
+    // console.log(`📋 收集了 ${marketData.length} 条市场价格数据`);
+    return marketData;
   }
 
   /**
    * 计算价格指数
    */
   private calculatePriceIndices(marketData: MarketDataPoint[]): PriceIndex[] {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('📈 计算价格指数...')// 按商品分?    const groupedByCommodity = this.groupByCommodity(marketData);
+    // TODO: 移除调试日志
+    // console.log('📈 计算价格指数...');
+    // 按商品分
+    const groupedByCommodity = this.groupByCommodity(marketData);
 
     const priceIndices: PriceIndex[] = [];
 
     for (const [commodity, dataPoints] of Object.entries(groupedByCommodity)) {
       if (dataPoints.length < 2) continue;
 
-      // 按时间排?      const sortedData = [...dataPoints].sort(
+      // 按时间排
+      const sortedData = [...dataPoints].sort(
         (a, b) =>
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
       );
 
-      // 获取基准价格（最早的）和当前价格（最新的?      const basePrice = sortedData[0].price;
+      // 获取基准价格（最早的）和当前价格（最新的）
+      const basePrice = sortedData[0].price;
       const currentPrice = sortedData[sortedData.length - 1].price;
 
       // 计算价格变化
@@ -239,7 +257,8 @@ export class MarketIntelligenceService {
       const priceChangePercent =
         basePrice > 0 ? (priceChange / basePrice) * 100 : 0;
 
-      // 计算波动?      const volatilityIndex = this.calculateVolatilityIndex(
+      // 计算波动
+      const volatilityIndex = this.calculateVolatilityIndex(
         sortedData.map(d => d.price)
       );
 
@@ -258,7 +277,9 @@ export class MarketIntelligenceService {
       });
     }
 
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📊 计算完成 ${priceIndices.length} 个价格指数`)return priceIndices;
+    // TODO: 移除调试日志
+    // console.log(`📊 计算完成 ${priceIndices.length} 个价格指数`);
+    return priceIndices;
   }
 
   /**
@@ -267,14 +288,18 @@ export class MarketIntelligenceService {
   private async analyzeSupplyDemand(
     marketData: MarketDataPoint[]
   ): Promise<SupplyDemandAnalysis[]> {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('⚖️ 分析供需状况...')const analyses: SupplyDemandAnalysis[] = [];
+    // TODO: 移除调试日志
+    // console.log('⚖️ 分析供需状况...');
+    const analyses: SupplyDemandAnalysis[] = [];
     const groupedByCommodity = this.groupByCommodity(marketData);
 
     for (const [commodity, dataPoints] of Object.entries(groupedByCommodity)) {
       // 分析价格趋势判断供需
-      const recentData = dataPoints.slice(-30); // 最?0天数?      const priceTrend = this.calculatePriceTrend(recentData.map(d => d.price));
+      const recentData = dataPoints.slice(-30); // 最近30天数
+      const priceTrend = this.calculatePriceTrend(recentData.map(d => d.price));
 
-      // 分析成交量趋?      const volumeTrend = await this.analyzeVolumeTrend(commodity);
+      // 分析成交量趋势
+      const volumeTrend = await this.analyzeVolumeTrend(commodity);
 
       // 综合判断供需状况
       const supplyDemandAnalysis = this.determineSupplyDemandStatus(
@@ -293,13 +318,16 @@ export class MarketIntelligenceService {
    * 评估市场情绪
    */
   private async assessMarketSentiment(commodities?: string[]): Promise<any> {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('💭 评估市场情绪...')// 1. 新闻情感分析
+    // TODO: 移除调试日志
+    // console.log('💭 评估市场情绪...');
+    // 1. 新闻情感分析
     const newsSentiment = await this.analyzeNewsSentiment(commodities);
 
     // 2. 社交媒体情绪
     const socialSentiment = await this.analyzeSocialMediaSentiment(commodities);
 
-    // 3. 技术指标分?    const technicalIndicators =
+    // 3. 技术指标分析
+    const technicalIndicators =
       await this.analyzeTechnicalIndicators(commodities);
 
     // 综合情绪得分
@@ -325,7 +353,9 @@ export class MarketIntelligenceService {
    * 生成区域分析
    */
   private generateRegionalAnalysis(marketData: MarketDataPoint[]): any[] {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🌍 生成区域分析...')const groupedByRegion = this.groupByRegion(marketData);
+    // TODO: 移除调试日志
+    // console.log('🌍 生成区域分析...');
+    const groupedByRegion = this.groupByRegion(marketData);
     const regionalAnalysis: any[] = [];
 
     for (const [region, dataPoints] of Object.entries(groupedByRegion)) {
@@ -388,7 +418,9 @@ export class MarketIntelligenceService {
    * 分析商品焦点
    */
   private analyzeCommoditySpotlight(marketData: MarketDataPoint[]): any[] {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('�?分析商品焦点...')const commoditySpotlight: any[] = [];
+    // TODO: 移除调试日志
+    // console.log('🔍 分析商品焦点...');
+    const commoditySpotlight: any[] = [];
     const groupedByCommodity = this.groupByCommodity(marketData);
 
     // 找出最具波动性的商品
@@ -399,14 +431,15 @@ export class MarketIntelligenceService {
         return { commodity, volatility };
       })
       .sort((a, b) => b.volatility - a.volatility)
-      .slice(0, 5); // 取前5个最波动的商?
+      .slice(0, 5); // 取前5个最波动的商品
     for (const { commodity, volatility } of volatilityRanking) {
       const analysis = this.generateCommodityAnalysis(commodity, marketData);
       commoditySpotlight.push({
         commodity,
         analysis: analysis.description,
         recommendation: analysis.recommendation,
-        confidence_level: Math.min(1, volatility / 20), // 简化的置信度计?      });
+        confidence_level: Math.min(1, volatility / 20), // 简化的置信度计算
+      });
     }
 
     return commoditySpotlight;
@@ -420,7 +453,9 @@ export class MarketIntelligenceService {
     supplyDemandAnalyses: SupplyDemandAnalysis[],
     sentiment: any
   ): any {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🔮 生成市场展望...')// 1. 综合趋势分析
+    // TODO: 移除调试日志
+    // console.log('🔮 生成市场展望...');
+    // 1. 综合趋势分析
     const positiveTrends = priceIndices.filter(
       idx => idx.trend === 'up'
     ).length;
@@ -548,12 +583,14 @@ export class MarketIntelligenceService {
   private calculateVolatilityIndex(prices: number[]): number {
     if (prices.length < 2) return 0;
 
-    // 计算收益?    const returns: number[] = [];
+    // 计算收益
+    const returns: number[] = [];
     for (let i = 1; i < prices.length; i++) {
       returns.push((prices[i] - prices[i - 1]) / prices[i - 1]);
     }
 
-    // 计算标准?    const mean = returns.reduce((sum, r) => sum + r, 0) / returns.length;
+    // 计算标准差
+    const mean = returns.reduce((sum, r) => sum + r, 0) / returns.length;
     const variance =
       returns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) /
       (returns.length - 1);
@@ -578,8 +615,9 @@ export class MarketIntelligenceService {
   }
 
   private async analyzeVolumeTrend(commodity: string): Promise<number> {
-    // 模拟成交量趋势分?    await new Promise(resolve => setTimeout(resolve, 100));
-    return 0.5 + (Math.random() - 0.5) * 0.4; // -0.2 �?0.8 之间
+    // 模拟成交量趋势分析
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return 0.5 + (Math.random() - 0.5) * 0.4; // -0.2 ~ 0.8 之间
   }
 
   private determineSupplyDemandStatus(
@@ -616,7 +654,7 @@ export class MarketIntelligenceService {
         demandLevel,
         priceTrend
       ),
-      forecast_period: '30�?,
+      forecast_period: '30天',
     };
   }
 
@@ -628,9 +666,9 @@ export class MarketIntelligenceService {
     const insights: string[] = [];
 
     if (supplyLevel === 'shortage') {
-      insights.push('供应紧张，可能出现缺货风?);
+      insights.push('供应紧张，可能出现缺货风险');
     } else if (supplyLevel === 'surplus') {
-      insights.push('供应充足，价格下行压力较?);
+      insights.push('供应充足，价格下行压力较大');
     }
 
     if (demandLevel === 'strong') {
@@ -641,7 +679,7 @@ export class MarketIntelligenceService {
 
     if (Math.abs(priceTrend) > 10) {
       insights.push(
-        `价格波动剧烈?{priceTrend > 0 ? '上涨' : '下跌'}幅度?{Math.abs(priceTrend).toFixed(1)}%`
+        `价格波动剧烈，${priceTrend > 0 ? '上涨' : '下跌'}幅度为${Math.abs(priceTrend).toFixed(1)}%`
       );
     }
 
@@ -652,7 +690,7 @@ export class MarketIntelligenceService {
     // 模拟新闻情感分析
     await new Promise(resolve => setTimeout(resolve, 200));
     return {
-      sentiment_score: (Math.random() - 0.5) * 2, // -1 �?1
+      sentiment_score: (Math.random() - 0.5) * 2, // -1 ~ 1
       positive_news: Math.floor(Math.random() * 10),
       negative_news: Math.floor(Math.random() * 5),
       neutral_news: Math.floor(Math.random() * 8),
@@ -675,7 +713,8 @@ export class MarketIntelligenceService {
   private async analyzeTechnicalIndicators(
     commodities?: string[]
   ): Promise<any> {
-    // 模拟技术指标分?    await new Promise(resolve => setTimeout(resolve, 100));
+    // 模拟技术指标分析
+    await new Promise(resolve => setTimeout(resolve, 100));
     return {
       moving_average: Math.random() > 0.5 ? 'bullish' : 'bearish',
       rsi: 30 + Math.random() * 40, // 30-70
@@ -721,7 +760,7 @@ export class MarketIntelligenceService {
     }
 
     if (technical.rsi > 70 || technical.rsi < 30) {
-      drivers.push('技术指标显示超?超卖');
+      drivers.push('技术指标显示超买或超卖');
     }
 
     return drivers;
@@ -740,7 +779,8 @@ export class MarketIntelligenceService {
     region: string,
     dataPoints: MarketDataPoint[]
   ): number {
-    // 基于交易量和价格变化估算需求压?    const avgVolume =
+    // 基于交易量和价格变化估算需求压力
+    const avgVolume =
       dataPoints.reduce((sum, d) => sum + (d.volume || 0), 0) /
       dataPoints.length;
     return avgVolume > 1000 ? 0.8 : avgVolume > 500 ? 0.6 : 0.4;
@@ -760,10 +800,10 @@ export class MarketIntelligenceService {
     if (supplyPressure > 0.7) conditions.push('供应紧张');
     else if (supplyPressure < 0.3) conditions.push('供应充足');
 
-    if (demandPressure > 0.7) conditions.push('需求旺?);
-    else if (demandPressure < 0.3) conditions.push('需求疲?);
+    if (demandPressure > 0.7) conditions.push('需求旺盛');
+    else if (demandPressure < 0.3) conditions.push('需求疲软');
 
-    return conditions.join('�?);
+    return conditions.join(', ');
   }
 
   private generateCommodityAnalysis(
@@ -783,16 +823,16 @@ export class MarketIntelligenceService {
 
     if (priceTrend > 10) {
       description += '大幅上涨';
-      recommendation = '谨慎追高，关注回调机?;
+      recommendation = '谨慎追高，关注回调机会';
     } else if (priceTrend < -10) {
       description += '大幅下跌';
       recommendation = '可考虑逢低布局';
     } else {
       description += '走势平稳';
-      recommendation = '观望为主，等待明确信?;
+      recommendation = '观望为主，等待明确信号';
     }
 
-    description += `，波动率?{volatility.toFixed(2)}%`;
+    description += `，波动率为${volatility.toFixed(2)}%`;
 
     return { description, recommendation };
   }
@@ -866,7 +906,12 @@ export class MarketIntelligenceService {
 // 导出实例
 export const marketIntelligenceService = new MarketIntelligenceService();
 
-/**\n * API 路由处理器示例\n */*
+/**
+ * API 路由处理器示例
+ */
+/*
+import { NextRequest } from 'next/server';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -900,7 +945,8 @@ export async function GET(request: NextRequest) {
       if (error) throw error;
       return Response.json(data);
     } else {
-      // 获取最新报告列?      const { data, error } = await supabase
+      // 获取最新报告列表
+      const { data, error } = await supabase
         .from('market_intelligence_reports')
         .select('report_id, generated_at, coverage_period_start, coverage_period_end')
         .order('generated_at', { ascending: false })

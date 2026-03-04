@@ -19,7 +19,8 @@ interface BreadcrumbNavProps {
 export function BreadcrumbNav({ className, items }: BreadcrumbNavProps) {
   const pathname = usePathname();
 
-  // 默认根据路径自动生成面包?  const generateDefaultBreadcrumbs = (): BreadcrumbItem[] => {
+  // 默认根据路径自动生成面包屑
+  const generateDefaultBreadcrumbs = (): BreadcrumbItem[] => {
     const pathSegments = pathname.split('/').filter(segment => segment);
 
     if (pathSegments.length === 0) {
@@ -36,7 +37,8 @@ export function BreadcrumbNav({ className, items }: BreadcrumbNavProps) {
       const segment = pathSegments[i];
       currentPath += `/${segment}`;
 
-      // 转换路径段为友好的名?      const displayName = getDisplayName(segment);
+      // 转换路径段为友好的名称
+      const displayName = getDisplayName(segment);
       const isLast = i === pathSegments.length - 1;
 
       breadcrumbs.push({
@@ -51,7 +53,7 @@ export function BreadcrumbNav({ className, items }: BreadcrumbNavProps) {
 
   const getDisplayName = (segment: string): string => {
     const displayNameMap: Record<string, string> = {
-      dashboard: '仪表?,
+      dashboard: '仪表盘',
       users: '用户管理',
       content: '内容管理',
       shops: '店铺管理',

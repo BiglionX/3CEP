@@ -151,12 +151,14 @@ class ResponseTimeOptimizer {
       errorRate: 0, // 暂时设为 0
     }));
 
-    const sortedMetrics = metrics.sort((a, b) => b.avgResponseTime - a.avgResponseTime);
+    const sortedMetrics = metrics.sort(
+      (a, b) => b.avgResponseTime - a.avgResponseTime
+    );
 
     const priorityTasks: any[] = [];
     sortedMetrics.forEach((metric, index) => {
       const priority = index === 0 ? '🔴' : index < 3 ? '🟡' : '🟢';
-      
+
       priorityTasks.push({
         priority,
         endpoint: metric.endpoint,
@@ -204,7 +206,8 @@ class ResponseTimeOptimizer {
     Object.keys(oldMetrics).forEach(key => {
       const oldValue = oldMetrics[key];
       const newValue = newMetrics[key] || 0;
-      const improvement = oldValue > 0 ? ((oldValue - newValue) / oldValue) * 100 : 0;
+      const improvement =
+        oldValue > 0 ? ((oldValue - newValue) / oldValue) * 100 : 0;
 
       comparison[key] = {
         before: oldValue,

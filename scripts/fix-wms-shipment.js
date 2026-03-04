@@ -7,7 +7,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const filePath = path.join(process.cwd(), 'src/tech/utils/lib/warehouse/wms-shipment.service.ts');
+const filePath = path.join(
+  process.cwd(),
+  'src/tech/utils/lib/warehouse/wms-shipment.service.ts'
+);
 
 console.log('🔧 正在修复 wms-shipment.service.ts 文件...\n');
 
@@ -189,13 +192,13 @@ fixes.forEach(({ pattern, replacement }) => {
 });
 
 // 创建备份
-const backupPath = filePath + '.bak2';
+const backupPath = `${filePath}.bak2`;
 fs.writeFileSync(backupPath, fs.readFileSync(filePath));
 
 // 保存修复后的内容
 fs.writeFileSync(filePath, content);
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${'='.repeat(60)}`);
 console.log(`📊 修复完成统计:`);
 console.log(`✅ 共修复：${totalFixes} 处`);
 console.log(`💾 备份文件：${path.basename(backupPath)}`);

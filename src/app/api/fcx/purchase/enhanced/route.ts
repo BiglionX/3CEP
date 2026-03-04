@@ -21,7 +21,10 @@ export async function POST(request: Request) {
     }
 
     if (amountUSD <= 0) {
-      return NextResponse.json({ error: '璐拱閲戦蹇呴』澶т簬0' }, { status: 400 });
+      return NextResponse.json(
+        { error: '璐拱閲戦蹇呴』澶т簬0' },
+        { status: 400 }
+      );
     }
 
     if (amountUSD > 10000) {
@@ -81,7 +84,10 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '20');
 
     if (!userId) {
-      return NextResponse.json({ error: '缂哄皯userId鍙傛暟' }, { status: 400 });
+      return NextResponse.json(
+        { error: '缂哄皯userId鍙傛暟' },
+        { status: 400 }
+      );
     }
 
     const paymentService = new EnhancedPaymentService();
@@ -108,4 +114,3 @@ export async function GET(request: Request) {
     );
   }
 }
-

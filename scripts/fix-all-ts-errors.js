@@ -69,11 +69,14 @@ const commonFixPatterns = [
   { pattern: /大小写变？/g, replacement: '大小写变化' },
   { pattern: /未找到相关内？/g, replacement: '未找到相关内容' },
   { pattern: /您可以尝？/g, replacement: '您可以尝试' },
-  { pattern: /找到.*相关结？/g, replacement: (match) => match.replace('？', '果') },
+  {
+    pattern: /找到.*相关结？/g,
+    replacement: match => match.replace('？', '果'),
+  },
   { pattern: /时间冲突检？/g, replacement: '时间冲突检测' },
   { pattern: /连续时间段预？/g, replacement: '连续时间段预约' },
   { pattern: /预约成？/g, replacement: '预约成功' },
-  
+
   // 类型定义文件中的损坏
   { pattern: /定？/g, replacement: '定义' },
   { pattern: /节？/g, replacement: '节点' },
@@ -92,36 +95,54 @@ const fileSpecificPatterns = {
     { pattern: /dateRange\?: \{/g, replacement: 'dateRange?: {' },
     { pattern: /priceRange\?: \{/g, replacement: 'priceRange?: {' },
     { pattern: /sortBy\?: string;/g, replacement: 'sortBy?: string;' },
-    { pattern: /sortOrder\?: 'asc' \| 'desc';/g, replacement: "sortOrder?: 'asc' | 'desc';" },
+    {
+      pattern: /sortOrder\?: 'asc' \| 'desc';/g,
+      replacement: "sortOrder?: 'asc' | 'desc';",
+    },
     { pattern: /error\?: string;/g, replacement: 'error?: string;' },
-    { pattern: /facets\?: Record<string, any>;/g, replacement: 'facets?: Record<string, any>;' },
-    { pattern: /suggestions\?: SearchSuggestion\[\];/g, replacement: 'suggestions?: SearchSuggestion[];' },
-    { pattern: /loadMore: \(\) => void;/g, replacement: 'loadMore: () => void;' },
-    { pattern: /clearResults: \(\) => void;/g, replacement: 'clearResults: () => void;' },
+    {
+      pattern: /facets\?: Record<string, any>;/g,
+      replacement: 'facets?: Record<string, any>;',
+    },
+    {
+      pattern: /suggestions\?: SearchSuggestion\[\];/g,
+      replacement: 'suggestions?: SearchSuggestion[];',
+    },
+    {
+      pattern: /loadMore: \(\) => void;/g,
+      replacement: 'loadMore: () => void;',
+    },
+    {
+      pattern: /clearResults: \(\) => void;/g,
+      replacement: 'clearResults: () => void;',
+    },
   ],
-  
+
   'src/tech/utils/lib/warehouse/wms-shipment.service.ts': [
     // 修复Supabase 调用
     { pattern: /as any\);/g, replacement: 'as any);' },
-    { pattern: /await supabase\.from\('/g, replacement: "await supabase.from('" },
+    {
+      pattern: /await supabase\.from\('/g,
+      replacement: "await supabase.from('",
+    },
   ],
 };
 
 // 处理单个文件
 function processFile(filePath) {
   const fullPath = path.join(process.cwd(), filePath);
-  
+
   if (!fs.existsSync(fullPath)) {
     console.log(`⚠️  文件不存在：${filePath}`);
     return 0;
   }
-  
+
   console.log(`📄 处理文件：${filePath}`);
-  
+
   let content = fs.readFileSync(fullPath, 'utf8');
   const originalContent = content;
   let fileFixes = 0;
-  
+
   // 应用通用修复模式
   commonFixPatterns.forEach(({ pattern, replacement }) => {
     const matches = content.match(pattern);
@@ -131,7 +152,7 @@ function processFile(filePath) {
       fileFixes += count;
     }
   });
-  
+
   // 应用特定文件修复模式
   if (fileSpecificPatterns[filePath]) {
     fileSpecificPatterns[filePath].forEach(({ pattern, replacement }) => {
@@ -143,13 +164,13 @@ function processFile(filePath) {
       }
     });
   }
-  
+
   // 如果内容有变化，保存文件
   if (content !== originalContent) {
     // 创建备份
-    const backupPath = fullPath + '.bak3';
+    const backupPath = `${fullPath}.bak3`;
     fs.writeFileSync(backupPath, originalContent);
-    
+
     // 保存修复后的内容
     fs.writeFileSync(fullPath, content);
     console.log(`   ✅ 修复 ${fileFixes} 处错误`);
@@ -158,7 +179,7 @@ function processFile(filePath) {
   } else {
     console.log(`   ✓ 无需修复\n`);
   }
-  
+
   return fileFixes;
 }
 
@@ -167,16 +188,16 @@ function main() {
   console.log('📋 待处理文件列表:');
   filesToProcess.forEach(file => console.log(`   - ${file}`));
   console.log('\n');
-  
+
   // 处理每个文件
   filesToProcess.forEach(processFile);
-  
+
   console.log('='.repeat(60));
   console.log(`📊 修复完成统计:`);
   console.log(`✅ 共修复：${totalFixes} 处`);
   console.log(`📁 处理文件：${filesToProcess.length} 个`);
   console.log('='.repeat(60));
-  
+
   console.log('\n🧪 建议验证命令:');
   console.log('   npx tsc --noEmit  # 验证 TypeScript 编译');
   console.log('   npm run dev      # 验证应用运行\n');

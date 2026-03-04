@@ -36,7 +36,7 @@ export class BillingEngine {
       serviceType: 'manual_view',
       costPerUnit: 10,
       unitType: 'per_request',
-      description: '查看说明书费?,
+      description: '查看说明书费用',
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -117,7 +117,7 @@ export class BillingEngine {
     try {
       // 这里应该调用Token账户服务扣除Token
       // 暂时返回模拟结果
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+       - console.log(
         `从账?${accountId} 扣除 ${amount} 个Token，用途：${description}`
       )return Math.random() > 0.05; // 95%成功率模?    } catch (error) {
       console.error('扣除Token失败:', error);
@@ -136,7 +136,7 @@ export class BillingEngine {
     try {
       // 这里应该调用Token账户服务退还Token
       // 暂时返回模拟结果
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(
+       - console.log(
         `向账?${accountId} 退?${amount} 个Token，原因：${reason}`
       )return true;
     } catch (error) {

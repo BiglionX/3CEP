@@ -51,7 +51,10 @@ export async function POST(request: NextRequest) {
 
     // 楠岃瘉蹇呭～瀛楁
     if (!body.company_name) {
-      return NextResponse.json({ error: '鍏徃鍚嶇О涓哄繀濉」' }, { status: 400 });
+      return NextResponse.json(
+        { error: '鍏徃鍚嶇О涓哄繀濉」' },
+        { status: 400 }
+      );
     }
 
     // 鍒涘缓瀹㈡埛
@@ -68,4 +71,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

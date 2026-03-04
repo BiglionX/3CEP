@@ -119,42 +119,48 @@ export class AlertAggregator {
    */
   registerService(name: string, service: NotificationService): void {
     this.services.set(name, service);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?注册通知服务: ${name}`)}
+    console.log(`✅ 注册通知服务：${name}`);
+  }
 
   /**
    * 注销通知服务
    */
   unregisterService(name: string): void {
     this.services.delete(name);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?注销通知服务: ${name}`)}
+    console.log(`✅ 注销通知服务：${name}`);
+  }
 
   /**
    * 添加告警规则
    */
   addRule(rule: AlertRule): void {
     this.rules.set(rule.id, rule);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?添加告警规则: ${rule.name}`)}
+    console.log(`✅ 添加告警规则：${rule.name}`);
+  }
 
   /**
    * 移除告警规则
    */
   removeRule(ruleId: string): void {
     this.rules.delete(ruleId);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?移除告警规则: ${ruleId}`)}
+    console.log(`�?移除告警规则: ${ruleId}`);
+  }
 
   /**
    * 添加抑制规则
    */
   addSuppressionRule(rule: SuppressionRule): void {
     this.suppressionRules.set(rule.id, rule);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?添加抑制规则: ${rule.name}`)}
+    console.log(`�?添加抑制规则: ${rule.name}`);
+  }
 
   /**
    * 移除抑制规则
    */
   removeSuppressionRule(ruleId: string): void {
     this.suppressionRules.delete(ruleId);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?移除抑制规则: ${ruleId}`)}
+    console.log(`�?移除抑制规则: ${ruleId}`);
+  }
 
   /**
    * 发送告?   */
@@ -168,17 +174,17 @@ export class AlertAggregator {
     this.updateStatistics(event);
 
     // 检查抑制规?    if (this.config.enableSuppression && this.isSuppressed(event)) {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🔇 告警被抑? ${event.title}`)this.statistics.suppressedAlerts++;
+       this.statistics.suppressedAlerts++;
       return;
     }
 
     // 检查去?    if (this.isDuplicate(event)) {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`🔄 告警去重: ${event.title}`)return;
+       - console.log(`🔄 告警去重: ${event.title}`)return;
     }
 
     // 检查冷却期
     if (this.isInCooldown(event)) {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`❄️  告警冷却? ${event.title}`)return;
+       - console.log(`❄️  告警冷却? ${event.title}`)return;
     }
 
     // 应用告警规则
@@ -191,7 +197,8 @@ export class AlertAggregator {
         try {
           await service.send(event);
           this.incrementNotificationCount(channelName);
-          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`�?通过 ${channelName} 发送告? ${event.title}`)} catch (error) {
+          console.log(`�?通过 ${channelName} 发送告? ${event.title}`);
+  } catch (error) {
           console.error(`�?${channelName} 发送失?`, error);
         }
       }
@@ -206,7 +213,8 @@ export class AlertAggregator {
       this.scheduleEscalation(event, applicableRules);
     }
 
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`📢 告警处理完成: ${event.title}`)}
+    console.log(`📢 告警处理完成: ${event.title}`);
+  }
 
   /**
    * 批量发送告?   */
@@ -343,7 +351,7 @@ export class AlertAggregator {
     event: AlertEvent,
     channels: string[]
   ): Promise<void> {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`⬆️  告警升级: ${event.title} -> ${channels.join(', ')}`);
+     - console.log(`⬆️  告警升级: ${event.title} -> ${channels.join(', ')}`);
     this.statistics.escalatedAlerts++;
 
     const escalationEvent = {
@@ -445,11 +453,11 @@ export class AlertAggregator {
    */
   start(): void {
     if (this.isRunning) {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('⚠️  告警聚合服务已在运行')return;
+       - console.log('⚠️  告警聚合服务已在运行')return;
     }
 
     this.isRunning = true;
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🚀 告警聚合服务启动')// 定期清理过期数据
+     - console.log('🚀 告警聚合服务启动')// 定期清理过期数据
     setInterval(() => {
       this.cleanupRecentAlerts();
       this.cleanupCooldowns();
@@ -460,11 +468,11 @@ export class AlertAggregator {
    */
   stop(): void {
     if (!this.isRunning) {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('⚠️  告警聚合服务未在运行')return;
+       - console.log('⚠️  告警聚合服务未在运行')return;
     }
 
     this.isRunning = false;
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('🛑 告警聚合服务停止')}
+     - console.log('🛑 告警聚合服务停止')}
 
   /**
    * 重置统计信息
@@ -478,7 +486,7 @@ export class AlertAggregator {
       suppressedAlerts: 0,
       escalatedAlerts: 0,
     };
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('📊 统计信息已重?)}
+     - console.log('📊 统计信息已重?)}
 }
 
 // 默认告警规则示例
