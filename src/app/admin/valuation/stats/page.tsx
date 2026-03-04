@@ -105,9 +105,9 @@ export default function ValuationStatsPage() {
   const methodChartData = Object.entries(stats.methodDistribution).map(
     ([method, data]) => ({
       name: method.toUpperCase(),
-      数量: data.count,
-      百分? data.percentage,
-    })
+      name: method.toUpperCase(),
+      数量：data.count,
+      百分比：data.percentage,
   );
 
   const confidenceChartData = [
@@ -117,9 +117,9 @@ export default function ValuationStatsPage() {
       color: '#10B981',
     },
     {
-      name: '中等置信?,
-      value: stats.confidenceDistribution.medium,
-      color: '#F59E0B',
+    },
+    {
+      name: '中等置信度',
     },
     {
       name: '低置信度',
@@ -137,12 +137,12 @@ export default function ValuationStatsPage() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和筛?*/}
+      {/* 页面标题和筛选 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">估值统计分?/h1>
+          <h1 className="text-3xl font-bold">估值统计分析</h1>
           <p className="text-muted-foreground mt-2">
-            查看估值服务的关键指标和趋势分?          </p>
+            查看估值服务的关键指标和趋势分析
         </div>
         <div className="flex items-center gap-4">
           <Select value={period} onValueChange={setPeriod}>
