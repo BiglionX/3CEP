@@ -98,7 +98,7 @@ export default function BatchQRCodeManagementPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("批次创建成功?);
+        alert("批次创建成功");
         setShowCreateModal(false);
         fetchBatches();
         resetForm();
@@ -176,9 +176,9 @@ export default function BatchQRCodeManagementPage() {
   // 获取状态标?
   const getStatusBadge = (status: string) => {
     const statusMap = {
-      pending: { text: "待处?, color: "bg-yellow-100 text-yellow-800" },
-      processing: { text: "处理?, color: "bg-blue-100 text-blue-800" },
-      completed: { text: "已完?, color: "bg-green-100 text-green-800" },
+      pending: { text: "待处理", color: "bg-yellow-100 text-yellow-800" },
+      processing: { text: "处理中", color: "bg-blue-100 text-blue-800" },
+      completed: { text: "已完成", color: "bg-green-100 text-green-800" },
       failed: { text: "失败", color: "bg-red-100 text-red-800" }
     };
     
@@ -236,7 +236,7 @@ export default function BatchQRCodeManagementPage() {
                   返回管理主页
                 </button>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900">批量二维码生?/h1>
+              <h1 className="text-3xl font-bold text-gray-900">批量二维码生成</h1>
               <p className="mt-2 text-gray-600">按产品型号批量生成专属二维码，每批锁定唯一产品型号</p>
             </div>
             <div className="flex space-x-3">
@@ -273,7 +273,7 @@ export default function BatchQRCodeManagementPage() {
                 <Package className="w-6 h-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">总批?/p>
+                <p className="text-sm font-medium text-gray-600">总批次</p>
                 <p className="text-2xl font-bold text-gray-900">{batches.length}</p>
               </div>
             </div>
@@ -285,7 +285,7 @@ export default function BatchQRCodeManagementPage() {
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">已完?/p>
+                <p className="text-sm font-medium text-gray-600">已完成</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {batches.filter(b => b.status === 'completed').length}
                 </p>
@@ -299,7 +299,7 @@ export default function BatchQRCodeManagementPage() {
                 <Clock className="w-6 h-6 text-yellow-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">处理?/p>
+                <p className="text-sm font-medium text-gray-600">处理中</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {batches.filter(b => b.status === 'processing').length}
                 </p>
@@ -313,7 +313,7 @@ export default function BatchQRCodeManagementPage() {
                 <QrCode className="w-6 h-6 text-purple-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">总二维码?/p>
+                <p className="text-sm font-medium text-gray-600">总二维码数</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {batches.reduce((sum, b) => sum + b.generated_count, 0)}
                 </p>
@@ -662,7 +662,7 @@ export default function BatchQRCodeManagementPage() {
               <div className="p-6">
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
                   <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-lg font-medium text-gray-900 mb-2">拖拽CSV文件到这?/p>
+                  <p className="text-lg font-medium text-gray-900 mb-2">拖拽 CSV 文件到这里</p>
                   <p className="text-gray-500 mb-4">或点击选择文件</p>
                   <input
                     type="file"
