@@ -15,7 +15,8 @@ export default function AuthTestPage() {
   const [selectedRole, setSelectedRole] = useState<UserRole>('viewer');
   const [testPermission, setTestPermission] = useState('dashboard.view');
 
-  // 测试不同的角?  const testRoles: UserRole[] = [
+  // 测试不同的角色
+  const testRoles: UserRole[] = [
     'admin',
     'content_reviewer',
     'shop_reviewer',
@@ -40,7 +41,7 @@ export default function AuthTestPage() {
   const handleTestPermission = () => {
     const hasPerm = hasPermission(testPermission);
     alert(
-      `权限 "${testPermission}" 检查结? ${hasPerm ? '有权? : '无权?}`
+      `权限 "${testPermission}" 检查结果：${hasPerm ? '有权限' : '无权限'}`
     );
   };
 
@@ -62,7 +63,7 @@ export default function AuthTestPage() {
           {isLoading ? (
             <div className="text-center py-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-              <p className="mt-2 text-gray-500">加载?..</p>
+              <p className="mt-2 text-gray-500">加载中?..</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -71,19 +72,19 @@ export default function AuthTestPage() {
                 <div className="space-y-2 text-sm">
                   <div>
                     <span className="font-medium">用户ID:</span>{' '}
-                    {user?.id || '未登?}
+                    {user?.id || '未登录'}
                   </div>
                   <div>
                     <span className="font-medium">邮箱:</span>{' '}
-                    {user?.email || '未登?}
+                    {user?.email || '未登录'}
                   </div>
                   <div>
                     <span className="font-medium">当前角色:</span>{' '}
-                    {roles.join(', ') || '无角?}
+                    {roles.join(', ') || '无角色'}
                   </div>
                   <div>
                     <span className="font-medium">租户ID:</span>{' '}
-                    {tenantId || '无租?}
+                    {tenantId || '无租户'}
                   </div>
                 </div>
               </div>
@@ -173,9 +174,9 @@ export default function AuthTestPage() {
           <h2 className="text-xl font-semibold mb-4">RoleGuard 组件测试</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 管理员专?*/}
+            {/* 管理员专属?*/}
             <div className="border rounded-lg p-4">
-              <h3 className="font-medium mb-3 text-red-600">管理员专?/h3>
+              <h3 className="font-medium mb-3 text-red-600">管理员专属</h3>
               <RoleGuard
                 roles="admin"
                 fallback={
@@ -246,7 +247,7 @@ export default function AuthTestPage() {
 
           <div className="space-y-4">
             <div className="border rounded-lg p-4">
-              <h3 className="font-medium mb-3">仪表板访问权?/h3>
+              <h3 className="font-medium mb-3">仪表板访问权限</h3>
               <PermissionGuard
                 permissions="dashboard.view"
                 fallback={
@@ -294,15 +295,15 @@ export default function AuthTestPage() {
 
         {/* 控制台验证区?*/}
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">控制台验?/h2>
+          <h2 className="text-xl font-semibold mb-4">控制台验证</h2>
 
           <div className="space-y-4">
             <div>
               <h3 className="font-medium mb-2">验证步骤:</h3>
               <ol className="list-decimal list-inside space-y-2 text-gray-600">
                 <li>打开浏览器开发者工?(F12)</li>
-                <li>切换?Console 标签?/li>
-                <li>在控制台中输入以下命令验?</li>
+                <li>切换到 Console 标签</li>
+                <li>在控制台中输入以下命令验证</li>
               </ol>
             </div>
 

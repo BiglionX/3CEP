@@ -43,8 +43,8 @@ export default function AutomationPage() {
       setError(null)
     } catch (err) {
       setIsLoading(false)
-      setError('无法连接?n8n 服务，请检查服务状?)
-      console.warn('n8n 服务连接检查失?', err)
+      setError('无法连接 n8n 服务，请检查服务状态')
+      console.warn('n8n 服务连接检查失败', err)
     }
   }
 
@@ -72,14 +72,14 @@ export default function AutomationPage() {
       <div className="mb-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">自动化工作流</h1>
+            <h1 className="text-2xl font-bold text-foreground">自动化工作流？</h1>
             <p className="text-muted-foreground mt-1">
               通过 n8n 平台管理和执行自动化工作?
             </p>
           </div>
           <Badge variant="secondary" className="flex items-center gap-1">
             <Info className="w-3 h-3" />
-            需要登?
+            需要登录?
           </Badge>
         </div>
       </div>
@@ -91,18 +91,18 @@ export default function AutomationPage() {
             <span>🔑 n8n 登录指引</span>
           </CardTitle>
           <CardDescription>
-            首次使用需要登?n8n 平台才能访问工作流编辑器
+            首次使用需要登录?n8n 平台才能访问工作流编辑器器
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="text-sm text-muted-foreground">
-              <p className="mb-2">�?iframe 中打开?n8n 界面需要独立登录。请使用以下预配置账号：</p>
+              <p className="mb-2">在 iframe 中打开 n8n 界面需要独立登录。请使用以下预配置账号:</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">用户?/label>
+                <label className="text-sm font-medium">用户</label>
                 <div className="flex items-center gap-2">
                   <input 
                     type="text" 
@@ -117,7 +117,7 @@ export default function AutomationPage() {
                     className="flex items-center gap-1"
                   >
                     {copiedField === 'username' ? (
-                      <span className="text-xs">�?已复?/span>
+                      <span className="text-xs">已复制</span>
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
@@ -144,7 +144,7 @@ export default function AutomationPage() {
                     className="flex items-center gap-1"
                   >
                     {copiedField === 'password' ? (
-                      <span className="text-xs">�?已复?/span>
+                      <span className="text-xs">已复制</span>
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
@@ -166,12 +166,12 @@ export default function AutomationPage() {
             
             <div className="pt-2 border-t">
               <p className="text-xs text-muted-foreground mb-2">
-                <strong>💡 使用提示?/strong>
+                <strong>💡 使用提示</strong>
               </p>
               <ul className="text-xs text-muted-foreground space-y-1 ml-4 list-disc">
-                <li>�?iframe 中首次访问时会跳转到 n8n 登录页面</li>
-                <li>使用上方提供的账号信息登?/li>
-                <li>登录成功后即可访问工作流编辑?/li>
+                <li>在 iframe 中首次访问时会跳转到 n8n 登录页面</li>
+                <li>使用上方提供的账号信息登录</li>
+                <li>登录后即可访问工作流编辑器</li>
                 <li>会话期间无需重复登录</li>
               </ul>
             </div>
@@ -219,7 +219,7 @@ export default function AutomationPage() {
               border: 'none',
               minHeight: '700px'
             }}
-            title="n8n 自动化工作流"
+            title="n8n 自动化工作流？"
             onLoad={handleIframeLoad}
             onError={handleIframeError}
             className="w-full"
@@ -243,7 +243,7 @@ export default function AutomationPage() {
           <div className="flex items-center space-x-4">
             <span className={`flex items-center ${isLoading ? 'text-yellow-600' : error ? 'text-red-600' : 'text-green-600'}`}>
               <span className={`w-2 h-2 rounded-full mr-2 ${isLoading ? 'bg-yellow-500 animate-pulse' : error ? 'bg-red-500' : 'bg-green-500'}`}></span>
-              {isLoading ? '连接? : error ? '连接失败' : '已连?}
+              {isLoading ? '连接中' : error ? '连接失败' : '已连接'}
             </span>
           </div>
         </div>

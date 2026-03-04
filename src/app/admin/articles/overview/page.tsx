@@ -104,8 +104,8 @@ export default function ArticlesOverviewPage() {
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       draft: { text: '草稿', color: 'bg-yellow-100 text-yellow-800' },
-      published: { text: '已发?, color: 'bg-green-100 text-green-800' },
-      archived: { text: '已归?, color: 'bg-gray-100 text-gray-800' },
+      published: { text: '已发布', color: 'bg-green-100 text-green-800' },
+      archived: { text: '已归档', color: 'bg-gray-100 text-gray-800' },
     };
 
     const config =
@@ -151,7 +151,8 @@ export default function ArticlesOverviewPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">文章管理</h1>
           <p className="mt-1 text-sm text-gray-500">
-            管理和维护平台的所有文章内?          </p>
+            管理和维护平台的所有文章内?{' '}
+          </p>
         </div>
         <div className="mt-4 sm:mt-0">
           <Link
@@ -197,7 +198,8 @@ export default function ArticlesOverviewPage() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">
-                    已发?                  </dt>
+                    已发?{' '}
+                  </dt>
                   <dd className="flex items-baseline">
                     <div className="text-2xl font-semibold text-gray-900">
                       {stats.published}
@@ -278,10 +280,10 @@ export default function ArticlesOverviewPage() {
               onChange={e => setStatusFilter(e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="all">所有状?/option>
-              <option value="published">已发?/option>
+              <option value="all">所有状态</option>
+              <option value="published">已发布</option>
               <option value="draft">草稿</option>
-              <option value="archived">已归?/option>
+              <option value="archived">已归档</option>
             </select>
 
             {/* 排序方式 */}
@@ -290,10 +292,10 @@ export default function ArticlesOverviewPage() {
               onChange={e => setSortBy(e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="updated_at">最近更?/option>
+              <option value="updated_at">最近更新</option>
               <option value="created_at">创建时间</option>
-              <option value="view_count">浏览?/option>
-              <option value="like_count">点赞?/option>
+              <option value="view_count">浏览量</option>
+              <option value="like_count">点赞数</option>
             </select>
           </div>
         </div>
@@ -341,15 +343,17 @@ export default function ArticlesOverviewPage() {
                         {article.summary || '暂无摘要'}
                       </p>
                       <div className="mt-2 flex items-center text-xs text-gray-500">
-                        <span>{article?.name || '未知作?}</span>
-                        <span className="mx-2">�?/span>
-                        <span>{article?.name || '未分?}</span>
-                        <span className="mx-2">�?/span>
-                        <span>创建?{formatDate(article.created_at)}</span>
+                        <span>{article?.authors?.name || '未知作者'}</span>
+                        <span className="mx-2">•</span>
+                        <span>
+                          {article?.article_categories?.name || '未分类'}
+                        </span>
+                        <span className="mx-2">•</span>
+                        <span>创建于 {formatDate(article.created_at)}</span>
                         {article.updated_at !== article.created_at && (
                           <>
-                            <span className="mx-2">�?/span>
-                            <span>更新?{formatDate(article.updated_at)}</span>
+                            <span className="mx-2">•</span>
+                            <span>更新于 {formatDate(article.updated_at)}</span>
                           </>
                         )}
                       </div>
@@ -360,11 +364,11 @@ export default function ArticlesOverviewPage() {
                         {article.view_count}
                       </div>
                       <div className="flex items-center text-sm text-gray-500">
-                        <span className="mr-1">👍</span>
+                        <span className="mr-1">??</span>
                         {article.like_count}
                       </div>
                       <div className="flex items-center text-sm text-gray-500">
-                        💬 {article.comment_count}
+                        ?? {article.comment_count}
                       </div>
                       <div className="flex space-x-1">
                         <Link
@@ -400,4 +404,3 @@ export default function ArticlesOverviewPage() {
     </div>
   );
 }
-
