@@ -102,30 +102,30 @@ export default function AdminDemoPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>添加新用?/DialogTitle>
-                <DialogDescription>请输入新用户的信?/DialogDescription>
+                <DialogTitle>添加新用户</DialogTitle>
+                <DialogDescription>请输入新用户的信？</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div>
                   <label className="text-sm font-medium">姓名</label>
-                  <Input placeholder="请输入姓? className="mt-1" />
+                  <Input placeholder="请输入姓名" className="mt-1" />
                 </div>
                 <div>
                   <label className="text-sm font-medium">邮箱</label>
                   <Input
                     type="email"
-                    placeholder="请输入邮?
+                    placeholder="请输入邮箱"
                     className="mt-1"
                   />
                 </div>
                 <div>
                   <label className="text-sm font-medium">角色</label>
                   <select className="w-full mt-1 rounded-md border border-input bg-background px-3 py-2 text-sm">
-                    <option value="admin">管理?/option>
-                    <option value="content_reviewer">内容审核?/option>
-                    <option value="shop_reviewer">店铺审核?/option>
+                    <option value="admin">管理员</option>
+                    <option value="content_reviewer">内容审核员</option>
+                    <option value="shop_reviewer">店铺审核员</option>
                     <option value="finance">财务人员</option>
-                    <option value="viewer">查看?/option>
+                    <option value="viewer">查看者</option>
                   </select>
                 </div>
               </div>
@@ -147,7 +147,7 @@ export default function AdminDemoPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1">
           <div className="bg-card border rounded-lg p-4">
-            <h3 className="font-medium mb-4">动态菜?/h3>
+            <h3 className="font-medium mb-4">动态菜单</h3>
             <DynamicMenu />
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function AdminDemoPage() {
                 <TableRow>
                   <TableHead>用户信息</TableHead>
                   <TableHead>角色</TableHead>
-                  <TableHead>状?/TableHead>
+                  <TableHead>状态</TableHead>
                   <TableHead>创建时间</TableHead>
                   <TableHead className="text-right">操作</TableHead>
                 </TableRow>
