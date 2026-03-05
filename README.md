@@ -285,3 +285,26 @@ tests/              # 测试文件
 <div align="center">
   <sub>Built with ❤️ by the ProdCycleAI Team</sub>
 </div>
+
+---
+
+## 🏗️ 文件夹结构对齐 (v6.2)
+
+自 2026 年 3 月 4 日起，项目完成了**文件夹结构对齐计划**，实现清晰的模块化架构：
+
+```
+src/
+├── modules/          # 业务模块层 (8 个核心模块)
+├── tech/             # 技术基建层 (5 个技术层)
+├── app/              # Next.js App Router
+├── components/       # UI组件库
+└── ...              # 共享资源
+```
+
+**关键成果**：
+- ✅ 删除重复目录 12+ 个
+- ✅ 目录精简 41% (29 → 17 个)
+- ✅ 更新导入路径 68 个文件
+- ✅ 建立清晰的模块化架构规范
+
+📄 **详细报告**: [`reports/FOLDER_STRUCTURE_ALIGNMENT_COMPLETION_REPORT.md`](reports/FOLDER_STRUCTURE_ALIGNMENT_COMPLETION_REPORT.md)

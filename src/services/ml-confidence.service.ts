@@ -77,16 +77,16 @@ class MLConfidenceService {
     ];
 
     const availableFeatures = requiredFeatures.filter(
-      feature => features[feature] !== undefined && features[feature] !== null
+      feature => features[feature] !== undefined&& features[feature] !== null
     );
 
     const completeness = availableFeatures.length / requiredFeatures.length;
 
-    // 对关键缺失特征进行惩?    if (features.batteryHealthPercent === undefined) {
+    // 对关键缺失特征进行惩?    if (features.batteryHealthPercent === undefined {
       return Math.max(0, completeness - 0.2);
     }
 
-    if (features.screenConditionEncoded === undefined) {
+    if (features.screenConditionEncoded === undefined {
       return Math.max(0, completeness - 0.15);
     }
 

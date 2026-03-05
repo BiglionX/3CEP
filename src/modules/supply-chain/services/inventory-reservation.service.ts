@@ -24,7 +24,8 @@ interface ReservationRequest {
 interface InventoryUpdate {
   partId: string;
   warehouseId: string;
-  quantityChange: number; // 正数为增加，负数为减?  reason: string;
+  quantityChange: number; // 正数为增加，负数为减少
+  reason?: string;
   referenceId?: string;
 }
 
@@ -38,12 +39,13 @@ export class InventoryReservationService {
     errorMessage?: string;
   }> {
     try {
-      // 1. 检查库存是否充?      const { data: inventory, error: inventoryError } = await supabase
+      // 1. 检查库存是否充足
+      const { data: inventory, error: inventoryError } = (await supabase
         .from('inventory_records')
         .select('available_quantity, reserved_quantity, total_quantity')
         .eq('product_id', request.partId)
         .eq('warehouse_id', request.warehouseId)
-        .single();
+        .single()) as any;
 
       if (inventoryError) {
         return {
@@ -55,21 +57,21 @@ export class InventoryReservationService {
       if (!inventory) {
         return {
           success: false,
-          errorMessage: '库存记录不存?,
+          errorMessage: '库存记录不存在',
         };
       }
 
       if (inventory.available_quantity < request.quantity) {
         return {
           success: false,
-          errorMessage: `库存不足，当前可? ${inventory.available_quantity}, 需? ${request.quantity}`,
+          errorMessage: `库存不足，当前可用: ${inventory.available_quantity}, 需要: ${request.quantity}`,
         };
       }
 
       // 2. 创建库存预留记录
       const reservationId = `res_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24小时后过?
-      const { error: reservationError } = await supabase
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 小时后过期
+      const { error: reservationError } = (await supabase
         .from('inventory_reservations')
         .insert({
           id: reservationId,
@@ -80,7 +82,7 @@ export class InventoryReservationService {
           reservation_type: request.reservationType || 'fcx_exchange',
           expires_at: expiresAt,
           status: 'active',
-        } as any);
+        })) as any;
 
       if (reservationError) {
         return {
@@ -89,18 +91,20 @@ export class InventoryReservationService {
         };
       }
 
-      // 3. 更新库存记录（减少可用库存，增加预留库存?      const { error: updateError } = await supabase
+      // 3. 更新库存记录（减少可用库存，增加预留库存）
+      const { error: updateError } = (await supabase
         .from('inventory_records')
         .update({
           available_quantity: inventory.available_quantity - request.quantity,
           reserved_quantity: inventory.reserved_quantity + request.quantity,
           updated_at: new Date(),
-        } as any)
+        })
         .eq('product_id', request.partId)
-        .eq('warehouse_id', request.warehouseId);
+        .eq('warehouse_id', request.warehouseId)) as any;
 
       if (updateError) {
-        // 如果更新失败，删除预留记?        await supabase
+        // 如果更新失败，删除预留记录
+        await supabase
           .from('inventory_reservations')
           .delete()
           .eq('id', reservationId);
@@ -143,13 +147,13 @@ export class InventoryReservationService {
     const failedItems: Array<{ partId: string; reason: string }> = [];
 
     for (const item of items) {
-      const result = (await this.reserveInventory({
+      const result = await this.reserveInventory({
         partId: item.partId,
         warehouseId: item.warehouseId,
         quantity: item.quantity,
         orderId: item.orderId,
         reservationType: 'fcx_exchange',
-      })) as any;
+      }) as any;
 
       if (result.success && result.reservationId) {
         reservationIds.push(result.reservationId);
@@ -185,11 +189,12 @@ export class InventoryReservationService {
       }
 
       if (reservation.status !== 'active') {
-        console.error('预留记录状态无?', reservation.status);
+        console.error('预留记录状态无效:', reservation.status);
         return false;
       }
 
-      // 2. 更新预留记录状态为已使?      const { error: updateReservationError } = await supabase
+      // 2. 更新预留记录状态为已使用
+      const { error: updateReservationError } = await supabase
         .from('inventory_reservations')
         .update({
           status: 'used',
@@ -202,7 +207,8 @@ export class InventoryReservationService {
         return false;
       }
 
-      // 3. 更新库存记录（减少总库存和预留库存?      const { data: inventory, error: inventoryError } = await supabase
+      // 3. 更新库存记录（减少总库存和预留库存）
+      const { data: inventory, error: inventoryError } = await supabase
         .from('inventory_records')
         .select('total_quantity, reserved_quantity')
         .eq('product_id', reservation.part_id)
@@ -211,22 +217,23 @@ export class InventoryReservationService {
 
       if (inventoryError || !inventory) {
         console.error('获取库存记录失败:', inventoryError?.message);
-        // 回滚预留记录状?        await supabase
+        // 回滚预留记录状态
+        await supabase
           .from('inventory_reservations')
           .update({ status: 'active' } as any)
           .eq('id', reservationId);
         return false;
       }
 
-      const { error: updateInventoryError } = await supabase
+      const { error: updateInventoryError } = (await supabase
         .from('inventory_records')
         .update({
           total_quantity: inventory.total_quantity - reservation.quantity,
           reserved_quantity: inventory.reserved_quantity - reservation.quantity,
           updated_at: new Date(),
-        } as any)
+        })
         .eq('product_id', reservation.part_id)
-        .eq('warehouse_id', reservation.warehouse_id);
+        .eq('warehouse_id', reservation.warehouse_id)) as any;
 
       if (updateInventoryError) {
         console.error('更新库存记录失败:', updateInventoryError.message);
@@ -271,7 +278,8 @@ export class InventoryReservationService {
         return false;
       }
 
-      // 2. 更新预留记录状?      const { error: updateReservationError } = await supabase
+      // 2. 更新预留记录状态
+      const { error: updateReservationError } = await supabase
         .from('inventory_reservations')
         .update({
           status: 'cancelled',
@@ -284,7 +292,8 @@ export class InventoryReservationService {
         return false;
       }
 
-      // 3. 恢复库存（增加可用库存，减少预留库存?      const { data: inventory, error: inventoryError } = await supabase
+      // 3. 恢复库存（增加可用库存，减少预留库存）
+      const { data: inventory, error: inventoryError } = await supabase
         .from('inventory_records')
         .select('available_quantity, reserved_quantity')
         .eq('product_id', reservation.part_id)
@@ -329,13 +338,15 @@ export class InventoryReservationService {
   }
 
   /**
-   * 检查并清理过期的预留记?   */
+   * 检查并清理过期的预留记录
+   */
   async cleanupExpiredReservations(): Promise<{
     cleanedCount: number;
     restoredQuantities: Array<{ partId: string; quantity: number }>;
   }> {
     try {
-      // 1. 查找过期的预留记?      const { data: expiredReservations, error: queryError } = await supabase
+      // 1. 查找过期的预留记录
+      const { data: expiredReservations, error: queryError } = await supabase
         .from('inventory_reservations')
         .select('id, part_id, warehouse_id, quantity, status')
         .lt('expires_at', new Date().toISOString())
@@ -505,7 +516,7 @@ export class InventoryReservationService {
     }
 
     const priceMap: Record<string, number> = {};
-    data?.forEach(item => {
+    data?.forEach((item: any) => {
       priceMap[item.part_id] = item.fcx_price;
     }) as any;
 

@@ -246,7 +246,7 @@ export class AIDiagnosisService {
 
 ${
   knowledgeMatches.length > 0
-    ? `参考知识库匹配结果（置信度最高）: ${JSON.stringify(knowledgeMatches[0]?.fault, null, 2)}`
+    ? `参考知识库匹配结果（置信度最高）: ${JSON.stringify(knowledgeMatches[0]?.fault, null 2)}`
     : '无匹配的知识库结?
 }
 
@@ -289,7 +289,7 @@ ${
           confidence: 0.6,
           diagnosis: aiResponse,
           suggestedSolutions: [],
-          nextQuestions: ['能否提供更多关于问题的详细描述？'],
+          nextQuestions: ['能否提供更多关于问题的详细描述'],
         };
       }
     } catch (error) {

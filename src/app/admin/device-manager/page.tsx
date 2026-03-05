@@ -409,22 +409,23 @@ export default function DeviceManager() {
 
   // 删除设备
   const handleDelete = (device: Device) => {
-    if (confirm(`确定要删除设?"${device.device_id}" 吗？此操作不可撤销！`)) {
+    if (confirm(`确定要删除设备 "${device.device_id}" 吗？此操作不可撤销！`)) {
       // 模拟删除操作
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除设备:', device.id)fetchDevices(); // 重新加载数据
+      fetchDevices(); // 重新加载数据
     }
   };
 
   // 导出数据
   const handleExport = () => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出设备数据')};
+    console.log('导出设备数据');
+  };
 
   // 刷新数据
   const handleRefresh = () => {
     fetchDevices();
   };
 
-  // 状态标签渲?
+  // 状态标签渲染
   const renderStatusTag = (status: string) => {
     const statusConfig = {
       online: {
@@ -439,7 +440,7 @@ export default function DeviceManager() {
       },
       maintenance: {
         variant: 'outline' as const,
-        text: '维修?,
+        text: '维修中',
         color: 'bg-orange-100 text-orange-800',
       },
       retired: {
@@ -568,7 +569,7 @@ export default function DeviceManager() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <Smartphone className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">您没有权限查看设备管?/p>
+          <p className="text-gray-500">您没有权限查看设备管理</p>
         </div>
       </div>
     );
@@ -580,7 +581,7 @@ export default function DeviceManager() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">设备管理</h1>
-          <p className="text-gray-600 mt-1">管理用户设备信息和状态监?/p>
+          <p className="text-gray-600 mt-1">管理用户设备信息和状态监控</p>
         </div>
         <div className="flex items-center space-x-3">
           <Button variant="outline" onClick={handleRefresh}>
@@ -603,14 +604,14 @@ export default function DeviceManager() {
       {/* 筛选面?*/}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">筛选条?/CardTitle>
+          <CardTitle className="text-lg">筛选条件</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="搜索设备ID/型号/序列?
+                placeholder="搜索设备 ID/型号/序列号"
                 className="pl-10"
                 value={filters.search}
                 onChange={e => handleFilterChange('search', e.target.value)}
@@ -662,10 +663,10 @@ export default function DeviceManager() {
               onValueChange={value => handleFilterChange('status', value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="选择状? />
+                <SelectValue placeholder="选择状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">全部状?/SelectItem>
+                <SelectItem value="">全部状态</SelectItem>
                 {getStatusOptions().map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
@@ -714,7 +715,7 @@ export default function DeviceManager() {
               </SelectContent>
             </Select>
 
-            <Button onClick={applyFilters}>应用筛?/Button>
+            <Button onClick={applyFilters}>应用筛选</Button>
           </div>
 
           {/* 分组和标签管理按?*/}
@@ -758,7 +759,7 @@ export default function DeviceManager() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              维修?
+              维修中
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -789,7 +790,7 @@ export default function DeviceManager() {
       <Card>
         <CardHeader>
           <CardTitle>设备列表</CardTitle>
-          <CardDescription>�?{filteredDevices.length} 台设?/CardDescription>
+          <CardDescription>共 {filteredDevices.length} 台设备</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -812,7 +813,7 @@ export default function DeviceManager() {
                     >
                       <div className="flex items-center justify-center">
                         <RefreshCw className="w-5 h-5 animate-spin mr-2" />
-                        加载?..
+                        加载中...
                       </div>
                     </TableCell>
                   </TableRow>
@@ -993,7 +994,7 @@ export default function DeviceManager() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    序列?
+                    序列号
                   </label>
                   <Input
                     value={selectedDevice.serial_number}
@@ -1013,7 +1014,7 @@ export default function DeviceManager() {
                 )}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    状?
+                    状态
                   </label>
                   <Select
                     value={selectedDevice.status}
@@ -1034,7 +1035,7 @@ export default function DeviceManager() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    所有?
+                    所有者
                   </label>
                   <Input
                     value={selectedDevice.owner_name}
@@ -1043,7 +1044,7 @@ export default function DeviceManager() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    所属店?
+                    所属店铺
                   </label>
                   <Input
                     value={selectedDevice.shop_name || ''}
@@ -1090,7 +1091,7 @@ export default function DeviceManager() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    最后在?
+                    最后在线
                   </label>
                   <Input
                     value={new Date(selectedDevice.last_seen).toLocaleString()}
@@ -1136,7 +1137,7 @@ export default function DeviceManager() {
 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">设备状?/CardTitle>
+                    <CardTitle className="text-sm">设备状态</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {renderStatusTag(selectedDevice.status)}
@@ -1176,7 +1177,7 @@ export default function DeviceManager() {
                 onChange={e =>
                   setGroupForm(prev => ({ ...prev, name: e.target.value }))
                 }
-                placeholder="请输入分组名?
+                placeholder="请输入分组名称"
               />
             </div>
             <div>
@@ -1189,7 +1190,7 @@ export default function DeviceManager() {
                     description: e.target.value,
                   }))
                 }
-                placeholder="请输入分组描?
+                placeholder="请输入分组描述"
               />
             </div>
             <div>
@@ -1249,7 +1250,7 @@ export default function DeviceManager() {
                 onChange={e =>
                   setTagForm(prev => ({ ...prev, name: e.target.value }))
                 }
-                placeholder="请输入标签名?
+                placeholder="请输入标签名称"
               />
             </div>
             <div>
@@ -1291,4 +1292,3 @@ export default function DeviceManager() {
     </div>
   );
 }
-

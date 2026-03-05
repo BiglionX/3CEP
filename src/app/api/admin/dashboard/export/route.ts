@@ -195,12 +195,12 @@ async function generateHotLinksReport(
     ? new Date(startDate)
     : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  const { data } = await supabase
+  const { data } = (await supabase
     .from('unified_link_library')
     .select('title, url, source, category, likes, views, status, created_at')
     .gte('created_at', start.toISOString())
     .lte('created_at', end.toISOString())
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })) as any;
 
   const rows = [];
   rows.push([
@@ -241,12 +241,12 @@ async function generateAppointmentsReport(
     ? new Date(startDate)
     : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  const { data } = await supabase
+  const { data } = (await supabase
     .from('appointments')
     .select('start_time, end_time, status, notes, created_at')
     .gte('created_at', start.toISOString())
     .lte('created_at', end.toISOString())
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })) as any;
 
   const rows = [];
   rows.push(['寮€濮嬫椂?, '缁撴潫鏃堕棿', '鐘?, '澶囨敞', '鍒涘缓鏃堕棿']);

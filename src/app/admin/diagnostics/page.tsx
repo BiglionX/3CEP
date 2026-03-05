@@ -76,12 +76,15 @@ export default function DiagnosticsManagement() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<'view' | 'edit'>('view');
 
-  // 权限检?  const { hasPermission } = useRbacPermission();
+  // 权限检查
+  // @ts-ignore - useRbacPermission returns an object with hasPermission method
+  const { hasPermission } = useRbacPermission();
   const canView = hasPermission('diagnostics.view');
   const canManage = hasPermission('diagnostics.manage');
   const canDelete = hasPermission('diagnostics.delete');
 
-  // 筛选条?  const [filters, setFilters] = useState({
+  // 筛选条件
+  const [filters, setFilters] = useState({
     status: '',
     faultType: '',
     dateRange: [] as any[],
@@ -91,17 +94,17 @@ export default function DiagnosticsManagement() {
   const fetchDiagnostics = async () => {
     setLoading(true);
     try {
-      // 模拟API调用
+      // 模拟 API 调用
       const mockData: DiagnosticRecord[] = [
         {
           id: 'diag_001',
           device_id: 'dev_12345',
           device_model: 'iPhone 14 Pro',
           fault_type: '屏幕损坏',
-          diagnostic_result: '屏幕总成需要更换，预估费用1200�?,
+          diagnostic_result: '屏幕总成需要更换，预估费用 1200 元',
           confidence_score: 95,
           technician_id: 'tech_001',
-          technician_name: '张师?,
+          technician_name: '张师傅',
           status: 'completed',
           created_at: '2024-01-20T10:30:00Z',
           updated_at: '2024-01-20T11:45:00Z',
@@ -113,10 +116,10 @@ export default function DiagnosticsManagement() {
           device_id: 'dev_12346',
           device_model: 'Samsung Galaxy S23',
           fault_type: '电池老化',
-          diagnostic_result: '电池健康度降?5%，建议更?,
+          diagnostic_result: '电池健康度降至 75%，建议更换',
           confidence_score: 88,
           technician_id: 'tech_002',
-          technician_name: '李师?,
+          technician_name: '李师傅',
           status: 'pending',
           created_at: '2024-01-20T14:20:00Z',
           updated_at: '2024-01-20T14:20:00Z',
@@ -126,11 +129,11 @@ export default function DiagnosticsManagement() {
           id: 'diag_003',
           device_id: 'dev_12347',
           device_model: 'Huawei Mate 50',
-          fault_type: '摄像头故?,
-          diagnostic_result: '后置主摄无法对焦，需要专业维?,
+          fault_type: '摄像头故障',
+          diagnostic_result: '后置主摄无法对焦，需要专业维修',
           confidence_score: 92,
           technician_id: 'tech_003',
-          technician_name: '王师?,
+          technician_name: '王师傅',
           status: 'failed',
           created_at: '2024-01-20T16:15:00Z',
           updated_at: '2024-01-20T17:30:00Z',
@@ -146,7 +149,8 @@ export default function DiagnosticsManagement() {
     }
   };
 
-  // 应用筛?  const applyFilters = () => {
+  // 应用筛选
+  const applyFilters = () => {
     let filtered = [...diagnostics];
 
     if (filters.status) {
@@ -164,7 +168,8 @@ export default function DiagnosticsManagement() {
     setFilteredDiagnostics(filtered);
   };
 
-  // 处理筛选变?  const handleFilterChange = (field: string, value: any) => {
+  // 处理筛选变化
+  const handleFilterChange = (field: string, value: any) => {
     setFilters(prev => ({
       ...prev,
       [field]: value,
@@ -187,25 +192,27 @@ export default function DiagnosticsManagement() {
 
   // 删除记录
   const handleDelete = (record: DiagnosticRecord) => {
-    if (confirm(`确定要删除诊断记?${record.id} 吗？`)) {
+    if (confirm(`确定要删除诊断记录 ${record.id} 吗？`)) {
       // 模拟删除操作
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除记录:', record.id)fetchDiagnostics(); // 重新加载数据
+      fetchDiagnostics(); // 重新加载数据
     }
   };
 
   // 导出数据
   const handleExport = () => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出数据')};
+    console.log('导出数据');
+  };
 
   // 刷新数据
   const handleRefresh = () => {
     fetchDiagnostics();
   };
 
-  // 状态标签渲?  const renderStatusTag = (status: string) => {
+  // 状态标签渲染
+  const renderStatusTag = (status: string) => {
     const statusConfig = {
-      pending: { variant: 'secondary' as const, text: '待处? },
-      completed: { variant: 'default' as const, text: '已完? },
+      pending: { variant: 'secondary' as const, text: '待处理' },
+      completed: { variant: 'default' as const, text: '已完成' },
       failed: { variant: 'destructive' as const, text: '失败' },
     };
 
@@ -216,23 +223,26 @@ export default function DiagnosticsManagement() {
     return <Badge variant={config.variant}>{config.text}</Badge>;
   };
 
-  // 表格列定?  const columns = [
+  // 表格列定义
+  const columns = [
     { key: 'id', title: '诊断编号', width: '120px' },
     { key: 'device', title: '设备信息', width: '180px' },
     { key: 'fault_type', title: '故障类型', width: '120px' },
     { key: 'diagnostic_result', title: '诊断结果', width: '250px' },
-    { key: 'confidence_score', title: '置信?, width: '100px' },
-    { key: 'technician_name', title: '技?, width: '100px' },
-    { key: 'status', title: '状?, width: '100px' },
+    { key: 'confidence_score', title: '置信度', width: '100px' },
+    { key: 'technician_name', title: '技师', width: '100px' },
+    { key: 'status', title: '状态', width: '100px' },
     { key: 'created_at', title: '创建时间', width: '160px' },
     { key: 'actions', title: '操作', width: '150px' },
   ];
 
-  // 初始化数?  useEffect(() => {
+  // 初始化数据
+  useEffect(() => {
     fetchDiagnostics();
   }, []);
 
-  // 筛选变化时重新应用筛?  useEffect(() => {
+  // 筛选变化时重新应用筛选
+  useEffect(() => {
     applyFilters();
   }, [filters, diagnostics]);
 
@@ -241,7 +251,7 @@ export default function DiagnosticsManagement() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">您没有权限查看诊断服务管?/p>
+          <p className="text-gray-500">您没有权限查看诊断服务管理</p>
         </div>
       </div>
     );
@@ -249,11 +259,11 @@ export default function DiagnosticsManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按钮 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">诊断服务管理</h1>
-          <p className="text-gray-600 mt-1">管理设备诊断记录和服务质量监?/p>
+          <p className="text-gray-600 mt-1">管理设备诊断记录和服务质量监控</p>
         </div>
         <div className="flex items-center space-x-3">
           <Button variant="outline" onClick={handleRefresh}>
@@ -273,10 +283,10 @@ export default function DiagnosticsManagement() {
         </div>
       </div>
 
-      {/* 筛选面?*/}
+      {/* 筛选面板 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">筛选条?/CardTitle>
+          <CardTitle className="text-lg">筛选条目</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -285,12 +295,12 @@ export default function DiagnosticsManagement() {
               onValueChange={value => handleFilterChange('status', value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="选择状? />
+                <SelectValue placeholder="选择状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">全部状?/SelectItem>
-                <SelectItem value="pending">待处?/SelectItem>
-                <SelectItem value="completed">已完?/SelectItem>
+                <SelectItem value="">全部状态</SelectItem>
+                <SelectItem value="pending">待处理</SelectItem>
+                <SelectItem value="completed">已完成</SelectItem>
                 <SelectItem value="failed">失败</SelectItem>
               </SelectContent>
             </Select>
@@ -307,7 +317,7 @@ export default function DiagnosticsManagement() {
 
             <Input
               type="date"
-              placeholder="开始日?
+              placeholder="开始日期"
               value={filters.dateRange[0] || ''}
               onChange={e =>
                 handleFilterChange('dateRange', [
@@ -330,7 +340,7 @@ export default function DiagnosticsManagement() {
             />
           </div>
           <div className="mt-4">
-            <Button onClick={applyFilters}>应用筛?/Button>
+            <Button onClick={applyFilters}>应用筛选</Button>
           </div>
         </CardContent>
       </Card>
@@ -352,7 +362,8 @@ export default function DiagnosticsManagement() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              已完?            </CardTitle>
+              已完成
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
@@ -363,7 +374,8 @@ export default function DiagnosticsManagement() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              待处?            </CardTitle>
+              待处理
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">
@@ -374,7 +386,8 @@ export default function DiagnosticsManagement() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              平均置信?            </CardTitle>
+              平均置信度
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-600">
@@ -393,7 +406,8 @@ export default function DiagnosticsManagement() {
         <CardHeader>
           <CardTitle>诊断记录列表</CardTitle>
           <CardDescription>
-            �?{filteredDiagnostics.length} 条记?          </CardDescription>
+            共 {filteredDiagnostics.length} 条记录
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -416,7 +430,7 @@ export default function DiagnosticsManagement() {
                     >
                       <div className="flex items-center justify-center">
                         <RefreshCw className="w-5 h-5 animate-spin mr-2" />
-                        加载?..
+                        加载中...
                       </div>
                     </TableCell>
                   </TableRow>
@@ -503,7 +517,7 @@ export default function DiagnosticsManagement() {
         </CardContent>
       </Card>
 
-      {/* 详情/编辑对话?*/}
+      {/* 详情/编辑对话框 */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -540,7 +554,8 @@ export default function DiagnosticsManagement() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    状?                  </label>
+                    状态
+                  </label>
                   <Select
                     value={selectedRecord.status}
                     onValueChange={() => {}}
@@ -550,15 +565,16 @@ export default function DiagnosticsManagement() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pending">待处?/SelectItem>
-                      <SelectItem value="completed">已完?/SelectItem>
+                      <SelectItem value="pending">待处理</SelectItem>
+                      <SelectItem value="completed">已完成</SelectItem>
                       <SelectItem value="failed">失败</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    技?                  </label>
+                    技师
+                  </label>
                   <Input
                     value={selectedRecord.technician_name}
                     readOnly={dialogMode === 'view'}
@@ -566,7 +582,7 @@ export default function DiagnosticsManagement() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    置信?(%)
+                    置信度(%)
                   </label>
                   <Input
                     type="number"
@@ -577,7 +593,7 @@ export default function DiagnosticsManagement() {
                 {selectedRecord.cost_estimate !== undefined && (
                   <div>
                     <label className="text-sm font-medium text-gray-700">
-                      预估费用 (�?
+                      预估费用 (元)
                     </label>
                     <Input
                       type="number"

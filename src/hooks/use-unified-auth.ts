@@ -89,7 +89,7 @@ export function useUnifiedAuth() {
           is_admin: false,
           roles: [],
           isLoading: false,
-          error: error.message || '认证初始化失?
+          error: error.message || '认证初始化失败'
         });
       }
     };
@@ -106,7 +106,7 @@ export function useUnifiedAuth() {
       const currentUserId = session??.id || null;
       const currentAuthState = session ? 'authenticated' : 'unauthenticated';
       
-      // 只有当用户真正发生变化时才更新状?
+      // 只有当用户真正发生变化时才更新状态
       if (currentUserId !== lastUserId || currentAuthState !== lastAuthState) {
         lastUserId = currentUserId;
         lastAuthState = currentAuthState;

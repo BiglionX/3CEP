@@ -52,7 +52,7 @@
   private async requestWithRetry(
     method: string,
     url: string,
-    data: any = null,
+    data: any = null
     attempt: number = 1
   ): Promise<any> {
     try {
@@ -262,7 +262,7 @@
     ];
 
     for (const field of requiredFields) {
-      if (data[field] === undefined || data[field] === null) {
+      if (data[field] === undefined|| data[field] === null {
         throw new Error(`缺少必需字段: ${field}`);
       }
     }
@@ -300,16 +300,16 @@
       transfer_count: Number(data.transferCount),
       market_avg_price: data.marketAvgPrice
         ? Number(data.marketAvgPrice)
-        : null,
+        : null
       market_min_price: data.marketMinPrice
         ? Number(data.marketMinPrice)
-        : null,
+        : null
       market_max_price: data.marketMaxPrice
         ? Number(data.marketMaxPrice)
-        : null,
+        : null
       market_sample_count: data.marketSampleCount
         ? Number(data.marketSampleCount)
-        : null,
+        : null
     };
   }
 

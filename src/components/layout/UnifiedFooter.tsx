@@ -36,13 +36,13 @@ export function UnifiedFooter() {
         { name: '维修教程', href: '/tutorials' },
         { name: '帮助中心', href: '/help' },
         { name: '常见问题', href: '/faq' },
-        { name: '技术支?, href: '/diagnosis' },
+        { name: '技术支持', href: '/diagnosis' },
       ],
     },
     {
       title: '关于我们',
       items: [
-        { name: '公司简?, href: '/about' },
+        { name: '公司简介', href: '/about' },
         { name: '联系我们', href: '/contact' },
         { name: '加入我们', href: '#' },
         { name: '媒体报道', href: '#' },
@@ -69,16 +69,16 @@ export function UnifiedFooter() {
   ];
 
   const contactInfo = [
-    { icon: Phone, text: '400-888-9999', subtext: '工作?9:00-18:00' },
+    { icon: Phone, text: '400-888-9999', subtext: '工作日 9:00-18:00' },
     { icon: Mail, text: 'support@fixcycle.com', subtext: '24小时在线支持' },
-    { icon: MapPin, text: '深圳市南山区科技?, subtext: '总部地址' },
+    { icon: MapPin, text: '深圳市南山区科技园', subtext: '总部地址' },
   ];
 
   const certifications = [
     { icon: Shield, text: 'ISO 27001认证' },
-    { icon: Zap, text: '高新技术企? },
+    { icon: Zap, text: '高新技术企业' },
     { icon: Users, text: 'AAA信用企业' },
-    { icon: Globe, text: '全球化服务网? },
+    { icon: Globe, text: '全球化服务网络' },
   ];
 
   return (

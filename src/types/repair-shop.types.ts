@@ -107,7 +107,8 @@ export interface ShopStatistics {
   monthlyRevenue: number;
   averageCompletionTime: number; // 平均完成时间（小时）
   customerSatisfaction: number; // 客户满意度（百分比）
-  technicianUtilization: number; // 技师利用率（百分比?  topFaultTypes: { faultType: string; count: number }[];
+  technicianUtilization: number; // 技师利用率（百分比）
+  topFaultTypes: { faultType: string; count: number }[];
 }
 
 // 通知类型

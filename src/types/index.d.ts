@@ -1,5 +1,7 @@
 ﻿// 全局类型声明文件
-// 用于增强IDE的类型提示和智能感知
+// 用于增强 IDE 的类型提示和智能感知
+
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 // Window 对象扩展
 declare global {
@@ -53,6 +55,9 @@ export interface User {
   avatar?: string;
   created_at?: string;
   updated_at?: string;
+  // 兼容 Supabase User 类型
+  user_metadata?: any;
+  app_metadata?: any;
 }
 
 // 设备信息
@@ -100,9 +105,9 @@ export interface Shop {
 // Supabase 客户端增强类
 export interface EnhancedSupabaseClient {
   from: (table: string) => {
-    select: (columns?: string) => Promise<any>;
-    insert: (data: any) => Promise<any>;
-    update: (data: any) => Promise<any>;
+    select: <T = any>(columns?: string) => Promise<any>;
+    insert: <T = any>(data: any) => Promise<any>;
+    update: <T = any>(data: any) => Promise<any>;
     delete: () => Promise<any>;
     eq: (column: string, value: any) => any;
   };

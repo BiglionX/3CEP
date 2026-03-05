@@ -152,9 +152,9 @@ export interface LogEntry {
         service: entry.service,
         message: entry.message,
         trace_id: entry.traceId,
-        context: entry.context ? JSON.stringify(entry.context) : null,
-        error_message: entry?.message || null,
-        error_stack: entry?.stack || null,
+        context: entry.context ? JSON.stringify(entry.context) : null
+        error_message: entry?.message || null
+        error_stack: entry?.stack || null
       };
 
       // 如果有Supabase连接，存储到数据?      if (

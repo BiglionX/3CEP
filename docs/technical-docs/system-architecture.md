@@ -14,6 +14,100 @@ FixCycle 采用**现代化全栈架构**，基于以下核心理念设计：
 - **数据分离架构**：应用数据与基础数据物理分离，通过 lionfix 系统集成
 - **微服务友好**：模块化设计，支持未来微服务拆分
 - **云原生部署**：容器化部署，支持弹性扩缩容
+- **模块化分层**：业务模块与技术基建分离，清晰职责边界
+
+### 核心设计理念
+
+✅ **数据分离**：应用数据与基础数据物理分离  
+✅ **实时集成**：通过数据库直连实现实时数据访问  
+✅ **自动化协调**：通过 n8n 实现智能体间的工作流编排  
+✅ **安全优先**：最小权限原则和多重安全防护  
+✅ **性能优化**：智能缓存和连接池管理  
+✅ **可观测性**：完整的监控告警和日志体系  
+✅ **模块清晰**：业务模块 (`src/modules/`) 与技术基建 (`src/tech/`) 完全分离
+
+### 文件夹结构规范 (v6.2)
+
+自 2026 年 3 月 4 日起，项目执行了**文件夹结构对齐计划**，实现清晰的模块化架构：
+
+```
+src/
+├── modules/                      # 【业务模块层】核心业务逻辑
+│   ├── auth/                     # 认证授权模块
+│   ├── repair-service/           # 维修服务模块
+│   ├── parts-market/             # 配件商城模块
+│   ├── b2b-procurement/          # B2B采购模块
+│   ├── data-center/              # 数据中心模块
+│   ├── fcx-alliance/             # FCX联盟模块
+│   ├── admin-panel/              # 管理后台模块
+│   ├── supply-chain/             # 供应链模块
+│   ├── procurement-intelligence/ # 采购智能模块
+│   ├── sales-intelligence/       # 销售智能模块
+│   ├── sales-agent/              # 销售代理模块
+│   ├── agent-sdk/                # Agent SDK
+│   └── common/                   # 公共组件模块
+│       └── permissions/          # 权限管理子模块
+│
+├── tech/                         # 【技术基建层】纯技术实现
+│   ├── api/                      # API接口层
+│   │   ├── controllers/          # 控制器
+│   │   ├── services/             # 技术服务
+│   │   └── routes/               # 路由定义
+│   ├── database/                 # 数据库层
+│   │   ├── models/               # 数据模型
+│   │   └── repositories/         # 数据访问层
+│   ├── middleware/               # 中间件层
+│   │   ├── auth.middleware.ts    # 认证中间件
+│   │   ├── logging.middleware.ts # 日志中间件
+│   │   └── error.middleware.ts   # 错误处理中间件
+│   ├── utils/                    # 工具函数层
+│   │   ├── helper.utils.ts       # 辅助函数
+│   │   └── validation.utils.ts   # 验证工具
+│   └── types/                    # TypeScript 类型定义
+│
+├── app/                          # 【应用层】Next.js App Router
+│   ├── (public)/                 # 公共页面包围组
+│   ├── (dashboard)/              # 仪表板页面包围组
+│   ├── admin/                    # 管理后台
+│   └── api/                      # API 路由
+│
+├── components/                   # 【UI组件库】纯展示组件
+│   ├── ui/                       # 基础 UI组件
+│   ├── business/                 # 业务组件
+│   └── layouts/                  # 布局组件
+│
+├── hooks/                        # 【React Hooks】跨模块复用
+├── lib/                          # 【第三方库封装】外部依赖适配
+├── stores/                       # 【状态管理】Zustand stores
+├── contexts/                     # 【React Contexts】上下文
+├── config/                       # 【配置文件】环境配置
+├── types/                        # 【全局类型】跨模块类型定义
+└── migrations/                   # 【数据库迁移】
+```
+
+**设计原则**：
+
+1. **业务模块** → `src/modules/` - 核心业务逻辑，按领域划分
+2. **技术基建** → `src/tech/` - 纯技术实现，与业务解耦
+3. **应用层** → `src/app/` - Next.js 路由和页面
+4. **共享资源** → `src/components/`, `src/hooks/`, `src/lib/` - 跨模块复用
+
+**路径映射规则**：
+
+``typescript
+// 业务模块导入
+import { AuthService } from '@/modules/auth/services/auth.service';
+import { RepairService } from '@/modules/repair-service/services/repair.service';
+
+// 技术基建导入
+import { logger } from '@/tech/utils/logger';
+import { authMiddleware } from '@/tech/middleware/auth.middleware';
+import { UserModel } from '@/tech/database/models/user.model';
+
+// 共享资源导入
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+```
 
 ### 核心设计理念
 
@@ -342,7 +436,7 @@ export async function authenticate(req: NextRequest) {
 
 ### 安全监控
 
-```yaml
+```
 实时监控:
   - 异常登录检测
   - API调用频率限制
@@ -359,7 +453,7 @@ export async function authenticate(req: NextRequest) {
 
 ### 缓存策略
 
-```typescript
+```
 // 多层缓存架构
 const cacheStrategy = {
   // 浏览器缓存
@@ -391,7 +485,7 @@ const cacheStrategy = {
 
 ### 数据库优化
 
-```sql
+```
 -- 关键索引优化
 CREATE INDEX idx_device_profiles_user_id ON device_profiles(user_id);
 CREATE INDEX idx_orders_created_at ON orders(created_at DESC);
@@ -407,7 +501,7 @@ LIMIT 10;
 
 ### 前端性能
 
-```javascript
+```
 // 代码分割和懒加载
 const LazyComponent = dynamic(() => import('./HeavyComponent'), {
   loading: () => <LoadingSpinner />,
@@ -632,6 +726,13 @@ test('user can create crowdfunding project', async ({ page }) => {
 
 ---
 
-_最后更新: 2026年2月21日_  
-_架构版本: v3.0_  
-_文档状态: 生产就绪_
+_最后更新：2026 年 3 月 4 日_  
+_架构版本：v6.2 (文件夹结构对齐版)_  
+_文档状态：生产就绪_
+
+## 📚 相关文档
+
+- [文件夹结构对齐计划](../../FOLDER_STRUCTURE_ALIGNMENT_PLAN.md) - 详细规划文档
+- [文件夹结构对齐完成报告](../../reports/FOLDER_STRUCTURE_ALIGNMENT_COMPLETION_REPORT.md) - 执行报告
+- [项目说明书 v6.2](../project-overview/project-specification.md) - 项目整体说明
+- [路径映射规则](../../scripts/update-import-paths.js) - 自动化脚本

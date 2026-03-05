@@ -9,7 +9,8 @@ export type UserRole =
   | 'finance'
   | 'viewer';
 
-// 管理员用户接?export interface AdminUser {
+// 管理员用户接口
+export interface AdminUser {
   id: string;
   user_id: string;
   email: string;

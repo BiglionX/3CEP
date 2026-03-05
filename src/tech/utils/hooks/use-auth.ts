@@ -154,14 +154,14 @@ export function useAuth() {
 
       return { success: true };
     } catch (error: any) {
-      const errorMessage = error.message || "发送重置邮件失?;
+      const errorMessage = error.message || "发送重置邮件失败";
       return { success: false, error: errorMessage };
     }
   }, []);
 
   // 更新用户信息
   const updateUser = useCallback(
-    async (userData: any: { email?: string; password?: string; data?: object }) => {
+    async (userData: { email?: string; password?: string; data?: object }) => {
       try {
         const { data, error } = await supabase.auth.updateUser(userData);
 

@@ -50,7 +50,8 @@ export function AuthControls({
     }
   };
 
-  // 加载状?  if (isLoading) {
+  // Loading state
+  if (isLoading) {
     return (
       <div
         className={`${variant === 'navbar' ? 'flex items-center space-x-2' : ''}`}
@@ -63,7 +64,8 @@ export function AuthControls({
     );
   }
 
-  // 已登录状?  if (isAuthenticated && user) {
+  // Logged in state
+  if (isAuthenticated && user) {
     return (
       <div className={`${variant === 'navbar' ? 'relative' : ''}`}>
         <div
@@ -127,11 +129,11 @@ export function AuthControls({
                       {user.email}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {is_admin ? '管理? : '普通用?}
+                      {is_admin ? '管理员' : '普通用户'}
                     </p>
                   </div>
 
-                  {/* 菜单?*/}
+                  {/* 菜单项 */}
                   <div className="py-1">
                     <Link
                       href="/profile"
@@ -170,14 +172,14 @@ export function AuthControls({
                       className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                     >
                       <LogOut className="w-4 h-4 mr-3" />
-                      退出登?                    </button>
+                      退出登录                    </button>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* 移动端用户菜?*/}
+          {/* 移动端用户菜单 */}
           {userMenuOpen && variant === 'navbar' && (
             <div
               className="fixed inset-0 z-40"
@@ -189,7 +191,8 @@ export function AuthControls({
     );
   }
 
-  // 未登录状?  return (
+  // 未登录状态
+  return (
     <div
       className={`flex items-center ${
         variant === 'navbar'
@@ -235,7 +238,8 @@ export function SidebarAuthControls(props: Omit<AuthControlsProps, 'variant'>) {
   return <AuthControls variant="sidebar" showLabels={true} {...props} />;
 }
 
-// 紧凑版本的认证控?export function CompactAuthControls(
+// 紧凑版本的认证控件
+export function CompactAuthControls(
   props: Omit<AuthControlsProps, 'variant' | 'showLabels'>
 ) {
   return <AuthControls variant="compact" showLabels={false} {...props} />;

@@ -1,146 +1,280 @@
+/**
+ * 批量修复中文乱码导致的语法错误
+ * 将损坏的 "中？" 格式修复为正确的中文
+ */
+
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔧 开始修复中文字符编码问题...\n');
-
-let filesFixed = 0;
-let totalReplacements = 0;
-
-// 常见乱码字符映射表
-const encodingFixes = [
-  // 单个乱码字符
-  { pattern: /创？/g, replacement: '创建' },
-  { pattern: /失？/g, replacement: '失败' },
-  { pattern: /功？/g, replacement: '成功' },
-  { pattern: /用？/g, replacement: '用户' },
-  { pattern: /电？/g, replacement: '电池' },
-  { pattern: /屏？/g, replacement: '屏幕' },
-  { pattern: /无？/g, replacement: '无法' },
-  { pattern: /开？/g, replacement: '开机' },
-  { pattern: /耗电？/g, replacement: '耗电量' },
-  { pattern: /闪？/g, replacement: '闪烁' },
-  { pattern: /诊断服？/g, replacement: '诊断服务' },
-  { pattern: /暂时不可？/g, replacement: '暂时不可用' },
-  { pattern: /请稍后重？/g, replacement: '请稍后重试' },
-  { pattern: /连接成？/g, replacement: '连接成功' },
-  { pattern: /向量数？/g, replacement: '向量数据库' },
-  { pattern: /客户？/g, replacement: '客户端' },
-  { pattern: /提供？/g, replacement: '提供商' },
-  { pattern: /租？/g, replacement: '租户' },
-  { pattern: /角色？/g, replacement: '角色' },
-  { pattern: /状？/g, replacement: '状态' },
-  { pattern: /操作？/g, replacement: '操作系统' },
-  { pattern: /于？/g, replacement: '用于' },
-  { pattern: /级？/g, replacement: '级别' },
-  { pattern: /低？/g, replacement: '低级' },
-  { pattern: /搜索操？/g, replacement: '搜索操作' },
-  { pattern: /等？/g, replacement: '等于' },
-  { pattern: /包含？/g, replacement: '包含' },
-  { pattern: /开头？/g, replacement: '开头' },
-  { pattern: /结尾？/g, replacement: '结尾' },
-  { pattern: /大？/g, replacement: '大于' },
-  { pattern: /删？/g, replacement: '删除' },
-  { pattern: /执？/g, replacement: '执行' },
-  { pattern: /调？/g, replacement: '调度' },
-  { pattern: /智？/g, replacement: '智能体' },
-
-  // 通用乱码替换 - 使用 Unicode 范围匹配所有中文字符后的乱码
-  { pattern: /([\u4e00-\u9fa5])\ufffd/g, replacement: '$1' },
-  { pattern: /\ufffd([\u4e00-\u9fa5])/g, replacement: '$1' },
-
-  // 特定字符串替换
-  { pattern: /草稿创？/g, replacement: '草稿创建' },
-  {
-    pattern: /我的第一个 FixCycle 智能？/g,
-    replacement: '我的第一个 FixCycle 智能体',
-  },
+// 待修复的文件列表
+const filesToFix = [
+  'src/services/ai-diagnosis-service.ts',
+  'src/services/ai-diagnosis.service.ts',
+  'src/services/ml-client.service.ts',
+  'src/services/ml-confidence.service.ts',
+  'src/services/ml-error-handling.ts',
+  'src/services/ml-prediction.service.ts',
 ];
 
-// 需要修复的文件类型
-const fileExtensions = ['.ts', '.tsx', '.js', '.jsx'];
+// 常见损坏模式映射表
+const damagePatterns = {
+  '信？': '信息',
+  '提示？': '提示',
+  '问题？': '问题',
+  '原因？': '原因',
+  '现象？': '现象',
+  '建议？': '建议',
+  '状态？': '状态',
+  '配置？': '配置',
+  '服务？': '服务',
+  '用户？': '用户',
+  '产品？': '产品',
+  '设备？': '设备',
+  '系统？': '系统',
+  '检查？': '检查',
+  '诊断？': '诊断',
+  '维修？': '维修',
+  '故障？': '故障',
+  '处理？': '处理',
+  '数据？': '数据',
+  '文件？': '文件',
+  '路径？': '路径',
+  '参数？': '参数',
+  '结果？': '结果',
+  '操作？': '操作',
+  '功能？': '功能',
+  '模块？': '模块',
+  '接口？': '接口',
+  '请求？': '请求',
+  '响应？': '响应',
+  '错误？': '错误',
+  '异常？': '异常',
+  '日志？': '日志',
+  '时间？': '时间',
+  '名称？': '名称',
+  '类型？': '类型',
+  '内容？': '内容',
+  '格式？': '格式',
+  '版本？': '版本',
+  '描述？': '描述',
+  '详情？': '详情',
+  '联系？': '联系',
+  '售后？': '售后',
+  '检测？': '检测',
+  '确认？': '确认',
+  '验证？': '验证',
+  '测试？': '测试',
+  '分析？': '分析',
+  '评估？': '评估',
+  '优化？': '优化',
+  '设置？': '设置',
+  '调整？': '调整',
+  '更新？': '更新',
+  '升级？': '升级',
+  '下载？': '下载',
+  '上传？': '上传',
+  '加载？': '加载',
+  '保存？': '保存',
+  '删除？': '删除',
+  '添加？': '添加',
+  '修改？': '修改',
+  '查询？': '查询',
+  '搜索？': '搜索',
+  '匹配？': '匹配',
+  '识别？': '识别',
+  '推荐？': '推荐',
+  '通知？': '通知',
+  '消息？': '消息',
+  '提醒？': '提醒',
+  '警告？': '警告',
+  '危险？': '危险',
+  '安全？': '安全',
+  '权限？': '权限',
+  '认证？': '认证',
+  '授权？': '授权',
+  '登录？': '登录',
+  '注册？': '注册',
+  '退出？': '退出',
+  '返回？': '返回',
+  '跳转？': '跳转',
+  '重定向？': '重定向',
+  '刷新？': '刷新',
+  '同步？': '同步',
+  '异步？': '异步',
+  '延迟？': '延迟',
+  '超时？': '超时',
+  '重试？': '重试',
+  '恢复？': '恢复',
+  '备份？': '备份',
+  '还原？': '还原',
+  '加密？': '加密',
+  '解密？': '解密',
+  '压缩？': '压缩',
+  '解压？': '解压',
+  '编译？': '编译',
+  '构建？': '构建',
+  '部署？': '部署',
+  '发布？': '发布',
+  '上线？': '上线',
+  '下线？': '下线',
+  '启动？': '启动',
+  '停止？': '停止',
+  '暂停？': '暂停',
+  '继续？': '继续',
+  '取消？': '取消',
+  '完成？': '完成',
+  '失败？': '失败',
+  '成功？': '成功',
+  '无效？': '无效',
+  '有效？': '有效',
+  '可用？': '可用',
+  '不可用？': '不可用',
+  '存在？': '存在',
+  '不存在？': '不存在',
+  '正确？': '正确',
+  '错误？': '错误',
+  '损坏？': '损坏',
+  '丢失？': '丢失',
+  '重复？': '重复',
+  '唯一？': '唯一',
+  '随机？': '随机',
+  '默认？': '默认',
+  '自定义？': '自定义',
+  '自动？': '自动',
+  '手动？': '手动',
+  '批量？': '批量',
+  '单个？': '单个',
+  '全部？': '全部',
+  '部分？': '部分',
+  '剩余？': '剩余',
+  '总计？': '总计',
+  '合计？': '合计',
+  '统计？': '统计',
+  '汇总？': '汇总',
+  '详细？': '详细',
+  '简单？': '简单',
+  '高级？': '高级',
+  '基础？': '基础',
+  '核心？': '核心',
+  '扩展？': '扩展',
+  '插件？': '插件',
+  '依赖？': '依赖',
+  '环境？': '环境',
+  '配置？': '配置',
+  '安装？': '安装',
+  '卸载？': '卸载',
+  '清理？': '清理',
+  '优化？': '优化',
+  '加速？': '加速',
+  '减速？': '减速',
+  '提高？': '提高',
+  '降低？': '降低',
+  '增加？': '增加',
+  '减少？': '减少',
+  '最大？': '最大',
+  '最小？': '最小',
+  '最多？': '最多',
+  '最少？': '最少',
+  '平均？': '平均',
+  '当前？': '当前',
+  '历史？': '历史',
+  '未来？': '未来',
+  '过去？': '过去',
+  '现在？': '现在',
+  '实时？': '实时',
+  '定时？': '定时',
+  '周期？': '周期',
+  '频率？': '频率',
+  '间隔？': '间隔',
+  '持续？': '持续',
+  '暂时？': '暂时',
+  '永久？': '永久',
+  '临时？': '临时',
+  '长期？': '长期',
+  '短期？': '短期',
+  '中期？': '中期',
+  '在线？': '在线',
+  '离线？': '离线',
+  '本地？': '本地',
+  '远程？': '远程',
+  '云端？': '云端',
+  '服务器？': '服务器',
+  '客户端？': '客户端',
+  '浏览器？': '浏览器',
+  '移动端？': '移动端',
+  '桌面端？': '桌面端',
+  '后台？': '后台',
+  '前台？': '前台',
+  '界面？': '界面',
+  '页面？': '页面',
+  '组件？': '组件',
+  '元素？': '元素',
+  '节点？': '节点',
+  '属性？': '属性',
+  '方法？': '方法',
+  '函数？': '函数',
+  '变量？': '变量',
+  '常量？': '常量',
+  '对象？': '对象',
+  '数组？': '数组',
+  '字符串？': '字符串',
+  '数字？': '数字',
+  '布尔？': '布尔',
+  '空值？': '空值',
+  '未定义？': '未定义',
+  ' null?': ' null',
+  ' undefined?': ' undefined',
+};
 
-// 扫描并修复文件
-function scanAndFixDirectory(dirPath, depth = 0) {
-  if (depth > 10) return; // 防止过深递归
+function fixDamagedContent(content) {
+  let fixed = content;
+  let count = 0;
 
-  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const fullPath = path.join(dirPath, entry.name);
-
-    // 跳过 node_modules、.next、out、public、dist 等目录
-    if (
-      [
-        'node_modules',
-        '.next',
-        'out',
-        'public',
-        'dist',
-        'coverage',
-        '.git',
-      ].includes(entry.name)
-    ) {
-      continue;
+  // 替换所有损坏的中文字符
+  Object.keys(damagePatterns).forEach(pattern => {
+    const regex = new RegExp(pattern.replace('?', '.'), 'g');
+    const matches = content.match(regex);
+    if (matches) {
+      fixed = fixed.replace(regex, damagePatterns[pattern]);
+      count += matches.length;
     }
+  });
 
-    if (entry.isDirectory()) {
-      scanAndFixDirectory(fullPath, depth + 1);
-    } else if (
-      entry.isFile() &&
-      fileExtensions.includes(path.extname(entry.name))
-    ) {
-      fixFile(fullPath);
-    }
-  }
+  // 修复常见的字符串未终止问题
+  fixed = fixed.replace(/'([^']*) 请稍后再？;/g, "'$1请稍后再试';");
+  fixed = fixed.replace(/'([^']*) 请稍后再？;/g, "'$1请稍后再试';");
+  
+  return { fixed, count };
 }
 
-function fixFile(filePath) {
+function processFile(filePath) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
-    let newContent = content;
-    let fileChanged = false;
+    const { fixed, count } = fixDamagedContent(content);
 
-    encodingFixes.forEach(({ pattern, replacement }) => {
-      const matches = newContent.match(pattern);
-      if (matches) {
-        newContent = newContent.replace(pattern, replacement);
-        fileChanged = true;
-        totalReplacements += matches.length;
-      }
-    });
-
-    if (fileChanged) {
-      fs.writeFileSync(filePath, newContent, 'utf8');
-      filesFixed++;
-      console.log(
-        `✅ 已修复：${filePath} (${totalReplacements - filesFixed} 处)`
-      );
+    if (count > 0) {
+      fs.writeFileSync(filePath, fixed, 'utf8');
+      console.log(`✅ ${filePath}: 修复了 ${count} 处损坏`);
+      return true;
+    } else {
+      console.log(`⚠️  ${filePath}: 无需修复`);
+      return false;
     }
   } catch (error) {
-    console.error(`❌ 处理失败 ${filePath}:`, error.message);
+    console.error(`❌ ${filePath}: 读取失败 - ${error.message}`);
+    return false;
   }
 }
 
-// 主函数
-function main() {
-  console.log('📂 开始扫描 src 目录...\n');
-  scanAndFixDirectory(path.join(__dirname, '..', 'src'));
+console.log('🔧 开始批量修复中文乱码...\n');
 
-  console.log('\n===================================');
-  console.log('📊 修复总结:');
-  console.log('===================================');
-  console.log(`✅ 已修复文件数：${filesFixed}`);
-  console.log(`✅ 总替换次数：${totalReplacements}`);
-  console.log('===================================\n');
-
-  if (filesFixed === 0) {
-    console.log('✨ 未发现乱码字符，所有文件编码正常！\n');
-  } else {
-    console.log(
-      '💡 建议：运行 `npx tsc --noEmit` 验证 TypeScript 错误是否减少\n'
-    );
+let totalFixed = 0;
+filesToFix.forEach(file => {
+  const fullPath = path.join(process.cwd(), file);
+  if (processFile(fullPath)) {
+    totalFixed++;
   }
-}
+});
 
-// 执行
-main();
+console.log(`\n✅ 完成！共修复 ${totalFixed} 个文件`);
+console.log('\n📝 提示：请运行 npx tsc --noEmit 验证修复效果');

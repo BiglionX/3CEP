@@ -375,7 +375,8 @@ export class GoodcangWMSClient implements WMSClient {
   }
 
   /**
-   * 更新订单发货状?   */
+   * 更新订单发货状态
+   */
   async updateShipmentStatus(
     orderId: string,
     trackingNumber: string,
@@ -413,7 +414,7 @@ export class GoodcangWMSClient implements WMSClient {
           success: false,
           error: {
             code: `UPDATE_STATUS_ERROR_${response.status}`,
-            message: errorData.message || '更新订单状态失?,
+            message: errorData.message || '更新订单状态失败',
             details: errorData,
           },
           requestId,
@@ -689,7 +690,8 @@ export class GoodcangWMSClient implements WMSClient {
   }
 
   /**
-   * 发起基础请求（带重试机制?   */
+   * 发起基础请求（带重试机制）
+   */
   private async makeRequest(
     endpoint: string,
     options: RequestInit
@@ -718,12 +720,14 @@ export class GoodcangWMSClient implements WMSClient {
           return response;
         }
 
-        // 5xx错误，准备重?        if (attempt < (this.config.retryAttempts || 3)) {
+        // 5xx 错误，准备重试
+        if (attempt < (this.config.retryAttempts || 3)) {
           const delay = (this.config.retryDelay || 1000) * Math.pow(2, attempt);
           await this.delay(delay);
         }
       } catch (error) {
-        // 网络错误，准备重?        if (attempt < (this.config.retryAttempts || 3)) {
+        // 网络错误，准备重试
+        if (attempt < (this.config.retryAttempts || 3)) {
           const delay = (this.config.retryDelay || 1000) * Math.pow(2, attempt);
           await this.delay(delay);
         } else {
@@ -736,7 +740,8 @@ export class GoodcangWMSClient implements WMSClient {
   }
 
   /**
-   * 设置令牌刷新定时?   */
+   * 设置令牌刷新定时器
+   */
   private setupTokenRefresh(expiresIn: number): void {
     if (this.tokenExpiryTimer) {
       clearTimeout(this.tokenExpiryTimer);
@@ -772,7 +777,8 @@ export class GoodcangWMSClient implements WMSClient {
    * 生成回调令牌
    */
   private generateCallbackToken(): string {
-    // 生成安全的回调令?    return require('crypto').randomBytes(32).toString('hex');
+    // 生成安全的回调令牌
+    return require('crypto').randomBytes(32).toString('hex');
   }
 
   /**
@@ -852,7 +858,8 @@ export class GoodcangWMSClient implements WMSClient {
       const crypto = require('crypto');
       const secret = this.config.clientSecret;
 
-      // 生成期望的签?      const expectedSignature = crypto
+      // 生成期望的签名
+      const expectedSignature = crypto
         .createHmac('sha256', secret)
         .update(JSON.stringify(data))
         .digest('hex');
@@ -890,7 +897,8 @@ export class GoodcangWMSClient implements WMSClient {
         }
       }
 
-      // 验证时间?      const callbackTime = new Date(callbackData.timestamp);
+      // 验证时间戳
+      const callbackTime = new Date(callbackData.timestamp);
       const currentTime = new Date();
       const timeDiff = Math.abs(currentTime.getTime() - callbackTime.getTime());
 
@@ -899,14 +907,14 @@ export class GoodcangWMSClient implements WMSClient {
         return {
           success: false,
           processed: false,
-          error: '时间戳过?,
+          error: '时间戳过期',
           timestamp: new Date(),
         };
       }
 
       // 处理回调数据
       // 这里应该调用实际的服务层来处理业务逻辑
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('处理入库预报回调:', callbackData)return {
+      return {
         success: true,
         processed: true,
         timestamp: new Date(),

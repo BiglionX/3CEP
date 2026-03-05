@@ -1,4 +1,6 @@
-﻿// 增强的Supabase 类型声明
+﻿// 增强的 Supabase类型声明
+
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 declare global {
   interface Window {
@@ -9,9 +11,9 @@ declare global {
 // Supabase 客户端增强类
 interface EnhancedSupabaseClient {
   from: (table: string) => {
-    select: (columns?: string) => Promise<any>;
-    insert: (data: any) => Promise<any>;
-    update: (data: any) => Promise<any>;
+    select: <T = any>(columns?: string) => Promise<any>;
+    insert: <T = any>(data: any) => Promise<any>;
+    update: <T = any>(data: any) => Promise<any>;
     delete: () => Promise<any>;
   };
 }
@@ -42,6 +44,10 @@ interface User {
   name?: string;
   role?: string;
   created_at?: string;
+  // 兼容 Supabase User 类型
+  user_metadata?: any;
+  app_metadata?: any;
+  last_sign_in_at?: string;
 }
 
 // 市场数据类型

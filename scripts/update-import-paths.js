@@ -20,7 +20,7 @@ function processFile(filePath) {
   try {
     let content = fs.readFileSync(filePath, 'utf8');
     const original = content;
-    
+
     PATH_MAPPINGS.forEach(({ from, to }) => {
       const matches = content.match(from);
       if (matches) {
@@ -28,7 +28,7 @@ function processFile(filePath) {
         stats.replacements += matches.length;
       }
     });
-    
+
     if (content !== original) {
       fs.writeFileSync(filePath, content, 'utf8');
       stats.modified++;
@@ -44,7 +44,11 @@ function walkDir(dir) {
   files.forEach(file => {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
-    if (stat.isDirectory() && !file.startsWith('.') && file !== 'node_modules') {
+    if (
+      stat.isDirectory() &&
+      !file.startsWith('.') &&
+      file !== 'node_modules'
+    ) {
       walkDir(filePath);
     } else if (/\.(ts|tsx|js|jsx)$/.test(file)) {
       processFile(filePath);

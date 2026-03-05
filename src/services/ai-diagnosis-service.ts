@@ -19,17 +19,19 @@ export class AIDiagnosisService {
   // 获取产品相关信息
   static async getProductContext(
     productId: string
-  ): Promise<ProductInfo | null> {
-    // 这里应该查询数据库获取产品信?    // 暂时返回模拟数据
+  ): Promise<ProductInfo | null {
+    // 这里应该查询数据库获取产品信息
+    // 暂时返回模拟数据
     return {
       brand: 'Apple',
       model: 'iPhone 15 Pro',
       category: '手机',
-      symptoms: ['无法开?, '电池耗电?, '屏幕闪烁'],
+      symptoms: ['无法开机', '电池耗电快', '屏幕闪烁'],
     };
   }
 
-  // 生成诊断提示?  static generateDiagnosisPrompt(
+  // 生成诊断提示
+  static generateDiagnosisPrompt(
     productInfo: ProductInfo,
     userMessage: string
   ): string {
@@ -61,13 +63,14 @@ export class AIDiagnosisService {
       let conversationHistory = diagnosisSessions.get(sessionId) || [];
 
       // 如果有产品ID，获取产品上下文
-      let productInfo: ProductInfo | null = null;
+      let productInfo: ProductInfo | null= null
       if (productId) {
         productInfo = await this.getProductContext(productId);
       }
 
-      // 构建系统提示?      let systemPrompt =
-        '你是一个专业的产品维修技师AI助手，专门帮助用户诊断和解决产品故障问题?;
+      // 构建系统提示
+      let systemPrompt =
+        '你是一个专业的产品维修技师 AI 助手，专门帮助用户诊断和解决产品故障问题';
       if (productInfo) {
         systemPrompt = this.generateDiagnosisPrompt(productInfo, userMessage);
       }
@@ -120,7 +123,7 @@ export class AIDiagnosisService {
       };
     } catch (error) {
       console.error('AI诊断服务错误:', error);
-      throw new Error('诊断服务暂时不可用，请稍后再?);
+      throw new Error('诊断服务暂时不可用，请稍后再试');
     }
   }
 
@@ -134,10 +137,10 @@ export class AIDiagnosisService {
     // 基于关键词的建议
     const lowerMessage = userMessage.toLowerCase();
 
-    if (lowerMessage.includes('不开?) || lowerMessage.includes('无法开?)) {
+    if (lowerMessage.includes('开不了机') || lowerMessage.includes('无法开机')) {
       suggestions.push('检查充电线和充电器是否正常');
       suggestions.push('尝试强制重启设备');
-      suggestions.push('检查电池是否有?);
+      suggestions.push('检查电池是否有物理损坏');
     }
 
     if (lowerMessage.includes('屏幕') || lowerMessage.includes('显示')) {
@@ -147,15 +150,15 @@ export class AIDiagnosisService {
     }
 
     if (lowerMessage.includes('声音') || lowerMessage.includes('音频')) {
-      suggestions.push('检查音量设?);
+      suggestions.push('检查音量设置');
       suggestions.push('清理扬声器孔');
       suggestions.push('尝试重启设备');
     }
 
     if (lowerMessage.includes('网络') || lowerMessage.includes('连接')) {
-      suggestions.push('检查WiFi/蓝牙开?);
-      suggestions.push('重启路由?);
-      suggestions.push('忘记网络后重新连?);
+      suggestions.push('检查 WiFi/蓝牙开关');
+      suggestions.push('重启路由器');
+      suggestions.push('忘记网络后重新连接');
     }
 
     // 基于产品类型的通用建议
@@ -177,9 +180,9 @@ export class AIDiagnosisService {
   // 获取会话摘要
   static getSessionSummary(
     sessionId: string
-  ): { messageCount: number; duration: string } | null {
+  ): { messageCount: number; duration: string } | null{
     const history = diagnosisSessions.get(sessionId);
-    if (!history || history.length === 0) return null;
+    if (!history || history.length === 0) return null
 
     const firstMessage = history[0];
     const lastMessage = history[history.length - 1];
@@ -196,7 +199,7 @@ export class AIDiagnosisService {
     const seconds = Math.floor((ms % 60000) / 1000);
 
     if (minutes > 0) {
-      return `${minutes}�?{seconds}秒`;
+      return `${minutes}分${seconds}秒`;
     }
     return `${seconds}秒`;
   }
@@ -222,7 +225,7 @@ export class AIDiagnosisService {
 1. 屏幕亮度设置 - 检查是否调至最?2. 显示驱动问题 - 尝试重启设备
 3. 物理损坏 - 查看是否有裂痕或进水痕迹
 
-能详细描述一下具体现象吗？比如是完全黑屏还是有显示异常？`;
+能详细描述一下具体现象吗？比如是完全黑屏还是有显示异常`;
     }
 
     if (lowerMessage.includes('声音') || lowerMessage.includes('没声?)) {

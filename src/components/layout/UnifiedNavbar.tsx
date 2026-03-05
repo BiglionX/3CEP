@@ -67,7 +67,7 @@ export function UnifiedNavbar() {
       icon: <BookOpen className="w-4 h-4" />,
     },
     {
-      name: '技术支?,
+      name: '技术支持',
       href: '/diagnosis',
       icon: <MessageSquare className="w-4 h-4" />,
     },

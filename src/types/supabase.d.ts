@@ -1,10 +1,12 @@
 ﻿// Supabase类型增强声明
+
+// SVG 模块类型声明
 declare module '*.svg' {
   const content: string;
   export default content;
 }
 
-// Supabase PostgREST类型修复
+// Supabase PostgREST 类型修复
 interface SupabaseInsertOptions {
   returning?: 'minimal' | 'representation';
   count?: 'exact' | 'planned' | 'estimated';
@@ -34,3 +36,6 @@ interface ManualVersion {
   changes: string;
   created_at?: string;
 }
+
+// 导出空对象以满足模块系统要求
+export {};

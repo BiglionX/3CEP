@@ -1,4 +1,5 @@
-// Supabase客户端配?import { createClient } from '@supabase/supabase-js';
+// Supabase 客户端配置
+import { createClient } from '@supabase/supabase-js';
 
 // 环境变量配置
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -16,7 +17,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// 服务端客户端（Node.js环境使用?export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
+// 服务端客户端（Node.js 环境使用）
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: {
     persistSession: false,
     autoRefreshToken: false,
@@ -78,7 +80,8 @@ export interface SystemConfig {
   updated_at: string;
 }
 
-// 数据库操作辅助函?export class DatabaseService {
+// 数据库操作辅助函数
+export class DatabaseService {
   // 配件相关操作
   static async getParts() {
     const { data, error } = await supabase
