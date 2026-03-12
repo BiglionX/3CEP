@@ -1,0 +1,35 @@
+# TypeScript
+*.ts text eol=lf charset=utf-8
+*.tsx text eol=lf charset=utf-8
+
+# JavaScript
+*.js text eol=lf charset=utf-8
+*.jsx text eol=lf charset=utf-8
+
+# JSON
+*.json text eol=lf charset=utf-8
+
+# Markdown
+*.md text eol=lf charset=utf-8
+
+# YAML/YML
+*.yml text eol=lf charset=utf-8
+*.yaml text eol=lf charset=utf-8
+
+# CSS/SCSS/Less
+*.css text eol=lf charset=utf-8
+*.scss text eol=lf charset=utf-8
+*.less text eol=lf charset=utf-8
+
+# HTML
+*.html text eol=lf charset=utf-8
+
+# Shell Scripts
+*.sh text eol=lf charset=utf-8
+*.bash text eol=lf charset=utf-8
+
+# Git Hooks
+.husky/* text eol=lf charset=utf-8
+
+# Ensure no conversion for node_modules
+node_modules/** -text
