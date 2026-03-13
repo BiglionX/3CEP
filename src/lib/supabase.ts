@@ -1,4 +1,5 @@
-// Supabase客户端配?import { createClient } from '@supabase/supabase-js';
+// Supabase客户端配置
+import { createClient } from '@supabase/supabase-js';
 
 // 环境变量配置
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -7,7 +8,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 // 服务端客户端（使用服务角色密钥）
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-// 单例模式防止多实例问?let supabaseInstance: ReturnType<typeof createClient> | null = null;
+// 单例模式防止多实例问题
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
 let supabaseAdminInstance: ReturnType<typeof createClient> | null = null;
 
 // 公共客户端（浏览器使用）- 单例模式
@@ -18,14 +20,14 @@ export const supabase = (() => {
         persistSession: true,
         detectSessionInUrl: true,
         autoRefreshToken: true,
-        storageKey: 'sb-hrjqzbhqueleszkvnsen-auth-token-singleton',
+        storageKey: 'sb-procyc-auth-token-singleton',
       },
     });
   }
   return supabaseInstance;
 })();
 
-// 服务端客户端（Node.js环境使用? 单例模式
+// 服务端客户端（Node.js环境使用）- 单例模式
 export const supabaseAdmin = (() => {
   if (!supabaseAdminInstance) {
     supabaseAdminInstance = createClient(supabaseUrl, supabaseServiceRoleKey, {
@@ -93,7 +95,8 @@ export interface SystemConfig {
   updated_at: string;
 }
 
-// 数据库操作辅助函?export class DatabaseService {
+// 数据库操作辅助函数
+export class DatabaseService {
   // 配件相关操作
   static async getParts() {
     const { data, error } = await supabase
@@ -102,7 +105,7 @@ export interface SystemConfig {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data as Part[];
+    return (data || []) as unknown as Part[];
   }
 
   static async getPartById(id: string) {
@@ -113,7 +116,7 @@ export interface SystemConfig {
       .single();
 
     if (error) throw error;
-    return data as Part;
+    return data as unknown as Part;
   }
 
   static async getPartsWithPrices() {
@@ -135,7 +138,7 @@ export interface SystemConfig {
       .order('last_updated', { ascending: false });
 
     if (error) throw error;
-    return data as PartPrice[];
+    return (data || []) as unknown as PartPrice[];
   }
 
   // 上传内容相关操作
@@ -146,7 +149,7 @@ export interface SystemConfig {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data as UploadedContent[];
+    return (data || []) as unknown as UploadedContent[];
   }
 
   static async uploadContent(
@@ -159,7 +162,7 @@ export interface SystemConfig {
       .single();
 
     if (error) throw error;
-    return data as UploadedContent;
+    return data as unknown as UploadedContent;
   }
 
   // 预约相关操作
@@ -176,7 +179,7 @@ export interface SystemConfig {
     const { data, error } = await query;
 
     if (error) throw error;
-    return data as Appointment[];
+    return (data || []) as unknown as Appointment[];
   }
 
   static async createAppointment(
@@ -189,7 +192,7 @@ export interface SystemConfig {
       .single();
 
     if (error) throw error;
-    return data as Appointment;
+    return data as unknown as Appointment;
   }
 
   // 系统配置相关操作
@@ -212,7 +215,7 @@ export interface SystemConfig {
       .single();
 
     if (error) throw error;
-    return data as SystemConfig;
+    return data as unknown as SystemConfig;
   }
 }
 
