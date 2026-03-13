@@ -1,6 +1,5 @@
 ﻿'use client';
 
-import { SEO_PRESETS, SeoHead } from '@/components/SeoHead';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -111,8 +110,6 @@ export default function HomePage() {
   return (
     <UnifiedLayout showNavbar={true} showFooter={true} navbarPadding={true}>
       <div className="min-h-screen">
-        <SeoHead {...SEO_PRESETS.overview} />
-
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
