@@ -1,5 +1,5 @@
-import { supabase, supabaseAdmin } from './supabase';
 import type { User } from '@supabase/supabase-js';
+import { supabase, supabaseAdmin } from './supabase';
 
 // 角色类型定义
 export type UserRole =
@@ -61,7 +61,8 @@ export class AuthService {
               }
             }
           } catch (parseError) {
-            // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('Cookie解析失败:', parseError)}
+            // TODO: 移除调试日志 - console.log('Cookie解析失败:', parseError)
+          }
         }
       }
 
@@ -113,7 +114,8 @@ export class AuthService {
     }
   }
 
-  // 检查用户是否为管理?  static async isAdminUser(userId: string): Promise<boolean> {
+  // 检查用户是否为管理员
+  static async isAdminUser(userId: string): Promise<boolean> {
     try {
       const { data, error } = await supabaseAdmin
         .from('admin_users')
@@ -129,20 +131,23 @@ export class AuthService {
     }
   }
 
-  // 检查权?  static async checkPermission(
+  // 检查权限
+  static async checkPermission(
     userId: string,
     resource: string,
     action: string
   ): Promise<boolean> {
     try {
-      // 首先检查是否为管理?      const isAdmin = await this.isAdminUser(userId);
+      // 首先检查是否为管理员
+      const isAdmin = await this.isAdminUser(userId);
       if (!isAdmin) {
         return false;
       }
 
       const userRole = await this.getUserRole(userId);
 
-      // 管理员拥有所有权?      if (userRole === 'admin') return true;
+      // 管理员拥有所有权限
+      if (userRole === 'admin') return true;
 
       const { data, error } = await supabase
         .from('permissions')
@@ -153,12 +158,13 @@ export class AuthService {
 
       return !error && data && (data as any)?.data.length > 0;
     } catch (error) {
-      console.error('权限检查失?', error);
+      console.error('权限检查失败', error);
       return false;
     }
   }
 
-  // 管理员登录检?  static async isAdminAuthenticated(): Promise<boolean> {
+  // 管理员登录检查
+  static async isAdminAuthenticated(): Promise<boolean> {
     const user = await this.getCurrentUser();
     if (!user) return false;
 
@@ -176,13 +182,13 @@ export class AuthService {
         .single();
 
       if (error) {
-        console.error('获取管理员信息失?', error);
+        console.error('获取管理员信息失败', error);
         return null;
       }
 
-      return data as AdminUser;
+      return data as unknown as AdminUser;
     } catch (error) {
-      console.error('获取管理员信息异?', error);
+      console.error('获取管理员信息异常', error);
       return null;
     }
   }
@@ -219,18 +225,19 @@ export class AuthService {
         .single();
 
       if (error) {
-        console.error('创建管理员用户失?', error);
+        console.error('创建管理员用户失败', error);
         return null;
       }
 
-      return data as AdminUser;
+      return data as unknown as AdminUser;
     } catch (error) {
-      console.error('创建管理员用户异?', error);
+      console.error('创建管理员用户异常', error);
       return null;
     }
   }
 
-  // 更新管理员用户状?  static async updateAdminUserStatus(
+  // 更新管理员用户状态
+  static async updateAdminUserStatus(
     userId: string,
     isActive: boolean
   ): Promise<boolean> {
@@ -240,10 +247,11 @@ export class AuthService {
 
       const currentRole = await this.getUserRole(currentUser.id);
       if (currentRole !== 'admin') {
-        throw new Error('只有超级管理员可以更新用户状?);
+        throw new Error('只有超级管理员可以更新用户状态');
       }
 
-      // 使用 any 类型绕过类型检查问?      const { error } = await (supabaseAdmin.from('admin_users') as any)
+      // 使用 any 类型绕过类型检查问题
+      const { error } = await (supabaseAdmin.from('admin_users') as any)
         .update({
           is_active: isActive,
           updated_at: new Date().toISOString(),
@@ -252,19 +260,20 @@ export class AuthService {
 
       return !error;
     } catch (error) {
-      console.error('更新管理员状态失?', error);
+      console.error('更新管理员状态失败', error);
       return false;
     }
   }
 
-  // 获取所有管理员用户（仅限管理员?  static async getAllAdminUsers(): Promise<AdminUser[]> {
+  // 获取所有管理员用户（仅限管理员）
+  static async getAllAdminUsers(): Promise<AdminUser[]> {
     try {
       const currentUser = await this.getCurrentUser();
       if (!currentUser) return [];
 
       const currentRole = await this.getUserRole(currentUser.id);
       if (currentRole !== 'admin') {
-        throw new Error('只有管理员可以查看用户列?);
+        throw new Error('只有管理员可以查看用户列表');
       }
 
       const { data, error } = (await supabase
@@ -273,13 +282,13 @@ export class AuthService {
         .order('created_at', { ascending: false })) as any;
 
       if (error) {
-        console.error('获取管理员用户列表失?', error);
+        console.error('获取管理员用户列表失败', error);
         return [];
       }
 
       return data as AdminUser[];
     } catch (error) {
-      console.error('获取管理员用户列表异?', error);
+      console.error('获取管理员用户列表异常', error);
       return [];
     }
   }
@@ -300,7 +309,7 @@ export class AuthService {
         return [];
       }
 
-      return data as Permission[];
+      return data as unknown as Permission[];
     } catch (error) {
       console.error('获取用户权限异常:', error);
       return [];
@@ -319,16 +328,17 @@ export class AuthService {
   // 获取角色显示名称
   static getRoleDisplayName(role: UserRole): string {
     const roleNames: Record<UserRole, string> = {
-      admin: '超级管理?,
-      content_reviewer: '内容审核?,
-      shop_reviewer: '店铺审核?,
+      admin: '超级管理员',
+      content_reviewer: '内容审核员',
+      shop_reviewer: '店铺审核员',
       finance: '财务人员',
-      viewer: '查看?,
+      viewer: '查看者',
     };
     return roleNames[role] || role;
   }
 
-  // 检查是否具有特定角?  static async hasRole(
+  // 检查是否具有特定角色
+  static async hasRole(
     userId: string,
     requiredRole: UserRole
   ): Promise<boolean> {
