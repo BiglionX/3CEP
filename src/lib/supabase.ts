@@ -8,29 +8,30 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 // 服务端客户端（使用服务角色密钥）
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-// 单例模式防止多实例问题
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
-let supabaseAdminInstance: ReturnType<typeof createClient> | null = null;
+// 单例模式防止多实例问题 - 使用全局变量确保跨模块共享
+declare global {
+  var __supabaseInstance: any | undefined;
+  var __supabaseAdminInstance: any | undefined;
+}
 
 // 公共客户端（浏览器使用）- 单例模式
 export const supabase = (() => {
-  if (!supabaseInstance) {
-    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-        detectSessionInUrl: true,
-        autoRefreshToken: true,
-        storageKey: 'sb-procyc-auth-token-singleton',
-      },
-    });
-  }
-  return supabaseInstance;
-})();
-
-// 服务端客户端（Node.js环境使用）- 单例模式
-export const supabaseAdmin = (() => {
-  if (!supabaseAdminInstance) {
-    supabaseAdminInstance = createClient(supabaseUrl, supabaseServiceRoleKey, {
+  if (typeof window !== 'undefined') {
+    // 浏览器端：使用全局单例
+    if (!globalThis.__supabaseInstance) {
+      globalThis.__supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: true,
+          detectSessionInUrl: true,
+          autoRefreshToken: true,
+          storageKey: 'sb-procyc-auth-token-singleton',
+        },
+      });
+    }
+    return globalThis.__supabaseInstance;
+  } else {
+    // 服务端：直接创建新实例
+    return createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
@@ -38,7 +39,20 @@ export const supabaseAdmin = (() => {
       },
     });
   }
-  return supabaseAdminInstance;
+})();
+
+// 服务端客户端（Node.js环境使用）- 单例模式
+export const supabaseAdmin = (() => {
+  if (!globalThis.__supabaseAdminInstance) {
+    globalThis.__supabaseAdminInstance = createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    });
+  }
+  return globalThis.__supabaseAdminInstance;
 })();
 
 // 数据库表接口定义
