@@ -100,14 +100,14 @@ export class AuthService {
         .select('role')
         .eq('user_id', userId)
         .eq('is_active', true)
-        .single<{ role: UserRole }>();
+        .single();
 
       if (error) {
         console.error('获取用户角色失败:', error);
         return 'viewer'; // 默认角色
       }
 
-      return data?.role || 'viewer';
+      return (data as any)?.role || 'viewer';
     } catch (error) {
       console.error('获取用户角色异常:', error);
       return 'viewer';
