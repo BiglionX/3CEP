@@ -18,7 +18,6 @@ module.exports = [
       'reports/**',
       '*.report.*',
       'TASK_*.js',
-      'eslint.config.js',
     ],
   },
   {
