@@ -2,14 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  CheckCircle,
-  Navigation,
-  Layout,
-  Smartphone,
-  Users,
-  Wrench,
-} from 'lucide-react';
+import { CheckCircle, Navigation, Layout, Users, Wrench } from 'lucide-react';
 
 export default function NavigationTestPage() {
   const testPages = [
@@ -17,7 +10,6 @@ export default function NavigationTestPage() {
     { name: '联系我们', path: '/contact', icon: Users },
     { name: '关于我们', path: '/about', icon: Layout },
     { name: '帮助中心', path: '/help', icon: Wrench },
-    { name: '移动端扫?, path: '/mobile/scan', icon: Smartphone },
   ];
 
   return (
@@ -36,19 +28,22 @@ export default function NavigationTestPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              导航组件状?            </CardTitle>
+              导航组件状态
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
-                <span className="font-medium text-green-800">顶部导航?/span>
+                <span className="font-medium text-green-800">顶部导航</span>
                 <span className="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm">
-                  已启?                </span>
+                  已启用
+                </span>
               </div>
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                 <span className="font-medium text-green-800">底部页脚</span>
                 <span className="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm">
-                  已启?                </span>
+                  已启用
+                </span>
               </div>
             </div>
           </CardContent>
@@ -93,4 +88,3 @@ export default function NavigationTestPage() {
     </div>
   );
 }
-

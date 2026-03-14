@@ -1,23 +1,10 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  ShoppingCart,
-  Search,
-  Filter,
-  Star,
-  Package,
-  Truck,
-  Shield,
-  Clock,
-  Tag,
-  Heart,
-  Plus,
-  Minus,
-} from 'lucide-react';
+import { ShoppingCart, Search, Star, Package } from 'lucide-react';
 
 interface Part {
   id: string;
@@ -59,7 +46,7 @@ export default function PartsMarketPage() {
           inStock: true,
           category: '屏幕',
           compatibleDevices: ['iPhone 14', 'iPhone 14 Plus'],
-          description: '原装品质屏幕总成，支持原彩显?,
+          description: '原装品质屏幕总成，支持原彩显示',
         },
         {
           id: '2',
@@ -77,7 +64,7 @@ export default function PartsMarketPage() {
         },
         {
           id: '3',
-          name: '小米13 摄像头模?,
+          name: '小米13 摄像头模组',
           brand: '原装',
           model: '小米13',
           price: 459,
@@ -86,9 +73,51 @@ export default function PartsMarketPage() {
           rating: 4.7,
           reviewCount: 67,
           inStock: false,
-          category: '摄像?,
+          category: '摄像头',
           compatibleDevices: ['小米13', '小米13 Pro'],
           description: '5000万像素主摄，光学防抖',
+        },
+        {
+          id: '4',
+          name: '三星S23 后盖',
+          brand: '原装',
+          model: 'Galaxy S23',
+          price: 199,
+          image: '/images/parts/back-cover.jpg',
+          rating: 4.5,
+          reviewCount: 45,
+          inStock: true,
+          category: '外壳',
+          compatibleDevices: ['Galaxy S23', 'Galaxy S23+'],
+          description: '原装后盖，完美贴合',
+        },
+        {
+          id: '5',
+          name: 'OPPO Find X5 充电头',
+          brand: '官方',
+          model: 'SuperVOOC',
+          price: 159,
+          image: '/images/parts/charger.jpg',
+          rating: 4.9,
+          reviewCount: 156,
+          inStock: true,
+          category: '充电器',
+          compatibleDevices: ['OPPO Find X5', 'OPPO Find X5 Pro'],
+          description: '80W超级闪充，快速补电',
+        },
+        {
+          id: '6',
+          name: 'iPhone 13 电池',
+          brand: '原装',
+          model: 'iPhone 13',
+          price: 249,
+          image: '/images/parts/battery-iphone.jpg',
+          rating: 4.7,
+          reviewCount: 203,
+          inStock: true,
+          category: '电池',
+          compatibleDevices: ['iPhone 13', 'iPhone 13 Pro', 'iPhone 13 mini'],
+          description: '3240mAh容量，续航更持久',
         },
       ]);
       setLoading(false);
@@ -131,48 +160,48 @@ export default function PartsMarketPage() {
         {/* 页面标题 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">配件商城</h1>
-          <p className="text-gray-600">精选优质手机配件，品质保障，价格实?/p>
+          <p className="text-gray-600">精选优质手机配件，品质保障，价格实惠</p>
         </div>
 
-        {/* 搜索和筛选区?*/}
+        {/* 搜索和筛选区域 */}
         <Card className="mb-8">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-4">
-              {/* 搜索?*/}
+              {/* 搜索框 */}
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="搜索配件名称或品?.."
+                  placeholder="搜索配件名称或品牌..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10 w-full"
                 />
               </div>
 
-              {/* 分类筛?*/}
+              {/* 分类筛选 */}
               <div className="flex gap-2">
                 <select
                   value={selectedCategory}
                   onChange={e => setSelectedCategory(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 >
                   <option value="all">全部分类</option>
                   <option value="屏幕">屏幕</option>
                   <option value="电池">电池</option>
-                  <option value="摄像?>摄像?/option>
+                  <option value="摄像头">摄像头</option>
                   <option value="外壳">外壳</option>
-                  <option value="充电?>充电?/option>
+                  <option value="充电器">充电器</option>
                 </select>
 
                 <select
                   value={sortBy}
                   onChange={e => setSortBy(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 >
                   <option value="price">价格排序</option>
                   <option value="rating">评分排序</option>
-                  <option value="reviews">评论?/option>
+                  <option value="reviews">评论数排序</option>
                 </select>
               </div>
             </div>
@@ -210,7 +239,7 @@ export default function PartsMarketPage() {
                       {part.name}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {part.brand} �?{part.model}
+                      {part.brand} · {part.model}
                     </p>
                   </div>
 
@@ -268,14 +297,15 @@ export default function PartsMarketPage() {
                     {part.inStock ? (
                       <>
                         <ShoppingCart className="w-4 h-4 mr-2" />
-                        加入购物?                      </>
+                        加入购物车
+                      </>
                     ) : (
                       '暂时缺货'
                     )}
                   </Button>
 
                   <Button variant="outline" size="icon">
-                    <Heart className="w-4 h-4" />
+                    <Star className="w-4 h-4" />
                   </Button>
                 </div>
               </CardContent>
@@ -296,4 +326,3 @@ export default function PartsMarketPage() {
     </div>
   );
 }
-

@@ -1,4 +1,4 @@
-﻿"use client";
+﻿'use client';
 
 import {
   BarChart3,
@@ -9,8 +9,8 @@ import {
   TrendingDown,
   Users,
   XCircle,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface NegotiationSession {
   sessionId: string;
@@ -20,7 +20,7 @@ interface NegotiationSession {
   initialQuote: number;
   currentRound: number;
   maxRounds: number;
-  status: "pending" | "negotiating" | "success" | "failed" | "cancelled";
+  status: 'pending' | 'negotiating' | 'success' | 'failed' | 'cancelled';
   startTime: Date;
   endTime?: Date;
   finalDiscountRate?: number;
@@ -35,15 +35,6 @@ interface NegotiationRound {
   strategyUsed: string;
   confidenceLevel: number;
   remarks?: string;
-}
-
-interface NegotiationAdvice {
-  recommendedPrice: number;
-  confidence: number;
-  strategyToUse: string;
-  riskLevel: "low" | "medium" | "high";
-  expectedDiscount: number;
-  timeEstimate: number;
 }
 
 interface SupplierRecommendation {
@@ -66,10 +57,10 @@ export default function NegotiationPage() {
     SupplierRecommendation[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [supplierQuote, setSupplierQuote] = useState("");
-  const [remarks, setRemarks] = useState("");
+  const [supplierQuote, setSupplierQuote] = useState('');
+  const [remarks, setRemarks] = useState('');
 
-  // 初始化数?
+  // 初始化数据
   useEffect(() => {
     loadActiveSessions();
     loadRecommendations();
@@ -82,15 +73,15 @@ export default function NegotiationPage() {
       // 模拟API调用
       const mockSessions: NegotiationSession[] = [
         {
-          sessionId: "NEG-12345",
-          procurementRequestId: "PR-20240101-001",
-          supplierId: "SUP-001",
+          sessionId: 'NEG-12345',
+          procurementRequestId: 'PR-20240101-001',
+          supplierId: 'SUP-001',
           targetPrice: 10000,
           initialQuote: 12000,
           currentRound: 2,
           maxRounds: 5,
-          status: "negotiating",
-          startTime: new Date(Date.now() - 3600000), // 1小时?
+          status: 'negotiating',
+          startTime: new Date(Date.now() - 3600000), // 1小时前
         },
       ];
       setSessions(mockSessions);
@@ -99,7 +90,7 @@ export default function NegotiationPage() {
         loadSessionHistory(mockSessions[0].sessionId);
       }
     } catch (error) {
-      console.error("加载议价会话失败:", error);
+      console.error('加载议价会话失败:', error);
     } finally {
       setIsLoading(false);
     }
@@ -116,9 +107,9 @@ export default function NegotiationPage() {
           ourInitialOffer: 12000,
           supplierQuote: 11500,
           ourCounterOffer: 11000,
-          strategyUsed: "价格敏感型策?,
+          strategyUsed: '价格敏感型策略',
           confidenceLevel: 85,
-          remarks: "首轮议价",
+          remarks: '首轮议价',
         },
         {
           round: 2,
@@ -126,75 +117,75 @@ export default function NegotiationPage() {
           ourInitialOffer: 11000,
           supplierQuote: 11200,
           ourCounterOffer: 10800,
-          strategyUsed: "价格敏感型策?,
+          strategyUsed: '价格敏感型策略',
           confidenceLevel: 78,
-          remarks: "第二轮议?,
+          remarks: '第二轮议价',
         },
       ];
       setHistory(mockHistory);
     } catch (error) {
-      console.error("加载会话历史失败:", error);
+      console.error('加载会话历史失败:', error);
     }
   };
 
-  // 加载供应商推?
+  // 加载供应商推荐
   const loadRecommendations = async () => {
     try {
       // 模拟API调用
       const mockRecommendations: SupplierRecommendation[] = [
         {
-          supplierId: "SUP-001",
-          supplierName: "优质供应商A",
+          supplierId: 'SUP-001',
+          supplierName: '优质供应商A',
           score: 92,
           transactionCount: 45,
           averageDiscountRate: 12.5,
           afterSalesRate: 4.6,
           priceCompetitiveness: 4.8,
           reasons: [
-            "经验丰富?5笔交易）",
-            "议价成功率高",
-            "平均折扣率高?2.5%",
+            '经验丰富（45笔交易）',
+            '议价成功率高',
+            '平均折扣率高（12.5%）',
           ],
         },
         {
-          supplierId: "SUP-002",
-          supplierName: "可靠供应商B",
+          supplierId: 'SUP-002',
+          supplierName: '可靠供应商B',
           score: 85,
           transactionCount: 32,
           averageDiscountRate: 10.2,
           afterSalesRate: 4.3,
           priceCompetitiveness: 4.5,
-          reasons: ["售后服务评价优秀", "价格具有竞争?],
+          reasons: ['售后服务评价优秀', '价格具有竞争力'],
         },
       ];
       setRecommendations(mockRecommendations);
     } catch (error) {
-      console.error("加载供应商推荐失?", error);
+      console.error('加载供应商推荐失败:', error);
     }
   };
 
-  // 启动新议?
+  // 启动新议价
   const startNewNegotiation = async () => {
     try {
       setIsLoading(true);
       // 模拟API调用
       const newSession: NegotiationSession = {
         sessionId: `NEG-${Date.now()}`,
-        procurementRequestId: "PR-20240101-002",
-        supplierId: "SUP-001",
+        procurementRequestId: 'PR-20240101-002',
+        supplierId: 'SUP-001',
         targetPrice: 8000,
         initialQuote: 9500,
         currentRound: 1,
         maxRounds: 5,
-        status: "negotiating",
+        status: 'negotiating',
         startTime: new Date(),
       };
 
-      setSessions((prev) => [...prev, newSession]);
+      setSessions(prev => [...prev, newSession]);
       setCurrentSession(newSession);
       setHistory([]);
     } catch (error) {
-      console.error("启动新议价失?", error);
+      console.error('启动新议价失败:', error);
     } finally {
       setIsLoading(false);
     }
@@ -217,14 +208,14 @@ export default function NegotiationPage() {
             ? history[history.length - 1].ourCounterOffer
             : currentSession.initialQuote,
         supplierQuote: quoteValue,
-        ourCounterOffer: quoteValue * 0.95, // 简单的95折还?
-        strategyUsed: "价格敏感型策?,
+        ourCounterOffer: quoteValue * 0.95, // 简单的95折还价
+        strategyUsed: '价格敏感型策略',
         confidenceLevel: 80,
         remarks,
       };
 
-      setHistory((prev) => [...prev, newRound]);
-      setCurrentSession((prev) =>
+      setHistory(prev => [...prev, newRound]);
+      setCurrentSession(prev =>
         prev
           ? {
               ...prev,
@@ -233,16 +224,16 @@ export default function NegotiationPage() {
           : null
       );
 
-      setSupplierQuote("");
-      setRemarks("");
+      setSupplierQuote('');
+      setRemarks('');
     } catch (error) {
-      console.error("执行议价回合失败:", error);
+      console.error('执行议价回合失败:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 接受最终报?
+  // 接受最终报价
   const acceptOffer = async () => {
     if (!currentSession || history.length === 0) return;
 
@@ -250,11 +241,11 @@ export default function NegotiationPage() {
       setIsLoading(true);
       const finalPrice = history[history.length - 1].ourCounterOffer;
 
-      setCurrentSession((prev) =>
+      setCurrentSession(prev =>
         prev
           ? {
               ...prev,
-              status: "success",
+              status: 'success',
               endTime: new Date(),
               finalDiscountRate:
                 ((prev.initialQuote - finalPrice) / prev.initialQuote) * 100,
@@ -262,20 +253,20 @@ export default function NegotiationPage() {
           : null
       );
     } catch (error) {
-      console.error("接受报价失败:", error);
+      console.error('接受报价失败:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 渲染状态图?
+  // 渲染状态图标
   const renderStatusIcon = (status: string) => {
     switch (status) {
-      case "success":
+      case 'success':
         return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case "failed":
+      case 'failed':
         return <XCircle className="h-5 w-5 text-red-500" />;
-      case "negotiating":
+      case 'negotiating':
         return <Play className="h-5 w-5 text-blue-500" />;
       default:
         return <Clock className="h-5 w-5 text-gray-500" />;
@@ -297,292 +288,265 @@ export default function NegotiationPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 左侧：议价控制面?*/}
-          <div className="lg:col-span-2 space-y-6">
-            {/* 当前议价会话 */}
-            {currentSession && (
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    当前议价会话
-                  </h2>
-                  <div className="flex items-center space-x-2">
-                    {renderStatusIcon(currentSession.status)}
-                    <span className="text-sm font-medium capitalize">
-                      {currentSession.status}
-                    </span>
-                  </div>
-                </div>
-
-                {/* 会话信息 */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <div className="text-sm text-blue-600 font-medium">
-                      目标价格
-                    </div>
-                    <div className="text-xl font-bold text-blue-900">
-                      ¥{currentSession.targetPrice.toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <div className="text-sm text-green-600 font-medium">
-                      初始报价
-                    </div>
-                    <div className="text-xl font-bold text-green-900">
-                      ¥{currentSession.initialQuote.toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="bg-purple-50 p-4 rounded-lg">
-                    <div className="text-sm text-purple-600 font-medium">
-                      当前轮次
-                    </div>
-                    <div className="text-xl font-bold text-purple-900">
-                      {currentSession.currentRound}/{currentSession.maxRounds}
-                    </div>
-                  </div>
-                  <div className="bg-orange-50 p-4 rounded-lg">
-                    <div className="text-sm text-orange-600 font-medium">
-                      进行时间
-                    </div>
-                    <div className="text-xl font-bold text-orange-900">
-                      {Math.floor(
-                        (Date.now() - currentSession.startTime.getTime()) /
-                          60000
-                      )}
-                      分钟
-                    </div>
-                  </div>
-                </div>
-
-                {/* 议价回合执行 */}
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    执行议价回合
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        供应商报?(¥)
-                      </label>
-                      <input
-                        type="number"
-                        value={supplierQuote}
-                        onChange={(e) => setSupplierQuote(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="请输入供应商报价"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        回合备注
-                      </label>
-                      <textarea
-                        value={remarks}
-                        onChange={(e) => setRemarks(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        rows={2}
-                        placeholder="可选：添加本次议价的备注信?
-                      />
-                    </div>
-                    <div className="flex space-x-3">
-                      <button
-                        onClick={executeRound}
-                        disabled={isLoading || !supplierQuote}
-                        className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                      >
-                        {isLoading ? (
-                          <RefreshCw className="h-5 w-5 animate-spin" />
-                        ) : (
-                          <>
-                            <Play className="h-5 w-5 mr-2" />
-                            执行议价
-                          </>
-                        )}
-                      </button>
-                      <button
-                        onClick={acceptOffer}
-                        disabled={isLoading || history.length === 0}
-                        className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-                      >
-                        <CheckCircle className="h-5 w-5 mr-2" />
-                        接受报价
-                      </button>
-                    </div>
-                  </div>
-                </div>
+          {/* 左侧 - 议价会话列表 */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  议价会话
+                </h2>
+                <button
+                  onClick={startNewNegotiation}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  <Play className="h-4 w-4" />
+                  新建会话
+                </button>
               </div>
-            )}
 
-            {/* 议价历史记录 */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                议价历史
-              </h2>
-              {history.length === 0 ? (
-                <div className="text-center py-12">
-                  <BarChart3 className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-                  <p className="text-gray-500">暂无议价历史记录</p>
+              {sessions.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  暂无议价会话
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {history.map((round, index) => (
+                <div className="space-y-3">
+                  {sessions.map(session => (
                     <div
-                      key={index}
-                      className="border border-gray-200 rounded-lg p-4"
+                      key={session.sessionId}
+                      onClick={() => {
+                        setCurrentSession(session);
+                        loadSessionHistory(session.sessionId);
+                      }}
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-colors ${
+                        currentSession?.sessionId === session.sessionId
+                          ? 'border-blue-600 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
                     >
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center">
-                          <span className="font-medium text-gray-900">
-                            �?{round.round} �?
-                          </span>
-                          <span className="ml-3 text-sm text-gray-500">
-                            {round.timestamp.toLocaleString("zh-CN")}
-                          </span>
-                        </div>
-                        <div className="flex items-center">
-                          <span className="text-sm font-medium text-blue-600 mr-2">
-                            置信? {round.confidenceLevel}%
-                          </span>
-                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                            {round.strategyUsed}
-                          </span>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium text-sm">
+                          {session.sessionId}
+                        </span>
+                        {renderStatusIcon(session.status)}
+                      </div>
+                      <div className="text-xs text-gray-600 space-y-1">
+                        <div>目标价: ¥{session.targetPrice}</div>
+                        <div>初始报价: ¥{session.initialQuote}</div>
+                        <div>
+                          轮次: {session.currentRound}/{session.maxRounds}
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-500">我方初始报价:</span>
-                          <span className="font-medium ml-2">
-                            ¥{round.ourInitialOffer.toLocaleString()}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">供应商报?</span>
-                          <span className="font-medium ml-2 text-orange-600">
-                            ¥{round.supplierQuote.toLocaleString()}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">我方还价:</span>
-                          <span className="font-medium ml-2 text-green-600">
-                            ¥{round.ourCounterOffer.toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                      {round.remarks && (
-                        <div className="mt-3 pt-3 border-t border-gray-100">
-                          <span className="text-sm text-gray-500">
-                            备注: {round.remarks}
-                          </span>
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
               )}
             </div>
-          </div>
 
-          {/* 右侧：供应商推荐和统?*/}
-          <div className="space-y-6">
-            {/* 供应商推?*/}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex justify-between items-center mb-6">
+            {/* 供应商推荐 */}
+            <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Users className="h-5 w-5 text-blue-600" />
                 <h2 className="text-xl font-semibold text-gray-900">
-                  供应商推?
+                  供应商推荐
                 </h2>
-                <button
-                  onClick={loadRecommendations}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  <RefreshCw className="h-5 w-5" />
-                </button>
               </div>
 
-              <div className="space-y-4">
-                {recommendations.map((supplier, index) => (
+              <div className="space-y-3">
+                {recommendations.map(rec => (
                   <div
-                    key={supplier.supplierId}
-                    className="border border-gray-200 rounded-lg p-4"
+                    key={rec.supplierId}
+                    className="p-4 bg-gray-50 rounded-lg"
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium text-gray-900">
-                        {supplier.supplierName}
-                      </h3>
-                      <span className="text-lg font-bold text-blue-600">
-                        {supplier.score}�?
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium text-sm">
+                        {rec.supplierName}
+                      </span>
+                      <span className="text-sm font-semibold text-blue-600">
+                        {rec.score}分
                       </span>
                     </div>
-                    <div className="text-sm text-gray-600 mb-3">
-                      <div>交易次数: {supplier.transactionCount}</div>
-                      <div>平均折扣: {supplier.averageDiscountRate}%</div>
-                      <div>售后评分: {supplier.afterSalesRate}</div>
+                    <div className="text-xs text-gray-600 space-y-1">
+                      <div>交易次数: {rec.transactionCount}</div>
+                      <div>平均折扣: {rec.averageDiscountRate}%</div>
+                      <div>售后评分: {rec.afterSalesRate}/5.0</div>
                     </div>
-                    <div className="flex flex-wrap gap-1">
-                      {supplier.reasons.map((reason, i) => (
-                        <span
-                          key={i}
-                          className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded"
-                        >
-                          {reason}
-                        </span>
+                    <div className="mt-2 space-y-1">
+                      {rec.reasons.map((reason, idx) => (
+                        <div key={idx} className="text-xs text-green-600">
+                          ✓ {reason}
+                        </div>
                       ))}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* 统计信息 */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                议价统计
-              </h2>
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">总议价次?/span>
-                  <span className="font-medium">24</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">成功?/span>
-                  <span className="font-medium text-green-600">62.5%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">平均折扣</span>
-                  <span className="font-medium text-blue-600">7.8%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">平均时长</span>
-                  <span className="font-medium">28分钟</span>
-                </div>
+          {/* 中间 - 议价详情 */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  议价详情
+                </h2>
+                {currentSession && (
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-gray-600">
+                      会话ID: {currentSession.sessionId}
+                    </span>
+                    {renderStatusIcon(currentSession.status)}
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* 快速操?*/}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                快速操?
-              </h2>
-              <div className="space-y-3">
-                <button
-                  onClick={startNewNegotiation}
-                  disabled={isLoading}
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                >
-                  {isLoading ? (
-                    <RefreshCw className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <>
-                      <Play className="h-5 w-5 mr-2" />
-                      启动新议?
-                    </>
-                  )}
-                </button>
+              {!currentSession ? (
+                <div className="text-center py-12 text-gray-500">
+                  <BarChart3 className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                  <p>请选择一个议价会话或创建新会话</p>
+                </div>
+              ) : (
+                <>
+                  {/* 会话信息 */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <div className="text-xs text-gray-600 mb-1">目标价格</div>
+                      <div className="text-lg font-semibold text-blue-600">
+                        ¥{currentSession.targetPrice}
+                      </div>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <div className="text-xs text-gray-600 mb-1">初始报价</div>
+                      <div className="text-lg font-semibold text-gray-900">
+                        ¥{currentSession.initialQuote}
+                      </div>
+                    </div>
+                    <div className="p-4 bg-purple-50 rounded-lg">
+                      <div className="text-xs text-gray-600 mb-1">当前轮次</div>
+                      <div className="text-lg font-semibold text-purple-600">
+                        {currentSession.currentRound}/{currentSession.maxRounds}
+                      </div>
+                    </div>
+                    {currentSession.finalDiscountRate !== undefined && (
+                      <div className="p-4 bg-green-50 rounded-lg">
+                        <div className="text-xs text-gray-600 mb-1">折扣率</div>
+                        <div className="text-lg font-semibold text-green-600">
+                          {currentSession.finalDiscountRate.toFixed(1)}%
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                <button className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 flex items-center justify-center">
-                  <Users className="h-5 w-5 mr-2" />
-                  查看所有会?
-                </button>
-              </div>
+                  {/* 议价历史 */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      议价历史
+                    </h3>
+                    {history.length === 0 ? (
+                      <div className="text-center py-8 text-gray-500">
+                        暂无议价记录
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {history.map((round, idx) => (
+                          <div
+                            key={round.round}
+                            className="p-4 bg-gray-50 rounded-lg"
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-medium">
+                                第{round.round}轮
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {round.timestamp.toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4 text-sm">
+                              <div>
+                                <div className="text-gray-600">我方初始</div>
+                                <div className="font-semibold">
+                                  ¥{round.ourInitialOffer}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-gray-600">供应商报价</div>
+                                <div className="font-semibold text-blue-600">
+                                  ¥{round.supplierQuote}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-gray-600">我方还价</div>
+                                <div className="font-semibold text-green-600">
+                                  ¥{round.ourCounterOffer}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-2 text-xs text-gray-600">
+                              <div>策略: {round.strategyUsed}</div>
+                              <div>信心度: {round.confidenceLevel}%</div>
+                              {round.remarks && (
+                                <div>备注: {round.remarks}</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 新回合 */}
+                  {currentSession.status === 'negotiating' &&
+                    currentSession.currentRound < currentSession.maxRounds && (
+                      <div className="border-t pt-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                          新回合
+                        </h3>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              供应商报价
+                            </label>
+                            <input
+                              type="number"
+                              value={supplierQuote}
+                              onChange={e => setSupplierQuote(e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="请输入供应商报价"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              备注
+                            </label>
+                            <textarea
+                              value={remarks}
+                              onChange={e => setRemarks(e.target.value)}
+                              rows={3}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="请输入备注信息"
+                            />
+                          </div>
+                          <div className="flex gap-3">
+                            <button
+                              onClick={executeRound}
+                              disabled={!supplierQuote || isLoading}
+                              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-300"
+                            >
+                              执行议价
+                            </button>
+                            <button
+                              onClick={acceptOffer}
+                              disabled={history.length === 0 || isLoading}
+                              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-300"
+                            >
+                              接受报价
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -590,4 +554,3 @@ export default function NegotiationPage() {
     </div>
   );
 }
-

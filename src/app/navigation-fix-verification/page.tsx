@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle, Navigation, Eye } from 'lucide-react';
+import { CheckCircle, Navigation, Eye } from 'lucide-react';
 
 export default function NavigationFixVerification() {
   return (
@@ -23,15 +23,15 @@ export default function NavigationFixVerification() {
             </div>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start">
-                <span className="text-green-500 mr-2">�?/span>
+                <span className="text-green-500 mr-2">✓</span>
                 <span>调整了统一布局的padding设置</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-500 mr-2">�?/span>
-                <span>优化了首页Hero部分的间?/span>
+                <span className="text-green-500 mr-2">✓</span>
+                <span>优化了首页Hero部分的间距</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-500 mr-2">�?/span>
+                <span className="text-green-500 mr-2">✓</span>
                 <span>确保导航栏高度与内容间距匹配</span>
               </li>
             </ul>
@@ -46,7 +46,7 @@ export default function NavigationFixVerification() {
               <li>访问首页查看导航显示</li>
               <li>滚动页面测试导航固定效果</li>
               <li>检查移动端菜单功能</li>
-              <li>验证其他页面导航一致?/li>
+              <li>验证其他页面导航一致性</li>
             </ol>
           </div>
         </div>
@@ -90,7 +90,8 @@ export default function NavigationFixVerification() {
 
         <div className="text-center">
           <p className="text-gray-600 mb-6">
-            如果问题仍然存在，请提供更多详细信息以便进一步排?          </p>
+            如果问题仍然存在，请提供更多详细信息以便进一步排查
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild>
               <Link href="/">返回首页</Link>
@@ -104,4 +105,3 @@ export default function NavigationFixVerification() {
     </div>
   );
 }
-
