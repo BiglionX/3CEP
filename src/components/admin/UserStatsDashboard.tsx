@@ -1,8 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
   Users,
   Activity,
@@ -11,7 +10,6 @@ import {
   BarChart3,
   TrendingUp,
   Calendar,
-  Filter,
 } from 'lucide-react';
 
 interface UserStats {
@@ -77,12 +75,12 @@ export function UserStatsDashboard({
 
   const getRoleDisplayName = (role: string) => {
     const roleNames: Record<string, string> = {
-      admin: '超级管理?,
-      content_reviewer: '内容审核?,
-      shop_reviewer: '店铺审核?,
+      admin: '超级管理员',
+      content_reviewer: '内容审核员',
+      shop_reviewer: '店铺审核员',
       finance: '财务人员',
-      viewer: '查看?,
-      unknown: '未设?,
+      viewer: '查看者',
+      unknown: '未设置',
     };
     return roleNames[role] || role;
   };
@@ -90,8 +88,8 @@ export function UserStatsDashboard({
   const getStatusDisplayName = (status: string) => {
     const statusNames: Record<string, string> = {
       active: '正常',
-      banned: '已封?,
-      suspended: '已暂?,
+      banned: '已封禁',
+      suspended: '已暂停',
       unknown: '未知',
     };
     return statusNames[status] || status;
@@ -138,7 +136,7 @@ export function UserStatsDashboard({
         <div className="text-center py-12">
           <Users className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">暂无数据</h3>
-          <p className="mt-1 text-sm text-gray-500">还没有用户统计数?/p>
+          <p className="mt-1 text-sm text-gray-500">还没有用户统计数据</p>
         </div>
       </div>
     );
@@ -151,7 +149,8 @@ export function UserStatsDashboard({
         <div>
           <h2 className="text-2xl font-bold text-gray-900">用户统计概览</h2>
           <p className="mt-1 text-sm text-gray-600">
-            实时监控用户增长和活跃情?          </p>
+            实时监控用户增长和活跃情况
+          </p>
         </div>
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-2">
@@ -161,9 +160,9 @@ export function UserStatsDashboard({
               onChange={e => setPeriod(e.target.value as any)}
               className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="7d">最?�?/option>
-              <option value="30d">最?0�?/option>
-              <option value="90d">最?0�?/option>
+              <option value="7d">最近7天</option>
+              <option value="30d">最近30天</option>
+              <option value="90d">最近90天</option>
             </select>
           </div>
           <button
@@ -206,7 +205,8 @@ export function UserStatsDashboard({
             <div className="flex items-center mt-1">
               <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
               <span className="text-xs text-green-600">
-                {stats.activeRate}% 活跃?              </span>
+                {stats.activeRate}% 活跃率
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -246,7 +246,7 @@ export function UserStatsDashboard({
         </Card>
       </div>
 
-      {/* 角色分布和状态分?*/}
+      {/* 角色分布和状态分布 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 角色分布 */}
         <Card>
@@ -284,12 +284,13 @@ export function UserStatsDashboard({
           </CardContent>
         </Card>
 
-        {/* 状态分?*/}
+        {/* 状态分布 */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
               <Activity className="w-5 h-5 mr-2" />
-              用户状态分?            </CardTitle>
+              用户状态分布
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -330,12 +331,13 @@ export function UserStatsDashboard({
         </Card>
       </div>
 
-      {/* 活跃度分?*/}
+      {/* 活跃度分布 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <BarChart3 className="w-5 h-5 mr-2" />
-            用户活跃度分?          </CardTitle>
+            用户活跃度分布
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -361,7 +363,7 @@ export function UserStatsDashboard({
               <div className="text-2xl font-bold text-gray-700">
                 {stats.activityDistribution.inactive}
               </div>
-              <div className="text-sm text-gray-600">不活?/div>
+              <div className="text-sm text-gray-600">不活跃</div>
             </div>
           </div>
         </CardContent>
@@ -370,7 +372,7 @@ export function UserStatsDashboard({
       {/* 底部信息 */}
       <div className="text-center text-xs text-gray-500">
         数据更新时间: {new Date(stats.lastUpdated).toLocaleString('zh-CN')}
-        {period === '30d' && <span className="ml-2">默认显示最?0天数?/span>}
+        {period === '30d' && <span className="ml-2">默认显示最近30天数据</span>}
       </div>
     </div>
   );

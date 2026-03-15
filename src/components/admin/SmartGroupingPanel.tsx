@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,7 +26,7 @@ interface SmartGroup {
   criteria: GroupCriteria;
   memberCount: number;
   members: string[]; // 用户ID列表
-  aiConfidence: number; // AI分组置信?0-1
+  aiConfidence: number; // AI分组置信度 0-1
   lastUpdated: string;
   statistics: GroupStatistics;
 }
@@ -83,7 +83,8 @@ export function SmartGroupingPanel({
     predictive: {},
   });
 
-  // 初始化智能分?  useEffect(() => {
+  // 初始化智能分组
+  useEffect(() => {
     initializeSmartGroups();
   }, [usersData, behaviorData]);
 
@@ -96,7 +97,7 @@ export function SmartGroupingPanel({
       setGroups(autoGroups);
       onGroupUpdate?.(autoGroups);
     } catch (error) {
-      console.error('初始化智能分组失?', error);
+      console.error('初始化智能分组失败:', error);
     } finally {
       setLoading(false);
     }
@@ -104,35 +105,37 @@ export function SmartGroupingPanel({
 
   // 生成自动分组
   const generateAutomaticGroups = (
-    users: any[],
-    behaviors: any[]
+    _users: any[],
+    _behaviors: any[]
   ): SmartGroup[] => {
     const groups: SmartGroup[] = [];
 
-    // 1. 基于价值层级分?    const valueBasedGroups = createValueBasedGroups(users);
+    // 1. 基于价值层级分组
+    const valueBasedGroups = createValueBasedGroups(_users);
     groups.push(...valueBasedGroups);
 
     // 2. 基于行为模式分组
-    const behaviorBasedGroups = createBehaviorBasedGroups(users, behaviors);
+    const behaviorBasedGroups = createBehaviorBasedGroups(_users, _behaviors);
     groups.push(...behaviorBasedGroups);
 
     // 3. 基于生命周期分组
-    const lifecycleGroups = createLifecycleGroups(users);
+    const lifecycleGroups = createLifecycleGroups(_users);
     groups.push(...lifecycleGroups);
 
     // 4. 基于风险等级分组
-    const riskBasedGroups = createRiskBasedGroups(users, behaviors);
+    const riskBasedGroups = createRiskBasedGroups(_users, _behaviors);
     groups.push(...riskBasedGroups);
 
     return groups;
   };
 
-  // 基于价值层级创建分?  const createValueBasedGroups = (users: any[]): SmartGroup[] => {
+  // 基于价值层级创建分组
+  const createValueBasedGroups = (users: any[]): SmartGroup[] => {
     const groups: SmartGroup[] = [];
     const valueTiers = ['platinum', 'gold', 'silver', 'bronze'];
 
     valueTiers.forEach(tier => {
-      const tierUsers = users.filter(u => u.valueTier === tier);
+      const tierUsers = users.filter((u: any) => u.valueTier === tier);
       if (tierUsers.length > 0) {
         groups.push({
           id: `value_${tier}`,
@@ -145,7 +148,7 @@ export function SmartGroupingPanel({
             predictive: {},
           },
           memberCount: tierUsers.length,
-          members: tierUsers.map(u => u.userId),
+          members: tierUsers.map((u: any) => u.userId),
           aiConfidence: 0.95,
           lastUpdated: new Date().toISOString(),
           statistics: calculateGroupStatistics(tierUsers),
@@ -163,10 +166,11 @@ export function SmartGroupingPanel({
   ): SmartGroup[] => {
     const groups: SmartGroup[] = [];
 
-    // 高频活跃用户?    const highFrequencyUsers = users.filter(u => {
-      const userBehaviors = behaviors.filter(b => b.user_id === u.userId);
+    // 高频活跃用户组
+    const highFrequencyUsers = users.filter((u: any) => {
+      const userBehaviors = behaviors.filter((b: any) => b.user_id === u.userId);
       const dailyVisits =
-        userBehaviors.filter(b => b.behavior_type === 'page_view').length / 30;
+        userBehaviors.filter((b: any) => b.behavior_type === 'page_view').length / 30;
       return dailyVisits > 2;
     });
 
@@ -182,14 +186,15 @@ export function SmartGroupingPanel({
           predictive: {},
         },
         memberCount: highFrequencyUsers.length,
-        members: highFrequencyUsers.map(u => u.userId),
+        members: highFrequencyUsers.map((u: any) => u.userId),
         aiConfidence: 0.88,
         lastUpdated: new Date().toISOString(),
         statistics: calculateGroupStatistics(highFrequencyUsers),
       });
     }
 
-    // 功能专家用户?    const featureExperts = users.filter(u => {
+    // 功能专家用户组
+    const featureExperts = users.filter((u: any) => {
       const adoptionRate = u?.featureAdoption?.adoptionRate || 0;
       return adoptionRate > 70;
     });
@@ -198,7 +203,7 @@ export function SmartGroupingPanel({
       groups.push({
         id: 'behavior_experts',
         name: '功能专家用户',
-        description: '功能采用率超?0%的资深用?,
+        description: '功能采用率超过70%的资深用户',
         criteria: {
           behavioral: { engagementLevel: 'active' },
           demographic: {},
@@ -206,7 +211,7 @@ export function SmartGroupingPanel({
           predictive: {},
         },
         memberCount: featureExperts.length,
-        members: featureExperts.map(u => u.userId),
+        members: featureExperts.map((u: any) => u.userId),
         aiConfidence: 0.92,
         lastUpdated: new Date().toISOString(),
         statistics: calculateGroupStatistics(featureExperts),
@@ -222,11 +227,11 @@ export function SmartGroupingPanel({
     const lifecycleStages = ['new_user', 'onboarding', 'active', 'loyal'];
 
     lifecycleStages.forEach(stage => {
-      const stageUsers = users.filter(u => u.lifecycleStage === stage);
+      const stageUsers = users.filter((u: any) => u.lifecycleStage === stage);
       if (stageUsers.length > 0) {
         const stageNames: Record<string, string> = {
-          new_user: '新用?,
-          onboarding: '体验期用?,
+          new_user: '新用户',
+          onboarding: '体验期用户',
           active: '活跃用户',
           loyal: '忠实用户',
         };
@@ -237,12 +242,12 @@ export function SmartGroupingPanel({
           description: `处于${stageNames[stage]}阶段的用户`,
           criteria: {
             behavioral: {},
-            demographic: {}, // 可以添加更具体的生命周期条件
+            demographic: {},
             preference: {},
             predictive: {},
           },
           memberCount: stageUsers.length,
-          members: stageUsers.map(u => u.userId),
+          members: stageUsers.map((u: any) => u.userId),
           aiConfidence: 0.85,
           lastUpdated: new Date().toISOString(),
           statistics: calculateGroupStatistics(stageUsers),
@@ -261,10 +266,9 @@ export function SmartGroupingPanel({
     const groups: SmartGroup[] = [];
 
     // 高流失风险用户组
-    const highRiskUsers = users.filter(u => {
-      // 简化的风险判断逻辑
-      const userBehaviors = behaviors.filter(b => b.user_id === u.userId);
-      const recentActivity = userBehaviors.filter(b => {
+    const highRiskUsers = users.filter((u: any) => {
+      const userBehaviors = behaviors.filter((b: any) => b.user_id === u.userId);
+      const recentActivity = userBehaviors.filter((b: any) => {
         const daysAgo =
           (Date.now() - new Date(b.timestamp).getTime()) /
           (1000 * 60 * 60 * 24);
@@ -277,8 +281,8 @@ export function SmartGroupingPanel({
     if (highRiskUsers.length > 0) {
       groups.push({
         id: 'risk_high',
-        name: '高流失风险用?,
-        description: '�?0天活动较少且非高价值用户的潜在流失用户',
+        name: '高流失风险用户',
+        description: '30天活动较少且非高价值用户的潜在流失用户',
         criteria: {
           behavioral: {},
           demographic: {},
@@ -286,7 +290,7 @@ export function SmartGroupingPanel({
           predictive: { churnRisk: 'high' },
         },
         memberCount: highRiskUsers.length,
-        members: highRiskUsers.map(u => u.userId),
+        members: highRiskUsers.map((u: any) => u.userId),
         aiConfidence: 0.82,
         lastUpdated: new Date().toISOString(),
         statistics: calculateGroupStatistics(highRiskUsers),
@@ -316,27 +320,30 @@ export function SmartGroupingPanel({
       0
     );
     const highValueUsers = users.filter(
-      u => u.valueTier === 'gold' || u.valueTier === 'platinum'
+      (u: any) => u.valueTier === 'gold' || u.valueTier === 'platinum'
     ).length;
 
     return {
       averageEngagement: totalEngagement / users.length,
       featureAdoptionRate: totalAdoption / users.length,
-      retentionRate: (users.length / users.length) * 100, // 简化处?      valueContribution: (highValueUsers / users.length) * 100,
+      retentionRate: (users.length / users.length) * 100,
+      valueContribution: (highValueUsers / users.length) * 100,
     };
   };
 
-  // 手动创建新分?  const createManualGroup = () => {
+  // 手动创建新分组
+  const createManualGroup = () => {
     if (!newGroupName.trim()) return;
 
     const newGroup: SmartGroup = {
       id: `manual_${Date.now()}`,
       name: newGroupName,
-      description: '手动创建的用户分?,
+      description: '手动创建的用户分组',
       criteria: newGroupCriteria,
       memberCount: 0,
       members: [],
-      aiConfidence: 0.7, // 手动分组置信度较?      lastUpdated: new Date().toISOString(),
+      aiConfidence: 0.7,
+      lastUpdated: new Date().toISOString(),
       statistics: {
         averageEngagement: 0,
         featureAdoptionRate: 0,
@@ -358,7 +365,7 @@ export function SmartGroupingPanel({
   // 刷新智能分组
   const refreshGroups = async () => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 模拟处理时间
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await initializeSmartGroups();
   };
 
@@ -436,7 +443,8 @@ export function SmartGroupingPanel({
                     variant={group.aiConfidence > 0.9 ? 'default' : 'secondary'}
                     className="text-xs"
                   >
-                    {Math.round(group.aiConfidence * 100)}% 置信?                  </Badge>
+                    {Math.round(group.aiConfidence * 100)}% 置信度
+                  </Badge>
                 </div>
               </CardHeader>
 
@@ -453,32 +461,32 @@ export function SmartGroupingPanel({
                     <div className="flex items-center">
                       <Activity className="w-4 h-4 text-green-500 mr-1" />
                       <span>
-                        参与? {group.statistics.averageEngagement.toFixed(0)}
+                        参与度 {group.statistics.averageEngagement.toFixed(0)}
                       </span>
                     </div>
                     <div className="flex items-center">
                       <TrendingUp className="w-4 h-4 text-blue-500 mr-1" />
                       <span>
-                        采用?{' '}
+                        采用率{' '}
                         {group.statistics.featureAdoptionRate.toFixed(0)}%
                       </span>
                     </div>
                     <div className="flex items-center">
                       <Target className="w-4 h-4 text-purple-500 mr-1" />
                       <span>
-                        价值贡?{' '}
+                        价值贡献{' '}
                         {group.statistics.valueContribution.toFixed(0)}%
                       </span>
                     </div>
                     <div className="flex items-center">
                       <Filter className="w-4 h-4 text-orange-500 mr-1" />
                       <span>
-                        留存? {group.statistics.retentionRate.toFixed(0)}%
+                        留存率 {group.statistics.retentionRate.toFixed(0)}%
                       </span>
                     </div>
                   </div>
 
-                  {/* 快速操?*/}
+                  {/* 快速操作 */}
                   <div className="flex space-x-2 pt-2">
                     <Button size="sm" variant="outline" className="flex-1">
                       <Edit className="w-3 h-3 mr-1" />
@@ -502,7 +510,8 @@ export function SmartGroupingPanel({
           <CardHeader>
             <CardTitle className="flex items-center">
               <Plus className="w-5 h-5 mr-2" />
-              创建自定义分?            </CardTitle>
+              创建自定义分组
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
@@ -549,7 +558,7 @@ export function SmartGroupingPanel({
                         <option value="">参与程度</option>
                         <option value="active">活跃</option>
                         <option value="passive">被动</option>
-                        <option value="inactive">不活?/option>
+                        <option value="inactive">不活跃</option>
                       </select>
                     </div>
                   </div>
@@ -559,7 +568,7 @@ export function SmartGroupingPanel({
                     <h4 className="font-medium text-gray-700">人口统计</h4>
                     <div className="space-y-2">
                       <select className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
-                        <option value="">价值等?/option>
+                        <option value="">价值等级</option>
                         <option value="platinum">铂金</option>
                         <option value="gold">黄金</option>
                         <option value="silver">白银</option>
@@ -568,10 +577,10 @@ export function SmartGroupingPanel({
 
                       <select className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
                         <option value="">生命周期</option>
-                        <option value="new_user">新用?/option>
-                        <option value="onboarding">体验?/option>
-                        <option value="active">活跃?/option>
-                        <option value="loyal">忠诚?/option>
+                        <option value="new_user">新用户</option>
+                        <option value="onboarding">体验期</option>
+                        <option value="active">活跃期</option>
+                        <option value="loyal">忠诚期</option>
                       </select>
                     </div>
                   </div>
@@ -593,7 +602,7 @@ export function SmartGroupingPanel({
         </Card>
       )}
 
-      {/* 空状?*/}
+      {/* 空状态 */}
       {groups.length === 0 && activeTab === 'auto' && (
         <div className="text-center py-12">
           <Users className="mx-auto h-12 w-12 text-gray-400" />
@@ -601,7 +610,8 @@ export function SmartGroupingPanel({
             暂无智能分组
           </h3>
           <p className="mt-1 text-sm text-gray-500">
-            系统正在分析用户数据以生成智能分?          </p>
+            系统正在分析用户数据以生成智能分组
+          </p>
           <Button onClick={refreshGroups} className="mt-4">
             <RefreshCw className="w-4 h-4 mr-2" />
             重新分析

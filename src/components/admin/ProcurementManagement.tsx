@@ -1,27 +1,24 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-// 暂时移除Select组件导入，使用原生select替代
+import {} from '@/components/ui/table';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-// 暂时移除Card和Badge组件导入
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Plus,
   Search,
-  Filter,
-  Eye,
-  Edit,
   Truck,
   CheckCircle,
   XCircle,
+  Eye,
+  Edit,
 } from 'lucide-react';
 
 interface PurchaseOrder {
@@ -83,7 +80,8 @@ export default function ProcurementManagement() {
     }
   };
 
-  // 获取供应商列?  const fetchSuppliers = async () => {
+  // 获取供应商列表
+  const fetchSuppliers = async () => {
     try {
       const response = await fetch('/api/supply-chain/suppliers');
       const result = await response.json();
@@ -92,7 +90,7 @@ export default function ProcurementManagement() {
         setSuppliers(result.data);
       }
     } catch (error) {
-      console.error('获取供应商失?', error);
+      console.error('获取供应商失败:', error);
     }
   };
 
@@ -116,7 +114,8 @@ export default function ProcurementManagement() {
     fetchWarehouses();
   }, []);
 
-  // 状态标签映?  const getStatusBadge = (status: string) => {
+  // 状态标签映射
+  const getStatusBadge = (status: string) => {
     const statusMap: Record<
       string,
       {
@@ -148,11 +147,11 @@ export default function ProcurementManagement() {
 
     const statusText =
       {
-        pending: '待确?,
-        confirmed: '已确?,
-        shipping: '运输?,
-        received: '已收?,
-        cancelled: '已取?,
+        pending: '待确认',
+        confirmed: '已确认',
+        shipping: '运输中',
+        received: '已收货',
+        cancelled: '已取消',
       }[status] || status;
 
     const statusColor =
@@ -164,11 +163,13 @@ export default function ProcurementManagement() {
         cancelled: 'bg-red-100 text-red-800',
       }[status] || 'bg-gray-100 text-gray-800';
 
+    const config = statusMap[status];
+
     return (
       <span
         className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}
       >
-        {config.icon}
+        {config?.icon}
         {statusText}
       </span>
     );
@@ -182,19 +183,21 @@ export default function ProcurementManagement() {
     const matchesStatus =
       statusFilter === 'all' || order.status === statusFilter;
     const matchesSupplier =
-      supplierFilter === 'all' || order.supplierId === supplierFilter;
+      supplierFilter === 'all' || order.supplier.name === suppliers.find(s => s.id === supplierFilter)?.name;
 
     return matchesSearch && matchesStatus && matchesSupplier;
   });
 
-  // 格式化货?  const formatCurrency = (amount: number) => {
+  // 格式化货币
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('zh-CN', {
       style: 'currency',
       currency: 'CNY',
     }).format(amount);
   };
 
-  // 格式化日?  const formatDate = (dateString: string) => {
+  // 格式化日期
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-CN');
   };
 
@@ -223,21 +226,21 @@ export default function ProcurementManagement() {
       {/* 统计信息 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600 mb-1">待处理订?/div>
+          <div className="text-sm text-gray-600 mb-1">待处理订单</div>
           <div className="text-2xl font-bold text-orange-600">
             {orders.filter(o => o.status === 'pending').length}
           </div>
         </div>
 
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600 mb-1">运输?/div>
+          <div className="text-sm text-gray-600 mb-1">运输中</div>
           <div className="text-2xl font-bold text-blue-600">
             {orders.filter(o => o.status === 'shipping').length}
           </div>
         </div>
 
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600 mb-1">本月采购?/div>
+          <div className="text-sm text-gray-600 mb-1">本月采购额</div>
           <div className="text-2xl font-bold text-green-600">
             {formatCurrency(
               orders.reduce((sum, order) => sum + order.totalAmount, 0)
@@ -251,14 +254,14 @@ export default function ProcurementManagement() {
         </div>
       </div>
 
-      {/* 搜索和筛?*/}
+      {/* 搜索和筛选 */}
       <div className="bg-white p-6 rounded-lg shadow mb-6">
-        <h2 className="text-lg font-semibold mb-4">订单筛?/h2>
+        <h2 className="text-lg font-semibold mb-4">订单筛选</h2>
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="搜索订单号或供应?.."
+              placeholder="搜索订单号或供应商..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -270,12 +273,12 @@ export default function ProcurementManagement() {
             onChange={e => setStatusFilter(e.target.value)}
             className="border rounded-md px-3 py-2 w-[180px]"
           >
-            <option value="all">全部状?/option>
-            <option value="pending">待确?/option>
-            <option value="confirmed">已确?/option>
-            <option value="shipping">运输?/option>
-            <option value="received">已收?/option>
-            <option value="cancelled">已取?/option>
+            <option value="all">全部状态</option>
+            <option value="pending">待确认</option>
+            <option value="confirmed">已确认</option>
+            <option value="shipping">运输中</option>
+            <option value="received">已收货</option>
+            <option value="cancelled">已取消</option>
           </select>
 
           <select
@@ -283,7 +286,7 @@ export default function ProcurementManagement() {
             onChange={e => setSupplierFilter(e.target.value)}
             className="border rounded-md px-3 py-2 w-[180px]"
           >
-            <option value="all">全部供应?/option>
+            <option value="all">全部供应商</option>
             {suppliers.map(supplier => (
               <option key={supplier.id} value={supplier.id}>
                 {supplier.name}
@@ -298,16 +301,19 @@ export default function ProcurementManagement() {
         <div className="p-6 border-b">
           <h2 className="text-lg font-semibold">采购订单列表</h2>
           <p className="text-gray-600 mt-1">
-            �?{filteredOrders.length} 个订?          </p>
+            共 {filteredOrders.length} 个订单
+          </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  订单?                </th>
+                  订单号
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  供应?                </th>
+                  供应商
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   仓库
                 </th>
@@ -315,9 +321,11 @@ export default function ProcurementManagement() {
                   商品数量
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  总金?                </th>
+                  总金额
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  状?                </th>
+                  状态
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   预计到货
                 </th>
@@ -330,20 +338,21 @@ export default function ProcurementManagement() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredOrders.map(order => (
+              {filteredOrders.map((order: PurchaseOrder) => (
                 <tr key={order.id}>
                   <td className="px-6 py-4 whitespace-nowrap font-medium">
                     {order.orderNumber}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {order?.name || '未知供应?}
+                    {order?.supplier?.name || '未知供应商'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {order?.name || '未知仓库'}
+                    {order?.warehouse?.name || '未知仓库'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {order.items.reduce((sum, item) => sum + item.quantity, 0)}{' '}
-                    �?                  </td>
+                    件
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap font-semibold">
                     {formatCurrency(order.totalAmount)}
                   </td>
@@ -377,7 +386,8 @@ export default function ProcurementManagement() {
 
           {filteredOrders.length === 0 && (
             <div className="text-center py-8 text-gray-500">
-              暂无符合条件的订?            </div>
+              暂无符合条件的订单
+            </div>
           )}
         </div>
       </div>
@@ -419,7 +429,7 @@ function CreateOrderModal({
 
   const handleSubmit = async () => {
     if (!selectedSupplier || !selectedWarehouse || items.length === 0) {
-      alert('请填写完整信?);
+      alert('请填写完整信息');
       return;
     }
 
@@ -443,7 +453,7 @@ function CreateOrderModal({
       if (result.success) {
         onSuccess();
       } else {
-        alert('创建失败: ' + result.error);
+        alert(`创建失败: ${result.error}`);
       }
     } catch (error) {
       console.error('创建订单失败:', error);
@@ -460,13 +470,13 @@ function CreateOrderModal({
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">供应?/label>
+            <label className="block text-sm font-medium mb-1">供应商</label>
             <Select
               value={selectedSupplier}
               onValueChange={setSelectedSupplier}
             >
               <SelectTrigger>
-                <SelectValue placeholder="选择供应? />
+                <SelectValue placeholder="选择供应商" />
               </SelectTrigger>
               <SelectContent>
                 {suppliers.map(supplier => (
@@ -563,7 +573,7 @@ function CreateOrderModal({
             取消
           </Button>
           <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? '创建?..' : '创建订单'}
+            {loading ? '创建中...' : '创建订单'}
           </Button>
         </div>
       </div>

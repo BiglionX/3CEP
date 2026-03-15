@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -72,23 +72,23 @@ export default function ConfigManager() {
       }
     } catch (error) {
       console.error('保存配置错误:', error);
-      toast.error('保存配置时发生错?);
+      toast.error('保存配置时发生错误');
     } finally {
       setSaving(false);
     }
   };
 
-  // 添加新配?
+  // 添加新配置
   const addNewConfig = async () => {
     if (!newConfig.key || !newConfig.value) {
-      toast.error('请填写必填字?);
+      toast.error('请填写必填字段');
       return;
     }
 
     try {
       const success = await ConfigService.createConfig(newConfig);
       if (success) {
-        toast.success('新配置添加成?);
+        toast.success('新配置添加成功');
         setNewConfig({
           key: '',
           value: '',
@@ -102,7 +102,7 @@ export default function ConfigManager() {
       }
     } catch (error) {
       console.error('添加配置错误:', error);
-      toast.error('添加配置时发生错?);
+      toast.error('添加配置时发生错误');
     }
   };
 
@@ -119,7 +119,7 @@ export default function ConfigManager() {
         }
       } catch (error) {
         console.error('删除配置错误:', error);
-        toast.error('删除配置时发生错?);
+        toast.error('删除配置时发生错误');
       }
     }
   };
@@ -141,7 +141,7 @@ export default function ConfigManager() {
               }
             />
             <span className="text-sm text-muted-foreground">
-              {config.value === 'true' ? '开? : '关闭'}
+              {config.value === 'true' ? '开启' : '关闭'}
             </span>
           </div>
         );
@@ -199,7 +199,7 @@ export default function ConfigManager() {
     return (
       <div className="flex items-center justify-center py-12">
         <RefreshCw className="w-6 h-6 animate-spin mr-2" />
-        加载配置?..
+        加载配置中...
       </div>
     );
   }
@@ -210,7 +210,7 @@ export default function ConfigManager() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">系统配置管理</h1>
-          <p className="text-muted-foreground">管理系统的各项配置参?/p>
+          <p className="text-muted-foreground">管理系统的各项配置参数</p>
         </div>
         <Button onClick={loadConfigs} variant="outline">
           <RefreshCw className="w-4 h-4 mr-2" />
@@ -218,7 +218,7 @@ export default function ConfigManager() {
         </Button>
       </div>
 
-      {/* 配置标签?*/}
+      {/* 配置标签页 */}
       <Tabs defaultValue="system" className="space-y-6">
         <TabsList>
           {Object.keys(configs).map(category => (
@@ -237,7 +237,7 @@ export default function ConfigManager() {
           </TabsTrigger>
         </TabsList>
 
-        {/* 各分类配置内?*/}
+        {/* 各分类配置内容 */}
         {Object.entries(configs).map(([category, categoryConfigs]) => (
           <TabsContent key={category} value={category} className="space-y-4">
             <div className="grid gap-6 md:grid-cols-2">
@@ -274,7 +274,7 @@ export default function ConfigManager() {
                     <div className="space-y-4">
                       {renderConfigInput(config)}
                       <div className="text-xs text-muted-foreground">
-                        类型: {config.type} | 最后更?{' '}
+                        类型: {config.type} | 最后更新{' '}
                         {new Date(config.updated_at).toLocaleString()}
                       </div>
                     </div>
@@ -285,7 +285,7 @@ export default function ConfigManager() {
           </TabsContent>
         ))}
 
-        {/* 添加新配?*/}
+        {/* 添加新配置 */}
         <TabsContent value="add">
           <Card>
             <CardHeader>
@@ -322,13 +322,13 @@ export default function ConfigManager() {
                       <SelectItem value="security">安全</SelectItem>
                       <SelectItem value="upload">上传</SelectItem>
                       <SelectItem value="api">API</SelectItem>
-                      <SelectItem value="custom">自定?/SelectItem>
+                      <SelectItem value="custom">自定义</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="new-type">值类?/Label>
+                  <Label htmlFor="new-type">值类型</Label>
                   <Select
                     value={newConfig.type}
                     onValueChange={(v: any) =>
@@ -339,23 +339,23 @@ export default function ConfigManager() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="string">字符?/SelectItem>
+                      <SelectItem value="string">字符串</SelectItem>
                       <SelectItem value="number">数字</SelectItem>
-                      <SelectItem value="boolean">布尔?/SelectItem>
+                      <SelectItem value="boolean">布尔值</SelectItem>
                       <SelectItem value="json">JSON</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="new-value">配置?*</Label>
+                  <Label htmlFor="new-value">配置值 *</Label>
                   <Input
                     id="new-value"
                     value={newConfig.value}
                     onChange={e =>
                       setNewConfig({ ...newConfig, value: e.target.value })
                     }
-                    placeholder="配置?
+                    placeholder="配置值"
                   />
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function ConfigManager() {
 
               <Button onClick={addNewConfig} disabled={saving}>
                 <Plus className="w-4 h-4 mr-2" />
-                {saving ? '添加?..' : '添加配置'}
+                {saving ? '添加中...' : '添加配置'}
               </Button>
             </CardContent>
           </Card>

@@ -141,7 +141,7 @@ export default function RepairShopDashboard() {
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <h2 className="text-xl font-semibold text-gray-800 mb-2">加载失败</h2>
-          <p className="text-gray-600 mb-4">{error || '无法获取仪表板数?}</p>
+          <p className="text-gray-600 mb-4">{error || '无法获取仪表板数据'}</p>
           <button
             onClick={fetchDashboardData}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
@@ -173,7 +173,7 @@ export default function RepairShopDashboard() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           维修店业务仪表板
         </h1>
-        <p className="text-gray-600">实时监控业务运营状况和关键指?/p>
+        <p className="text-gray-600">实时监控业务运营状况和关键指标</p>
       </motion.div>
 
       {/* KPI 概览卡片 */}
@@ -208,7 +208,7 @@ export default function RepairShopDashboard() {
             <div className="text-2xl font-bold text-gray-900">
               {kpiOverview.activeShops}
             </div>
-            <p className="text-xs text-blue-600 mt-1">覆盖全国 15 个城?/p>
+            <p className="text-xs text-blue-600 mt-1">覆盖全国 15 个城市</p>
           </CardContent>
         </Card>
 
@@ -305,7 +305,7 @@ export default function RepairShopDashboard() {
                     <XAxis dataKey="month" />
                     <YAxis domain={[80, 100]} />
                     <Tooltip
-                      formatter={(value: number) => [`${value}%`, '完成?]}
+                      formatter={(value: number) => [`${value}%`, '完成率']}
                       labelStyle={{ color: '#333' }}
                     />
                     <Bar dataKey="rate" fill="#3B82F6" radius={[4, 4, 0, 0]} />
@@ -319,7 +319,7 @@ export default function RepairShopDashboard() {
 
       {/* 满意度和维修类别 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* 客户满意度分?*/}
+        {/* 客户满意度分析 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -343,7 +343,7 @@ export default function RepairShopDashboard() {
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="count"
-                      label={({ name, percent }) =>
+                      label={({ percent }) =>
                         `${(percent * 100).toFixed(0)}%`
                       }
                     >
@@ -422,7 +422,7 @@ export default function RepairShopDashboard() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>最近活?/CardTitle>
+            <CardTitle>最近活动</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

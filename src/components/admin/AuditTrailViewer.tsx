@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -83,7 +83,7 @@ export default function AuditTrailViewer() {
       const csvContent = await AuditService.exportLogsAsCSV(filters);
 
       if (csvContent) {
-        const blob = new Blob(['\uFEFF' + csvContent], {
+        const blob = new Blob([`\uFEFF${csvContent}`], {
           type: 'text/csv;charset=utf-8;',
         });
         const link = document.createElement('a');

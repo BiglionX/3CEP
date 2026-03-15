@@ -13,9 +13,6 @@ import {
   Trash2,
   Shield,
   UserCheck,
-  UserX,
-  Save,
-  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,7 +48,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useEnhancedRbac, Role, Permission } from './EnhancedRbacManager';
+import { useEnhancedRbac, Role, Permission, EnhancedRbacContextType } from './EnhancedRbacManager';
 
 interface RoleManagementPanelProps {
   className?: string;
@@ -60,13 +57,8 @@ interface RoleManagementPanelProps {
 export function RoleManagementPanel({
   className = '',
 }: RoleManagementPanelProps) {
-  const {
-    roles,
-    permissions,
-    addInheritance,
-    removeInheritance,
-    getInheritedPermissions,
-  } = useEnhancedRbac();
+  const context = useEnhancedRbac() as unknown as EnhancedRbacContextType;
+  const { roles, permissions, addInheritance, /* removeInheritance unused, */ getInheritedPermissions } = context;
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
@@ -88,15 +80,15 @@ export function RoleManagementPanel({
   // 处理角色创建/编辑
   const handleSaveRole = () => {
     // 这里应该调用API保存角色
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('保存角色:', { ...newRole, permissions: selectedPermissions })setDialogOpen(false);
+    setDialogOpen(false);
     resetForm();
   };
 
   // 处理角色删除
-  const handleDeleteRole = (roleId: string) => {
-    if (confirm('确定要删除这个角色吗?)) {
+  const handleDeleteRole = (_roleId: string) => {
+    if (confirm('确定要删除这个角色吗?')) {
       // 这里应该调用API删除角色
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除角色:', roleId)}
+    }
   };
 
   // 处理权限选择
@@ -186,18 +178,18 @@ export function RoleManagementPanel({
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
-              {Object.values(roles).filter(r => r.isSystem).length}
+              {Object.values(roles).filter((r: Role) => r.isSystem).length}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">自定义角?/CardTitle>
+            <CardTitle className="text-sm font-medium">自定义角色</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {Object.values(roles).filter(r => !r.isSystem).length}
+              {Object.values(roles).filter((r: Role) => !r.isSystem).length}
             </div>
           </CardContent>
         </Card>
@@ -235,7 +227,7 @@ export function RoleManagementPanel({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Object.values(roles).map(role => {
+                {Object.values(roles).map((role: Role) => {
                   const inheritedPermissions = getInheritedPermissions(role.id);
                   const totalPermissions = [
                     ...role.permissions,
@@ -293,14 +285,14 @@ export function RoleManagementPanel({
                             })}
                           </div>
                         ) : (
-                          <span className="text-gray-400 text-sm">�?/span>
+                          <span className="text-gray-400 text-sm">-</span>
                         )}
                       </TableCell>
                       <TableCell>
                         <Badge
                           variant={role.isSystem ? 'default' : 'secondary'}
                         >
-                          {role.isSystem ? '系统' : '自定?}
+                          {role.isSystem ? '系统' : '自定义'}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -332,7 +324,7 @@ export function RoleManagementPanel({
         </CardContent>
       </Card>
 
-      {/* 角色编辑对话?*/}
+      {/* 角色编辑对话框 */}
       <Dialog
         open={dialogOpen}
         onOpenChange={open => {
@@ -346,7 +338,7 @@ export function RoleManagementPanel({
             <DialogDescription>
               {editingRole
                 ? `修改角色 "${editingRole.name}" 的配置`
-                : '创建一个新的系统角?}
+                : '创建一个新的系统角色'}
             </DialogDescription>
           </DialogHeader>
 
@@ -359,35 +351,35 @@ export function RoleManagementPanel({
                 <div>
                   <label className="text-sm font-medium">角色名称 *</label>
                   <Input
-                    value={newRole.name}
-                    onChange={e =>
-                      setNewRole({ ...newRole, name: e.target.value })
-                    }
-                    placeholder="请输入角色名?
-                  />
-                </div>
+                  value={newRole.name}
+                  onChange={e =>
+                    setNewRole({ ...newRole, name: e.target.value })
+                  }
+                  placeholder="请输入角色名称"
+                />
+              </div>
 
-                <div>
-                  <label className="text-sm font-medium">权限等级</label>
-                  <Select
-                    value={newRole.level.toString()}
-                    onValueChange={value =>
-                      setNewRole({ ...newRole, level: parseInt(value) })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="10">10 - 只读</SelectItem>
-                      <SelectItem value="30">30 - 基础用户</SelectItem>
-                      <SelectItem value="50">50 - 普通员?/SelectItem>
-                      <SelectItem value="70">70 - 管理?/SelectItem>
-                      <SelectItem value="80">80 - 高级管理?/SelectItem>
-                      <SelectItem value="100">100 - 超级管理?/SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div>
+                <label className="text-sm font-medium">权限等级</label>
+                <Select
+                  value={newRole.level.toString()}
+                  onValueChange={value =>
+                    setNewRole({ ...newRole, level: parseInt(value) })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10 - 只读</SelectItem>
+                    <SelectItem value="30">30 - 基础用户</SelectItem>
+                    <SelectItem value="50">50 - 普通员工</SelectItem>
+                    <SelectItem value="70">70 - 管理员</SelectItem>
+                    <SelectItem value="80">80 - 高级管理员</SelectItem>
+                    <SelectItem value="100">100 - 超级管理员</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               </div>
 
               <div>
@@ -397,7 +389,7 @@ export function RoleManagementPanel({
                   onChange={e =>
                     setNewRole({ ...newRole, description: e.target.value })
                   }
-                  placeholder="请输入角色描?
+                  placeholder="请输入角色描述"
                   rows={3}
                 />
               </div>
@@ -425,10 +417,10 @@ export function RoleManagementPanel({
               <div className="border rounded-lg p-4">
                 <div className="mb-3">
                   <label className="text-sm font-medium">
-                    已选权?({selectedPermissions.length})
+                    已选权限 ({selectedPermissions.length})
                   </label>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {selectedPermissions.map(permId => {
+                    {selectedPermissions.map((permId: string) => {
                       const permission = permissions[permId];
                       return (
                         <Badge
@@ -438,7 +430,7 @@ export function RoleManagementPanel({
                           onClick={() => togglePermission(permId)}
                         >
                           {permission?.name || permId}
-                          <X className="w-3 h-3 ml-1" />
+                          <Trash2 className="w-3 h-3 ml-1" />
                         </Badge>
                       );
                     })}
@@ -446,11 +438,11 @@ export function RoleManagementPanel({
                 </div>
 
                 <div className="border-t pt-3">
-                  <label className="text-sm font-medium">可选权?/label>
+                  <label className="text-sm font-medium">可选权限</label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 max-h-60 overflow-y-auto">
                     {Object.values(permissions)
-                      .filter(perm => !selectedPermissions.includes(perm.id))
-                      .map(permission => (
+                      .filter((perm: Permission) => !selectedPermissions.includes(perm.id))
+                      .map((permission: Permission) => (
                         <div
                           key={permission.id}
                           className="flex items-center gap-2 p-2 rounded hover:bg-gray-50 cursor-pointer"
@@ -480,14 +472,13 @@ export function RoleManagementPanel({
               取消
             </Button>
             <Button onClick={handleSaveRole}>
-              <Save className="w-4 h-4 mr-2" />
               保存角色
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* 继承关系管理对话?*/}
+      {/* 继承关系管理对话框 */}
       <Dialog
         open={inheritanceDialogOpen}
         onOpenChange={setInheritanceDialogOpen}
@@ -509,10 +500,10 @@ export function RoleManagementPanel({
                   onValueChange={setInheritanceSource}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="选择父角? />
+                    <SelectValue placeholder="选择父角色" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(roles).map(role => (
+                    {Object.values(roles).map((role: Role) => (
                       <SelectItem key={role.id} value={role.id}>
                         {role.name}
                       </SelectItem>
@@ -528,10 +519,10 @@ export function RoleManagementPanel({
                   onValueChange={setInheritanceTarget}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="选择子角? />
+                    <SelectValue placeholder="选择子角色" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(roles).map(role => (
+                    {Object.values(roles).map((role: Role) => (
                       <SelectItem key={role.id} value={role.id}>
                         {role.name}
                       </SelectItem>
@@ -544,7 +535,8 @@ export function RoleManagementPanel({
             <div className="bg-blue-50 p-3 rounded-lg">
               <h4 className="font-medium text-blue-800 mb-1">继承说明</h4>
               <p className="text-sm text-blue-600">
-                子角色将自动获得父角色的所有权限，但不会影响父角色的权限配置?                一个角色可以同时继承多个父角色的权限?              </p>
+                子角色将自动获得父角色的所有权限，但不会影响父角色的权限配置。一个角色可以同时继承多个父角色的权限。
+              </p>
             </div>
           </div>
 

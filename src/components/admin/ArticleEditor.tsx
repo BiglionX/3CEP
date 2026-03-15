@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,6 @@ import {
   ArrowLeft,
   Image,
   Tag,
-  Calendar,
   AlertCircle,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -99,7 +98,7 @@ export default function ArticleEditor({
   // 保存草稿
   const handleSave = async () => {
     if (!title.trim()) {
-      setError('请输入文章标?);
+      setError('请输入文章标题');
       return;
     }
 
@@ -120,14 +119,14 @@ export default function ArticleEditor({
       if (onSave) {
         const success = await onSave(articleData);
         if (success) {
-          alert('草稿保存成功?);
+          alert('草稿保存成功');
         } else {
           setError('保存失败，请重试');
         }
       }
     } catch (error) {
       console.error('保存失败:', error);
-      setError('保存过程中发生错?);
+      setError('保存过程中发生错误');
     } finally {
       setIsSaving(false);
     }
@@ -136,12 +135,12 @@ export default function ArticleEditor({
   // 发布文章
   const handlePublish = async () => {
     if (!title.trim()) {
-      setError('请输入文章标?);
+      setError('请输入文章标题');
       return;
     }
 
     if (!content.trim()) {
-      setError('请输入文章内?);
+      setError('请输入文章内容');
       return;
     }
 
@@ -162,7 +161,7 @@ export default function ArticleEditor({
       if (onPublish) {
         const success = await onPublish(articleData);
         if (success) {
-          alert('文章发布成功?);
+          alert('文章发布成功');
           router.push('/admin/articles');
         } else {
           setError('发布失败，请重试');
@@ -170,7 +169,7 @@ export default function ArticleEditor({
       }
     } catch (error) {
       console.error('发布失败:', error);
-      setError('发布过程中发生错?);
+      setError('发布过程中发生错误');
     } finally {
       setIsPublishing(false);
     }
@@ -193,7 +192,7 @@ export default function ArticleEditor({
         <div className="flex gap-2">
           <Button onClick={handleSave} disabled={isSaving} variant="outline">
             <Save className="w-4 h-4 mr-2" />
-            {isSaving ? '保存?..' : '保存草稿'}
+            {isSaving ? '保存中...' : '保存草稿'}
           </Button>
 
           <Button
@@ -202,7 +201,7 @@ export default function ArticleEditor({
             className="bg-green-600 hover:bg-green-700"
           >
             <Send className="w-4 h-4 mr-2" />
-            {isPublishing ? '发布?..' : '发布文章'}
+            {isPublishing ? '发布中...' : '发布文章'}
           </Button>
         </div>
       </div>
@@ -224,7 +223,7 @@ export default function ArticleEditor({
           <Input
             value={title}
             onChange={e => setTitle(e.target.value)}
-            placeholder="请输入文章标?
+            placeholder="请输入文章标题"
             className="text-lg"
           />
         </div>
@@ -238,7 +237,7 @@ export default function ArticleEditor({
             <Input
               value={coverImageUrl}
               onChange={e => setCoverImageUrl(e.target.value)}
-              placeholder="输入图片URL或上传图?
+              placeholder="输入图片URL或上传图片"
               className="flex-1"
             />
             <Button variant="outline" size="sm">
@@ -328,7 +327,7 @@ export default function ArticleEditor({
           </div>
         </div>
 
-        {/* 正文编辑?*/}
+        {/* 正文编辑器 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             正文内容 *
@@ -336,7 +335,7 @@ export default function ArticleEditor({
           <Textarea
             value={content}
             onChange={e => setContent(e.target.value)}
-            placeholder="在这里输入文章正文内?.."
+            placeholder="在这里输入文章正文内容..."
             rows={15}
             className="font-mono text-sm"
           />

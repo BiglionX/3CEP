@@ -23,9 +23,24 @@ interface DataCenterUserMenuProps {
   userEmail?: string;
 }
 
+// 定义 RBAC 权限返回类型
+interface RbacPermissionResult {
+  user: any;
+  roles: string[];
+  isLoading: boolean;
+  hasPermission: (permission: string) => boolean;
+  hasAnyPermission: (permissions: string[]) => boolean;
+  hasAllPermissions: (permissions: string[]) => boolean;
+  getAccessibleResources: (category?: string) => string[];
+  getPermissionInfo: (permission: string) => any;
+  getRoleInfo: (role: string) => any;
+  rbacConfig: any;
+  isConfigLoaded: boolean;
+}
+
 export function DataCenterUserMenu({ userEmail }: DataCenterUserMenuProps) {
   const router = useRouter();
-  const { hasPermission, roles } = useRbacPermission();
+  const { hasPermission, roles } = useRbacPermission() as unknown as RbacPermissionResult;
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -61,10 +76,10 @@ export function DataCenterUserMenu({ userEmail }: DataCenterUserMenuProps) {
         {/* 用户信息 */}
         <div className="px-4 py-3 border-b">
           <p className="text-sm font-medium truncate">
-            {userEmail || '未登录用?}
+            {userEmail || '未登录用户'}
           </p>
           <p className="text-xs text-muted-foreground">
-            {roles.includes('admin') ? '系统管理? : '普通用?}
+            {roles?.includes('admin') ? '系统管理员' : '普通用户'}
           </p>
         </div>
 
@@ -80,7 +95,7 @@ export function DataCenterUserMenu({ userEmail }: DataCenterUserMenuProps) {
           <span>个人中心</span>
         </DropdownMenuItem>
 
-        {/* 数据中心仪表?*/}
+        {/* 数据中心仪表盘 */}
         <DropdownMenuItem
           onClick={() => {
             router.push('/data-center');
@@ -133,7 +148,7 @@ export function DataCenterUserMenu({ userEmail }: DataCenterUserMenuProps) {
           <span>系统设置</span>
         </DropdownMenuItem>
 
-        {/* 分割?*/}
+        {/* 分割线 */}
         <div className="border-t my-1" />
 
         {/* 登出 */}
@@ -142,7 +157,7 @@ export function DataCenterUserMenu({ userEmail }: DataCenterUserMenuProps) {
           className="cursor-pointer text-red-600 focus:text-red-600"
         >
           <LogOut className="mr-2 h-4 w-4" />
-          <span>退出登?/span>
+          <span>退出登录</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

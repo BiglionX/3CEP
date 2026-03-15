@@ -79,7 +79,8 @@ export interface Role {
   updatedAt: Date;
 }
 
-// 用户权限上下?export interface UserPermissionContext {
+// 用户权限上下文
+export interface UserPermissionContext {
   userId: string;
   roles: string[];
   directPermissions: string[];
@@ -89,7 +90,8 @@ export interface Role {
   position?: string;
 }
 
-// 权限检查结?export interface PermissionCheckResult {
+// 权限检查结果
+export interface PermissionCheckResult {
   allowed: boolean;
   reason?: string;
   inheritedFrom?: string;
@@ -103,7 +105,8 @@ export interface InheritanceRule {
   permissionMapping: Record<string, string>;
 }
 
-// 动态权限分?export interface DynamicPermissionAssignment {
+// 动态权限分配
+export interface DynamicPermissionAssignment {
   id: string;
   userId: string;
   permissionId: string;
@@ -128,7 +131,8 @@ export interface PermissionAuditLog {
   details?: string;
 }
 
-// 上下文类?interface EnhancedRbacContextType {
+// 上下文类型
+export interface EnhancedRbacContextType {
   // 状?  currentUser: UserPermissionContext | null;
   isLoading: boolean;
   permissions: Record<string, Permission>;
@@ -138,7 +142,8 @@ export interface PermissionAuditLog {
   hasAnyPermission: (permissionIds: string[]) => boolean;
   hasAllPermissions: (permissionIds: string[]) => boolean;
 
-  // 资源级权限检?  canAccessResource: (
+  // 资源级权限检查
+  canAccessResource: (
     resource: ResourceType,
     action: PermissionAction
   ) => boolean;
@@ -149,7 +154,8 @@ export interface PermissionAuditLog {
   assignRole: (userId: string, roleId: string) => Promise<void>;
   revokeRole: (userId: string, roleId: string) => Promise<void>;
 
-  // 动态权?  grantDynamicPermission: (
+  // 动态权限
+  grantDynamicPermission: (
     assignment: Omit<
       DynamicPermissionAssignment,
       'id' | 'grantedAt' | 'isActive'
@@ -185,7 +191,8 @@ export interface PermissionAuditLog {
   getMissingPermissions: (requiredPermissions: string[]) => string[];
 }
 
-// 创建上下?const EnhancedRbacContext = createContext<EnhancedRbacContextType | undefined>(
+// 创建上下文
+const EnhancedRbacContext = createContext<EnhancedRbacContextType | undefined>(
   undefined
 );
 
@@ -193,7 +200,7 @@ export interface PermissionAuditLog {
 const DEFAULT_PERMISSIONS: Record<string, Permission> = {
   dashboard_read: {
     id: 'dashboard_read',
-    name: '仪表板查?,
+    name: '仪表板查看',
     description: '查看系统仪表板和统计数据',
     category: 'dashboard',
     resource: 'dashboard',
@@ -204,7 +211,7 @@ const DEFAULT_PERMISSIONS: Record<string, Permission> = {
   users_read: {
     id: 'users_read',
     name: '用户查看',
-    description: '查看用户列表和基本信?,
+    description: '查看用户列表和基本信息',
     category: 'user_management',
     resource: 'users',
     action: 'read',
@@ -545,7 +552,8 @@ export function EnhancedRbacProvider({
         timestamp: new Date(),
       };
 
-      setAuditLogs(prev => [auditLog, ...prev.slice(0, 99)]); // 保留最?00条日?    },
+      setAuditLogs(prev => [auditLog, ...prev.slice(0, 99)]); // 保留最近100条日志
+    },
     []
   );
 
