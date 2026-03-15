@@ -3,20 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
 import {
   ArrowLeft,
   Globe,
   Ship,
-  Calendar,
   DollarSign,
   Package,
   Users,
@@ -24,7 +17,6 @@ import {
   CheckCircle,
   AlertCircle,
   Clock,
-  MapPin,
   Phone,
   Mail,
 } from 'lucide-react';
