@@ -10,17 +10,17 @@ import {
   useEffect,
   useCallback,
 } from 'react';
-import {
-  Shield,
-  User,
-  Users,
-  Key,
-  Eye,
-  EyeOff,
-  Lock,
-  Unlock,
-  Settings,
-} from 'lucide-react';
+// import {
+//   Shield,
+//   User,
+//   Users,
+//   Key,
+//   Eye,
+//   EyeOff,
+//   Lock,
+//   Unlock,
+//   Settings,
+// } from 'lucide-react';
 
 // 权限操作类型
 export type PermissionAction =
@@ -133,12 +133,14 @@ export interface PermissionAuditLog {
 
 // 上下文类型
 export interface EnhancedRbacContextType {
-  // 状?  currentUser: UserPermissionContext | null;
+  // 状态
+  currentUser: UserPermissionContext | null;
   isLoading: boolean;
   permissions: Record<string, Permission>;
   roles: Record<string, Role>;
 
-  // 基础权限检?  hasPermission: (permissionId: string) => boolean;
+  // 基础权限检查
+  hasPermission: (permissionId: string) => boolean;
   hasAnyPermission: (permissionIds: string[]) => boolean;
   hasAllPermissions: (permissionIds: string[]) => boolean;
 
@@ -582,7 +584,8 @@ export function EnhancedRbacProvider({
     [auditLogs]
   );
 
-  // 条件权限检?  const checkConditionalPermission = useCallback(
+  // 条件权限检查
+  const checkConditionalPermission = useCallback(
     async (
       permissionId: string,
       conditions: Record<string, any>
