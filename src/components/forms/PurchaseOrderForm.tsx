@@ -238,10 +238,10 @@ export function PurchaseOrderForm() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">�?/SelectItem>
-                  <SelectItem value="medium">�?/SelectItem>
-                  <SelectItem value="high">�?/SelectItem>
-                  <SelectItem value="urgent">紧?/SelectItem>
+                  <SelectItem value="low">低</SelectItem>
+                  <SelectItem value="medium">中</SelectItem>
+                  <SelectItem value="high">高</SelectItem>
+                  <SelectItem value="urgent">紧急</SelectItem>
                 </SelectContent>
               </Select>
               {getFieldError('priority') && (

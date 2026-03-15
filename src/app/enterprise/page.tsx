@@ -54,6 +54,7 @@ export default function EnterpriseServicePage() {
       icon: ShoppingCart,
       features: ['智能需求理解', '供应商匹配', '自动询价', '风险评估'],
       path: '/enterprise/procurement',
+      badge: 'HOT',
     },
     {
       id: 'after-sales',
@@ -62,6 +63,7 @@ export default function EnterpriseServicePage() {
       icon: Headphones,
       features: ['二维码管理', '智能诊断', '生命周期追踪', '数据分析'],
       path: '/enterprise/after-sales',
+      badge: 'NEW',
     },
     {
       id: 'warehousing',
@@ -70,6 +72,7 @@ export default function EnterpriseServicePage() {
       icon: Warehouse,
       features: ['库存同步', '智能分仓', '物流追踪', '效能分析'],
       path: '/enterprise/warehousing',
+      badge: '',
     },
     {
       id: 'customer-service',
@@ -78,6 +81,7 @@ export default function EnterpriseServicePage() {
       icon: Users,
       features: ['多轮对话', '情感识别', '知识库检索', '工单生成'],
       path: '/enterprise/customer-service',
+      badge: '',
     },
     {
       id: 'data-analysis',
@@ -86,6 +90,7 @@ export default function EnterpriseServicePage() {
       icon: BarChart3,
       features: ['数据可视化', '预测分析', '异常检测', '报表自动生成'],
       path: '/enterprise/data-analysis',
+      badge: '',
     },
     {
       id: 'workflow-automation',
@@ -94,6 +99,7 @@ export default function EnterpriseServicePage() {
       icon: Zap,
       features: ['流程编排', '任务调度', '异常处理', '监控告警'],
       path: '/enterprise/workflow-automation',
+      badge: 'NEW',
     },
     {
       id: 'supply-chain',
@@ -102,6 +108,7 @@ export default function EnterpriseServicePage() {
       icon: Package,
       features: ['需求预测', '库存优化', '供应商协作', '风险预警'],
       path: '/enterprise/supply-chain',
+      badge: 'NEW',
     },
   ];
 
@@ -120,31 +127,19 @@ export default function EnterpriseServicePage() {
           <div className="flex space-x-8">
             <button
               onClick={() => setActiveTab('services')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'services'
-                   'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'services' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
             >
               企业服务
             </button>
             <button
               onClick={() => setActiveTab('solutions')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'solutions'
-                   'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'solutions' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
             >
               解决方案
             </button>
             <button
               onClick={() => setActiveTab('about')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'about'
-                   'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'about' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
             >
               关于我们
             </button>
@@ -329,7 +324,7 @@ export default function EnterpriseServicePage() {
                       }}
                     >
                       {solution.title === '贸易行业'
-                         '进入管理平台'
+                        ? '进入管理平台'
                         : '查看详情'}
                     </Button>
                   </CardContent>

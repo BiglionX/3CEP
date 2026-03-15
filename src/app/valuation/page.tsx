@@ -359,7 +359,7 @@ export default function ValuationPage() {
                 onClick={calculateValuation}
                 disabled={isLoading || !model}
               >
-                {isLoading  (
+                {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                     正在计算估价...
@@ -376,7 +376,7 @@ export default function ValuationPage() {
 
           {/* 估价结果 */}
           <div className="space-y-6">
-            {result  (
+            {result ? (
               <>
                 <Card className="shadow-lg border-green-200">
                   <CardHeader className="bg-green-50">

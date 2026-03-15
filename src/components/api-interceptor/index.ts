@@ -1,8 +1,10 @@
 /**
- * API拦截器系统入口文? * 导出所有相关的拦截器组件和服务
+ * API拦截器系统入口文件
+ * 导出所有相关的拦截器组件和服务
  */
 
-// 核心管理?export {
+// 核心管理器
+export {
   ApiInterceptorProvider,
   useApiInterceptor,
   createAuthInterceptor,

@@ -386,7 +386,7 @@ export default function UserOrdersPage() {
           <h3 className="mt-2 text-sm font-medium text-gray-900">暂无订单</h3>
           <p className="mt-1 text-sm text-gray-500">
             {searchTerm || statusFilter !== 'all'
-               '没有找到匹配的订单'
+              ? '没有找到匹配的订单'
               : '您还没有创建任何维修订单'}
           </p>
           <div className="mt-6">

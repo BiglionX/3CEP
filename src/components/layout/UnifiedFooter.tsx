@@ -182,7 +182,8 @@ export function UnifiedFooter() {
                 深圳市循环科技有限公司. 保留所有权?
               </p>
               <p className="text-gray-500 text-xs mt-1">
-                粤ICP备XXXXXXXX�?| 粤公网安备XXXXXXXXXXXXX�?              </p>
+                粤ICP备XXXXXXXX号 | 粤公网安备XXXXXXXXXXXXX号
+              </p>
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 md:gap-6">

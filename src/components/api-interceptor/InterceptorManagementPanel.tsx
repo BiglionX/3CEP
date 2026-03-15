@@ -1,5 +1,6 @@
 ﻿/**
- * API拦截器管理面? * 提供拦截器配置、监控和调试功能
+ * API拦截器管理面板
+ * 提供拦截器配置、监控和调试功能
  */
 
 'use client';
@@ -14,13 +15,13 @@ import {
   CheckCircle,
   XCircle,
   Play,
-  Pause,
   RotateCcw,
-  Eye,
-  EyeOff,
   Server,
   Network,
   RefreshCw,
+  // Pause, // 未使用
+  // Eye, // 未使用
+  // EyeOff, // 未使用
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -72,8 +73,8 @@ export function InterceptorManagementPanel({
   className = '',
 }: InterceptorManagementPanelProps) {
   const {
-    config,
-    updateConfig,
+    config: _config,
+    updateConfig: _updateConfig,
     registerInterceptor,
     unregisterInterceptor,
     getInterceptors,
@@ -101,21 +102,24 @@ export function InterceptorManagementPanel({
 
   // 初始化默认拦截器
   useEffect(() => {
-    // 认证拦截?    const authInterceptor = createAuthInterceptor({
+    // 认证拦截器
+    const authInterceptor = createAuthInterceptor({
       tokenGetter: getAuthToken,
       tokenSetter: setAuthToken,
       unauthorizedRedirect: '/login',
     });
     registerInterceptor('auth', authInterceptor);
 
-    // 安全拦截?    const securityInterceptor = createSecurityInterceptor({
+    // 安全拦截器
+    const securityInterceptor = createSecurityInterceptor({
       enableCSRF: true,
       enableRateLimiting: true,
       maxRequestsPerMinute: 60,
     });
     registerInterceptor('security', securityInterceptor);
 
-    // 日志拦截?    const loggingInterceptor = createLoggingInterceptor({
+    // 日志拦截器
+    const loggingInterceptor = createLoggingInterceptor({
       enableRequestLogging: true,
       enableResponseLogging: true,
       enableErrorLogging: true,
@@ -123,10 +127,12 @@ export function InterceptorManagementPanel({
     });
     registerInterceptor('logging', loggingInterceptor);
 
-    // 重试拦截?    const retryInterceptor = createRetryInterceptor(3, 1000);
+    // 重试拦截器
+    const retryInterceptor = createRetryInterceptor(3, 1000);
     registerInterceptor('retry', retryInterceptor);
 
-    // 缓存拦截?    const cacheInterceptor = createCacheInterceptor();
+    // 缓存拦截器
+    const cacheInterceptor = createCacheInterceptor();
     registerInterceptor('cache', cacheInterceptor);
   }, []);
 
@@ -186,19 +192,22 @@ export function InterceptorManagementPanel({
     }
   };
 
-  // 切换拦截器状?  const toggleInterceptor = (name: string) => {
+  // 切换拦截器状态
+  const toggleInterceptor = (name: string) => {
     const interceptors = getInterceptors();
     if (interceptors[name]) {
       unregisterInterceptor(name);
     } else {
       // 重新注册拦截器的逻辑需要在这里实现
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`重新注册拦截? ${name}`)}
+      // TODO: 移除调试日志 - console.log(`重新注册拦截器 ${name}`);
+    }
   };
 
   // 重置统计
   const resetStats = () => {
     // 这里应该重置统计信息
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('重置统计信息')};
+    // TODO: 移除调试日志 - console.log('重置统计信息');
+  };
 
   const interceptors = getInterceptors();
 
@@ -209,14 +218,14 @@ export function InterceptorManagementPanel({
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Shield className="w-6 h-6" />
-            API拦截器管?          </h2>
-          <p className="text-gray-600 mt-1">配置和监控API请求拦截?/p>
+            API拦截器管理          </h2>
+          <p className="text-gray-600 mt-1">配置和监控API请求拦截器</p>
         </div>
 
         <div className="flex gap-2">
           <Button onClick={() => setDialogOpen(true)}>
             <Settings className="w-4 h-4 mr-2" />
-            添加拦截?          </Button>
+            添加拦截器          </Button>
           <Button variant="outline" onClick={resetStats}>
             <RotateCcw className="w-4 h-4 mr-2" />
             重置统计
@@ -224,11 +233,11 @@ export function InterceptorManagementPanel({
         </div>
       </div>
 
-      {/* 状态概览卡?*/}
+      {/* 状态概览卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">活跃请求?/CardTitle>
+            <CardTitle className="text-sm font-medium">活跃请求</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
@@ -248,7 +257,7 @@ export function InterceptorManagementPanel({
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">成功?/CardTitle>
+            <CardTitle className="text-sm font-medium">成功率</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
@@ -293,7 +302,7 @@ export function InterceptorManagementPanel({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-sm">认证状?</span>
+            <span className="text-sm">认证状态</span>
             {isAuthenticated ? (
               <Badge variant="default">
                 <CheckCircle className="w-3 h-3 mr-1" />
@@ -307,16 +316,16 @@ export function InterceptorManagementPanel({
         </CardContent>
       </Card>
 
-      {/* 拦截器开关控?*/}
+      {/* 拦截器开关控制 */}
       <Card>
         <CardHeader>
-          <CardTitle>拦截器控?/CardTitle>
+          <CardTitle>拦截器控制</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4" />
-              <span>日志拦截?/span>
+              <span>日志拦截器</span>
             </div>
             <Button
               variant={loggingEnabled ? 'default' : 'outline'}
@@ -330,7 +339,7 @@ export function InterceptorManagementPanel({
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4" />
-              <span>安全拦截?/span>
+              <span>安全拦截器</span>
             </div>
             <Button
               variant={securityEnabled ? 'default' : 'outline'}
@@ -344,7 +353,7 @@ export function InterceptorManagementPanel({
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
             <div className="flex items-center gap-2">
               <RefreshCw className="w-4 h-4" />
-              <span>重试拦截?/span>
+              <span>重试拦截器</span>
             </div>
             <Button
               variant={retryEnabled ? 'default' : 'outline'}
@@ -357,14 +366,14 @@ export function InterceptorManagementPanel({
         </CardContent>
       </Card>
 
-      {/* 拦截器列?*/}
+      {/* 拦截器列表 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Server className="w-5 h-5" />
-            拦截器列?          </CardTitle>
+            拦截器列表          </CardTitle>
           <CardDescription>
-            当前注册?{Object.keys(interceptors).length} 个拦截器
+            当前注册了 {Object.keys(interceptors).length} 个拦截器
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -374,13 +383,13 @@ export function InterceptorManagementPanel({
                 <TableRow>
                   <TableHead>名称</TableHead>
                   <TableHead>类型</TableHead>
-                  <TableHead>状?/TableHead>
+                  <TableHead>状态</TableHead>
                   <TableHead>功能</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Object.entries(interceptors).map(([name, interceptor]) => (
+                {Object.entries(interceptors).map(([name, _interceptor]) => (
                   <TableRow key={name}>
                     <TableCell className="font-medium">{name}</TableCell>
                     <TableCell>
@@ -395,15 +404,15 @@ export function InterceptorManagementPanel({
                                 ? '重试'
                                 : name === 'cache'
                                   ? '缓存'
-                                  : '自定?}
+                                  : '自定义'}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="default">运行?/Badge>
+                      <Badge variant="default">运行中</Badge>
                     </TableCell>
                     <TableCell className="text-sm text-gray-600">
                       {name === 'auth'
-                        ? 'JWT认证和刷?
+                        ? 'JWT认证和刷新'
                         : name === 'security'
                           ? 'CSRF保护和速率限制'
                           : name === 'logging'
@@ -412,7 +421,7 @@ export function InterceptorManagementPanel({
                               ? '自动重试机制'
                               : name === 'cache'
                                 ? '响应缓存'
-                                : '自定义功?}
+                                : '自定义功能'}
                     </TableCell>
                     <TableCell>
                       <Button
@@ -438,7 +447,7 @@ export function InterceptorManagementPanel({
             <Network className="w-5 h-5" />
             API测试
           </CardTitle>
-          <CardDescription>测试拦截器效?/CardDescription>
+          <CardDescription>测试拦截器效果</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-3">
@@ -450,7 +459,7 @@ export function InterceptorManagementPanel({
             />
             <Button onClick={testApiRequest}>
               <Play className="w-4 h-4 mr-2" />
-              发送请?            </Button>
+              发送请求            </Button>
           </div>
 
           {testResult && (
@@ -458,7 +467,7 @@ export function InterceptorManagementPanel({
               {testResult.status === 'loading' ? (
                 <div className="flex items-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-                  <span>请求?..</span>
+                  <span>请求中...</span>
                 </div>
               ) : testResult.status === 'success' ? (
                 <div className="space-y-3">
@@ -493,12 +502,12 @@ export function InterceptorManagementPanel({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>添加新拦截器</DialogTitle>
-            <DialogDescription>配置新的API请求拦截?/DialogDescription>
+            <DialogDescription>配置新的API请求拦截器</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">拦截器名?/label>
+              <label className="text-sm font-medium">拦截器名称</label>
               <Input
                 value={newInterceptor.name}
                 onChange={e =>
@@ -509,7 +518,7 @@ export function InterceptorManagementPanel({
             </div>
 
             <div>
-              <label className="text-sm font-medium">拦截器类?/label>
+              <label className="text-sm font-medium">拦截器类型</label>
               <Select
                 value={newInterceptor.type}
                 onValueChange={value =>
@@ -520,11 +529,11 @@ export function InterceptorManagementPanel({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="auth">认证拦截?/SelectItem>
-                  <SelectItem value="security">安全拦截?/SelectItem>
-                  <SelectItem value="logging">日志拦截?/SelectItem>
-                  <SelectItem value="retry">重试拦截?/SelectItem>
-                  <SelectItem value="cache">缓存拦截?/SelectItem>
+                  <SelectItem value="auth">认证拦截器</SelectItem>
+                  <SelectItem value="security">安全拦截器</SelectItem>
+                  <SelectItem value="logging">日志拦截器</SelectItem>
+                  <SelectItem value="retry">重试拦截器</SelectItem>
+                  <SelectItem value="cache">缓存拦截器</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -538,7 +547,7 @@ export function InterceptorManagementPanel({
               onClick={handleAddInterceptor}
               disabled={!newInterceptor.name}
             >
-              添加拦截?            </Button>
+              添加拦截器            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

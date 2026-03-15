@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function UltimateTest() {
   const router = useRouter();
@@ -17,7 +17,6 @@ export default function UltimateTest() {
       timestamp: new Date().toLocaleTimeString(),
     };
     setResults(prev => [...prev, result]);
-    // TODO: 移除调试日志 - console.log(`[阶段${phase}] [${status}] ${message}`);
   };
 
   const runUltimateTest = async () => {
@@ -74,7 +73,11 @@ export default function UltimateTest() {
             method();
             log(3, `跳转方法${index + 1}已执行`, 'success');
           } catch (error) {
-            log(3, `跳转方法${index + 1}失败: ${(error as Error).message}`, 'error');
+            log(
+              3,
+              `跳转方法${index + 1}失败: ${(error as Error).message}`,
+              'error'
+            );
           }
         }, index * 2000);
       });
@@ -99,7 +102,7 @@ export default function UltimateTest() {
         const loginResult = await loginResponse.json();
         log(4, `登录状态: ${loginResponse.status}`, 'data');
         log(4, `登录成功: ${loginResponse.ok}`, 'data');
-        log(4, `用户ID: ${loginResult.id.substring(0, 8) || '无'}`, 'data');
+        log(4, `用户ID: ${loginResult.id?.substring(0, 8) || '无'}`, 'data');
 
         if (loginResponse.ok) {
           setTimeout(() => {
@@ -148,7 +151,7 @@ export default function UltimateTest() {
                   className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
                   {isTesting
-                     `测试中... (阶段${testPhase}/5)`
+                    ? `测试中... (阶段${testPhase}/5)`
                     : '运行终极诊断'}
                 </button>
 
@@ -184,9 +187,9 @@ export default function UltimateTest() {
                     key={phase}
                     className={`p-3 rounded-lg ${
                       testPhase === phase
-                         'bg-blue-600'
+                        ? 'bg-blue-600'
                         : testPhase > phase
-                           'bg-green-600'
+                          ? 'bg-green-600'
                           : 'bg-gray-600'
                     }`}
                   >
@@ -218,11 +221,11 @@ export default function UltimateTest() {
                     key={index}
                     className={`mb-2 p-3 rounded ${
                       result.status === 'error'
-                         'bg-red-900/30 border border-red-700'
+                        ? 'bg-red-900/30 border border-red-700'
                         : result.status === 'success'
-                           'bg-green-900/30 border border-green-700'
+                          ? 'bg-green-900/30 border border-green-700'
                           : result.status === 'data'
-                             'bg-blue-900/30 border border-blue-700'
+                            ? 'bg-blue-900/30 border border-blue-700'
                             : 'bg-gray-800'
                     }`}
                   >
@@ -237,11 +240,11 @@ export default function UltimateTest() {
                     <div
                       className={
                         result.status === 'error'
-                           'text-red-400'
+                          ? 'text-red-400'
                           : result.status === 'success'
-                             'text-green-400'
+                            ? 'text-green-400'
                             : result.status === 'data'
-                               'text-blue-400'
+                              ? 'text-blue-400'
                               : 'text-yellow-400'
                       }
                     >
@@ -257,9 +260,7 @@ export default function UltimateTest() {
             <h3 className="font-semibold text-red-400 mb-3">🚨 紧急解决方案</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
-                <h4 className="font-medium text-red-300 mb-2">
-                  如果测试失败:
-                </h4>
+                <h4 className="font-medium text-red-300 mb-2">如果测试失败:</h4>
                 <ul className="space-y-1 text-red-200">
                   <li>✓ 检查服务器控制台错误信息</li>
                   <li>✓ 验证所有API端点是否正常工作</li>

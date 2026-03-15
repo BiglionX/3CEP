@@ -393,7 +393,7 @@ export function EnhancedTutorialViewer({
             {renderProgressBar()}
             <div className="flex items-center justify-between text-sm text-gray-500">
               <span>
-                �?{currentStepIndex + 1} �? {currentStep.title}
+                步骤 {currentStepIndex + 1}： {currentStep.title}
               </span>
               <span>
                 预计剩余:{' '}
@@ -453,7 +453,7 @@ export function EnhancedTutorialViewer({
                       <ul className="text-blue-800 space-y-1">
                         {currentStep.tips.map((tip, index) => (
                           <li key={index} className="flex items-start">
-                            <span className="mr-2">�?/span>
+                            <span className="mr-2">💡</span>
                             <span>{tip}</span>
                           </li>
                         ))}
@@ -469,7 +469,7 @@ export function EnhancedTutorialViewer({
                       <ul className="text-yellow-800 space-y-1">
                         {currentStep.warnings.map((warning, index) => (
                           <li key={index} className="flex items-start">
-                            <span className="mr-2">�?/span>
+                            <span className="mr-2">⚠️</span>
                             <span>{warning}</span>
                           </li>
                         ))}

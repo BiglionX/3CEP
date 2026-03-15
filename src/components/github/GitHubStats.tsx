@@ -10,9 +10,9 @@ import { useGitHubRepo } from '@/lib/github/hooks';
 import { formatNumber, formatDate } from '@/lib/github/api';
 
 interface GitHubStatsProps {
-  /** 仓库名称（不包含 owner�?*/
+  /** 仓库名称（不包含 owner） */
   repoName: string;
-  /** 是否显示详细统计，默?false */
+  /** 是否显示详细统计，默认 false */
   detailed?: boolean;
   /** 自定义类?*/
   className?: string;
@@ -149,7 +149,7 @@ export function GitHubStats({
 }
 
 /**
- * GitHub 徽章组件（使?shields.io�? */
+ * GitHub 徽章组件（使用 shields.io） */
 export function GitHubBadge({
   repoName,
   type = 'stars',

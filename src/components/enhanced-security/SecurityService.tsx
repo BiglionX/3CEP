@@ -468,7 +468,8 @@ export function SecureData({
       try {
         const encrypted = await encryptData(data, algorithm);
         setEncryptedData(encrypted);
-        setDisplayData('•••••••••••�?); // 显示加密占位?        setIsEncrypted(true);
+        setDisplayData('••••••••••••'); // 显示加密占位符
+        setIsEncrypted(true);
       } catch (error) {
         console.error('加密失败:', error);
       }

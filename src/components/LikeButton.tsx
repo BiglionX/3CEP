@@ -34,7 +34,7 @@ export default function LikeButton({
       // 调用父组件回?
       onLike?.(newCount);
 
-      // 检查是否触发草稿创建（�?次点赞）
+      // 检查是否触发草稿创建（3次点赞）
       if (newCount === 3) {
         await createDraft(contentId);
         onDraftCreate?.(contentId);
@@ -69,7 +69,7 @@ export default function LikeButton({
       <span data-testid="like-count">{likeCount}</span>
       {likeCount >= 3 && (
         <span className="text-xs text-green-600" data-testid="draft-indicator">
-          �?已沉淀
+          已沉淀
         </span>
       )}
     </button>

@@ -46,19 +46,19 @@ export default function SearchResults({
           </div>
           <ul className="text-left text-gray-600 space-y-2">
             <li className="flex items-start gap-2">
-              <span className="text-green-500 mt-1">�?/span>
-              <span>检查拼写是否正?/span>
+              <span className="text-green-500 mt-1">✓</span>
+              <span>检查拼写是否正确</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-500 mt-1">�?/span>
-              <span>使用更常见的关键?/span>
+              <span className="text-green-500 mt-1">✓</span>
+              <span>使用更常见的关键词</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-500 mt-1">�?/span>
-              <span>减少关键词数?/span>
+              <span className="text-green-500 mt-1">✓</span>
+              <span>减少关键词数量</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-500 mt-1">�?/span>
+              <span className="text-green-500 mt-1">✓</span>
               <span>浏览热门标签</span>
             </li>
           </ul>

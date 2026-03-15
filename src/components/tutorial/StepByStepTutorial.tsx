@@ -119,7 +119,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
         return `https://www.youtube.com/embed/${videoId}`;
       }
       
-      // B�?
+      // B站
       if (url.hostname.includes('bilibili.com')) {
         const videoId = url.pathname.split('/').pop()?.split('?')[0];
         return `https://player.bilibili.com/player.html?bvid=${videoId}&page=1`;
@@ -239,11 +239,11 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
   // 获取平台图标
   const getPlatformIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
-      case 'jd': return ' JD';
-      case 'taobao': return ' �?;
-      case 'tmall': return ' �?;
-      case 'amazon': return ' A';
-      default: return ' �?;
+      case 'jd': return '🐶 JD';
+      case 'taobao': return '🍑 淘宝';
+      case 'tmall': return '🐱 天猫';
+      case 'amazon': return '📦 A';
+      default: return '❓';
     }
   };
 
@@ -321,7 +321,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
               }`}
-              aria-label={`�?{index + 1}�? ${step.title}`}
+              aria-label={`步骤 ${index + 1}： ${step.title}`}
             >
               {index + 1}
             </button>
@@ -347,7 +347,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-2xl font-bold text-gray-900">
-            �?{currentStepIndex + 1} �? {currentStep.title}
+            步骤 {currentStepIndex + 1}： {currentStep.title}
           </h2>
           <Badge variant="secondary">
             {currentStep.estimated_time}分钟
@@ -395,7 +395,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                   <ul className="text-blue-800 space-y-1">
                     {currentStep.tips.map((tip, index) => (
                       <li key={index} className="flex items-start">
-                        <span className="mr-2">�?/span>
+                        <span className="mr-2">💡</span>
                         <span>{tip}</span>
                       </li>
                     ))}
@@ -414,7 +414,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                   <ul className="text-yellow-800 space-y-1">
                     {currentStep.warnings.map((warning, index) => (
                       <li key={index} className="flex items-start">
-                        <span className="mr-2">�?/span>
+                        <span className="mr-2">⚠️</span>
                         <span>{warning}</span>
                       </li>
                     ))}

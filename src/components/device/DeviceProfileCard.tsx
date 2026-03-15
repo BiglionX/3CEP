@@ -36,7 +36,7 @@ export default function DeviceProfileCard({
       if (data) {
         setProfile(data);
       } else {
-        setError('未找到设备档?);
+        setError('未找到设备档案');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '加载失败');
@@ -46,12 +46,12 @@ export default function DeviceProfileCard({
   };
 
   const formatDate = (date: Date | undefined): string => {
-    if (!date) return '�?;
+    if (!date) return '-';
     return new Date(date).toLocaleDateString('zh-CN');
   };
 
   const formatDateTime = (date: Date | undefined): string => {
-    if (!date) return '�?;
+    if (!date) return '-';
     return new Date(date).toLocaleString('zh-CN');
   };
 
@@ -121,8 +121,8 @@ export default function DeviceProfileCard({
               />
             </svg>
           </div>
-          <p className="text-gray-500 font-medium">未找到设备档?/p>
-          <p className="text-gray-400 text-sm mt-1">该设备尚未创建档?/p>
+          <p className="text-gray-500 font-medium">未找到设备档案</p>
+          <p className="text-gray-400 text-sm mt-1">该设备尚未创建档案</p>
         </div>
       </div>
     );
@@ -137,7 +137,7 @@ export default function DeviceProfileCard({
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-xl font-bold text-gray-800">设备档案</h2>
-            <p className="text-sm text-gray-500 mt-1">二维? {qrcodeId}</p>
+            <p className="text-sm text-gray-500 mt-1">二维码: {qrcodeId}</p>
           </div>
           <span
             className={`px-3 py-1 rounded-full text-sm font-medium ${STATUS_COLORS[profile.currentStatus as DeviceStatus]}`}
@@ -169,36 +169,36 @@ export default function DeviceProfileCard({
               <div>
                 <dt className="text-sm text-gray-600">产品类别</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                  {profile.productCategory || '未分?}
+                  {profile.productCategory || '未分类'}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm text-gray-600">序列?/dt>
+                <dt className="text-sm text-gray-600">序列号</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                  {profile.serialNumber || '�?}
+                  {profile.serialNumber || '-'}
                 </dd>
               </div>
             </dl>
           </div>
 
-          {/* 状态信?*/}
+          {/* 状态信息 */}
           <div>
-            <h3 className="text-sm font-medium text-gray-500 mb-3">状态信?/h3>
+            <h3 className="text-sm font-medium text-gray-500 mb-3">状态信息</h3>
             <dl className="space-y-2">
               <div>
-                <dt className="text-sm text-gray-600">制造日?/dt>
+                <dt className="text-sm text-gray-600">制造日期</dt>
                 <dd className="text-sm font-medium text-gray-900">
                   {formatDate(profile.manufacturingDate)}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm text-gray-600">首次激?/dt>
+                <dt className="text-sm text-gray-600">首次激活</dt>
                 <dd className="text-sm font-medium text-gray-900">
                   {formatDateTime(profile.firstActivatedAt)}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm text-gray-600">最后事?/dt>
+                <dt className="text-sm text-gray-600">最后事件</dt>
                 <dd className="text-sm font-medium text-gray-900">
                   {formatDateTime(profile.lastEventAt)}
                 </dd>
@@ -243,15 +243,15 @@ export default function DeviceProfileCard({
           <h3 className="text-sm font-medium text-gray-500 mb-3">保修信息</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <dt className="text-sm text-gray-600">保修?/dt>
+              <dt className="text-sm text-gray-600">保修期</dt>
               <dd className="text-sm font-medium text-gray-900">
                 {profile.warrantyPeriod
                   ? `${profile.warrantyPeriod}个月`
-                  : '无保修信?}
+                  : '无保修信息'}
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-600">保修开?/dt>
+              <dt className="text-sm text-gray-600">保修开始</dt>
               <dd className="text-sm font-medium text-gray-900">
                 {formatDate(profile.warrantyStartDate)}
               </dd>

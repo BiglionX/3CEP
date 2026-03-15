@@ -29,13 +29,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import {
   ChevronLeft,
   ChevronRight,
   MoreVertical,
   Search,
-  Filter,
   Download,
   RefreshCw,
 } from 'lucide-react';
@@ -103,7 +101,8 @@ export function DataTable<T>({
 
   const getValue = (record: T, column: Column<T>): any => {
     if (typeof column.key === 'string' && column.key.includes('.')) {
-      // 处理嵌套属?      return column.key
+      // 处理嵌套属性
+      return column.key
         .split('.')
         .reduce((obj: any, key: string) => obj?.[key], record);
     }
@@ -126,7 +125,7 @@ export function DataTable<T>({
     }
 
     if (typeof value === 'boolean') {
-      return value ? '�? : '�?;
+      return value ? '是' : '否';
     }
 
     if (value instanceof Date) {
@@ -149,7 +148,8 @@ export function DataTable<T>({
     return (
       <div className="flex items-center justify-between px-4 py-3 border-t">
         <div className="text-sm text-muted-foreground">
-          显示?{startItem} �?{endItem} 条，�?{pagination.total} 条记?        </div>
+          显示 {startItem} - {endItem} 条，共 {pagination.total} 条记录
+        </div>
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
@@ -162,7 +162,8 @@ export function DataTable<T>({
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <span className="text-sm">
-            �?{pagination.current} 页，�?{totalPages} �?          </span>
+            第 {pagination.current} 页，共 {totalPages} 页
+          </span>
           <Button
             variant="outline"
             size="sm"
@@ -180,7 +181,7 @@ export function DataTable<T>({
 
   return (
     <div className="border rounded-lg">
-      {/* 工具?*/}
+      {/* 工具栏 */}
       {(searchable || exportable || refreshable || filters) && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-b">
           <div className="flex flex-col sm:flex-row gap-3">
@@ -266,7 +267,7 @@ export function DataTable<T>({
                 >
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-2"></div>
-                    加载?..
+                    加载中...
                   </div>
                 </TableCell>
               </TableRow>

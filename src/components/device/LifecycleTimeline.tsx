@@ -162,12 +162,14 @@ export default function LifecycleTimeline({
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold text-gray-800">
-            生命周期时间?          </h2>
+            生命周期时间轴
+          </h2>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-500">
-              {events.length} 个事?            </span>
+              {events.length} 个事件
+            </span>
             {events.length >= limit && (
-              <span className="text-xs text-gray-400">显示最近{limit}�?/span>
+              <span className="text-xs text-gray-400">显示最近{limit}条</span>
             )}
           </div>
         </div>
@@ -340,7 +342,8 @@ export default function LifecycleTimeline({
               onClick={loadLifecycleEvents}
               className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
             >
-              刷新时间?            </button>
+              刷新时间轴
+            </button>
             {events.length >= limit && (
               <button className="px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
                 查看全部

@@ -97,9 +97,9 @@ export function PersonalizedWelcome({
 
       const mockProfile: UserProfile = {
         id: userId,
-        name: user??.split('@')[0] || '用户',
+        name: user?.name || user?.email?.split('@')[0] || '用户',
         email: user?.email || '',
-        avatar: user??.avatar_url,
+        avatar: user?.user_metadata?.avatar_url,
         joinDate: '2024-01-15',
         lastActive: '刚刚',
         memberLevel: '青铜会员',
@@ -115,7 +115,7 @@ export function PersonalizedWelcome({
           },
           {
             id: 'quick_learner',
-            title: '快速上?,
+            title: '快速上手',
             description: '完成新手引导',
             icon: '🎓',
             earnedDate: '2024-01-16',
@@ -123,16 +123,16 @@ export function PersonalizedWelcome({
           },
           {
             id: 'explorer',
-            title: '探索?,
-            description: '访问5个不同功能模?,
+            title: '探索者',
+            description: '访问5个不同功能模块',
             icon: '🧭',
             earnedDate: '',
             isUnlocked: false,
           },
           {
             id: 'contributor',
-            title: '贡献?,
-            description: '创建第一个维修工?,
+            title: '贡献者',
+            description: '创建第一个维修工单',
             icon: '🔧',
             earnedDate: '',
             isUnlocked: false,
@@ -153,7 +153,7 @@ export function PersonalizedWelcome({
             id: 'act_1',
             type: 'login',
             title: '今日登录',
-            timestamp: '2小时?,
+            timestamp: '2小时前',
             pointsEarned: 10,
           },
           {
@@ -215,28 +215,28 @@ export function PersonalizedWelcome({
   const quickActions = [
     {
       title: '设备管理',
-      description: '查看和管理您的设备资?,
+      description: '查看和管理您的设备资产',
       icon: <Smartphone className="w-6 h-6" />,
       href: '/devices',
       color: 'blue',
     },
     {
       title: '维修工单',
-      description: '创建和跟踪维修请?,
+      description: '创建和跟踪维修请求',
       icon: <Wrench className="w-6 h-6" />,
       href: '/tickets',
       color: 'green',
     },
     {
       title: '数据分析',
-      description: '查看业务洞察和报?,
+      description: '查看业务洞察和报表',
       icon: <BarChart3 className="w-6 h-6" />,
       href: '/analytics',
       color: 'purple',
     },
     {
       title: '个人中心',
-      description: '管理账户和偏好设?,
+      description: '管理账户和偏好设置',
       icon: <User className="w-6 h-6" />,
       href: '/profile',
       color: 'orange',
@@ -284,7 +284,7 @@ export function PersonalizedWelcome({
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 左侧个人信息?*/}
+          {/* 左侧个人信息 */}
           <div className="lg:col-span-1 space-y-6">
             {/* 用户卡片 */}
             <Card className="overflow-hidden">
@@ -328,7 +328,7 @@ export function PersonalizedWelcome({
                       <div className="text-2xl font-bold text-blue-600">
                         {profile.achievements.filter(a => a.isUnlocked).length}
                       </div>
-                      <div className="text-sm text-gray-600">已获得成?/div>
+                      <div className="text-sm text-gray-600">已获得成就</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-green-600">
@@ -341,7 +341,7 @@ export function PersonalizedWelcome({
               </CardContent>
             </Card>
 
-            {/* 快速统计数?*/}
+            {/* 快速统计 */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -352,11 +352,11 @@ export function PersonalizedWelcome({
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">登录天数</span>
-                  <span className="font-semibold">5�?/span>
+                  <span className="font-semibold">5天</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">功能使用</span>
-                  <span className="font-semibold">12�?/span>
+                  <span className="font-semibold">12次</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">累计积分</span>
@@ -366,12 +366,12 @@ export function PersonalizedWelcome({
             </Card>
           </div>
 
-          {/* 右侧主要内容?*/}
+          {/* 右侧主要内容 */}
           <div className="lg:col-span-2 space-y-8">
             {/* 快捷操作 */}
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                快速开?
+                快速开始
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {quickActions.map((action, index) => (
@@ -442,7 +442,7 @@ export function PersonalizedWelcome({
                     {achievement.isUnlocked && (
                       <Badge variant="secondary" className="text-xs">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        已解?
+                        已解锁
                       </Badge>
                     )}
                   </motion.div>
@@ -505,7 +505,7 @@ export function PersonalizedWelcome({
             <h3 className="text-xl font-bold text-gray-900 mb-2">
               准备好深入体验了吗？
             </h3>
-            <p className="text-gray-600 mb-6">探索更多功能，解锁更多成?/p>
+            <p className="text-gray-600 mb-6">探索更多功能，解锁更多成就</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
@@ -513,7 +513,7 @@ export function PersonalizedWelcome({
                 asChild
               >
                 <Link href="/dashboard">
-                  进入控制?
+                  进入控制台
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>

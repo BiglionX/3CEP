@@ -154,11 +154,11 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
               {/* 可能的原?*/}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <h4 className="font-medium text-blue-900 mb-2">可能的原?/h4>
+                  <h4 className="font-medium text-blue-900 mb-2">可能的原因</h4>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>�?网络连接不稳?/li>
-                    <li>�?服务器临时故?/li>
-                    <li>�?浏览器兼容性问?/li>
+                    <li>• 网络连接不稳定</li>
+                    <li>• 服务器临时故障</li>
+                    <li>• 浏览器兼容性问题</li>
                   </ul>
                 </div>
                 <div className="bg-green-50 rounded-lg p-4">
@@ -166,9 +166,9 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                     您可以尝?
                   </h4>
                   <ul className="text-sm text-green-800 space-y-1">
-                    <li>�?刷新当前页面</li>
-                    <li>�?检查网络连?/li>
-                    <li>�?稍后再试</li>
+                    <li>• 刷新当前页面</li>
+                    <li>• 检查网络连接</li>
+                    <li>• 稍后再试</li>
                   </ul>
                 </div>
               </div>

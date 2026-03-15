@@ -319,10 +319,10 @@ function PredictionForm({
             <SelectValue placeholder="选择预测周期" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="7">7�?/SelectItem>
-            <SelectItem value="15">15�?/SelectItem>
-            <SelectItem value="30">30�?/SelectItem>
-            <SelectItem value="60">60�?/SelectItem>
+            <SelectItem value="7">7天</SelectItem>
+            <SelectItem value="15">15天</SelectItem>
+            <SelectItem value="30">30天</SelectItem>
+            <SelectItem value="60">60天</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -587,13 +587,13 @@ function ConfidenceBadge({ confidence }: { confidence: number }) {
 
   if (confidence >= 0.9) {
     variant = 'default';
-    text = '�?;
+    text = '高';
   } else if (confidence >= 0.7) {
     variant = 'secondary';
-    text = '�?;
+    text = '中';
   } else {
     variant = 'destructive';
-    text = '�?;
+    text = '低';
   }
 
   return (

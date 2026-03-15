@@ -1,7 +1,6 @@
 ﻿'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import DeviceProfileCard from '@/components/device/DeviceProfileCard';
 import LifecycleTimeline from '@/components/device/LifecycleTimeline';
 import { DeviceLifecycleService } from '@/services/device-lifecycle.service';
@@ -43,7 +42,8 @@ export default function DeviceArchiveTab({
       const lifecycleService = new DeviceLifecycleService();
       const profileService = new DeviceProfileService();
 
-      // 并行加载档案和事件数?      const [profileData, eventsData] = await Promise.all([
+      // 并行加载档案和事件数据
+      const [profileData, eventsData] = await Promise.all([
         profileService.getDeviceProfile(qrcodeId),
         lifecycleService.getDeviceLifecycleHistory(qrcodeId, { limit: 20 }),
       ]);
@@ -63,12 +63,13 @@ export default function DeviceArchiveTab({
       setIsActivating(true);
       const lifecycleService = new DeviceLifecycleService();
 
-      // 调用LIFE-204激活设?      await lifecycleService.recordEvent({
+      // 调用LIFE-204激活设备
+      await lifecycleService.recordEvent({
         qrcodeId,
         eventType: DeviceEventType.ACTIVATED,
         eventSubtype: 'user_activation',
-        location: '用户扫码激?,
-        notes: '用户通过扫码页面激活设?,
+        location: '用户扫码激活',
+        notes: '用户通过扫码页面激活设备',
       });
 
       // 重新加载数据
@@ -77,17 +78,15 @@ export default function DeviceArchiveTab({
       // 显示成功消息
       alert('设备激活成功！');
     } catch (err) {
-      console.error('设备激活失?', err);
-      alert(
-        '设备激活失败：' + (err instanceof Error ? err.message : '未知错误')
-      );
+      console.error('设备激活失败', err);
+      alert(`设备激活失败：${err instanceof Error ? err.message : '未知错误'}`);
     } finally {
       setIsActivating(false);
     }
   };
 
   const formatDate = (date: Date | undefined): string => {
-    if (!date) return '�?;
+    if (!date) return '-';
     return new Date(date).toLocaleString('zh-CN');
   };
 
@@ -143,7 +142,7 @@ export default function DeviceArchiveTab({
     <div
       className={`bg-white rounded-lg shadow-md overflow-hidden ${className}`}
     >
-      {/* 标签页导?*/}
+      {/* 标签页导航 */}
       <div className="border-b border-gray-200">
         <nav className="flex -mb-px">
           <button
@@ -226,7 +225,7 @@ export default function DeviceArchiveTab({
         </nav>
       </div>
 
-      {/* 标签页内?*/}
+      {/* 标签页内容 */}
       <div className="p-6">
         {/* 激活状态和按钮 */}
         {profile && (
@@ -245,13 +244,14 @@ export default function DeviceArchiveTab({
                   </span>
                   {profile.currentStatus !== 'activated' && (
                     <span className="text-sm text-orange-600 bg-orange-100 px-2 py-1 rounded">
-                      未激?                    </span>
+                      未激活
+                    </span>
                   )}
                 </div>
                 <p className="text-gray-600">
                   {profile.currentStatus === 'activated'
                     ? `设备已于 ${formatDate(profile.firstActivatedAt)} 激活`
-                    : '此设备尚未激活，请点击下方按钮进行激?}
+                    : '此设备尚未激活，请点击下方按钮进行激活'}
                 </p>
               </div>
 
@@ -300,7 +300,8 @@ export default function DeviceArchiveTab({
                           d="M13 10V3L4 14h7v7l9-11h-7z"
                         />
                       </svg>
-                      激活设?                    </>
+                      激活设备
+                    </>
                   )}
                 </button>
               )}
@@ -308,7 +309,7 @@ export default function DeviceArchiveTab({
           </div>
         )}
 
-        {/* 档案标签?*/}
+        {/* 档案标签页 */}
         {activeTab === 'profile' && (
           <div className="space-y-6">
             <DeviceProfileCard qrcodeId={qrcodeId} />
@@ -321,7 +322,8 @@ export default function DeviceArchiveTab({
                   申请维修
                 </button>
                 <button className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                  查看说明?                </button>
+                  查看说明书
+                </button>
                 <button className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                   AI故障诊断
                 </button>
@@ -330,12 +332,12 @@ export default function DeviceArchiveTab({
           </div>
         )}
 
-        {/* 生命周期标签?*/}
+        {/* 生命周期标签页 */}
         {activeTab === 'timeline' && (
           <LifecycleTimeline qrcodeId={qrcodeId} limit={50} />
         )}
 
-        {/* 维修历史标签?*/}
+        {/* 维修历史标签页 */}
         {activeTab === 'history' && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow">
@@ -352,7 +354,8 @@ export default function DeviceArchiveTab({
                         e.eventType === 'part_replaced'
                     ).length
                   }{' '}
-                  条维修记?                </p>
+                  条维修记录
+                </p>
               </div>
 
               <div className="p-6">
@@ -417,7 +420,7 @@ export default function DeviceArchiveTab({
 
                             {event?.technician && (
                               <div>
-                                <span className="text-gray-500">技?</span>
+                                <span className="text-gray-500">技师</span>
                                 <span className="ml-2 text-gray-900">
                                   {event.eventData.technician}
                                 </span>

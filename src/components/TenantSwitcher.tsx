@@ -47,7 +47,7 @@ export default function TenantSwitcher() {
       if (result.success) {
         setTenants(result.data);
         
-        // �?cookie �?localStorage 获取当前租户
+        // 从 cookie 或 localStorage 获取当前租户
         const currentTenantId = getCurrentTenantId();
         const current = result.data.find((t: Tenant) => t.id === currentTenantId) || 
                        result.data.find((t: Tenant) => t.isPrimary) ||
@@ -209,7 +209,7 @@ export default function TenantSwitcher() {
                       </span>
                       {tenant.isPrimary && (
                         <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          �?
+                          主
                         </span>
                       )}
                     </div>
@@ -232,7 +232,7 @@ export default function TenantSwitcher() {
             {/* 底部信息 */}
             <div className="border-t border-gray-100 px-4 py-2">
               <div className="text-xs text-gray-500">
-                �?{tenants.length} 个租?
+                共 {tenants.length} 个租户
               </div>
             </div>
           </div>

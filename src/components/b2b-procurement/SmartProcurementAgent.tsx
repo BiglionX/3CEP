@@ -7,13 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import {
   Play,
   Plus,
-  Edit,
   Trash2,
-  History,
   Coins,
   Zap,
   CheckCircle,
-  AlertCircle,
 } from 'lucide-react';
 
 interface OrderItem {
@@ -77,7 +74,6 @@ export function SmartProcurementAgent() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fcxEstimate, setFcxEstimate] = useState<any>(null);
   const [executionResult, setExecutionResult] = useState<any>(null);
-  const [showModifyDialog, setShowModifyDialog] = useState<boolean>(false);
 
   // 模拟获取历史订单
   useEffect(() => {
@@ -97,7 +93,7 @@ export function SmartProcurementAgent() {
               productId: 'prod-001',
               productName: '电子元件A',
               quantity: 100,
-              unit: '�?,
+              unit: '个',
               unitPrice: 50,
             },
             {
@@ -105,7 +101,7 @@ export function SmartProcurementAgent() {
               productId: 'prod-002',
               productName: '连接器B',
               quantity: 50,
-              unit: '�?,
+              unit: '个',
               unitPrice: 30,
             },
           ],
@@ -121,7 +117,7 @@ export function SmartProcurementAgent() {
               productId: 'prod-003',
               productName: '传感器C',
               quantity: 200,
-              unit: '�?,
+              unit: '个',
               unitPrice: 25,
             },
           ],
@@ -138,7 +134,7 @@ export function SmartProcurementAgent() {
 
   const handleCreateSmartQuotation = async () => {
     if (!selectedOrderId) {
-      alert('请选择一个历史订?);
+      alert('请选择一个历史订单');
       return;
     }
 
@@ -164,7 +160,7 @@ export function SmartProcurementAgent() {
         setQuotationPlans([result.quotationPlan]);
         setFcxEstimate(result.fcxEstimate);
         setSelectedPlan(result.quotationPlan);
-        alert('智能询价计划创建成功?);
+        alert('智能询价计划创建成功！');
       } else {
         alert(`创建失败: ${result.errorMessage}`);
       }
@@ -200,7 +196,7 @@ export function SmartProcurementAgent() {
 
       if (result.success) {
         setExecutionResult(result);
-        alert(`询价执行成功！消?${result.totalFcxConsumed} FCX`);
+        alert(`询价执行成功！消耗${result.totalFcxConsumed} FCX`);
       } else {
         alert(`执行失败: ${result.errorMessage}`);
       }
@@ -220,7 +216,7 @@ export function SmartProcurementAgent() {
         productId: '',
         productName: '',
         quantity: 0,
-        unit: '�?,
+        unit: '个',
       },
     ]);
   };
@@ -241,12 +237,12 @@ export function SmartProcurementAgent() {
     setModifications(newModifications);
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, { variant: string; text: string }> = {
+  const _getStatusBadge = (status: string) => {
+    const statusMap: Record<string, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; text: string }> = {
       draft: { variant: 'secondary', text: '草稿' },
-      sent: { variant: 'default', text: '已发? },
-      completed: { variant: 'success', text: '已完? },
-      cancelled: { variant: 'destructive', text: '已取? },
+      sent: { variant: 'default', text: '已发送' },
+      completed: { variant: 'default', text: '已完成' },
+      cancelled: { variant: 'destructive', text: '已取消' },
     };
 
     const config = statusMap[status] || { variant: 'secondary', text: status };
@@ -287,7 +283,7 @@ export function SmartProcurementAgent() {
                 onChange={e => setSelectedOrderId(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">请选择一个历史订?/option>
+                <option value="">请选择一个历史订单</option>
                 {orders.map(order => (
                   <option key={order.id} value={order.id}>
                     {order.orderNumber} ({order.items.length}项商?
@@ -421,7 +417,7 @@ export function SmartProcurementAgent() {
                           </label>
                           <input
                             type="text"
-                            value={mod.unit || '�?}
+                            value={mod.unit || '个'}
                             onChange={e =>
                               handleModificationChange(
                                 index,
@@ -457,12 +453,13 @@ export function SmartProcurementAgent() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Coins className="mr-2 h-5 w-5 text-yellow-500" />
-              FCX消耗预?            </CardTitle>
+              FCX消耗预估
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-600">预计消?/p>
+                <p className="text-sm text-blue-600">预计消耗</p>
                 <p className="text-2xl font-bold text-blue-800">
                   {fcxEstimate.totalCost} FCX
                 </p>
@@ -476,7 +473,7 @@ export function SmartProcurementAgent() {
               </div>
 
               <div className="bg-orange-50 p-4 rounded-lg">
-                <p className="text-sm text-orange-600">余额状?/p>
+                <p className="text-sm text-orange-600">余额状态</p>
                 <p className="text-2xl font-bold text-orange-800">
                   {fcxEstimate.canAfford ? '充足' : '不足'}
                 </p>
@@ -559,13 +556,15 @@ export function SmartProcurementAgent() {
                             {group.supplierName}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {group.items.length} �?                          </td>
+                            {group.items.length} 项
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             ¥{group.estimatedCost.toLocaleString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                              待执?                            </span>
+                              待执行
+                            </span>
                           </td>
                         </tr>
                       ))}
@@ -592,18 +591,19 @@ export function SmartProcurementAgent() {
               <div className="bg-green-50 p-4 rounded-lg">
                 <p className="text-sm text-green-600">成功执行</p>
                 <p className="text-2xl font-bold text-green-800">
-                  {executionResult.executedRequests.length} �?                </p>
+                  {executionResult.executedRequests.length} 项
+                </p>
               </div>
 
               <div className="bg-yellow-50 p-4 rounded-lg">
-                <p className="text-sm text-yellow-600">FCX消?/p>
+                <p className="text-sm text-yellow-600">FCX消耗</p>
                 <p className="text-2xl font-bold text-yellow-800">
                   {executionResult.totalFcxConsumed} FCX
                 </p>
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-600">执行状?/p>
+                <p className="text-sm text-blue-600">执行状态</p>
                 <p className="text-2xl font-bold text-blue-800">完成</p>
               </div>
             </div>

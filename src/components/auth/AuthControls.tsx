@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { Button } from '@/components/ui/button';
-import { User, LogOut, Settings, ChevronDown, Menu, X } from 'lucide-react';
+import { User, LogOut, Settings, ChevronDown, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -95,12 +95,12 @@ export function AuthControls({
                 ${is_admin ? 'bg-red-500' : 'bg-blue-500'}
               `}
               >
-                {user?.charAt(0).toUpperCase() || 'U'}
+                {user?.email?.[0]?.toUpperCase() || 'U'}
               </div>
 
               {showLabels && (
                 <span className="hidden md:inline text-sm font-medium text-gray-700">
-                  {user.email}
+                  {user?.email || '用户'}
                 </span>
               )}
 
@@ -126,7 +126,7 @@ export function AuthControls({
                   {/* 用户信息 */}
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-medium text-gray-900 truncate">
-                      {user.email}
+                      {user?.email || '用户'}
                     </p>
                     <p className="text-xs text-gray-500">
                       {is_admin ? '管理员' : '普通用户'}

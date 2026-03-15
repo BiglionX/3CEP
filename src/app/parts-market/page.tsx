@@ -54,6 +54,7 @@ export default function PartsMarketPage() {
           brand: '原厂',
           model: 'P50',
           price: 299,
+          originalPrice: 399,
           image: '/images/parts/battery.jpg',
           rating: 4.6,
           reviewCount: 89,
@@ -83,6 +84,7 @@ export default function PartsMarketPage() {
           brand: '原装',
           model: 'Galaxy S23',
           price: 199,
+          originalPrice: 299,
           image: '/images/parts/back-cover.jpg',
           rating: 4.5,
           reviewCount: 45,
@@ -97,6 +99,7 @@ export default function PartsMarketPage() {
           brand: '官方',
           model: 'SuperVOOC',
           price: 159,
+          originalPrice: 199,
           image: '/images/parts/charger.jpg',
           rating: 4.9,
           reviewCount: 156,
@@ -111,6 +114,7 @@ export default function PartsMarketPage() {
           brand: '原装',
           model: 'iPhone 13',
           price: 249,
+          originalPrice: 349,
           image: '/images/parts/battery-iphone.jpg',
           rating: 4.7,
           reviewCount: 203,
@@ -292,9 +296,9 @@ export default function PartsMarketPage() {
                   <Button
                     className="flex-1"
                     disabled={!part.inStock}
-                    variant={part.inStock  'default' : 'outline'}
+                    variant={part.inStock ? 'default' : 'outline'}
                   >
-                    {part.inStock  (
+                    {part.inStock ? (
                       <>
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         加入购物车

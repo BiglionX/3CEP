@@ -1,10 +1,11 @@
 ﻿/**
  * 通知组件
- * 统一的通知显示和管? */
+ * 统一的通知显示和管理
+ */
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react';
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNotification } from '@/components/common/LoadingState';
