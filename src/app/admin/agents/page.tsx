@@ -1,4 +1,9 @@
-﻿import AgentsDashboard from '@/components/admin/AgentsDashboard';
+﻿import dynamic from 'next/dynamic';
+
+const AgentsDashboard = dynamic(
+  () => import('@/components/admin/AgentsDashboard').then(mod => mod.default),
+  { ssr: false }
+);
 
 export default function AgentsPage() {
   return (

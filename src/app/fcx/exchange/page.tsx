@@ -731,7 +731,7 @@ const FcxExchangePage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {orders.length === 0  (
+            {orders.length === 0 ? (
               <div className="text-center py-8">
                 <Truck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500">暂无兑换记录</p>

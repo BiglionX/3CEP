@@ -360,19 +360,19 @@ export default function TradingPage() {
                           </span>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status === 'confirmed'
-                               '已确认'
+                               ? '已确认'
                               : order.status === 'pending'
-                                 '待确认'
+                                 ? '待确认'
                                 : order.status === 'processing'
-                                   '处理中'
+                                   ? '处理中'
                                   : order.status === 'shipped'
-                                     '已发货'
+                                     ? '已发货'
                                     : order.status === 'delivered'
                                        ? '已交付' : '已取消'}
                           </Badge>
                           <Badge className={getPriorityColor(order.priority)}>
                             {order.priority === 'high'
-                               '紧急'
+                               ? '紧急'
                               : order.priority === 'medium'
                                  ? '中等' : '普通'}
                           </Badge>

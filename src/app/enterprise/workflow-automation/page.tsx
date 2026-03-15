@@ -67,6 +67,7 @@ export default function WorkflowAutomationPage() {
       description: '自动生成各类业务报表并发送给相关人员',
       status: 'paused',
       lastRun: '2024-01-19 09:00:00',
+      nextRun: '待恢复',
       successRate: 100,
       tasksCompleted: 156,
     },
@@ -456,7 +457,7 @@ export default function WorkflowAutomationPage() {
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full"
-                        style="{ width: '45%' "
+                        style={{ width: '45%' }}
                       ></div>
                     </div>
 
@@ -467,7 +468,7 @@ export default function WorkflowAutomationPage() {
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-green-600 h-2 rounded-full"
-                        style="{ width: '68%' "
+                        style={{ width: '68%' }}
                       ></div>
                     </div>
                   </div>
