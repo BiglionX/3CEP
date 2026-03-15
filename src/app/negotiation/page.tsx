@@ -5,7 +5,6 @@ import {
   CheckCircle,
   Clock,
   Play,
-  RefreshCw,
   TrendingDown,
   Users,
   XCircle,
@@ -22,8 +21,8 @@ interface NegotiationSession {
   maxRounds: number;
   status: 'pending' | 'negotiating' | 'success' | 'failed' | 'cancelled';
   startTime: Date;
-  endTime?: Date;
-  finalDiscountRate?: number;
+  endTime: Date;
+  finalDiscountRate: number;
 }
 
 interface NegotiationRound {
@@ -34,7 +33,7 @@ interface NegotiationRound {
   ourCounterOffer: number;
   strategyUsed: string;
   confidenceLevel: number;
-  remarks?: string;
+  remarks: string;
 }
 
 interface SupplierRecommendation {
@@ -97,7 +96,7 @@ export default function NegotiationPage() {
   };
 
   // 加载会话历史
-  const loadSessionHistory = async (sessionId: string) => {
+  const loadSessionHistory = async (_sessionId: string) => {
     try {
       // 模拟API调用
       const mockHistory: NegotiationRound[] = [
@@ -205,7 +204,7 @@ export default function NegotiationPage() {
         timestamp: new Date(),
         ourInitialOffer:
           history.length > 0
-            ? history[history.length - 1].ourCounterOffer
+             history[history.length - 1].ourCounterOffer
             : currentSession.initialQuote,
         supplierQuote: quoteValue,
         ourCounterOffer: quoteValue * 0.95, // 简单的95折还价
@@ -217,7 +216,7 @@ export default function NegotiationPage() {
       setHistory(prev => [...prev, newRound]);
       setCurrentSession(prev =>
         prev
-          ? {
+           {
               ...prev,
               currentRound: prev.currentRound + 1,
             }
@@ -243,7 +242,7 @@ export default function NegotiationPage() {
 
       setCurrentSession(prev =>
         prev
-          ? {
+           {
               ...prev,
               status: 'success',
               endTime: new Date(),
@@ -304,7 +303,7 @@ export default function NegotiationPage() {
                 </button>
               </div>
 
-              {sessions.length === 0 ? (
+              {sessions.length === 0  (
                 <div className="text-center py-8 text-gray-500">
                   暂无议价会话
                 </div>
@@ -318,8 +317,8 @@ export default function NegotiationPage() {
                         loadSessionHistory(session.sessionId);
                       }}
                       className={`p-4 rounded-lg border-2 cursor-pointer transition-colors ${
-                        currentSession?.sessionId === session.sessionId
-                          ? 'border-blue-600 bg-blue-50'
+                        currentSession.sessionId === session.sessionId
+                           'border-blue-600 bg-blue-50'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -400,7 +399,7 @@ export default function NegotiationPage() {
                 )}
               </div>
 
-              {!currentSession ? (
+              {!currentSession  (
                 <div className="text-center py-12 text-gray-500">
                   <BarChart3 className="h-16 w-16 mx-auto mb-4 text-gray-300" />
                   <p>请选择一个议价会话或创建新会话</p>
@@ -442,13 +441,13 @@ export default function NegotiationPage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                       议价历史
                     </h3>
-                    {history.length === 0 ? (
+                    {history.length === 0  (
                       <div className="text-center py-8 text-gray-500">
                         暂无议价记录
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        {history.map((round, idx) => (
+                        {history.map((round, _idx) => (
                           <div
                             key={round.round}
                             className="p-4 bg-gray-50 rounded-lg"

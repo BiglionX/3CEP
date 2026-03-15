@@ -1,6 +1,6 @@
 ﻿/**
  * 璁㈠崟绠＄悊API璺敱
- * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩? */
+ * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩 */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
@@ -19,7 +19,7 @@ const mockOrders = [
         id: 'item-1',
         agent_id: 'agent-1',
         agent_name: '閿€鍞姪鎵嬫櫤鑳戒綋',
-        agent_description: '涓撲笟鐨勯攢鍞璇濆姪?,
+        agent_description: '涓撲笟鐨勯攢鍞璇濆姪,
         price: 99.99,
         token_cost_per_use: 0.5,
         quantity: 1,
@@ -29,7 +29,7 @@ const mockOrders = [
       {
         id: 'item-2',
         agent_id: 'agent-2',
-        agent_name: '閲囪喘鏅鸿兘?,
+        agent_name: '閲囪喘鏅鸿兘,
         agent_description: '鏅鸿兘閲囪喘鍐崇瓥鍔╂墜',
         price: 149.99,
         token_cost_per_use: 0.8,
@@ -38,13 +38,13 @@ const mockOrders = [
         developer_name: 'Procurement Pro',
       },
     ],
-    payment_method: '鏀粯?,
+    payment_method: '鏀粯,
     payment_status: 'paid',
     shipping_address: {
       full_name: '寮犱笁',
       email: 'zhangsan@example.com',
       phone: '13800138000',
-      address: '鍖椾含甯傛湞闃冲尯xxx琛楅亾xxx锟?,
+      address: '鍖椾含甯傛湞闃冲尯xxx琛楅亾xxx,
       city: '鍖椾含',
       postal_code: '100000',
       country: '涓浗',
@@ -63,7 +63,7 @@ const mockOrders = [
       {
         id: 'item-3',
         agent_id: 'agent-3',
-        agent_name: '瀹㈡湇鏀寔鏈哄櫒?,
+        agent_name: '瀹㈡湇鏀寔鏈哄櫒,
         agent_description: '24/7鏅鸿兘瀹㈡湇鏀寔',
         price: 79.99,
         token_cost_per_use: 0.3,
@@ -78,7 +78,7 @@ const mockOrders = [
       full_name: '鏉庡洓',
       email: 'lisi@example.com',
       phone: '13900139000',
-      address: '涓婃捣甯傛郸涓滄柊鍖簒xx璺痻xx锟?,
+      address: '涓婃捣甯傛郸涓滄柊鍖簒xx璺痻xx,
       city: '涓婃捣',
       postal_code: '200000',
       country: '涓浗',
@@ -96,7 +96,7 @@ export async function GET(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -128,7 +128,7 @@ export async function GET(request: Request) {
     // 杩囨护璁㈠崟鏁版嵁
     let filteredOrders = mockOrders.filter(order => order.user_id === user.id);
 
-    // 鐘舵€佽繃?    if (status !== 'all') {
+    // 鐘舵€佽繃    if (status !== 'all') {
       filteredOrders = filteredOrders.filter(order => order.status === status);
     }
 
@@ -143,7 +143,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 鎺掑簭锛堟寜鍒涘缓鏃堕棿鍊掑簭?    filteredOrders.sort(
+    // 鎺掑簭锛堟寜鍒涘缓堕棿鍊掑簭    filteredOrders.sort(
       (a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
@@ -189,7 +189,7 @@ export async function POST(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -211,7 +211,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
 
     // 楠岃瘉蹇呰瀛楁
     if (!body.items || !Array.isArray(body.items) || body.items.length === 0) {
@@ -246,9 +246,9 @@ export async function POST(request: Request) {
       0
     );
 
-    // 鐢熸垚璁㈠崟?    const orderNumber = `ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${String(Date.now()).slice(-3)}`;
+    // 鐢熸垚璁㈠崟    const orderNumber = `ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${String(Date.now()).slice(-3)}`;
 
-    // 鍒涘缓鏂拌?    const newOrder = {
+    // 鍒涘缓鏂拌    const newOrder = {
       id: `order-${Date.now()}`,
       order_number: orderNumber,
       user_id: user.id,
@@ -281,7 +281,7 @@ export async function POST(request: Request) {
       updated_at: new Date().toISOString(),
     };
 
-    // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細淇濆瓨鍒版暟鎹簱
+    // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細淇濆鍒版暟鎹簱
     // await supabase.from('orders').insert(newOrder);
 
     return NextResponse.json(

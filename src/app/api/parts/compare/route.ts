@@ -9,7 +9,7 @@ const mockParts = [
     prices: [
       { platform: '娣樺疂', price: 899, url: 'https://taobao.com/item1' },
       { platform: '浜笢', price: 959, url: 'https://jd.com/item1' },
-      { platform: '鎷煎?, price: 799, url: 'https://pinduoduo.com/item1' },
+      { platform: '鎷煎, price: 799, url: 'https://pinduoduo.com/item1' },
     ],
   },
   {
@@ -19,7 +19,7 @@ const mockParts = [
     prices: [
       { platform: '娣樺疂', price: 299, url: 'https://taobao.com/item2' },
       { platform: '浜笢', price: 329, url: 'https://jd.com/item2' },
-      { platform: '鎷煎?, price: 259, url: 'https://pinduoduo.com/item2' },
+      { platform: '鎷煎, price: 259, url: 'https://pinduoduo.com/item2' },
     ],
   },
 ];
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   const partId = searchParams.get('partId');
 
   // 妯℃嫙API寤惰繜
-  const baseDelay = refresh ? 2000 : 300; // refresh=true鏃跺欢杩熸洿?  await new Promise(resolve => setTimeout(resolve, baseDelay));
+  const baseDelay = refresh  2000 : 300; // refresh=true跺欢杩熸洿  await new Promise(resolve => setTimeout(resolve, baseDelay));
 
   if (partId) {
     const part = mockParts.find(p => p.id === partId);
@@ -57,12 +57,12 @@ export async function POST(request: Request) {
   const { partIds, refresh = false } = body;
 
   // 妯℃嫙鎵归噺鏌ヨ寤惰繜
-  const delay = refresh ? 1500 : 200;
+  const delay = refresh  1500 : 200;
   await new Promise(resolve => setTimeout(resolve, delay));
 
   const results =
     partIds
-      ?.map((id: string) => mockParts.find(p => p.id === id))
+      .map((id: string) => mockParts.find(p => p.id === id))
       .filter(Boolean) || mockParts;
 
   return NextResponse.json({

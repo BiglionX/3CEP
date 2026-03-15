@@ -1,7 +1,6 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Search,
   Filter,
@@ -9,7 +8,6 @@ import {
   MoreHorizontal,
   Eye,
   Edit,
-  Trash2,
   Download,
   MapPin,
   Phone,
@@ -55,7 +53,6 @@ interface Supplier {
 }
 
 export default function SuppliersPage() {
-  const router = useRouter();
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -77,7 +74,7 @@ export default function SuppliersPage() {
             email: 'kim.minjun@samsung.com',
             phone: '+82-2-1234-5678',
             website: 'www.samsung.com',
-            products: ['智能手机', '半导?, '显示?],
+            products: ['智能手机', '半导体', '显示器'],
             rating: 4.8,
             cooperationYears: 5,
             status: 'active',
@@ -109,7 +106,7 @@ export default function SuppliersPage() {
             email: 'tanaka.h@sony.co.jp',
             phone: '+81-3-1234-5678',
             website: 'www.sony.jp',
-            products: ['游戏?, '相机', '音频设备'],
+            products: ['游戏机', '相机', '音频设备'],
             rating: 4.5,
             cooperationYears: 7,
             status: 'active',
@@ -125,7 +122,7 @@ export default function SuppliersPage() {
             email: 'park.seoyeon@lge.com',
             phone: '+82-2-8765-4321',
             website: 'www.lg.com',
-            products: ['家电', '显示?, '手机'],
+            products: ['家电', '显示器', '手机'],
             rating: 4.3,
             cooperationYears: 4,
             status: 'pending',
@@ -174,7 +171,8 @@ export default function SuppliersPage() {
     return matchesSearch && matchesStatus && matchesCountry;
   });
 
-  // 状态颜色映?  const getStatusColor = (status: string) => {
+  // 状态颜色映射
+  const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       active: 'bg-green-100 text-green-800',
       inactive: 'bg-gray-100 text-gray-800',
@@ -185,9 +183,9 @@ export default function SuppliersPage() {
 
   const getStatusText = (status: string) => {
     const textMap: Record<string, string> = {
-      active: '合作?,
-      inactive: '已停?,
-      pending: '待审?,
+      active: '合作中',
+      inactive: '已停用',
+      pending: '待审核',
     };
     return textMap[status] || status;
   };
@@ -196,21 +194,25 @@ export default function SuppliersPage() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+        className={`h-4 w-4 ${i < Math.floor(rating)  'text-yellow-400 fill-current' : 'text-gray-300'}`}
       />
     ));
   };
 
   const handleViewSupplier = (supplierId: string) => {
     // TODO: 实现查看详情功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看供应商详?', supplierId)};
+    console.debug('查看供应商详情:', supplierId);
+  };
 
   const handleCreateSupplier = () => {
-    // TODO: 实现创建供应商功?    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('创建新供应商')};
+    // TODO: 实现创建供应商功能
+    console.debug('创建新供应商');
+  };
 
   const handleExport = () => {
     // TODO: 实现导出功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出供应商数?)};
+    console.debug('导出供应商数据');
+  };
 
   if (loading) {
     return (
@@ -228,7 +230,7 @@ export default function SuppliersPage() {
       {/* 页面头部 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">供应商管?/h1>
+          <h1 className="text-3xl font-bold text-gray-900">供应商管理</h1>
           <p className="mt-2 text-gray-600">管理国际供应商信息和合作关系</p>
         </div>
         <div className="flex gap-3">
@@ -238,7 +240,8 @@ export default function SuppliersPage() {
           </Button>
           <Button onClick={handleCreateSupplier}>
             <Plus className="h-4 w-4 mr-2" />
-            添加供应?          </Button>
+            添加供应商
+          </Button>
         </div>
       </div>
 
@@ -246,14 +249,15 @@ export default function SuppliersPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">总供应商?/CardTitle>
+            <CardTitle className="text-sm font-medium">总供应商数</CardTitle>
             <Building className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{suppliers.length}</div>
             <p className="text-xs text-muted-foreground">
-              活跃供应?{suppliers.filter(s => s.status === 'active').length}{' '}
-              �?            </p>
+              活跃供应商 {suppliers.filter(s => s.status === 'active').length}{' '}
+              个
+            </p>
           </CardContent>
         </Card>
 
@@ -266,13 +270,13 @@ export default function SuppliersPage() {
             <div className="text-2xl font-bold">
               {[...new Set(suppliers.map(s => s.country))].length}
             </div>
-            <p className="text-xs text-muted-foreground">个不同国?地区</p>
+            <p className="text-xs text-muted-foreground">个不同国家/地区</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">年度交易?/CardTitle>
+            <CardTitle className="text-sm font-medium">年度交易额</CardTitle>
             <Globe className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -282,8 +286,9 @@ export default function SuppliersPage() {
                 suppliers.reduce((sum, s) => sum + s.annualVolume, 0) /
                 100000000
               ).toFixed(1)}
-              �?            </div>
-            <p className="text-xs text-muted-foreground">累计年度交易?/p>
+              亿元
+            </div>
+            <p className="text-xs text-muted-foreground">累计年度交易额</p>
           </CardContent>
         </Card>
 
@@ -311,7 +316,8 @@ export default function SuppliersPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            筛选条?          </CardTitle>
+            筛选条件
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -319,7 +325,7 @@ export default function SuppliersPage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
-                  placeholder="搜索供应商名称、联系人或国?.."
+                  placeholder="搜索供应商名称、联系人或国家..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -329,13 +335,13 @@ export default function SuppliersPage() {
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="合作状? />
+                <SelectValue placeholder="合作状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状?/SelectItem>
-                <SelectItem value="active">合作?/SelectItem>
-                <SelectItem value="pending">待审?/SelectItem>
-                <SelectItem value="inactive">已停?/SelectItem>
+                <SelectItem value="all">全部状态</SelectItem>
+                <SelectItem value="active">合作中</SelectItem>
+                <SelectItem value="pending">待审核</SelectItem>
+                <SelectItem value="inactive">已停用</SelectItem>
               </SelectContent>
             </Select>
 
@@ -356,26 +362,28 @@ export default function SuppliersPage() {
         </CardContent>
       </Card>
 
-      {/* 供应商列?*/}
+      {/* 供应商列表 */}
       <Card>
         <CardHeader>
-          <CardTitle>供应商列?/CardTitle>
+          <CardTitle>供应商列表</CardTitle>
           <CardDescription>
-            共找?{filteredSuppliers.length} 个符合条件的供应?          </CardDescription>
+            共找到 {filteredSuppliers.length} 个符合条件的供应商
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSuppliers.length === 0 ? (
+            {filteredSuppliers.length === 0  (
               <div className="col-span-full text-center py-12">
                 <Building className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">
-                  暂无供应商数?                </h3>
+                  暂无供应商数据
+                </h3>
                 <p className="mt-1 text-sm text-gray-500">
                   {searchTerm ||
                   statusFilter !== 'all' ||
                   countryFilter !== 'all'
-                    ? '没有找到匹配的供应商'
-                    : '开始添加第一个供应商?}
+                     '没有找到匹配的供应商'
+                    : '开始添加第一个供应商'}
                 </p>
                 {!searchTerm &&
                   statusFilter === 'all' &&
@@ -383,7 +391,8 @@ export default function SuppliersPage() {
                     <div className="mt-6">
                       <Button onClick={handleCreateSupplier}>
                         <Plus className="h-4 w-4 mr-2" />
-                        添加供应?                      </Button>
+                        添加供应商
+                      </Button>
                     </div>
                   )}
               </div>
@@ -431,7 +440,7 @@ export default function SuppliersPage() {
                       </div>
                     </div>
 
-                    {/* 评分和年?*/}
+                    {/* 评分和年限 */}
                     <div className="flex items-center justify-between pt-2 border-t">
                       <div className="flex items-center gap-1">
                         {getRatingStars(supplier.rating)}
@@ -440,7 +449,8 @@ export default function SuppliersPage() {
                         </span>
                       </div>
                       <div className="text-sm text-gray-600">
-                        {supplier.cooperationYears}年合?                      </div>
+                        {supplier.cooperationYears}年合作
+                      </div>
                     </div>
 
                     {/* 产品类别 */}
@@ -467,9 +477,10 @@ export default function SuppliersPage() {
                     {/* 交易信息 */}
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-gray-500">年度交易?</span>
+                        <span className="text-gray-500">年度交易额:</span>
                         <div className="font-medium">
-                          ¥{(supplier.annualVolume / 10000).toFixed(0)}�?                        </div>
+                          ¥{(supplier.annualVolume / 10000).toFixed(0)}万元
+                        </div>
                       </div>
                       <div>
                         <span className="text-gray-500">上次订单:</span>
@@ -508,4 +519,3 @@ export default function SuppliersPage() {
     </div>
   );
 }
-

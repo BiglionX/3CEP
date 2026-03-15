@@ -56,7 +56,7 @@ export default function PerformanceMonitorPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">性能监控</h1>
           <p className="mt-1 text-sm text-gray-600">
-            实时监控系统性能指标和优化建?          </p>
+            实时监控系统性能指标和优化建          </p>
         </div>
         <div className="flex space-x-3">
           <select
@@ -64,10 +64,10 @@ export default function PerformanceMonitorPage() {
             onChange={e => setRefreshInterval(Number(e.target.value))}
             className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
-            <option value={2000}>2秒刷?/option>
-            <option value={5000}>5秒刷?/option>
-            <option value={10000}>10秒刷?/option>
-            <option value={30000}>30秒刷?/option>
+            <option value={2000}>2秒刷/option>
+            <option value={5000}>5秒刷/option>
+            <option value={10000}>10秒刷/option>
+            <option value={30000}>30秒刷/option>
           </select>
           <button
             onClick={clearAllData}
@@ -80,7 +80,7 @@ export default function PerformanceMonitorPage() {
 
       {/* 性能概览卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* 数据库查询统?*/}
+        {/* 数据库查询统*/}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -140,7 +140,7 @@ export default function PerformanceMonitorPage() {
           </div>
         </div>
 
-        {/* 慢查询数?*/}
+        {/* 慢查询数*/}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -161,7 +161,7 @@ export default function PerformanceMonitorPage() {
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900">慢查?/h3>
+              <h3 className="text-sm font-medium text-gray-900">慢查/h3>
               <p className="text-2xl font-semibold text-gray-900">
                 {performanceData.dbStats.slowQueries}
               </p>
@@ -169,7 +169,7 @@ export default function PerformanceMonitorPage() {
           </div>
         </div>
 
-        {/* 缓存命中?*/}
+        {/* 缓存命中心*/}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -205,7 +205,7 @@ export default function PerformanceMonitorPage() {
           <h2 className="text-lg font-medium text-gray-900">优化建议</h2>
         </div>
         <div className="p-6">
-          {performanceData.dbReport.recommendations.length > 0 ? (
+          {performanceData.dbReport.recommendations.length > 0  (
             <ul className="space-y-3">
               {performanceData.dbReport.recommendations.map(
                 (recommendation: string, index: number) => (
@@ -258,7 +258,7 @@ export default function PerformanceMonitorPage() {
         </div>
       </div>
 
-      {/* 慢查询列?*/}
+      {/* 慢查询列*/}
       {performanceData.dbReport.slowQueries.length > 0 && (
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
@@ -317,7 +317,7 @@ export default function PerformanceMonitorPage() {
           </div>
           <div className="p-6 space-y-4">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">总缓存条?/span>
+              <span className="text-sm text-gray-600">总缓存条/span>
               <span className="font-medium">{cacheStats.totalEntries}</span>
             </div>
             <div className="flex justify-between">
@@ -343,16 +343,16 @@ export default function PerformanceMonitorPage() {
           </div>
           <div className="p-6 space-y-4">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">峰值响应时?/span>
+              <span className="text-sm text-gray-600">峰值响应时/span>
               <span className="font-medium">
                 {performanceData.dbStats.peakTime.toFixed(2)}ms
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">缓存命中?/span>
+              <span className="text-sm text-gray-600">缓存命中心/span>
               <span className="font-medium">
                 {cacheStats.totalEntries > 0
-                  ? `${Math.round(
+                   `${Math.round(
                       ((cacheStats.totalEntries - cacheStats.expiredEntries) /
                         cacheStats.totalEntries) *
                         100

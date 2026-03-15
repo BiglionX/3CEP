@@ -1,7 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -10,7 +10,7 @@ import { createClient } from '@supabase/supabase-js';
  * @swagger
  * /api/links/query:
  *   post:
- *     summary: 鏌ヨ閾炬帴搴撲腑鐨勯摼? *     description: 鏍规嵁鍏抽敭璇嶆煡璇㈤摼鎺ュ簱锛岃繑鍥炴寜浼樺厛绾ф帓搴忕殑缁撴灉
+ *     summary: 鏌ヨ炬帴搴撲腑鐨勯摼 *     description: 鏍规嵁鍏抽敭璇嶆煡璇㈤摼鎺ュ簱锛岃繑鍥炴寜樺厛绾ф帓搴忕殑缁撴灉
  *     requestBody:
  *       required: true
  *       content:
@@ -20,7 +20,7 @@ import { createClient } from '@supabase/supabase-js';
  *             properties:
  *               query:
  *                 type: string
- *                 description: 鏌ヨ鍏抽敭? *                 example: "iPhone 12 鐢垫睜鏇存崲"
+ *                 description: 鏌ヨ鍏抽敭 *                 example: "iPhone 12 鐢垫睜鏇存崲"
  *               limit:
  *                 type: integer
  *                 description: 杩斿洖缁撴灉鏁伴噺闄愬埗
@@ -28,10 +28,10 @@ import { createClient } from '@supabase/supabase-js';
  *                 example: 5
  *               category:
  *                 type: string
- *                 description: 鎸囧畾鍒嗙被绛? *                 example: "缁翠慨鏁欑▼"
+ *                 description: 鎸囧畾鍒嗙被绛 *                 example: "缁翠慨鏁欑▼"
  *     responses:
  *       200:
- *         description: 鎴愬姛杩斿洖閾炬帴鍒楄〃
+ *         description: 鎴愬姛杩斿洖炬帴鍒楄〃
  *         content:
  *           application/json:
  *             schema:
@@ -44,19 +44,19 @@ import { createClient } from '@supabase/supabase-js';
  *                     properties:
  *                       url:
  *                         type: string
- *                         description: 閾炬帴鍦板潃
+ *                         description: 炬帴鍦板潃
  *                       title:
  *                         type: string
- *                         description: 閾炬帴鏍囬
+ *                         description: 炬帴鏍囬
  *                       priority:
  *                         type: integer
- *                         description: 浼樺厛? *                       source:
+ *                         description: 樺厛 *                       source:
  *                         type: string
  *                         description: 鏉ユ簮
  *       400:
- *         description: 璇锋眰鍙傛暟閿欒
+ *         description: 璇眰鍙傛暟閿欒
  *       500:
- *         description: 鏈嶅姟鍣ㄥ唴閮ㄩ敊? */
+ *         description: 鏈嶅姟鍣ㄥ唴閮ㄩ敊 */
 
 export async function POST(req: NextRequest) {
   try {
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     // 鍙傛暟楠岃瘉
     if (!query) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呰鐨勬煡璇㈠弬? query' },
+        { error: '缂哄皯蹇呰鐨勬煡璇㈠弬 query' },
         { status: 400 }
       );
     }
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       .eq('status', 'active')
       .order('priority', { ascending: false });
 
-    // 娣诲姞鍒嗙被绛?    if (category) {
+    // 娣诲姞鍒嗙被绛    if (category) {
       dbQuery = dbQuery.eq('category', category);
     }
 
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
     const { data, error } = await dbQuery;
 
     if (error) {
-      console.error('鏌ヨ閾炬帴搴撳け?', error);
+      console.error('鏌ヨ炬帴搴撳け', error);
       return NextResponse.json(
         { error: '鏌ヨ澶辫触', details: error.message },
         { status: 500 }
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
 
     // 澶勭悊杩斿洖鏁版嵁
     const links =
-      data?.map(item => ({
+      data.map(item => ({
         id: item.id,
         url: item.url,
         title: item.title,
@@ -145,7 +145,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error('API澶勭悊閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
  * @swagger
  * /api/links/query:
  *   get:
- *     summary: 鑾峰彇閾炬帴搴撶粺璁′俊? *     description: 杩斿洖閾炬帴搴撶殑鍩烘湰缁熻淇℃伅
+ *     summary: 鑾峰彇炬帴搴撶粺璁′俊 *     description: 杩斿洖炬帴搴撶殑鍩烘湰缁熻淇℃伅
  *     responses:
  *       200:
  *         description: 鎴愬姛杩斿洖缁熻淇℃伅
@@ -167,9 +167,9 @@ export async function POST(req: NextRequest) {
  *                   description: 鎬婚摼鎺ユ暟
  *                 active_links:
  *                   type: integer
- *                   description: 娲昏穬閾炬帴? *                 high_priority_links:
+ *                   description: 娲昏穬炬帴 *                 high_priority_links:
  *                   type: integer
- *                   description: 楂樹紭鍏堢骇閾炬帴? *                 categories:
+ *                   description: 楂樹紭鍏堢骇炬帴 *                 categories:
  *                   type: array
  *                   items:
  *                     type: object
@@ -192,16 +192,16 @@ export async function GET() {
     }
 
     // 璁＄畻缁熻鏁版嵁
-    const totalLinks = allLinks?.length || 0;
+    const totalLinks = allLinks.length || 0;
     const activeLinks =
-      allLinks?.filter(link => link.status === 'active').length || 0;
+      allLinks.filter(link => link.status === 'active').length || 0;
     const highPriorityLinks =
-      allLinks?.filter(link => link.priority > 50).length || 0;
+      allLinks.filter(link => link.priority > 50).length || 0;
 
     // 鍒嗙被缁熻
     const categoryStats: Record<string, number> = {};
-    allLinks?.forEach(link => {
-      const cat = link.category || '鏈垎?;
+    allLinks.forEach(link => {
+      const cat = link.category || '鏈垎;
       categoryStats[cat] = (categoryStats[cat] || 0) + 1;
     });
 
@@ -219,7 +219,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error('缁熻API閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 

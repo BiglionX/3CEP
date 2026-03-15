@@ -13,13 +13,13 @@ import {
 
 interface FileUploadProps {
   onFileSelect: (files: File[]) => void;
-  onUploadComplete?: (result: any) => void;
-  accept?: string;
-  maxSize?: number; // bytes
-  maxFiles?: number;
-  multiple?: boolean;
-  disabled?: boolean;
-  className?: string;
+  onUploadComplete: (result: any) => void;
+  accept: string;
+  maxSize: number; // bytes
+  maxFiles: number;
+  multiple: boolean;
+  disabled: boolean;
+  className: string;
 }
 
 interface UploadFile {
@@ -27,7 +27,7 @@ interface UploadFile {
   id: string;
   status: 'pending' | 'uploading' | 'success' | 'error';
   progress: number;
-  error?: string;
+  error: string;
 }
 
 export function FileUpload({
@@ -104,7 +104,7 @@ export function FileUpload({
       });
 
       if (errors.length > 0) {
-        alert(`以下文件有问?\n${errors.join('\n')}`);
+        alert(`以下文件有问\n${errors.join('\n')}`);
       }
 
       if (validFiles.length > 0) {
@@ -157,7 +157,7 @@ export function FileUpload({
       for (let progress = 0; progress <= 100; progress += 10) {
         await new Promise(resolve => setTimeout(resolve, 100));
         setFiles(prev =>
-          prev.map(f => (f.id === file.id ? { ...f, progress } : f))
+          prev.map(f => (f.id === file.id  { ...f, progress } : f))
         );
       }
 
@@ -165,7 +165,7 @@ export function FileUpload({
       setTimeout(() => {
         setFiles(prev =>
           prev.map(f =>
-            f.id === file.id ? { ...f, status: 'success', progress: 100 } : f
+            f.id === file.id  { ...f, status: 'success', progress: 100 } : f
           )
         );
 
@@ -186,13 +186,13 @@ export function FileUpload({
       <div
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           isDragging
-            ? 'border-blue-500 bg-blue-50'
+             'border-blue-500 bg-blue-50'
             : 'border-gray-300 hover:border-gray-400'
-        } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        } ${disabled  'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => !disabled && fileInputRef?.click()}
+        onClick={() => !disabled && fileInputRef.click()}
       >
         <input
           ref={fileInputRef}
@@ -213,8 +213,8 @@ export function FileUpload({
           拖拽文件到这里或点击选择
         </p>
         <p className="text-sm text-gray-500">
-          支持 {accept} 格式，单个文件最?{formatFileSize(maxSize)}
-          {multiple && `, 最?${maxFiles} 个文件`}
+          支持 {accept} 格式，单个文件最{formatFileSize(maxSize)}
+          {multiple && `, 最${maxFiles} 个文件`}
         </p>
       </div>
 
@@ -223,22 +223,22 @@ export function FileUpload({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="font-medium text-gray-900">
-              已选择的文?({files.length})
+              已选择的文({files.length})
             </h3>
             <Button
               onClick={triggerUpload}
               disabled={files.some(f => f.status === 'uploading')}
               size="sm"
             >
-              {files.some(f => f.status === 'uploading') ? (
+              {files.some(f => f.status === 'uploading')  (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  上传?..
+                  上传..
                 </>
               ) : (
                 <>
                   <Upload className="w-4 h-4 mr-2" />
-                  开始上?                </>
+                  开始上                </>
               )}
             </Button>
           </div>
@@ -263,7 +263,7 @@ export function FileUpload({
 
                 <div className="flex items-center space-x-2 ml-4">
                   {uploadFile.status === 'pending' && (
-                    <span className="text-sm text-gray-500">待上?/span>
+                    <span className="text-sm text-gray-500">待上/span>
                   )}
 
                   {uploadFile.status === 'uploading' && (

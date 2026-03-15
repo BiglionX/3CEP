@@ -1,6 +1,5 @@
 ﻿'use client';
 
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -108,7 +107,7 @@ export default function HomePage() {
   ];
 
   return (
-    <UnifiedLayout showNavbar={true} showFooter={true} navbarPadding={true}>
+    <>
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 overflow-hidden">
@@ -373,6 +372,6 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-    </UnifiedLayout>
+    </>
   );
 }

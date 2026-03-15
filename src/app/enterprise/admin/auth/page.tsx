@@ -60,16 +60,16 @@ export default function EnterpriseAuthPage() {
       // 模拟登录验证
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // 简单验?
+      // 简单验
       if (!loginForm.email || !loginForm.password) {
-        setErrors({ general: '请填写所有必填字? });
+        setErrors({ general: '请填写所有必填字 });
         return;
       }
       
       // 模拟成功登录，跳转到企业后台
       router.push('/enterprise/admin/dashboard');
     } catch (error) {
-      setErrors({ general: '登录失败，请检查用户名和密? });
+      setErrors({ general: '登录失败，请检查用户名和密 });
     } finally {
       setIsLoading(false);
     }
@@ -84,14 +84,14 @@ export default function EnterpriseAuthPage() {
       // 表单验证
       const newErrors: Record<string, string> = {};
       
-      if (!registerForm.companyName) newErrors.companyName = '请输入公司名?;
-      if (!registerForm.businessLicense) newErrors.businessLicense = '请输入营业执照号?;
+      if (!registerForm.companyName) newErrors.companyName = '请输入公司名;
+      if (!registerForm.businessLicense) newErrors.businessLicense = '请输入营业执照号;
       if (!registerForm.contactPerson) newErrors.contactPerson = '请输入联系人姓名';
-      if (!registerForm.phone) newErrors.phone = '请输入联系电?;
+      if (!registerForm.phone) newErrors.phone = '请输入联系电;
       if (!registerForm.email) newErrors.email = '请输入邮箱地址';
-      if (!registerForm.password) newErrors.password = '请输入密?;
+      if (!registerForm.password) newErrors.password = '请输入密;
       if (registerForm.password !== registerForm.confirmPassword) {
-        newErrors.confirmPassword = '两次输入的密码不一?;
+        newErrors.confirmPassword = '两次输入的密码不一;
       }
       
       if (Object.keys(newErrors).length > 0) {
@@ -136,7 +136,7 @@ export default function EnterpriseAuthPage() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">智能体监?/h3>
+                <h3 className="text-lg font-semibold text-gray-900">智能体监/h3>
                 <p className="text-gray-600">实时监控AI智能体运行状态和性能指标</p>
               </div>
             </div>
@@ -176,7 +176,7 @@ export default function EnterpriseAuthPage() {
                   onClick={() => setActiveTab('login')}
                   className={`flex-1 py-3 px-4 text-center font-medium ${
                     activeTab === 'login'
-                      ? 'text-blue-600 border-b-2 border-blue-600'
+                       'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
@@ -186,7 +186,7 @@ export default function EnterpriseAuthPage() {
                   onClick={() => setActiveTab('register')}
                   className={`flex-1 py-3 px-4 text-center font-medium ${
                     activeTab === 'register'
-                      ? 'text-blue-600 border-b-2 border-blue-600'
+                       'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
@@ -214,7 +214,7 @@ export default function EnterpriseAuthPage() {
                         value={loginForm.email}
                         onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                         className="pl-10"
-                        placeholder="请输入企业邮?
+                        placeholder="请输入企业邮
                         required
                       />
                     </div>
@@ -226,11 +226,11 @@ export default function EnterpriseAuthPage() {
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <Input
                         id="login-password"
-                        type={showPassword ? "text" : "password"}
+                        type={showPassword  "text" : "password"}
                         value={loginForm.password}
                         onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                         className="pl-10 pr-10"
-                        placeholder="请输入密?
+                        placeholder="请输入密
                         required
                       />
                       <button
@@ -238,7 +238,7 @@ export default function EnterpriseAuthPage() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       >
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        {showPassword  <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
                     </div>
                   </div>
@@ -246,10 +246,10 @@ export default function EnterpriseAuthPage() {
                   <div className="flex items-center justify-between">
                     <label className="flex items-center">
                       <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                      <span className="ml-2 text-sm text-gray-600">记住?/span>
+                      <span className="ml-2 text-sm text-gray-600">记住/span>
                     </label>
                     <Link href="/enterprise/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
-                      忘记密码?
+                      忘记密码
                     </Link>
                   </div>
                   
@@ -258,10 +258,10 @@ export default function EnterpriseAuthPage() {
                     className="w-full py-6 text-lg"
                     disabled={isLoading}
                   >
-                    {isLoading ? (
+                    {isLoading  (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        登录?..
+                        登录..
                       </>
                     ) : (
                       <>
@@ -299,7 +299,7 @@ export default function EnterpriseAuthPage() {
                         id="companyName"
                         value={registerForm.companyName}
                         onChange={(e) => setRegisterForm({...registerForm, companyName: e.target.value})}
-                        placeholder="请输入公司全?
+                        placeholder="请输入公司全
                         required
                       />
                       {errors.companyName && <p className="text-red-500 text-xs">{errors.companyName}</p>}
@@ -311,7 +311,7 @@ export default function EnterpriseAuthPage() {
                         id="businessLicense"
                         value={registerForm.businessLicense}
                         onChange={(e) => setRegisterForm({...registerForm, businessLicense: e.target.value})}
-                        placeholder="请输入营业执照号?
+                        placeholder="请输入营业执照号
                         required
                       />
                       {errors.businessLicense && <p className="text-red-500 text-xs">{errors.businessLicense}</p>}
@@ -320,7 +320,7 @@ export default function EnterpriseAuthPage() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="contactPerson">联系?*</Label>
+                      <Label htmlFor="contactPerson">联系*</Label>
                       <Input
                         id="contactPerson"
                         value={registerForm.contactPerson}
@@ -338,7 +338,7 @@ export default function EnterpriseAuthPage() {
                         type="tel"
                         value={registerForm.phone}
                         onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})}
-                        placeholder="请输入联系电?
+                        placeholder="请输入联系电
                         required
                       />
                       {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
@@ -355,7 +355,7 @@ export default function EnterpriseAuthPage() {
                         value={registerForm.email}
                         onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
                         className="pl-10"
-                        placeholder="请输入企业邮?
+                        placeholder="请输入企业邮
                         required
                       />
                     </div>
@@ -369,11 +369,11 @@ export default function EnterpriseAuthPage() {
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         <Input
                           id="password"
-                          type={showPassword ? "text" : "password"}
+                          type={showPassword  "text" : "password"}
                           value={registerForm.password}
                           onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
                           className="pl-10 pr-10"
-                          placeholder="请输入密?
+                          placeholder="请输入密
                           required
                         />
                       </div>
@@ -386,11 +386,11 @@ export default function EnterpriseAuthPage() {
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         <Input
                           id="confirmPassword"
-                          type={showPassword ? "text" : "password"}
+                          type={showPassword  "text" : "password"}
                           value={registerForm.confirmPassword}
                           onChange={(e) => setRegisterForm({...registerForm, confirmPassword: e.target.value})}
                           className="pl-10 pr-10"
-                          placeholder="请再次输入密?
+                          placeholder="请再次输入密
                           required
                         />
                       </div>
@@ -422,10 +422,10 @@ export default function EnterpriseAuthPage() {
                     className="w-full py-6 text-lg"
                     disabled={isLoading}
                   >
-                    {isLoading ? (
+                    {isLoading  (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        注册?..
+                        注册..
                       </>
                     ) : (
                       <>
@@ -451,7 +451,7 @@ export default function EnterpriseAuthPage() {
           </Card>
           
           <div className="mt-8 text-center text-sm text-gray-600">
-            <p>© 2026 FixCycle AI Platform. 保留所有权利?/p>
+            <p>© 2026 FixCycle AI Platform. 保留所有权利/p>
           </div>
         </div>
       </div>

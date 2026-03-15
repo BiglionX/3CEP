@@ -17,7 +17,7 @@ export async function GET() {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 妯℃嫙鏍囩鏁版嵁
@@ -32,7 +32,7 @@ export async function GET() {
       },
       {
         id: 'tag_002',
-        name: '闇€瑕佺淮?,
+        name: '闇€瑕佺淮,
         color: '#f59e0b',
         device_count: 12,
         created_at: '2024-01-05T09:30:00Z',
@@ -40,7 +40,7 @@ export async function GET() {
       },
       {
         id: 'tag_003',
-        name: '鏂拌?,
+        name: '鏂拌,
         color: '#10b981',
         device_count: 8,
         created_at: '2024-01-10T14:20:00Z',
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const body = await request.json();

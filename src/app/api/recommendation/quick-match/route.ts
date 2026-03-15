@@ -5,20 +5,20 @@ import {
   UserFeatures,
 } from '@/lib/quick-match-recommender';
 
-// 鍏ㄥ眬鎺ㄨ崘鍣ㄥ疄?let recommender: QuickMatchRecommender | null = null;
+// 鍏ㄥ眬鎺ㄨ崘鍣ㄥ疄let recommender: QuickMatchRecommender | null = null;
 
 // 鍒濆鍖栨帹鑽愬櫒
 function getRecommender(): QuickMatchRecommender {
   if (!recommender) {
-    // 浣跨敤鍐峰惎鍔ㄤ紭鍖栭厤?    const config = QuickMatchPresets.getColdStartOptimized();
+    // 浣跨敤鍐峰惎鍔ㄤ紭鍖栭厤    const config = QuickMatchPresets.getColdStartOptimized();
     recommender = new QuickMatchRecommender(config);
 
-    // 鍒濆鍖栦竴浜涚ず渚嬬敤鎴锋暟鎹敤浜庢祴?    initializeSampleData(recommender);
+    // 鍒濆鍖栦竴浜涚ず渚嬬敤鎴暟鎹敤浜庢祴    initializeSampleData(recommender);
   }
   return recommender;
 }
 
-// 鍒濆鍖栫ず渚嬫暟?function initializeSampleData(recommender: QuickMatchRecommender): void {
+// 鍒濆鍖栫ず渚嬫暟function initializeSampleData(recommender: QuickMatchRecommender): void {
   const sampleUsers: UserFeatures[] = [
     {
       userId: 'user_001',
@@ -26,7 +26,7 @@ function getRecommender(): QuickMatchRecommender {
         ageGroup: '25-35',
         gender: 'male',
         location: '鍖椾含',
-        occupation: '宸ョ▼?,
+        occupation: '宸ョ▼,
         membershipLevel: 'gold',
       },
       behavior: {
@@ -37,7 +37,7 @@ function getRecommender(): QuickMatchRecommender {
         interactionDepth: 0.7,
       },
       preferences: {
-        favoriteCategories: ['鏅鸿兘鎵嬫満', '绗旇鏈數?],
+        favoriteCategories: ['鏅鸿兘鎵嬫満', '绗旇鏈數],
         preferredBrands: ['Apple', '鍗庝负'],
         contentTypes: ['鏁欑▼', '鏂伴椈'],
         interactionStyles: ['detail_oriented', 'efficiency_focused'],
@@ -55,7 +55,7 @@ function getRecommender(): QuickMatchRecommender {
         ageGroup: '25-35',
         gender: 'male',
         location: '鍖椾含',
-        occupation: '璁捐?,
+        occupation: '璁捐,
         membershipLevel: 'silver',
       },
       behavior: {
@@ -95,9 +95,9 @@ function getRecommender(): QuickMatchRecommender {
         interactionDepth: 0.8,
       },
       preferences: {
-        favoriteCategories: ['鏈嶅姟?, '缃戠粶璁惧'],
+        favoriteCategories: ['鏈嶅姟, '缃戠粶璁惧'],
         preferredBrands: ['鍗庝负', '鎬濈'],
-        contentTypes: ['琛屼笟鎶ュ憡', '鏈€浣冲疄?],
+        contentTypes: ['琛屼笟鎶ュ憡', '鏈€浣冲疄],
         interactionStyles: ['data_driven', 'strategic_thinking'],
       },
       context: {
@@ -126,7 +126,7 @@ function getRecommender(): QuickMatchRecommender {
       preferences: {
         favoriteCategories: ['鏅鸿兘鎵嬫満', '鑰虫満'],
         preferredBrands: ['灏忕背', 'OPPO'],
-        contentTypes: ['鍏ラ棬鎸囧崡', '鎶€宸у垎?],
+        contentTypes: ['鍏ラ棬鎸囧崡', '鎶€宸у垎],
         interactionStyles: ['learning_focused', 'community_oriented'],
       },
       context: {
@@ -153,9 +153,9 @@ function getRecommender(): QuickMatchRecommender {
         interactionDepth: 0.6,
       },
       preferences: {
-        favoriteCategories: ['浼佷笟绾ц?, '瀹夊叏瑙ｅ喅鏂规'],
+        favoriteCategories: ['佷笟绾ц, '瀹夊叏瑙ｅ喅鏂规'],
         preferredBrands: ['IBM', '寰蒋'],
-        contentTypes: ['鐧界毊?, '鎶€鏈?],
+        contentTypes: ['鐧界毊, '鎶€鏈],
         interactionStyles: ['security_focused', 'compliance_driven'],
       },
       context: {
@@ -170,7 +170,7 @@ function getRecommender(): QuickMatchRecommender {
   recommender.addUsersBatch(sampleUsers);
 }
 
-// GET /api/recommendation/quick-match?userId=user_123&maxResults=10
+// GET /api/recommendation/quick-matchuserId=user_123&maxResults=10
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -203,7 +203,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鎺ㄨ崘鏈嶅姟鏆傛椂涓嶅彲?,
+        error: '鎺ㄨ崘鏈嶅姟鏆傛椂涓嶅彲,
       },
       { status: 500 }
     );
@@ -273,7 +273,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '鐢ㄦ埛鏁版嵁蹇呴』鏄暟缁勬牸?,
+          error: '鐢ㄦ埛鏁版嵁蹇呴』鏄暟缁勬牸,
         },
         { status: 400 }
       );
@@ -284,7 +284,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `鎴愬姛娣诲姞 ${users.length} 涓敤鎴锋暟鎹甡,
+      message: `鎴愬姛娣诲姞 ${users.length} 涓敤鎴暟鎹甡,
       data: {
         totalUsers: recommender.getSystemStats().totalUsers,
       },
@@ -316,7 +316,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏃犳硶鑾峰彇绯荤粺缁熻淇℃伅',
+        error: '犳硶鑾峰彇绯荤粺缁熻淇℃伅',
       },
       { status: 500 }
     );

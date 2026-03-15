@@ -11,7 +11,7 @@ export default function FcxTestSuite() {
     {
       id: 'level-display',
       title: '等级展示组件',
-      description: '用户等级可视化展示，包含评分、进度条和关键指?,
+      description: '用户等级可视化展示，包含评分、进度条和关键指标',
       icon: Trophy,
       path: '/test/level-display',
       status: 'complete',
@@ -26,7 +26,7 @@ export default function FcxTestSuite() {
     },
     {
       id: 'dashboard',
-      title: 'FCX仪表?,
+      title: 'FCX仪表板',
       description: '集成所有FCX功能的统一管理界面',
       icon: BarChart3,
       path: '/dashboard/fcx',
@@ -37,9 +37,9 @@ export default function FcxTestSuite() {
   const features = [
     '基于多维度指标的智能等级计算',
     '自动化FCX2奖励发放机制',
-    '丰富的权益兑换系?,
+    '丰富的权益兑换系统',
     '实时数据展示和可视化',
-    '完整的用户激励体?,
+    '完整的用户激励体系',
   ];
 
   return (
@@ -61,7 +61,8 @@ export default function FcxTestSuite() {
         {/* 功能亮点 */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            核心功能特?          </h2>
+            核心功能特性
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <div
@@ -96,11 +97,11 @@ export default function FcxTestSuite() {
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         component.status === 'complete'
-                          ? 'bg-green-100 text-green-800'
+                           'bg-green-100 text-green-800'
                           : 'bg-yellow-100 text-yellow-800'
                       }`}
                     >
-                      {component.status === 'complete' ? '已完? : '开发中'}
+                      {component.status === 'complete'  '已完成' : '开发中'}
                     </span>
                   </div>
                 </CardHeader>
@@ -118,32 +119,34 @@ export default function FcxTestSuite() {
           </div>
         </div>
 
-        {/* 技术架?*/}
+        {/* 技术架构 */}
         <div className="mt-12 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl shadow-lg p-8 text-white">
-          <h2 className="text-2xl font-bold mb-6">技术架构概?/h2>
+          <h2 className="text-2xl font-bold mb-6">技术架构概览</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-lg font-semibold mb-3 flex items-center">
                 <div className="w-3 h-3 bg-blue-400 rounded-full mr-2"></div>
-                后端服务?              </h3>
+                后端服务层
+              </h3>
               <ul className="space-y-2 text-gray-300">
-                <li>�?LevelCalculatorService - 智能等级计算引擎</li>
-                <li>�?Fcx2RewardService - 奖励计算与发?/li>
-                <li>�?EquityRedemptionService - 权益兑换管理</li>
-                <li>�?定时任务调度系统</li>
+                <li>• LevelCalculatorService - 智能等级计算引擎</li>
+                <li>• Fcx2RewardService - 奖励计算与发放</li>
+                <li>• EquityRedemptionService - 权益兑换管理</li>
+                <li>• 定时任务调度系统</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-3 flex items-center">
                 <div className="w-3 h-3 bg-green-400 rounded-full mr-2"></div>
-                前端组件?              </h3>
+                前端组件层
+              </h3>
               <ul className="space-y-2 text-gray-300">
-                <li>�?FcxLevelDisplay - 等级可视化组?/li>
-                <li>�?FcxEquityCenter - 权益管理中心</li>
-                <li>�?FCX仪表?- 统一管理界面</li>
-                <li>�?响应式UI设计</li>
+                <li>• FcxLevelDisplay - 等级可视化组件</li>
+                <li>• FcxEquityCenter - 权益管理中心</li>
+                <li>• FCX仪表板 - 统一管理界面</li>
+                <li>• 响应式UI设计</li>
               </ul>
             </div>
           </div>
@@ -178,17 +181,17 @@ export default function FcxTestSuite() {
 
           <div className="space-y-4">
             {[
-              '�?能根据用户行为数据正确计算并发放FCX2',
-              '�?等级变更能实时反映在用户界面',
-              '�?权益兑换后能立即生效并显?,
-              '�?系统具有完善的日志记录和监控能力',
-              '�?前端界面友好，用户体验流?,
+              '✓ 能根据用户行为数据正确计算并发放FCX2',
+              '✓ 等级变更能实时反映在用户界面',
+              '✓ 权益兑换后能立即生效并显示',
+              '✓ 系统具有完善的日志记录和监控能力',
+              '✓ 前端界面友好，用户体验流畅',
             ].map((item, index) => (
               <div
                 key={index}
                 className="flex items-center p-3 bg-green-50 rounded-lg"
               >
-                <span className="text-green-600 mr-3 text-xl">�?/span>
+                <span className="text-green-600 mr-3 text-xl">✓</span>
                 <span className="text-gray-700">{item.substring(2)}</span>
               </div>
             ))}
@@ -198,4 +201,3 @@ export default function FcxTestSuite() {
     </div>
   );
 }
-

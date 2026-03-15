@@ -7,16 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Search,
-  BookOpen,
   MessageSquare,
   Lightbulb,
   FileText,
   Video,
-  Users,
   Phone,
   ChevronRight,
   Star,
-  Clock,
   TrendingUp,
   Wrench,
   Shield,
@@ -56,7 +53,7 @@ export default function HelpCenterPage() {
     {
       id: 'getting-started',
       title: '入门指南',
-      description: '新手上路，快速了解平台使?,
+      description: '新手上路，快速了解平台使用方法',
       icon: <Lightbulb className="w-6 h-6" />,
       articles: 12,
       popular: true,
@@ -64,7 +61,7 @@ export default function HelpCenterPage() {
     {
       id: 'device-repair',
       title: '设备维修',
-      description: '各类设备维修流程和注意事?,
+      description: '各类设备维修流程和注意事项',
       icon: <Wrench className="w-6 h-6" />,
       articles: 28,
       popular: true,
@@ -72,7 +69,7 @@ export default function HelpCenterPage() {
     {
       id: 'account-security',
       title: '账户安全',
-      description: '账户保护和隐私设?,
+      description: '账户保护和隐私设置',
       icon: <Shield className="w-6 h-6" />,
       articles: 8,
       popular: false,
@@ -80,7 +77,7 @@ export default function HelpCenterPage() {
     {
       id: 'payment-billing',
       title: '支付账单',
-      description: '支付方式和费用说?,
+      description: '支付方式和费用说明',
       icon: <CreditCard className="w-6 h-6" />,
       articles: 15,
       popular: false,
@@ -88,7 +85,7 @@ export default function HelpCenterPage() {
     {
       id: 'troubleshooting',
       title: '故障排除',
-      description: '常见问题和解决方?,
+      description: '常见问题和解决方案',
       icon: <HelpCircle className="w-6 h-6" />,
       articles: 22,
       popular: true,
@@ -112,7 +109,7 @@ export default function HelpCenterPage() {
     {
       id: 'parts-market',
       title: '配件商城',
-      description: '配件选购和使用指?,
+      description: '配件选购和使用指南',
       icon: <ShoppingCart className="w-6 h-6" />,
       articles: 14,
       popular: false,
@@ -133,7 +130,7 @@ export default function HelpCenterPage() {
     {
       id: 'article-2',
       title: 'iPhone屏幕更换完整指南',
-      excerpt: '从故障诊断到维修完成的全流程说明，包含所需工具和注意事?,
+      excerpt: '从故障诊断到维修完成的全流程说明，包含所需工具和注意事项',
       category: '设备维修',
       views: 987,
       likes: 76,
@@ -141,7 +138,7 @@ export default function HelpCenterPage() {
     },
     {
       id: 'article-3',
-      title: '账户安全设置最佳实?,
+      title: '账户安全设置最佳实践',
       excerpt: '保护账户安全的重要设置和建议，包括双重验证和密码管理',
       category: '账户安全',
       views: 756,
@@ -160,7 +157,7 @@ export default function HelpCenterPage() {
     {
       id: 'article-5',
       title: '智能设备估价系统使用指南',
-      excerpt: '如何使用我们的AI智能估价系统获得准确的设备回收价格评?,
+      excerpt: '如何使用我们的AI智能估价系统获得准确的设备回收价格评估',
       category: '设备估价',
       views: 845,
       likes: 71,
@@ -169,7 +166,7 @@ export default function HelpCenterPage() {
     {
       id: 'article-6',
       title: '配件商城选购攻略',
-      excerpt: '教您如何在配件商城中选择合适的原装或兼容配?,
+      excerpt: '教您如何在配件商城中选择合适的原装或兼容配件',
       category: '配件商城',
       views: 634,
       likes: 52,
@@ -181,42 +178,42 @@ export default function HelpCenterPage() {
     {
       question: '维修服务多长时间能完成？',
       answer:
-        '一般情况下，简单维?-2小时内完成，复杂维修需?-3个工作日。我们会根据具体情况给出准确的时间预估?,
+        '一般情况下，简单维修1-2小时内完成，复杂维修需2-3个工作日。我们会根据具体情况给出准确的时间预估',
     },
     {
-      question: '如何查询维修进度?,
+      question: '如何查询维修进度？',
       answer:
-        '您可以通过个人中心?我的订单"页面实时查看维修进度，也可以通过微信公众号接收进度通知?,
+        '您可以通过个人中心"我的订单"页面实时查看维修进度，也可以通过微信公众号接收进度通知',
     },
     {
-      question: '维修后有保修期吗?,
+      question: '维修后有保修期吗？',
       answer:
-        '是的，所有维修服务都提供30天质量保修期。保修期内如出现同样问题，可免费返修?,
+        '是的，所有维修服务都提供30天质量保修期。保修期内如出现同样问题，可免费返修',
     },
     {
-      question: '支持哪些支付方式?,
+      question: '支持哪些支付方式？',
       answer:
-        '我们支持微信支付、支付宝、银行卡等多种支付方式，您可以根据需要选择?,
+        '我们支持微信支付、支付宝、银行卡等多种支付方式，您可以根据需要选择',
     },
     {
-      question: '如何使用智能估价系统?,
+      question: '如何使用智能估价系统？',
       answer:
-        '在首页或设备管理页面点击"智能估价"，按照提示输入设备信息和状况，系统将给出精准的价格评估?,
+        '在首页或设备管理页面点击"智能估价"，按照提示输入设备信息和状况，系统将给出精准的价格评估',
     },
     {
-      question: '配件商城的商品都是正品吗?,
+      question: '配件商城的商品都是正品吗？',
       answer:
-        '是的，我们承诺所有配件均为原厂或优质兼容件，并提供质量保证。每件商品都有详细的产品说明和参数?,
+        '是的，我们承诺所有配件均为原厂或优质兼容件，并提供质量保证。每件商品都有详细的产品说明和参数',
     },
     {
       question: '如何申请成为服务商？',
       answer:
-        '请前往商户合作页面提交申请，我们的商务团队会在3个工作日内与您联系，协助完成入驻流程?,
+        '请前往商户合作页面提交申请，我们的商务团队会在3个工作日内与您联系，协助完成入驻流程',
     },
     {
       question: '设备回收有什么要求？',
       answer:
-        '接受外观完好、功能正常的二手设备回收。我们会根据设备型号、使用年限和成色给出合理报价?,
+        '接受外观完好、功能正常的二手设备回收。我们会根据设备型号、使用年限和成色给出合理报价',
     },
   ];
 
@@ -257,7 +254,7 @@ export default function HelpCenterPage() {
     },
     {
       id: 'guide-2',
-      title: '配件安装说明?,
+      title: '配件安装说明书',
       type: 'PDF',
       size: '1.8MB',
       downloads: '1.9K',
@@ -279,13 +276,14 @@ export default function HelpCenterPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* 页面标题和搜?*/}
+      {/* 页面标题和搜索 */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">帮助中心</h1>
         <p className="text-xl text-gray-600 mb-8">
-          在这里找到您需要的帮助和答?        </p>
+          在这里找到您需要的帮助和答案
+        </p>
 
-        {/* 搜索?*/}
+        {/* 搜索框 */}
         <div className="max-w-2xl mx-auto relative">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input
@@ -297,16 +295,16 @@ export default function HelpCenterPage() {
         </div>
       </div>
 
-      {/* 分类筛?*/}
+      {/* 分类筛选 */}
       <div className="flex flex-wrap justify-center gap-3 mb-12">
         <Button
-          variant={selectedCategory === 'all' ? 'default' : 'outline'}
+          variant={selectedCategory === 'all'  'default' : 'outline'}
           onClick={() => setSelectedCategory('all')}
         >
           全部类别
         </Button>
         <Button
-          variant={selectedCategory === 'popular' ? 'default' : 'outline'}
+          variant={selectedCategory === 'popular'  'default' : 'outline'}
           onClick={() => setSelectedCategory('popular')}
         >
           <Star className="w-4 h-4 mr-2" />
@@ -315,7 +313,7 @@ export default function HelpCenterPage() {
         {categories.map(category => (
           <Button
             key={category.id}
-            variant={selectedCategory === category.id ? 'default' : 'outline'}
+            variant={selectedCategory === category.id  'default' : 'outline'}
             onClick={() => setSelectedCategory(category.id)}
           >
             {category.title}
@@ -347,7 +345,8 @@ export default function HelpCenterPage() {
               <p className="text-gray-600 mb-4">{category.description}</p>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-500">
-                  {category.articles} 篇文?                </span>
+                  {category.articles} 篇文章
+                </span>
                 <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
               </div>
             </CardContent>
@@ -472,7 +471,7 @@ export default function HelpCenterPage() {
                         {resource.title}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {resource.type} �?{resource.size}
+                        {resource.type} • {resource.size}
                       </p>
                     </div>
                   </div>
@@ -494,8 +493,9 @@ export default function HelpCenterPage() {
       <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
         <CardContent className="p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            没有找到您需要的答案?          </h2>
-          <p className="text-gray-600 mb-6">我们的专业客服团队随时为您服?/p>
+            没有找到您需要的答案？
+          </h2>
+          <p className="text-gray-600 mb-6">我们的专业客服团队随时为您服务</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
               <MessageSquare className="w-5 h-5 mr-2" />

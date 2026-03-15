@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 export default function MinimalLoginTest() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [testResult, setTestResult] = useState('');
 
   const handleMinimalLogin = async () => {
@@ -28,7 +27,7 @@ export default function MinimalLoginTest() {
 
       if (response.ok) {
         setTestResult(
-          `�?登录成功! 用户: ${result?.email}, 管理? ${result?.is_admin}`
+          `✅ 登录成功! 用户: ${result.email}, 管理员: ${result.is_admin}`
         );
 
         // 立即测试跳转
@@ -36,20 +35,20 @@ export default function MinimalLoginTest() {
           setTestResult('🔄 正在执行跳转测试...');
           try {
             router.push('/admin/dashboard');
-            setTestResult('�?跳转执行完成');
+            setTestResult('✅ 跳转执行完成');
           } catch (error: unknown) {
             const errorMessage =
-              error instanceof Error ? error.message : String(error);
-            setTestResult(`�?跳转失败: ${errorMessage}`);
+              error instanceof Error  error.message : String(error);
+            setTestResult(`❌ 跳转失败: ${errorMessage}`);
           }
         }, 1000);
       } else {
-        setTestResult(`�?登录失败: ${result.error}`);
+        setTestResult(`❌ 登录失败: ${result.error}`);
       }
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      setTestResult(`�?网络错误: ${errorMessage}`);
+        error instanceof Error  error.message : String(error);
+      setTestResult(`❌ 网络错误: ${errorMessage}`);
     }
   };
 
@@ -57,11 +56,11 @@ export default function MinimalLoginTest() {
     setTestResult('🔄 执行直接跳转测试...');
     try {
       router.push('/admin/dashboard');
-      setTestResult('�?直接跳转成功');
+      setTestResult('✅ 直接跳转成功');
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      setTestResult(`�?直接跳转失败: ${errorMessage}`);
+        error instanceof Error  error.message : String(error);
+      setTestResult(`❌ 直接跳转失败: ${errorMessage}`);
     }
   };
 
@@ -115,15 +114,15 @@ export default function MinimalLoginTest() {
                 <p>
                   <strong>当前路径:</strong>{' '}
                   {typeof window !== 'undefined'
-                    ? window.location.pathname
+                     window.location.pathname
                     : 'N/A'}
                 </p>
                 <p>
                   <strong>当前主机:</strong>{' '}
-                  {typeof window !== 'undefined' ? window.location.host : 'N/A'}
+                  {typeof window !== 'undefined'  window.location.host : 'N/A'}
                 </p>
                 <p>
-                  <strong>时间?</strong> {new Date().toLocaleString()}
+                  <strong>时间:</strong> {new Date().toLocaleString()}
                 </p>
               </div>
             </div>
@@ -131,10 +130,10 @@ export default function MinimalLoginTest() {
             <div className="bg-red-50 p-6 rounded-lg">
               <h3 className="font-semibold text-red-800 mb-3">故障排除</h3>
               <div className="text-sm text-red-700 space-y-2">
-                <p>�?如果登录测试失败：检查API连接和认证凭?/p>
-                <p>�?如果跳转测试失败：检查路由配置和权限</p>
-                <p>�?查看浏览器Console获取详细错误信息</p>
-                <p>�?确认管理员用户权限设置正?/p>
+                <p>• 如果登录测试失败：检查API连接和认证凭据</p>
+                <p>• 如果跳转测试失败：检查路由配置和权限</p>
+                <p>• 查看浏览器Console获取详细错误信息</p>
+                <p>• 确认管理员用户权限设置正确</p>
               </div>
             </div>
           </div>
@@ -143,4 +142,3 @@ export default function MinimalLoginTest() {
     </div>
   );
 }
-

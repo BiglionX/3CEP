@@ -71,7 +71,7 @@ export default function ValuationStatsPage() {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/admin/valuation/stats?period=${period}`
+        `/api/admin/valuation/statsperiod=${period}`
       );
       const result = await response.json();
 
@@ -150,10 +150,10 @@ export default function ValuationStatsPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="24h">最?4小时</SelectItem>
-              <SelectItem value="7d">最?�?/SelectItem>
-              <SelectItem value="30d">最?0�?/SelectItem>
-              <SelectItem value="90d">最?0�?/SelectItem>
+              <SelectItem value="24h">最4小时</SelectItem>
+              <SelectItem value="7d">最/SelectItem>
+              <SelectItem value="30d">最0/SelectItem>
+              <SelectItem value="90d">最0/SelectItem>
             </SelectContent>
           </Select>
           <Button onClick={fetchStats}>
@@ -175,13 +175,13 @@ export default function ValuationStatsPage() {
               {stats.overview.totalRequests.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              统计周期：{stats.period.days}�?            </p>
+              统计周期：{stats.period.days}            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">平均估?/CardTitle>
+            <CardTitle className="text-sm font-medium">平均估/CardTitle>
             <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -189,7 +189,7 @@ export default function ValuationStatsPage() {
               ¥{stats.overview.avgValue.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
-              平均置信? {(stats.overview.avgConfidence * 100).toFixed(1)}%
+              平均置信 {(stats.overview.avgConfidence * 100).toFixed(1)}%
             </p>
           </CardContent>
         </Card>
@@ -209,13 +209,13 @@ export default function ValuationStatsPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">成功?/CardTitle>
+            <CardTitle className="text-sm font-medium">成功/CardTitle>
             <CheckCircleIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {stats.overview.totalRequests > 0
-                ? (
+                 (
                     ((stats.overview.totalRequests -
                       (stats.confidenceDistribution.low || 0)) /
                       stats.overview.totalRequests) *
@@ -224,7 +224,7 @@ export default function ValuationStatsPage() {
                 : '0.0'}
               %
             </div>
-            <p className="text-xs text-muted-foreground">�?中置信度占比</p>
+            <p className="text-xs text-muted-foreground">中置信度占比</p>
           </CardContent>
         </Card>
       </div>
@@ -234,7 +234,7 @@ export default function ValuationStatsPage() {
         {/* 方法分布饼图 */}
         <Card>
           <CardHeader>
-            <CardTitle>估值方法分?/CardTitle>
+            <CardTitle>估值方法分/CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -258,16 +258,16 @@ export default function ValuationStatsPage() {
                     />
                   ))}
                 </Pie>
-                <Tooltip formatter={value => [value, '请求?]} />
+                <Tooltip formatter={value => [value, '请求]} />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* 置信度分布饼?*/}
+        {/* 置信度分布饼*/}
         <Card>
           <CardHeader>
-            <CardTitle>置信度分?/CardTitle>
+            <CardTitle>置信度分/CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -288,7 +288,7 @@ export default function ValuationStatsPage() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={value => [value, '请求?]} />
+                <Tooltip formatter={value => [value, '请求]} />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -304,7 +304,7 @@ export default function ValuationStatsPage() {
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={stats.dailyTrend.slice(-30)}>
               {' '}
-              {/* 显示最?0�?*/}
+              {/* 显示最0*/}
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="date"
@@ -317,13 +317,13 @@ export default function ValuationStatsPage() {
               <YAxis yAxisId="right" orientation="right" domain={[0, 1]} />
               <Tooltip
                 formatter={(value, name) => {
-                  if (name === 'count') return [value, '请求?];
+                  if (name === 'count') return [value, '请求];
                   if (name === 'avgValue')
-                    return [`¥${Number(value).toFixed(2)}`, '平均估?];
+                    return [`¥${Number(value).toFixed(2)}`, '平均估];
                   if (name === 'avgConfidence')
                     return [
                       `${(Number(value) * 100).toFixed(1)}%`,
-                      '平均置信?,
+                      '平均置信,
                     ];
                   return [value, name];
                 }}
@@ -333,19 +333,19 @@ export default function ValuationStatsPage() {
                 yAxisId="left"
                 dataKey="count"
                 fill="#8884d8"
-                name="请求?
+                name="请求
               />
               <Bar
                 yAxisId="left"
                 dataKey="avgValue"
                 fill="#82ca9d"
-                name="平均估?
+                name="平均估
               />
               <Bar
                 yAxisId="right"
                 dataKey="avgConfidence"
                 fill="#ffc658"
-                name="平均置信?
+                name="平均置信
               />
             </BarChart>
           </ResponsiveContainer>

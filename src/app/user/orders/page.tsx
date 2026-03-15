@@ -7,14 +7,12 @@ import { Input } from '@/components/ui/input';
 import {
   Package,
   Search,
-  Filter,
   Clock,
   CheckCircle,
   XCircle,
   Truck,
   Calendar,
   MapPin,
-  Phone,
   User,
   MoreVertical,
   Eye,
@@ -55,7 +53,7 @@ export default function UserOrdersPage() {
           deviceName: 'iPhone 14 Pro',
           brand: 'Apple',
           model: 'A2890',
-          issue: '屏幕碎裂，无法正常显?,
+          issue: '屏幕碎裂，无法正常显示',
           status: 'completed',
           priority: 'high',
           createTime: '2024-02-15T10:30:00',
@@ -64,7 +62,7 @@ export default function UserOrdersPage() {
           actualCompletion: '2024-02-18T15:45:00',
           totalPrice: 899,
           serviceLocation: '北京市朝阳区维修中心',
-          technician: '张师?,
+          technician: '张师傅',
           contactPhone: '138****1234',
         },
         {
@@ -81,8 +79,8 @@ export default function UserOrdersPage() {
           estimatedCompletion: '2024-02-22T18:00:00',
           actualCompletion: null,
           totalPrice: 450,
-          serviceLocation: '上海市浦东新区服务中?,
-          technician: '李师?,
+          serviceLocation: '上海市浦东新区服务中心',
+          technician: '李师傅',
           contactPhone: '139****5678',
         },
         {
@@ -91,7 +89,7 @@ export default function UserOrdersPage() {
           deviceName: 'MacBook Pro 14"',
           brand: 'Apple',
           model: 'M2 Pro',
-          issue: '键盘按键失灵，部分功能异?,
+          issue: '键盘按键失灵，部分功能异常',
           status: 'pending',
           priority: 'urgent',
           createTime: '2024-02-20T14:20:00',
@@ -99,8 +97,8 @@ export default function UserOrdersPage() {
           estimatedCompletion: '2024-02-25T17:00:00',
           actualCompletion: null,
           totalPrice: 0,
-          serviceLocation: '广州市天河区维修?,
-          technician: '待分?,
+          serviceLocation: '广州市天河区维修站',
+          technician: '待分配',
           contactPhone: '136****9012',
         },
       ];
@@ -113,25 +111,25 @@ export default function UserOrdersPage() {
     switch (status) {
       case 'pending':
         return {
-          text: '待处?,
+          text: '待处理',
           color: 'bg-yellow-100 text-yellow-800',
           icon: Clock,
         };
       case 'processing':
         return {
-          text: '处理?,
+          text: '处理中',
           color: 'bg-blue-100 text-blue-800',
           icon: Truck,
         };
       case 'completed':
         return {
-          text: '已完?,
+          text: '已完成',
           color: 'bg-green-100 text-green-800',
           icon: CheckCircle,
         };
       case 'cancelled':
         return {
-          text: '已取?,
+          text: '已取消',
           color: 'bg-red-100 text-red-800',
           icon: XCircle,
         };
@@ -147,13 +145,13 @@ export default function UserOrdersPage() {
   const getPriorityInfo = (priority: string) => {
     switch (priority) {
       case 'low':
-        return { text: '�?, color: 'text-gray-500' };
+        return { text: '低', color: 'text-gray-500' };
       case 'medium':
-        return { text: '�?, color: 'text-blue-500' };
+        return { text: '中', color: 'text-blue-500' };
       case 'high':
-        return { text: '�?, color: 'text-orange-500' };
+        return { text: '高', color: 'text-orange-500' };
       case 'urgent':
-        return { text: '紧?, color: 'text-red-500' };
+        return { text: '紧急', color: 'text-red-500' };
       default:
         return { text: '未知', color: 'text-gray-500' };
     }
@@ -185,7 +183,7 @@ export default function UserOrdersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">我的订单</h1>
-          <p className="text-gray-600 mt-1">查看和管理您的维修订单历?/p>
+          <p className="text-gray-600 mt-1">查看和管理您的维修订单历史</p>
         </div>
         <div className="flex items-center space-x-3">
           <div className="relative">
@@ -202,11 +200,11 @@ export default function UserOrdersPage() {
             onChange={e => setStatusFilter(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="all">全部状?/option>
-            <option value="pending">待处?/option>
-            <option value="processing">处理?/option>
-            <option value="completed">已完?/option>
-            <option value="cancelled">已取?/option>
+            <option value="all">全部状态</option>
+            <option value="pending">待处理</option>
+            <option value="processing">处理中</option>
+            <option value="completed">已完成</option>
+            <option value="cancelled">已取消</option>
           </select>
         </div>
       </div>
@@ -239,7 +237,7 @@ export default function UserOrdersPage() {
                 <p className="text-2xl font-bold text-gray-900">
                   {orders.filter(o => o.status === 'pending').length}
                 </p>
-                <p className="text-sm text-gray-600">待处?/p>
+                <p className="text-sm text-gray-600">待处理</p>
               </div>
             </div>
           </CardContent>
@@ -255,7 +253,7 @@ export default function UserOrdersPage() {
                 <p className="text-2xl font-bold text-gray-900">
                   {orders.filter(o => o.status === 'processing').length}
                 </p>
-                <p className="text-sm text-gray-600">处理?/p>
+                <p className="text-sm text-gray-600">处理中</p>
               </div>
             </div>
           </CardContent>
@@ -271,7 +269,7 @@ export default function UserOrdersPage() {
                 <p className="text-2xl font-bold text-gray-900">
                   {orders.filter(o => o.status === 'completed').length}
                 </p>
-                <p className="text-sm text-gray-600">已完?/p>
+                <p className="text-sm text-gray-600">已完成</p>
               </div>
             </div>
           </CardContent>
@@ -306,7 +304,7 @@ export default function UserOrdersPage() {
                           <span
                             className={`text-xs font-medium ${priorityInfo.color}`}
                           >
-                            优先? {priorityInfo.text}
+                            优先级: {priorityInfo.text}
                           </span>
                         </div>
                         <p className="text-gray-600">
@@ -321,7 +319,7 @@ export default function UserOrdersPage() {
                       </Button>
                     </div>
 
-                    {/* 时间和地点信?*/}
+                    {/* 时间和地点信息 */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                       <div className="flex items-center text-gray-600">
                         <Calendar className="w-4 h-4 mr-2" />
@@ -347,7 +345,7 @@ export default function UserOrdersPage() {
                       <div className="flex items-center text-gray-600">
                         <User className="w-4 h-4 mr-2" />
                         <div>
-                          <p>技? {order.technician}</p>
+                          <p>技师: {order.technician}</p>
                           <p className="text-gray-500">{order.contactPhone}</p>
                         </div>
                       </div>
@@ -360,7 +358,7 @@ export default function UserOrdersPage() {
                       <p className="text-2xl font-bold text-gray-900">
                         ¥{order.totalPrice}
                       </p>
-                      <p className="text-sm text-gray-500">总费?/p>
+                      <p className="text-sm text-gray-500">总费用</p>
                     </div>
                     <div className="flex space-x-2">
                       <Button variant="outline" size="sm">
@@ -381,14 +379,14 @@ export default function UserOrdersPage() {
         })}
       </div>
 
-      {/* 空状?*/}
+      {/* 空状态 */}
       {filteredOrders.length === 0 && (
         <div className="text-center py-12">
           <Package className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">暂无订单</h3>
           <p className="mt-1 text-sm text-gray-500">
             {searchTerm || statusFilter !== 'all'
-              ? '没有找到匹配的订?
+               '没有找到匹配的订单'
               : '您还没有创建任何维修订单'}
           </p>
           <div className="mt-6">
@@ -402,4 +400,3 @@ export default function UserOrdersPage() {
     </div>
   );
 }
-

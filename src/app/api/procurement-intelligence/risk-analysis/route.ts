@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
           );
         }
 
-        // 鏌ヨ渚涘簲鍟嗗熀鏈俊?        const { data: supplierData, error: supplierError } = await supabase
+        // 鏌ヨ渚涘簲鍟嗗熀鏈俊        const { data: supplierData, error: supplierError } = await supabase
           .from('supplier_intelligence_profiles')
           .select('*')
           .eq('supplier_id', params.supplierId)
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
           return NextResponse.json(
             {
               success: false,
-              error: `鏌ヨ渚涘簲鍟嗕俊鎭け? ${supplierError.message}`,
+              error: `鏌ヨ渚涘簲鍟嗕俊鎭け ${supplierError.message}`,
             },
             { status: 500 }
           );
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
         const { supplierIds } = params;
         if (!Array.isArray(supplierIds) || supplierIds.length === 0) {
           return NextResponse.json(
-            { success: false, error: 'supplierIds蹇呴』鏄潪绌烘暟? },
+            { success: false, error: 'supplierIds蹇呴』鏄潪绌烘暟 },
             { status: 400 }
           );
         }
@@ -163,7 +163,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -203,7 +203,7 @@ export async function GET(request: Request) {
 
         if (error && error.code !== 'PGRST116') {
           return NextResponse.json(
-            { success: false, error: `鏌ヨ鏈€鏂拌瘎浼板け? ${error.message}` },
+            { success: false, error: `鏌ヨ鏈€鏂拌瘎板け ${error.message}` },
             { status: 500 }
           );
         }
@@ -214,7 +214,7 @@ export async function GET(request: Request) {
         });
 
       case 'risk_summary':
-        // 鑾峰彇椋庨櫓姹囨€荤粺?        const { data: summaryData, error: summaryError } = await supabase
+        // 鑾峰彇椋庨櫓姹囨€荤粺        const { data: summaryData, error: summaryError } = await supabase
           .from('supplier_risk_assessments')
           .select('risk_level, count')
           .neq('risk_level', null)
@@ -224,7 +224,7 @@ export async function GET(request: Request) {
           return NextResponse.json(
             {
               success: false,
-              error: `鏌ヨ椋庨櫓姹囨€诲け? ${summaryError.message}`,
+              error: `鏌ヨ椋庨櫓姹囨€诲け ${summaryError.message}`,
             },
             { status: 500 }
           );
@@ -280,14 +280,14 @@ function calculateSupplierRisk(supplierData: any) {
     riskCategories.financial = 20;
   }
 
-  // 杩愯惀椋庨櫓璁＄畻锛堝熀浜庝氦浠樿瘎鍒嗭級
+  // 杩愯惀椋庨櫓璁＄畻锛堝熀浜庝氦樿瘎鍒嗭級
   riskCategories.operational = Math.max(
     0,
     100 - (supplierData.delivery_score || 50)
   );
 
   // 鍚堣椋庨櫓璁＄畻锛堝熀浜庤璇佹儏鍐碉級
-  const certificationCount = supplierData?.length || 0;
+  const certificationCount = supplierData.length || 0;
   riskCategories.compliance = Math.max(0, 80 - certificationCount * 15);
 
   // 鍦扮紭鏀挎不椋庨櫓璁＄畻
@@ -295,11 +295,11 @@ function calculateSupplierRisk(supplierData: any) {
   riskCategories.geopolitical = highRiskCountries.includes(
     supplierData.registration_country
   )
-    ? 80
+     80
     : 20;
 
-  // 渚涘簲閾鹃闄╄?  riskCategories.supplyChain =
-    supplierData.business_scale === 'enterprise' ? 15 : 45;
+  // 渚涘簲鹃闄╄  riskCategories.supplyChain =
+    supplierData.business_scale === 'enterprise'  15 : 45;
 
   // 璁＄畻缁煎悎椋庨櫓寰楀垎
   const weights = {
@@ -324,25 +324,25 @@ function calculateSupplierRisk(supplierData: any) {
 
   // 鐢熸垚椋庨櫓椹卞姩鍥犵礌
   const riskDrivers = [];
-  if (riskCategories.financial > 60) riskDrivers.push('璐㈠姟绋冲畾鎬т笉?);
+  if (riskCategories.financial > 60) riskDrivers.push('璐㈠姟绋冲畾鎬т笉);
   if (riskCategories.operational > 60) riskDrivers.push('浜や粯鑳藉姏杈冨急');
-  if (riskCategories.compliance > 60) riskDrivers.push('鍚堣璁よ瘉涓嶅厖?);
+  if (riskCategories.compliance > 60) riskDrivers.push('鍚堣璁よ瘉涓嶅厖);
   if (riskCategories.geopolitical > 60) riskDrivers.push('鍦扮紭鏀挎不椋庨櫓杈冮珮');
-  if (riskCategories.supplyChain > 60) riskDrivers.push('渚涘簲閾捐剢寮辨€ч珮');
+  if (riskCategories.supplyChain > 60) riskDrivers.push('渚涘簲捐剢寮辨€ч珮');
 
   // 鐢熸垚缂撹В寤鸿
   const mitigationRecommendations = [];
   if (riskCategories.financial > 50) {
     mitigationRecommendations.push('瑕佹眰鎻愪緵璐㈠姟鎶ヨ〃杩涜娣卞叆鍒嗘瀽');
-    mitigationRecommendations.push('璁剧疆鍒嗘湡浠樻鏉′欢');
+    mitigationRecommendations.push('璁剧疆鍒嗘湡樻鏉′欢');
   }
   if (riskCategories.operational > 50) {
-    mitigationRecommendations.push('寤虹珛澶囩敤渚涘簲鍟嗗悕?);
+    mitigationRecommendations.push('寤虹珛澶囩敤渚涘簲鍟嗗悕);
     mitigationRecommendations.push('缂╃煭浜や粯鍛ㄦ湡瑕佹眰');
   }
   if (riskCategories.compliance > 50) {
     mitigationRecommendations.push('瑕佹眰鎻愪緵鐩稿叧璁よ瘉璇佷功');
-    mitigationRecommendations.push('瀹夋帓绗笁鏂瑰?);
+    mitigationRecommendations.push('瀹夋帓绗笁鏂瑰);
   }
 
   return {
@@ -351,7 +351,7 @@ function calculateSupplierRisk(supplierData: any) {
     riskCategories,
     riskDrivers: riskDrivers.slice(0, 3),
     mitigationRecommendations: mitigationRecommendations.slice(0, 5),
-    confidence: 0.85, // 鍩轰簬鏁版嵁瀹屾暣鎬х殑缃俊?    assessmentDate: new Date().toISOString(),
+    confidence: 0.85, // 鍩轰簬鏁版嵁瀹屾暣鎬х殑缃俊    assessmentDate: new Date().toISOString(),
   };
 }
 
@@ -364,12 +364,12 @@ function calculateNextReviewDate(riskLevel: string): string {
       daysToAdd = 7; // 姣忓懆瀹℃煡
       break;
     case 'high':
-      daysToAdd = 14; // 姣忎袱鍛ㄥ?      break;
+      daysToAdd = 14; // 姣忎袱鍛ㄥ      break;
     case 'medium':
       daysToAdd = 30; // 姣忔湀瀹℃煡
       break;
     case 'low':
-      daysToAdd = 90; // 姣忓搴﹀?      break;
+      daysToAdd = 90; // 姣忓搴﹀      break;
   }
 
   const nextReview = new Date(now);

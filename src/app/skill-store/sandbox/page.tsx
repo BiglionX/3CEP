@@ -10,9 +10,9 @@ interface SkillOption {
 }
 
 const SKILLS: SkillOption[] = [
-  { name: 'procyc-find-shop', title: '附近维修店查?, icon: '📍' },
+  { name: 'procyc-find-shop', title: '附近维修店查询', icon: '📍' },
   { name: 'procyc-fault-diagnosis', title: '设备故障诊断', icon: '🔍' },
-  { name: 'procyc-part-lookup', title: '配件兼容性查?, icon: '🔧' },
+  { name: 'procyc-part-lookup', title: '配件兼容性查询', icon: '🔧' },
   { name: 'procyc-estimate-value', title: '设备智能估价', icon: '💰' },
 ];
 
@@ -26,7 +26,7 @@ const DEFAULT_PARAMS: Record<string, any> = {
   'procyc-fault-diagnosis': {
     deviceType: 'phone',
     deviceBrand: 'Apple',
-    symptoms: ['无法开?, '黑屏'],
+    symptoms: ['无法开机', '黑屏'],
   },
   'procyc-part-lookup': {
     deviceModel: 'iPhone 14',
@@ -65,7 +65,7 @@ export default function SandboxPage() {
 
   const handleExecute = async () => {
     if (!apiKey) {
-      setError('请输?API Key');
+      setError('请输入 API Key');
       return;
     }
 
@@ -76,7 +76,8 @@ export default function SandboxPage() {
     try {
       const startTime = Date.now();
 
-      // 模拟 API 调用（实际应该调用后?API�?      const response = await fetch(`/api/v1/skills/${selectedSkill}/execute`, {
+      // 模拟 API 调用（实际应该调用后端 API）
+      const response = await fetch(`/api/v1/skills/${selectedSkill}/execute`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,10 +113,10 @@ export default function SandboxPage() {
           },
         ]);
       } else {
-        setError(data.error?.message || '执行失败');
+        setError(data.error.message || '执行失败');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : '未知错误');
+      setError(err instanceof Error  err.message : '未知错误');
     } finally {
       setLoading(false);
     }
@@ -141,7 +142,7 @@ export default function SandboxPage() {
             onChange={e => handleParamChange(key, parseFloat(e.target.value))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           />
-        ) : Array.isArray(value) ? (
+        ) : Array.isArray(value)  (
           <textarea
             value={value.join(', ')}
             onChange={e =>
@@ -156,7 +157,7 @@ export default function SandboxPage() {
         ) : (
           <input
             type="text"
-            value={value}
+            value={value as string}
             onChange={e => handleParamChange(key, e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           />
@@ -174,10 +175,11 @@ export default function SandboxPage() {
             href="/skill-store"
             className="text-indigo-600 hover:text-indigo-700 font-medium"
           >
-            �?返回商店首页
+            ← 返回商店首页
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mt-2">
-            🔬 技能测试沙?          </h1>
+            🔬 技能测试沙盒
+          </h1>
           <p className="text-gray-600 mt-2">
             在线测试 ProCyc 技能，实时查看执行结果
           </p>
@@ -192,7 +194,8 @@ export default function SandboxPage() {
             {/* Skill Selection */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                1️⃣ 选择技?              </h2>
+                1️⃣ 选择技能
+              </h2>
               <select
                 value={selectedSkill}
                 onChange={e => handleSkillChange(e.target.value)}
@@ -219,12 +222,13 @@ export default function SandboxPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
               <p className="text-sm text-gray-600 mt-2">
-                需?API Key 才能执行技能。{' '}
+                需要 API Key 才能执行技能。{' '}
                 <a
                   href="/dashboard/api-keys"
                   className="text-indigo-600 hover:underline"
                 >
-                  获取 API Key �?                </a>
+                  获取 API Key →
+                </a>
               </p>
             </div>
 
@@ -240,11 +244,11 @@ export default function SandboxPage() {
                 disabled={loading}
                 className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
                   loading
-                    ? 'bg-gray-400 cursor-not-allowed'
+                     'bg-gray-400 cursor-not-allowed'
                     : 'bg-indigo-600 hover:bg-indigo-700'
                 }`}
               >
-                {loading ? '�?执行?..' : '🚀 执行技?}
+                {loading  '⏳ 执行中...' : '🚀 执行技能'}
               </button>
             </div>
 
@@ -262,7 +266,7 @@ export default function SandboxPage() {
                     >
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-lg ${item.success ? '�? : '�?}`}
+                          className={`text-lg ${item.success  '✅' : '❌'}`}
                         ></span>
                         <span className="text-sm font-medium text-gray-700">
                           {item.skill}
@@ -282,7 +286,7 @@ export default function SandboxPage() {
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-6">
                 <h2 className="text-xl font-semibold text-red-800 mb-2">
-                  �?执行失败
+                  ❌ 执行失败
                 </h2>
                 <p className="text-red-700">{error}</p>
               </div>
@@ -292,13 +296,14 @@ export default function SandboxPage() {
             {result && (
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  �?执行结果
+                  ✅ 执行结果
                 </h2>
 
                 {/* Metadata */}
                 <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                   <h3 className="text-sm font-medium text-gray-700 mb-2">
-                    元数?                  </h3>
+                    元数据
+                  </h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-600">执行时间:</span>
@@ -313,7 +318,7 @@ export default function SandboxPage() {
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-600">时间?</span>
+                      <span className="text-gray-600">时间戳:</span>
                       <span className="ml-2 font-medium">
                         {new Date(result.metadata.timestamp).toLocaleString()}
                       </span>
@@ -349,9 +354,9 @@ export default function SandboxPage() {
                     </h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-green-700">已计?</span>
+                        <span className="text-green-700">已计费:</span>
                         <span className="ml-2 font-medium">
-                          {result.metadata.billing.charged ? '�? : '�?}
+                          {result.metadata.billing.charged  '是' : '否'}
                         </span>
                       </div>
                       <div>
@@ -376,7 +381,8 @@ export default function SandboxPage() {
                     准备就绪
                   </h3>
                   <p className="text-gray-600 mt-2">
-                    配置好技能和参数后，点击"执行技?开始测?                  </p>
+                    配置好技能和参数后，点击"执行技能"开始测试
+                  </p>
                 </div>
               </div>
             )}
@@ -391,25 +397,25 @@ export default function SandboxPage() {
                   <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-medium">
                     1
                   </span>
-                  <p className="text-sm">选择一个要测试的技?/p>
+                  <p className="text-sm">选择一个要测试的技能</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-medium">
                     2
                   </span>
-                  <p className="text-sm">输入您的 API Key（需要有效的密钥?/p>
+                  <p className="text-sm">输入您的 API Key（需要有效的密钥）</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-medium">
                     3
                   </span>
-                  <p className="text-sm">配置技能参?/p>
+                  <p className="text-sm">配置技能参数</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-medium">
                     4
                   </span>
-                  <p className="text-sm">点击"执行技?查看实时结果</p>
+                  <p className="text-sm">点击"执行技能"查看实时结果</p>
                 </div>
               </div>
             </div>
@@ -419,4 +425,3 @@ export default function SandboxPage() {
     </div>
   );
 }
-

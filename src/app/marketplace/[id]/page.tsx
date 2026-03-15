@@ -39,14 +39,14 @@ interface AgentDetail {
   download_count: number;
   developer: {
     name: string;
-    avatar?: string;
+    avatar: string;
     verified: boolean;
   };
   tags: string[];
   featured: boolean;
   screenshots: string[];
-  documentation_url?: string;
-  demo_video_url?: string;
+  documentation_url: string;
+  demo_video_url: string;
   requirements: string[];
   features: string[];
   changelog: {
@@ -58,7 +58,7 @@ interface AgentDetail {
     id: string;
     user: {
       name: string;
-      avatar?: string;
+      avatar: string;
     };
     rating: number;
     comment: string;
@@ -176,17 +176,17 @@ export default function AgentDetailPage() {
   }, [agentId]);
 
   const formatPrice = (price: number) => {
-    return price === 0 ? '免费' : `¥${price.toFixed(2)}`;
+    return price === 0  '免费' : `¥${price.toFixed(2)}`;
   };
 
   const addToCart = () => {
     // 实现加入购物车逻辑
-    alert(`已将 ${agent?.name} 加入购物车`);
+    alert(`已将 ${agent.name} 加入购物车`);
   };
 
   const buyNow = () => {
     // 实现立即购买逻辑
-    alert(`开始购买 ${agent?.name}`);
+    alert(`开始购买 ${agent.name}`);
   };
 
   const toggleFavorite = () => {
@@ -306,12 +306,12 @@ export default function AgentDetailPage() {
                       onClick={toggleFavorite}
                       className={`p-3 rounded-lg border transition-colors ${
                         isFavorite
-                          ? 'bg-red-50 border-red-200 text-red-600'
+                           'bg-red-50 border-red-200 text-red-600'
                           : 'border-gray-300 text-gray-600 hover:bg-gray-50'
                       }`}
                     >
                       <Heart
-                        className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`}
+                        className={`w-5 h-5 ${isFavorite  'fill-current' : ''}`}
                       />
                     </button>
                     <button className="p-3 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors">
@@ -353,7 +353,7 @@ export default function AgentDetailPage() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors ${
                         activeTab === tab.id
-                          ? 'border-blue-500 text-blue-600'
+                           'border-blue-500 text-blue-600'
                           : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                       }`}
                     >
@@ -494,7 +494,7 @@ export default function AgentDetailPage() {
                                       key={i}
                                       className={`w-4 h-4 ${
                                         i < review.rating
-                                          ? 'text-yellow-400 fill-current'
+                                           'text-yellow-400 fill-current'
                                           : 'text-gray-300'
                                       }`}
                                     />

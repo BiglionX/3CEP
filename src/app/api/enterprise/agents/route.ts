@@ -2,7 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -10,11 +10,11 @@ import { cookies } from 'next/headers';
 export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('sb-access-token')?.value;
+    const token = cookieStore.get('sb-access-token').value;
 
     if (!token) {
       return NextResponse.json(
-        { success: false, error: '鏈巿鏉冭? },
+        { success: false, error: '鏈巿鏉冭 },
         { status: 401 }
       );
     }
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 鑾峰彇浼佷笟鐢ㄦ埛淇℃伅
+    // 鑾峰彇佷笟鐢ㄦ埛淇℃伅
     const { data: enterpriseUser, error: enterpriseError } = await supabase
       .from('enterprise_users')
       .select('id')
@@ -41,12 +41,12 @@ export async function GET(request: Request) {
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '闈炰紒涓氱敤? },
+        { success: false, error: '闈炰紒涓氱敤 },
         { status: 403 }
       );
     }
 
-    // 鏌ヨ璇ヤ紒涓氱殑鏅鸿兘浣撳垪?    const { data: agents, error: agentsError } = await supabase
+    // 鏌ヨ璇ヤ紒涓氱殑鏅鸿兘浣撳垪    const { data: agents, error: agentsError } = await supabase
       .from('enterprise_agents')
       .select(
         `
@@ -65,9 +65,9 @@ export async function GET(request: Request) {
       .order('created_at', { ascending: false });
 
     if (agentsError) {
-      console.error('鑾峰彇鏅鸿兘浣撳垪琛ㄥけ?', agentsError);
+      console.error('鑾峰彇鏅鸿兘浣撳垪琛ㄥけ', agentsError);
       return NextResponse.json(
-        { success: false, error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ? },
+        { success: false, error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ },
         { status: 500 }
       );
     }
@@ -77,9 +77,9 @@ export async function GET(request: Request) {
       data: agents || [],
     });
   } catch (error: any) {
-    console.error('鑾峰彇鏅鸿兘浣撳垪琛ㄩ敊?', error);
+    console.error('鑾峰彇鏅鸿兘浣撳垪琛ㄩ敊', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }
@@ -88,11 +88,11 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('sb-access-token')?.value;
+    const token = cookieStore.get('sb-access-token').value;
 
     if (!token) {
       return NextResponse.json(
-        { success: false, error: '鏈巿鏉冭? },
+        { success: false, error: '鏈巿鏉冭 },
         { status: 401 }
       );
     }
@@ -103,7 +103,7 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!name || !configuration) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涙櫤鑳戒綋鍚嶇О鍜岄厤缃俊? },
+        { success: false, error: '璇彁渚涙櫤鑳戒綋鍚嶇О鍜岄厤缃俊 },
         { status: 400 }
       );
     }
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鑾峰彇浼佷笟鐢ㄦ埛淇℃伅
+    // 鑾峰彇佷笟鐢ㄦ埛淇℃伅
     const { data: enterpriseUser, error: enterpriseError } = await supabase
       .from('enterprise_users')
       .select('id')
@@ -130,12 +130,12 @@ export async function POST(request: Request) {
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '闈炰紒涓氱敤? },
+        { success: false, error: '闈炰紒涓氱敤 },
         { status: 403 }
       );
     }
 
-    // 鍒涘缓鏅鸿兘?    const { data: agent, error: createError } = await supabase
+    // 鍒涘缓鏅鸿兘    const { data: agent, error: createError } = await supabase
       .from('enterprise_agents')
       .insert({
         enterprise_id: enterpriseUser.id,
@@ -149,14 +149,14 @@ export async function POST(request: Request) {
       .single();
 
     if (createError) {
-      console.error('鍒涘缓鏅鸿兘浣撳け?', createError);
+      console.error('鍒涘缓鏅鸿兘浣撳け', createError);
       return NextResponse.json(
-        { success: false, error: '鍒涘缓鏅鸿兘浣撳け? },
+        { success: false, error: '鍒涘缓鏅鸿兘浣撳け },
         { status: 500 }
       );
     }
 
-    // 璁板綍鎿嶄綔鏃ュ織
+    // 璁板綍鎿嶄綔ュ織
     (await supabase.from('audit_logs').insert({
       user_id: user.id,
       action: 'create_agent',
@@ -172,15 +172,15 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: '鏅鸿兘浣撳垱寤烘垚?,
+        message: '鏅鸿兘浣撳垱寤烘垚,
         data: agent,
       },
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('鍒涘缓鏅鸿兘浣撻敊?', error);
+    console.error('鍒涘缓鏅鸿兘浣撻敊', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }

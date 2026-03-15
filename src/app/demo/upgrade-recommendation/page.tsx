@@ -22,13 +22,13 @@ const UpgradeRecommendationDemo = () => {
   const handleRecommendationClick = (recommendation: Recommendation) => {
     console.log('用户点击推荐:', recommendation);
     alert(
-      `您点击了?${recommendation.oldModel} 升级?${recommendation.newModel} 的推荐！`
+      `您点击了${recommendation.oldModel} 升级到${recommendation.newModel} 的推荐！`
     );
   };
 
   const handleConversion = (recommendation: Recommendation) => {
     console.log('用户准备升级:', recommendation);
-    alert(`即将为您跳转?${recommendation.newModel} 的购买页面！`);
+    alert(`即将为您跳转到${recommendation.newModel} 的购买页面！`);
   };
 
   return (
@@ -96,7 +96,7 @@ const UpgradeRecommendationDemo = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-green-600" />
-                为您推荐的升级方?              </CardTitle>
+                为您推荐的升级方案              </CardTitle>
             </CardHeader>
             <CardContent>
               <UpgradeRecommendationList
@@ -112,11 +112,11 @@ const UpgradeRecommendationDemo = () => {
                   💡 功能特色
                 </h3>
                 <ul className="text-blue-700 space-y-1 text-sm">
-                  <li>�?基于设备使用历史的智能推荐算?/li>
-                  <li>�?实时计算以旧换新优惠金额</li>
-                  <li>�?个性化推荐得分和优先级排序</li>
-                  <li>�?完整的用户行为追踪和分析</li>
-                  <li>�?响应式设计，支持多端访问</li>
+                  <li>• 基于设备使用历史的智能推荐算法/li>
+                  <li>实时计算以旧换新优惠金额</li>
+                  <li>个性化推荐得分和优先级排序</li>
+                  <li>完整的用户行为追踪和分析</li>
+                  <li>响应式设计，支持多端访问</li>
                 </ul>
               </div>
             </CardContent>

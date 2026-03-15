@@ -1,5 +1,5 @@
 ﻿/**
- * 鎬ц兘浼樺寲鐨勯噰璐櫤鑳戒綋API绀轰緥
+ * 鎬ц兘樺寲鐨勯噰璐櫤鑳戒綋API绀轰緥
  */
 import { NextRequest, NextResponse } from 'next/server';
 import {
@@ -7,27 +7,27 @@ import {
   generateCacheKey,
 } from '@/tech/middleware/cache.middleware';
 
-// 妯℃嫙浼樺寲鍚庣殑鏈嶅姟
+// 妯℃嫙樺寲鍚庣殑鏈嶅姟
 class OptimizedProcurementService {
-  // 浣跨敤棰勮绠楀拰缂撳瓨鐨勪緵搴斿晢璇勫垎
+  // 浣跨敤棰勮绠楀拰缂撳鐨勪緵搴斿晢璇勫垎
   private supplierScoresCache = new Map<
     string,
     { score: number; timestamp: number }
   >();
 
   async getSupplierProfileOptimized(supplierId: string) {
-    // 1. 棣栧厛妫€鏌ュ唴瀛樼紦?    const cached = this.supplierScoresCache.get(supplierId);
+    // 1. 棣栧厛妫€鏌ュ唴瀛樼紦    const cached = this.supplierScoresCache.get(supplierId);
     if (cached && Date.now() - cached.timestamp < 300000) {
-      // 5鍒嗛挓缂撳瓨
+      // 5鍒嗛挓缂撳
       console.log('Memory cache hit for supplier:', supplierId);
       return { supplierId, score: cached.score, fromCache: true };
     }
 
-    // 2. 妯℃嫙浼樺寲鍚庣殑鏁版嵁搴撴煡璇紙姣斿師鏉ュ揩30%锟?    await new Promise(resolve => setTimeout(resolve, 70)); // 浼樺寲?00ms -> 浼樺寲?0ms
+    // 2. 妯℃嫙樺寲鍚庣殑鏁版嵁搴撴煡璇紙姣斿師鏉ュ揩30%    await new Promise(resolve => setTimeout(resolve, 70)); // 樺寲00ms -> 樺寲0ms
 
     const score = Math.floor(Math.random() * 40) + 60;
 
-    // 3. 鏇存柊鍐呭瓨缂撳瓨
+    // 3. 鏇存柊鍐呭缂撳
     this.supplierScoresCache.set(supplierId, {
       score,
       timestamp: Date.now(),
@@ -36,9 +36,9 @@ class OptimizedProcurementService {
     return { supplierId, score, fromCache: false };
   }
 
-  // 鎵归噺澶勭悊浼樺寲
+  // 鎵归噺澶勭悊樺寲
   async getMultipleSupplierProfiles(supplierIds: string[]) {
-    // 骞惰澶勭悊澶氫釜璇锋眰
+    // 骞惰澶勭悊澶氫釜璇眰
     const promises = supplierIds.map(id =>
       this.getSupplierProfileOptimized(id)
     );
@@ -53,7 +53,7 @@ class OptimizedProcurementService {
     // 寮傛澶勭悊
     setImmediate(async () => {
       try {
-        // 妯℃嫙鑰楁椂鐨勯闄╄瘎浼拌?        await new Promise(resolve => setTimeout(resolve, 2000));
+        // 妯℃嫙鑰楁椂鐨勯闄╄瘎拌        await new Promise(resolve => setTimeout(resolve, 2000));
         console.log(`Risk assessment completed for task: ${taskId}`);
       } catch (error) {
         console.error(`Risk assessment failed for task: ${taskId}`, error);
@@ -76,12 +76,12 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 鐢熸垚缂撳瓨?    const cacheKey = generateCacheKey('supplier-profile', {
+    // 鐢熸垚缂撳    const cacheKey = generateCacheKey('supplier-profile', {
       supplierId,
       action,
     });
 
-    // 浣跨敤缂撳瓨涓棿?    return await cacheMiddleware(
+    // 浣跨敤缂撳涓棿    return await cacheMiddleware(
       request,
       async () => {
         const result =
@@ -94,13 +94,13 @@ export async function GET(request: NextRequest) {
         });
       },
       cacheKey,
-      1800 // 30鍒嗛挓缂撳瓨
+      1800 // 30鍒嗛挓缂撳
     );
   } catch (error) {
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: error instanceof Error  error.message : 'Unknown error',
       },
       { status: 500 }
     );
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: error instanceof Error  error.message : 'Unknown error',
       },
       { status: 500 }
     );

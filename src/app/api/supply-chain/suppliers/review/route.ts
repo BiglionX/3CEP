@@ -32,13 +32,13 @@ export async function POST(request: Request) {
 
     // 楠岃瘉瀹℃牳缁撴灉
     if (!Object.values(ReviewStatus).includes(reviewResult as ReviewStatus)) {
-      return NextResponse.json({ error: '鏃犳晥鐨勫鏍哥粨? }, { status: 400 });
+      return NextResponse.json({ error: '犳晥鐨勫鏍哥粨 }, { status: 400 });
     }
 
     // 楠岃瘉鍒嗘暟鑼冨洿
     if (score < 0 || score > 100) {
       return NextResponse.json(
-        { error: '瀹℃牳鍒嗘暟蹇呴』?-100涔嬮棿' },
+        { error: '瀹℃牳鍒嗘暟蹇呴』-100涔嬮棿' },
         { status: 400 }
       );
     }
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       reviewResult: reviewResult as ReviewStatus,
       score,
       comments: comments || '',
-      nextReviewDate: nextReviewDate ? new Date(nextReviewDate) : undefined,
+      nextReviewDate: nextReviewDate  new Date(nextReviewDate) : undefined,
     };
 
     const supplierService = new SupplierService();
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
         success: true,
         data: {
           supplierId: result.supplierId,
-          message: '渚涘簲鍟嗗鏍稿畬?,
+          message: '渚涘簲鍟嗗鏍稿畬,
         },
       });
     } else {
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
-    console.error('渚涘簲鍟嗗鏍搁敊?', error);
+    console.error('渚涘簲鍟嗗鏍搁敊', error);
     return NextResponse.json(
       {
         error: '瀹℃牳澶勭悊澶辫触',

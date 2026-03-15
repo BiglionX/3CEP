@@ -1,12 +1,12 @@
 ﻿// 鍛婅瑙勫垯瀹屽杽鍔熻兘婕旂ずAPI
-// 灞曠ずD002浠诲姟鐨勬牳蹇冨姛?
+// 灞曠ずD002诲姟鐨勬牳蹇冨姛
 import { NextResponse } from 'next/server';
 import { alertRulesManager } from '@/modules/procurement-intelligence/services/alert-rules-manager.service';
 import { notificationChannelsService } from '@/modules/procurement-intelligence/services/notification-channels.service';
 
 export async function GET() {
   try {
-    // 婕旂ず鏁版嵁鍒濆?    const demoData = await initializeDemoData();
+    // 婕旂ず鏁版嵁鍒濆    const demoData = await initializeDemoData();
 
     // 鍔熻兘婕旂ず
     const demoResults = await runDemonstrations();
@@ -35,8 +35,8 @@ async function initializeDemoData() {
     // 鍒涘缓婕旂ず鐢ㄧ殑鍛婅瑙勫垯
     const demoRules = [
       {
-        name: 'CPU浣跨敤鐜囪繃楂樺憡?,
-        description: '鐩戞帶绯荤粺CPU浣跨敤鐜囷紝褰撹秴?0%鏃惰Е鍙戝憡?,
+        name: 'CPU浣跨敤鐜囪繃楂樺憡,
+        description: '鐩戞帶绯荤粺CPU浣跨敤鐜囷紝褰撹秴0%惰Е鍙戝憡,
         metric_name: 'cpu_usage_percent',
         condition: 'above' as const,
         threshold: 80,
@@ -48,8 +48,8 @@ async function initializeDemoData() {
         created_by: 'demo',
       },
       {
-        name: '鍐呭瓨涓嶈冻鍛婅',
-        description: '鐩戞帶绯荤粺鍐呭瓨浣跨敤鎯呭喌锛屽綋鍙敤鍐呭瓨浣庝簬1GB鏃惰Е鍙戝憡?,
+        name: '鍐呭涓嶈冻鍛婅',
+        description: '鐩戞帶绯荤粺鍐呭浣跨敤鎯呭喌锛屽綋鍙敤鍐呭浣庝簬1GB惰Е鍙戝憡,
         metric_name: 'memory_available_bytes',
         condition: 'below' as const,
         threshold: 1073741824, // 1GB
@@ -85,10 +85,10 @@ async function initializeDemoData() {
       }
     }
 
-    // 鍒涘缓婕旂ず鐢ㄧ殑閫氱煡娓犻亾
+    // 鍒涘缓婕旂ず鐢ㄧ殑氱煡娓犻亾
     const demoChannels = [
       {
-        name: '閭欢閫氱煡娓犻亾',
+        name: '欢氱煡娓犻亾',
         type: 'email' as const,
         config: {
           smtp_host: 'smtp.company.com',
@@ -98,7 +98,7 @@ async function initializeDemoData() {
         },
       },
       {
-        name: 'Slack閫氱煡娓犻亾',
+        name: 'Slack氱煡娓犻亾',
         type: 'slack' as const,
         config: {
           webhook_url: 'https://hooks.slack.com/services/xxx/yyy/zzz',
@@ -106,7 +106,7 @@ async function initializeDemoData() {
         },
       },
       {
-        name: '鐭俊閫氱煡娓犻亾',
+        name: '鐭俊氱煡娓犻亾',
         type: 'sms' as const,
         config: {
           provider: 'aliyun' as const,
@@ -139,7 +139,7 @@ async function initializeDemoData() {
       sample_channels: createdChannels.slice(0, 2),
     };
   } catch (error) {
-    console.error('鍒濆鍖栨紨绀烘暟鎹け?', error);
+    console.error('鍒濆鍖栨紨绀烘暟鎹け', error);
     return { error: (error as Error).message };
   }
 }
@@ -151,7 +151,7 @@ async function runDemonstrations() {
     // 1. 鍛婅瑙勫垯娴嬭瘯婕旂ず
     results.rule_testing = await demonstrateRuleTesting();
 
-    // 2. 閫氱煡娓犻亾婕旂ず
+    // 2. 氱煡娓犻亾婕旂ず
     results.notification_demo = await demonstrateNotifications();
 
     // 3. 缁熻淇℃伅婕旂ず
@@ -169,11 +169,11 @@ async function runDemonstrations() {
 
 async function demonstrateRuleTesting() {
   try {
-    // 鑾峰彇涓€涓鍒欒繘琛屾祴?    const rules = await alertRulesManager.getAllAlertRules();
-    if (rules.length === 0) return { message: '娌℃湁鍙敤鐨勮鍒欒繘琛屾祴? };
+    // 鑾峰彇涓€涓鍒欒繘琛屾祴    const rules = await alertRulesManager.getAllAlertRules();
+    if (rules.length === 0) return { message: '娌℃湁鍙敤鐨勮鍒欒繘琛屾祴 };
 
     const rule = rules[0];
-    const testValues = [75, 85, 95]; // 涓嶅悓鐨勬祴璇?
+    const testValues = [75, 85, 95]; // 涓嶅悓鐨勬祴璇
     const testResults = [];
     for (const value of testValues) {
       const result = await alertRulesManager.testAlertRule(rule.id, value);
@@ -195,10 +195,10 @@ async function demonstrateRuleTesting() {
 
 async function demonstrateNotifications() {
   try {
-    // 鑾峰彇閭欢娓犻亾
+    // 鑾峰彇欢娓犻亾
     const emailChannels =
       await notificationChannelsService.getChannelsByType('email');
-    if (emailChannels.length === 0) return { message: '娌℃湁閰嶇疆閭欢閫氱煡娓犻亾' };
+    if (emailChannels.length === 0) return { message: '娌℃湁閰嶇疆欢氱煡娓犻亾' };
 
     const channel = emailChannels[0];
 
@@ -206,7 +206,7 @@ async function demonstrateNotifications() {
     const result = await notificationChannelsService.sendNotification(
       channel.id,
       '鍛婅瑙勫垯瀹屽杽婕旂ず',
-      '杩欐槸涓€涓潵鑷狣002鍛婅瑙勫垯瀹屽杽浠诲姟鐨勬祴璇曢€氱煡',
+      '杩欐槸涓€涓潵鑷狣002鍛婅瑙勫垯瀹屽杽诲姟鐨勬祴璇曢€氱煡',
       ['demo@company.com'],
       'normal'
     );
@@ -215,8 +215,8 @@ async function demonstrateNotifications() {
       channel_name: channel.name,
       notification_sent: result.success,
       message: result.success
-        ? '閫氱煡鍙戦€佹垚?
-        : `閫氱煡鍙戦€佸け? ${result.errorMessage}`,
+         '氱煡鍙戦€佹垚
+        : `氱煡鍙戦€佸け ${result.errorMessage}`,
     };
   } catch (error) {
     return { error: (error as Error).message };
@@ -240,12 +240,12 @@ async function demonstrateStatistics() {
 
 async function demonstrateRuleManagement() {
   try {
-    // 鑾峰彇鎵€鏈夎?    const allRules = await alertRulesManager.getAllAlertRules();
+    // 鑾峰彇鎵€鏈夎    const allRules = await alertRulesManager.getAllAlertRules();
 
-    // 鎸夌姸鎬佸垎?    const enabledRules = allRules.filter(r => r.enabled);
+    // 鎸夌姸鎬佸垎    const enabledRules = allRules.filter(r => r.enabled);
     const disabledRules = allRules.filter(r => !r.enabled);
 
-    // 鎸変弗閲嶇骇鍒垎?    const rulesBySeverity = allRules.reduce(
+    // 鎸変弗閲嶇骇鍒垎    const rulesBySeverity = allRules.reduce(
       (acc, rule) => {
         acc[rule.severity] = (acc[rule.severity] || 0) + 1;
         return acc;

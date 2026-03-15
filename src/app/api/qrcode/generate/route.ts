@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // 鏀寔鍗曚釜浜у搧鍜屾壒閲忎骇?    const {
+    // 鏀寔鍗曚釜浜у搧鍜屾壒閲忎骇    const {
       productId,
       brandId,
       productName,
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       config = {},
     } = body;
 
-    // 濡傛灉鏄壒閲忚?    if (products && Array.isArray(products)) {
+    // 濡傛灉鏄壒閲忚    if (products && Array.isArray(products)) {
       return await handleBatchGeneration(products, config);
     }
 
@@ -32,12 +32,12 @@ export async function POST(request: NextRequest) {
     // 楠岃瘉蹇呰鍙傛暟
     if (!productId || !brandId || !productName) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呰鍙傛暟锛歱roductId銆乥randId 锟?productName' },
+        { error: '缂哄皯蹇呰鍙傛暟锛歱roductId銆乥randId productName' },
         { status: 400 }
       );
     }
 
-    // 鏋勯€犱骇鍝佷俊?    const productInfo: ProductInfo = {
+    // 鏋勯€犱骇鍝佷俊    const productInfo: ProductInfo = {
       productId,
       brandId,
       productName,
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       specifications,
     };
 
-    // 鐢熸垚浜岀淮?    const result = await qrcodeService.generateQRCode(productInfo, config);
+    // 鐢熸垚浜岀淮    const result = await qrcodeService.generateQRCode(productInfo, config);
 
     return NextResponse.json({
       success: true,
@@ -59,12 +59,12 @@ export async function POST(request: NextRequest) {
       qrImageBase64: result.qrImageBase64,
       format: result.format,
       size: result.size,
-      message: '浜岀淮鐮佺敓鎴愭垚?,
+      message: '浜岀淮鐮佺敓鎴愭垚,
     });
   } catch (error) {
-    console.error('浜岀淮鐮佺敓鎴愰敊?', error);
+    console.error('浜岀淮鐮佺敓鎴愰敊', error);
     return NextResponse.json(
-      { error: (error as Error).message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { error: (error as Error).message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
   if (!Array.isArray(products) || products.length === 0) {
     return NextResponse.json(
-      { error: '璇锋彁渚涙湁鏁堢殑浜у搧鍒楄〃' },
+      { error: '璇彁渚涙湁鏁堢殑浜у搧鍒楄〃' },
       { status: 400 }
     );
   }
@@ -93,7 +93,7 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
         continue;
       }
 
-      // 鏋勯€犱骇鍝佷俊?      const productInfo: ProductInfo = {
+      // 鏋勯€犱骇鍝佷俊      const productInfo: ProductInfo = {
         productId: product.productId,
         brandId: product.brandId,
         productName: product.productName,
@@ -105,7 +105,7 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
         specifications: product.specifications,
       };
 
-      // 鐢熸垚浜岀淮?      const result = await qrcodeService.generateQRCode(productInfo, config);
+      // 鐢熸垚浜岀淮      const result = await qrcodeService.generateQRCode(productInfo, config);
 
       results.push({
         productId: result.productId,
@@ -120,7 +120,7 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
       results.push({
         productId: product.productId,
         success: false,
-        error: err instanceof Error ? err.message : '鏈煡閿欒',
+        error: err instanceof Error  err.message : '鏈煡閿欒',
       });
     }
   }
@@ -133,13 +133,13 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
       success: results.filter(r => r.success).length,
       failed: results.filter(r => !r.success).length,
     },
-    message: `鎵归噺澶勭悊瀹屾垚锛屾垚?${
+    message: `鎵归噺澶勭悊瀹屾垚锛屾垚${
       results.filter(r => r.success).length
     } 涓紝澶辫触 ${results.filter(r => !r.success).length} 涓猔,
   });
 }
 
-// 鑾峰彇浜岀淮鐮佷俊?export async function GET(request: NextRequest) {
+// 鑾峰彇浜岀淮鐮佷俊export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const qrCodeId = searchParams.get('qrCodeId');
@@ -161,14 +161,14 @@ async function handleBatchGeneration(products: any[], config: QRCodeConfig) {
       });
     } else {
       return NextResponse.json(
-        { error: '璇锋彁?qrCodeId 锟?productId 鍙傛暟' },
+        { error: '璇彁qrCodeId productId 鍙傛暟' },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('鑾峰彇浜岀淮鐮佷俊鎭敊?', error);
+    console.error('鑾峰彇浜岀淮鐮佷俊鎭敊', error);
     return NextResponse.json(
-      { error: (error as Error).message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { error: (error as Error).message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }

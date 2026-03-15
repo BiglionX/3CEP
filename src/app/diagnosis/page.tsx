@@ -39,23 +39,23 @@ export default function AIDiagnosisChat() {
 
   // 常见问题快捷按钮
   const quickQuestions = [
-    { icon: Smartphone, text: "手机无法开机怎么办？", keyword: "手机无法开? },
+    { icon: Smartphone, text: "手机无法开机怎么办？", keyword: "手机无法开 },
     { icon: MessageSquare, text: "屏幕显示异常", keyword: "屏幕显示异常" },
     { icon: Wrench, text: "设备发热严重", keyword: "设备发热严重" },
     { icon: Laptop, text: "无法充电", keyword: "手机充不进电" },
   ];
 
-  // 自动滚动到底?
+  // 自动滚动到底
   const scrollToBottom = () => {
-    messagesEndRef?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // 发送消?
-  const sendMessage = async (messageText?: any: string) => {
+  // 发送消
+  const sendMessage = async (messageText: any: string) => {
     const textToSend = messageText || inputValue.trim();
     if (!textToSend) return;
 
@@ -92,7 +92,7 @@ export default function AIDiagnosisChat() {
       const result = await response.json();
 
       if (result.success) {
-        // 格式化诊断结果为易读的消?
+        // 格式化诊断结果为易读的消
         const formattedResponse = formatDiagnosisResponse(
           result.data.diagnosisResult
         );
@@ -119,12 +119,12 @@ export default function AIDiagnosisChat() {
         throw new Error(result.error || "诊断服务出错");
       }
     } catch (error) {
-      console.error("发送消息失?", error);
+      console.error("发送消息失", error);
       // 添加错误消息
       const errorMessage: Message = {
         id: `msg_${Date.now()}_error`,
         role: "assistant",
-        content: "抱歉，诊断服务暂时不可用。请稍后再试或联系人工客服?,
+        content: "抱歉，诊断服务暂时不可用。请稍后再试或联系人工客服,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -145,11 +145,11 @@ export default function AIDiagnosisChat() {
 
   // 清空对话
   const clearConversation = async () => {
-    const confirmed = window.confirm("确定要清空当前对话吗?);
+    const confirmed = window.confirm("确定要清空当前对话吗);
     if (!confirmed) return;
 
     try {
-      await fetch(`/api/diagnosis/analyze?sessionId=${sessionId}`, {
+      await fetch(`/api/diagnosis/analyzesessionId=${sessionId}`, {
         method: "DELETE",
       });
 
@@ -164,7 +164,7 @@ export default function AIDiagnosisChat() {
   const getSessionInfo = async () => {
     try {
       const response = await fetch(
-        `/api/diagnosis/analyze?sessionId=${sessionId}`
+        `/api/diagnosis/analyzesessionId=${sessionId}`
       );
       const result = await response.json();
 
@@ -185,7 +185,7 @@ export default function AIDiagnosisChat() {
       diagnosisResult.faultCauses.forEach((cause: any, index: number) => {
         response += `${index + 1}. ${cause.reason} (${
           cause.probability
-        }, 置信? ${(cause.confidence * 100).toFixed(0)}%)\n`;
+        }, 置信 ${(cause.confidence * 100).toFixed(0)}%)\n`;
         if (cause.description) {
           response += `   说明: ${cause.description}\n`;
         }
@@ -195,7 +195,7 @@ export default function AIDiagnosisChat() {
 
     // 添加解决方案
     if (diagnosisResult.solutions && diagnosisResult.solutions.length > 0) {
-      response += "🔧 **建议解决方案?*\n";
+      response += "🔧 **建议解决方案*\n";
       diagnosisResult.solutions.forEach((solution: any, index: number) => {
         response += `**${index + 1}. ${solution.title}**\n`;
         response += `难度等级: ${solution.difficulty}/5\n`;
@@ -216,9 +216,9 @@ export default function AIDiagnosisChat() {
       diagnosisResult.recommendedParts &&
       diagnosisResult.recommendedParts.length > 0
     ) {
-      response += "📦 **可能需要的配件?*\n";
+      response += "📦 **可能需要的配件*\n";
       diagnosisResult.recommendedParts.forEach((part: any) => {
-        response += `�?${part.partName}`;
+        response += `${part.partName}`;
         if (part.partNumber) {
           response += ` (${part.partNumber})`;
         }
@@ -231,10 +231,10 @@ export default function AIDiagnosisChat() {
     }
 
     // 添加总体预估
-    response += "📊 **总体预估?*\n";
+    response += "📊 **总体预估*\n";
     response += `总耗时: ${diagnosisResult.estimatedTotalTime}分钟\n`;
-    response += `总费? ¥${diagnosisResult.estimatedTotalCost.min}-${diagnosisResult.estimatedTotalCost.max}\n`;
-    response += `诊断置信? ${diagnosisResult.confidenceLevel}\n`;
+    response += `总费 ¥${diagnosisResult.estimatedTotalCost.min}-${diagnosisResult.estimatedTotalCost.max}\n`;
+    response += `诊断置信 ${diagnosisResult.confidenceLevel}\n`;
     if (diagnosisResult.severityLevel) {
       response += `故障严重程度: ${diagnosisResult.severityLevel}\n`;
     }
@@ -252,7 +252,7 @@ export default function AIDiagnosisChat() {
             <div>
               <h1 className="text-xl font-bold">AI智能诊断助手</h1>
               <p className="text-blue-100 text-sm">
-                为您提供专业的设备故障诊断服?
+                为您提供专业的设备故障诊断服
               </p>
             </div>
           </div>
@@ -298,7 +298,7 @@ export default function AIDiagnosisChat() {
         <div className="p-4 bg-yellow-50 border-b">
           <div className="flex items-center mb-2">
             <Lightbulb className="h-5 w-5 text-yellow-600 mr-2" />
-            <h3 className="text-sm font-medium text-yellow-800">相关建议?/h3>
+            <h3 className="text-sm font-medium text-yellow-800">相关建议/h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {suggestions.map((suggestion) => (
@@ -316,14 +316,14 @@ export default function AIDiagnosisChat() {
 
       {/* 消息区域 */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 ? (
+        {messages.length === 0  (
           <div className="text-center py-12">
             <Bot className="h-16 w-16 mx-auto text-gray-300 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               您好！我是AI诊断助手
             </h3>
             <p className="text-gray-500 max-w-md mx-auto">
-              请描述您遇到的设备问题，我会尽力为您提供专业的诊断建议和解决方案?
+              请描述您遇到的设备问题，我会尽力为您提供专业的诊断建议和解决方案
             </p>
           </div>
         ) : (
@@ -331,20 +331,20 @@ export default function AIDiagnosisChat() {
             <div
               key={message.id}
               className={`flex ${
-                message.role === "user" ? "justify-end" : "justify-start"
+                message.role === "user"  "justify-end" : "justify-start"
               }`}
             >
               <div
                 className={`flex items-start space-x-3 max-w-3xl ${
                   message.role === "user"
-                    ? "flex-row-reverse space-x-reverse"
+                     "flex-row-reverse space-x-reverse"
                     : ""
                 }`}
               >
                 <div
                   className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                     message.role === "user"
-                      ? "bg-blue-600 text-white"
+                       "bg-blue-600 text-white"
                       : "bg-gray-200 text-gray-600"
                   }`}
                 >
@@ -357,7 +357,7 @@ export default function AIDiagnosisChat() {
                 <div
                   className={`rounded-lg p-4 ${
                     message.role === "user"
-                      ? "bg-blue-600 text-white"
+                       "bg-blue-600 text-white"
                       : "bg-gray-100 text-gray-800"
                   }`}
                 >
@@ -365,7 +365,7 @@ export default function AIDiagnosisChat() {
                   <div
                     className={`text-xs mt-2 ${
                       message.role === "user"
-                        ? "text-blue-200"
+                         "text-blue-200"
                         : "text-gray-500"
                     }`}
                   >
@@ -380,7 +380,7 @@ export default function AIDiagnosisChat() {
           ))
         )}
 
-        {/* 加载指示?*/}
+        {/* 加载指示*/}
         {isLoading && (
           <div className="flex justify-start">
             <div className="flex items-start space-x-3">
@@ -433,7 +433,7 @@ export default function AIDiagnosisChat() {
           </Button>
         </div>
         <p className="text-xs text-gray-500 mt-2 text-center">
-          �?Enter 发送，Shift + Enter 换行
+          Enter 发送，Shift + Enter 换行
         </p>
       </div>
     </div>

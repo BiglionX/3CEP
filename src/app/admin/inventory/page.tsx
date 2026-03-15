@@ -49,8 +49,8 @@ interface StockMovement {
   item_id: string;
   movement_type: 'in' | 'out' | 'transfer' | 'adjustment';
   quantity: number;
-  from_location?: string;
-  to_location?: string;
+  from_location: string;
+  to_location: string;
   reason: string;
   operator: string;
   created_at: string;
@@ -105,11 +105,11 @@ export default function InventoryManagementPage() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
         search: searchTerm,
-        category: categoryFilter === 'all' ? '' : categoryFilter,
-        status: statusFilter === 'all' ? '' : statusFilter,
+        category: categoryFilter === 'all'  '' : categoryFilter,
+        status: statusFilter === 'all'  '' : statusFilter,
       });
 
-      const response = await fetch(`/api/admin/inventory/items?${params}`);
+      const response = await fetch(`/api/admin/inventory/items${params}`);
       const result = await response.json();
 
       if (result.data) {
@@ -171,7 +171,7 @@ export default function InventoryManagementPage() {
     }
   }, [activeTab, pagination.page, searchTerm, categoryFilter, statusFilter]);
 
-  // 处理全?  const handleSelectAll = (checked: boolean) => {
+  // 处理全  const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(items.map(item => item.id));
     } else {
@@ -222,10 +222,10 @@ export default function InventoryManagementPage() {
 
     try {
       const url = editingItem.id
-        ? `/api/admin/inventory/items/${editingItem.id}`
+         `/api/admin/inventory/items/${editingItem.id}`
         : '/api/admin/inventory/items';
 
-      const method = editingItem.id ? 'PUT' : 'POST';
+      const method = editingItem.id  'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -237,7 +237,7 @@ export default function InventoryManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert(editingItem.id ? '库存项目更新成功' : '库存项目创建成功');
+        alert(editingItem.id  '库存项目更新成功' : '库存项目创建成功');
         setShowItemDialog(false);
         setEditingItem(null);
         fetchInventory();
@@ -250,7 +250,7 @@ export default function InventoryManagementPage() {
     }
   };
 
-  // 库存出入库操?  const handleStockMovement = (itemId: string) => {
+  // 库存出入库操  const handleStockMovement = (itemId: string) => {
     setMovementType('in');
     setShowMovementDialog(true);
   };
@@ -264,11 +264,11 @@ export default function InventoryManagementPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          item_id: editingItem?.id,
+          item_id: editingItem.id,
           movement_type: movementType,
           quantity: 10, // 示例数量
           reason: '手动调整',
-          operator: '管理?,
+          operator: '管理员,
         }),
       });
 
@@ -287,7 +287,7 @@ export default function InventoryManagementPage() {
     }
   };
 
-  // 获取状态标签样?  const getStatusBadge = (status: string) => {
+  // 获取状态标签样  const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
       normal: { text: '正常', className: 'bg-green-100 text-green-800' },
       low_stock: {
@@ -311,7 +311,7 @@ export default function InventoryManagementPage() {
     );
   };
 
-  // 格式化金?  const formatCurrency = (amount: number) => {
+  // 格式化金  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('zh-CN', {
       style: 'currency',
       currency: 'CNY',
@@ -326,14 +326,14 @@ export default function InventoryManagementPage() {
         <p className="text-gray-600 mt-1">管理库存、仓库位置和库存流水</p>
       </div>
 
-      {/* 标签页导?*/}
+      {/* 标签页导*/}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('inventory')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'inventory'
-                ? 'border-blue-500 text-blue-600'
+                 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -343,7 +343,7 @@ export default function InventoryManagementPage() {
             onClick={() => setActiveTab('movements')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'movements'
-                ? 'border-blue-500 text-blue-600'
+                 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -353,7 +353,7 @@ export default function InventoryManagementPage() {
             onClick={() => setActiveTab('locations')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'locations'
-                ? 'border-blue-500 text-blue-600'
+                 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -362,10 +362,10 @@ export default function InventoryManagementPage() {
         </nav>
       </div>
 
-      {/* 库存管理标签?*/}
+      {/* 库存管理标签*/}
       {activeTab === 'inventory' && (
         <div className="space-y-6">
-          {/* 操作?*/}
+          {/* 操作*/}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex gap-2 flex-wrap">
               <Input
@@ -383,7 +383,7 @@ export default function InventoryManagementPage() {
                 <option value="all">全部分类</option>
                 <option value="手机配件">手机配件</option>
                 <option value="电池">电池</option>
-                <option value="数据?>数据?/option>
+                <option value="数据源>数据源/option>
                 <option value="充电设备">充电设备</option>
                 <option value="芯片">芯片</option>
                 <option value="工具">工具</option>
@@ -394,7 +394,7 @@ export default function InventoryManagementPage() {
                 onChange={e => setStatusFilter(e.target.value)}
                 className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">全部状?/option>
+                <option value="all">全部状态/option>
                 <option value="normal">正常</option>
                 <option value="low_stock">库存不足</option>
                 <option value="out_of_stock">缺货</option>
@@ -442,7 +442,7 @@ export default function InventoryManagementPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>库存总?/CardDescription>
+                <CardDescription>库存总/CardDescription>
                 <CardTitle className="text-2xl text-green-600">
                   {formatCurrency(
                     items.reduce((sum, item) => sum + item.total_value, 0)
@@ -454,10 +454,10 @@ export default function InventoryManagementPage() {
 
           {/* 库存列表表格 */}
           <div className="bg-white shadow rounded-lg overflow-hidden">
-            {loading ? (
+            {loading  (
               <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-2 text-gray-600">加载?..</span>
+                <span className="ml-2 text-gray-600">加载中..</span>
               </div>
             ) : (
               <Table>
@@ -480,7 +480,7 @@ export default function InventoryManagementPage() {
                     <TableHead>当前库存</TableHead>
                     <TableHead>可用库存</TableHead>
                     <TableHead>单价</TableHead>
-                    <TableHead>状?/TableHead>
+                    <TableHead>状/TableHead>
                     <TableHead>位置</TableHead>
                     <TableHead className="text-right">操作</TableHead>
                   </TableRow>
@@ -518,7 +518,7 @@ export default function InventoryManagementPage() {
                       </TableCell>
                       <TableCell>
                         <div
-                          className={`font-medium ${item.current_stock <= item.min_stock_level ? 'text-red-600' : 'text-gray-900'}`}
+                          className={`font-medium ${item.current_stock <= item.min_stock_level  'text-red-600' : 'text-gray-900'}`}
                         >
                           {item.current_stock}
                         </div>
@@ -558,7 +558,7 @@ export default function InventoryManagementPage() {
                             size="sm"
                             onClick={() => handleStockMovement(item.id)}
                           >
-                            出入?                          </Button>
+                            出入                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -571,12 +571,12 @@ export default function InventoryManagementPage() {
             {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between px-4 py-3 border-t">
                 <div className="text-sm text-gray-700">
-                  显示?{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
+                  显示{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
                   {Math.min(
                     pagination.page * pagination.pageSize,
                     pagination.total
                   )}{' '}
-                  条， �?{pagination.total} 条记?                </div>
+                  条， {pagination.total} 条记                </div>
                 <div className="flex gap-2">
                   <Button
                     onClick={() =>
@@ -589,7 +589,7 @@ export default function InventoryManagementPage() {
                     variant="outline"
                     size="sm"
                   >
-                    上一?                  </Button>
+                    上一                  </Button>
                   <Button
                     onClick={() =>
                       setPagination({
@@ -601,7 +601,7 @@ export default function InventoryManagementPage() {
                     variant="outline"
                     size="sm"
                   >
-                    下一?                  </Button>
+                    下一                  </Button>
                 </div>
               </div>
             )}
@@ -609,7 +609,7 @@ export default function InventoryManagementPage() {
         </div>
       )}
 
-      {/* 库存流水标签?*/}
+      {/* 库存流水标签*/}
       {activeTab === 'movements' && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
@@ -620,10 +620,10 @@ export default function InventoryManagementPage() {
           </div>
 
           <div className="bg-white shadow rounded-lg overflow-hidden">
-            {loading ? (
+            {loading  (
               <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-2 text-gray-600">加载?..</span>
+                <span className="ml-2 text-gray-600">加载中..</span>
               </div>
             ) : (
               <Table>
@@ -634,7 +634,7 @@ export default function InventoryManagementPage() {
                     <TableHead>操作类型</TableHead>
                     <TableHead>数量</TableHead>
                     <TableHead>原因</TableHead>
-                    <TableHead>操作?/TableHead>
+                    <TableHead>操作/TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -652,16 +652,16 @@ export default function InventoryManagementPage() {
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             movement.movement_type === 'in'
-                              ? 'bg-green-100 text-green-800'
+                               'bg-green-100 text-green-800'
                               : movement.movement_type === 'out'
-                                ? 'bg-red-100 text-red-800'
+                                 'bg-red-100 text-red-800'
                                 : 'bg-blue-100 text-blue-800'
                           }`}
                         >
                           {movement.movement_type === 'in'
-                            ? '入库'
+                             '入库'
                             : movement.movement_type === 'out'
-                              ? '出库'
+                               '出库'
                               : '转移'}
                         </span>
                       </TableCell>
@@ -669,11 +669,11 @@ export default function InventoryManagementPage() {
                         <div
                           className={`font-medium ${
                             movement.movement_type === 'in'
-                              ? 'text-green-600'
+                               'text-green-600'
                               : 'text-red-600'
                           }`}
                         >
-                          {movement.movement_type === 'in' ? '+' : '-'}
+                          {movement.movement_type === 'in'  '+' : '-'}
                           {movement.quantity}
                         </div>
                       </TableCell>
@@ -696,7 +696,7 @@ export default function InventoryManagementPage() {
         </div>
       )}
 
-      {/* 仓库位置标签?*/}
+      {/* 仓库位置标签*/}
       {activeTab === 'locations' && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
@@ -713,21 +713,21 @@ export default function InventoryManagementPage() {
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         location.status === 'active'
-                          ? 'bg-green-100 text-green-800'
+                           'bg-green-100 text-green-800'
                           : 'bg-gray-100 text-gray-800'
                       }`}
                     >
-                      {location.status === 'active' ? '启用' : '停用'}
+                      {location.status === 'active'  '启用' : '停用'}
                     </span>
                   </CardTitle>
                   <CardDescription>编码: {location.code}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 text-sm">
-                    <div>📦 容量: {location.capacity} �?/div>
-                    <div>🔄 已使? {location.current_usage} �?/div>
+                    <div>📦 容量: {location.capacity} /div>
+                    <div>🔄 已使 {location.current_usage} /div>
                     <div>
-                      📊 使用?{' '}
+                      📊 使用{' '}
                       {Math.round(
                         (location.current_usage / location.capacity) * 100
                       )}
@@ -757,12 +757,12 @@ export default function InventoryManagementPage() {
         </div>
       )}
 
-      {/* 编辑库存项目对话?*/}
+      {/* 编辑库存项目对话*/}
       <Dialog open={showItemDialog} onOpenChange={setShowItemDialog}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingItem?.id ? '编辑库存商品' : '新增库存商品'}
+              {editingItem.id  '编辑库存商品' : '新增库存商品'}
             </DialogTitle>
           </DialogHeader>
 
@@ -812,7 +812,7 @@ export default function InventoryManagementPage() {
                     <option value="">请选择分类</option>
                     <option value="手机配件">手机配件</option>
                     <option value="电池">电池</option>
-                    <option value="数据?>数据?/option>
+                    <option value="数据源>数据源/option>
                     <option value="充电设备">充电设备</option>
                     <option value="芯片">芯片</option>
                     <option value="工具">工具</option>
@@ -871,7 +871,7 @@ export default function InventoryManagementPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    最低库存预?                  </label>
+                    最低库存预                  </label>
                   <Input
                     type="number"
                     value={editingItem.min_stock_level}
@@ -886,7 +886,7 @@ export default function InventoryManagementPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    最高库存限?                  </label>
+                    最高库存限                  </label>
                   <Input
                     type="number"
                     value={editingItem.max_stock_level}
@@ -942,13 +942,13 @@ export default function InventoryManagementPage() {
               取消
             </Button>
             <Button onClick={saveItem}>
-              {editingItem?.id ? '保存更改' : '创建商品'}
+              {editingItem.id  '保存更改' : '创建商品'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* 库存操作对话?*/}
+      {/* 库存操作对话*/}
       <Dialog open={showMovementDialog} onOpenChange={setShowMovementDialog}>
         <DialogContent>
           <DialogHeader>
@@ -986,7 +986,7 @@ export default function InventoryManagementPage() {
               <textarea
                 rows={3}
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="请输入操作原?.."
+                placeholder="请输入操作原.."
                 defaultValue="日常补货"
               />
             </div>

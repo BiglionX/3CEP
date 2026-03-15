@@ -11,11 +11,11 @@ export default function SkillsPage() {
   const skills = [
     {
       name: 'procyc-find-shop',
-      title: '附近维修店查?,
+      title: '附近维修店查询',
       category: 'LOCA',
-      categoryName: '定位?,
+      categoryName: '定位类',
       icon: '📍',
-      description: '基于地理位置的附近维修店查询，亚毫秒级响?,
+      description: '基于地理位置的附近维修店查询，亚毫秒级响应',
       version: '1.0.0',
       downloads: '1.2k',
       rating: 4.9,
@@ -25,9 +25,9 @@ export default function SkillsPage() {
       name: 'procyc-fault-diagnosis',
       title: '设备故障诊断',
       category: 'DIAG',
-      categoryName: '诊断?,
+      categoryName: '诊断类',
       icon: '🔍',
-      description: '基于大模型的 3C 设备故障智能诊断，内?14+ 故障案例',
+      description: '基于大模型的 3C 设备故障智能诊断，内置 14+ 故障案例',
       version: '1.0.0',
       downloads: '856',
       rating: 4.8,
@@ -35,11 +35,11 @@ export default function SkillsPage() {
     },
     {
       name: 'procyc-part-lookup',
-      title: '配件兼容性查?,
+      title: '配件兼容性查询',
       category: 'PART',
-      categoryName: '配件?,
+      categoryName: '配件类',
       icon: '🔧',
-      description: '根据设备型号查询兼容配件，支持多维度筛?,
+      description: '根据设备型号查询兼容配件，支持多维度筛选',
       version: '1.0.0',
       downloads: '623',
       rating: 4.7,
@@ -49,7 +49,7 @@ export default function SkillsPage() {
       name: 'procyc-estimate-value',
       title: '设备智能估价',
       category: 'ESTM',
-      categoryName: '估价?,
+      categoryName: '估价类',
       icon: '💰',
       description: '基于设备档案和市场数据的智能估价，准确率 >85%',
       version: '1.0.0',
@@ -61,19 +61,19 @@ export default function SkillsPage() {
 
   const categories = [
     { code: 'ALL', name: '全部', icon: '📦' },
-    { code: 'DIAG', name: '诊断?, icon: '🔍' },
-    { code: 'ESTM', name: '估价?, icon: '💰' },
-    { code: 'LOCA', name: '定位?, icon: '📍' },
-    { code: 'PART', name: '配件?, icon: '🔧' },
-    { code: 'DATA', name: '数据?, icon: '📊' },
-    { code: 'COMM', name: '通讯?, icon: '💬' },
+    { code: 'DIAG', name: '诊断类', icon: '🔍' },
+    { code: 'ESTM', name: '估价类', icon: '💰' },
+    { code: 'LOCA', name: '定位类', icon: '📍' },
+    { code: 'PART', name: '配件类', icon: '🔧' },
+    { code: 'DATA', name: '数据类', icon: '📊' },
+    { code: 'COMM', name: '通讯类', icon: '💬' },
     { code: 'AUTO', name: '自动化类', icon: '🤖' },
-    { code: 'INTEG', name: '集成?, icon: '🔗' },
+    { code: 'INTEG', name: '集成类', icon: '🔗' },
   ];
 
   const filteredSkills =
     selectedCategory && selectedCategory !== 'ALL'
-      ? skills.filter(skill => skill.category === selectedCategory)
+       skills.filter(skill => skill.category === selectedCategory)
       : skills;
 
   return (
@@ -87,10 +87,11 @@ export default function SkillsPage() {
                 href="/skill-store"
                 className="text-indigo-600 hover:text-indigo-700 font-medium"
               >
-                �?返回商店首页
+                ← 返回商店首页
               </Link>
               <h1 className="text-3xl font-bold text-gray-900 mt-2">
-                所有技?              </h1>
+                所有技能
+              </h1>
             </div>
           </div>
         </div>
@@ -102,11 +103,11 @@ export default function SkillsPage() {
           {categories.map(cat => (
             <Link
               key={cat.code}
-              href={`/skill-store/skills${cat.code === 'ALL' ? '' : `?category=${cat.code}`}`}
+              href={`/skill-store/skills${cat.code === 'ALL'  '' : `category=${cat.code}`}`}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 (!selectedCategory && cat.code === 'ALL') ||
                 selectedCategory === cat.code
-                  ? 'bg-indigo-600 text-white'
+                   'bg-indigo-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
@@ -148,7 +149,7 @@ export default function SkillsPage() {
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>v{skill.version}</span>
                 <div className="flex items-center gap-4">
-                  <span>�?{skill.rating}</span>
+                  <span>⭐ {skill.rating}</span>
                   <span>⬇️ {skill.downloads}</span>
                 </div>
               </div>
@@ -160,7 +161,8 @@ export default function SkillsPage() {
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🚧</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              暂无技?            </h3>
+              暂无技能
+            </h3>
             <p className="text-gray-600">更多技能正在开发中，敬请期待！</p>
           </div>
         )}
@@ -174,16 +176,17 @@ export default function SkillsPage() {
               想贡献自己的技能？
             </h2>
             <p className="text-indigo-100 mb-6">
-              查看我们的开发者指南，了解如何开发和发布技?            </p>
+              查看我们的开发者指南，了解如何开发和发布技能
+            </p>
             <Link
               href="/docs/how-to-develop"
               className="inline-block px-6 py-3 bg-white text-indigo-600 font-medium rounded-lg hover:bg-indigo-50 transition-colors"
             >
-              开始开发技?�?            </Link>
+              开始开发技能 →
+            </Link>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

@@ -1,5 +1,5 @@
 ﻿/**
- * 宸ュ崟绠＄悊API - 鍒涘缓鍜屾煡璇㈠伐? */
+ * 宸ュ崟绠＄悊API - 鍒涘缓鍜屾煡璇㈠伐 */
 
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';

@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function JumpDebugTool() {
@@ -32,25 +32,25 @@ export default function JumpDebugTool() {
   };
 
   const testJumpMechanism = async () => {
-    logResult('开始测?, '🟡', '初始化跳转测?..');
+    logResult('开始测试', '🟡', '初始化跳转测试...');
 
     // 测试1: 直接跳转
     try {
-      logResult('测试1', '🟡', '执行直接跳转?/admin/dashboard');
+      logResult('测试1', '🟡', '执行直接跳转到 /admin/dashboard');
       router.push('/admin/dashboard');
-      logResult('测试1', '�?, '跳转指令已发?);
+      logResult('测试1', '✅', '跳转指令已发送');
     } catch (error: any) {
-      logResult('测试1', '�?, `跳转失败: ${error.message}`);
+      logResult('测试1', '❌', `跳转失败: ${error.message}`);
     }
 
     // 测试2: 延迟跳转
     setTimeout(() => {
       try {
-        logResult('测试2', '🟡', '执行延迟跳转?/admin/dashboard');
+        logResult('测试2', '🟡', '执行延迟跳转到 /admin/dashboard');
         router.push('/admin/dashboard');
-        logResult('测试2', '�?, '延迟跳转指令已发?);
+        logResult('测试2', '✅', '延迟跳转指令已发送');
       } catch (error: any) {
-        logResult('测试2', '�?, `延迟跳转失败: ${error.message}`);
+        logResult('测试2', '❌', `延迟跳转失败: ${error.message}`);
       }
     }, 1000);
 
@@ -59,15 +59,15 @@ export default function JumpDebugTool() {
       try {
         logResult('测试3', '🟡', '执行window.location跳转');
         window.location.href = '/admin/dashboard';
-        logResult('测试3', '�?, 'Window跳转已执?);
+        logResult('测试3', '✅', 'Window跳转已执行');
       } catch (error: any) {
-        logResult('测试3', '�?, `Window跳转失败: ${error.message}`);
+        logResult('测试3', '❌', `Window跳转失败: ${error.message}`);
       }
     }, 2000);
   };
 
   const testLoginFlow = async () => {
-    logResult('登录流程', '🟡', '开始模拟登录流?..');
+    logResult('登录流程', '🟡', '开始模拟登录流程...');
 
     try {
       // 模拟登录API调用
@@ -85,28 +85,28 @@ export default function JumpDebugTool() {
       if (response.ok) {
         logResult(
           '登录API',
-          '�?,
-          `登录成功 - 用户: ${result?.email}, 管理? ${result?.is_admin}`
+          '✅',
+          `登录成功 - 用户: ${result.email}, 管理员: ${result.is_admin}`
         );
 
         // 模拟跳转逻辑
         setTimeout(() => {
-          if (result?.is_admin) {
+          if (result.is_admin) {
             const targetRedirect = '/admin/dashboard';
             logResult('跳转逻辑', '🟡', `管理员跳转到: ${targetRedirect}`);
             try {
               router.push(targetRedirect);
-              logResult('跳转执行', '�?, '管理员跳转已执行');
+              logResult('跳转执行', '✅', '管理员跳转已执行');
             } catch (error: any) {
-              logResult('跳转执行', '�?, `管理员跳转失? ${error.message}`);
+              logResult('跳转执行', '❌', `管理员跳转失败: ${error.message}`);
             }
           }
         }, 500);
       } else {
-        logResult('登录API', '�?, `登录失败: ${result.error}`);
+        logResult('登录API', '❌', `登录失败: ${result.error}`);
       }
     } catch (error: any) {
-      logResult('登录API', '�?, `网络错误: ${error.message}`);
+      logResult('登录API', '❌', `网络错误: ${error.message}`);
     }
   };
 
@@ -144,19 +144,20 @@ export default function JumpDebugTool() {
 
             <div className="bg-gray-700 p-4 rounded-lg">
               <h2 className="text-xl font-semibold mb-4 text-yellow-400">
-                当前状?              </h2>
+                当前状态
+              </h2>
               <div className="space-y-2 text-sm">
                 <div>
                   <strong>步骤:</strong> {debugInfo.step}
                 </div>
                 <div>
-                  <strong>状?</strong>{' '}
+                  <strong>状态:</strong>{' '}
                   <span
                     className={
-                      debugInfo.status.includes('�?)
-                        ? 'text-green-400'
-                        : debugInfo.status.includes('�?)
-                          ? 'text-red-400'
+                      debugInfo.status.includes('✅')
+                         'text-green-400'
+                        : debugInfo.status.includes('❌')
+                           'text-red-400'
                           : 'text-yellow-400'
                     }
                   >
@@ -195,10 +196,10 @@ export default function JumpDebugTool() {
                   >
                     <span
                       className={
-                        result.status.includes('�?)
-                          ? 'text-green-400'
-                          : result.status.includes('�?)
-                            ? 'text-red-400'
+                        result.status.includes('✅')
+                           'text-green-400'
+                          : result.status.includes('❌')
+                             'text-red-400'
                             : 'text-yellow-400'
                       }
                     >
@@ -220,10 +221,10 @@ export default function JumpDebugTool() {
           <div className="bg-red-900/30 border border-red-700 rounded-lg p-4">
             <h3 className="font-semibold text-red-400 mb-2">🚨 诊断要点</h3>
             <div className="text-sm text-red-200 space-y-1">
-              <p>�?如果所有跳转测试都失败，问题可能在路由配置</p>
-              <p>�?如果只有登录后跳转失败，问题可能在登录逻辑</p>
-              <p>�?检查浏览器Console是否有JavaScript错误</p>
-              <p>�?确认管理员权限判断是否正?/p>
+              <p>• 如果所有跳转测试都失败，问题可能在路由配置</p>
+              <p>• 如果只有登录后跳转失败，问题可能在登录逻辑</p>
+              <p>• 检查浏览器Console是否有JavaScript错误</p>
+              <p>• 确认管理员权限判断是否正确</p>
             </div>
           </div>
         </div>
@@ -231,4 +232,3 @@ export default function JumpDebugTool() {
     </div>
   );
 }
-

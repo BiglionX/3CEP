@@ -20,9 +20,9 @@ export async function GET(
     }
 
     // 设置默认时间范围（最近30天）
-    const endDate = endDateStr ? new Date(endDateStr) : new Date();
+    const endDate = endDateStr  new Date(endDateStr) : new Date();
     const startDate = startDateStr
-      ? new Date(startDateStr)
+       new Date(startDateStr)
       : new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     const warehouseService = new WarehouseService();

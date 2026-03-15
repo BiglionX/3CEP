@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 export default function TutorialsTestPage() {
-  const [message, setMessage] = useState('测试页面加载?..');
+  const [message, setMessage] = useState('测试页面加载中..');
 
   useEffect(() => {
     // 测试API连接
@@ -12,7 +12,7 @@ export default function TutorialsTestPage() {
         const response = await fetch('/api/tutorials');
         if (response.ok) {
           const data = await response.json();
-          setMessage(`API连接成功！找?${data?.length || 0} 个教程`);
+          setMessage(`API连接成功！找${data.length || 0} 个教程`);
         } else {
           setMessage(`API连接失败: ${response.status} ${response.statusText}`);
         }

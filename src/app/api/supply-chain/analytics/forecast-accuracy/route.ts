@@ -1,6 +1,6 @@
 ﻿/**
  * 棰勬祴鍑嗙‘鐜囧垎鏋怉PI
- * 鐢ㄤ簬楠岃瘉鏃堕棿搴忓垪棰勬祴妯″瀷鐨勫噯纭? */
+ * 鐢ㄤ簬楠岃瘉堕棿搴忓垪棰勬祴妯″瀷鐨勫噯纭 */
 
 import { NextResponse } from 'next/server';
 import { DemandForecastService } from '@/supply-chain/services/demand-forecast.service';
@@ -37,12 +37,12 @@ export async function GET(request: Request) {
 
     const forecastService = new DemandForecastService();
 
-    // 鑾峰彇鍘嗗彶棰勬祴璁板綍鍜屽疄闄呴攢鍞暟?    const [forecastRecords, actualSales] = await Promise.all([
+    // 鑾峰彇鍘嗗彶棰勬祴璁板綍鍜屽疄闄呴攢鍞暟    const [forecastRecords, actualSales] = await Promise.all([
       getHistoricalForecasts(daysBack, warehouseId, productId),
       getActualSalesData(daysBack, warehouseId, productId),
     ]);
 
-    // 璁＄畻鍑嗙‘鐜囨寚?    const accuracyReport = calculateForecastAccuracy(
+    // 璁＄畻鍑嗙‘鐜囨寚    const accuracyReport = calculateForecastAccuracy(
       forecastRecords,
       actualSales
     );
@@ -54,15 +54,15 @@ export async function GET(request: Request) {
         targetMet: accuracyReport.overallAccuracy >= 80,
         message:
           accuracyReport.overallAccuracy >= 80
-            ? '棰勬祴鍑嗙‘鐜囪揪?锟?
+             '棰勬祴鍑嗙‘鐜囪揪
             : `棰勬祴鍑嗙‘鐜囨湭杈炬爣 (${accuracyReport.overallAccuracy.toFixed(1)}% < 80%)`,
       },
     });
   } catch (error) {
-    console.error('棰勬祴鍑嗙‘鐜囧垎鏋愰敊?', error);
+    console.error('棰勬祴鍑嗙‘鐜囧垎鏋愰敊', error);
     return NextResponse.json(
       {
-        error: '鍒嗘瀽棰勬祴鍑嗙‘鐜囧け?,
+        error: '鍒嗘瀽棰勬祴鍑嗙‘鐜囧け,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -75,8 +75,8 @@ export async function GET(request: Request) {
  */
 async function getHistoricalForecasts(
   daysBack: number,
-  warehouseId?: string,
-  productId?: string
+  warehouseId: string,
+  productId: string
 ) {
   try {
     let query = supabase
@@ -102,17 +102,17 @@ async function getHistoricalForecasts(
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.warn('鑾峰彇鍘嗗彶棰勬祴鏁版嵁澶辫触锛屼娇鐢ㄦā鎷熸暟?', error);
+    console.warn('鑾峰彇鍘嗗彶棰勬祴鏁版嵁澶辫触锛屼娇鐢ㄦā鎷熸暟', error);
     return generateMockForecastData(daysBack, warehouseId, productId);
   }
 }
 
 /**
- * 鑾峰彇瀹為檯閿€鍞暟? */
+ * 鑾峰彇瀹為檯閿€鍞暟 */
 async function getActualSalesData(
   daysBack: number,
-  warehouseId?: string,
-  productId?: string
+  warehouseId: string,
+  productId: string
 ) {
   try {
     let query = supabase
@@ -141,12 +141,12 @@ async function getActualSalesData(
 
     if (error) throw error;
 
-    // 鑱氬悎姣忔棩閿€鍞暟?    const dailySales = new Map<string, Map<string, number>>();
+    // 鑱氬悎姣忔棩閿€鍞暟    const dailySales = new Map<string, Map<string, number>>();
 
-    data?.forEach(order => {
+    data.forEach(order => {
       const orderDate = new Date(order.created_at).toISOString().split('T')[0];
       const orderItems = Array.isArray(order.order_items)
-        ? order.order_items
+         order.order_items
         : [order.order_items];
 
       if (!dailySales.has(orderDate)) {
@@ -171,7 +171,7 @@ async function getActualSalesData(
 }
 
 /**
- * 璁＄畻棰勬祴鍑嗙‘? */
+ * 璁＄畻棰勬祴鍑嗙‘ */
 function calculateForecastAccuracy(
   forecastRecords: any[],
   actualSales: Map<string, Map<string, number>>
@@ -192,7 +192,7 @@ function calculateForecastAccuracy(
     const productId = record.product_id;
 
     const actualMap = actualSales.get(forecastDate);
-    const actualValue = actualMap ? actualMap.get(productId) || 0 : 0;
+    const actualValue = actualMap  actualMap.get(productId) || 0 : 0;
 
     if (!productGroups.has(productId)) {
       productGroups.set(productId, []);
@@ -231,7 +231,7 @@ function calculateForecastAccuracy(
     }
   });
 
-  // 璁＄畻鏁翠綋鍑嗙‘?  const totalForecasted = productAccuracy.reduce(
+  // 璁＄畻鏁翠綋鍑嗙‘  const totalForecasted = productAccuracy.reduce(
     (sum, p) => sum + p.forecasted,
     0
   );
@@ -254,7 +254,7 @@ function calculateForecastAccuracy(
 
     const actualMap = actualSales.get(forecastDate.toISOString().split('T')[0]);
     const actualValue = actualMap
-      ? Array.from(actualMap.values()).reduce((sum, v) => sum + v, 0)
+       Array.from(actualMap.values()).reduce((sum, v) => sum + v, 0)
       : 0;
 
     if (!periodGroups.has(period)) {
@@ -298,8 +298,8 @@ function calculateForecastAccuracy(
       a.period.localeCompare(b.period)
     ),
     algorithmComparison: {
-      arima: Math.round(overallAccuracy * 0.95), // ARIMA閫氬父鐣ヤ綆
-      prophet: Math.round(overallAccuracy), // Prophet涓哄熀?    },
+      arima: Math.round(overallAccuracy * 0.95), // ARIMA氬父鐣ヤ綆
+      prophet: Math.round(overallAccuracy), // Prophet涓哄熀    },
   };
 }
 
@@ -307,8 +307,8 @@ function calculateForecastAccuracy(
 
 function generateMockForecastData(
   daysBack: number,
-  warehouseId?: string,
-  productId?: string
+  warehouseId: string,
+  productId: string
 ): any[] {
   const records = [];
   const baseDemand = 100;
@@ -337,8 +337,8 @@ function generateMockForecastData(
 
 function generateMockSalesData(
   daysBack: number,
-  warehouseId?: string,
-  productId?: string
+  warehouseId: string,
+  productId: string
 ): Map<string, Map<string, number>> {
   const dailySales = new Map<string, Map<string, number>>();
 
@@ -347,11 +347,11 @@ function generateMockSalesData(
     const dateString = date.toISOString().split('T')[0];
 
     const productMap = new Map<string, number>();
-    const productCount = productId ? 1 : 5;
+    const productCount = productId  1 : 5;
 
     for (let j = 0; j < productCount; j++) {
       const pid = productId || `product-${j}`;
-      // 瀹為檯閿€鍞湪棰勬祴鍩虹涓婃坊鍔犻殢鏈哄亸?      const baseSales = 100;
+      // 瀹為檯閿€鍞湪棰勬祴鍩虹涓婃坊鍔犻殢鏈哄亸      const baseSales = 100;
       const actualSales = Math.round(baseSales * (0.7 + Math.random() * 0.6));
       productMap.set(pid, actualSales);
     }

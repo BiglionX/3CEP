@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '璇锋彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿?,
+          error: '璇彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿,'
         },
         { status: 400 }
       );
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鍒涘缓鍘熷璇锋眰瀵硅薄
+    // 鍒涘缓鍘熷璇眰瀵硅薄
     const rawRequest: RawProcurementRequest = {
       id: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       companyId,
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       updatedAt: new Date(),
     };
 
-    // 璋冪敤澶фā鍨嬭В鏋愭湇?    const parserService = new LargeModelProcurementService();
+    // 璋冪敤澶фā鍨嬭В鏋愭湇    const parserService = new LargeModelProcurementService();
     const parsedRequest = await parserService.parseDemand(rawRequest);
 
     return NextResponse.json({
@@ -51,37 +51,38 @@ export async function POST(request: Request) {
         rawRequest,
         parsedRequest,
         enhancement: '澶фā鍨婣PI闆嗘垚鏋舵瀯',
-        modelUsed: 'DeepSeek + 閫氫箟鍗冮棶',
+        modelUsed: 'DeepSeek + 氫箟鍗冮棶',
         confidenceLevel:
           parsedRequest.aiConfidence > 90
-            ? '浼樼'
+             '樼'
             : parsedRequest.aiConfidence > 80
-              ? '鑹ソ'
-              : '涓€?,
+               '鑹ソ'
+              : '涓€,'
       },
-      message: '閲囪喘闇€姹傝В鏋愭垚鍔燂紙澶фā鍨嬬増?,
+      message: '閲囪喘闇€姹傝В鏋愭垚鍔燂紙澶фā鍨嬬増,'
     });
   } catch (error) {
-    console.error('閲囪喘闇€姹傝В鏋愰敊?', error);
+    console.error('閲囪喘闇€姹傝В鏋愰敊', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: '閲囪喘闇€姹傝В鏋愬け?,
-        details: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '閲囪喘闇€姹傝В鏋愬け,'
+        details: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€?export async function GET() {
+// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€export async function GET() {
   return NextResponse.json({
     success: true,
-    message: '澶фā鍨婣PI闆嗘垚鐗圔2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾?,
-    enhancement: '闆嗘垚DeepSeek鍜岄€氫箟鍗冮棶鍙屾ā?,
-    supportedModels: ['DeepSeek', '閫氫箟鍗冮棶'],
+    message: '澶фā鍨婣PI闆嗘垚鐗圔2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾,'
+    enhancement: '闆嗘垚DeepSeek鍜岄€氫箟鍗冮棶鍙屾ā,'
+    supportedModels: ['DeepSeek', '氫箟鍗冮棶'],
     timestamp: new Date().toISOString(),
   });
 }
+
 

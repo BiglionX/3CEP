@@ -1,5 +1,5 @@
 ﻿/**
- * 采购仪表板页? * B2B采购服务的核心管理界? */
+ * 采购仪表板页 * B2B采购服务的核心管理界 */
 
 'use client';
 
@@ -107,7 +107,7 @@ export default function ProcurementDashboardPage() {
       {
         id: '3',
         orderNumber: 'PO-2024-003',
-        supplier: '上海半导体材料公?,
+        supplier: '上海半导体材料公,
         amount: 245000,
         status: 'processing',
         createdAt: '2024-01-14',
@@ -117,7 +117,7 @@ export default function ProcurementDashboardPage() {
       {
         id: '4',
         orderNumber: 'PO-2024-004',
-        supplier: '北京智能设备?,
+        supplier: '北京智能设备,
         amount: 67500,
         status: 'completed',
         createdAt: '2024-01-13',
@@ -145,31 +145,31 @@ export default function ProcurementDashboardPage() {
     }, 1000);
   }, []);
 
-  // 状态标签映?  const statusBadges: Record<
+  // 状态标签映  const statusBadges: Record<
     string,
     {
       text: string;
       variant: 'default' | 'secondary' | 'destructive' | 'outline';
     }
   > = {
-    pending: { text: '待审?, variant: 'secondary' },
-    approved: { text: '已批?, variant: 'default' },
-    processing: { text: '处理?, variant: 'default' },
-    completed: { text: '已完?, variant: 'default' },
-    cancelled: { text: '已取?, variant: 'destructive' },
+    pending: { text: '待审, variant: 'secondary' },
+    approved: { text: '已批, variant: 'default' },
+    processing: { text: '处理, variant: 'default' },
+    completed: { text: '已完, variant: 'default' },
+    cancelled: { text: '已取, variant: 'destructive' },
   };
 
-  // 优先级标签映?  const priorityBadges: Record<
+  // 优先级标签映  const priorityBadges: Record<
     string,
     {
       text: string;
       variant: 'default' | 'secondary' | 'destructive' | 'outline';
     }
   > = {
-    low: { text: '�?, variant: 'outline' },
-    medium: { text: '�?, variant: 'secondary' },
-    high: { text: '�?, variant: 'default' },
-    urgent: { text: '紧?, variant: 'destructive' },
+    low: { text: ', variant: 'outline' },
+    medium: { text: ', variant: 'secondary' },
+    high: { text: ', variant: 'default' },
+    urgent: { text: '紧, variant: 'destructive' },
   };
 
   // 过滤订单
@@ -185,20 +185,20 @@ export default function ProcurementDashboardPage() {
     return matchesSearch && matchesStatus && matchesPriority;
   });
 
-  // 格式化金?  const formatCurrency = (amount: number) => {
+  // 格式化金  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('zh-CN', {
       style: 'currency',
       currency: 'CNY',
     }).format(amount);
   };
 
-  // 格式化日?  const formatDate = (dateString: string) => {
+  // 格式化日  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-CN');
   };
 
   if (loading) {
     return (
-      <EnterpriseLayout title="采购仪表?>
+      <EnterpriseLayout title="采购仪表>
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
@@ -207,7 +207,7 @@ export default function ProcurementDashboardPage() {
   }
 
   return (
-    <EnterpriseLayout title="采购仪表?>
+    <EnterpriseLayout title="采购仪表>
       {/* 统计卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
@@ -218,7 +218,7 @@ export default function ProcurementDashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalOrders}</div>
             <p className="text-xs text-muted-foreground">
-              本月新增 {stats.totalOrders} 笔订?            </p>
+              本月新增 {stats.totalOrders} 笔订            </p>
           </CardContent>
         </Card>
 
@@ -239,25 +239,25 @@ export default function ProcurementDashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待处理订?/CardTitle>
+            <CardTitle className="text-sm font-medium">待处理订/CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">
               {stats.pendingOrders}
             </div>
-            <p className="text-xs text-muted-foreground">需要尽快审?/p>
+            <p className="text-xs text-muted-foreground">需要尽快审/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">合作供应?/CardTitle>
+            <CardTitle className="text-sm font-medium">合作供应/CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.suppliers}</div>
-            <p className="text-xs text-muted-foreground">活跃供应商数?/p>
+            <p className="text-xs text-muted-foreground">活跃供应商数/p>
           </CardContent>
         </Card>
       </div>
@@ -284,34 +284,34 @@ export default function ProcurementDashboardPage() {
           <div className="flex flex-col sm:flex-row gap-4 mb-4">
             <div className="flex-1">
               <Input
-                placeholder="搜索订单号或供应?.."
+                placeholder="搜索订单号或供应.."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="订单状? />
+                <SelectValue placeholder="订单状 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状?/SelectItem>
-                <SelectItem value="pending">待审?/SelectItem>
-                <SelectItem value="approved">已批?/SelectItem>
-                <SelectItem value="processing">处理?/SelectItem>
-                <SelectItem value="completed">已完?/SelectItem>
-                <SelectItem value="cancelled">已取?/SelectItem>
+                <SelectItem value="all">全部状态/SelectItem>
+                <SelectItem value="pending">待审/SelectItem>
+                <SelectItem value="approved">已批/SelectItem>
+                <SelectItem value="processing">处理/SelectItem>
+                <SelectItem value="completed">已完/SelectItem>
+                <SelectItem value="cancelled">已取/SelectItem>
               </SelectContent>
             </Select>
             <Select value={priorityFilter} onValueChange={setPriorityFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="优先? />
+                <SelectValue placeholder="优先 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部优先?/SelectItem>
-                <SelectItem value="low">�?/SelectItem>
-                <SelectItem value="medium">�?/SelectItem>
-                <SelectItem value="high">�?/SelectItem>
-                <SelectItem value="urgent">紧?/SelectItem>
+                <SelectItem value="all">全部优先/SelectItem>
+                <SelectItem value="low">/SelectItem>
+                <SelectItem value="medium">/SelectItem>
+                <SelectItem value="high">/SelectItem>
+                <SelectItem value="urgent">紧/SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -321,12 +321,12 @@ export default function ProcurementDashboardPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>订单?/TableHead>
-                  <TableHead>供应?/TableHead>
+                  <TableHead>订单/TableHead>
+                  <TableHead>供应/TableHead>
                   <TableHead>金额</TableHead>
                   <TableHead>商品数量</TableHead>
-                  <TableHead>状?/TableHead>
-                  <TableHead>优先?/TableHead>
+                  <TableHead>状/TableHead>
+                  <TableHead>优先/TableHead>
                   <TableHead>创建时间</TableHead>
                   <TableHead className="text-right">操作</TableHead>
                 </TableRow>
@@ -339,7 +339,7 @@ export default function ProcurementDashboardPage() {
                     </TableCell>
                     <TableCell>{order.supplier}</TableCell>
                     <TableCell>{formatCurrency(order.amount)}</TableCell>
-                    <TableCell>{order.items} �?/TableCell>
+                    <TableCell>{order.items} /TableCell>
                     <TableCell>
                       <Badge variant={statusBadges[order.status].variant}>
                         {statusBadges[order.status].text}
@@ -376,7 +376,7 @@ export default function ProcurementDashboardPage() {
 
           {filteredOrders.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              没有找到匹配的订?            </div>
+              没有找到匹配的订            </div>
           )}
         </CardContent>
       </Card>

@@ -1,5 +1,5 @@
 ﻿/**
- * 渚涘簲閾惧簱瀛樻煡璇PI
+ * 渚涘簲惧簱瀛樻煡璇PI
  */
 
 import { NextResponse } from 'next/server';
@@ -53,10 +53,10 @@ export async function GET(request: Request) {
       count: inventoryList.length,
     });
   } catch (error) {
-    console.error('鏌ヨ搴撳瓨閿欒:', error);
+    console.error('鏌ヨ搴撳閿欒:', error);
     return NextResponse.json(
       {
-        error: '鏌ヨ搴撳瓨澶辫触',
+        error: '鏌ヨ搴撳澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
       productId,
       warehouseId,
       quantityChange,
-      reason: reason || '搴撳瓨璋冩暣',
+      reason: reason || '搴撳璋冩暣',
       referenceNumber: referenceNumber || '',
     };
 
@@ -92,13 +92,13 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: movement,
-      message: '搴撳瓨璋冩暣鎴愬姛',
+      message: '搴撳璋冩暣鎴愬姛',
     });
   } catch (error) {
-    console.error('璋冩暣搴撳瓨閿欒:', error);
+    console.error('璋冩暣搴撳閿欒:', error);
     return NextResponse.json(
       {
-        error: '搴撳瓨璋冩暣澶辫触',
+        error: '搴撳璋冩暣澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }

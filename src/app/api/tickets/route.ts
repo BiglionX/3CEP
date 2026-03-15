@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: { assigned },
-          message: assigned ? '宸ュ崟鍒嗛厤鎴愬姛' : '鏆傛棤鍚堥€傚伐绋嬪笀',
+          message: assigned  '宸ュ崟鍒嗛厤鎴愬姛' : '鏆傛棤鍚堥€傚伐绋嬪笀',
         });
 
       case 'manual_assign':
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: { assigned: manuallyAssigned },
-          message: manuallyAssigned ? '宸ュ崟鍒嗛厤鎴愬姛' : '鍒嗛厤澶辫触',
+          message: manuallyAssigned  '宸ュ崟鍒嗛厤鎴愬姛' : '鍒嗛厤澶辫触',
         });
 
       case 'update_status':
@@ -48,14 +48,14 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: true,
-          message: '鐘舵€佹洿鏂版垚?,
+          message: '鐘舵€佹洿鏂版垚,
         });
 
       case 'check_overdue':
         await ticketService.checkOverdueTickets();
         return NextResponse.json({
           success: true,
-          message: '瓒呮椂妫€鏌ュ畬?,
+          message: '瓒呮椂妫€鏌ュ畬,
         });
 
       case 'process_settlement':

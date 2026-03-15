@@ -23,7 +23,7 @@ function calculateDistance(
   return R * c;
 }
 
-// GET /api/shops/nearby?lat=39.9042&lng=116.4074&radius=10&limit=10
+// GET /api/shops/nearbylat=39.9042&lng=116.4074&radius=10&limit=10
 export async function GET(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
@@ -37,14 +37,14 @@ export async function GET(request: Request) {
     // 楠岃瘉鍙傛暟
     if (lat === 0 || lng === 0) {
       return NextResponse.json(
-        { error: '璇锋彁渚涙湁鏁堢殑缁忕含搴﹀弬? },
+        { error: '璇彁渚涙湁鏁堢殑缁忕含搴﹀弬 },
         { status: 400 }
       );
     }
 
-    // 楠岃瘉缁忕含搴﹁寖?    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    // 楠岃瘉缁忕含搴﹁寖    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
       return NextResponse.json(
-        { error: '缁忕含搴﹀弬鏁拌秴鍑烘湁鏁堣寖? },
+        { error: '缁忕含搴﹀弬鏁拌秴鍑烘湁鏁堣寖 },
         { status: 400 }
       );
     }
@@ -73,7 +73,7 @@ export async function GET(request: Request) {
       });
     }
 
-    // 璁＄畻璺濈骞惰繃?    const shopsWithDistance: any[] = [];
+    // 璁＄畻璺濈骞惰繃    const shopsWithDistance: any[] = [];
 
     for (const shop of shops) {
       if (shop.latitude && shop.longitude) {
@@ -99,9 +99,9 @@ export async function GET(request: Request) {
             longitude: shop.longitude,
             logo_url: shop.logo_url,
             cover_image_url: shop.cover_image_url,
-            services: shop.services ? JSON.parse(shop.services as string) : [],
+            services: shop.services  JSON.parse(shop.services as string) : [],
             specialties: shop.specialties
-              ? JSON.parse(shop.specialties as string)
+               JSON.parse(shop.specialties as string)
               : [],
             rating: shop.rating,
             review_count: shop.review_count,
@@ -134,7 +134,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('闄勮繎搴楅摵API閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 

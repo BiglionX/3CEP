@@ -21,13 +21,13 @@ export async function GET(request: Request) {
         limit
       );
     } else if (category) {
-      // 鎸夊垎绫昏幏鍙栭」?      result = await CrowdfundingProjectService.getProjectsByCategory(
+      // 鎸夊垎绫昏幏鍙栭」      result = await CrowdfundingProjectService.getProjectsByCategory(
         category,
         page,
         limit
       );
     } else {
-      // 鑾峰彇鎵€鏈夋椿璺冮」?      result = await CrowdfundingProjectService.getActiveProjects(page, limit);
+      // 鑾峰彇鎵€鏈夋椿璺冮」      result = await CrowdfundingProjectService.getActiveProjects(page, limit);
     }
 
     return NextResponse.json(result);
@@ -40,21 +40,21 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/crowdfunding/projects - 鍒涘缓鏂伴」?export async function POST(request: Request) {
+// POST /api/crowdfunding/projects - 鍒涘缓鏂伴」export async function POST(request: Request) {
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 楠岃瘉JWT浠ょ墝
+    // 楠岃瘉JWTょ墝
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(token);
     if (authError || !user) {
-      return NextResponse.json({ error: '鏃犳晥鐨勮璇佷护? }, { status: 401 });
+      return NextResponse.json({ error: '犳晥鐨勮璇佷护 }, { status: 401 });
     }
 
     const body = await request.json();
@@ -83,12 +83,12 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: '鐩爣閲戦蹇呴』澶т簬0' }, { status: 400 });
     }
 
-    // 楠岃瘉鏃ユ湡
+    // 楠岃瘉ユ湡
     const startDate = new Date(body.start_date);
     const endDate = new Date(body.end_date);
     if (endDate <= startDate) {
       return NextResponse.json(
-        { error: '缁撴潫鏃堕棿蹇呴』鏅氫簬寮€濮嬫椂? },
+        { error: '缁撴潫堕棿蹇呴』鏅氫簬寮€濮嬫椂 },
         { status: 400 }
       );
     }

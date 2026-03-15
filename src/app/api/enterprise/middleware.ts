@@ -1,6 +1,6 @@
 ﻿/**
- * 浼佷笟鏈嶅姟API涓棿?
- * 鐢ㄤ簬淇濇姢浼佷笟鏈嶅姟鐩稿叧鐨凙PI绔偣
+ * 佷笟鏈嶅姟API涓棿
+ * 鐢ㄤ簬淇濇姢佷笟鏈嶅姟鐩稿叧鐨凙PI绔偣
  */
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -20,7 +20,7 @@ const API_PERMISSIONS: Record<string, string> = {
 }
 
 /**
- * 浼佷笟鏈嶅姟API涓棿浠跺鐞嗗櫒
+ * 佷笟鏈嶅姟API涓棿跺鐞嗗櫒
  */
 export async function enterpriseApiMiddleware(request: NextRequest) {
   const method = request.method
@@ -36,12 +36,12 @@ export async function enterpriseApiMiddleware(request: NextRequest) {
     return NextResponse.next()
   }
   
-  // 妫€鏌ユ潈?
+  // 妫€鏌ユ潈
   const { allowed, user } = await checkEnterpriseApiAccess(request, requiredPermission)
   
   if (!allowed) {
     console.warn(`API鏉冮檺鎷掔粷: ${routeKey}`, {
-      userId: user?.id || 'anonymous',
+      userId: user.id || 'anonymous',
       requiredPermission,
       timestamp: new Date().toISOString()
     })
@@ -67,7 +67,7 @@ export async function enterpriseApiMiddleware(request: NextRequest) {
 }
 
 /**
- * 閫氱敤API鏉冮檺妫€鏌ヨ楗板櫒
+ * 氱敤API鏉冮檺妫€鏌ヨ楗板櫒
  */
 export function withEnterprisePermission(
   handler: (req: NextRequest) => Promise<NextResponse>,
@@ -80,14 +80,14 @@ export function withEnterprisePermission(
       return NextResponse.json(
         {
           error: '鏉冮檺涓嶈冻',
-          message: '鎮ㄦ病鏈夋墽琛屾鎿嶄綔鐨勬潈?,
+          message: '鎮ㄦ病鏈夋墽琛屾鎿嶄綔鐨勬潈,
           requiredPermission: permission
         },
         { status: 403 }
       )
     }
     
-    // 灏嗙敤鎴蜂俊鎭敞鍏ュ埌璇锋眰涓婁笅鏂囦腑
+    // 灏嗙敤鎴蜂俊鎭敞鍏ュ埌璇眰涓婁笅鏂囦腑
     (request as any).currentUser = user
     
     return handler(request)

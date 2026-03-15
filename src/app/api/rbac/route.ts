@@ -28,15 +28,15 @@ const mockUsers: Record<string, UserInfo> = {
   },
 };
 
-// 鑾峰彇褰撳墠鐢ㄦ埛淇℃伅锛堜粠token瑙ｆ瀽?function getCurrentUser(): UserInfo | null {
+// 鑾峰彇褰撳墠鐢ㄦ埛淇℃伅锛堜粠token瑙ｆ瀽function getCurrentUser(): UserInfo | null {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token')?.value;
+    const token = cookieStore.get('auth-token').value;
 
     if (!token) return null;
 
     // 绠€鍖栧鐞嗭細瀹為檯搴旇瑙ｆ瀽JWT token
-    const userId = 'user_admin'; // 榛樿绠＄悊?    return mockUsers[userId] || null;
+    const userId = 'user_admin'; // 榛樿绠＄悊    return mockUsers[userId] || null;
   } catch (error) {
     console.error('鑾峰彇鐢ㄦ埛淇℃伅澶辫触:', error);
     return null;
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const rbac = RBACController.getInstance();
@@ -107,14 +107,14 @@ export async function GET(request: Request) {
         });
 
       default:
-        return NextResponse.json({ error: '鏃犳晥鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '犳晥鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error) {
     console.error('RBAC GET鎿嶄綔澶辫触:', error);
     return NextResponse.json(
       {
         error: '鎿嶄綔澶辫触',
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -125,7 +125,7 @@ export async function POST(request: Request) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const rbac = RBACController.getInstance();
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { action, ...params } = body;
 
-    // 鏉冮檺妫€?- 鍙湁绠＄悊鍛樻墠鑳芥墽琛孯BAC绠＄悊鎿嶄綔
+    // 鏉冮檺妫€- 鍙湁绠＄悊鍛樻墠鑳芥墽琛孯BAC绠＄悊鎿嶄綔
     const permissionResult = permissionManager.hasPermission(
       currentUser,
       'rbac_manage'
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
         const { userId: assignUserId, roleId } = params;
         if (!assignUserId || !roleId) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? userId, roleId' },
+            { error: '缂哄皯蹇呰鐨勫弬 userId, roleId' },
             { status: 400 }
           );
         }
@@ -165,7 +165,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: assignSuccess,
-          message: assignSuccess ? '瑙掕壊鍒嗛厤鎴愬姛' : '瑙掕壊鍒嗛厤澶辫触',
+          message: assignSuccess  '瑙掕壊鍒嗛厤鎴愬姛' : '瑙掕壊鍒嗛厤澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -173,7 +173,7 @@ export async function POST(request: Request) {
         const { userId: removeUserId, roleId: removeRoleId } = params;
         if (!removeUserId || !removeRoleId) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? userId, roleId' },
+            { error: '缂哄皯蹇呰鐨勫弬 userId, roleId' },
             { status: 400 }
           );
         }
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: removeSuccess,
-          message: removeSuccess ? '瑙掕壊绉婚櫎鎴愬姛' : '瑙掕壊绉婚櫎澶辫触',
+          message: removeSuccess  '瑙掕壊绉婚櫎鎴愬姛' : '瑙掕壊绉婚櫎澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -193,7 +193,7 @@ export async function POST(request: Request) {
         const { userId: grantUserId, permission, scope, condition } = params;
         if (!grantUserId || !permission) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? userId, permission' },
+            { error: '缂哄皯蹇呰鐨勫弬 userId, permission' },
             { status: 400 }
           );
         }
@@ -207,7 +207,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: grantSuccess,
-          message: grantSuccess ? '鏉冮檺鎺堜簣鎴愬姛' : '鏉冮檺鎺堜簣澶辫触',
+          message: grantSuccess  '鏉冮檺鎺堜簣鎴愬姛' : '鏉冮檺鎺堜簣澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -215,7 +215,7 @@ export async function POST(request: Request) {
         const { userId: revokeUserId, permission: revokePermission } = params;
         if (!revokeUserId || !revokePermission) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? userId, permission' },
+            { error: '缂哄皯蹇呰鐨勫弬 userId, permission' },
             { status: 400 }
           );
         }
@@ -227,7 +227,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: revokeSuccess,
-          message: revokeSuccess ? '鏉冮檺鎾ら攢鎴愬姛' : '鏉冮檺鎾ら攢澶辫触',
+          message: revokeSuccess  '鏉冮檺鎾ら攢鎴愬姛' : '鏉冮檺鎾ら攢澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -235,7 +235,7 @@ export async function POST(request: Request) {
         const { parentRoleId, childRoleId } = params;
         if (!parentRoleId || !childRoleId) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? parentRoleId, childRoleId' },
+            { error: '缂哄皯蹇呰鐨勫弬 parentRoleId, childRoleId' },
             { status: 400 }
           );
         }
@@ -247,7 +247,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: hierarchySuccess,
-          message: hierarchySuccess ? '瑙掕壊灞傛鍒涘缓鎴愬姛' : '瑙掕壊灞傛鍒涘缓澶辫触',
+          message: hierarchySuccess  '瑙掕壊灞傛鍒涘缓鎴愬姛' : '瑙掕壊灞傛鍒涘缓澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -260,7 +260,7 @@ export async function POST(request: Request) {
         } = params;
         if (!resourceId || !requestAction) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? resourceId, action' },
+            { error: '缂哄皯蹇呰鐨勫弬 resourceId, action' },
             { status: 400 }
           );
         }
@@ -275,7 +275,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: { requestId: accessRequestId },
-          message: '璁块棶璇锋眰鎻愪氦鎴愬姛',
+          message: '璁块棶璇眰鎻愪氦鎴愬姛',
           timestamp: new Date().toISOString(),
         });
 
@@ -283,7 +283,7 @@ export async function POST(request: Request) {
         const { requestId: reviewRequestId, approved, notes } = params;
         if (!reviewRequestId || approved === undefined) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? requestId, approved' },
+            { error: '缂哄皯蹇呰鐨勫弬 requestId, approved' },
             { status: 400 }
           );
         }
@@ -296,19 +296,19 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: reviewSuccess,
-          message: reviewSuccess ? '璁块棶璇锋眰瀹℃壒鎴愬姛' : '璁块棶璇锋眰瀹℃壒澶辫触',
+          message: reviewSuccess  '璁块棶璇眰瀹℃壒鎴愬姛' : '璁块棶璇眰瀹℃壒澶辫触',
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: '鏃犳晥鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '犳晥鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error) {
     console.error('RBAC POST鎿嶄綔澶辫触:', error);
     return NextResponse.json(
       {
         error: '鎿嶄綔澶辫触',
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );

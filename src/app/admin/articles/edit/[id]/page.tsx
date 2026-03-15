@@ -123,12 +123,12 @@ export default function EditArticlePage() {
     <ArticleEditor
       articleId={articleId}
       initialData={{
-        title: article?.title || '',
-        content: article?.content || '',
-        summary: article?.summary || '',
-        coverImageUrl: article?.cover_image_url || '',
-        tags: article?.tags || [],
-        categoryId: article?.category_id || '',
+        title: article.title || '',
+        content: article.content || '',
+        summary: article.summary || '',
+        coverImageUrl: article.cover_image_url || '',
+        tags: article.tags || [],
+        categoryId: article.category_id || '',
       }}
       onSave={handleSave}
       onPublish={handlePublish}

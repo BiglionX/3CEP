@@ -101,7 +101,7 @@ export async function PUT(
 
     if (body.name !== undefined) updateData.name = body.name.trim();
     if (body.description !== undefined)
-      updateData.description = body?.trim() || null;
+      updateData.description = body.trim() || null;
     if (body.configuration !== undefined)
       updateData.configuration = body.configuration;
     if (body.status !== undefined) updateData.status = body.status;

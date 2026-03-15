@@ -14,7 +14,6 @@ import {
   AlertTriangle,
   CheckCircle,
   TrendingUp,
-  TrendingDown,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -51,7 +50,7 @@ interface PerformanceMetrics {
   domParsing: number;
   timeToInteractive: number;
   totalBlockingTime: number;
-  performanceScore?: number;
+  performanceScore: number;
 }
 
 interface PerformanceSummary {
@@ -110,7 +109,7 @@ export default function PerformanceMonitoringDashboard() {
       params.append('limit', '50');
       params.append('sortBy', filters.sortBy);
 
-      const response = await fetch(`/api/performance/metrics?${params}`);
+      const response = await fetch(`/api/performance/metrics${params}`);
       const data = await response.json();
 
       if (data.success) {
@@ -134,27 +133,27 @@ export default function PerformanceMonitoringDashboard() {
       const paint = perf.getEntriesByType('paint') as any[];
 
       const metrics: PerformanceMetrics = {
-        navigationStart: navigation?.navigationStart || 0,
-        domContentLoaded: navigation?.domContentLoadedEventEnd || 0,
-        loadEventEnd: navigation?.loadEventEnd || 0,
+        navigationStart: navigation.navigationStart || 0,
+        domContentLoaded: navigation.domContentLoadedEventEnd || 0,
+        loadEventEnd: navigation.loadEventEnd || 0,
         firstPaint:
-          paint?.find((p: any) => p.name === 'first-paint')?.startTime || 0,
+          paint.find((p: any) => p.name === 'first-paint').startTime || 0,
         firstContentfulPaint:
-          paint?.find((p: any) => p.name === 'first-contentful-paint')
-            ?.startTime || 0,
+          paint.find((p: any) => p.name === 'first-contentful-paint')
+            .startTime || 0,
         largestContentfulPaint: 0,
         cumulativeLayoutShift: 0,
         firstInputDelay: 0,
         interactionToNextPaint: 0,
         dnsLookup:
-          navigation?.domainLookupEnd - navigation?.domainLookupStart || 0,
-        tcpConnection: navigation?.connectEnd - navigation?.connectStart || 0,
+          navigation.domainLookupEnd - navigation.domainLookupStart || 0,
+        tcpConnection: navigation.connectEnd - navigation.connectStart || 0,
         requestDuration:
-          navigation?.responseStart - navigation?.requestStart || 0,
+          navigation.responseStart - navigation.requestStart || 0,
         responseDuration:
-          navigation?.responseEnd - navigation?.responseStart || 0,
+          navigation.responseEnd - navigation.responseStart || 0,
         scriptExecution: 0,
-        domParsing: navigation?.domComplete - navigation?.domInteractive || 0,
+        domParsing: navigation.domComplete - navigation.domInteractive || 0,
         timeToInteractive: 0,
         totalBlockingTime: 0,
       };
@@ -206,7 +205,7 @@ export default function PerformanceMonitoringDashboard() {
   };
 
   // 指标状态判断
-  const getMetricStatus = (
+  const _getMetricStatus = (
     value: number,
     thresholds: { good: number; warning: number }
   ) => {
@@ -228,7 +227,7 @@ export default function PerformanceMonitoringDashboard() {
   };
 
   // 格式化百分比
-  const formatPercentage = (value: number) => {
+  const _formatPercentage = (value: number) => {
     return `${(value * 100).toFixed(2)}%`;
   };
 
@@ -250,14 +249,14 @@ export default function PerformanceMonitoringDashboard() {
 
             <div className="flex items-center gap-3">
               <Button
-                variant={realTimeEnabled ? 'default' : 'outline'}
+                variant={realTimeEnabled  'default' : 'outline'}
                 size="sm"
                 onClick={() => setRealTimeEnabled(!realTimeEnabled)}
               >
                 <Activity
-                  className={`h-4 w-4 mr-2 ${realTimeEnabled ? 'animate-pulse' : ''}`}
+                  className={`h-4 w-4 mr-2 ${realTimeEnabled  'animate-pulse' : ''}`}
                 />
-                {realTimeEnabled ? '实时监控' : '手动刷新'}
+                {realTimeEnabled  '实时监控' : '手动刷新'}
               </Button>
 
               <Button
@@ -267,7 +266,7 @@ export default function PerformanceMonitoringDashboard() {
                 disabled={loading}
               >
                 <Zap
-                  className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`}
+                  className={`h-4 w-4 mr-2 ${loading  'animate-spin' : ''}`}
                 />
                 刷新数据
               </Button>
@@ -421,9 +420,9 @@ export default function PerformanceMonitoringDashboard() {
                     <div
                       className={`h-full transition-all duration-300 ${
                         metrics.largestContentfulPaint < 2500
-                          ? 'bg-green-500'
+                           'bg-green-500'
                           : metrics.largestContentfulPaint < 4000
-                            ? 'bg-yellow-500'
+                             'bg-yellow-500'
                             : 'bg-red-500'
                       }`}
                       style={{
@@ -446,9 +445,9 @@ export default function PerformanceMonitoringDashboard() {
                     <div
                       className={`h-full transition-all duration-300 ${
                         metrics.firstInputDelay < 100
-                          ? 'bg-green-500'
+                           'bg-green-500'
                           : metrics.firstInputDelay < 300
-                            ? 'bg-yellow-500'
+                             'bg-yellow-500'
                             : 'bg-red-500'
                       }`}
                       style={{
@@ -471,9 +470,9 @@ export default function PerformanceMonitoringDashboard() {
                     <div
                       className={`h-full transition-all duration-300 ${
                         metrics.cumulativeLayoutShift < 0.1
-                          ? 'bg-green-500'
+                           'bg-green-500'
                           : metrics.cumulativeLayoutShift < 0.25
-                            ? 'bg-yellow-500'
+                             'bg-yellow-500'
                             : 'bg-red-500'
                       }`}
                       style={{
@@ -515,9 +514,9 @@ export default function PerformanceMonitoringDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            {loading ? (
+            {loading  (
               <div className="text-center py-12 text-gray-500">加载中...</div>
-            ) : historicalData.length === 0 ? (
+            ) : historicalData.length === 0  (
               <div className="text-center py-12 text-gray-500">
                 暂无历史数据
               </div>

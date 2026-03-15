@@ -17,14 +17,14 @@ export async function GET(request: Request) {
 
     let kpiDefinitions: any = { ...WAREHOUSE_KPI_DEFINITIONS };
 
-    // 鎸夊垎绫荤瓫?    if (category) {
+    // 鎸夊垎绫荤瓫    if (category) {
       const filteredEntries = Object.entries(kpiDefinitions).filter(
         ([_, definition]) => (definition as any).category === category
       );
       kpiDefinitions = Object.fromEntries(filteredEntries);
     }
 
-    // 鎸夊叿浣揔PI绫诲瀷绛?    if (
+    // 鎸夊叿浣揔PI绫诲瀷绛    if (
       kpiType &&
       Object.values(WarehouseKPI).includes(kpiType as WarehouseKPI)
     ) {
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
         error: '鑾峰彇KPI瀹氫箟澶辫触',
         details: (error as Error).message,
       },
-      { status: 500 }
+{ status: 500 }
     );
   }
 }

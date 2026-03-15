@@ -12,11 +12,11 @@ export async function POST(request: Request) {
     // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
-    if (!authHeader?.startsWith('Bearer ')) {
+    if (!authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '鏈巿鏉冭?,
+          message: '鏈巿鏉冭,
           data: null,
         },
         { status: 401 }
@@ -24,9 +24,9 @@ export async function POST(request: Request) {
     }
 
     const token = authHeader.substring(7);
-    // 瀹為檯搴旂敤涓渶瑕侀獙璇丣WT浠ょ墝
+    // 瀹為檯搴旂敤涓渶瑕侀獙璇丣WTょ墝
 
-    // 鑾峰彇璇锋眰?    const body = await request.json();
+    // 鑾峰彇璇眰    const body = await request.json();
     const { target_id, target_type } = body;
 
     // 楠岃瘉鍙傛暟
@@ -52,9 +52,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇浠嶫WT涓В?    const userId = 'user_123';
+    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇嶫WT涓В    const userId = 'user_123';
 
-    // 妫€鏌ユ槸鍚﹀凡缁忕偣?    const { data: existingLike, error: checkError } = await supabase
+    // 妫€鏌ユ槸鍚﹀凡缁忕偣    const { data: existingLike, error: checkError } = await supabase
       .from('user_interactions')
       .select('id, is_liked')
       .eq('user_id', userId)
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     let isLiked = false;
 
     if (checkError && checkError.code !== 'PGRST116') {
-      // PGRST116琛ㄧず鏈壘鍒拌?      console.error('妫€鏌ョ偣璧炵姸鎬佸け?', checkError);
+      // PGRST116琛ㄧず鏈壘鍒拌      console.error('妫€鏌ョ偣璧炵姸鎬佸け', checkError);
       // 缁х画鎵ц锛屼笉涓柇娴佺▼
     }
 
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
         .eq('id', existingLike.id);
 
       if (updateError) {
-        console.error('鏇存柊鐐硅禐鐘舵€佸け?', updateError);
+        console.error('鏇存柊鐐硅禐鐘舵€佸け', updateError);
         return NextResponse.json(
           {
             code: 50001,
@@ -123,10 +123,10 @@ export async function POST(request: Request) {
 
     // 鏇存柊鐩爣瀵硅薄鐨勭偣璧炴暟
     const targetTable =
-      target_type === 'article' ? 'articles' : 'hot_link_pool';
-    const likeField = target_type === 'article' ? 'like_count' : 'likes';
+      target_type === 'article'  'articles' : 'hot_link_pool';
+    const likeField = target_type === 'article'  'like_count' : 'likes';
 
-    // 鑾峰彇褰撳墠鐐硅禐?    const { data: targetData, error: targetError } = await supabase
+    // 鑾峰彇褰撳墠鐐硅禐    const { data: targetData, error: targetError } = await supabase
       .from(targetTable)
       .select(likeField)
       .eq('id', target_id)
@@ -134,9 +134,9 @@ export async function POST(request: Request) {
 
     if (!targetError && targetData) {
       currentLikes = targetData[likeField] || 0;
-      // 鏍规嵁鎿嶄綔绫诲瀷璋冩暣鐐硅禐?      currentLikes = isLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+      // 鏍规嵁鎿嶄綔绫诲瀷璋冩暣鐐硅禐      currentLikes = isLiked  currentLikes + 1 : Math.max(0, currentLikes - 1);
 
-      // 鏇存柊鐐硅禐?      await supabase
+      // 鏇存柊鐐硅禐      await supabase
         .from(targetTable)
         .update({ [likeField]: currentLikes } as any)
         .eq('id', target_id);
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         code: 50001,
-        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         data: null,
       },
       { status: 500 }
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
 // 瑙﹀彂鏂囩珷娌夋穩娴佺▼
 async function triggerArticleCreation(hotLinkId: string) {
   try {
-    // 鑾峰彇鐑偣閾炬帴淇℃伅
+    // 鑾峰彇鐑偣炬帴淇℃伅
     const { data: hotLink, error } = await supabase
       .from('hot_link_pool')
       .select('*')
@@ -186,7 +186,7 @@ async function triggerArticleCreation(hotLinkId: string) {
       .single();
 
     if (error || !hotLink) {
-      throw new Error('鑾峰彇鐑偣閾炬帴澶辫触');
+      throw new Error('鑾峰彇鐑偣炬帴澶辫触');
     }
 
     // 鍒涘缓鏂囩珷鑽夌
@@ -198,7 +198,7 @@ async function triggerArticleCreation(hotLinkId: string) {
 
 ${hotLink.description || ''}
 
-[鍘熸枃閾炬帴](${hotLink.url}) as any`,
+[鍘熸枃炬帴](${hotLink.url}) as any`,
         summary: hotLink.description || hotLink.title,
         source_url: hotLink.url,
         status: 'pending_review',
@@ -212,7 +212,7 @@ ${hotLink.description || ''}
       throw new Error('鍒涘缓鏂囩珷澶辫触');
     }
 
-    // 鏇存柊鐑偣閾炬帴鍏宠仈鐨勬枃绔營D
+    // 鏇存柊鐑偣炬帴鍏宠仈鐨勬枃绔營D
     await supabase
       .from('hot_link_pool')
       .update({
@@ -222,7 +222,7 @@ ${hotLink.description || ''}
       .eq('id', hotLinkId);
 
     console.log(
-      `锟?鐑偣閾炬帴 ${hotLinkId} 宸茶Е鍙戞枃绔犳矇娣€锛屾枃绔營D: ${article.id}`
+      `鐑偣炬帴 ${hotLinkId} 宸茶Е鍙戞枃绔犳矇娣€锛屾枃绔營D: ${article.id}`
     );
   } catch (error) {
     console.error('鏂囩珷娌夋穩娴佺▼澶辫触:', error);

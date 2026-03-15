@@ -17,22 +17,22 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!repairShopId) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涚淮淇簵ID' },
+        { success: false, error: '璇彁渚涚淮淇簵ID' },
         { status: 400 }
       );
     }
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涙湁鏁堢殑鍏戞崲鍟嗗搧鍒楄〃' },
+        { success: false, error: '璇彁渚涙湁鏁堢殑鍏戞崲鍟嗗搧鍒楄〃' },
         { status: 400 }
       );
     }
 
-    // 楠岃瘉姣忎釜鍟嗗搧?    for (const item of items) {
+    // 楠岃瘉姣忎釜鍟嗗搧    for (const item of items) {
       if (!item.productId || !item.quantity || !item.fcxPrice) {
         return NextResponse.json(
-          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬? },
+          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬 },
           { status: 400 }
         );
       }
@@ -81,12 +81,12 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
     const limit = searchParams.get('limit')
-      ? parseInt(searchParams.get('limit')!)
+       parseInt(searchParams.get('limit')!)
       : 20;
 
     if (!userId) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涚敤鎴稩D' },
+        { success: false, error: '璇彁渚涚敤鎴稩D' },
         { status: 400 }
       );
     }

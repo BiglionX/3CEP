@@ -41,9 +41,9 @@ export default function RoleAwareDashboard() {
     server: {
       status: 'healthy',
       metrics: [
-        { name: 'CPU使用?, value: '45', unit: '%', status: 'normal' },
-        { name: '内存使用?, value: '68', unit: '%', status: 'normal' },
-        { name: '磁盘使用?, value: '32', unit: '%', status: 'normal' },
+        { name: 'CPU使用, value: '45', unit: '%', status: 'normal' },
+        { name: '内存使用, value: '68', unit: '%', status: 'normal' },
+        { name: '磁盘使用, value: '32', unit: '%', status: 'normal' },
         { name: '网络延迟', value: '12', unit: 'ms', status: 'normal' },
       ],
       lastUpdated: new Date().toISOString(),
@@ -51,10 +51,10 @@ export default function RoleAwareDashboard() {
     database: {
       status: 'warning',
       metrics: [
-        { name: '连接?, value: '156', unit: '�?, status: 'normal' },
+        { name: '连接, value: '156', unit: ', status: 'normal' },
         { name: '查询延迟', value: '156', unit: 'ms', status: 'warning' },
-        { name: '缓存命中?, value: '87', unit: '%', status: 'normal' },
-        { name: '备份状?, value: '正常', unit: '', status: 'normal' },
+        { name: '缓存命中心, value: '87', unit: '%', status: 'normal' },
+        { name: '备份状, value: '正常', unit: '', status: 'normal' },
       ],
       lastUpdated: new Date().toISOString(),
     },
@@ -63,24 +63,24 @@ export default function RoleAwareDashboard() {
   // 业务KPI数据 (Biz)
   const businessKpiData = {
     sales: {
-      title: '销售业?,
+      title: '销售业,
       kpis: [
         {
           name: '本月销售额',
           current: 1250000,
           target: 1500000,
-          unit: '�?,
+          unit: ',
           trend: 'up',
         },
         {
           name: '订单数量',
           current: 3420,
           target: 4000,
-          unit: '�?,
+          unit: ',
           trend: 'up',
         },
         {
-          name: '客户转化?,
+          name: '客户转化,
           current: 12.5,
           target: 15,
           unit: '%',
@@ -100,10 +100,10 @@ export default function RoleAwareDashboard() {
           trend: 'down',
         },
         {
-          name: '客户满意?,
+          name: '客户满意,
           current: 4.6,
           target: 4.8,
-          unit: '�?,
+          unit: ',
           trend: 'up',
         },
         {
@@ -118,7 +118,7 @@ export default function RoleAwareDashboard() {
     },
   };
 
-  // 分析师趋势数?(Analyst)
+  // 分析师趋势数(Analyst)
   const analystData = {
     trends: [
       {
@@ -128,21 +128,21 @@ export default function RoleAwareDashboard() {
         icon: <TrendingUp />,
       },
       {
-        name: '收入增长?,
+        name: '收入增长,
         value: '+8%',
         status: 'warning',
         icon: <TrendingUp />,
       },
       {
-        name: '市场占有?,
+        name: '市场占有,
         value: '12.5%',
         status: 'info',
         icon: <BarChart3 />,
       },
-      { name: '用户留存?, value: '78%', status: 'success', icon: <Users /> },
+      { name: '用户留存, value: '78%', status: 'success', icon: <Users /> },
     ],
     forecasts: [
-      { metric: '下季度收入预?, value: '¥4,200,000', confidence: '85%' },
+      { metric: '下季度收入预, value: '¥4,200,000', confidence: '85%' },
       { metric: '用户增长预测', value: '+22%', confidence: '78%' },
       { metric: '市场份额预测', value: '15.2%', confidence: '92%' },
     ],
@@ -154,7 +154,7 @@ export default function RoleAwareDashboard() {
       title: '租户运营表现',
       kpis: [
         {
-          name: '服务可用?,
+          name: '服务可用,
           current: 99.8,
           target: 99.5,
           unit: '%',
@@ -168,7 +168,7 @@ export default function RoleAwareDashboard() {
           trend: 'down',
         },
         {
-          name: '错误?,
+          name: '错误,
           current: 0.2,
           target: 0.5,
           unit: '%',
@@ -185,7 +185,7 @@ export default function RoleAwareDashboard() {
       id: '1',
       type: 'system',
       severity: 'high',
-      title: '数据库查询延迟增?,
+      title: '数据库查询延迟增,
       message: '主数据库查询响应时间超过阈值，当前156ms',
       timestamp: new Date(Date.now() - 3600000).toISOString(),
       unread: true,
@@ -195,7 +195,7 @@ export default function RoleAwareDashboard() {
       type: 'business',
       severity: 'medium',
       title: '库存预警',
-      message: 'iPhone 15 Pro库存低于安全?,
+      message: 'iPhone 15 Pro库存低于安全,
       timestamp: new Date(Date.now() - 7200000).toISOString(),
       unread: false,
     },
@@ -204,7 +204,7 @@ export default function RoleAwareDashboard() {
       type: 'performance',
       severity: 'low',
       title: '页面加载速度下降',
-      message: '首页加载时间较昨日增?.3�?,
+      message: '首页加载时间较昨日增.3,
       timestamp: new Date(Date.now() - 10800000).toISOString(),
       unread: false,
     },
@@ -223,9 +223,9 @@ export default function RoleAwareDashboard() {
       {/* 头部信息 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">仪表?/h1>
+          <h1 className="text-2xl font-bold text-gray-900">仪表/h1>
           <p className="mt-1 text-sm text-gray-600">
-            欢迎回来, {user?.email || '用户'} · {currentTime.toLocaleString()}
+            欢迎回来, {user.email || '用户'} · {currentTime.toLocaleString()}
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
             {roles.map((role, index) => (
@@ -238,7 +238,7 @@ export default function RoleAwareDashboard() {
         </div>
       </div>
 
-      {/* 管理?运维人员视图 - 系统健康 */}
+      {/* 管理员运维人员视图 - 系统健康 */}
       <RoleGuard roles={['admin']}>
         <div className="space-y-6">
           <div>
@@ -247,18 +247,18 @@ export default function RoleAwareDashboard() {
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <SystemHealthCard
-                title="服务器状?
+                title="服务器状
                 status={systemHealthData.server.status}
                 metrics={systemHealthData.server.metrics}
                 lastUpdated={systemHealthData.server.lastUpdated}
-                onRefresh={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('刷新服务器状?)}
+                onRefresh={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('刷新服务器状)}
               />
               <SystemHealthCard
-                title="数据库状?
+                title="数据库状
                 status={systemHealthData.database.status}
                 metrics={systemHealthData.database.metrics}
                 lastUpdated={systemHealthData.database.lastUpdated}
-                onRefresh={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('刷新数据库状?)}
+                onRefresh={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('刷新数据库状)}
               />
             </div>
           </div>
@@ -296,11 +296,11 @@ export default function RoleAwareDashboard() {
         </div>
       </RoleGuard>
 
-      {/* 分析师视?- 趋势分析 */}
+      {/* 分析师视- 趋势分析 */}
       <RoleGuard roles={['content_reviewer', 'shop_reviewer']}>
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            数据分析与趋?          </h2>
+            数据分析与趋          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {analystData.trends.map((trend, index) => (
               <KpiCard
@@ -328,7 +328,7 @@ export default function RoleAwareDashboard() {
                     <div className="text-right">
                       <div className="font-semibold">{forecast.value}</div>
                       <div className="text-sm text-gray-500">
-                        置信? {forecast.confidence}
+                        置信 {forecast.confidence}
                       </div>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export default function RoleAwareDashboard() {
             <KpiCard
               title="总用户数"
               value="12,345"
-              unit="�?
+              unit="
               trend="up"
               trendValue={12}
               status="success"
@@ -378,14 +378,14 @@ export default function RoleAwareDashboard() {
             <KpiCard
               title="活跃订单"
               value="1,234"
-              unit="�?
+              unit="
               trend="stable"
               trendValue={0}
               status="info"
               icon={<ShoppingCart className="w-5 h-5" />}
             />
             <KpiCard
-              title="系统状?
+              title="系统状
               value="正常"
               status="success"
               icon={<CheckCircle className="w-5 h-5" />}

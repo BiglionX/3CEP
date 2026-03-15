@@ -1,9 +1,9 @@
 ﻿/**
- * 浼佷笟绠＄悊绯荤粺閫氱敤宸ュ叿鍑芥暟
+ * 佷笟绠＄悊绯荤粺氱敤宸ュ叿鍑芥暟
  */
 
 /**
- * 鏍煎紡鍖栨枃浠跺ぇ? */
+ * 鏍煎紡鍖栨枃跺ぇ */
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -13,7 +13,7 @@ export function formatFileSize(bytes: number): string {
 }
 
 /**
- * 鏍煎紡鍖栬揣甯侀噾? */
+ * 鏍煎紡鍖栬揣甯侀噾 */
 export function formatCurrency(
   amount: number,
   currency: string = 'CNY'
@@ -27,7 +27,7 @@ export function formatCurrency(
 }
 
 /**
- * 鏍煎紡鍖栨棩鏈熸椂? */
+ * 鏍煎紡鍖栨棩鏈熸椂 */
 export function formatDateTime(date: string | Date): string {
   return new Date(date).toLocaleString('zh-CN', {
     year: 'numeric',
@@ -39,7 +39,7 @@ export function formatDateTime(date: string | Date): string {
 }
 
 /**
- * 鏍煎紡鍖栨棩? */
+ * 鏍煎紡鍖栨棩 */
 export function formatDate(date: string | Date): string {
   return new Date(date).toLocaleDateString('zh-CN', {
     year: 'numeric',
@@ -123,7 +123,7 @@ export function deepClone<T>(obj: T): T {
 }
 
 /**
- * 楠岃瘉閭鏍煎紡
+ * 楠岃瘉鏍煎紡
  */
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -131,7 +131,7 @@ export function validateEmail(email: string): boolean {
 }
 
 /**
- * 楠岃瘉鎵嬫満鍙锋牸? */
+ * 楠岃瘉鎵嬫満鍙牸 */
 export function validatePhone(phone: string): boolean {
   const phoneRegex = /^1[3-9]\d{9}$/;
   return phoneRegex.test(phone);
@@ -161,7 +161,7 @@ export function paginate<T>(array: T[], page: number, pageSize: number): T[] {
 }
 
 /**
- * 璁＄畻鐧惧垎? */
+ * 璁＄畻鐧惧垎 */
 export function calculatePercentage(part: number, total: number): number {
   if (total === 0) return 0;
   return Math.round((part / total) * 100);
@@ -245,7 +245,7 @@ export const localStorageUtil = {
   get: <T>(key: string, defaultValue: T | null = null): T | null => {
     try {
       const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue;
+      return item  JSON.parse(item) : defaultValue;
     } catch (error) {
       console.error('localStorage 鑾峰彇澶辫触:', error);
       return defaultValue;
@@ -270,7 +270,7 @@ export const localStorageUtil = {
 };
 
 /**
- * 浼氳瘽瀛樺偍鎿嶄綔
+ * 氳瘽瀛樺偍鎿嶄綔
  */
 export const sessionStorageUtil = {
   set: (key: string, value: any): void => {
@@ -284,7 +284,7 @@ export const sessionStorageUtil = {
   get: <T>(key: string, defaultValue: T | null = null): T | null => {
     try {
       const item = sessionStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue;
+      return item  JSON.parse(item) : defaultValue;
     } catch (error) {
       console.error('sessionStorage 鑾峰彇澶辫触:', error);
       return defaultValue;

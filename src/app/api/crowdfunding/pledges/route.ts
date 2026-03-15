@@ -6,9 +6,9 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const {
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       error: authError,
     } = await supabase.auth.getUser(token);
     if (authError || !user) {
-      return NextResponse.json({ error: '鏃犳晥鐨勮璇佷护? }, { status: 401 });
+      return NextResponse.json({ error: '犳晥鐨勮璇佷护 }, { status: 401 });
     }
 
     const body = await request.json();
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // 楠岃瘉蹇呴渶瀛楁
     if (!body.project_id || !body.amount) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呴渶瀛楁: project_id 锟?amount' },
+        { error: '缂哄皯蹇呴渶瀛楁: project_id amount' },
         { status: 400 }
       );
     }
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '鏀寔閲戦蹇呴』澶т簬0' }, { status: 400 });
     }
 
-    // 璁剧疆榛樿?    const pledgeData = {
+    // 璁剧疆榛樿    const pledgeData = {
       project_id: body.project_id,
       amount: body.amount,
       pledge_type: body.pledge_type || 'reservation',
@@ -64,9 +64,9 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const {
@@ -74,7 +74,7 @@ export async function GET(request: Request) {
       error: authError,
     } = await supabase.auth.getUser(token);
     if (authError || !user) {
-      return NextResponse.json({ error: '鏃犳晥鐨勮璇佷护? }, { status: 401 });
+      return NextResponse.json({ error: '犳晥鐨勮璇佷护 }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);

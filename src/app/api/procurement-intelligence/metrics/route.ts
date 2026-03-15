@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
         id: 'alert_001',
         metric_type: 'supplier_match_success_rate',
         level: 'info',
-        message: '渚涘簲鍟嗗尮閰嶆垚鍔熺巼琛ㄧ幇鑹ソ锛岃揪?92.5%',
+        message: '渚涘簲鍟嗗尮閰嶆垚鍔熺巼琛ㄧ幇鑹ソ锛岃揪92.5%',
         timestamp: new Date().toISOString(),
         currentValue: 92.5,
         threshold: 90,
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
             trends: Object.keys(mockMetrics).reduce(
               (acc, key) => {
                 acc[key as keyof typeof mockMetrics] =
-                  Math.random() > 0.5 ? 'up' : 'stable';
+                  Math.random() > 0.5  'up' : 'stable';
                 return acc;
               },
               {} as Record<keyof typeof mockMetrics, 'up' | 'down' | 'stable'>
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
               thresholds: { critical: 60, warning: 75, good: 90 },
             },
             price_optimization_savings: {
-              name: '浠锋牸浼樺寲鑺傜渷?,
+              name: '牸樺寲鑺傜渷,
               unit: '%',
               thresholds: { critical: 2, warning: 5, good: 15 },
             },

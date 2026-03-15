@@ -7,10 +7,10 @@ import { useUnifiedAuth } from '@/hooks/use-unified-auth'
 export default function DashboardPage() {
   const { isAuthenticated, is_admin } = useUnifiedAuth()
   
-  // 保护管理员路?
+  // 保护管理员路
   useEffect(() => {
     if (!isAuthenticated || !is_admin) {
-      window.location.href = '/login?redirect=/admin/dashboard'
+      window.location.href = '/loginredirect=/admin/dashboard'
     }
   }, [isAuthenticated, is_admin])
 
@@ -27,7 +27,7 @@ export default function DashboardPage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-2">访问受限</h2>
           <p className="text-gray-600 mb-4">请先登录管理员账户</p>
           <button 
-            onClick={() => window.location.href = '/login?redirect=/admin/dashboard'}
+            onClick={() => window.location.href = '/loginredirect=/admin/dashboard'}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             前往登录
@@ -71,7 +71,7 @@ export default function DashboardPage() {
   const handleExport = async (type: string) => {
     try {
       setExportLoading(true)
-      const response = await fetch(`/api/admin/dashboard/export?type=${type}`)
+      const response = await fetch(`/api/admin/dashboard/exporttype=${type}`)
       
       if (response.ok) {
         const blob = await response.blob()
@@ -109,10 +109,10 @@ export default function DashboardPage() {
             disabled={exportLoading}
             className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
           >
-            {exportLoading ? (
+            {exportLoading  (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2"></div>
-                导出?..
+                导出..
               </>
             ) : (
               <>
@@ -240,9 +240,9 @@ export default function DashboardPage() {
 
       {/* 图表区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 预约趋势?*/}
+        {/* 预约趋势*/}
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">�?天预约量趋势</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">天预约量趋势</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={stats.appointmentTrends}>
@@ -313,7 +313,7 @@ export default function DashboardPage() {
           <div className="border-l-4 border-blue-500 pl-4">
             <p className="text-sm text-gray-600">今日热点链接增长</p>
             <p className="text-2xl font-bold text-gray-900">{stats.todayHotLinks}</p>
-            <p className="text-sm text-gray-500">较昨日 +{stats.todayHotLinks > 0 ? Math.floor(stats.todayHotLinks * 0.1) : 0}</p>
+            <p className="text-sm text-gray-500">较昨日 +{stats.todayHotLinks > 0  Math.floor(stats.todayHotLinks * 0.1) : 0}</p>
           </div>
           <div className="border-l-4 border-yellow-500 pl-4">
             <p className="text-sm text-gray-600">待审核内容积压</p>

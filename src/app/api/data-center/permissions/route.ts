@@ -11,7 +11,7 @@ import { rateLimit } from '@/lib/rate-limit';
 // 鏉冮檺鏈嶅姟瀹炰緥
 let permissionService: UnifiedPermissionService | null = null;
 
-// 鍒濆鍖栨潈闄愭湇?
+// 鍒濆鍖栨潈闄愭湇
 function initializePermissionService() {
   if (!permissionService) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -38,25 +38,25 @@ function getClientIP(request: NextRequest): string {
 // 鏉冮檺妫€鏌PI
 export async function GET(request: NextRequest) {
   try {
-    // 閫熺巼闄愬埗
+    // 熺巼闄愬埗
     const ip = getClientIP(request);
     const rateLimitResult = await rateLimit.checkRateLimit(ip, 'permission_check', 100, 60);
     
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
         { 
-          error: '璇锋眰杩囦簬棰戠箒',
+          error: '璇眰杩囦簬棰戠箒',
           retryAfter: rateLimitResult.retryAfter 
         },
         { status: 429 }
       );
     }
 
-    // 鑾峰彇鐢ㄦ埛浼氳瘽
+    // 鑾峰彇鐢ㄦ埛氳瘽
     const session = await getSession();
-    if (!session??.id) {
+    if (!session.id) {
       return NextResponse.json(
-        { error: '鐢ㄦ埛鏈? },
+        { error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -68,16 +68,16 @@ export async function GET(request: NextRequest) {
     const tableName = searchParams.get('tableName');
     const accessType = searchParams.get('accessType') as 'READ' | 'WRITE' | 'EXECUTE' || 'READ';
 
-    // 鍒濆鍖栨潈闄愭湇?
+    // 鍒濆鍖栨潈闄愭湇
     const service = initializePermissionService();
     if (!service) {
       return NextResponse.json(
-        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け? },
+        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け },
         { status: 500 }
       );
     }
 
-    // 鏁版嵁璁块棶鎺у埗妫€?
+    // 鏁版嵁璁块棶鎺у埗妫€
     if (dataSource && tableName) {
       const dataAccessResult = await service.checkDataAccess(
         session.user.id,
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 鏅€氭潈闄愭?
+    // 鏅€氭潈闄愭
     if (!permission) {
       return NextResponse.json(
         { error: '缂哄皯鏉冮檺鍙傛暟' },
@@ -120,47 +120,47 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('鏉冮檺妫€鏌PI閿欒:', error);
     return NextResponse.json(
-      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊 },
       { status: 500 }
     );
   }
 }
 
-// 鎵归噺鏉冮檺妫€?
+// 鎵归噺鏉冮檺妫€
 export async function POST(request: NextRequest) {
   try {
-    // 閫熺巼闄愬埗
+    // 熺巼闄愬埗
     const ip = getClientIP(request);
     const rateLimitResult = await rateLimit.checkRateLimit(ip, 'permission_batch_check', 50, 60);
     
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
         { 
-          error: '璇锋眰杩囦簬棰戠箒',
+          error: '璇眰杩囦簬棰戠箒',
           retryAfter: rateLimitResult.retryAfter 
         },
         { status: 429 }
       );
     }
 
-    // 鑾峰彇鐢ㄦ埛浼氳瘽
+    // 鑾峰彇鐢ㄦ埛氳瘽
     const session = await getSession();
-    if (!session??.id) {
+    if (!session.id) {
       return NextResponse.json(
-        { error: '鐢ㄦ埛鏈? },
+        { error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
 
-    // 瑙ｆ瀽璇锋眰?
+    // 瑙ｆ瀽璇眰
     const body = await request.json();
     const { permissions, action } = body;
 
-    // 鍒濆鍖栨潈闄愭湇?
+    // 鍒濆鍖栨潈闄愭湇
     const service = initializePermissionService();
     if (!service) {
       return NextResponse.json(
-        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け? },
+        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け },
         { status: 500 }
       );
     }
@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
         await service.clearUserPermissionCache(session.user.id);
         
         return NextResponse.json({
-          message: '鏉冮檺缂撳瓨宸叉竻?,
+          message: '鏉冮檺缂撳宸叉竻,
           clearedAt: new Date().toISOString()
         });
 
@@ -204,7 +204,7 @@ export async function POST(request: NextRequest) {
         const statsPermission = await service.checkPermission(session.user.id, 'permission_stats_read');
         if (!statsPermission.allowed) {
           return NextResponse.json(
-            { error: '鏃犳潈闄愯闂粺璁′俊? },
+            { error: '犳潈闄愯闂粺璁′俊 },
             { status: 403 }
           );
         }
@@ -226,29 +226,29 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('鏉冮檺鎵归噺妫€鏌PI閿欒:', error);
     return NextResponse.json(
-      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊 },
       { status: 500 }
     );
   }
 }
 
-// PUT - 鏇存柊鏉冮檺閰嶇疆锛堥渶瑕佺鐞嗗憳鏉冮檺?
+// PUT - 鏇存柊鏉冮檺閰嶇疆锛堥渶瑕佺鐞嗗憳鏉冮檺
 export async function PUT(request: NextRequest) {
   try {
-    // 鑾峰彇鐢ㄦ埛浼氳瘽
+    // 鑾峰彇鐢ㄦ埛氳瘽
     const session = await getSession();
-    if (!session??.id) {
+    if (!session.id) {
       return NextResponse.json(
-        { error: '鐢ㄦ埛鏈? },
+        { error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
 
-    // 鍒濆鍖栨潈闄愭湇?
+    // 鍒濆鍖栨潈闄愭湇
     const service = initializePermissionService();
     if (!service) {
       return NextResponse.json(
-        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け? },
+        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け },
         { status: 500 }
       );
     }
@@ -257,17 +257,17 @@ export async function PUT(request: NextRequest) {
     const adminPermission = await service.checkPermission(session.user.id, 'permission_manage');
     if (!adminPermission.allowed) {
       return NextResponse.json(
-        { error: '鏃犳潈闄愮鐞嗘潈闄愰厤? },
+        { error: '犳潈闄愮鐞嗘潈闄愰厤 },
         { status: 403 }
       );
     }
 
-    // 瑙ｆ瀽璇锋眰?
+    // 瑙ｆ瀽璇眰
     const body = await request.json();
     const { action, data } = body;
 
-    // 璁板綍鎿嶄綔鏃ュ織
-    console.log(`绠＄悊?${session.user.id} 鎵ц鏉冮檺绠＄悊鎿嶄綔: ${action}`, data);
+    // 璁板綍鎿嶄綔ュ織
+    console.log(`绠＄悊${session.user.id} 鎵ц鏉冮檺绠＄悊鎿嶄綔: ${action}`, data);
 
     // 杩欓噷搴旇瀹炵幇鍏蜂綋鐨勬潈闄愰厤缃洿鏂伴€昏緫
     // 鐢变簬娑夊強鏁版嵁搴撴搷浣滐紝鏆傛椂杩斿洖鎴愬姛鍝嶅簲
@@ -281,45 +281,45 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error('鏉冮檺閰嶇疆鏇存柊API閿欒:', error);
     return NextResponse.json(
-      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊 },
       { status: 500 }
     );
   }
 }
 
-// DELETE - 鍒犻櫎鏉冮檺缂撳瓨
+// DELETE - 鍒犻櫎鏉冮檺缂撳
 export async function DELETE(request: NextRequest) {
   try {
-    // 鑾峰彇鐢ㄦ埛浼氳瘽
+    // 鑾峰彇鐢ㄦ埛氳瘽
     const session = await getSession();
-    if (!session??.id) {
+    if (!session.id) {
       return NextResponse.json(
-        { error: '鐢ㄦ埛鏈? },
+        { error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
 
-    // 鍒濆鍖栨潈闄愭湇?
+    // 鍒濆鍖栨潈闄愭湇
     const service = initializePermissionService();
     if (!service) {
       return NextResponse.json(
-        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け? },
+        { error: '鏉冮檺鏈嶅姟鍒濆鍖栧け },
         { status: 500 }
       );
     }
 
-    // 娓呴櫎鐢ㄦ埛鏉冮檺缂撳瓨
+    // 娓呴櫎鐢ㄦ埛鏉冮檺缂撳
     await service.clearUserPermissionCache(session.user.id);
     
     return NextResponse.json({
-      message: '鏉冮檺缂撳瓨宸叉竻?,
+      message: '鏉冮檺缂撳宸叉竻,
       clearedAt: new Date().toISOString()
     });
 
   } catch (error) {
-    console.error('娓呴櫎鏉冮檺缂撳瓨API閿欒:', error);
+    console.error('娓呴櫎鏉冮檺缂撳API閿欒:', error);
     return NextResponse.json(
-      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: '鍐呴儴鏈嶅姟鍣ㄩ敊 },
       { status: 500 }
     );
   }

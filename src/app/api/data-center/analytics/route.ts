@@ -16,16 +16,16 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        // 瑙ｆ瀽鍒嗘瀽閫夐」
+        // 瑙ｆ瀽鍒嗘瀽夐」
         const timeRange = searchParams.get('timeRange') || '30d';
-        const platforms = searchParams.get('platforms')?.split(',') || [];
+        const platforms = searchParams.get('platforms').split(',') || [];
         const includeForecast = searchParams.get('forecast') !== 'false';
         const forecastDays = parseInt(searchParams.get('forecastDays') || '7');
         const granularity = searchParams.get('granularity') || 'daily';
 
         const analysis = await priceTrendAnalyzer.analyzePriceTrend(partId, {
           timeRange: timeRange as any,
-          platforms: platforms.length > 0 ? platforms : undefined,
+          platforms: platforms.length > 0  platforms : undefined,
           includeForecast,
           forecastDays,
           granularity: granularity as any
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(analysis);
 
       case 'price-comparison':
-        const partIds = searchParams.get('partIds')?.split(',');
+        const partIds = searchParams.get('partIds').split(',');
         if (!partIds || partIds.length === 0) {
           return NextResponse.json(
             { error: '缂哄皯partIds鍙傛暟' },
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        // 鎵归噺鍒嗘瀽澶氫釜閰嶄欢鐨勪环鏍艰秼?
+        // 鎵归噺鍒嗘瀽澶氫釜閰嶄欢鐨勪环鏍艰秼
         const comparisons = await Promise.all(
           partIds.map(async (id) => {
             try {
@@ -70,13 +70,13 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(marketOverview);
 
       case 'volatility-ranking':
-        // 浠锋牸娉㈠姩鎺掑悕
+        // 牸娉㈠姩鎺掑悕
         const volatilityRanking = await getPriceVolatilityRanking();
         return NextResponse.json(volatilityRanking);
 
       default:
         return NextResponse.json(
-          { error: '鏈煡鐨勬搷浣滅被? },
+          { error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
     console.error('鏁版嵁鍒嗘瀽API閿欒:', error);
     return NextResponse.json(
       { 
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString()
       },
       { status: 500 }
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
               return { 
                 success: false, 
                 partId: id, 
-                error: error instanceof Error ? error.message : '鏈煡閿欒' 
+                error: error instanceof Error  error.message : '鏈煡閿欒' 
               };
             }
           })
@@ -141,13 +141,13 @@ export async function POST(request: NextRequest) {
         });
 
       case 'custom-analysis':
-        // 鑷畾涔夊垎?
+        // 鑷畾涔夊垎
         const customAnalysis = await performCustomAnalysis(body);
         return NextResponse.json(customAnalysis);
 
       default:
         return NextResponse.json(
-          { error: '鏈煡鐨勬搷浣滅被? },
+          { error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
     console.error('鏁版嵁鍒嗘瀽API閿欒:', error);
     return NextResponse.json(
       { 
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString()
       },
       { status: 500 }
@@ -175,11 +175,11 @@ async function generateMarketOverview(category: string, limit: number) {
     highestVolatility: [
       { partId: 'part_001', volatility: 15.2, partName: 'iPhone灞忓箷' },
       { partId: 'part_002', volatility: 12.8, partName: '鐢垫睜缁勪欢' },
-      { partId: 'part_003', volatility: 10.5, partName: '鎽勫儚澶存ā? }
+      { partId: 'part_003', volatility: 10.5, partName: '鎽勫儚澶存ā }
     ],
     lowestPrices: [
-      { partId: 'part_004', price: 25.99, partName: '鍏呯數? },
-      { partId: 'part_005', price: 15.50, partName: '淇濇姢? },
+      { partId: 'part_004', price: 25.99, partName: '鍏呯數 },
+      { partId: 'part_005', price: 15.50, partName: '淇濇姢 },
       { partId: 'part_006', price: 8.99, partName: '璐磋啘' }
     ],
     timestamp: new Date().toISOString()
@@ -187,16 +187,16 @@ async function generateMarketOverview(category: string, limit: number) {
 }
 
 async function getPriceVolatilityRanking() {
-  // 妯℃嫙浠锋牸娉㈠姩鎺掑悕
+  // 妯℃嫙牸娉㈠姩鎺掑悕
   return {
     ranking: [
       { rank: 1, partId: 'part_001', partName: '楂樼鎵嬫満灞忓箷', volatility: 25.5 },
       { rank: 2, partId: 'part_002', partName: '鍘熻鐢垫睜', volatility: 18.3 },
-      { rank: 3, partId: 'part_003', partName: '鎽勫儚澶存ā?, volatility: 15.7 },
+      { rank: 3, partId: 'part_003', partName: '鎽勫儚澶存ā, volatility: 15.7 },
       { rank: 4, partId: 'part_004', partName: '涓绘澘鑺墖', volatility: 12.1 },
-      { rank: 5, partId: 'part_005', partName: '鏄剧ず?, volatility: 9.8 }
+      { rank: 5, partId: 'part_005', partName: '鏄剧ず, volatility: 9.8 }
     ],
-    timeframe: '30锟?,
+    timeframe: '30,
     timestamp: new Date().toISOString()
   };
 }
@@ -209,14 +209,14 @@ async function performCustomAnalysis(requestBody: any) {
     case 'correlation':
       return {
         type: 'correlation',
-        result: '閰嶄欢A鍜岄厤浠禕浠锋牸鐩稿叧绯绘暟: 0.75',
+        result: '閰嶄欢A鍜岄厤禕牸鐩稿叧绯绘暟: 0.75',
         confidence: 0.85
       };
       
     case 'seasonal':
       return {
         type: 'seasonal',
-        result: '鍙戠幇鏄庢樉鐨勫鑺傛€т环鏍兼ā?,
+        result: '鍙戠幇鏄庢樉鐨勫鑺傛€т环鏍兼ā,
         seasons: ['鏄ュ涓婃定15%', '澶忓涓嬮檷8%', '绉嬪绋冲畾', '鍐涓婃定12%']
       };
       

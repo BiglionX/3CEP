@@ -27,14 +27,14 @@ export async function GET(request: NextRequest) {
 
       case 'patterns':
         // 鑾峰彇闂妯″紡
-        // 娉ㄦ剰锛氳繖閲岄渶瑕佷慨鏀筰ssueIdentificationEngine浠ユ毚闇瞤atterns
+        // 娉ㄦ剰锛氳繖閲岄渶瑕佷慨鏀筰ssueIdentificationEngineユ毚闇瞤atterns
         return NextResponse.json({
           message: '鍔熻兘鏆傛湭瀹炵幇',
           timestamp: new Date().toISOString(),
         });
 
       case 'execution-status':
-        // 鑾峰彇鎵ц鐘?        const stats = autoFixCoordinator.getExecutionStats();
+        // 鑾峰彇鎵ц鐘        const stats = autoFixCoordinator.getExecutionStats();
         return NextResponse.json({
           executionStats: stats,
           timestamp: new Date().toISOString(),
@@ -61,13 +61,13 @@ export async function GET(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鑷姩淇API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -82,10 +82,10 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'analyze-issues':
-        // 鍒嗘瀽鏁版嵁璐ㄩ噺闂骞剁敓鎴愪慨澶嶅缓?        const { checkResults } = params;
+        // 鍒嗘瀽鏁版嵁璐ㄩ噺闂骞剁敓鎴愪慨澶嶅缓        const { checkResults } = params;
         if (!checkResults || !Array.isArray(checkResults)) {
           return NextResponse.json(
-            { error: '缂哄皯鏈夋晥鐨勬鏌ョ粨鏋滄暟? },
+            { error: '缂哄皯鏈夋晥鐨勬鏌ョ粨鏋滄暟 },
             { status: 400 }
           );
         }
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
           await issueIdentificationEngine.identifyIssues(checkResults);
 
         return NextResponse.json({
-          message: `鐢熸垚?${suggestions.length} 涓慨澶嶅缓璁甡,
+          message: `鐢熸垚${suggestions.length} 涓慨澶嶅缓璁甡,
           suggestions: suggestions,
           summary: {
             totalSuggestions: suggestions.length,
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
             failed: failedExecutions,
             successRate:
               planResults.length > 0
-                ? (successfulExecutions / planResults.length) * 100
+                 (successfulExecutions / planResults.length) * 100
                 : 0,
           },
           timestamp: new Date().toISOString(),
@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
           await autoFixCoordinator.cancelExecution(suggestionId);
 
         return NextResponse.json({
-          message: cancelled ? '鎵ц宸插彇? : '鍙栨秷澶辫触鎴栨墽琛屽凡瀹屾垚',
+          message: cancelled  '鎵ц宸插彇 : '鍙栨秷澶辫触鎴栨墽琛屽凡瀹屾垚',
           suggestionId: suggestionId,
           cancelled: cancelled,
           timestamp: new Date().toISOString(),
@@ -226,17 +226,17 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: '缂哄皯妯″紡鏁版嵁' }, { status: 400 });
         }
 
-        // 娉ㄦ剰锛氶渶瑕佷慨鏀筰ssueIdentificationEngine浠ユ敮鎸佹鏂规硶
+        // 娉ㄦ剰锛氶渶瑕佷慨鏀筰ssueIdentificationEngineユ敮鎸佹鏂规硶
         return NextResponse.json({
           message: '鍔熻兘鏆傛湭瀹炵幇',
           timestamp: new Date().toISOString(),
         });
 
       case 'evaluate-effectiveness':
-        // 璇勪及鐗瑰畾淇鐨勬晥?        const { suggestion: evalSuggestion, executionResult } = params;
+        // 璇勪及鐗瑰畾淇鐨勬晥        const { suggestion: evalSuggestion, executionResult } = params;
         if (!evalSuggestion || !executionResult) {
           return NextResponse.json(
-            { error: '缂哄皯璇勪及鎵€闇€鐨勬暟? },
+            { error: '缂哄皯璇勪及鎵€闇€鐨勬暟 },
             { status: 400 }
           );
         }
@@ -253,13 +253,13 @@ export async function POST(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鑷姩淇API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
         role: 'admin',
         status: 'active',
         department: '鎶€鏈儴',
-        position: '绯荤粺绠＄悊?,
+        position: '绯荤粺绠＄悊,
         created_at: '2024-01-01T10:00:00Z',
         last_login: '2024-01-20T15:30:00Z',
       },
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
         phone: '13800138001',
         role: 'manager',
         status: 'active',
-        department: '杩愯惀?,
+        department: '杩愯惀,
         position: '杩愯惀缁忕悊',
         created_at: '2024-01-05T09:30:00Z',
         last_login: '2024-01-20T14:20:00Z',
@@ -46,15 +46,15 @@ export async function GET(request: Request) {
     if (format === 'csv') {
       // 鐢熸垚CSV鏍煎紡鏁版嵁
       const csvHeaders = [
-        '鐢ㄦ埛?,
-        '閭',
-        '鎵嬫満?,
+        '鐢ㄦ埛,
+        '',
+        '鎵嬫満,
         '瑙掕壊',
-        '鐘?,
+        '鐘,
         '閮ㄩ棬',
         '鑱屼綅',
-        '鍒涘缓鏃堕棿',
-        '鏈€鍚庣櫥?,
+        '鍒涘缓堕棿',
+        '鏈€鍚庣櫥,
       ];
       const csvRows = mockUsers.map(user => [
         user.username,
@@ -65,7 +65,7 @@ export async function GET(request: Request) {
         user.department || '',
         user.position || '',
         new Date(user.created_at).toLocaleString(),
-        user.last_login ? new Date(user.last_login).toLocaleString() : '',
+        user.last_login  new Date(user.last_login).toLocaleString() : '',
       ]);
 
       const csvContent = [
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
         },
       });
     } else if (format === 'excel') {
-      // 杩斿洖Excel鏍煎紡鏁版嵁锛堣繖閲岀畝鍖栦负JSON锟?      return NextResponse.json({
+      // 杩斿洖Excel鏍煎紡鏁版嵁锛堣繖閲岀畝鍖栦负JSON      return NextResponse.json({
         data: mockUsers,
         filename: 'users-export.xlsx',
       });

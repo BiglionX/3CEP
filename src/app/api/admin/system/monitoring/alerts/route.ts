@@ -9,9 +9,9 @@ interface SystemAlert {
   category: 'system' | 'security' | 'performance' | 'business';
   status: 'active' | 'acknowledged' | 'resolved';
   created_at: string;
-  acknowledged_by?: string;
-  resolved_at?: string;
-  metrics?: Record<string, any>;
+  acknowledged_by: string;
+  resolved_at: string;
+  metrics: Record<string, any>;
 }
 
 // 鑾峰彇绯荤粺鍛婅
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -32,8 +32,8 @@ export async function GET(request: Request) {
     const alerts: SystemAlert[] = [
       {
         id: 'alert_001',
-        title: 'CPU浣跨敤鐜囪繃?,
-        description: '鏈嶅姟鍣–PU浣跨敤鐜囪揪?8.5%锛岃秴杩囬璀﹂槇?0%',
+        title: 'CPU浣跨敤鐜囪繃,
+        description: '鏈嶅姟鍣–PU浣跨敤鐜囪揪8.5%锛岃秴杩囬璀﹂槇0%',
         severity: 'medium',
         category: 'performance',
         status: 'active',
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
       {
         id: 'alert_002',
         title: '纾佺洏绌洪棿涓嶈冻',
-        description: '鏍瑰垎鍖轰娇鐢ㄧ巼杈惧埌72.8%锛屾帴?0%鐨勫嵄闄╅槇?,
+        description: '鏍瑰垎鍖轰娇鐢ㄧ巼杈惧埌72.8%锛屾帴0%鐨勫嵄闄╅槇,
         severity: 'medium',
         category: 'system',
         status: 'active',
@@ -72,8 +72,8 @@ export async function GET(request: Request) {
       },
       {
         id: 'alert_004',
-        title: 'API鍝嶅簲鏃堕棿寤惰繜',
-        description: '鏍稿績API骞冲潎鍝嶅簲鏃堕棿杈惧埌120ms锛屽奖鍝嶇敤鎴蜂綋?,
+        title: 'API鍝嶅簲堕棿寤惰繜',
+        description: '鏍稿績API骞冲潎鍝嶅簲堕棿杈惧埌120ms锛屽奖鍝嶇敤鎴蜂綋,
         severity: 'low',
         category: 'performance',
         status: 'resolved',
@@ -117,24 +117,24 @@ export async function GET(request: Request) {
   }
 }
 
-// 澶勭悊鍛婅锛堢‘?瑙ｅ喅?export async function POST(request: Request) {
+// 澶勭悊鍛婅锛堢‘瑙ｅ喅export async function POST(request: Request) {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const body = await request.json();
     const { action, alertId, userId } = body;
 
     // 妯℃嫙鍛婅澶勭悊
-    console.log(`${action} 鍛婅:`, alertId, '鎿嶄綔?', userId);
+    console.log(`${action} 鍛婅:`, alertId, '鎿嶄綔', userId);
 
     return NextResponse.json({
       success: true,
-      message: `鍛婅?{action === 'acknowledge' ? '纭' : '瑙ｅ喅'}`,
+      message: `鍛婅{action === 'acknowledge'  '纭' : '瑙ｅ喅'}`,
     });
   } catch (error) {
     console.error('澶勭悊鍛婅澶辫触:', error);

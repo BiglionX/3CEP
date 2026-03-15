@@ -16,9 +16,9 @@ export async function GET(request: Request) {
         const filters = {
           enabled:
             searchParams.get('enabled') === 'true'
-              ? true
+               true
               : searchParams.get('enabled') === 'false'
-                ? false
+                 false
                 : undefined,
           severity: searchParams.get('severity') || undefined,
           metric_name: searchParams.get('metric_name') || undefined,
@@ -50,7 +50,7 @@ export async function GET(request: Request) {
           return NextResponse.json(
             {
               success: false,
-              error: '鍛婅瑙勫垯涓嶅瓨?,
+              error: '鍛婅瑙勫垯涓嶅,
             },
             { status: 404 }
           );
@@ -193,7 +193,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: toggledRule,
-          message: `鍛婅瑙勫垯?{params.enabled ? '鍚敤' : '绂佺敤'}`,
+          message: `鍛婅瑙勫垯{params.enabled  '鍚敤' : '绂佺敤'}`,
           timestamp: new Date().toISOString(),
         });
 
@@ -259,7 +259,7 @@ export async function POST(request: Request) {
         });
 
       case 'create_channel':
-        // 鍒涘缓閫氱煡娓犻亾
+        // 鍒涘缓氱煡娓犻亾
         if (!params.name || !params.type || !params.config) {
           return NextResponse.json(
             {
@@ -279,7 +279,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: channel,
-          message: '閫氱煡娓犻亾鍒涘缓鎴愬姛',
+          message: '氱煡娓犻亾鍒涘缓鎴愬姛',
           timestamp: new Date().toISOString(),
         });
 
@@ -304,7 +304,7 @@ export async function POST(request: Request) {
   }
 }
 
-// 鑾峰彇鎵€鏈夊崌绾х瓥?export async function GET_ESCALATION_POLICIES() {
+// 鑾峰彇鎵€鏈夊崌绾х瓥export async function GET_ESCALATION_POLICIES() {
   try {
     const policies = await alertRulesManager.getAllEscalationPolicies();
     return NextResponse.json({
@@ -340,7 +340,7 @@ export async function GET_NOTIFICATION_CHANNELS(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('鑾峰彇閫氱煡娓犻亾澶辫触:', error);
+    console.error('鑾峰彇氱煡娓犻亾澶辫触:', error);
     return NextResponse.json(
       {
         success: false,

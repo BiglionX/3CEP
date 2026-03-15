@@ -1,5 +1,7 @@
 ﻿/**
- * 增强版错误处理系? * 提供全局错误边界、友好的错误提示和错误上报功? */
+ * 增强版错误处理系统
+ * 提供全局错误边界、友好的错误提示和错误上报功能
+ */
 
 'use client';
 
@@ -52,7 +54,8 @@ export interface AppError {
   context?: Record<string, any>;
 }
 
-// 错误上下?interface ErrorContextType {
+// 错误上下文类型
+interface ErrorContextType {
   errors: AppError[];
   addError: (error: Omit<AppError, 'id' | 'timestamp'>) => void;
   removeError: (id: string) => void;
@@ -60,9 +63,11 @@ export interface AppError {
   handleError: (error: unknown, context?: Record<string, any>) => void;
 }
 
-// 创建错误上下?const ErrorContext = createContext<ErrorContextType | undefined>(undefined);
+// 创建错误上下文
+const ErrorContext = createContext<ErrorContextType | undefined>(undefined);
 
-// 错误提供商组?export function ErrorProvider({ children }: { children: React.ReactNode }) {
+// 错误提供商组件
+export function ErrorProvider({ children }: { children: React.ReactNode }) {
   const [errors, setErrors] = useState<AppError[]>([]);
 
   // 添加错误
@@ -73,7 +78,7 @@ export interface AppError {
       timestamp: Date.now(),
     };
 
-    setErrors(prev => [newError, ...prev].slice(0, 10)); // 保持最?0个错?
+    setErrors(prev => [newError, ...prev].slice(0, 10)); // 保持最多10个错误
     // 发送错误到监控服务
     reportErrorToService(newError);
   }, []);
@@ -83,7 +88,8 @@ export interface AppError {
     setErrors(prev => prev.filter(error => error.id !== id));
   }, []);
 
-  // 清除所有错?  const clearErrors = useCallback(() => {
+  // 清除所有错误
+  const clearErrors = useCallback(() => {
     setErrors([]);
   }, []);
 
@@ -96,7 +102,8 @@ export interface AppError {
     [addError]
   );
 
-  // 错误上下文?  const contextValue: ErrorContextType = {
+  // 错误上下文值
+  const contextValue: ErrorContextType = {
     errors,
     addError,
     removeError,
@@ -142,7 +149,8 @@ export class GlobalErrorBoundary extends React.Component<
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Global Error Boundary caught:', error, errorInfo);
 
-    // 发送错误报?    const errorReport = {
+    // 发送错误报告
+    const errorReport = {
       error: error.toString(),
       stack: error.stack,
       componentStack: errorInfo.componentStack,
@@ -529,14 +537,17 @@ export function useQueryErrorHandler() {
   return { handleQueryError };
 }
 
-// 异步操作错误包装?export async function withErrorHandling<T>(
+// 异步操作错误包装函数
+export async function withErrorHandling<T>(
   operation: () => Promise<T>,
   context?: Record<string, any>
 ): Promise<T> {
   try {
     return await operation();
   } catch (error) {
-    // 这里应该使用全局错误处理上下?    // 由于Hook限制，暂时直接处?    console.error('Operation failed:', error, context);
+    // 这里应该使用全局错误处理上下文
+    // 由于Hook限制，暂时直接处理
+    console.error('Operation failed:', error, context);
     throw error;
   }
 }

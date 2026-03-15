@@ -1,6 +1,6 @@
 ﻿/**
  * 手势支持功能演示页面
- * 展示各种移动端手势交互功? */
+ * 展示各种移动端手势交互功能 */
 
 'use client';
 
@@ -15,7 +15,6 @@ import {
   Activity,
   BarChart3,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -31,7 +30,6 @@ import {
   GestureCanvas,
 } from '@/components/gestures';
 import {
-  useGestures,
   GestureType,
   GestureEventData,
 } from '@/hooks/use-gestures';
@@ -58,7 +56,8 @@ export default function GesturesDemoPage() {
   // 处理手势事件
   const handleGesture = (gesture: GestureType, data: GestureEventData) => {
     updateStats(gesture);
-    setGestureHistory(prev => [data, ...prev.slice(0, 9)]); // 保持最?0个手?  };
+    setGestureHistory(prev => [data, ...prev.slice(0, 9)]); // 保持最近10个手势
+  };
 
   // 手势类型映射
   const gestureLabels: Record<GestureType, string> = {
@@ -133,7 +132,7 @@ export default function GesturesDemoPage() {
                     <div className="text-2xl font-bold text-purple-600">
                       {gestureStats[gesture] || 0}
                     </div>
-                    <div className="text-sm text-gray-500 mt-1">次使?/div>
+                    <div className="text-sm text-gray-500 mt-1">次使用</div>
                   </CardContent>
                 </Card>
               ))}
@@ -145,7 +144,8 @@ export default function GesturesDemoPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Settings className="h-5 w-5" />
-                    支持的手势类?                  </CardTitle>
+                    支持的手势类型
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
@@ -153,14 +153,15 @@ export default function GesturesDemoPage() {
                       <div key={gesture} className="flex items-center gap-2">
                         <Badge
                           variant={
-                            gestureStats[gesture] ? 'default' : 'secondary'
+                            gestureStats[gesture]  'default' : 'secondary'
                           }
                           className="capitalize"
                         >
                           {label}
                         </Badge>
                         <span className="text-sm text-gray-600">
-                          {gestureStats[gesture] || 0}�?                        </span>
+                          {gestureStats[gesture] || 0} 次
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -170,24 +171,25 @@ export default function GesturesDemoPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>实时反馈</CardTitle>
-                  <CardDescription>当前手势识别状?/CardDescription>
+                  <CardDescription>当前手势识别状态</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="p-4 bg-purple-50 rounded-lg">
                       <div className="text-sm text-gray-600 mb-1">
-                        最后识别手?                      </div>
+                        最后识别手势
+                      </div>
                       <div className="text-lg font-semibold text-purple-700">
-                        {lastGesture ? gestureLabels[lastGesture] : '�?}
+                        {lastGesture  gestureLabels[lastGesture] : '无'}
                       </div>
                     </div>
 
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <div className="text-sm text-gray-600 mb-2">
-                        手势历史 (最?0�?
+                        手势历史 (最近10个)
                       </div>
                       <div className="space-y-2 max-h-40 overflow-y-auto">
-                        {gestureHistory.length === 0 ? (
+                        {gestureHistory.length === 0  (
                           <p className="text-gray-500 text-sm">暂无手势记录</p>
                         ) : (
                           gestureHistory.map((event, index) => (
@@ -210,13 +212,14 @@ export default function GesturesDemoPage() {
             </div>
           </TabsContent>
 
-          {/* 图片查看器面?*/}
+          {/* 图片查看器面板 */}
           <TabsContent value="image" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Image className="h-5 w-5" />
-                  手势图片查看?                </CardTitle>
+                  手势图片查看器
+                </CardTitle>
                 <CardDescription>
                   支持捏合缩放、旋转、拖拽等手势操作
                 </CardDescription>
@@ -329,15 +332,15 @@ export default function GesturesDemoPage() {
                     <CardContent>
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline">�?左滑</Badge>
-                          <Badge variant="outline">�?右滑</Badge>
+                          <Badge variant="outline">👈 左滑</Badge>
+                          <Badge variant="outline">👉 右滑</Badge>
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge variant="outline">👆 点击</Badge>
                           <Badge variant="outline">👆👆 双击</Badge>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline">�?长按</Badge>
+                          <Badge variant="outline">👇 长按</Badge>
                         </div>
                       </div>
                     </CardContent>
@@ -353,9 +356,11 @@ export default function GesturesDemoPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Palette className="h-5 w-5" />
-                  手势绘画?                </CardTitle>
+                  手势绘画板
+                </CardTitle>
                 <CardDescription>
-                  使用手指在画布上绘制，支持手势清?                </CardDescription>
+                  使用手指在画布上绘制，支持手势清除
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-center">
@@ -365,9 +370,9 @@ export default function GesturesDemoPage() {
                     strokeWidth={3}
                     strokeColor="#3b82f6"
                     backgroundColor="#f8fafc"
-                    onDrawStart={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('开始绘?)}
-                    onDrawEnd={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('结束绘制')}
-                    onClear={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('清空画布')}
+                    onDrawStart={() => {/* 开始绘制 */}}
+                    onDrawEnd={() => {/* 结束绘制 */}}
+                    onClear={() => {/* 清空画布 */}}
                   />
                 </div>
 
@@ -393,7 +398,8 @@ export default function GesturesDemoPage() {
                       实时反馈
                     </div>
                     <div className="text-sm text-gray-600">
-                      绘制过程中实时显示轨?                    </div>
+                      绘制过程中实时显示轨迹
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -406,7 +412,7 @@ export default function GesturesDemoPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>手势使用统计</CardTitle>
-                  <CardDescription>各类手势的使用频?/CardDescription>
+                  <CardDescription>各类手势的使用频率</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -445,7 +451,7 @@ export default function GesturesDemoPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                      <span>识别准确?/span>
+                      <span>识别准确率</span>
                       <Badge variant="default">99.2%</Badge>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
@@ -470,10 +476,10 @@ export default function GesturesDemoPage() {
                   <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                     <h4 className="font-medium mb-2">使用建议</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>�?在移动设备上体验最佳效?/li>
-                      <li>�?确保浏览器支持触摸事?/li>
-                      <li>�?手势操作时保持手指稳?/li>
-                      <li>�?双击间隔建议小于300ms</li>
+                      <li>• 在移动设备上体验最佳效果</li>
+                      <li>• 确保浏览器支持触摸事件</li>
+                      <li>• 手势操作时保持手指稳定</li>
+                      <li>• 双击间隔建议小于300ms</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -484,7 +490,7 @@ export default function GesturesDemoPage() {
 
         {/* 底部说明 */}
         <div className="mt-12 text-center text-gray-500 text-sm">
-          <p>💡 提示：请在移动设备或触摸屏上体验完整的手势功?/p>
+          <p>💡 提示：请在移动设备或触摸屏上体验完整的手势功能</p>
           <p className="mt-1">
             所有手势操作都经过精心优化，提供流畅自然的交互体验
           </p>

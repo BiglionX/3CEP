@@ -1,6 +1,6 @@
 ﻿/**
  * @file page.tsx
- * @description 拖拽设计器测试页?
+ * @description 拖拽设计器测试页
  * @version 1.0.0
  * @author DataCenter Team
  * @date 2026-02-28
@@ -19,7 +19,7 @@ export default function DragDropDesignerPage() {
 
   const handleLoad = async (id: string) => {
     // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('加载设计配置:', id)const saved = localStorage.getItem('drag-drop-design');
-    return saved ? JSON.parse(saved) : null;
+    return saved  JSON.parse(saved) : null;
   };
 
   return (

@@ -43,7 +43,7 @@ const carouselItems = [
   {
     id: 1,
     title: '触控按钮',
-    description: '专为移动设备优化的触控按钮，支持长按和双击手?,
+    description: '专为移动设备优化的触控按钮，支持长按和双击手势',
     icon: Heart,
     color: 'bg-red-100 text-red-600',
   },
@@ -57,7 +57,7 @@ const carouselItems = [
   {
     id: 3,
     title: '触控滑块',
-    description: '精确的触控滑块控制，适用于各种数值调节场?,
+    description: '精确的触控滑块控制，适用于各种数值调节场景',
     icon: Sun,
     color: 'bg-orange-100 text-orange-600',
   },
@@ -88,7 +88,8 @@ function GestureDemo() {
   const gestureHandlers = useGestureRecognizer(handleGesture);
 
   const handleSwipe = (direction: SwipeDirection) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('滑动方向:', direction)// 根据滑动方向切换轮播?    if (direction === 'left' && carouselIndex < carouselItems.length - 1) {
+    // 根据滑动方向切换轮播
+    if (direction === 'left' && carouselIndex < carouselItems.length - 1) {
       setCarouselIndex(carouselIndex + 1);
     } else if (direction === 'right' && carouselIndex > 0) {
       setCarouselIndex(carouselIndex - 1);
@@ -104,7 +105,8 @@ function GestureDemo() {
             手势识别演示
           </CardTitle>
           <CardDescription>
-            在下方区域内进行各种手势操作来测试手势识别功?          </CardDescription>
+            在下方区域内进行各种手势操作来测试手势识别功能
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {/* 手势识别区域 */}
@@ -124,7 +126,8 @@ function GestureDemo() {
                   手势识别区域
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  在此区域内尝试各种手势操?                </p>
+                  在此区域内尝试各种手势操作
+                </p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
                   <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                     滑动
@@ -141,7 +144,7 @@ function GestureDemo() {
                 </div>
               </div>
 
-              {/* 视觉反馈指示?*/}
+              {/* 视觉反馈指示器 */}
               <div className="absolute top-4 left-4 right-4 flex justify-between">
                 <div className="w-3 h-3 rounded-full bg-red-400 animate-pulse"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-400 animate-pulse"></div>
@@ -150,7 +153,7 @@ function GestureDemo() {
             </div>
           </SwipeableContainer>
 
-          {/* 手势指示?*/}
+          {/* 手势指示器 */}
           <GestureIndicator gesture={detectedGesture} />
         </CardContent>
       </Card>
@@ -168,8 +171,8 @@ function GestureDemo() {
             <TouchButton
               variant="primary"
               size="lg"
-              onPress={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('主要按钮被点?)}
-              onLongPress={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('主要按钮被长?)}
+              onPress={() => console.log('主要按钮被点击')}
+              onLongPress={() => console.log('主要按钮被长按')}
             >
               <ThumbsUp className="w-5 h-5 mr-2" />
               点赞
@@ -178,7 +181,7 @@ function GestureDemo() {
             <TouchButton
               variant="secondary"
               size="md"
-              onPress={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('分享按钮被点?)}
+              onPress={() => console.log('分享按钮被点击')}
             >
               <Share2 className="w-4 h-4 mr-2" />
               分享
@@ -187,8 +190,8 @@ function GestureDemo() {
             <TouchButton
               variant="danger"
               size="sm"
-              onPress={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除按钮被点?)}
-              onLongPress={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除按钮被长?)}
+              onPress={() => console.log('删除按钮被点击')}
+              onLongPress={() => console.log('删除按钮被长按')}
             >
               <VolumeX className="w-4 h-4 mr-1" />
               静音
@@ -197,7 +200,7 @@ function GestureDemo() {
             <TouchButton
               variant="ghost"
               size="md"
-              onPress={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('收藏按钮被点?)}
+              onPress={() => console.log('收藏按钮被点击')}
             >
               <Star className="w-4 h-4 mr-2" />
               收藏
@@ -211,7 +214,8 @@ function GestureDemo() {
         <CardHeader>
           <CardTitle>触控滑块组件</CardTitle>
           <CardDescription>
-            精确的触控滑块控制，适用于音量、亮度等数值调?          </CardDescription>
+            精确的触控滑块控制，适用于音量、亮度等数值调节
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <TouchSlider
@@ -250,11 +254,11 @@ function GestureDemo() {
         </CardContent>
       </Card>
 
-      {/* 轮播图演?*/}
+      {/* 轮播图演示 */}
       <Card>
         <CardHeader>
           <CardTitle>触控轮播组件</CardTitle>
-          <CardDescription>支持手势滑动的卡片轮播组?/CardDescription>
+          <CardDescription>支持手势滑动的卡片轮播组件</CardDescription>
         </CardHeader>
         <CardContent>
           <TouchCarousel
@@ -315,14 +319,16 @@ function GestureDemo() {
   );
 }
 
-// 主演示页?export default function TouchGesturesDemoPage() {
+// 主演示页面
+export default function TouchGesturesDemoPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            移动端手势组件演?          </h1>
-          <p className="text-gray-600">专为触控设备优化的交互组件集?/p>
+            移动端手势组件演示
+          </h1>
+          <p className="text-gray-600">专为触控设备优化的交互组件集合</p>
         </div>
 
         <GestureDemo />
@@ -330,4 +336,3 @@ function GestureDemo() {
     </div>
   );
 }
-

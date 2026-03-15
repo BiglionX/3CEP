@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       case 'calculate':
         if (!orderId || rating === undefined) {
           return NextResponse.json(
-            { success: false, error: '璁＄畻濂栧姳闇€瑕佹彁渚涘伐鍗旾D鍜岃瘎? },
+            { success: false, error: '璁＄畻濂栧姳闇€瑕佹彁渚涘伐鍗旾D鍜岃瘎 },
             { status: 400 }
           );
         }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
         if (orderError || !orderData) {
           return NextResponse.json(
-            { success: false, error: '宸ュ崟涓嶅瓨? },
+            { success: false, error: '宸ュ崟涓嶅 },
             { status: 404 }
           );
         }
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       case 'grant':
         if (!orderId || rating === undefined) {
           return NextResponse.json(
-            { success: false, error: '鍙戞斁濂栧姳闇€瑕佹彁渚涘伐鍗旾D鍜岃瘎? },
+            { success: false, error: '鍙戞斁濂栧姳闇€瑕佹彁渚涘伐鍗旾D鍜岃瘎 },
             { status: 400 }
           );
         }
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
         if (orderError2 || !orderData2) {
           return NextResponse.json(
-            { success: false, error: '宸ュ崟涓嶅瓨? },
+            { success: false, error: '宸ュ崟涓嶅 },
             { status: 404 }
           );
         }
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       case 'redeem':
         if (!shopId || !amount) {
           return NextResponse.json(
-            { success: false, error: '鍏戞崲鏈熸潈闇€瑕佹彁渚涘簵閾篒D鍜岄噾? },
+            { success: false, error: '鍏戞崲鏈熸潈闇€瑕佹彁渚涘簵篒D鍜岄噾 },
             { status: 400 }
           );
         }
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -129,7 +129,7 @@ export async function GET(request: Request) {
 
     if (!shopId) {
       return NextResponse.json(
-        { success: false, error: '闇€瑕佹彁渚涘簵閾篒D' },
+        { success: false, error: '闇€瑕佹彁渚涘簵篒D' },
         { status: 400 }
       );
     }
@@ -168,7 +168,7 @@ export async function GET(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬煡璇㈢被? },
+          { success: false, error: '犳晥鐨勬煡璇㈢被 },
           { status: 400 }
         );
     }

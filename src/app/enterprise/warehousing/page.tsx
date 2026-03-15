@@ -41,8 +41,8 @@ export default function WarehousingManagementPage() {
   const warehouses: Warehouse[] = [
     {
       id: 'WH-001',
-      name: '深圳?,
-      location: '广东省深圳市南山?,
+      name: '深圳,
+      location: '广东省深圳市南山,
       capacity: 10000,
       currentStock: 7500,
       utilization: 75,
@@ -50,8 +50,8 @@ export default function WarehousingManagementPage() {
     },
     {
       id: 'WH-002',
-      name: '上海?,
-      location: '上海市浦东新?,
+      name: '上海,
+      location: '上海市浦东新,
       capacity: 8000,
       currentStock: 6800,
       utilization: 85,
@@ -132,9 +132,9 @@ export default function WarehousingManagementPage() {
             <Warehouse className="w-8 h-8 text-blue-600" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            海外仓智能管理系?          </h1>
+            海外仓智能管理系          </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            全球仓储网络和智能物流管理，实现库存同步、智能分仓和高效配?          </p>
+            全球仓储网络和智能物流管理，实现库存同步、智能分仓和高效配          </p>
         </div>
 
         {/* 导航标签 */}
@@ -146,11 +146,11 @@ export default function WarehousingManagementPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
                   activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
+                     'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                {tab === 'dashboard' && '仪表?}
+                {tab === 'dashboard' && '仪表}
                 {tab === 'warehouses' && '仓库管理'}
                 {tab === 'shipments' && '货运管理'}
                 {tab === 'analytics' && '数据分析'}
@@ -159,7 +159,7 @@ export default function WarehousingManagementPage() {
           </nav>
         </div>
 
-        {/* 仪表板内?*/}
+        {/* 仪表板内*/}
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
             {/* 统计卡片 */}
@@ -173,13 +173,13 @@ export default function WarehousingManagementPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">12</div>
-                  <p className="text-xs text-muted-foreground">覆盖5个国?/p>
+                  <p className="text-xs text-muted-foreground">覆盖5个国/p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">总库?/CardTitle>
+                  <CardTitle className="text-sm font-medium">总库/CardTitle>
                   <Package className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -191,20 +191,20 @@ export default function WarehousingManagementPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    在途货?                  </CardTitle>
+                    在途货                  </CardTitle>
                   <Truck className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">1,247</div>
                   <p className="text-xs text-muted-foreground">
-                    预计24小时内到?                  </p>
+                    预计24小时内到                  </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    准时交付?                  </CardTitle>
+                    准时交付                  </CardTitle>
                   <CheckCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -214,7 +214,7 @@ export default function WarehousingManagementPage() {
               </Card>
             </div>
 
-            {/* 仓库分布?*/}
+            {/* 仓库分布*/}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -242,7 +242,7 @@ export default function WarehousingManagementPage() {
                             <div className="text-sm font-medium">
                               {warehouse.utilization}%
                             </div>
-                            <div className="text-xs text-gray-500">利用?/div>
+                            <div className="text-xs text-gray-500">利用/div>
                           </div>
                         </div>
                       ))}
@@ -267,7 +267,7 @@ export default function WarehousingManagementPage() {
                             <div className="text-sm font-medium">
                               {warehouse.utilization}%
                             </div>
-                            <div className="text-xs text-gray-500">利用?/div>
+                            <div className="text-xs text-gray-500">利用/div>
                           </div>
                         </div>
                       ))}
@@ -279,14 +279,14 @@ export default function WarehousingManagementPage() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div>
-                          <div className="font-medium">德国汉堡?/div>
+                          <div className="font-medium">德国汉堡/div>
                           <div className="text-sm text-gray-600">
                             Hamburg, Germany
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-sm font-medium">筹备?/div>
-                          <div className="text-xs text-gray-500">即将开?/div>
+                          <div className="text-sm font-medium">筹备/div>
+                          <div className="text-xs text-gray-500">即将开/div>
                         </div>
                       </div>
                     </div>
@@ -314,8 +314,8 @@ export default function WarehousingManagementPage() {
                         <th className="text-left py-3 px-4">位置</th>
                         <th className="text-left py-3 px-4">容量</th>
                         <th className="text-left py-3 px-4">当前库存</th>
-                        <th className="text-left py-3 px-4">利用?/th>
-                        <th className="text-left py-3 px-4">状?/th>
+                        <th className="text-left py-3 px-4">利用/th>
+                        <th className="text-left py-3 px-4">状/th>
                       </tr>
                     </thead>
                     <tbody>
@@ -341,9 +341,9 @@ export default function WarehousingManagementPage() {
                                 <div
                                   className={`h-2 rounded-full ${
                                     warehouse.utilization > 90
-                                      ? 'bg-red-500'
+                                       'bg-red-500'
                                       : warehouse.utilization > 75
-                                        ? 'bg-yellow-500'
+                                         'bg-yellow-500'
                                         : 'bg-green-500'
                                   }`}
                                   style={{ width: `${warehouse.utilization}%` }}
@@ -356,9 +356,9 @@ export default function WarehousingManagementPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(warehouse.status)}`}
                             >
-                              {warehouse.status === 'active' && '运营?}
-                              {warehouse.status === 'maintenance' && '维护?}
-                              {warehouse.status === 'full' && '已满?}
+                              {warehouse.status === 'active' && '运营部}
+                              {warehouse.status === 'maintenance' && '维护}
+                              {warehouse.status === 'full' && '已满}
                             </span>
                           </td>
                         </tr>
@@ -384,11 +384,11 @@ export default function WarehousingManagementPage() {
                     <thead>
                       <tr className="border-b">
                         <th className="text-left py-3 px-4">货运编号</th>
-                        <th className="text-left py-3 px-4">订单?/th>
-                        <th className="text-left py-3 px-4">目的?/th>
-                        <th className="text-left py-3 px-4">承运?/th>
+                        <th className="text-left py-3 px-4">订单/th>
+                        <th className="text-left py-3 px-4">目的/th>
+                        <th className="text-left py-3 px-4">承运/th>
                         <th className="text-left py-3 px-4">预计送达</th>
-                        <th className="text-left py-3 px-4">状?/th>
+                        <th className="text-left py-3 px-4">状/th>
                       </tr>
                     </thead>
                     <tbody>
@@ -410,8 +410,8 @@ export default function WarehousingManagementPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getShipmentStatusColor(shipment.status)}`}
                             >
-                              {shipment.status === 'pending' && '待发?}
-                              {shipment.status === 'shipping' && '运输?}
+                              {shipment.status === 'pending' && '待发}
+                              {shipment.status === 'shipping' && '运输}
                               {shipment.status === 'delivered' && '已送达'}
                               {shipment.status === 'delayed' && '延误'}
                             </span>
@@ -441,11 +441,11 @@ export default function WarehousingManagementPage() {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span>平均库存周转天数</span>
-                      <span className="font-semibold">45�?/span>
+                      <span className="font-semibold">45/span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>库存周转?/span>
-                      <span className="font-semibold">8.1�?�?/span>
+                      <span>库存周转/span>
+                      <span className="font-semibold">8.1/span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span>滞销商品占比</span>
@@ -471,11 +471,11 @@ export default function WarehousingManagementPage() {
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>配送效率提?/span>
+                      <span>配送效率提/span>
                       <span className="font-semibold text-green-600">35%</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>客户满意?/span>
+                      <span>客户满意/span>
                       <span className="font-semibold">4.8/5.0</span>
                     </div>
                   </div>

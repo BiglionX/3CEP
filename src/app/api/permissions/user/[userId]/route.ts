@@ -37,7 +37,7 @@ export async function GET_USER_PERMISSIONS(
     const mockUser: UserInfo = {
       id: userId,
       email: `${userId}@example.com`,
-      roles: userId === 'admin' ? ['admin'] : ['manager'],
+      roles: userId === 'admin'  ['admin'] : ['manager'],
       isActive: true,
       tenantId: 'default-tenant',
     };
@@ -66,7 +66,7 @@ export async function GET_USER_PERMISSIONS(
         permId => {
           const permDef = config.permissions[permId];
           return permDef
-            ? { id: permId, ...permDef }
+             { id: permId, ...permDef }
             : { id: permId, name: permId };
         }
       );
@@ -74,7 +74,7 @@ export async function GET_USER_PERMISSIONS(
       responseData.roleDetails = mockUser.roles.map(roleId => {
         const roleDef = config.roles[roleId];
         return roleDef
-          ? { id: roleId, ...roleDef }
+           { id: roleId, ...roleDef }
           : { id: roleId, name: roleId };
       });
     }
@@ -89,7 +89,7 @@ export async function GET_USER_PERMISSIONS(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '获取用户权限失败',
+        error: error instanceof Error  error.message : '获取用户权限失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -121,7 +121,7 @@ export async function CHECK_USER_PERMISSIONS(
     const mockUser: UserInfo = {
       id: userId,
       email: `${userId}@example.com`,
-      roles: userId === 'admin' ? ['admin'] : ['manager'],
+      roles: userId === 'admin'  ['admin'] : ['manager'],
       isActive: true,
       tenantId: 'default-tenant',
     };
@@ -131,7 +131,7 @@ export async function CHECK_USER_PERMISSIONS(
     if (permissions) {
       // 检查具体权限
       const permsArray = Array.isArray(permissions)
-        ? permissions
+         permissions
         : [permissions];
       checkResult = permissionManager.hasPermission(mockUser, permsArray);
     } else {
@@ -158,7 +158,7 @@ export async function CHECK_USER_PERMISSIONS(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '权限检查失败',
+        error: error instanceof Error  error.message : '权限检查失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -183,7 +183,7 @@ export async function GET_ACCESSIBLE_RESOURCES(
     const mockUser: UserInfo = {
       id: userId,
       email: `${userId}@example.com`,
-      roles: userId === 'admin' ? ['admin'] : ['manager'],
+      roles: userId === 'admin'  ['admin'] : ['manager'],
       isActive: true,
       tenantId: 'default-tenant',
     };
@@ -226,7 +226,7 @@ export async function GET_ACCESSIBLE_RESOURCES(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '获取可访问资源失败',
+        error: error instanceof Error  error.message : '获取可访问资源失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -258,7 +258,7 @@ export async function BULK_PERMISSION_CHECK(
     const mockUser: UserInfo = {
       id: userId,
       email: `${userId}@example.com`,
-      roles: userId === 'admin' ? ['admin'] : ['manager'],
+      roles: userId === 'admin'  ['admin'] : ['manager'],
       isActive: true,
       tenantId: 'default-tenant',
     };
@@ -295,7 +295,7 @@ export async function BULK_PERMISSION_CHECK(
       } catch (error) {
         return {
           index,
-          error: error instanceof Error ? error.message : '检查执行失败',
+          error: error instanceof Error  error.message : '检查执行失败',
         };
       }
     });
@@ -321,7 +321,7 @@ export async function BULK_PERMISSION_CHECK(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '批量权限检查失败',
+        error: error instanceof Error  error.message : '批量权限检查失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

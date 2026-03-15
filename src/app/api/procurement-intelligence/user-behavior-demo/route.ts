@@ -1,6 +1,6 @@
 ﻿/**
  * 鐢ㄦ埛琛屼负鍒嗘瀽婕旂ずAPI
- * 灞曠ず鐢ㄦ埛琛屼负杩借釜鍜屽垎鏋愬姛? */
+ * 灞曠ず鐢ㄦ埛琛屼负杩借釜鍜屽垎鏋愬姛 */
 
 import { NextResponse } from 'next/server';
 import { userBehaviorAnalyzer } from '@/modules/procurement-intelligence/services/user-behavior-analyzer.service';
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     const userId = searchParams.get('userId') || 'demo-user-001';
     const days = parseInt(searchParams.get('days') || '7');
 
-    // 鐢熸垚涓€浜涙紨绀烘暟?    generateDemoData(userId);
+    // 鐢熸垚涓€浜涙紨绀烘暟    generateDemoData(userId);
 
     // 鎵ц鐢ㄦ埛琛屼负鍒嗘瀽
     const analysisResult = await userBehaviorAnalyzer.analyzeUserBehavior(
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       days
     );
 
-    // 鑾峰彇浼氳瘽缁熻
+    // 鑾峰彇氳瘽缁熻
     const sessionStats = userBehaviorAnalyzer.getSessionStats(days);
 
     return NextResponse.json({
@@ -68,13 +68,13 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '鏃犳晥鐨勮姹傛暟?,
+          error: '犳晥鐨勮姹傛暟,
         },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('鐢ㄦ埛琛屼负鍒嗘瀽璇锋眰澶勭悊澶辫触:', error);
+    console.error('鐢ㄦ埛琛屼负鍒嗘瀽璇眰澶勭悊澶辫触:', error);
     return NextResponse.json(
       {
         success: false,
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
  */
 function generateDemoData(userId: string): void {
   const sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  const baseTime = Date.now() - 24 * 60 * 60 * 1000; // 24灏忔椂?
+  const baseTime = Date.now() - 24 * 60 * 60 * 1000; // 24灏忔椂
   // 鐢熸垚椤甸潰娴忚浜嬩欢
   const pages = [
     '/',
@@ -108,7 +108,7 @@ function generateDemoData(userId: string): void {
       eventName: 'page_view',
       pageUrl: page,
 
-      referrer: index === 0 ? '' : pages[index - 1],
+      referrer: index === 0  '' : pages[index - 1],
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       ipAddress: '192.168.1.100',
       deviceInfo: {
@@ -167,7 +167,7 @@ function generateDemoData(userId: string): void {
     },
   });
 
-  // 鐢熸垚鍙︿竴涓細?  const sessionId2 = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  // 鐢熸垚鍙︿竴涓細  const sessionId2 = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
   userBehaviorAnalyzer.recordEvent({
     userId,
@@ -192,7 +192,7 @@ function generateDemoData(userId: string): void {
     eventType: 'click',
     eventName: 'quick_quote_click',
     elementId: 'quick-quote-btn',
-    elementText: '蹇€熸姤?,
+    elementText: '蹇€熸姤,
     pageUrl: '/',
   });
 }
@@ -203,8 +203,8 @@ function generateDemoData(userId: string): void {
 function getPageTitle(path: string): string {
   const titles: Record<string, string> = {
     '/': '棣栭〉',
-    '/procurement/dashboard': '閲囪喘浠〃?,
-    '/procurement/suppliers': '渚涘簲鍟嗙?,
+    '/procurement/dashboard': '閲囪喘〃,
+    '/procurement/suppliers': '渚涘簲鍟嗙,
     '/procurement/analytics': '鏁版嵁鍒嗘瀽',
     '/settings/profile': '涓汉璁剧疆',
   };

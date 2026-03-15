@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 
 export default function UnifiedAuthTest() {
@@ -53,39 +53,40 @@ export default function UnifiedAuthTest() {
             统一认证系统测试
           </h1>
 
-          {/* 当前状态显?*/}
+          {/* 当前状态显示 */}
           <div className="mb-8 p-4 bg-blue-50 rounded-lg">
             <h2 className="text-lg font-semibold text-blue-800 mb-3">
-              当前认证状?            </h2>
+              当前认证状态
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-600">认证状?</p>
+                <p className="text-sm text-gray-600">认证状态</p>
                 <p
-                  className={`font-medium ${isAuthenticated ? 'text-green-600' : 'text-red-600'}`}
+                  className={`font-medium ${isAuthenticated  'text-green-600' : 'text-red-600'}`}
                 >
-                  {isAuthenticated ? '�?已认? : '�?未认?}
+                  {isAuthenticated  '已认证' : '未认证'}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">管理员权?</p>
+                <p className="text-sm text-gray-600">管理员权限</p>
                 <p
-                  className={`font-medium ${is_admin ? 'text-green-600' : 'text-red-600'}`}
+                  className={`font-medium ${is_admin  'text-green-600' : 'text-red-600'}`}
                 >
-                  {is_admin ? '�?是管理员' : '�?非管理员'}
+                  {is_admin  '是管理员' : '非管理员'}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">加载状?</p>
+                <p className="text-sm text-gray-600">加载状态</p>
                 <p
-                  className={`font-medium ${isLoading ? 'text-yellow-600' : 'text-green-600'}`}
+                  className={`font-medium ${isLoading  'text-yellow-600' : 'text-green-600'}`}
                 >
-                  {isLoading ? '�?加载?..' : '�?已就?}
+                  {isLoading  '加载中...' : '已就绪'}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">用户邮箱:</p>
                 <p className="font-medium text-gray-900">
-                  {user?.email || '�?}
+                  {user.email || '无'}
                 </p>
               </div>
             </div>
@@ -98,7 +99,7 @@ export default function UnifiedAuthTest() {
           </div>
 
           {/* 登录测试区域 */}
-          {!isAuthenticated ? (
+          {!isAuthenticated  (
             <div className="mb-8 p-4 bg-gray-50 rounded-lg">
               <h2 className="text-lg font-semibold text-gray-800 mb-4">
                 登录测试
@@ -140,20 +141,22 @@ export default function UnifiedAuthTest() {
                   disabled={loginLoading}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
                 >
-                  {loginLoading ? '登录?..' : '测试登录'}
+                  {loginLoading  '登录中...' : '测试登录'}
                 </button>
               </div>
             </div>
           ) : (
             <div className="mb-8 p-4 bg-green-50 rounded-lg">
               <h2 className="text-lg font-semibold text-green-800 mb-4">
-                已登?              </h2>
+                已登录
+              </h2>
               <div className="flex gap-3">
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
                 >
-                  退出登?                </button>
+                  退出登录
+                </button>
                 <button
                   onClick={() => (window.location.href = '/admin/dashboard')}
                   className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
@@ -171,33 +174,34 @@ export default function UnifiedAuthTest() {
                 权限测试
               </h2>
               <div className="space-y-2">
-                <p>用户角色: {roles.join(', ') || '�?}</p>
+                <p>用户角色: {roles.join(', ') || '无'}</p>
                 <p>
                   dashboard.view 权限:{' '}
-                  {hasPermission('dashboard.view') ? '�?有权? : '�?无权?}
+                  {hasPermission('dashboard.view')  '有权限' : '无权限'}
                 </p>
                 <p>
                   user.manage 权限:{' '}
-                  {hasPermission('user.manage') ? '�?有权? : '�?无权?}
+                  {hasPermission('user.manage')  '有权限' : '无权限'}
                 </p>
                 <p>
                   system.admin 权限:{' '}
-                  {hasPermission('system.admin') ? '�?有权? : '�?无权?}
+                  {hasPermission('system.admin')  '有权限' : '无权限'}
                 </p>
               </div>
             </div>
           )}
 
-          {/* 技术信?*/}
+          {/* 技术信息 */}
           <div className="p-4 bg-gray-50 rounded-lg">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              技术信?            </h2>
+              技术信息
+            </h2>
             <div className="text-sm text-gray-600 space-y-1">
               <p>认证Hook: useUnifiedAuth</p>
               <p>认证服务: UnifiedAuthService</p>
-              <p>状态管? React useState + useEffect</p>
-              <p>认证? Supabase Session + localStorage</p>
-              <p>权限检? AuthService.isAdminUser()</p>
+              <p>状态管理: React useState + useEffect</p>
+              <p>认证方式: Supabase Session + localStorage</p>
+              <p>权限检查: AuthService.isAdminUser()</p>
             </div>
           </div>
         </div>
@@ -205,4 +209,3 @@ export default function UnifiedAuthTest() {
     </div>
   );
 }
-

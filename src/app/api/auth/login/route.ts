@@ -13,12 +13,12 @@ export async function POST(request: Request) {
     // 楠岃瘉杈撳叆鍙傛暟
     if (!email || !password) {
       return NextResponse.json(
-        { error: '閭鍜屽瘑鐮佷笉鑳戒负? },
+        { error: '鍜屽瘑鐮佷笉鑳戒负 },'
         { status: 400 }
       );
     }
 
-    // 浣跨敤Supabase杩涜閭瀵嗙爜鐧诲綍
+    // 浣跨敤Supabase杩涜瀵嗙爜鐧诲綍
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -30,11 +30,11 @@ export async function POST(request: Request) {
       // 澶勭悊鍏蜂綋閿欒淇℃伅
       let errorMessage = '鐧诲綍澶辫触';
       if (error.code === 'invalid_credentials') {
-        errorMessage = '閭鎴栧瘑鐮侀敊?;
+        errorMessage = '鎴栧瘑鐮侀敊;
       } else if (error.code === 'over_email_send_rate_limit') {
-        errorMessage = '閭欢鍙戦€佽繃浜庨绻侊紝璇风瓑?灏忔椂鍚庨噸璇曟垨妫€鏌ュ瀮鍦鹃偖?;
+        errorMessage = '欢鍙戦€佽繃浜庨绻侊紝璇风瓑灏忔椂鍚庨噸璇曟垨妫€鏌ュ瀮鍦鹃偖;
       } else if (error.code === 'email_address_invalid') {
-        errorMessage = '閭鏍煎紡涓嶆?;
+        errorMessage = '鏍煎紡涓嶆;
       } else if (error.code) {
         errorMessage = `鐧诲綍澶辫触: ${error.code}`;
       }
@@ -42,15 +42,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: errorMessage }, { status: 401 });
     }
 
-    // 妫€鏌ユ槸鍚︿负绠＄悊鍛樼敤?    let isAdmin = false;
+    // 妫€鏌ユ槸鍚︿负绠＄悊鍛樼敤    let isAdmin = false;
     if (data.user) {
       console.log('鐢ㄦ埛鐧诲綍鎴愬姛:', data.user.email);
 
-      // 棣栧厛妫€鏌ョ敤鎴峰厓鏁版嵁涓殑绠＄悊鍛樻爣?      if (data.user?.isAdmin === true) {
+      // 棣栧厛妫€鏌ョ敤鎴峰厓鏁版嵁涓殑绠＄悊鍛樻爣      if (data.user.isAdmin === true) {
         isAdmin = true;
-        console.log('閫氳繃鐢ㄦ埛鍏冩暟鎹獙璇佷负绠＄悊?);
+        console.log('氳繃鐢ㄦ埛鍏冩暟鎹獙璇佷负绠＄悊);
       } else {
-        // 澶囩敤鏂规锛氭鏌ユ暟鎹簱涓殑绠＄悊鍛樿?        try {
+        // 澶囩敤鏂规锛氭鏌ユ暟鎹簱涓殑绠＄悊鍛樿        try {
           const { data: adminData } = await supabase
             .from('admin_users')
             .select('id, role, is_active')
@@ -60,18 +60,18 @@ export async function POST(request: Request) {
 
           isAdmin = !!adminData;
           if (isAdmin) {
-            console.log('閫氳繃鏁版嵁搴撻獙璇佷负绠＄悊?);
+            console.log('氳繃鏁版嵁搴撻獙璇佷负绠＄悊);
           }
         } catch (dbError) {
-          // 鏁版嵁搴撹〃涓嶅瓨鍦ㄦ垨鏌ヨ澶辫触鏃讹紝浣跨敤鐢ㄦ埛鍏冩暟鎹綔涓哄垽鏂緷?          console.log('鏁版嵁搴撶鐞嗗憳妫€鏌ュけ璐ワ紝浣跨敤鐢ㄦ埛鍏冩暟鎹垽?);
+          // 鏁版嵁搴撹〃涓嶅鍦ㄦ垨鏌ヨ澶辫触讹紝浣跨敤鐢ㄦ埛鍏冩暟鎹綔涓哄垽鏂緷          console.log('鏁版嵁搴撶鐞嗗憳妫€鏌ュけ璐ワ紝浣跨敤鐢ㄦ埛鍏冩暟鎹垽);
         }
       }
 
-      console.log('鏈€缁堢鐞嗗憳鐘?', isAdmin);
+      console.log('鏈€缁堢鐞嗗憳鐘', isAdmin);
     }
 
     // 璁剧疆璁よ瘉cookie
-    const cookieName = `sb-${process.env?.split('//')[1].split('.')[0]}-auth-token`;
+    const cookieName = `sb-${process.env.split('//')[1].split('.')[0]}-auth-token`;
     const cookieValue = JSON.stringify(data.session);
 
     const response = NextResponse.json({
@@ -97,7 +97,8 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     console.error('鐧诲綍鎺ュ彛閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
+
 

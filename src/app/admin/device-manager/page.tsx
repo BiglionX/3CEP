@@ -74,9 +74,9 @@ interface Device {
   warranty_end: string | null;
   purchase_date: string | null;
   repair_count: number;
-  group_id?: string;
-  group_name?: string;
-  tags?: string[];
+  group_id: string;
+  group_name: string;
+  tags: string[];
 }
 
 export default function DeviceManager() {
@@ -89,13 +89,13 @@ export default function DeviceManager() {
     'view'
   );
 
-  // 权限检?
+  // 权限检
   const { hasPermission } = useRbacPermission();
   const canView = hasPermission('devicemgr.view');
   const canManage = hasPermission('devicemgr.manage');
   const canDelete = hasPermission('devicemgr.delete');
 
-  // 筛选条?
+  // 筛选条
   const [filters, setFilters] = useState({
     category: '',
     status: '',
@@ -105,7 +105,7 @@ export default function DeviceManager() {
     search: '',
   });
 
-  // 分组和标签相关状?
+  // 分组和标签相关状
   const [groups, setGroups] = useState<any[]>([]);
   const [tags, setTags] = useState<any[]>([]);
   const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
@@ -210,7 +210,7 @@ export default function DeviceManager() {
     }
   };
 
-  // 应用筛?
+  // 应用筛
   const applyFilters = () => {
     let filtered = [...devices];
 
@@ -254,7 +254,7 @@ export default function DeviceManager() {
     setFilteredDevices(filtered);
   };
 
-  // 处理筛选变?
+  // 处理筛选变
   const handleFilterChange = (field: string, value: string) => {
     setFilters(prev => ({
       ...prev,
@@ -282,10 +282,10 @@ export default function DeviceManager() {
   const handleSaveGroup = async () => {
     try {
       const url = selectedGroup
-        ? `/api/admin/devices/groups/${selectedGroup.id}`
+         `/api/admin/devices/groups/${selectedGroup.id}`
         : '/api/admin/devices/groups';
 
-      const method = selectedGroup ? 'PUT' : 'POST';
+      const method = selectedGroup  'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -294,7 +294,7 @@ export default function DeviceManager() {
       });
 
       if (response.ok) {
-        alert(selectedGroup ? '分组更新成功' : '分组创建成功');
+        alert(selectedGroup  '分组更新成功' : '分组创建成功');
         setIsGroupDialogOpen(false);
         fetchGroups();
       } else {
@@ -342,10 +342,10 @@ export default function DeviceManager() {
   const handleSaveTag = async () => {
     try {
       const url = selectedTag
-        ? `/api/admin/devices/tags/${selectedTag.id}`
+         `/api/admin/devices/tags/${selectedTag.id}`
         : '/api/admin/devices/tags';
 
-      const method = selectedTag ? 'PUT' : 'POST';
+      const method = selectedTag  'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -354,7 +354,7 @@ export default function DeviceManager() {
       });
 
       if (response.ok) {
-        alert(selectedTag ? '标签更新成功' : '标签创建成功');
+        alert(selectedTag  '标签更新成功' : '标签创建成功');
         setIsTagDialogOpen(false);
         fetchTags();
       } else {
@@ -478,7 +478,7 @@ export default function DeviceManager() {
       <div className="flex flex-wrap gap-1">
         {deviceTags.slice(0, 3).map(tagId => {
           const tag = tags.find(t => t.id === tagId);
-          return tag ? (
+          return tag  (
             <Badge
               key={tag.id}
               className="text-xs"
@@ -502,7 +502,7 @@ export default function DeviceManager() {
     if (!groupId) return '-';
 
     const group = groups.find(g => g.id === groupId);
-    return group ? (
+    return group  (
       <div className="flex items-center">
         <div
           className="w-3 h-3 rounded-full mr-2"
@@ -529,13 +529,13 @@ export default function DeviceManager() {
     return brands.map(brand => ({ value: brand, label: brand }));
   };
 
-  // 计算存储使用?
+  // 计算存储使用
   const calculateStorageUsage = (used: number | null, total: number | null) => {
     if (!used || !total) return 0;
     return Math.round((used / total) * 100);
   };
 
-  // 表格列定?
+  // 表格列定
   const columns = [
     { key: 'device_id', title: '设备ID', width: '120px' },
     { key: 'model', title: '型号', width: '150px' },
@@ -552,14 +552,14 @@ export default function DeviceManager() {
     { key: 'actions', title: '操作', width: '150px' },
   ];
 
-  // 初始化数?
+  // 初始化数
   useEffect(() => {
     fetchDevices();
     fetchGroups();
     fetchTags();
   }, []);
 
-  // 筛选变化时重新应用筛?
+  // 筛选变化时重新应用筛
   useEffect(() => {
     applyFilters();
   }, [filters, devices]);
@@ -577,7 +577,7 @@ export default function DeviceManager() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按*/}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">设备管理</h1>
@@ -601,7 +601,7 @@ export default function DeviceManager() {
         </div>
       </div>
 
-      {/* 筛选面?*/}
+      {/* 筛选面*/}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">筛选条件</CardTitle>
@@ -718,7 +718,7 @@ export default function DeviceManager() {
             <Button onClick={applyFilters}>应用筛选</Button>
           </div>
 
-          {/* 分组和标签管理按?*/}
+          {/* 分组和标签管理按*/}
           <div className="flex space-x-2 mt-4 pt-4 border-t">
             <Button variant="outline" size="sm" onClick={handleCreateGroup}>
               管理分组
@@ -805,7 +805,7 @@ export default function DeviceManager() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {loading ? (
+                {loading  (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -817,7 +817,7 @@ export default function DeviceManager() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredDevices.length === 0 ? (
+                ) : filteredDevices.length === 0  (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -852,7 +852,7 @@ export default function DeviceManager() {
                       <TableCell>{device.shop_name || '-'}</TableCell>
                       <TableCell>{renderStatusTag(device.status)}</TableCell>
                       <TableCell>
-                        {device.battery_level !== null ? (
+                        {device.battery_level !== null  (
                           <div className="flex items-center">
                             <Battery className="w-4 h-4 text-blue-500 mr-1" />
                             <span>{device.battery_level}%</span>
@@ -862,7 +862,7 @@ export default function DeviceManager() {
                         )}
                       </TableCell>
                       <TableCell>
-                        {device.storage_total ? (
+                        {device.storage_total  (
                           <div className="text-sm">
                             <div>
                               {calculateStorageUsage(
@@ -920,15 +920,15 @@ export default function DeviceManager() {
         </CardContent>
       </Card>
 
-      {/* 详情/编辑对话?*/}
+      {/* 详情/编辑对话*/}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>
               {dialogMode === 'view'
-                ? '设备详情'
+                 '设备详情'
                 : dialogMode === 'edit'
-                  ? '编辑设备'
+                   '编辑设备'
                   : '新增设备'}
             </DialogTitle>
           </DialogHeader>
@@ -1059,7 +1059,7 @@ export default function DeviceManager() {
                     type="date"
                     value={
                       selectedDevice.purchase_date
-                        ? selectedDevice.purchase_date.split('T')[0]
+                         selectedDevice.purchase_date.split('T')[0]
                         : ''
                     }
                     readOnly={dialogMode === 'view'}
@@ -1073,7 +1073,7 @@ export default function DeviceManager() {
                     type="date"
                     value={
                       selectedDevice.warranty_end
-                        ? selectedDevice.warranty_end.split('T')[0]
+                         selectedDevice.warranty_end.split('T')[0]
                         : ''
                     }
                     readOnly={dialogMode === 'view'}
@@ -1108,7 +1108,7 @@ export default function DeviceManager() {
                   <CardContent>
                     <div className="text-2xl font-bold text-blue-600">
                       {selectedDevice.battery_level !== null
-                        ? `${selectedDevice.battery_level}%`
+                         `${selectedDevice.battery_level}%`
                         : 'N/A'}
                     </div>
                   </CardContent>
@@ -1121,11 +1121,11 @@ export default function DeviceManager() {
                   <CardContent>
                     <div className="text-lg font-medium">
                       {selectedDevice.storage_total
-                        ? `${selectedDevice.storage_used}GB / ${selectedDevice.storage_total}GB`
+                         `${selectedDevice.storage_used}GB / ${selectedDevice.storage_total}GB`
                         : 'N/A'}
                     </div>
                     <div className="text-sm text-gray-500">
-                      使用?{' '}
+                      使用{' '}
                       {calculateStorageUsage(
                         selectedDevice.storage_used,
                         selectedDevice.storage_total
@@ -1153,7 +1153,7 @@ export default function DeviceManager() {
                   >
                     取消
                   </Button>
-                  <Button>{dialogMode === 'edit' ? '保存' : '创建'}</Button>
+                  <Button>{dialogMode === 'edit'  '保存' : '创建'}</Button>
                 </div>
               )}
             </div>
@@ -1161,11 +1161,11 @@ export default function DeviceManager() {
         </DialogContent>
       </Dialog>
 
-      {/* 分组管理对话?*/}
+      {/* 分组管理对话*/}
       <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedGroup ? '编辑分组' : '创建分组'}</DialogTitle>
+            <DialogTitle>{selectedGroup  '编辑分组' : '创建分组'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -1228,17 +1228,17 @@ export default function DeviceManager() {
               取消
             </Button>
             <Button onClick={handleSaveGroup}>
-              {selectedGroup ? '保存' : '创建'}
+              {selectedGroup  '保存' : '创建'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* 标签管理对话?*/}
+      {/* 标签管理对话*/}
       <Dialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedTag ? '编辑标签' : '创建标签'}</DialogTitle>
+            <DialogTitle>{selectedTag  '编辑标签' : '创建标签'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -1284,7 +1284,7 @@ export default function DeviceManager() {
               取消
             </Button>
             <Button onClick={handleSaveTag}>
-              {selectedTag ? '保存' : '创建'}
+              {selectedTag  '保存' : '创建'}
             </Button>
           </DialogFooter>
         </DialogContent>

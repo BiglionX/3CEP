@@ -1,6 +1,7 @@
 ﻿/**
  * 结账页面
- * FixCycle 6.0 智能体市场平? */
+ * FixCycle 6.0 智能体市场平台
+ */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -54,13 +55,14 @@ export default function CheckoutPage() {
     country: '中国',
   });
 
-  // 模拟购物车数?  const mockCartItems: CheckoutItem[] = [
+  // 模拟购物车数据
+  const mockCartItems: CheckoutItem[] = [
     {
       id: 'item-1',
       agent: {
         id: 'agent-1',
         name: '销售助手智能体',
-        description: '专业的销售对话助手，能够自动跟进客户、生成报价单和合?,
+        description: '专业的销售对话助手，能够自动跟进客户、生成报价单和合同',
         price: 99.99,
         token_cost_per_use: 0.5,
         developer: {
@@ -74,7 +76,7 @@ export default function CheckoutPage() {
       id: 'item-2',
       agent: {
         id: 'agent-2',
-        name: '采购智能?,
+        name: '采购智能助手',
         description: '智能采购决策助手，支持供应商比价、风险评估和合同管理',
         price: 149.99,
         token_cost_per_use: 0.8,
@@ -115,7 +117,7 @@ export default function CheckoutPage() {
 
   const handlePayment = () => {
     // 模拟支付处理
-    alert(`使用${paymentMethod === 'alipay' ? '支付? : '微信支付'}完成支付`);
+    alert(`使用${paymentMethod === 'alipay'  '支付宝' : '微信支付'}完成支付`);
     router.push('/marketplace/orders');
   };
 
@@ -128,7 +130,7 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载结账信息?..</p>
+          <p className="mt-4 text-gray-600">加载结账信息中...</p>
         </div>
       </div>
     );
@@ -140,7 +142,8 @@ export default function CheckoutPage() {
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            购物车为?          </h2>
+            购物车为空
+          </h2>
           <p className="text-gray-600 mb-6">请先添加商品到购物车</p>
           <button
             onClick={() => router.push('/marketplace')}
@@ -163,7 +166,8 @@ export default function CheckoutPage() {
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            返回购物?          </button>
+            返回购物车
+          </button>
         </div>
       </div>
 
@@ -174,9 +178,9 @@ export default function CheckoutPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 主要内容?*/}
+          {/* 主要内容区域 */}
           <div className="lg:col-span-2 space-y-6">
-            {/* 进度指示?*/}
+            {/* 进度指示器 */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between">
                 {[1, 2, 3].map(step => (
@@ -184,7 +188,7 @@ export default function CheckoutPage() {
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center ${
                         currentStep >= step
-                          ? 'bg-blue-600 text-white'
+                           'bg-blue-600 text-white'
                           : 'bg-gray-200 text-gray-500'
                       }`}
                     >
@@ -193,7 +197,7 @@ export default function CheckoutPage() {
                     {step < 3 && (
                       <div
                         className={`w-16 h-1 mx-2 ${
-                          currentStep > step ? 'bg-blue-600' : 'bg-gray-200'
+                          currentStep > step  'bg-blue-600' : 'bg-gray-200'
                         }`}
                       ></div>
                     )}
@@ -211,7 +215,8 @@ export default function CheckoutPage() {
             {currentStep === 1 && (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                  收货人信?                </h2>
+                  收货人信息
+                </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -222,7 +227,7 @@ export default function CheckoutPage() {
                     <input
                       type="text"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="请输入您的姓?
+                      placeholder="请输入您的姓名"
                       value={formData.fullName}
                       onChange={e =>
                         handleInputChange('fullName', e.target.value)
@@ -252,7 +257,7 @@ export default function CheckoutPage() {
                     <input
                       type="tel"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="请输入手机号?
+                      placeholder="请输入手机号码"
                       value={formData.phone}
                       onChange={e => handleInputChange('phone', e.target.value)}
                     />
@@ -297,7 +302,7 @@ export default function CheckoutPage() {
                     disabled={!isFormValid()}
                     className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                   >
-                    <span>下一?/span>
+                    <span>下一步</span>
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>
@@ -315,7 +320,7 @@ export default function CheckoutPage() {
                   <div
                     className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
                       paymentMethod === 'alipay'
-                        ? 'border-blue-500 bg-blue-50'
+                         'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                     onClick={() => setPaymentMethod('alipay')}
@@ -324,7 +329,7 @@ export default function CheckoutPage() {
                       <div
                         className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
                           paymentMethod === 'alipay'
-                            ? 'border-blue-500 bg-blue-500'
+                             'border-blue-500 bg-blue-500'
                             : 'border-gray-300'
                         }`}
                       >
@@ -333,9 +338,10 @@ export default function CheckoutPage() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <div className="font-medium text-gray-900">支付?/div>
+                        <div className="font-medium text-gray-900">支付宝</div>
                         <div className="text-sm text-gray-500">
-                          推荐使用支付宝支?                        </div>
+                          推荐使用支付宝支付
+                        </div>
                       </div>
                       <div className="text-2xl">📱</div>
                     </div>
@@ -344,7 +350,7 @@ export default function CheckoutPage() {
                   <div
                     className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
                       paymentMethod === 'wechat'
-                        ? 'border-green-500 bg-green-50'
+                         'border-green-500 bg-green-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                     onClick={() => setPaymentMethod('wechat')}
@@ -353,7 +359,7 @@ export default function CheckoutPage() {
                       <div
                         className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
                           paymentMethod === 'wechat'
-                            ? 'border-green-500 bg-green-500'
+                             'border-green-500 bg-green-500'
                             : 'border-gray-300'
                         }`}
                       >
@@ -379,12 +385,13 @@ export default function CheckoutPage() {
                     onClick={() => setCurrentStep(1)}
                     className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                   >
-                    上一?                  </button>
+                    上一步
+                  </button>
                   <button
                     onClick={() => setCurrentStep(3)}
                     className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                   >
-                    <span>下一?/span>
+                    <span>下一步</span>
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>
@@ -413,7 +420,7 @@ export default function CheckoutPage() {
                           {item.agent.description}
                         </p>
                         <div className="text-xs text-gray-500 mt-1">
-                          开发? {item.agent.developer.name}
+                          开发者: {item.agent.developer.name}
                         </div>
                       </div>
                       <div className="text-right">
@@ -449,14 +456,15 @@ export default function CheckoutPage() {
                   <h3 className="font-medium text-gray-900 mb-3">支付方式</h3>
                   <div className="flex items-center">
                     <div className="text-2xl mr-3">
-                      {paymentMethod === 'alipay' ? '📱' : '💬'}
+                      {paymentMethod === 'alipay'  '📱' : '💬'}
                     </div>
                     <div>
                       <div className="font-medium text-gray-900">
-                        {paymentMethod === 'alipay' ? '支付? : '微信支付'}
+                        {paymentMethod === 'alipay'  '支付宝' : '微信支付'}
                       </div>
                       <div className="text-sm text-gray-600">
-                        安全快捷的移动支?                      </div>
+                        安全快捷的移动支付
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -466,7 +474,8 @@ export default function CheckoutPage() {
                     onClick={() => setCurrentStep(2)}
                     className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                   >
-                    上一?                  </button>
+                    上一步
+                  </button>
                   <button
                     onClick={handlePayment}
                     className="flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
@@ -479,7 +488,7 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          {/* 侧边?- 订单摘要 */}
+          {/* 侧边栏 - 订单摘要 */}
           <div className="space-y-6">
             {/* 订单摘要 */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -526,7 +535,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <CheckCircle className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
-                  <span>7天无理由退?/span>
+                  <span>7天无理由退款</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Wallet className="w-5 h-5 text-purple-500 mr-3 flex-shrink-0" />
@@ -542,9 +551,9 @@ export default function CheckoutPage() {
                 <div className="text-sm text-blue-800">
                   <p className="font-medium mb-1">重要提醒</p>
                   <ul className="list-disc list-inside space-y-1 text-blue-700">
-                    <li>购买后可立即使用智能?/li>
-                    <li>Token将在实际使用时扣?/li>
-                    <li>支持发票申请和企业采?/li>
+                    <li>购买后可立即使用智能体</li>
+                    <li>Token将在实际使用时扣除</li>
+                    <li>支持发票申请和企业采购</li>
                   </ul>
                 </div>
               </div>
@@ -555,4 +564,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-

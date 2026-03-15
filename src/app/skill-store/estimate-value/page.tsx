@@ -13,7 +13,7 @@ export default function EstimateValueSkillPage() {
             href="/skill-store"
             className="text-indigo-600 hover:text-indigo-700 font-medium"
           >
-            �?返回商店首页
+            ← 返回商店首页
           </Link>
         </div>
       </div>
@@ -26,18 +26,19 @@ export default function EstimateValueSkillPage() {
             <div>
               <h1 className="text-4xl font-bold mb-2">procyc-estimate-value</h1>
               <p className="text-xl text-green-100">
-                基于设备档案和市场数据的智能估价技?              </p>
+                基于设备档案和市场数据的智能估价技能
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap gap-4 mt-8">
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
-              💰 估价?(ESTM)
+              💰 估价技能(ESTM)
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
               v1.0.0
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
-              �?4.9/5.0
+              ⭐ 4.9/5.0
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
               ⬇️ 445 下载
@@ -58,53 +59,60 @@ export default function EstimateValueSkillPage() {
             {/* Overview */}
             <section className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📋 技能简?              </h2>
+                📋 技能简介
+              </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
                 <code className="bg-gray-100 px-2 py-1 rounded text-sm">
                   procyc-estimate-value
                 </code>{' '}
-                是一个专业的设备估价技能，基于多维度估值算法（品牌、成色、年龄、维修历史）
-                结合市场价格对比，为 3C 设备提供精准的估值服务。集?FixCycle
-                估值引擎， 支持多种货币定价（CNY/FCX/USD）�?              </p>
+                是一个专业的设备估价技能,基于多维度估值算法(品牌、成色、年龄、维修历史)
+                结合市场价格对比,为 3C 设备提供精准的估值服务。集成 FixCycle
+                估值引擎, 支持多种货币定价(CNY/FCX/USD)
+              </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-                核心特?              </h3>
+                核心特性
+              </h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>多维度估?/strong> -
-                    综合考虑品牌、成色、年龄、维修历?                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
-                  <span className="text-gray-700">
-                    <strong>市场数据对比</strong> - 实时比对闲鱼等二手平台价?                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
-                  <span className="text-gray-700">
-                    <strong>详细估值分?/strong> - 提供透明的价格构成分?                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
-                  <span className="text-gray-700">
-                    <strong>FixCycle 集成</strong> - 接入专业估值引?                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
-                  <span className="text-gray-700">
-                    <strong>多货币支?/strong> - CNY/FCX/USD三种货币
+                    <strong>多维度估值</strong> -
+                    综合考虑品牌、成色、年龄、维修历史
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>高准确率</strong> - 与市场成交价对比准确?&gt; 85%
+                    <strong>市场数据对比</strong> - 实时比对闲鱼等二手平台价格
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-gray-700">
+                    <strong>详细估值分析</strong> - 提供透明的价格构成分析
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-gray-700">
+                    <strong>FixCycle 集成</strong> - 接入专业估值引擎
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-gray-700">
+                    <strong>多货币支持</strong> - CNY/FCX/USD三种货币
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-gray-700">
+                    <strong>高准确率</strong> - 与市场成交价对比准确率 &gt; 85%
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
                     <strong>性能优秀</strong> - P95 响应时间 &lt; 800ms
                   </span>
@@ -175,7 +183,7 @@ const result = await estimateValue.execute({
   ageMonths: 12,
 });
 
-// TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(result.data?.valuation)// 详细评估（包含维修历史）
+// 详细评估（包含维修历史）
 const detailed = await estimateValue.execute({
   deviceType: 'laptop',
   brand: 'MacBook Pro',
@@ -186,9 +194,7 @@ const detailed = await estimateValue.execute({
     { type: 'screen_replacement', date: '2022-06-15' }
   ],
   currency: 'CNY',
-});
-
-// TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(detailed.data?.marketAnalysis)`}
+});`}
                     </pre>
                   </div>
                 </div>
@@ -235,7 +241,8 @@ detailed = skill.execute({
             {/* API Reference */}
             <section className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📖 API 参?              </h2>
+                📖 API 参考
+              </h2>
 
               <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
                 输入参数
@@ -254,7 +261,8 @@ detailed = skill.execute({
                         必填
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        默认?                      </th>
+                        默认值
+                      </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                         说明
                       </th>
@@ -268,10 +276,11 @@ detailed = skill.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        设备类型（smartphone/laptop/tablet/desktop�?                      </td>
+                        设备类型（smartphone/laptop/tablet/desktop）
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 font-mono text-sm text-gray-900">
@@ -280,7 +289,7 @@ detailed = skill.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         品牌名称
@@ -293,7 +302,7 @@ detailed = skill.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         具体型号
@@ -306,10 +315,11 @@ detailed = skill.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        成色等级（excellent/good/fair/poor�?                      </td>
+                        成色等级（excellent/good/fair/poor）
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 font-mono text-sm text-gray-900">
@@ -318,7 +328,7 @@ detailed = skill.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         number
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         使用月数
@@ -329,7 +339,7 @@ detailed = skill.execute({
                         repairHistory
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-500">array</td>
-                      <td className="px-4 py-3 text-sm text-yellow-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-yellow-600">否</td>
                       <td className="px-4 py-3 text-sm text-gray-500">[]</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         维修历史记录
@@ -342,10 +352,11 @@ detailed = skill.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-yellow-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-yellow-600">否</td>
                       <td className="px-4 py-3 text-sm text-gray-500">CNY</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        货币类型（CNY/FCX/USD�?                      </td>
+                        货币类型（CNY/FCX/USD）
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -358,7 +369,7 @@ detailed = skill.execute({
                 <pre className="text-gray-800 font-mono text-sm">
                   {`{
   success: boolean;
-  data?: {
+  data: {
     valuation: {
       minPrice: number;
       maxPrice: number;
@@ -370,12 +381,12 @@ detailed = skill.execute({
       demandLevel: 'high' | 'medium' | 'low';
       trendingDirection: 'up' | 'stable' | 'down';
       similarListings: number;
-      averageSellingTime?: string;
+      averageSellingTime: string;
     };
     comparableSales: Array<{
       price: number;
       condition: string;
-      soldDate?: string;
+      soldDate: string;
       source: 'xianyu' | 'other';
     }>;
     breakdown: {
@@ -386,7 +397,7 @@ detailed = skill.execute({
       repairImpact: number;
     };
   };
-  error?: {
+  error: {
     code: string;
     message: string;
   };
@@ -417,7 +428,7 @@ detailed = skill.execute({
                   <div className="text-2xl font-bold text-green-600">
                     &gt; 85%
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">估价准确?/div>
+                  <div className="text-sm text-gray-600 mt-1">估价准确率</div>
                 </div>
                 <div className="text-center p-4 bg-purple-50 rounded-lg">
                   <div className="text-2xl font-bold text-purple-600">500+</div>
@@ -438,10 +449,11 @@ detailed = skill.execute({
             {/* Quick Actions */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                快速操?              </h3>
+                快速操作
+              </h3>
               <div className="space-y-3">
                 <Link
-                  href="/skill-store/sandbox?skill=procyc-estimate-value"
+                  href="/skill-store/sandboxskill=procyc-estimate-value"
                   className="block w-full px-4 py-2 bg-indigo-600 text-white text-center font-medium rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   🧪 在线测试
@@ -458,7 +470,8 @@ detailed = skill.execute({
                   href="/docs/spec"
                   className="block w-full px-4 py-2 bg-gray-100 text-gray-700 text-center font-medium rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                  📚 技能规?                </Link>
+                  📚 技能规范
+                </Link>
               </div>
             </div>
 
@@ -477,7 +490,7 @@ detailed = skill.execute({
                   <span className="font-medium">~1.2 MB</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">许可?/span>
+                  <span className="text-gray-600">许可证</span>
                   <span className="font-medium">MIT</span>
                 </div>
                 <div className="flex justify-between">
@@ -490,7 +503,8 @@ detailed = skill.execute({
             {/* Related Skills */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                相关技?              </h3>
+                相关技能
+              </h3>
               <div className="space-y-3">
                 <Link
                   href="/skill-store/find-shop"
@@ -503,7 +517,8 @@ detailed = skill.execute({
                         procyc-find-shop
                       </div>
                       <div className="text-sm text-gray-500">
-                        附近维修店查?                      </div>
+                        附近维修店查询
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -532,7 +547,8 @@ detailed = skill.execute({
                         procyc-part-lookup
                       </div>
                       <div className="text-sm text-gray-500">
-                        配件兼容性查?                      </div>
+                        配件兼容性查询
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -544,4 +560,3 @@ detailed = skill.execute({
     </div>
   );
 }
-

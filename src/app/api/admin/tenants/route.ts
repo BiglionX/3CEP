@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
       return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 濡傛灉闇€瑕佸寘鍚敤鎴蜂俊?    if (includeUsers && tenants.length > 0) {
+    // 濡傛灉闇€瑕佸寘鍚敤鎴蜂俊    if (includeUsers && tenants.length > 0) {
       const tenantIds = tenants.map((t: any) => t.id);
 
       const { data: userTenants, error: userError } = await supabase
@@ -82,8 +82,8 @@ export async function GET(request: NextRequest) {
             .filter((ut: any) => ut.tenant_id === tenant.id)
             .map((ut: any) => ({
               id: ut.user_id,
-              username: ut?.username || '鏈煡鐢ㄦ埛',
-              email: ut?.email || '鏈煡閭',
+              username: ut.username || '鏈煡鐢ㄦ埛',
+              email: ut.email || '鏈煡',
               role: ut.role,
               is_primary: ut.is_primary,
             }));
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('绉熸埛鍒楄〃鑾峰彇閿欒:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -115,33 +115,33 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
       return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
     const { name, code, description } = body;
 
     // 楠岃瘉蹇呭～瀛楁
     if (!name || !code) {
       return NextResponse.json(
-        { error: '绉熸埛鍚嶇О鍜岀紪鐮佷负蹇呭～? },
+        { error: '绉熸埛鍚嶇О鍜岀紪鐮佷负蹇呭～ },
         { status: 400 }
       );
     }
 
-    // 妫€鏌ョ紪鐮佸敮涓€?    const { data: existingTenant } = await supabase
+    // 妫€鏌ョ紪鐮佸敮涓€    const { data: existingTenant } = await supabase
       .from('tenants')
       .select('id')
       .eq('code', code)
       .single();
 
     if (existingTenant) {
-      return NextResponse.json({ error: '绉熸埛缂栫爜宸插瓨? }, { status: 409 });
+      return NextResponse.json({ error: '绉熸埛缂栫爜宸插 }, { status: 409 });
     }
 
     // 鍒涘缓绉熸埛
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
       .insert({
         name: name.trim(),
         code: code.trim().toUpperCase(),
-        description: description?.trim() || null,
+        description: description.trim() || null,
         is_active: true,
       } as any)
       .select()
@@ -173,10 +173,10 @@ export async function POST(request: NextRequest) {
     } as any);
 
     if (assignError) {
-      console.warn('鑷姩鍒嗛厤绉熸埛绠＄悊鍛樺け?', assignError);
+      console.warn('鑷姩鍒嗛厤绉熸埛绠＄悊鍛樺け', assignError);
     }
 
-    // 璁板綍瀹¤鏃ュ織
+    // 璁板綍瀹¤ュ織
     await logAuditEvent(
       'tenant_create',
       user.id,
@@ -196,7 +196,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('绉熸埛鍒涘缓閿欒:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -217,22 +217,22 @@ export async function PUT(
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
       return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
     const { name, description, is_active } = body;
 
     // 鏋勫缓鏇存柊鏁版嵁
     const updateData = {};
     if (name !== undefined) updateData.name = name.trim();
     if (description !== undefined)
-      updateData.description = description?.trim() || null;
+      updateData.description = description.trim() || null;
     if (is_active !== undefined) updateData.is_active = Boolean(is_active);
 
     // 鏇存柊绉熸埛
@@ -251,10 +251,10 @@ export async function PUT(
     }
 
     if (!tenant) {
-      return NextResponse.json({ error: '绉熸埛涓嶅瓨? }, { status: 404 });
+      return NextResponse.json({ error: '绉熸埛涓嶅 }, { status: 404 });
     }
 
-    // 璁板綍瀹¤鏃ュ織
+    // 璁板綍瀹¤ュ織
     await logAuditEvent(
       'tenant_update',
       user.id,
@@ -271,7 +271,7 @@ export async function PUT(
   } catch (error) {
     console.error('绉熸埛鏇存柊閿欒:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: error.message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: error.message },
       { status: 500 }
     );
   }
@@ -289,29 +289,29 @@ export async function DELETE(request, { params }) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 妫€鏌ユ槸鍚︿负绠＄悊?    const isAdmin = await checkAdminUser(user.id, supabase);
+    // 妫€鏌ユ槸鍚︿负绠＄悊    const isAdmin = await checkAdminUser(user.id, supabase);
     if (!isAdmin) {
       return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 妫€鏌ョ鎴锋槸鍚﹀瓨?    const { data: tenant } = await supabase
+    // 妫€鏌ョ鎴槸鍚﹀    const { data: tenant } = await supabase
       .from('tenants')
       .select('name, code')
       .eq('id', tenantId)
       .single();
 
     if (!tenant) {
-      return NextResponse.json({ error: '绉熸埛涓嶅瓨? }, { status: 404 });
+      return NextResponse.json({ error: '绉熸埛涓嶅 }, { status: 404 });
     }
 
-    // 妫€鏌ユ槸鍚︿负涓荤?    if (tenant.code === 'MAIN') {
-      return NextResponse.json({ error: '涓嶈兘鍒犻櫎涓荤? }, { status: 400 });
+    // 妫€鏌ユ槸鍚︿负涓荤    if (tenant.code === 'MAIN') {
+      return NextResponse.json({ error: '涓嶈兘鍒犻櫎涓荤 }, { status: 400 });
     }
 
-    // 妫€鏌ョ鎴锋槸鍚﹁繕鏈夋椿璺冪敤?    const { data: activeUsers } = await supabase
+    // 妫€鏌ョ鎴槸鍚﹁繕鏈夋椿璺冪敤    const { data: activeUsers } = await supabase
       .from('user_tenants')
       .select('count()', { count: 'exact', head: true })
       .eq('tenant_id', tenantId)
@@ -319,7 +319,7 @@ export async function DELETE(request, { params }) {
 
     if (activeUsers && activeUsers.count > 0) {
       return NextResponse.json(
-        { error: '绉熸埛浠嶆湁娲昏穬鐢ㄦ埛锛屼笉鑳藉垹? },
+        { error: '绉熸埛嶆湁娲昏穬鐢ㄦ埛锛屼笉鑳藉垹 },
         { status: 400 }
       );
     }
@@ -337,7 +337,7 @@ export async function DELETE(request, { params }) {
       );
     }
 
-    // 璁板綍瀹¤鏃ュ織
+    // 璁板綍瀹¤ュ織
     await logAuditEvent(
       'tenant_delete',
       user.id,
@@ -353,7 +353,7 @@ export async function DELETE(request, { params }) {
   } catch (error) {
     console.error('绉熸埛鍒犻櫎閿欒:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: error.message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: error.message },
       { status: 500 }
     );
   }
@@ -378,10 +378,10 @@ async function checkAdminUser(userId, supabase) {
 
 async function logAuditEvent(action, userId, resource, changes, supabase) {
   try {
-    // 杩欓噷搴旇璋冪敤瀹¤鏃ュ織绯荤粺
-    console.log(`瀹¤鏃ュ織: ${action} by ${userId} on ${resource}`, changes);
+    // 杩欓噷搴旇璋冪敤瀹¤ュ織绯荤粺
+    console.log(`瀹¤ュ織: ${action} by ${userId} on ${resource}`, changes);
   } catch (error) {
-    console.error('璁板綍瀹¤鏃ュ織澶辫触:', error);
+    console.error('璁板綍瀹¤ュ織澶辫触:', error);
   }
 }
 

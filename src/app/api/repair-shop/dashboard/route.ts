@@ -1,32 +1,32 @@
 ﻿import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-// 妯℃嫙缁翠慨搴椾笟鍔℃暟?const mockDashboardData = {
+// 妯℃嫙缁翠慨搴椾笟鍔℃暟const mockDashboardData = {
   // 鏀跺叆瓒嬪娍鏁版嵁
   revenueTrend: [
-    { month: '1锟?, income: 125000, orders: 85 },
-    { month: '2锟?, income: 138000, orders: 92 },
-    { month: '3锟?, income: 156000, orders: 108 },
-    { month: '4锟?, income: 142000, orders: 96 },
-    { month: '5锟?, income: 168000, orders: 115 },
-    { month: '6锟?, income: 185000, orders: 128 },
+    { month: '1, income: 125000, orders: 85 },
+    { month: '2, income: 138000, orders: 92 },
+    { month: '3, income: 156000, orders: 108 },
+    { month: '4, income: 142000, orders: 96 },
+    { month: '5, income: 168000, orders: 115 },
+    { month: '6, income: 185000, orders: 128 },
   ],
 
-  // 瀹屾垚鐜囨暟?  completionRate: {
+  // 瀹屾垚鐜囨暟  completionRate: {
     totalOrders: 245,
     completedOrders: 218,
     completionPercentage: 89.0,
     monthlyCompletion: [
-      { month: '1锟?, rate: 85.2 },
-      { month: '2锟?, rate: 87.8 },
-      { month: '3锟?, rate: 91.5 },
-      { month: '4锟?, rate: 88.3 },
-      { month: '5锟?, rate: 92.1 },
-      { month: '6锟?, rate: 89.0 },
+      { month: '1, rate: 85.2 },
+      { month: '2, rate: 87.8 },
+      { month: '3, rate: 91.5 },
+      { month: '4, rate: 88.3 },
+      { month: '5, rate: 92.1 },
+      { month: '6, rate: 89.0 },
     ],
   },
 
-  // 瀹㈡埛婊℃剰搴︽暟?  satisfaction: {
+  // 瀹㈡埛婊℃剰搴︽暟  satisfaction: {
     averageScore: 4.6,
     totalReviews: 187,
     ratingDistribution: [
@@ -37,12 +37,12 @@ import { cookies } from 'next/headers';
       { rating: 1, count: 2, percentage: 1.0 },
     ],
     monthlySatisfaction: [
-      { month: '1锟?, score: 4.3 },
-      { month: '2锟?, score: 4.4 },
-      { month: '3锟?, score: 4.6 },
-      { month: '4锟?, score: 4.5 },
-      { month: '5锟?, score: 4.7 },
-      { month: '6锟?, score: 4.6 },
+      { month: '1, score: 4.3 },
+      { month: '2, score: 4.4 },
+      { month: '3, score: 4.6 },
+      { month: '4, score: 4.5 },
+      { month: '5, score: 4.7 },
+      { month: '6, score: 4.6 },
     ],
   },
 
@@ -65,12 +65,12 @@ import { cookies } from 'next/headers';
     { category: '鍏朵粬缁翠慨', count: 45, percentage: 11.1 },
   ],
 
-  // 鏈€杩戞椿?  recentActivities: [
+  // 鏈€杩戞椿  recentActivities: [
     {
       id: 1,
       type: 'order_completed',
       title: 'iPhone 14 Pro 灞忓箷鏇存崲瀹屾垚',
-      description: '瀹㈡埛寮犲コ澹殑iPhone 14 Pro灞忓箷缁翠慨宸插畬?,
+      description: '瀹㈡埛寮犲コ澹殑iPhone 14 Pro灞忓箷缁翠慨宸插畬,
       timestamp: new Date(Date.now() - 1000 * 60 * 15),
       priority: 'high',
     },
@@ -93,8 +93,8 @@ import { cookies } from 'next/headers';
     {
       id: 4,
       type: 'payment_received',
-      title: '鏀跺埌澶ч浠樻',
-      description: '鏀跺埌浼佷笟瀹㈡埛鑱旀兂绗旇鏈壒閲忕淮淇?,
+      title: '鏀跺埌澶ч樻',
+      description: '鏀跺埌佷笟瀹㈡埛鑱旀兂绗旇鏈壒閲忕淮淇,
       timestamp: new Date(Date.now() - 1000 * 60 * 180),
       priority: 'high',
     },
@@ -104,15 +104,15 @@ import { cookies } from 'next/headers';
 export async function GET(request: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token')?.value;
+    const token = cookieStore.get('auth-token').value;
 
-    // 妯℃嫙韬唤楠岃瘉妫€?    if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+    // 妯℃嫙韬唤楠岃瘉妫€    if (!token) {
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 妯℃嫙鏉冮檺妫€?    const userRole = 'repair_shop_admin'; // 瀹為檯搴斾粠token瑙ｆ瀽
+    // 妯℃嫙鏉冮檺妫€    const userRole = 'repair_shop_admin'; // 瀹為檯搴斾粠token瑙ｆ瀽
 
-    // 娣诲姞涓€浜涢殢鏈烘尝鍔ㄤ娇鏁版嵁鏇寸湡?    const fluctuation = (Math.random() - 0.5) * 0.1; // 卤5% 娉㈠姩
+    // 娣诲姞涓€浜涢殢鏈烘尝鍔ㄤ娇鏁版嵁鏇寸湡    const fluctuation = (Math.random() - 0.5) * 0.1; // 卤5% 娉㈠姩
 
     const enhancedData = {
       ...mockDashboardData,
@@ -134,11 +134,11 @@ export async function GET(request: Request) {
       userRole,
     });
   } catch (error) {
-    console.error('鑾峰彇浠〃鏉挎暟鎹け?', error);
+    console.error('鑾峰彇〃鏉挎暟鎹け', error);
     return NextResponse.json(
       {
-        error: '鑾峰彇浠〃鏉挎暟鎹け?,
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鑾峰彇〃鏉挎暟鎹け,
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );

@@ -1,6 +1,6 @@
 ﻿/**
  * 用户行为追踪监控面板
- * 实时显示和分析用户行为数? */
+ * 实时显示和分析用户行为数 */
 
 'use client';
 
@@ -47,14 +47,14 @@ interface BehaviorEvent {
   userAgent: string;
   screenSize: string;
   viewportSize: string;
-  userId?: string;
+  userId: string;
   sessionId: string;
-  element?: string;
-  elementId?: string;
-  coordinates?: { x: number; y: number };
-  scrollDepth?: number;
-  duration?: number;
-  metadata?: Record<string, any>;
+  element: string;
+  elementId: string;
+  coordinates: { x: number; y: number };
+  scrollDepth: number;
+  duration: number;
+  metadata: Record<string, any>;
 }
 
 interface BehaviorSummary {
@@ -80,7 +80,7 @@ export default function BehaviorTrackingDashboard() {
   });
   const [realTimeEnabled, setRealTimeEnabled] = useState(true);
 
-  // 初始化行为追?  const { trackEvent, trackCustomEvent, setUser, flush } = useBehaviorTracker({
+  // 初始化行为追  const { trackEvent, trackCustomEvent, setUser, flush } = useBehaviorTracker({
     batchSize: 5,
     batchInterval: 3000,
     captureScroll: true,
@@ -89,7 +89,7 @@ export default function BehaviorTrackingDashboard() {
     captureErrors: true,
   });
 
-  // 设置当前用户（演示用?  useEffect(() => {
+  // 设置当前用户（演示用  useEffect(() => {
     setUser(`demo_user_${Math.random().toString(36).substr(2, 9)}`);
   }, [setUser]);
 
@@ -127,7 +127,7 @@ export default function BehaviorTrackingDashboard() {
       params.append('startDate', startDate.toISOString());
       params.append('limit', '100');
 
-      const response = await fetch(`/api/analytics/events?${params}`);
+      const response = await fetch(`/api/analytics/events${params}`);
       const data = await response.json();
 
       if (data.success) {
@@ -171,7 +171,7 @@ export default function BehaviorTrackingDashboard() {
     search: '搜索',
     navigation: '导航',
     error: '错误',
-    custom: '自定?,
+    custom: '自定,
   };
 
   // 设备类型识别
@@ -211,14 +211,14 @@ export default function BehaviorTrackingDashboard() {
 
             <div className="flex items-center gap-3">
               <Button
-                variant={realTimeEnabled ? 'default' : 'outline'}
+                variant={realTimeEnabled  'default' : 'outline'}
                 size="sm"
                 onClick={() => setRealTimeEnabled(!realTimeEnabled)}
               >
                 <RefreshCw
-                  className={`h-4 w-4 mr-2 ${realTimeEnabled ? 'animate-spin' : ''}`}
+                  className={`h-4 w-4 mr-2 ${realTimeEnabled  'animate-spin' : ''}`}
                 />
-                {realTimeEnabled ? '实时更新' : '手动刷新'}
+                {realTimeEnabled  '实时更新' : '手动刷新'}
               </Button>
 
               <Button
@@ -228,7 +228,7 @@ export default function BehaviorTrackingDashboard() {
                 disabled={loading}
               >
                 <RefreshCw
-                  className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`}
+                  className={`h-4 w-4 mr-2 ${loading  'animate-spin' : ''}`}
                 />
                 刷新
               </Button>
@@ -355,9 +355,9 @@ export default function BehaviorTrackingDashboard() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1h">最?小时</SelectItem>
-                    <SelectItem value="24h">最?4小时</SelectItem>
-                    <SelectItem value="7d">最?�?/SelectItem>
+                    <SelectItem value="1h">最1小时</SelectItem>
+                    <SelectItem value="24h">最4小时</SelectItem>
+                    <SelectItem value="7d">最/SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -369,7 +369,7 @@ export default function BehaviorTrackingDashboard() {
                   disabled={loading}
                 >
                   <RefreshCw
-                    className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`}
+                    className={`h-4 w-4 mr-2 ${loading  'animate-spin' : ''}`}
                   />
                   应用过滤
                 </Button>
@@ -460,14 +460,14 @@ export default function BehaviorTrackingDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Activity className="h-5 w-5" />
-              实时事件?              {loading && (
+              实时事件              {loading && (
                 <RefreshCw className="h-4 w-4 animate-spin text-blue-500" />
               )}
             </CardTitle>
             <CardDescription>最近发生的用户行为事件</CardDescription>
           </CardHeader>
           <CardContent>
-            {events.length === 0 ? (
+            {events.length === 0  (
               <div className="text-center py-12 text-gray-500">
                 <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>暂无行为事件数据</p>
@@ -492,9 +492,9 @@ export default function BehaviorTrackingDashboard() {
                             </span>
                           </div>
 
-                          {getDeviceType(event.userAgent) === 'mobile' ? (
+                          {getDeviceType(event.userAgent) === 'mobile'  (
                             <Smartphone className="w-4 h-4 text-green-500" />
-                          ) : getDeviceType(event.userAgent) === 'tablet' ? (
+                          ) : getDeviceType(event.userAgent) === 'tablet'  (
                             <Monitor className="w-4 h-4 text-blue-500" />
                           ) : (
                             <Monitor className="w-4 h-4 text-gray-500" />
@@ -563,7 +563,7 @@ export default function BehaviorTrackingDashboard() {
         <div className="mt-8 p-6 bg-white rounded-lg border">
           <h3 className="text-lg font-medium mb-4">演示操作区域</h3>
           <p className="text-gray-600 mb-4">
-            在下面进行各种操作来测试行为追踪功能?          </p>
+            在下面进行各种操作来测试行为追踪功能          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button
@@ -591,8 +591,8 @@ export default function BehaviorTrackingDashboard() {
             <Button
               variant="secondary"
               onClick={() => {
-                // 触发一个模拟错?                setTimeout(() => {
-                  throw new Error('这是一个测试错?);
+                // 触发一个模拟错                setTimeout(() => {
+                  throw new Error('这是一个测试错);
                 }, 100);
               }}
             >
@@ -601,10 +601,10 @@ export default function BehaviorTrackingDashboard() {
           </div>
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <h4 className="font-medium mb-2">当前追踪状?/h4>
+            <h4 className="font-medium mb-2">当前追踪状/h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">待发送事?</span>
+                <span className="text-gray-600">待发送事</span>
                 <span className="ml-2 font-medium">0</span>
               </div>
               <div>

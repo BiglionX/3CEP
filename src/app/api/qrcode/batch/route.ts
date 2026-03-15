@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { parse } from "csv-parse/sync";
 import { v4 as uuidv4 } from "uuid";
 
-// 鍒濆鍖朣upabase瀹㈡埛?
+// 鍒濆鍖朣upabase瀹㈡埛
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -28,14 +28,14 @@ export async function GET() {
       );
     }
 
-    // 鏍煎紡鍖栬繑鍥炴暟?
-    const batches = data?.map(batch => ({
+    // 鏍煎紡鍖栬繑鍥炴暟
+    const batches = data.map(batch => ({
       id: batch.id,
       batch_id: batch.batch_id,
       product_model: batch.product_model,
       product_category: batch.product_category,
       quantity: batch.quantity,
-      generated_count: batch.qr_codes?.[0]?.count || 0,
+      generated_count: batch.qr_codes.[0].count || 0,
       status: batch.status,
       created_at: batch.created_at,
       completed_at: batch.completed_at,
@@ -50,13 +50,13 @@ export async function GET() {
   } catch (error) {
     console.error("鑾峰彇鎵规鍒楄〃寮傚父:", error);
     return NextResponse.json(
-      { success: false, error: "鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: "鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }
 }
 
-// 鍒涘缓鏂版壒?
+// 鍒涘缓鏂版壒
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       startDate,
       endDate
     }).catch(err => {
-      console.error("寮傛鐢熸垚浜岀淮鐮佸け?", err);
+      console.error("寮傛鐢熸垚浜岀淮鐮佸け", err);
       // 鏇存柊鎵规鐘舵€佷负澶辫触
       supabase
         .from("qr_batches")
@@ -142,13 +142,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("鍒涘缓鎵规寮傚父:", error);
     return NextResponse.json(
-      { success: false, error: "鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: "鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }
 }
 
-// 寮傛鐢熸垚鎵规浜岀淮?
+// 寮傛鐢熸垚鎵规浜岀淮
 async function generateBatchCodes(
   batchId: string,
   params: any
@@ -165,7 +165,7 @@ async function generateBatchCodes(
   } = params;
 
   try {
-    // 鏇存柊鎵规鐘舵€佷负澶勭悊?
+    // 鏇存柊鎵规鐘舵€佷负澶勭悊
     await supabase
       .from("qr_batches")
       .update({ status: "processing" } as any)
@@ -178,7 +178,7 @@ async function generateBatchCodes(
       const productId = `${productModel}_${serialNumber}`;
       const qrContent = `https://fx.cn/p/${productId}`;
       
-      // 鐢熸垚浜岀淮鐮丅ase64锛堣繖閲屼娇鐢ㄥ崰浣嶇锛屽疄闄呭簲璇ヨ皟鐢ㄤ簩缁寸爜鐢熸垚鏈嶅姟?
+      // 鐢熸垚浜岀淮鐮丅ase64锛堣繖閲屼娇鐢ㄥ崰浣嶇锛屽疄闄呭簲璇ヨ皟鐢ㄤ簩缁寸爜鐢熸垚鏈嶅姟
       const qrImageBase64 = generatePlaceholderQR(productId, qrContent);
 
       codes.push({
@@ -193,13 +193,13 @@ async function generateBatchCodes(
       });
     }
 
-    // 鎵归噺鎻掑叆浜岀淮鐮佽?
+    // 鎵归噺鎻掑叆浜岀淮鐮佽
     const { error: insertError } = await supabase
       .from("qr_codes")
       .insert(codes);
 
     if (insertError) {
-      throw new Error(`鎻掑叆浜岀淮鐮佽褰曞け? ${insertError.message}`);
+      throw new Error(`鎻掑叆浜岀淮鐮佽褰曞け ${insertError.message}`);
     }
 
     // 鏇存柊鎵规鐘舵€佷负瀹屾垚
@@ -224,10 +224,10 @@ async function generateBatchCodes(
   }
 }
 
-// 鐢熸垚鍗犱綅浜岀淮鐮侊紙瀹為檯搴旇浣跨敤浜岀淮鐮佸簱?
+// 鐢熸垚鍗犱綅浜岀淮鐮侊紙瀹為檯搴旇浣跨敤浜岀淮鐮佸簱
 function generatePlaceholderQR(productId: string, content: string): string {
-  // 杩欓噷搴旇浣跨敤鐪熸鐨勪簩缁寸爜鐢熸垚搴擄紝锟?qrcode 锟?qr-image
-  // 鐩墠杩斿洖涓€涓畝鍗曠殑SVG鍗犱綅?
+  // 杩欓噷搴旇浣跨敤鐪熸鐨勪簩缁寸爜鐢熸垚搴擄紝qrcode qr-image
+  // 鐩墠杩斿洖涓€涓畝鍗曠殑SVG鍗犱綅
   return `data:image/svg+xml;base64,${Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
       <rect width="200" height="200" fill="#ffffff"/>

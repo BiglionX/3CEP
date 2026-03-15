@@ -6,7 +6,8 @@ import { usePermission } from '@/hooks/use-permission';
 
 export default function FinalVerificationTest() {
   const router = useRouter();
-  const { isAuthenticated, loading, userInfo } = usePermission();
+  const permissionData = usePermission();
+  const { isAuthenticated, loading, userInfo } = permissionData;
   const [testResults, setTestResults] = useState<Array<{
     timestamp: string;
     message: string;
@@ -20,50 +21,51 @@ export default function FinalVerificationTest() {
       type
     };
     setTestResults(prev => [...prev, result]);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`[${type.toUpperCase()}] ${message}`);
+    // TODO: 移除调试日志
+    console.debug(`${type.toUpperCase()} ${message}`);
   };
 
   useEffect(() => {
-    log('组件初始?, 'init');
-    log(`认证状? ${isAuthenticated}`, 'auth');
-    log(`加载状? ${loading}`, 'loading');
-    log(`用户信息: ${userInfo ? JSON.stringify(userInfo) : 'null'}`, 'user');
+    log('组件初始化', 'init');
+    log(`认证状态: ${isAuthenticated}`, 'auth');
+    log(`加载状态: ${loading}`, 'loading');
+    log(`用户信息: ${userInfo ? JSON.stringify(userInfo) : "null"}`, 'user');
   }, [isAuthenticated, loading, userInfo]);
 
   const testAuthentication = async () => {
-    log('开始认证测?..', 'start');
-    
+    log('开始认证测试...', 'start');
+
     try {
-      // 测试API认证状?
+      // 测试API认证状态
       const response = await fetch('/api/auth/check-session');
       const sessionData = await response.json();
-      
+
       log(`API认证响应: ${response.status}`, 'api');
       log(`会话数据: ${JSON.stringify(sessionData)}`, 'data');
-      
-      // 测试hook认证状?
-      log(`Hook认证状? ${isAuthenticated}`, 'hook');
-      log(`Hook用户信息: ${userInfo ? JSON.stringify(userInfo) : 'null'}`, 'hook-data');
-      
+
+      // 测试hook认证状态
+      log(`Hook认证状态: ${isAuthenticated}`, 'hook');
+      log(`Hook用户信息: ${userInfo ? JSON.stringify(userInfo) : "null"}`, 'hook-data');
+
       if (sessionData.authenticated && isAuthenticated) {
-        log('�?认证同步成功', 'success');
-        
+        log('双认证同步成功', 'success');
+
         // 测试跳转
-        log('测试跳转到管理后?..', 'jump');
+        log('测试跳转到管理后台...', 'jump');
         setTimeout(() => {
           router.push('/admin/dashboard');
         }, 1000);
-        
+
       } else {
-        log('�?认证状态不同步', 'error');
+        log('双认证状态不同步', 'error');
         if (!sessionData.authenticated) {
-          log('API显示未认?, 'error');
+          log('API显示未认证', 'error');
         }
         if (!isAuthenticated) {
-          log('Hook显示未认?, 'error');
+          log('Hook显示未认证', 'error');
         }
       }
-      
+
     } catch (error: unknown) {
       log(`认证测试失败: ${(error as Error).message}`, 'error');
     }
@@ -74,9 +76,9 @@ export default function FinalVerificationTest() {
     try {
       const response = await fetch('/api/auth/check-session');
       const sessionData = await response.json();
-      
+
       if (sessionData.authenticated) {
-        // 模拟登录成功后的状态更?
+        // 模拟登录成功后的状态更新
         localStorage.setItem('temp-auth-flag', 'true');
         window.location.reload();
       }
@@ -89,34 +91,34 @@ export default function FinalVerificationTest() {
     <div className="min-h-screen bg-gray-100 py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">最终验证测?/h1>
-          
+          <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">最终验证测试</h1>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-blue-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4 text-blue-800">当前状?/h2>
+              <h2 className="text-xl font-semibold mb-4 text-blue-800">当前状态</h2>
               <div className="space-y-3">
-                <div className={`p-3 rounded ${loading ? 'bg-yellow-100' : 'bg-green-100'}`}>
-                  <span className="font-medium">加载状?</span> {loading ? '加载?..' : '完成'}
+                <div className={`p-3 rounded {loading  ? 'bg-yellow-100' : 'bg-green-100'}`}>
+                  <span className="font-medium">加载状态</span> {loading  ? '加载中...' : '完成'}
                 </div>
-                <div className={`p-3 rounded ${isAuthenticated ? 'bg-green-100' : 'bg-red-100'}`}>
-                  <span className="font-medium">认证状?</span> {isAuthenticated ? '已认? : '未认?}
-                </div>
-                <div className="p-3 rounded bg-gray-100">
-                  <span className="font-medium">用户邮箱:</span> {userInfo?.email || '�?}
+                <div className={`p-3 rounded ${isAuthenticated  ? 'bg-green-100' : 'bg-red-100'}`}>
+                  <span className="font-medium">认证状态</span> {isAuthenticated  ? '已认证' : '未认证'}
                 </div>
                 <div className="p-3 rounded bg-gray-100">
-                  <span className="font-medium">用户角色:</span> {userInfo??.join(', ') || '�?}
+                  <span className="font-medium">用户邮箱:</span> {userInfo?.email || '未知'}
+                </div>
+                <div className="p-3 rounded bg-gray-100">
+                  <span className="font-medium">用户角色:</span> {userInfo?.roles.join(', ') || '未知'}
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 p-6 rounded-lg">
               <h2 className="text-xl font-semibold mb-4 text-gray-800">测试控制</h2>
               <div className="space-y-3">
                 <button
                   onClick={testAuthentication}
                   disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-3 px-4 rounded-lg font-medium transition-colors"
+                  className="w-full bg-blue-600 hover:bg-blue-700disabled:bg-gray-400 text-white py-3 px-4 rounded-lg font-medium transition-colors"
                 >
                   测试认证同步
                 </button>
@@ -141,32 +143,30 @@ export default function FinalVerificationTest() {
               <h2 className="text-xl font-semibold text-gray-800">测试日志</h2>
               <button
                 onClick={() => setTestResults([])}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+                className="bg-red-500 bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
               >
                 清除日志
               </button>
             </div>
-            
+
             <div className="bg-black rounded-lg p-4 h-80 overflow-y-auto font-mono text-sm">
-              {testResults.length === 0 ? (
-                <p className="text-gray-500">等待测试开?..</p>
+              {testResults.length === 0  (
+                <p className="text-gray-500">等待测试开始...</p>
               ) : (
                 testResults.map((result: {timestamp: string; message: string; type: string}, index: number) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className={`mb-2 p-2 rounded ${
-                      result.type === 'error' ? 'bg-red-900/30 border border-red-700' :
-                      result.type === 'success' ? 'bg-green-900/30 border border-green-700' :
-                      result.type === 'data' ? 'bg-blue-900/30 border border-blue-700' :
-                      'bg-gray-800'
+                      result.type === 'error'  'bg-red-900/30 border border-red-700' :
+                      result.type === 'success'  'bg-green-900/30 border border-green-700' :
+                      result.type === 'data' ? 'bg-blue-900/30 border border-blue-700' : 'bg-gray-800'
                     }`}
                   >
                     <span className="text-gray-400">[{result.timestamp}]</span>{' '}
                     <span className={
-                      result.type === 'error' ? 'text-red-400' :
-                      result.type === 'success' ? 'text-green-400' :
-                      result.type === 'data' ? 'text-blue-400' :
-                      'text-yellow-400'
+                      result.type === 'error'  'text-red-400' :
+                      result.type === 'success'  'text-green-400' :
+                      result.type === 'data'  ? 'text-blue-400' : 'text-yellow-400'
                     }>
                       [{result.type.toUpperCase()}]
                     </span>{' '}
@@ -180,10 +180,10 @@ export default function FinalVerificationTest() {
           <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
             <h3 className="font-semibold text-yellow-800 mb-3">🔧 修复说明</h3>
             <div className="text-sm text-yellow-700 space-y-2">
-              <p>�?已修?usePermission hook 以支?Supabase 认证</p>
-              <p>�?现在会优先检?/api/auth/check-session 接口</p>
-              <p>�?备用方案仍然?localStorage JWT token</p>
-              <p>�?管理员用户会被识别为 ['admin'] 角色</p>
+              <p>• 已修复usePermission hook 以支持Supabase 认证</p>
+              <p>• 现在会优先检查 /api/auth/check-session 接口</p>
+              <p>• 备用方案仍然使用 localStorage JWT token</p>
+              <p>• 管理员用户会被识别为 ['admin'] 角色</p>
             </div>
           </div>
         </div>

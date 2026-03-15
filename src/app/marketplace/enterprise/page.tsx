@@ -1,6 +1,7 @@
 ﻿/**
  * 企业订阅管理页面
- * FixCycle 6.0 智能体市场平?- 企业级订阅系? */
+ * FixCycle 6.0 智能体市场平台 - 企业级订阅系统
+ */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -15,9 +16,7 @@ import {
   AlertTriangle,
   CheckCircle,
   XCircle,
-  TrendingUp,
   TrendingDown,
-  Filter,
   Search,
   Plus,
   Edit,
@@ -76,14 +75,14 @@ export default function EnterprisePage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
-  const [showTeamModal, setShowTeamModal] = useState(false);
-  const [showMemberModal, setShowMemberModal] = useState(false);
+  const [_showTeamModal, _setShowTeamModal] = useState(false);
+  const [_showMemberModal, _setShowMemberModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   // 模拟企业订阅数据
   const mockSubscription: EnterpriseSubscription = {
     id: 'sub-enterprise-001',
-    name: '企业智能体订?,
+    name: '企业智能体订阅',
     plan: 'enterprise',
     status: 'active',
     member_count: 25,
@@ -104,7 +103,7 @@ export default function EnterprisePage() {
     teams: [
       {
         id: 'team-sales',
-        name: '销售团?,
+        name: '销售团队',
         members: 8,
         assigned_agents: ['agent-1', 'agent-4'],
         usage: 2156,
@@ -133,7 +132,7 @@ export default function EnterprisePage() {
   const mockMembers: TeamMember[] = [
     {
       id: 'member-1',
-      name: '张经?,
+      name: '张经理',
       email: 'zhang.manager@company.com',
       role: 'admin',
       joined_date: '2026-01-15',
@@ -142,7 +141,7 @@ export default function EnterprisePage() {
     },
     {
       id: 'member-2',
-      name: '李主?,
+      name: '李主管',
       email: 'li.supervisor@company.com',
       role: 'member',
       joined_date: '2026-01-20',
@@ -151,7 +150,7 @@ export default function EnterprisePage() {
     },
     {
       id: 'member-3',
-      name: '王专?,
+      name: '王专员',
       email: 'wang.specialist@company.com',
       role: 'member',
       joined_date: '2026-02-01',
@@ -176,19 +175,19 @@ export default function EnterprisePage() {
       { name: string; color: string; price: string }
     > = {
       starter: {
-        name: '入门?,
+        name: '入门版',
         color: 'bg-blue-100 text-blue-800',
-        price: '¥999/�?,
+        price: '¥999/年',
       },
       professional: {
-        name: '专业?,
+        name: '专业版',
         color: 'bg-purple-100 text-purple-800',
-        price: '¥2999/�?,
+        price: '¥2999/年',
       },
       enterprise: {
-        name: '企业?,
+        name: '企业版',
         color: 'bg-green-100 text-green-800',
-        price: '¥9999/�?,
+        price: '¥9999/年',
       },
     };
     return configs[plan] || configs.starter;
@@ -207,17 +206,17 @@ export default function EnterprisePage() {
       pending: {
         icon: <AlertTriangle className="w-4 h-4" />,
         color: 'text-yellow-600',
-        text: '待激?,
+        text: '待激活',
       },
       expired: {
         icon: <XCircle className="w-4 h-4" />,
         color: 'text-red-600',
-        text: '已过?,
+        text: '已过期',
       },
       cancelled: {
         icon: <XCircle className="w-4 h-4" />,
         color: 'text-gray-600',
-        text: '已取?,
+        text: '已取消',
       },
     };
     return configs[status] || configs.pending;
@@ -234,7 +233,7 @@ export default function EnterprisePage() {
   };
 
   const formatPercentage = (value: number, total: number) => {
-    return total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+    return total > 0  ((value / total) * 100).toFixed(1) : '0';
   };
 
   const formatDate = (dateString: string) => {
@@ -246,7 +245,7 @@ export default function EnterprisePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载企业订阅数据?..</p>
+          <p className="mt-4 text-gray-600">加载企业订阅数据中...</p>
         </div>
       </div>
     );
@@ -258,8 +257,9 @@ export default function EnterprisePage() {
         <div className="text-center">
           <Building className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            未找到企业订?          </h2>
-          <p className="text-gray-600 mb-6">您的企业尚未订阅智能体服?/p>
+            未找到企业订阅
+          </h2>
+          <p className="text-gray-600 mb-6">您的企业尚未订阅智能体服务</p>
           <button
             onClick={() => router.push('/marketplace')}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
@@ -335,7 +335,7 @@ export default function EnterprisePage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Token使用?/p>
+                <p className="text-sm text-gray-600">Token使用量</p>
                 <p className="text-2xl font-bold text-purple-600">
                   {subscription.used_tokens}/{subscription.token_budget}
                 </p>
@@ -368,7 +368,8 @@ export default function EnterprisePage() {
                 subscription.remaining_tokens /
                 subscription.usage_stats.average_daily_usage
               ).toFixed(1)}{' '}
-              �?            </div>
+              天
+            </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -390,7 +391,7 @@ export default function EnterprisePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 左侧 - 团队管理 */}
           <div className="lg:col-span-2">
-            {/* 标签页导?*/}
+            {/* 标签页导航 */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
               <div className="border-b border-gray-200">
                 <nav className="flex space-x-8 px-6">
@@ -404,7 +405,7 @@ export default function EnterprisePage() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors ${
                         activeTab === tab.id
-                          ? 'border-blue-500 text-blue-600'
+                           'border-blue-500 text-blue-600'
                           : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                       }`}
                     >
@@ -415,7 +416,7 @@ export default function EnterprisePage() {
                 </nav>
               </div>
 
-              {/* 标签页内?*/}
+              {/* 标签页内容 */}
               <div className="p-6">
                 {activeTab === 'overview' && (
                   <div>
@@ -490,7 +491,7 @@ export default function EnterprisePage() {
                         团队列表
                       </h3>
                       <button
-                        onClick={() => setShowTeamModal(true)}
+                        onClick={() => _setShowTeamModal(true)}
                         className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         <Plus className="w-4 h-4" />
@@ -510,7 +511,8 @@ export default function EnterprisePage() {
                                 {team.name}
                               </h4>
                               <p className="text-sm text-gray-600">
-                                {team.members} 名成?                              </p>
+                                {team.members} 名成员
+                              </p>
                               <div className="flex flex-wrap gap-1 mt-2">
                                 {team.assigned_agents.map((agent, index) => (
                                   <span
@@ -560,7 +562,7 @@ export default function EnterprisePage() {
                           />
                         </div>
                         <button
-                          onClick={() => setShowMemberModal(true)}
+                          onClick={() => _setShowMemberModal(true)}
                           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                         >
                           <Plus className="w-4 h-4" />
@@ -607,20 +609,20 @@ export default function EnterprisePage() {
                               <div
                                 className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                   member.role === 'admin'
-                                    ? 'bg-red-100 text-red-800'
+                                     'bg-red-100 text-red-800'
                                     : member.role === 'member'
-                                      ? 'bg-blue-100 text-blue-800'
+                                       'bg-blue-100 text-blue-800'
                                       : 'bg-gray-100 text-gray-800'
                                 }`}
                               >
                                 {member.role === 'admin'
-                                  ? '管理?
+                                   '管理员'
                                   : member.role === 'member'
-                                    ? '成员'
-                                    : '查看?}
+                                     '成员'
+                                    : '查看者'}
                               </div>
                               <p className="text-sm text-gray-500 mt-1">
-                                最后活?{' '}
+                                最后活跃{' '}
                                 {new Date(
                                   member.last_active
                                 ).toLocaleDateString('zh-CN')}
@@ -644,7 +646,7 @@ export default function EnterprisePage() {
             </div>
           </div>
 
-          {/* 右侧 - 订阅详情和设?*/}
+          {/* 右侧 - 订阅详情和设置 */}
           <div className="space-y-6">
             {/* 订阅详情 */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -665,9 +667,9 @@ export default function EnterprisePage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">自动续费</span>
                   <span
-                    className={`font-medium ${subscription.auto_renew ? 'text-green-600' : 'text-gray-600'}`}
+                    className={`font-medium ${subscription.auto_renew  'text-green-600' : 'text-gray-600'}`}
                   >
-                    {subscription.auto_renew ? '开? : '关闭'}
+                    {subscription.auto_renew  '开启' : '关闭'}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -689,7 +691,7 @@ export default function EnterprisePage() {
                 <AlertTriangle className="w-5 h-5 text-yellow-500 mr-3 mt-0.5 flex-shrink-0" />
                 <div className="text-sm text-yellow-800">
                   <p className="font-medium mb-1">预算提醒</p>
-                  <p>当前Token使用量已达到预算?2%，请注意控制使用?/p>
+                  <p>当前Token使用量已达到预算的62%，请注意控制使用量</p>
                 </div>
               </div>
             </div>
@@ -719,4 +721,3 @@ export default function EnterprisePage() {
     </div>
   );
 }
-

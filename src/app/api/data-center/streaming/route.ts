@@ -6,7 +6,7 @@ import {
   UserActionProcessor,
 } from '@/modules/data-center/streaming/real-time-service';
 
-// 鍒濆鍖栨秷璐硅€呯粍锛堝湪棣栨璁块棶鏃跺垱寤猴級
+// 鍒濆鍖栨秷璐硅€呯粍锛堝湪棣栨璁块棶跺垱寤猴級
 let isInitialized = false;
 
 async function initializeRealTimeService() {
@@ -38,12 +38,12 @@ async function initializeRealTimeService() {
       blockTime: 1000,
     });
 
-    // 鍚姩娑堣垂?    await realTimeDataService.startConsumers();
+    // 鍚姩娑堣垂    await realTimeDataService.startConsumers();
 
     isInitialized = true;
-    console.log('锟?瀹炴椂鏁版嵁鏈嶅姟鍒濆鍖栧畬?);
+    console.log('瀹炴椂鏁版嵁鏈嶅姟鍒濆鍖栧畬);
   } catch (error) {
-    console.error('锟?瀹炴椂鏁版嵁鏈嶅姟鍒濆鍖栧け?', error);
+    console.error('瀹炴椂鏁版嵁鏈嶅姟鍒濆鍖栧け', error);
     throw error;
   }
 }
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'status':
-        // 鑾峰彇鏈嶅姟鐘?        return NextResponse.json({
+        // 鑾峰彇鏈嶅姟鐘        return NextResponse.json({
           status: 'running',
           initialized: isInitialized,
           consumers: Array.from(realTimeDataService.consumerGroups.keys()),
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
             const info = await realTimeDataService.getStreamInfo(key);
             streamInfo[key] = info;
           } catch (error) {
-            streamInfo[key] = { error: 'Stream涓嶅瓨鍦ㄦ垨鏃犳硶璁块棶' };
+            streamInfo[key] = { error: 'Stream涓嶅鍦ㄦ垨犳硶璁块棶' };
           }
         }
 
@@ -107,20 +107,20 @@ export async function GET(request: NextRequest) {
         const eventId = await realTimeDataService.publishEvent(testEvent);
 
         return NextResponse.json({
-          message: '娴嬭瘯浜嬩欢宸插彂?,
+          message: '娴嬭瘯浜嬩欢宸插彂,
           eventId,
           event: testEvent,
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瀹炴椂鏁版嵁API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -183,7 +183,7 @@ export async function POST(request: NextRequest) {
             break;
           default:
             return NextResponse.json(
-              { error: '涓嶆敮鎸佺殑澶勭悊鍣ㄧ被? },
+              { error: '涓嶆敮鎸佺殑澶勭悊鍣ㄧ被 },
               { status: 400 }
             );
         }
@@ -191,18 +191,18 @@ export async function POST(request: NextRequest) {
         realTimeDataService.registerProcessor(processor);
 
         return NextResponse.json({
-          message: `澶勭悊?${processorType} 宸叉敞鍐宍,
+          message: `澶勭悊${processorType} 宸叉敞鍐宍,
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瀹炴椂鏁版嵁API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

@@ -121,7 +121,7 @@ export async function PUT(request: Request) {
         transaction_type: transaction_type || 'adjustment',
         reason: reason || '库存调整',
         reference_number: reference_number,
-        created_by: (await supabase.auth.getUser()).data?.id,
+        created_by: (await supabase.auth.getUser()).data.id,
       } as any);
 
     if (inventoryError) throw inventoryError;

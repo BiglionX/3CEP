@@ -19,8 +19,6 @@ import {
   Server,
   Wifi,
   HardDrive,
-  BarChart3,
-  LineChart,
   RefreshCw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -175,9 +173,9 @@ export default function PerformanceMonitoringDemoPage() {
         <div className="flex items-center gap-4 mb-6">
           <Button
             onClick={toggleMonitoring}
-            variant={isMonitoringEnabled ? 'default' : 'outline'}
+            variant={isMonitoringEnabled  'default' : 'outline'}
           >
-            {isMonitoringEnabled ? '停止监控' : '开始监控'}
+            {isMonitoringEnabled  '停止监控' : '开始监控'}
           </Button>
           <Button onClick={simulateApiCall} variant="secondary">
             <Timer className="h-4 w-4 mr-2" />
@@ -188,8 +186,8 @@ export default function PerformanceMonitoringDemoPage() {
             刷新数据
           </Button>
 
-          <Badge variant={isMonitoringEnabled ? 'default' : 'secondary'}>
-            {isMonitoringEnabled ? '监控中' : '已暂停'}
+          <Badge variant={isMonitoringEnabled  'default' : 'secondary'}>
+            {isMonitoringEnabled  '监控中' : '已暂停'}
           </Badge>
         </div>
 
@@ -217,9 +215,9 @@ export default function PerformanceMonitoringDemoPage() {
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
                     {performanceData.currentScore >= 90
-                      ? '优秀'
+                       '优秀'
                       : performanceData.currentScore >= 70
-                        ? '良好'
+                         '良好'
                         : '需改进'}
                   </p>
                 </CardContent>
@@ -238,9 +236,9 @@ export default function PerformanceMonitoringDemoPage() {
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
                     {calculateAvgResponseTime() < 200
-                      ? '优秀'
+                       '优秀'
                       : calculateAvgResponseTime() < 500
-                        ? '良好'
+                         '良好'
                         : '较慢'}
                   </p>
                 </CardContent>
@@ -255,7 +253,7 @@ export default function PerformanceMonitoringDemoPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-purple-600">
-                    {performanceData.metrics[1]?.value || 0}ms
+                    {performanceData.metrics[1].value || 0}ms
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
                     最大内容绘制
@@ -305,17 +303,17 @@ export default function PerformanceMonitoringDemoPage() {
                       <Badge
                         variant={
                           metric.status === 'good'
-                            ? 'default'
+                             'default'
                             : metric.status === 'needs-improvement'
-                              ? 'secondary'
+                               'secondary'
                               : 'destructive'
                         }
                         className={getStatusColor(metric.status)}
                       >
                         {metric.status === 'good'
-                          ? '良好'
+                           '良好'
                           : metric.status === 'needs-improvement'
-                            ? '需改进'
+                             '需改进'
                             : '较差'}
                       </Badge>
                     </div>
@@ -339,14 +337,14 @@ export default function PerformanceMonitoringDemoPage() {
                       首次内容绘制 (FCP)
                     </h4>
                     <div className="text-2xl font-bold text-blue-600 mb-1">
-                      {performanceData.metrics[0]?.value || 0}ms
+                      {performanceData.metrics[0].value || 0}ms
                     </div>
                     <p className="text-sm text-blue-800">目标: &lt; 1.8s</p>
                     <div className="mt-2 h-2 bg-blue-200 rounded-full">
                       <div
                         className="h-full bg-blue-500 rounded-full"
                         style={{
-                          width: `${Math.min(100, (performanceData.metrics[0]?.value || 0) / 18)}%`,
+                          width: `${Math.min(100, (performanceData.metrics[0].value || 0) / 18)}%`,
                         }}
                       />
                     </div>
@@ -357,14 +355,14 @@ export default function PerformanceMonitoringDemoPage() {
                       最大内容绘制 (LCP)
                     </h4>
                     <div className="text-2xl font-bold text-green-600 mb-1">
-                      {performanceData.metrics[1]?.value || 0}ms
+                      {performanceData.metrics[1].value || 0}ms
                     </div>
                     <p className="text-sm text-green-800">目标: &lt; 2.5s</p>
                     <div className="mt-2 h-2 bg-green-200 rounded-full">
                       <div
                         className="h-full bg-green-500 rounded-full"
                         style={{
-                          width: `${Math.min(100, (performanceData.metrics[1]?.value || 0) / 25)}%`,
+                          width: `${Math.min(100, (performanceData.metrics[1].value || 0) / 25)}%`,
                         }}
                       />
                     </div>
@@ -375,14 +373,14 @@ export default function PerformanceMonitoringDemoPage() {
                       首次输入延迟 (FID)
                     </h4>
                     <div className="text-2xl font-bold text-purple-600 mb-1">
-                      {performanceData.metrics[2]?.value || 0}ms
+                      {performanceData.metrics[2].value || 0}ms
                     </div>
                     <p className="text-sm text-purple-800">目标: &lt; 100ms</p>
                     <div className="mt-2 h-2 bg-purple-200 rounded-full">
                       <div
                         className="h-full bg-purple-500 rounded-full"
                         style={{
-                          width: `${Math.min(100, performanceData.metrics[2]?.value || 0)}%`,
+                          width: `${Math.min(100, performanceData.metrics[2].value || 0)}%`,
                         }}
                       />
                     </div>
@@ -393,14 +391,14 @@ export default function PerformanceMonitoringDemoPage() {
                       累积布局偏移 (CLS)
                     </h4>
                     <div className="text-2xl font-bold text-orange-600 mb-1">
-                      {performanceData.metrics[3]?.value || 0}
+                      {performanceData.metrics[3].value || 0}
                     </div>
                     <p className="text-sm text-orange-800">目标: &lt; 0.1</p>
                     <div className="mt-2 h-2 bg-orange-200 rounded-full">
                       <div
                         className="h-full bg-orange-500 rounded-full"
                         style={{
-                          width: `${Math.min(100, (performanceData.metrics[3]?.value || 0) * 1000)}%`,
+                          width: `${Math.min(100, (performanceData.metrics[3].value || 0) * 1000)}%`,
                         }}
                       />
                     </div>
@@ -477,17 +475,17 @@ export default function PerformanceMonitoringDemoPage() {
                           <Badge
                             variant={
                               metric.value < 200
-                                ? 'default'
+                                 'default'
                                 : metric.value < 500
-                                  ? 'secondary'
+                                   'secondary'
                                   : 'destructive'
                             }
                             className="text-xs"
                           >
                             {metric.value < 200
-                              ? '快'
+                               '快'
                               : metric.value < 500
-                                ? '正常'
+                                 '正常'
                                 : '慢'}
                           </Badge>
                         </div>

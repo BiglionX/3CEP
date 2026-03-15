@@ -2,7 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-// GET /api/enterprise/manuals - 鑾峰彇璇存槑涔﹀垪?export async function GET(request: Request) {
+// GET /api/enterprise/manuals - 鑾峰彇璇存槑涔﹀垪export async function GET(request: Request) {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,7 +16,7 @@ import { cookies } from 'next/headers';
     } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
-        { success: false, error: '鏈巿鏉冭? },
+        { success: false, error: '鏈巿鏉冭 },
         { status: 401 }
       );
     }
@@ -30,7 +30,7 @@ import { cookies } from 'next/headers';
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '浼佷笟璐︽埛涓嶅瓨? },
+        { success: false, error: '佷笟璐︽埛涓嶅 },
         { status: 404 }
       );
     }
@@ -68,18 +68,18 @@ import { cookies } from 'next/headers';
     const { data: manuals, error } = await query;
 
     if (error) {
-      console.error('鑾峰彇璇存槑涔﹀垪琛ㄩ敊?', error);
+      console.error('鑾峰彇璇存槑涔﹀垪琛ㄩ敊', error);
       return NextResponse.json(
-        { success: false, error: '鑾峰彇璇存槑涔﹀垪琛ㄥけ? },
+        { success: false, error: '鑾峰彇璇存槑涔﹀垪琛ㄥけ },
         { status: 500 }
       );
     }
 
     return NextResponse.json({ success: true, data: manuals });
   } catch (error) {
-    console.error('鏈嶅姟鍣ㄩ敊?', error);
+    console.error('鏈嶅姟鍣ㄩ敊', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
-        { success: false, error: '鏈巿鏉冭? },
+        { success: false, error: '鏈巿鏉冭 },
         { status: 401 }
       );
     }
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '浼佷笟璐︽埛涓嶅瓨? },
+        { success: false, error: '佷笟璐︽埛涓嶅 },
         { status: 404 }
       );
     }
@@ -162,18 +162,18 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      console.error('鍒涘缓璇存槑涔﹂敊?', error);
+      console.error('鍒涘缓璇存槑涔﹂敊', error);
       return NextResponse.json(
-        { success: false, error: '鍒涘缓璇存槑涔﹀け? },
+        { success: false, error: '鍒涘缓璇存槑涔﹀け },
         { status: 500 }
       ) as any;
     }
 
     return NextResponse.json({ success: true, data: manual });
   } catch (error) {
-    console.error('鏈嶅姟鍣ㄩ敊?', error);
+    console.error('鏈嶅姟鍣ㄩ敊', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }

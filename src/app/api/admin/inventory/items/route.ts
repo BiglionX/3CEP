@@ -1,6 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 
-// 妯℃嫙搴撳瓨鏁版嵁
+// 妯℃嫙搴撳鏁版嵁
 const mockInventoryItems = [
   {
     id: 'inv_001',
@@ -15,7 +15,7 @@ const mockInventoryItems = [
     max_stock_level: 50,
     unit_price: 680.0,
     total_value: 17000.0,
-    location: 'A锟?01璐ф灦',
+    location: 'A01璐ф灦',
     last_updated: '2024-02-28T10:30:00Z',
     status: 'normal',
   },
@@ -32,15 +32,15 @@ const mockInventoryItems = [
     max_stock_level: 100,
     unit_price: 60.0,
     total_value: 480.0,
-    location: 'B锟?03璐ф灦',
+    location: 'B03璐ф灦',
     last_updated: '2024-02-27T14:15:00Z',
     status: 'low_stock',
   },
   {
     id: 'inv_003',
     sku: 'TC-CBL-001',
-    name: 'Type-C鏁版嵁?,
-    category: '鏁版嵁?,
+    name: 'Type-C鏁版嵁,
+    category: '鏁版嵁,
     brand: 'Samsung',
     current_stock: 120,
     reserved_stock: 20,
@@ -49,7 +49,7 @@ const mockInventoryItems = [
     max_stock_level: 200,
     unit_price: 25.0,
     total_value: 3000.0,
-    location: 'C锟?02璐ф灦',
+    location: 'C02璐ф灦',
     last_updated: '2024-02-28T09:20:00Z',
     status: 'normal',
   },
@@ -66,7 +66,7 @@ const mockInventoryItems = [
     max_stock_level: 25,
     unit_price: 1560.0,
     total_value: 0.0,
-    location: 'D锟?01璐ф灦',
+    location: 'D01璐ф灦',
     last_updated: '2024-02-25T11:45:00Z',
     status: 'out_of_stock',
   },
@@ -83,14 +83,14 @@ const mockInventoryItems = [
     max_stock_level: 150,
     unit_price: 4000.0,
     total_value: 600000.0,
-    location: 'E锟?04璐ф灦',
+    location: 'E04璐ф灦',
     last_updated: '2024-02-28T13:30:00Z',
     status: 'overstock',
   },
   {
     id: 'inv_006',
     sku: 'WC-PAD-001',
-    name: '鏃犵嚎鍏呯數?,
+    name: '犵嚎鍏呯數,
     category: '鍏呯數璁惧',
     brand: 'Belkin',
     current_stock: 35,
@@ -100,7 +100,7 @@ const mockInventoryItems = [
     max_stock_level: 60,
     unit_price: 128.0,
     total_value: 4480.0,
-    location: 'A锟?05璐ф灦',
+    location: 'A05璐ф灦',
     last_updated: '2024-02-27T16:45:00Z',
     status: 'normal',
   },
@@ -108,7 +108,7 @@ const mockInventoryItems = [
     id: 'inv_007',
     sku: 'SM-TEST-001',
     name: '鏅鸿兘妫€娴嬩华',
-    category: '妫€娴嬭?,
+    category: '妫€娴嬭,
     brand: 'Fluke',
     current_stock: 8,
     reserved_stock: 1,
@@ -117,7 +117,7 @@ const mockInventoryItems = [
     max_stock_level: 15,
     unit_price: 1890.0,
     total_value: 15120.0,
-    location: 'F锟?02璐ф灦',
+    location: 'F02璐ф灦',
     last_updated: '2024-02-26T09:15:00Z',
     status: 'normal',
   },
@@ -150,7 +150,7 @@ export async function GET(request: NextRequest) {
       filteredItems = filteredItems.filter(item => item.category === category);
     }
 
-    // 鐘舵€佽繃?    if (status && status !== 'all') {
+    // 鐘舵€佽繃    if (status && status !== 'all') {
       filteredItems = filteredItems.filter(item => item.status === status);
     }
 
@@ -172,11 +172,11 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('鑾峰彇搴撳瓨鍒楄〃澶辫触:', error);
+    console.error('鑾峰彇搴撳鍒楄〃澶辫触:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鑾峰彇搴撳瓨鍒楄〃澶辫触',
+        error: '鑾峰彇搴撳鍒楄〃澶辫触',
         data: [],
         pagination: {
           page: 1,
@@ -200,11 +200,11 @@ export async function POST(request: NextRequest) {
       body.sku ||
       `SKU${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(Date.now()).slice(-4)}`;
 
-    // 璁＄畻鍙敤搴撳瓨鍜屾€讳环?    const current_stock = body.current_stock || 0;
+    // 璁＄畻鍙敤搴撳鍜屾€讳环    const current_stock = body.current_stock || 0;
     const reserved_stock = body.reserved_stock || 0;
     const unit_price = body.unit_price || 0;
 
-    // 鍒涘缓鏂板簱瀛橀」?    const newItem = {
+    // 鍒涘缓鏂板簱瀛橀」    const newItem = {
       id: newId,
       sku: sku,
       ...body,
@@ -215,11 +215,11 @@ export async function POST(request: NextRequest) {
       last_updated: new Date().toISOString(),
       status:
         current_stock === 0
-          ? 'out_of_stock'
+           'out_of_stock'
           : current_stock <= (body.min_stock_level || 10)
-            ? 'low_stock'
+             'low_stock'
             : current_stock >= (body.max_stock_level || 100)
-              ? 'overstock'
+               'overstock'
               : 'normal',
     };
 
@@ -228,12 +228,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: newItem,
-      message: '搴撳瓨椤圭洰鍒涘缓鎴愬姛',
+      message: '搴撳椤圭洰鍒涘缓鎴愬姛',
     });
   } catch (error) {
-    console.error('鍒涘缓搴撳瓨椤圭洰澶辫触:', error);
+    console.error('鍒涘缓搴撳椤圭洰澶辫触:', error);
     return NextResponse.json(
-      { success: false, error: '鍒涘缓搴撳瓨椤圭洰澶辫触' },
+      { success: false, error: '鍒涘缓搴撳椤圭洰澶辫触' },
       { status: 500 }
     );
   }

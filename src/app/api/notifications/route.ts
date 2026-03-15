@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-// 妯℃嫙閫氱煡鏁版嵁
+// 妯℃嫙氱煡鏁版嵁
 interface Notification {
   id: string;
   title: string;
@@ -10,20 +10,20 @@ interface Notification {
   priority: 'low' | 'medium' | 'high' | 'critical';
   status: 'unread' | 'read' | 'archived';
   createdAt: Date;
-  readAt?: Date;
-  scheduledTime?: Date;
+  readAt: Date;
+  scheduledTime: Date;
   userId: string;
   category: string;
-  actionUrl?: string;
-  icon?: string;
+  actionUrl: string;
+  icon: string;
 }
 
-// 妯℃嫙鐢ㄦ埛閫氱煡鏁版嵁
+// 妯℃嫙鐢ㄦ埛氱煡鏁版嵁
 const mockNotifications: Record<string, Notification[]> = {
   user_001: [
     {
       id: 'notif_001',
-      title: '鏂拌鍗曟彁?,
+      title: '鏂拌鍗曟彁,
       content: '鎮ㄦ敹鍒颁簡涓€涓柊鐨刬Phone 14 Pro灞忓箷缁翠慨璁㈠崟',
       type: 'info',
       priority: 'high',
@@ -37,7 +37,7 @@ const mockNotifications: Record<string, Notification[]> = {
     {
       id: 'notif_002',
       title: '鏀粯鍒拌处',
-      content: '瀹㈡埛寮犲コ澹殑缁翠慨璐圭敤宸插埌?楼850',
+      content: '瀹㈡埛寮犲コ澹殑缁翠慨璐圭敤宸插埌楼850',
       type: 'success',
       priority: 'medium',
       status: 'unread',
@@ -61,8 +61,8 @@ const mockNotifications: Record<string, Notification[]> = {
     },
     {
       id: 'notif_004',
-      title: '绯荤粺缁存姢閫氱煡',
-      content: '浠婃櫄12鐐瑰皢杩涜绯荤粺缁存姢锛岄璁℃寔?0鍒嗛挓',
+      title: '绯荤粺缁存姢氱煡',
+      content: '婃櫄12鐐瑰皢杩涜绯荤粺缁存姢锛岄璁℃寔0鍒嗛挓',
       type: 'info',
       priority: 'low',
       status: 'read',
@@ -76,8 +76,8 @@ const mockNotifications: Record<string, Notification[]> = {
   user_002: [
     {
       id: 'notif_005',
-      title: '搴撳瓨涓嶈冻璀﹀憡',
-      content: 'iPhone灞忓箷搴撳瓨浣庝簬瀹夊叏绾匡紝璇峰強鏃惰ˉ?,
+      title: '搴撳涓嶈冻璀﹀憡',
+      content: 'iPhone灞忓箷搴撳浣庝簬瀹夊叏绾匡紝璇峰強惰ˉ,
       type: 'warning',
       priority: 'high',
       status: 'unread',
@@ -89,7 +89,7 @@ const mockNotifications: Record<string, Notification[]> = {
   ],
 };
 
-// 鑾峰彇鐢ㄦ埛ID鐨勮緟鍔╁嚱?function getUserIdFromToken(token: string): string {
+// 鑾峰彇鐢ㄦ埛ID鐨勮緟鍔╁嚱function getUserIdFromToken(token: string): string {
   // 瀹為檯搴旂敤涓簲璇ヨВ鏋怞WT token鑾峰彇鐢ㄦ埛ID
   // 杩欓噷绠€鍖栧鐞嗭紝鍋囪token鍖呭惈鐢ㄦ埛淇℃伅
   return 'user_001'; // 榛樿鐢ㄦ埛
@@ -98,10 +98,10 @@ const mockNotifications: Record<string, Notification[]> = {
 export async function GET(request: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token')?.value;
+    const token = cookieStore.get('auth-token').value;
 
     if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const userId = getUserIdFromToken(token);
@@ -113,7 +113,7 @@ export async function GET(request: Request) {
 
     let userNotifications = mockNotifications[userId] || [];
 
-    // 鏍规嵁鐘舵€佽繃?    if (status !== 'all') {
+    // 鏍规嵁鐘舵€佽繃    if (status !== 'all') {
       userNotifications = userNotifications.filter(
         notif => notif.status === status
       );
@@ -137,14 +137,14 @@ export async function GET(request: Request) {
 
     // 缁熻淇℃伅
     const stats = {
-      total: mockNotifications[userId]?.length || 0,
+      total: mockNotifications[userId].length || 0,
       unread:
-        mockNotifications[userId]?.filter(n => n.status === 'unread').length ||
+        mockNotifications[userId].filter(n => n.status === 'unread').length ||
         0,
       read:
-        mockNotifications[userId]?.filter(n => n.status === 'read').length || 0,
+        mockNotifications[userId].filter(n => n.status === 'read').length || 0,
       archived:
-        mockNotifications[userId]?.filter(n => n.status === 'archived')
+        mockNotifications[userId].filter(n => n.status === 'archived')
           .length || 0,
     };
 
@@ -163,11 +163,11 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('鑾峰彇閫氱煡澶辫触:', error);
+    console.error('鑾峰彇氱煡澶辫触:', error);
     return NextResponse.json(
       {
-        error: '鑾峰彇閫氱煡澶辫触',
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鑾峰彇氱煡澶辫触',
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -177,10 +177,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token')?.value;
+    const token = cookieStore.get('auth-token').value;
 
     if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const body = await request.json();
@@ -197,7 +197,7 @@ export async function POST(request: Request) {
     // 楠岃瘉蹇呴渶瀛楁
     if (!title || !content) {
       return NextResponse.json(
-        { error: '鏍囬鍜屽唴瀹逛负蹇呭～? },
+        { error: '鏍囬鍜屽唴瀹逛负蹇呭～ },
         { status: 400 }
       );
     }
@@ -216,15 +216,15 @@ export async function POST(request: Request) {
       userId,
       category: category || 'general',
       actionUrl,
-      scheduledTime: scheduledTime ? new Date(scheduledTime) : undefined,
+      scheduledTime: scheduledTime  new Date(scheduledTime) : undefined,
     };
 
     // 娣诲姞鍒扮敤鎴烽€氱煡鍒楄〃
     if (!mockNotifications[userId]) {
       mockNotifications[userId] = [];
     }
-    mockNotifications[userId].unshift(newNotification); // 娣诲姞鍒板紑?
-    // 闄愬埗姣忎釜鐢ㄦ埛鏈€澶氫繚?00鏉￠€氱煡
+    mockNotifications[userId].unshift(newNotification); // 娣诲姞鍒板紑
+    // 闄愬埗姣忎釜鐢ㄦ埛鏈€澶氫繚00鏉￠€氱煡
     if (mockNotifications[userId].length > 100) {
       mockNotifications[userId] = mockNotifications[userId].slice(0, 100);
     }
@@ -234,15 +234,15 @@ export async function POST(request: Request) {
       data: {
         notification: newNotification,
       },
-      message: '閫氱煡鍒涘缓鎴愬姛',
+      message: '氱煡鍒涘缓鎴愬姛',
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('鍒涘缓閫氱煡澶辫触:', error);
+    console.error('鍒涘缓氱煡澶辫触:', error);
     return NextResponse.json(
       {
-        error: '鍒涘缓閫氱煡澶辫触',
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鍒涘缓氱煡澶辫触',
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );

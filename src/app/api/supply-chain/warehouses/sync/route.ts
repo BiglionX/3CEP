@@ -1,5 +1,5 @@
 ﻿/**
- * 浠撳簱搴撳瓨鍚屾API
+ * 撳簱搴撳鍚屾API
  */
 
 import { NextResponse } from 'next/server';
@@ -33,20 +33,20 @@ export async function POST(request: Request) {
         success: true,
         data: {
           syncRecordId: result.syncRecordId,
-          message: '搴撳瓨鍚屾宸插惎?,
+          message: '搴撳鍚屾宸插惎,
         },
       });
     } else {
       return NextResponse.json(
         {
-          error: '搴撳瓨鍚屾澶辫触',
+          error: '搴撳鍚屾澶辫触',
           details: result.errorMessage,
         },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('搴撳瓨鍚屾閿欒:', error);
+    console.error('搴撳鍚屾閿欒:', error);
     return NextResponse.json(
       {
         error: '鍚屾澶勭悊澶辫触',

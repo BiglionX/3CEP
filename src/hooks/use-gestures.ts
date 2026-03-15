@@ -21,17 +21,22 @@ export type GestureType =
   | 'pan'; // 拖拽
 
 // 手势配置参数
-interface GestureConfig {
-  // 点击相关阈?  tapThreshold?: number; // 点击判定的最大移动距?(px)
+export interface GestureConfig {
+  // 点击相关阈值
+  tapThreshold?: number; // 点击判定的最大移动距离(px)
   doubleTapDelay?: number; // 双击间隔时间 (ms)
   longPressDuration?: number; // 长按持续时间 (ms)
 
-  // 滑动手势阈?  swipeVelocity?: number; // 滑动最小速度 (px/ms)
-  swipeDistance?: number; // 滑动最小距?(px)
+  // 滑动手势阈值
+  swipeVelocity?: number; // 滑动最小速度 (px/ms)
+  swipeDistance?: number; // 滑动最小距离(px)
 
-  // 捏合和旋转阈?  pinchThreshold?: number; // 捏合最小变化比?  rotationThreshold?: number; // 旋转最小角?(�?
+  // 捏合和旋转阈值
+  pinchThreshold?: number; // 捏合最小变化比例
+  rotationThreshold?: number; // 旋转最小角度(度)
 
-  // 防抖和节?  debounceDelay?: number; // 防抖延迟 (ms)
+  // 防抖和节流
+  debounceDelay?: number; // 防抖延迟 (ms)
   throttleDelay?: number; // 节流延迟 (ms)
 }
 
@@ -51,9 +56,10 @@ export interface GestureEventData {
 }
 
 // 手势回调函数类型
-type GestureCallback = (event: GestureEventData) => void;
+export type GestureCallback = (event: GestureEventData) => void;
 
-// 手势处理器配?interface GestureHandlers {
+// 手势处理器配置
+export interface GestureHandlers {
   onTap?: GestureCallback;
   onDoubleTap?: GestureCallback;
   onLongPress?: GestureCallback;
@@ -94,11 +100,18 @@ const DEFAULT_CONFIG: Required<GestureConfig> = {
  * 移动端手势识别Hook
  * @param handlers 手势处理回调函数
  * @param config 手势识别配置参数
- * @returns 返回ref和状态信? */
-export function useGestures(
+ * @returns 返回ref和状态信息
+ */
+export interface UseGesturesReturn<T extends HTMLElement = HTMLElement> {
+  ref: React.RefObject<T>;
+  isActive: boolean;
+  touchCount: number;
+}
+
+export function useGestures<T extends HTMLElement = HTMLElement>(
   handlers: GestureHandlers = {},
   config: GestureConfig = {}
-) {
+): UseGesturesReturn<T> {
   const mergedConfig = { ...DEFAULT_CONFIG, ...config };
 
   // 状态管?  const [isActive, setIsActive] = useState(false);
@@ -106,7 +119,7 @@ export function useGestures(
   const [isLongPressTriggered, setIsLongPressTriggered] = useState(false);
 
   // 引用管理
-  const elementRef = useRef<HTMLElement>(null);
+  const elementRef = useRef<T>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const lastTapTimeRef = useRef<number>(0);
   const lastTapPositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });

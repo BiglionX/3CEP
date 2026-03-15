@@ -8,7 +8,7 @@ export async function GET() {
       {
         id: 'pkg_1',
         name: '鍩虹濂楅',
-        description: '閫傚悎鍋跺皵浣跨敤鐨勭敤?,
+        description: '傚悎鍋跺皵浣跨敤鐨勭敤,
         token_amount: 100,
         price: 9.9,
         discount_percentage: 0,
@@ -19,7 +19,7 @@ export async function GET() {
       {
         id: 'pkg_2',
         name: '鏍囧噯濂楅',
-        description: '鎬т环姣斾箣閫夛紝婊¤冻鏃ュ父闇€?,
+        description: '鎬т环姣斾箣夛紝婊¤冻ュ父闇€,
         token_amount: 500,
         price: 45.0,
         discount_percentage: 10,

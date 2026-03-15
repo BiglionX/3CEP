@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const body = await request.json();
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         });
 
       case 'update_status':
-        // 鎵归噺鏇存柊鐢ㄦ埛鐘?        console.log('鎵归噺鏇存柊鐢ㄦ埛鐘?', userIds, data);
+        // 鎵归噺鏇存柊鐢ㄦ埛鐘        console.log('鎵归噺鏇存柊鐢ㄦ埛鐘', userIds, data);
         return NextResponse.json({
           success: true,
           message: `鎴愬姛鏇存柊 ${userIds.length} 涓敤鎴风姸鎬乣,
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         console.log('鎵归噺鍒嗛厤瑙掕壊:', userIds, data);
         return NextResponse.json({
           success: true,
-          message: `鎴愬姛?${userIds.length} 涓敤鎴峰垎閰嶈鑹瞏,
+          message: `鎴愬姛${userIds.length} 涓敤鎴峰垎閰嶈鑹瞏,
           updatedCount: userIds.length,
         });
 

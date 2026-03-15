@@ -3,7 +3,7 @@ import { quotationTemplateService } from '../../../../../b2b-procurement-agent/s
 
 export async function GET(request: Request) {
   try {
-    // 鑾峰彇鐢ㄦ埛ID锛堝疄闄呭簲鐢ㄤ腑搴旇浠庤璇乼oken鑾峰彇?    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
+    // 鑾峰彇鐢ㄦ埛ID锛堝疄闄呭簲鐢ㄤ腑搴旇庤璇乼oken鑾峰彇    const userId = 'test-user-id'; // 涓存椂娴嬭瘯
     const { searchParams } = new URL(request.url);
     const activeOnly = searchParams.get('activeOnly') !== 'false';
 
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
+    const userId = 'test-user-id'; // 涓存椂娴嬭瘯
     const template = await quotationTemplateService.createTemplate(
       body,
       userId

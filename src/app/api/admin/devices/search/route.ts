@@ -16,14 +16,14 @@ export async function GET(request: Request) {
 
     if (!searchTerm || searchTerm.trim().length === 0) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涙悳绱㈠叧閿瘝' },
+        { success: false, error: '璇彁渚涙悳绱㈠叧閿瘝' },
         { status: 400 }
       );
     }
 
     const trimmedSearch = searchTerm.trim();
 
-    // 鍦ㄥ涓〃涓悳绱㈣?    const devices = await searchDevices(supabase, trimmedSearch);
+    // 鍦ㄥ涓〃涓悳绱㈣    const devices = await searchDevices(supabase, trimmedSearch);
 
     return NextResponse.json({
       success: true,
@@ -68,7 +68,7 @@ async function searchDevices(supabase: any, searchTerm: string) {
       .limit(20);
 
     if (qrcodeError) {
-      console.error('浜岀淮鐮佹悳绱㈤敊?', qrcodeError);
+      console.error('浜岀淮鐮佹悳绱㈤敊', qrcodeError);
     }
 
     // 2. 鍦ㄤ骇鍝佽〃涓悳绱㈠瀷鍙峰拰鍚嶇О
@@ -90,18 +90,18 @@ async function searchDevices(supabase: any, searchTerm: string) {
       console.error('浜у搧鎼滅储閿欒:', productError);
     }
 
-    // 3. 鍚堝苟鍜屽幓閲嶇粨?    const allResults = new Map();
+    // 3. 鍚堝苟鍜屽幓閲嶇粨    const allResults = new Map();
 
-    // 澶勭悊浜岀淮鐮佹悳绱㈢粨?    if (qrcodeResults) {
+    // 澶勭悊浜岀淮鐮佹悳绱㈢粨    if (qrcodeResults) {
       qrcodeResults.forEach((item: any) => {
         const key = item.qr_code_id;
         if (!allResults.has(key)) {
           allResults.set(key, {
             qrcodeId: item.qr_code_id,
-            productId: item?.id,
-            productModel: item?.model,
-            productName: item?.name,
-            brandName: item?.name || item?.brands?.name,
+            productId: item.id,
+            productModel: item.model,
+            productName: item.name,
+            brandName: item.name || item.brands.name,
             source: 'qrcode',
           });
         }
@@ -115,10 +115,10 @@ async function searchDevices(supabase: any, searchTerm: string) {
         const key = `${item.id}-${item.model}`;
         if (!allResults.has(key)) {
           allResults.set(key, {
-            qrcodeId: null, // 闇€瑕佽繘涓€姝ユ煡璇㈠叿浣撶殑浜岀淮?            productId: item.id,
+            qrcodeId: null, // 闇€瑕佽繘涓€姝ユ煡璇㈠叿浣撶殑浜岀淮            productId: item.id,
             productModel: item.model,
             productName: item.name,
-            brandName: item?.name,
+            brandName: item.name,
             source: 'product',
           });
         }
@@ -146,7 +146,7 @@ async function searchDevices(supabase: any, searchTerm: string) {
  */
 async function enrichDeviceInfo(supabase: any, device: any) {
   try {
-    // 濡傛灉娌℃湁浜岀淮鐮両D锛屽皾璇曟煡?    let qrcodeId = device.qrcodeId;
+    // 濡傛灉娌℃湁浜岀淮鐮両D锛屽皾璇曟煡    let qrcodeId = device.qrcodeId;
     if (!qrcodeId && device.productId) {
       const { data: qrcodeData } = await supabase
         .from('product_qrcodes')
@@ -155,11 +155,11 @@ async function enrichDeviceInfo(supabase: any, device: any) {
         .limit(1)
         .single();
 
-      qrcodeId = qrcodeData?.qr_code_id || null;
+      qrcodeId = qrcodeData.qr_code_id || null;
     }
 
     if (!qrcodeId) {
-      return null; // 娌℃湁浜岀淮鐮佺殑璁惧涓嶆樉?    }
+      return null; // 娌℃湁浜岀淮鐮佺殑璁惧涓嶆樉    }
 
     // 鑾峰彇璁惧妗ｆ淇℃伅
     const { data: profileData } = await supabase
@@ -185,19 +185,19 @@ async function enrichDeviceInfo(supabase: any, device: any) {
       productModel: device.productModel,
       productName: device.productName,
       brandName: device.brandName,
-      currentStatus: profileData?.current_status || 'unknown',
-      lastEventAt: profileData?.last_event_at,
-      lastEventType: profileData?.last_event_type,
-      totalRepairCount: profileData?.total_repair_count || 0,
-      totalPartReplacementCount: profileData?.total_part_replacement_count || 0,
-      totalTransferCount: profileData?.total_transfer_count || 0,
-      currentLocation: profileData?.current_location,
-      createdAt: profileData?.created_at || new Date().toISOString(),
+      currentStatus: profileData.current_status || 'unknown',
+      lastEventAt: profileData.last_event_at,
+      lastEventType: profileData.last_event_type,
+      totalRepairCount: profileData.total_repair_count || 0,
+      totalPartReplacementCount: profileData.total_part_replacement_count || 0,
+      totalTransferCount: profileData.total_transfer_count || 0,
+      currentLocation: profileData.current_location,
+      createdAt: profileData.created_at || new Date().toISOString(),
       source: device.source,
     };
   } catch (error) {
     console.error('涓板瘜璁惧淇℃伅閿欒:', error);
-    // 鍗充娇鍑洪敊涔熻繑鍥炲熀鏈澶囦俊?    return {
+    // 鍗充娇鍑洪敊涔熻繑鍥炲熀鏈澶囦俊    return {
       id: device.qrcodeId || device.productId,
       qrcodeId: device.qrcodeId,
       productModel: device.productModel,

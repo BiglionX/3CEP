@@ -151,14 +151,14 @@ export async function PUT(
 
     // 重新计算相关字段
     if ('current_stock' in body || 'reserved_stock' in body) {
-      const current_stock = body.current_stock ?? currentItem.current_stock;
-      const reserved_stock = body.reserved_stock ?? currentItem.reserved_stock;
+      const current_stock = body.current_stock  currentItem.current_stock;
+      const reserved_stock = body.reserved_stock  currentItem.reserved_stock;
       updatedItem.available_stock = current_stock - reserved_stock;
     }
 
     if ('current_stock' in body || 'unit_price' in body) {
-      const current_stock = body.current_stock ?? currentItem.current_stock;
-      const unit_price = body.unit_price ?? currentItem.unit_price;
+      const current_stock = body.current_stock  currentItem.current_stock;
+      const unit_price = body.unit_price  currentItem.unit_price;
       updatedItem.total_value = current_stock * unit_price;
     }
 
@@ -168,11 +168,11 @@ export async function PUT(
       'min_stock_level' in body ||
       'max_stock_level' in body
     ) {
-      const current_stock = body.current_stock ?? currentItem.current_stock;
+      const current_stock = body.current_stock  currentItem.current_stock;
       const min_stock_level =
-        body.min_stock_level ?? currentItem.min_stock_level;
+        body.min_stock_level  currentItem.min_stock_level;
       const max_stock_level =
-        body.max_stock_level ?? currentItem.max_stock_level;
+        body.max_stock_level  currentItem.max_stock_level;
 
       if (current_stock === 0) {
         updatedItem.status = 'out_of_stock';

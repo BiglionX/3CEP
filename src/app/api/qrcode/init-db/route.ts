@@ -1,7 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -17,11 +17,11 @@ export async function POST(request: NextRequest) {
     if (!tableError) {
       return NextResponse.json({
         success: true,
-        message: '鏁版嵁搴撹〃宸插瓨?,
+        message: '鏁版嵁搴撹〃宸插,
       });
     }
 
-    // 鍒涘缓琛ㄧ粨?    const createTablesSQL = `
+    // 鍒涘缓琛ㄧ粨    const createTablesSQL = `
       -- 鎵规涓昏〃
       CREATE TABLE IF NOT EXISTS qr_batches (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -70,13 +70,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: '鏁版嵁搴撹〃鍒涘缓鎴愬姛锛堣閫氳繃Supabase鎺у埗鍙版墜鍔ㄦ墽琛孲QL锟?,
+      message: '鏁版嵁搴撹〃鍒涘缓鎴愬姛锛堣氳繃Supabase鎺у埗鍙版墜鍔ㄦ墽琛孲QL,
       sql_script: createTablesSQL,
     });
   } catch (error) {
     console.error('鍒濆鍖栨暟鎹簱澶辫触:', error);
     return NextResponse.json(
-      { success: false, error: '鍒濆鍖栧け? },
+      { success: false, error: '鍒濆鍖栧け },
       { status: 500 }
     );
   }
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    // 娴嬭瘯鏁版嵁搴撹繛?    const { data, error } = await supabase
+    // 娴嬭瘯鏁版嵁搴撹繛    const { data, error } = await supabase
       .from('qr_batches')
       .select('count')
       .limit(1);
@@ -96,13 +96,13 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      message: '鏁版嵁搴撹繛鎺ユ?,
+      message: '鏁版嵁搴撹繛鎺ユ,
       table_exists: !error || error.code !== 'PGRST205',
     });
   } catch (error) {
-    console.error('鏁版嵁搴撹繛鎺ユ祴璇曞け?', error);
+    console.error('鏁版嵁搴撹繛鎺ユ祴璇曞け', error);
     return NextResponse.json(
-      { success: false, error: '鏁版嵁搴撹繛鎺ュけ? },
+      { success: false, error: '鏁版嵁搴撹繛鎺ュけ },
       { status: 500 }
     );
   }

@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +15,6 @@ import {
   BarChart3,
   MessageSquare,
   HelpCircle,
-  LogOut,
   CheckCircle,
   XCircle,
   AlertTriangle,
@@ -30,8 +29,8 @@ interface NavigationTest {
   icon: React.ComponentType<any>;
   category: string;
   expectedStatus: 'working' | 'broken' | 'unknown';
-  testResult?: 'pass' | 'fail' | 'pending';
-  errorMessage?: string;
+  testResult: 'pass' | 'fail' | 'pending';
+  errorMessage: string;
 }
 
 export default function UserCenterNavigationTest() {
@@ -39,7 +38,7 @@ export default function UserCenterNavigationTest() {
     // 个人设置类别
     {
       id: 'profile-dashboard',
-      name: '个人资料仪表?,
+      name: '个人资料仪表板',
       path: '/profile/dashboard',
       icon: User,
       category: '个人设置',
@@ -151,15 +150,18 @@ export default function UserCenterNavigationTest() {
     testItem: NavigationTest
   ): Promise<NavigationTest> => {
     try {
-      // 对于相对路径，我们只能检查前端路由是否存?      if (testItem.path.startsWith('/')) {
-        // 模拟前端路由检?        const routeExists = await checkRouteExists(testItem.path);
+      // 对于相对路径，我们只能检查前端路由是否存在
+      if (testItem.path.startsWith('/')) {
+        // 模拟前端路由检查
+        const routeExists = await checkRouteExists(testItem.path);
         return {
           ...testItem,
-          testResult: routeExists ? 'pass' : 'fail',
-          errorMessage: routeExists ? undefined : '路由不存在或无法访问',
+          testResult: routeExists  'pass' : 'fail',
+          errorMessage: routeExists  undefined : '路由不存在或无法访问',
         };
       } else {
-        // 对于外部链接，检查可访问?        const controller = new AbortController();
+        // 对于外部链接，检查可访问性
+        const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
 
         try {
@@ -170,8 +172,8 @@ export default function UserCenterNavigationTest() {
           clearTimeout(timeoutId);
           return {
             ...testItem,
-            testResult: response.ok ? 'pass' : 'fail',
-            errorMessage: response.ok ? undefined : `HTTP ${response.status}`,
+            testResult: response.ok  'pass' : 'fail',
+            errorMessage: response.ok  undefined : `HTTP ${response.status}`,
           };
         } catch (error: any) {
           clearTimeout(timeoutId);
@@ -187,8 +189,9 @@ export default function UserCenterNavigationTest() {
     }
   };
 
-  // 检查路由是否存在（模拟?  const checkRouteExists = async (path: string): Promise<boolean> => {
-    // 这里应该实际检?Next.js 路由，但为了测试我们使用模拟逻辑
+  // 检查路由是否存在（模拟）
+  const checkRouteExists = async (path: string): Promise<boolean> => {
+    // 这里应该实际检查Next.js 路由，但为了测试我们使用模拟逻辑
     const knownRoutes = [
       '/profile/dashboard',
       '/profile/settings',
@@ -220,15 +223,17 @@ export default function UserCenterNavigationTest() {
 
       // 更新状态以提供实时反馈
       setTestResults(prev =>
-        prev.map(item => (item.id === testItem.id ? result : item))
+        prev.map(item => (item.id === testItem.id  result : item))
       );
 
-      // 添加小延迟以避免过于频繁的请?      await new Promise(resolve => setTimeout(resolve, 100));
+      // 添加小延迟以避免过于频繁的请求
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     setTestResults(results);
 
-    // 计算总体状?    const passedTests = results.filter(r => r.testResult === 'pass').length;
+    // 计算总体状态
+    const passedTests = results.filter(r => r.testResult === 'pass').length;
     const totalTests = results.length;
 
     if (passedTests === totalTests) {
@@ -242,15 +247,16 @@ export default function UserCenterNavigationTest() {
     setIsTesting(false);
   };
 
-  // 按分类组织测试结?  const groupedTests = testResults.reduce(
-    (acc, test) => {
+  // 按分类组织测试结果
+  const groupedTests = testResults.reduce(
+    (acc: Record<string, NavigationTest[]>, test) => {
       if (!acc[test.category]) {
         acc[test.category] = [];
       }
       acc[test.category].push(test);
       return acc;
     },
-    {} as Record<string, NavigationTest[]>
+    {}
   );
 
   const getCategoryStatus = (category: string) => {
@@ -269,10 +275,11 @@ export default function UserCenterNavigationTest() {
             用户中心导航测试
           </h1>
           <p className="text-lg text-gray-600">
-            验证所有控件按钮跳转功能的完整性和可靠?          </p>
+            验证所有控件按钮跳转功能的完整性和可靠性
+          </p>
         </div>
 
-        {/* 总体状态卡?*/}
+        {/* 总体状态卡片 */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -282,7 +289,7 @@ export default function UserCenterNavigationTest() {
                 disabled={isTesting}
                 className="bg-blue-600 hover:bg-blue-700"
               >
-                {isTesting ? '测试?..' : '执行完整测试'}
+                {isTesting  '测试中...' : '执行完整测试'}
               </Button>
             </CardTitle>
           </CardHeader>
@@ -291,25 +298,25 @@ export default function UserCenterNavigationTest() {
               <div
                 className={`p-4 rounded-lg text-center ${
                   overallStatus === 'pass'
-                    ? 'bg-green-100'
+                     'bg-green-100'
                     : overallStatus === 'fail'
-                      ? 'bg-red-100'
+                       'bg-red-100'
                       : 'bg-gray-100'
                 }`}
               >
                 <div className="text-2xl font-bold mb-1">
                   {overallStatus === 'pass'
-                    ? '�?
+                     '✓'
                     : overallStatus === 'fail'
-                      ? '�?
-                      : '�?}
+                       '✗'
+                      : ''}
                 </div>
                 <div className="font-medium">
                   {overallStatus === 'pass'
-                    ? '全部通过'
+                     '全部通过'
                     : overallStatus === 'fail'
-                      ? '存在问题'
-                      : '待测?}
+                       '存在问题'
+                      : '待测试'}
                 </div>
               </div>
 
@@ -324,14 +331,14 @@ export default function UserCenterNavigationTest() {
                 <div className="text-2xl font-bold text-green-600">
                   {testResults.filter(t => t.testResult === 'pass').length}
                 </div>
-                <div className="text-green-800">通过?/div>
+                <div className="text-green-800">通过数</div>
               </div>
 
               <div className="p-4 bg-red-100 rounded-lg text-center">
                 <div className="text-2xl font-bold text-red-600">
                   {testResults.filter(t => t.testResult === 'fail').length}
                 </div>
-                <div className="text-red-800">失败?/div>
+                <div className="text-red-800">失败数</div>
               </div>
             </div>
           </CardContent>
@@ -353,16 +360,16 @@ export default function UserCenterNavigationTest() {
                       <div
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
                           status.passed === status.total
-                            ? 'bg-green-100 text-green-800'
+                             'bg-green-100 text-green-800'
                             : status.passed > 0
-                              ? 'bg-yellow-100 text-yellow-800'
+                               'bg-yellow-100 text-yellow-800'
                               : 'bg-red-100 text-red-800'
                         }`}
                       >
                         {status.passed === status.total
-                          ? '全部通过'
+                           '全部通过'
                           : status.passed > 0
-                            ? '部分通过'
+                             '部分通过'
                             : '全部失败'}
                       </div>
                     </div>
@@ -377,9 +384,9 @@ export default function UserCenterNavigationTest() {
                           key={test.id}
                           className={`p-4 rounded-lg border-2 transition-all duration-200 ${
                             test.testResult === 'pass'
-                              ? 'border-green-200 bg-green-50'
+                               'border-green-200 bg-green-50'
                               : test.testResult === 'fail'
-                                ? 'border-red-200 bg-red-50'
+                                 'border-red-200 bg-red-50'
                                 : 'border-gray-200 bg-white'
                           }`}
                         >
@@ -387,9 +394,9 @@ export default function UserCenterNavigationTest() {
                             <div
                               className={`p-2 rounded-lg ${
                                 test.testResult === 'pass'
-                                  ? 'bg-green-100 text-green-600'
+                                   'bg-green-100 text-green-600'
                                   : test.testResult === 'fail'
-                                    ? 'bg-red-100 text-red-600'
+                                     'bg-red-100 text-red-600'
                                     : 'bg-gray-100 text-gray-600'
                               }`}
                             >
@@ -414,12 +421,12 @@ export default function UserCenterNavigationTest() {
                                   <span
                                     className={`text-xs font-medium ${
                                       test.testResult === 'pass'
-                                        ? 'text-green-700'
+                                         'text-green-700'
                                         : 'text-red-700'
                                     }`}
                                   >
                                     {test.testResult === 'pass'
-                                      ? '通过'
+                                       '通过'
                                       : '失败'}
                                   </span>
                                 </div>
@@ -449,7 +456,7 @@ export default function UserCenterNavigationTest() {
                                 testLink(test).then(result => {
                                   setTestResults(prev =>
                                     prev.map(item =>
-                                      item.id === test.id ? result : item
+                                      item.id === test.id  result : item
                                     )
                                   );
                                 })
@@ -479,18 +486,18 @@ export default function UserCenterNavigationTest() {
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">测试范围</h3>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>�?用户中心所有功能模块的跳转链接</li>
-                  <li>�?个人资料、设置、安全相关页?/li>
-                  <li>�?业务功能模块（维修、配件、设备等?/li>
-                  <li>�?管理系统和工具页?/li>
+                  <li>• 用户中心所有功能模块的跳转链接</li>
+                  <li>• 个人资料、设置、安全相关页面</li>
+                  <li>• 业务功能模块（维修、配件、设备等）</li>
+                  <li>• 管理系统和工具页面</li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">测试标准</h3>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>�?�?路由存在且可正常访问</li>
-                  <li>�?�?路由不存在或返回错误</li>
-                  <li>�?⚠️ 需要进一步验证的功能</li>
+                  <li>• ✓ 路由存在且可正常访问</li>
+                  <li>• ✗ 路由不存在或返回错误</li>
+                  <li>• ⚠️ 需要进一步验证的功能</li>
                 </ul>
               </div>
             </div>
@@ -500,4 +507,3 @@ export default function UserCenterNavigationTest() {
     </div>
   );
 }
-

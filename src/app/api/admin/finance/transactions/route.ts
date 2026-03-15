@@ -5,7 +5,7 @@ const mockTransactions = [
   {
     id: 'txn_001',
     type: 'income',
-    category: '缁翠慨鏈嶅姟?,
+    category: '缁翠慨鏈嶅姟,
     amount: 288.0,
     description: 'iPhone 12 Pro灞忓箷鏇存崲',
     status: 'completed',
@@ -15,9 +15,9 @@ const mockTransactions = [
   {
     id: 'txn_002',
     type: 'income',
-    category: '閰嶄欢閿€?,
+    category: '閰嶄欢閿€,
     amount: 156.0,
-    description: '鍘熻鐢垫睜 + 鏁版嵁绾垮?,
+    description: '鍘熻鐢垫睜 + 鏁版嵁绾垮,
     status: 'completed',
     created_at: '2024-02-28T14:15:00Z',
     updated_at: '2024-02-28T14:15:00Z',
@@ -35,7 +35,7 @@ const mockTransactions = [
   {
     id: 'txn_004',
     type: 'income',
-    category: '缁翠慨鏈嶅姟?,
+    category: '缁翠慨鏈嶅姟,
     amount: 420.0,
     description: 'MacBook Pro閿洏缁翠慨',
     status: 'completed',
@@ -47,7 +47,7 @@ const mockTransactions = [
     type: 'expense',
     category: '浜哄伐鎴愭湰',
     amount: 1200.0,
-    description: '鎶€甯堝伐?,
+    description: '鎶€甯堝伐,
     status: 'completed',
     created_at: '2024-02-26T17:00:00Z',
     updated_at: '2024-02-26T17:00:00Z',
@@ -75,9 +75,9 @@ const mockTransactions = [
   {
     id: 'txn_008',
     type: 'income',
-    category: '缁翠慨鏈嶅姟?,
+    category: '缁翠慨鏈嶅姟,
     amount: 198.0,
-    description: '鍗庝负鎵嬫満鍏呯數鍙ｇ淮?,
+    description: '鍗庝负鎵嬫満鍏呯數鍙ｇ淮,
     status: 'pending',
     created_at: '2024-02-28T15:20:00Z',
     updated_at: '2024-02-28T15:20:00Z',
@@ -95,7 +95,7 @@ const mockTransactions = [
   {
     id: 'txn_010',
     type: 'income',
-    category: '閰嶄欢閿€?,
+    category: '閰嶄欢閿€,
     amount: 234.0,
     description: 'AirPods Pro鑰虫満',
     status: 'completed',
@@ -116,8 +116,8 @@ const mockMonthlyData = [
 
 // 妯℃嫙鍒嗙被鏁版嵁
 const mockIncomeCategories = [
-  { name: '缁翠慨鏈嶅姟?, value: 15600, color: '#10B981' },
-  { name: '閰嶄欢閿€?, value: 8900, color: '#3B82F6' },
+  { name: '缁翠慨鏈嶅姟, value: 15600, color: '#10B981' },
+  { name: '閰嶄欢閿€, value: 8900, color: '#3B82F6' },
   { name: '鏁版嵁鎭㈠', value: 3200, color: '#8B5CF6' },
   { name: '鍏朵粬鏀跺叆', value: 3500, color: '#F59E0B' },
 ];

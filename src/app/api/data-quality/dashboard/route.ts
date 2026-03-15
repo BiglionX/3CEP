@@ -3,7 +3,7 @@ import { dataQualityService } from '@/modules/data-center/monitoring/data-qualit
 import { monitoringService } from '@/modules/data-center/monitoring/monitoring-service';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET璇锋眰澶勭悊 - 鏁版嵁璐ㄩ噺鐪嬫澘
+// GET璇眰澶勭悊 - 鏁版嵁璐ㄩ噺鐪嬫澘
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { error: '鏈煡鐨勭湅鏉胯鍥剧被? },
+          { error: '鏈煡鐨勭湅鏉胯鍥剧被 },
           { status: 400 }
         );
     }
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     console.error('鏁版嵁璐ㄩ噺鐪嬫澘API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST璇锋眰澶勭悊 - 鐪嬫澘鎿嶄綔
+// POST璇眰澶勭悊 - 鐪嬫澘鎿嶄綔
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -48,11 +48,11 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'refresh':
-        // 鍒锋柊鐪嬫澘鏁版嵁
+        // 鍒柊鐪嬫澘鏁版嵁
         return await refreshDashboard();
 
       case 'trigger-check':
-        // 瑙﹀彂鐗瑰畾妫€?        const { ruleId } = params;
+        // 瑙﹀彂鐗瑰畾妫€        const { ruleId } = params;
         if (!ruleId) {
           return NextResponse.json(
             { error: '缂哄皯妫€鏌ヨ鍒橧D' },
@@ -62,21 +62,21 @@ export async function POST(request: NextRequest) {
         return await triggerSpecificCheck(ruleId);
 
       case 'trigger-job':
-        // 瑙﹀彂瀹氭椂浠诲姟
+        // 瑙﹀彂瀹氭椂诲姟
         const { jobId } = params;
         if (!jobId) {
-          return NextResponse.json({ error: '缂哄皯浠诲姟ID' }, { status: 400 });
+          return NextResponse.json({ error: '缂哄皯诲姟ID' }, { status: 400 });
         }
         return await triggerCronJob(jobId);
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鏁版嵁璐ㄩ噺鐪嬫澘鎿嶄綔閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -89,7 +89,7 @@ async function getOverviewDashboard() {
   // 鑾峰彇鏈€鏂扮殑璐ㄩ噺鎶ュ憡
   const qualityReport = await dataQualityService.generateQualityReport();
 
-  // 鑾峰彇瀹氭椂浠诲姟鐘?  const cronJobs = dataQualityCronService.getAllJobs();
+  // 鑾峰彇瀹氭椂诲姟鐘  const cronJobs = dataQualityCronService.getAllJobs();
   const runningJobs = dataQualityCronService.getRunningJobs();
 
   // 鑾峰彇鐩戞帶缁熻鏁版嵁
@@ -145,10 +145,10 @@ async function getOverviewDashboard() {
 
 // 鑾峰彇璇︾粏鐪嬫澘鏁版嵁
 async function getDetailedDashboard() {
-  // 鑾峰彇鎵€鏈夋鏌ヨ鍒欏拰鏈€鏂扮粨?  const allRules = dataQualityService.getAllCheckRules();
+  // 鑾峰彇鎵€鏈夋鏌ヨ鍒欏拰鏈€鏂扮粨  const allRules = dataQualityService.getAllCheckRules();
   const latestResults = dataQualityService.getCheckHistory(50);
 
-  // 鎸夎〃鍒嗙粍鐨勭粨?  const resultsByTable: Record<string, any[]> = {};
+  // 鎸夎〃鍒嗙粍鐨勭粨  const resultsByTable: Record<string, any[]> = {};
   latestResults.forEach(result => {
     if (!resultsByTable[result.tableName]) {
       resultsByTable[result.tableName] = [];
@@ -170,7 +170,7 @@ async function getDetailedDashboard() {
       checkCount: resultsByTable[tableName].length,
       latestCheck:
         resultsByTable[tableName][resultsByTable[tableName].length - 1]
-          ?.timestamp,
+          .timestamp,
       issues: resultsByTable[tableName]
         .filter(r => r.status !== 'passed')
         .map(r => ({
@@ -195,9 +195,9 @@ async function getDetailedDashboard() {
         threshold: rule.threshold,
         enabled: rule.enabled,
         severity: rule.severity,
-        lastExecution: latestResult?.timestamp,
-        lastStatus: latestResult?.status,
-        issuePercentage: latestResult?.issuePercentage || 0,
+        lastExecution: latestResult.timestamp,
+        lastStatus: latestResult.status,
+        issuePercentage: latestResult.issuePercentage || 0,
       };
     }),
 
@@ -213,7 +213,7 @@ async function getDetailedDashboard() {
 async function getTrendDashboard() {
   const history = dataQualityService.getCheckHistory(100);
 
-  // 鎸夋棩鏈熷垎缁勮绠楁瘡鏃ュ钩鍧囪川閲忓垎?  const dailyScores: Record<string, number[]> = {};
+  // 鎸夋棩鏈熷垎缁勮绠楁瘡ュ钩鍧囪川閲忓垎  const dailyScores: Record<string, number[]> = {};
 
   history.forEach(result => {
     const date = result.timestamp.split('T')[0]; // YYYY-MM-DD
@@ -248,7 +248,7 @@ async function getTrendDashboard() {
 async function getAlertsDashboard() {
   const allAlerts = monitoringService.getActiveAlerts();
 
-  // 鎸変弗閲嶇▼搴﹀垎?  const alertsBySeverity: Record<string, any[]> = {
+  // 鎸変弗閲嶇▼搴﹀垎  const alertsBySeverity: Record<string, any[]> = {
     critical: [],
     emergency: [],
     warning: [],
@@ -259,7 +259,7 @@ async function getAlertsDashboard() {
     alertsBySeverity[alert.severity].push({
       id: alert.id,
       name: alert.ruleName,
-      description: `瑙勫垯: ${alert.ruleName} - 褰撳墠? ${alert.currentValue}`,
+      description: `瑙勫垯: ${alert.ruleName} - 褰撳墠 ${alert.currentValue}`,
       severity: alert.severity,
       triggeredAt: alert.triggeredAt,
       resolved: !!alert.resolvedAt,
@@ -282,19 +282,19 @@ async function getAlertsDashboard() {
   return NextResponse.json(alertsData);
 }
 
-// 鍒锋柊鐪嬫澘鏁版嵁
+// 鍒柊鐪嬫澘鏁版嵁
 async function refreshDashboard() {
   // 鎵ц蹇€熸鏌ヤ互鏇存柊鏁版嵁
   const quickResults = await dataQualityService.runAllChecks();
 
   return NextResponse.json({
-    message: '鐪嬫澘鏁版嵁鍒锋柊瀹屾垚',
+    message: '鐪嬫澘鏁版嵁鍒柊瀹屾垚',
     refreshedChecks: quickResults.length,
     timestamp: new Date().toISOString(),
   });
 }
 
-// 瑙﹀彂鐗瑰畾妫€?async function triggerSpecificCheck(ruleId: string) {
+// 瑙﹀彂鐗瑰畾妫€async function triggerSpecificCheck(ruleId: string) {
   const result = await dataQualityService.executeCheckRule(ruleId);
 
   if (!result) {
@@ -305,19 +305,19 @@ async function refreshDashboard() {
   }
 
   return NextResponse.json({
-    message: '妫€鏌ユ墽琛屽畬?,
+    message: '妫€鏌ユ墽琛屽畬,
     result,
     timestamp: new Date().toISOString(),
   });
 }
 
-// 瑙﹀彂瀹氭椂浠诲姟
+// 瑙﹀彂瀹氭椂诲姟
 async function triggerCronJob(jobId: string) {
   try {
     await dataQualityCronService.triggerJob(jobId);
 
     return NextResponse.json({
-      message: '瀹氭椂浠诲姟瑙﹀彂鎴愬姛',
+      message: '瀹氭椂诲姟瑙﹀彂鎴愬姛',
       jobId,
       timestamp: new Date().toISOString(),
     });
@@ -374,14 +374,14 @@ function generatePerformanceTrends(results: any[]) {
     max: Math.max(...executionTimes),
     trend:
       executionTimes.length > 1
-        ? executionTimes[executionTimes.length - 1] > executionTimes[0]
-          ? 'increasing'
+         executionTimes[executionTimes.length - 1] > executionTimes[0]
+           'increasing'
           : 'decreasing'
         : 'stable',
   };
 }
 
-// 璁＄畻鏃堕棿?function getTimeSince(timestamp: string): string {
+// 璁＄畻堕棿function getTimeSince(timestamp: string): string {
   const now = new Date();
   const then = new Date(timestamp);
   const diffMs = now.getTime() - then.getTime();

@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-// Slider 组件可能需要自定义实现或使用其他UI�?import {
+import {
   Calculator,
   Smartphone,
   TrendingUp,
@@ -25,7 +25,11 @@ import {
 } from 'lucide-react';
 
 interface DeviceCondition {
-  screen: number; // 1-10�?  battery: number; // 1-10�?  body: number; // 1-10�?  functionality: number; // 1-10�?}
+  screen: number; // 1-10分
+  battery: number; // 1-10分
+  body: number; // 1-10分
+  functionality: number; // 1-10分
+}
 
 interface ValuationResult {
   baseValue: number;
@@ -62,7 +66,7 @@ export default function ValuationPage() {
     { value: 'iphone', label: 'iPhone', icon: Smartphone },
     { value: 'android', label: 'Android手机', icon: Smartphone },
     { value: 'tablet', label: '平板电脑', icon: Smartphone },
-    { value: 'laptop', label: '笔记本电?, icon: Smartphone },
+    { value: 'laptop', label: '笔记本电脑', icon: Smartphone },
     { value: 'watch', label: '智能手表', icon: Smartphone },
   ];
 
@@ -108,7 +112,8 @@ export default function ValuationPage() {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // 简化的估值算?      const basePrices: Record<string, number> = {
+      // 简化的估值算法
+      const basePrices: Record<string, number> = {
         'iPhone 15 Pro': 8000,
         'iPhone 15': 6500,
         'iPhone 14 Pro': 7000,
@@ -122,7 +127,7 @@ export default function ValuationPage() {
       const yearsOld = new Date().getFullYear() - parseInt(purchaseYear);
 
       // 折旧计算
-      const depreciationRate = Math.min(yearsOld * 0.15, 0.8); // 最?0%折旧
+      const depreciationRate = Math.min(yearsOld * 0.15, 0.8); // 最多80%折旧
       const depreciatedValue = basePrice * (1 - depreciationRate);
 
       // 成色调整
@@ -131,8 +136,8 @@ export default function ValuationPage() {
           condition.battery +
           condition.body +
           condition.functionality) /
-        40; // 转换?-1
-      const conditionMultiplier = 0.5 + avgCondition * 0.5; // 0.5-1.0�?
+        40; // 转换到0-1
+      const conditionMultiplier = 0.5 + avgCondition * 0.5; // 0.5-1.0范围
       const finalValue = depreciatedValue * conditionMultiplier;
 
       const resultData: ValuationResult = {
@@ -151,7 +156,7 @@ export default function ValuationPage() {
 
       setResult(resultData);
     } catch (error) {
-      console.error('估值计算失?', error);
+      console.error('估值计算失败', error);
     } finally {
       setIsLoading(false);
     }
@@ -160,7 +165,7 @@ export default function ValuationPage() {
   const getConditionLabel = (score: number) => {
     if (score >= 9) return '全新';
     if (score >= 7) return '良好';
-    if (score >= 5) return '一?;
+    if (score >= 5) return '一般';
     if (score >= 3) return '较差';
     return '很差';
   };
@@ -183,7 +188,7 @@ export default function ValuationPage() {
           <Label className="text-sm font-medium">{label}</Label>
         </div>
         <span className="text-sm text-gray-600">
-          {value}�?({getConditionLabel(value)})
+          {value}分 ({getConditionLabel(value)})
         </span>
       </div>
       <input
@@ -258,7 +263,7 @@ export default function ValuationPage() {
                     <SelectValue placeholder="选择品牌" />
                   </SelectTrigger>
                   <SelectContent>
-                    {brands[deviceType as keyof typeof brands]?.map(b => (
+                    {brands[deviceType as keyof typeof brands].map(b => (
                       <SelectItem key={b} value={b}>
                         {b}
                       </SelectItem>
@@ -303,7 +308,8 @@ export default function ValuationPage() {
                       (_, i) => new Date().getFullYear() - i
                     ).map(year => (
                       <SelectItem key={year} value={year.toString()}>
-                        {year}�?                      </SelectItem>
+                        {year}年
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -338,7 +344,7 @@ export default function ValuationPage() {
                 />
 
                 <ConditionSlider
-                  label="功能完整?
+                  label="功能完整性"
                   icon={Zap}
                   value={condition.functionality}
                   onChange={val =>
@@ -353,7 +359,7 @@ export default function ValuationPage() {
                 onClick={calculateValuation}
                 disabled={isLoading || !model}
               >
-                {isLoading ? (
+                {isLoading  (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                     正在计算估价...
@@ -370,7 +376,7 @@ export default function ValuationPage() {
 
           {/* 估价结果 */}
           <div className="space-y-6">
-            {result ? (
+            {result  (
               <>
                 <Card className="shadow-lg border-green-200">
                   <CardHeader className="bg-green-50">
@@ -385,7 +391,7 @@ export default function ValuationPage() {
                         ¥{result.finalValue.toLocaleString()}
                       </div>
                       <div className="text-sm text-gray-600">
-                        置信? {(result.confidence * 100).toFixed(0)}%
+                        置信度: {(result.confidence * 100).toFixed(0)}%
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 pt-4">
@@ -415,22 +421,26 @@ export default function ValuationPage() {
                       <div className="flex justify-between">
                         <span className="text-gray-600">屏幕状况:</span>
                         <span className="font-medium">
-                          {condition.screen}/10�?                        </span>
+                          {condition.screen}/10分
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">电池健康:</span>
                         <span className="font-medium">
-                          {condition.battery}/10�?                        </span>
+                          {condition.battery}/10分
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">外观成色:</span>
                         <span className="font-medium">
-                          {condition.body}/10�?                        </span>
+                          {condition.body}/10分
+                        </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">功能完整?</span>
+                        <span className="text-gray-600">功能完整性:</span>
                         <span className="font-medium">
-                          {condition.functionality}/10�?                        </span>
+                          {condition.functionality}/10分
+                        </span>
                       </div>
                       <div className="pt-3 border-t">
                         <div className="flex justify-between">
@@ -447,11 +457,12 @@ export default function ValuationPage() {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h4 className="font-semibold text-blue-900 mb-2 flex items-center">
                     <MapPin className="w-4 h-4 mr-2" />
-                    下一步建?                  </h4>
+                    下一步建议
+                  </h4>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>�?可以前往附近的维修网点进行实物检?/li>
-                    <li>�?联系我们的回收合作伙伴获取报?/li>
-                    <li>�?参考多家回收商的价格对?/li>
+                    <li>• 可以前往附近的维修网点进行实物检验</li>
+                    <li>• 联系我们的回收合作伙伴获取报价</li>
+                    <li>• 参考多家回收商的价格对比</li>
                   </ul>
                 </div>
               </>
@@ -463,7 +474,8 @@ export default function ValuationPage() {
                     等待估价
                   </h3>
                   <p className="text-gray-600">
-                    填写设备信息并点?立即估价"按钮获取精准的价格评?                  </p>
+                    填写设备信息并点击"立即估价"按钮获取精准的价格评估
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -486,7 +498,8 @@ export default function ValuationPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  基于机器学习和大数据分析，提供行业领先的估价准确?                </p>
+                  基于机器学习和大数据分析，提供行业领先的估价准确性
+                </p>
               </CardContent>
             </Card>
 
@@ -523,4 +536,3 @@ export default function ValuationPage() {
     </div>
   );
 }
-

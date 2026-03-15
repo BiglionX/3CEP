@@ -69,12 +69,12 @@ export async function GET(request: NextRequest) {
         // 鑾峰彇鍛婅瑙勫垯閰嶇疆
         return NextResponse.json({
           success: true,
-          message: '鍛婅瑙勫垯閰嶇疆鎺ュ彛寰呭疄?,
+          message: '鍛婅瑙勫垯閰嶇疆鎺ュ彛寰呭疄,
           timestamp: new Date().toISOString(),
         });
 
       case 'health':
-        // 绯荤粺鍋ュ悍妫€?        return NextResponse.json({
+        // 绯荤粺鍋ュ悍妫€        return NextResponse.json({
           success: true,
           status: 'healthy',
           service: 'monitoring',
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/monitoring - 鎻愪氦鐩戞帶鏁版嵁鎴栭厤缃憡璀﹁?export async function POST(request: NextRequest) {
+// POST /api/monitoring - 鎻愪氦鐩戞帶鏁版嵁鎴栭厤缃憡璀﹁export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { action, data } = body;
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
         // 璁板綍鎸囨爣鏁版嵁
         if (!data || !data.name || data.value === undefined) {
           return NextResponse.json(
-            { success: false, error: '缂哄皯蹇呰鐨勬寚鏍囨暟? },
+            { success: false, error: '缂哄皯蹇呰鐨勬寚鏍囨暟 },
             { status: 400 }
           );
         }
@@ -192,7 +192,7 @@ export async function GET(request: NextRequest) {
 
       case 'acknowledge_alert':
         // 纭鍛婅
-        const alertId = data?.alert_id;
+        const alertId = data.alert_id;
         if (!alertId) {
           return NextResponse.json(
             { success: false, error: '鍛婅ID涓嶈兘涓虹┖' },
@@ -200,19 +200,19 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        // 杩欓噷鍙互瀹炵幇鍛婅纭閫昏緫
+        // 杩欓噷鍙互瀹炵幇鍛婅纭昏緫
         logger.info(`Alert acknowledged: ${alertId}`);
 
         return NextResponse.json({
           success: true,
-          message: '鍛婅宸茬‘?,
+          message: '鍛婅宸茬‘,
           alert_id: alertId,
           timestamp: new Date().toISOString(),
         });
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -221,7 +221,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -245,7 +245,7 @@ export async function PUT(request: NextRequest) {
           );
         }
 
-        // 杩欓噷鍙互瀹炵幇閰嶇疆鏇存柊閫昏緫
+        // 杩欓噷鍙互瀹炵幇閰嶇疆鏇存柊昏緫
         logger.info('Monitoring config updated:', config);
 
         return NextResponse.json({
@@ -256,7 +256,7 @@ export async function PUT(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -265,7 +265,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -273,7 +273,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE /api/monitoring - 鍒犻櫎鐩戞帶鏁版嵁鎴栬?export async function DELETE(request: NextRequest) {
+// DELETE /api/monitoring - 鍒犻櫎鐩戞帶鏁版嵁鎴栬export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
@@ -300,7 +300,7 @@ export async function PUT(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -309,7 +309,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

@@ -1,5 +1,7 @@
 ﻿/**
- * 统一加载状态组? * 提供多种加载指示器样式和骨架屏组? */
+ * 统一加载状态组件
+ * 提供多种加载指示器样式和骨架屏组件
+ */
 
 import { Loader2, RefreshCw, Circle } from 'lucide-react';
 import './loading.css';
@@ -25,7 +27,8 @@ interface LoadingOverlayProps {
   fullScreen?: boolean;
 }
 
-// 加载旋转器组?export function LoadingSpinner({
+// 加载旋转器组件
+export function LoadingSpinner({
   size = 'md',
   variant = 'primary',
   className = '',
@@ -51,7 +54,8 @@ interface LoadingOverlayProps {
   );
 }
 
-// 脉冲加载点组?export function LoadingDots({ className = '' }: { className?: string }) {
+// 脉冲加载点组件
+export function LoadingDots({ className = '' }: { className?: string }) {
   return (
     <div className={`flex items-center space-x-1 ${className}`}>
       <Circle className="w-2 h-2 fill-current text-gray-400 animate-pulse" />
@@ -72,7 +76,8 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 骨架屏组?export function Skeleton({
+// 骨架屏组件
+export function Skeleton({
   className = '',
   variant = 'text',
   width,
@@ -99,7 +104,8 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 文本骨架?export function TextSkeleton({
+// 文本骨架屏
+export function TextSkeleton({
   lines = 3,
   className = '',
 }: {
@@ -117,7 +123,8 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 卡片骨架?export function CardSkeleton({ className = '' }: { className?: string }) {
+// 卡片骨架屏
+export function CardSkeleton({ className = '' }: { className?: string }) {
   return (
     <div
       className={`bg-white rounded-lg border border-gray-200 p-6 ${className}`}
@@ -134,7 +141,8 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 列表骨架?export function ListSkeleton({
+// 列表骨架屏
+export function ListSkeleton({
   items = 5,
   className = '',
 }: {
@@ -160,7 +168,8 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 表格骨架?export function TableSkeleton({
+// 表格骨架屏
+export function TableSkeleton({
   rows = 5,
   columns = 4,
   className = '',
@@ -182,7 +191,7 @@ export function LoadingBars({ className = '' }: { className?: string }) {
         </div>
       </div>
 
-      {/* 表格?*/}
+      {/* 表格内容 */}
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
@@ -201,10 +210,11 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 加载覆盖?export function LoadingOverlay({
+// 加载覆盖层组件
+export function LoadingOverlay({
   loading,
   children,
-  message = '加载?..',
+  message = '加载中...',
   variant = 'spinner',
   fullScreen = false,
 }: LoadingOverlayProps) {
@@ -242,8 +252,9 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 页面级加载组?export function PageLoader({
-  message = '加载?..',
+// 页面级加载组件
+export function PageLoader({
+  message = '加载中...',
   variant = 'spinner',
 }: {
   message?: string;
@@ -265,15 +276,16 @@ export function LoadingBars({ className = '' }: { className?: string }) {
       <div className="text-center">
         {renderLoader()}
         <p className="mt-4 text-lg text-gray-600 font-medium">{message}</p>
-        <p className="mt-2 text-sm text-gray-500">请稍?..</p>
+        <p className="mt-2 text-sm text-gray-500">请稍候...</p>
       </div>
     </div>
   );
 }
 
-// 内联加载指示?export function InlineLoader({
+// 内联加载指示器
+export function InlineLoader({
   size = 'sm',
-  message = '处理?..',
+  message = '处理中...',
 }: {
   size?: 'sm' | 'md' | 'lg';
   message?: string;
@@ -286,7 +298,8 @@ export function LoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 按钮加载状?export function ButtonLoader({
+// 按钮加载状态组件
+export function ButtonLoader({
   loading,
   children,
   size = 'sm',

@@ -13,18 +13,20 @@ export default function SimpleLoginTest() {
 
   // 防止闪退的稳定初始化
   useEffect(() => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('组件初始化完?)// 确保只执行一?    if (typeof window !== 'undefined' && !window.initComplete) {
-      window.initComplete = true;
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('首次初始化标记设?)}
+    // 确保只执行一次
+    if (typeof window !== 'undefined' && !(window as any).initComplete) {
+      (window as any).initComplete = true;
+    }
   }, []);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      // 模拟API调用，避免实际网络请?      await new Promise(resolve => setTimeout(resolve, 1000));
+      // 模拟API调用，避免实际网络请求
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       if (email === 'test@test.com' && password === '123456') {
         setIsLoggedIn(true);
@@ -33,7 +35,7 @@ export default function SimpleLoginTest() {
           router.push('/admin/dashboard');
         }, 500);
       } else {
-        setError('邮箱或密码错?);
+        setError('邮箱或密码错误');
       }
     } catch (err) {
       setError('登录失败');
@@ -45,8 +47,8 @@ export default function SimpleLoginTest() {
   if (isLoggedIn) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
-        <h2>�?登录成功</h2>
-        <p>正在跳转到管理后?..</p>
+        <h2>登录成功</h2>
+        <p>正在跳转到管理后台...</p>
       </div>
     );
   }
@@ -60,7 +62,7 @@ export default function SimpleLoginTest() {
           <input
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             required
           />
@@ -70,7 +72,7 @@ export default function SimpleLoginTest() {
           <input
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             required
           />
@@ -84,13 +86,13 @@ export default function SimpleLoginTest() {
           style={{
             width: '100%',
             padding: '10px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
+            backgroundColor: loading  '#ccc' : '#007bff',
             color: 'white',
             border: 'none',
-            cursor: loading ? 'not-allowed' : 'pointer',
+            cursor: loading  'not-allowed' : 'pointer',
           }}
         >
-          {loading ? '登录?..' : '登录'}
+          {loading  '登录中...' : '登录'}
         </button>
       </form>
       <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
@@ -100,4 +102,3 @@ export default function SimpleLoginTest() {
     </div>
   );
 }
-

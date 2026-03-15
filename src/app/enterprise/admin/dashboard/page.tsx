@@ -56,32 +56,32 @@ export default function EnterpriseDashboardPage() {
     {
       id: '1',
       type: 'agent',
-      title: '智能客服机器人部署成?,
-      description: '新的客服AI助手已上线运?,
-      time: '2小时?,
+      title: '智能客服机器人部署成,
+      description: '新的客服AI助手已上线运,
+      time: '2小时,
       status: 'success',
     },
     {
       id: '2',
       type: 'order',
-      title: '采购订单待审?,
-      description: '�?个采购订单等待您的审?,
-      time: '4小时?,
+      title: '采购订单待审,
+      description: '个采购订单等待您的审,
+      time: '4小时,
       status: 'warning',
     },
     {
       id: '3',
       type: 'alert',
       title: '系统维护通知',
-      description: '今晚23:00-24:00将进行系统维?,
+      description: '今晚23:00-24:00将进行系统维,
       time: '1天前',
       status: 'info',
     },
   ]);
 
   const menuItems = [
-    { name: '仪表?, href: '/enterprise/admin/dashboard', icon: BarChart3 },
-    { name: '智能体管?, href: '/enterprise/admin/agents', icon: Bot },
+    { name: '仪表, href: '/enterprise/admin/dashboard', icon: BarChart3 },
+    { name: '智能体管, href: '/enterprise/admin/agents', icon: Bot },
     {
       name: '采购管理',
       href: '/enterprise/admin/procurement',
@@ -114,12 +114,12 @@ export default function EnterpriseDashboardPage() {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">
-          {isCurrency ? `¥${value.toLocaleString()}` : value}
+          {isCurrency  `¥${value.toLocaleString()}` : value}
         </div>
         {change && (
           <p className="text-xs text-muted-foreground">
-            <span className={change > 0 ? 'text-green-600' : 'text-red-600'}>
-              {change > 0 ? '+' : ''}
+            <span className={change > 0  'text-green-600' : 'text-red-600'}>
+              {change > 0  '+' : ''}
               {change}%
             </span>{' '}
             本月对比
@@ -131,7 +131,7 @@ export default function EnterpriseDashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 顶部导航?*/}
+      {/* 顶部导航*/}
       <header className="bg-white shadow-sm border-b">
         <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center">
@@ -158,15 +158,15 @@ export default function EnterpriseDashboardPage() {
             </Button>
             <Button variant="ghost" size="sm">
               <LogOut className="h-4 w-4 mr-2" />
-              退?            </Button>
+              退            </Button>
           </div>
         </div>
       </header>
 
       <div className="flex">
-        {/* 侧边?*/}
+        {/* 侧边*/}
         <aside
-          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out`}
+          className={`${sidebarOpen  'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out`}
         >
           <div className="flex items-center justify-between h-16 px-4 border-b">
             <h2 className="text-lg font-semibold text-gray-900">管理菜单</h2>
@@ -200,9 +200,9 @@ export default function EnterpriseDashboardPage() {
           <div className="py-6 px-4 sm:px-6 lg:px-8">
             {/* 页面标题 */}
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">仪表板概?/h1>
+              <h1 className="text-2xl font-bold text-gray-900">仪表板概/h1>
               <p className="mt-1 text-sm text-gray-600">
-                欢迎回来！这里是您企业AI服务的管理中?              </p>
+                欢迎回来！这里是您企业AI服务的管理中心              </p>
             </div>
 
             {/* 统计卡片 */}
@@ -234,7 +234,7 @@ export default function EnterpriseDashboardPage() {
               />
             </div>
 
-            {/* 图表和活动区?*/}
+            {/* 图表和活动区*/}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
               {/* 近期活动 */}
               <Card className="lg:col-span-1">
@@ -254,9 +254,9 @@ export default function EnterpriseDashboardPage() {
                         <div
                           className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${
                             activity.status === 'success'
-                              ? 'bg-green-500'
+                               'bg-green-500'
                               : activity.status === 'warning'
-                                ? 'bg-yellow-500'
+                                 'bg-yellow-500'
                                 : 'bg-blue-500'
                           }`}
                         />
@@ -290,7 +290,7 @@ export default function EnterpriseDashboardPage() {
                     <Link href="/enterprise/agents/customize">
                       <Button className="w-full h-20 flex flex-col items-center justify-center space-y-2">
                         <Bot className="h-6 w-6" />
-                        <span>创建智能?/span>
+                        <span>创建智能/span>
                       </Button>
                     </Link>
                     <Link href="/enterprise/procurement">
@@ -308,7 +308,7 @@ export default function EnterpriseDashboardPage() {
                         className="w-full h-20 flex flex-col items-center justify-center space-y-2"
                       >
                         <Settings className="h-6 w-6" />
-                        <span>管理智能?/span>
+                        <span>管理智能/span>
                       </Button>
                     </Link>
                     <Link href="/enterprise/admin/procurement">
@@ -345,33 +345,33 @@ export default function EnterpriseDashboardPage() {
 
             {/* 详细统计 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* 智能体状?*/}
+              {/* 智能体状*/}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Bot className="h-5 w-5 mr-2" />
-                    智能体运行状?                  </CardTitle>
+                    智能体运行状态                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">总计</span>
                       <span className="font-semibold">
-                        {stats.totalAgents} �?                      </span>
+                        {stats.totalAgents}                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-green-600">运行?/span>
+                      <span className="text-green-600">运行/span>
                       <span className="font-semibold text-green-600">
-                        {stats.activeAgents} �?                      </span>
+                        {stats.activeAgents}                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-yellow-600">待启?/span>
+                      <span className="text-yellow-600">待启/span>
                       <span className="font-semibold text-yellow-600">
-                        {stats.totalAgents - stats.activeAgents} �?                      </span>
+                        {stats.totalAgents - stats.activeAgents}                       </span>
                     </div>
                     <div className="pt-4 border-t">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">运行?/span>
+                        <span className="text-gray-600">运行/span>
                         <span className="font-semibold text-green-600">
                           {Math.round(
                             (stats.activeAgents / stats.totalAgents) * 100
@@ -397,21 +397,21 @@ export default function EnterpriseDashboardPage() {
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">总订单数</span>
                       <span className="font-semibold">
-                        {stats.totalOrders} �?                      </span>
+                        {stats.totalOrders}                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-blue-600">处理?/span>
+                      <span className="text-blue-600">处理/span>
                       <span className="font-semibold text-blue-600">
-                        {stats.pendingOrders} �?                      </span>
+                        {stats.pendingOrders}                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-green-600">已完?/span>
+                      <span className="text-green-600">已完/span>
                       <span className="font-semibold text-green-600">
-                        {stats.totalOrders - stats.pendingOrders} �?                      </span>
+                        {stats.totalOrders - stats.pendingOrders}                       </span>
                     </div>
                     <div className="pt-4 border-t">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">成本节约?/span>
+                        <span className="text-gray-600">成本节约/span>
                         <span className="font-semibold text-green-600">
                           {stats.savingsRate}%
                         </span>

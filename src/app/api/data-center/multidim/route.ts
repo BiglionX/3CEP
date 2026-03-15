@@ -1,6 +1,6 @@
 ﻿/**
  * @file route.ts
- * @description 澶氱淮鍒嗘瀽API璺敱澶勭悊? * @version 1.0.0
+ * @description 澶氱淮鍒嗘瀽API璺敱澶勭悊 * @version 1.0.0
  * @author DataCenter Team
  * @date 2026-02-28
  */
@@ -14,7 +14,7 @@ import {
 } from '@/modules/data-center/analytics/multidimensional-query-builder';
 import { getCurrentUser } from '@/lib/auth/session';
 
-// 鍏ㄥ眬鏌ヨ鏋勫缓鍣ㄥ疄?const queryBuilder = new MultidimensionalQueryBuilder();
+// 鍏ㄥ眬鏌ヨ鏋勫缓鍣ㄥ疄const queryBuilder = new MultidimensionalQueryBuilder();
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     // 鑾峰彇褰撳墠鐢ㄦ埛
     const currentUser = await getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     switch (action) {
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'cube-info':
-        // 鑾峰彇绔嬫柟浣撲俊?        const cubeId = searchParams.get('cubeId');
+        // 鑾峰彇绔嬫柟浣撲俊        const cubeId = searchParams.get('cubeId');
         if (!cubeId) {
           return NextResponse.json(
             { error: '缂哄皯cubeId鍙傛暟' },
@@ -62,13 +62,13 @@ export async function GET(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('澶氱淮鍒嗘瀽API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     // 鑾峰彇褰撳墠鐢ㄦ埛
     const currentUser = await getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     switch (action) {
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
         });
 
       case 'cube':
-        // 鐢熸垚OLAP绔嬫柟?        if (!config) {
+        // 鐢熸垚OLAP绔嬫柟        if (!config) {
           return NextResponse.json({ error: '缂哄皯鏌ヨ閰嶇疆' }, { status: 400 });
         }
 
@@ -121,13 +121,13 @@ export async function POST(request: NextRequest) {
         });
 
       case 'save-template':
-        // 淇濆瓨鏌ヨ妯℃澘
+        // 淇濆鏌ヨ妯℃澘
         const { templateName, templateDescription } = body;
         if (!config || !templateName) {
           return NextResponse.json({ error: '缂哄皯蹇呰鍙傛暟' }, { status: 400 });
         }
 
-        // 杩欓噷鍙互瀹炵幇妯℃澘淇濆瓨閫昏緫
+        // 杩欓噷鍙互瀹炵幇妯℃澘淇濆昏緫
         return NextResponse.json({
           success: true,
           templateId: `template_${Date.now()}`,
@@ -175,13 +175,13 @@ export async function POST(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('澶氱淮鍒嗘瀽API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

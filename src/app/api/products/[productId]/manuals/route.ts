@@ -17,7 +17,7 @@ export async function GET(
 ) {
   try {
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status')?.split(',') || ['published'];
+    const status = searchParams.get('status').split(',') || ['published'];
     const includeDrafts = searchParams.get('includeDrafts') === 'true';
 
     const productId = params.productId;

@@ -19,7 +19,7 @@ import { generateUUID } from '@/modules/fcx-alliance/utils/helpers';
 let recommender: HybridRecommenderService | null = null;
 let behaviorCollector: UserBehaviorCollectorService | null = null;
 
-// 鍒濆鍖栨湇?async function initializeServices() {
+// 鍒濆鍖栨湇async function initializeServices() {
   if (!recommender) {
     recommender = new HybridRecommenderService();
     await recommender.initialize();
@@ -39,13 +39,13 @@ export async function GET(request: Request) {
     const userId = searchParams.get('userId');
     const count = parseInt(searchParams.get('count') || '10');
     const location = searchParams.get('location'); // lat,lng鏍煎紡
-    const categories = searchParams.get('categories'); // 閫楀彿鍒嗛殧
+    const categories = searchParams.get('categories'); // 楀彿鍒嗛殧
 
     if (!userId) {
       return NextResponse.json({ error: '缂哄皯鐢ㄦ埛ID鍙傛暟' }, { status: 400 });
     }
 
-    // 鏋勫缓鎺ㄨ崘涓婁笅?    const context: RecommendationContext = {
+    // 鏋勫缓鎺ㄨ崘涓婁笅    const context: RecommendationContext = {
       userId,
       filters: {},
     };
@@ -75,8 +75,8 @@ export async function GET(request: Request) {
     console.error('鎺ㄨ崘API閿欒:', error);
     return NextResponse.json(
       {
-        error: '鎺ㄨ崘鏈嶅姟鏆傛椂涓嶅彲?,
-        details: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鎺ㄨ崘鏈嶅姟鏆傛椂涓嶅彲,
+        details: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -120,15 +120,15 @@ export async function POST(request: Request) {
     console.error('鎺ㄨ崘API POST閿欒:', error);
     return NextResponse.json(
       {
-        error: '璇锋眰澶勭悊澶辫触',
-        details: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '璇眰澶勭悊澶辫触',
+        details: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// 澶勭悊鑾峰彇鎺ㄨ崘璇锋眰
+// 澶勭悊鑾峰彇鎺ㄨ崘璇眰
 async function handleGetRecommendations(params: any) {
   const { userId, context, count = 10 } = params;
 
@@ -138,10 +138,10 @@ async function handleGetRecommendations(params: any) {
 
   const recommendationContext: RecommendationContext = {
     userId,
-    location: context?.location,
-    deviceType: context?.deviceType,
-    timeOfDay: context?.timeOfDay,
-    filters: context?.filters,
+    location: context.location,
+    deviceType: context.deviceType,
+    timeOfDay: context.timeOfDay,
+    filters: context.filters,
   };
 
   const result = await recommender!.getRecommendations(
@@ -156,7 +156,7 @@ async function handleGetRecommendations(params: any) {
   });
 }
 
-// 澶勭悊琛屼负璁板綍璇锋眰
+// 澶勭悊琛屼负璁板綍璇眰
 async function handleRecordBehavior(params: any) {
   const { userId, itemId, itemType, actionType, context, metadata } = params;
 
@@ -186,12 +186,12 @@ async function handleRecordBehavior(params: any) {
   });
 }
 
-// 澶勭悊鎵归噺鎺ㄨ崘璇锋眰
+// 澶勭悊鎵归噺鎺ㄨ崘璇眰
 async function handleBatchRecommend(params: any) {
   const { contexts, count = 10 } = params;
 
   if (!contexts || !Array.isArray(contexts)) {
-    return NextResponse.json({ error: 'contexts蹇呴』鏄暟? }, { status: 400 });
+    return NextResponse.json({ error: 'contexts蹇呴』鏄暟 }, { status: 400 });
   }
 
   const results = await recommender!.batchRecommend(contexts, count);
@@ -204,7 +204,7 @@ async function handleBatchRecommend(params: any) {
   });
 }
 
-// 澶勭悊鍙嶉璁板綍璇锋眰
+// 澶勭悊鍙嶉璁板綍璇眰
 async function handleRecordFeedback(params: any) {
   const { userId, recommendationId, itemId, rating, feedbackType, metadata } =
     params;
@@ -235,7 +235,7 @@ async function handleRecordFeedback(params: any) {
   });
 }
 
-// 澶勭悊鍋ュ悍妫€鏌ヨ?async function handleHealthCheck() {
+// 澶勭悊鍋ュ悍妫€鏌ヨasync function handleHealthCheck() {
   const healthStatus = await recommender!.getHealthStatus();
 
   return NextResponse.json({
@@ -245,7 +245,7 @@ async function handleRecordFeedback(params: any) {
   });
 }
 
-// 澶勭悊妯″瀷閲嶆柊璁粌璇锋眰
+// 澶勭悊妯″瀷閲嶆柊璁粌璇眰
 async function handleRetrainModel(params: any) {
   const { force = false } = params;
 
@@ -300,7 +300,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `娓呯悊瀹屾垚锛屽垹?${deletedCount} 鏉¤繃鏈熻褰昤,
+      message: `娓呯悊瀹屾垚锛屽垹${deletedCount} 鏉¤繃鏈熻褰昤,
       deletedCount,
       timestamp: new Date().toISOString(),
     });

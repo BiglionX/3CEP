@@ -8,7 +8,7 @@ export async function GET() {
     // 浣跨敤宸茬煡鐨勭鐞嗗憳鐢ㄦ埛ID杩涜娴嬭瘯
     const testUserId = '6c83c463-bd84-4f3a-9e61-383b00bc3cfb';
 
-    // 鎵ц绠＄悊鍛樻潈闄愭?    const { data, error } = await supabaseAdmin
+    // 鎵ц绠＄悊鍛樻潈闄愭    const { data, error } = await supabaseAdmin
       .from('admin_users')
       .select('id')
       .eq('user_id', testUserId)
@@ -28,7 +28,7 @@ export async function GET() {
       isAdmin: isAdmin,
       userId: testUserId,
       data: data,
-      error: error?.message || null,
+      error: error.message || null,
     });
   } catch (error: any) {
     console.error('API娴嬭瘯澶辫触:', error);

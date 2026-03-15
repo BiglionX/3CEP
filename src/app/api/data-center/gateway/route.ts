@@ -1,5 +1,5 @@
 ﻿// 鏁版嵁涓績缁熶竴API缃戝叧
-// 鏁村悎鍚勬ā鍧楁暟鎹垎鏋怉PI鍒扮粺涓€鍏ュ彛?
+// 鏁村悎鍚勬ā鍧楁暟鎹垎鏋怉PI鍒扮粺涓€鍏ュ彛
 import { NextRequest, NextResponse } from 'next/server';
 import { apiGatewayService } from '@/modules/data-center/core/api-gateway.service';
 

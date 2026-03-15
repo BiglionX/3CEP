@@ -1,5 +1,7 @@
 ﻿/**
- * 安全监控仪表? * 实时展示安全威胁、异常行为和系统安全状? */
+ * 安全监控仪表板
+ * 实时展示安全威胁、异常行为和系统安全状态
+ */
 
 'use client';
 
@@ -39,10 +41,10 @@ interface SecurityEvent {
   eventType: string;
   threatLevel: 'low' | 'medium' | 'high' | 'critical';
   riskScore: number;
-  userId?: string;
+  userId: string;
   ipAddress: string;
   timestamp: string;
-  message?: string;
+  message: string;
 }
 
 interface SecurityDashboardData {
@@ -70,7 +72,8 @@ export default function SecurityMonitoringDashboard() {
     useState<SecurityDashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [refreshInterval, setRefreshInterval] = useState(30000); // 30秒刷?  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [refreshInterval, setRefreshInterval] = useState(30000); // 30秒刷新
+  const [autoRefresh, setAutoRefresh] = useState(true);
 
   useEffect(() => {
     loadDashboardData();
@@ -86,7 +89,7 @@ export default function SecurityMonitoringDashboard() {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch('/api/security-monitoring?action=dashboard');
+      const response = await fetch('/api/security-monitoringaction=dashboard');
       const result = await response.json();
 
       if (result.success) {
@@ -124,7 +127,7 @@ export default function SecurityMonitoringDashboard() {
   };
 
   const getComplianceColor = (status: boolean) => {
-    return status ? 'text-green-600' : 'text-red-600';
+    return status  'text-green-600' : 'text-red-600';
   };
 
   if (isLoading && !dashboardData) {
@@ -132,7 +135,7 @@ export default function SecurityMonitoringDashboard() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载安全监控数据?..</p>
+          <p className="mt-4 text-gray-600">加载安全监控数据中...</p>
         </div>
       </div>
     );
@@ -163,7 +166,7 @@ export default function SecurityMonitoringDashboard() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">暂无数据</h2>
-          <p className="text-gray-600">安全监控系统正在初始?..</p>
+          <p className="text-gray-600">安全监控系统正在初始化...</p>
         </div>
       </div>
     );
@@ -197,19 +200,19 @@ export default function SecurityMonitoringDashboard() {
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
                 <div
-                  className={`w-3 h-3 rounded-full ${autoRefresh ? 'bg-green-500' : 'bg-gray-400'}`}
+                  className={`w-3 h-3 rounded-full ${autoRefresh  'bg-green-500' : 'bg-gray-400'}`}
                 ></div>
                 <span className="text-sm text-gray-600">
-                  {autoRefresh ? '自动刷新' : '手动刷新'}
+                  {autoRefresh  '自动刷新' : '手动刷新'}
                 </span>
               </div>
 
               <button
                 onClick={() => setAutoRefresh(!autoRefresh)}
-                className={`p-2 rounded-lg ${autoRefresh ? 'bg-gray-100 hover:bg-gray-200' : 'bg-blue-100 hover:bg-blue-200'}`}
+                className={`p-2 rounded-lg ${autoRefresh  'bg-gray-100 hover:bg-gray-200' : 'bg-blue-100 hover:bg-blue-200'}`}
               >
                 <RefreshCw
-                  className={`w-4 h-4 ${autoRefresh ? 'text-gray-600' : 'text-blue-600'}`}
+                  className={`w-4 h-4 ${autoRefresh  'text-gray-600' : 'text-blue-600'}`}
                 />
               </button>
 
@@ -219,7 +222,7 @@ export default function SecurityMonitoringDashboard() {
                 className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
                 <RefreshCw
-                  className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`}
+                  className={`w-4 h-4 ${isLoading  'animate-spin' : ''}`}
                 />
                 <span>刷新</span>
               </button>
@@ -248,11 +251,11 @@ export default function SecurityMonitoringDashboard() {
               <div className="text-gray-600">
                 安全等级:{' '}
                 {systemSecurityScore >= 90
-                  ? '优秀'
+                   '优秀'
                   : systemSecurityScore >= 70
-                    ? '良好'
+                     '良好'
                     : systemSecurityScore >= 50
-                      ? '一?
+                       '一般'
                       : '危险'}
               </div>
 
@@ -261,11 +264,11 @@ export default function SecurityMonitoringDashboard() {
                   <div
                     className={`h-2 rounded-full transition-all duration-500 ${
                       systemSecurityScore >= 90
-                        ? 'bg-green-500'
+                         'bg-green-500'
                         : systemSecurityScore >= 70
-                          ? 'bg-yellow-500'
+                           'bg-yellow-500'
                           : systemSecurityScore >= 50
-                            ? 'bg-orange-500'
+                             'bg-orange-500'
                             : 'bg-red-500'
                     }`}
                     style={{ width: `${systemSecurityScore}%` }}
@@ -275,19 +278,20 @@ export default function SecurityMonitoringDashboard() {
             </div>
           </div>
 
-          {/* 合规状态卡?*/}
+          {/* 合规状态卡片 */}
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              合规状?            </h3>
+              合规状态
+            </h3>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.gdpr ? 'bg-green-100' : 'bg-red-100'
+                    complianceStatus.gdpr  'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.gdpr ? (
+                  {complianceStatus.gdpr  (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -297,17 +301,17 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.gdpr)}`}
                 >
-                  {complianceStatus.gdpr ? '合规' : '不合?}
+                  {complianceStatus.gdpr  '合规' : '不合规'}
                 </div>
               </div>
 
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.pci ? 'bg-green-100' : 'bg-red-100'
+                    complianceStatus.pci  'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.pci ? (
+                  {complianceStatus.pci  (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -317,17 +321,17 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.pci)}`}
                 >
-                  {complianceStatus.pci ? '合规' : '不合?}
+                  {complianceStatus.pci  '合规' : '不合规'}
                 </div>
               </div>
 
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.soc2 ? 'bg-green-100' : 'bg-red-100'
+                    complianceStatus.soc2  'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.soc2 ? (
+                  {complianceStatus.soc2  (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -337,17 +341,17 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.soc2)}`}
                 >
-                  {complianceStatus.soc2 ? '合规' : '不合?}
+                  {complianceStatus.soc2  '合规' : '不合规'}
                 </div>
               </div>
 
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.hipaa ? 'bg-green-100' : 'bg-red-100'
+                    complianceStatus.hipaa  'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.hipaa ? (
+                  {complianceStatus.hipaa  (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -357,7 +361,7 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.hipaa)}`}
                 >
-                  {complianceStatus.hipaa ? '合规' : '不合?}
+                  {complianceStatus.hipaa  '合规' : '不合规'}
                 </div>
               </div>
             </div>
@@ -430,7 +434,7 @@ export default function SecurityMonitoringDashboard() {
               </div>
 
               <div className="p-6">
-                {recentAlerts.length === 0 ? (
+                {recentAlerts.length === 0  (
                   <div className="text-center py-12">
                     <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
                     <p className="text-gray-500">暂无安全告警</p>
@@ -494,7 +498,7 @@ export default function SecurityMonitoringDashboard() {
               </div>
 
               <div className="p-6">
-                {recommendations.length === 0 ? (
+                {recommendations.length === 0  (
                   <div className="text-center py-8">
                     <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">当前无需特别关注</p>
@@ -525,7 +529,7 @@ export default function SecurityMonitoringDashboard() {
               </div>
 
               <div className="p-6">
-                {threatMetrics.topThreatSources.length === 0 ? (
+                {threatMetrics.topThreatSources.length === 0  (
                   <div className="text-center py-8">
                     <Globe className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">暂无威胁数据</p>
@@ -562,4 +566,3 @@ export default function SecurityMonitoringDashboard() {
     </div>
   );
 }
-

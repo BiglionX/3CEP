@@ -78,20 +78,20 @@ export default function UserManager() {
     'view'
   );
 
-  // 权限检?
+  // 权限检
   const { hasPermission } = useRbacPermission();
   const canView = hasPermission('usermgr.view');
   const canManage = hasPermission('usermgr.manage');
   const canDelete = hasPermission('usermgr.delete');
 
-  // 筛选条?
+  // 筛选条
   const [filters, setFilters] = useState({
     role: '',
     status: '',
     search: '',
   });
 
-  // 批量操作相关状?
+  // 批量操作相关状
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [importFile, setImportFile] = useState<File | null>(null);
@@ -116,7 +116,7 @@ export default function UserManager() {
           created_at: '2024-01-01T10:00:00Z',
           updated_at: '2024-01-20T15:30:00Z',
           department: '技术部',
-          position: '系统管理?,
+          position: '系统管理员',
         },
         {
           id: 'user_002',
@@ -129,7 +129,7 @@ export default function UserManager() {
           last_login: '2024-01-20T14:20:00Z',
           created_at: '2024-01-05T09:30:00Z',
           updated_at: '2024-01-18T16:45:00Z',
-          department: '运营?,
+          department: '运营部',
           position: '运营经理',
         },
       ];
@@ -143,7 +143,7 @@ export default function UserManager() {
     }
   };
 
-  // 应用筛?
+  // 应用筛
   const applyFilters = () => {
     let filtered = [...users];
 
@@ -161,15 +161,15 @@ export default function UserManager() {
         user =>
           user.username.toLowerCase().includes(searchTerm) ||
           user.email.toLowerCase().includes(searchTerm) ||
-          user?.includes(searchTerm) ||
-          user?.toLowerCase().includes(searchTerm)
+          user.includes(searchTerm) ||
+          user.toLowerCase().includes(searchTerm)
       );
     }
 
     setFilteredUsers(filtered);
   };
 
-  // 处理筛选变?
+  // 处理筛选变
   const handleFilterChange = (field: string, value: string) => {
     setFilters(prev => ({
       ...prev,
@@ -200,7 +200,7 @@ export default function UserManager() {
 
   // 删除用户
   const handleDelete = (user: User) => {
-    if (confirm(`确定要删除用?"${user.username}" 吗？此操作不可撤销！`)) {
+    if (confirm(`确定要删除用"${user.username}" 吗？此操作不可撤销！`)) {
       // 模拟删除操作
       // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除用户:', user.id)fetchUsers(); // 重新加载数据
     }
@@ -214,7 +214,7 @@ export default function UserManager() {
         filters: JSON.stringify(filters)
       });
 
-      const response = await fetch(`/api/admin/users/export?${params}`);
+      const response = await fetch(`/api/admin/users/export${params}`);
 
       if (response.ok) {
         if (format === 'csv') {
@@ -259,13 +259,13 @@ export default function UserManager() {
       setImportResult(result);
 
       if (result.success) {
-        alert(`导入成功?{result.importedCount} 个用户导入成功，${result.failedCount} 个失败`);
+        alert(`导入成功{result.importedCount} 个用户导入成功，${result.failedCount} 个失败`);
         setIsImportDialogOpen(false);
         setImportFile(null);
         setImportResult(null);
         fetchUsers(); // 刷新用户列表
       } else {
-        alert(`导入失败?{result.error}`);
+        alert(`导入失败{result.error}`);
       }
     } catch (error) {
       console.error('导入失败:', error);
@@ -277,7 +277,7 @@ export default function UserManager() {
   const toggleSelection = (userId: string) => {
     setSelectedIds(prev =>
       prev.includes(userId)
-        ? prev.filter(id => id !== userId)
+         prev.filter(id => id !== userId)
         : [...prev, userId]
     );
   };
@@ -297,7 +297,7 @@ export default function UserManager() {
       return;
     }
 
-    if (!confirm(`确定要删除选中?${selectedIds.length} 个用户吗？此操作不可撤销！`)) {
+    if (!confirm(`确定要删除选中心${selectedIds.length} 个用户吗？此操作不可撤销！`)) {
       return;
     }
 
@@ -327,7 +327,7 @@ export default function UserManager() {
     }
   };
 
-  // 批量更新状?
+  // 批量更新状
   const handleBatchUpdateStatus = async (status: string) => {
     if (selectedIds.length === 0) {
       alert('请先选择要更新的用户');
@@ -356,8 +356,8 @@ export default function UserManager() {
         throw new Error(result.error);
       }
     } catch (error) {
-      console.error('批量更新状态失?', error);
-      alert('批量更新状态失败，请重?);
+      console.error('批量更新状态失', error);
+      alert('批量更新状态失败，请重);
     }
   };
 
@@ -405,7 +405,7 @@ export default function UserManager() {
     const roleConfig = {
       admin: {
         variant: 'default' as const,
-        text: '管理?,
+        text: '管理员,
         color: 'bg-red-100 text-red-800',
       },
       manager: {
@@ -420,7 +420,7 @@ export default function UserManager() {
       },
       viewer: {
         variant: 'destructive' as const,
-        text: '查看?,
+        text: '查看,
         color: 'bg-gray-100 text-gray-800',
       },
     };
@@ -437,7 +437,7 @@ export default function UserManager() {
     );
   };
 
-  // 状态标签渲?
+  // 状态标签渲
   const renderStatusTag = (status: string) => {
     const statusConfig = {
       active: {
@@ -447,12 +447,12 @@ export default function UserManager() {
       },
       inactive: {
         variant: 'secondary' as const,
-        text: '非活?,
+        text: '非活,
         color: 'bg-gray-100 text-gray-800',
       },
       suspended: {
         variant: 'destructive' as const,
-        text: '已禁?,
+        text: '已禁,
         color: 'bg-red-100 text-red-800',
       },
     };
@@ -471,38 +471,38 @@ export default function UserManager() {
 
   // 获取角色选项
   const getRoleOptions = () => [
-    { value: 'admin', label: '管理? },
+    { value: 'admin', label: '管理员 },
     { value: 'manager', label: '经理' },
     { value: 'staff', label: '员工' },
-    { value: 'viewer', label: '查看? },
+    { value: 'viewer', label: '查看 },
   ];
 
   // 获取状态选项
   const getStatusOptions = () => [
     { value: 'active', label: '活跃' },
-    { value: 'inactive', label: '非活? },
-    { value: 'suspended', label: '已禁? },
+    { value: 'inactive', label: '非活 },
+    { value: 'suspended', label: '已禁 },
   ];
 
-  // 表格列定?
+  // 表格列定
   const columns = [
-    { key: 'username', title: '用户?, width: '120px' },
+    { key: 'username', title: '用户, width: '120px' },
     { key: 'email', title: '邮箱', width: '200px' },
-    { key: 'phone', title: '手机?, width: '120px' },
+    { key: 'phone', title: '手机, width: '120px' },
     { key: 'role', title: '角色', width: '100px' },
     { key: 'department', title: '部门', width: '120px' },
     { key: 'position', title: '职位', width: '120px' },
-    { key: 'status', title: '状?, width: '100px' },
-    { key: 'last_login', title: '最后登?, width: '160px' },
+    { key: 'status', title: '状, width: '100px' },
+    { key: 'last_login', title: '最后登, width: '160px' },
     { key: 'actions', title: '操作', width: '150px' },
   ];
 
-  // 初始化数?
+  // 初始化数
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // 筛选变化时重新应用筛?
+  // 筛选变化时重新应用筛
   useEffect(() => {
     applyFilters();
   }, [filters, users]);
@@ -512,7 +512,7 @@ export default function UserManager() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <User className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">您没有权限查看用户管?/p>
+          <p className="text-gray-500">您没有权限查看用户管/p>
         </div>
       </div>
     );
@@ -520,11 +520,11 @@ export default function UserManager() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按*/}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">用户管理</h1>
-          <p className="text-gray-600 mt-1">管理系统用户账户和权限分?/p>
+          <p className="text-gray-600 mt-1">管理系统用户账户和权限分/p>
         </div>
         <div className="flex items-center space-x-3">
           <Button variant="outline" onClick={handleRefresh}>
@@ -570,17 +570,17 @@ export default function UserManager() {
         </div>
       </div>
 
-      {/* 筛选面?*/}
+      {/* 筛选面*/}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">筛选条?/CardTitle>
+          <CardTitle className="text-lg">筛选条/CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="搜索用户?邮箱/手机?
+                placeholder="搜索用户邮箱/手机
                 className="pl-10"
                 value={filters.search}
                 onChange={e => handleFilterChange('search', e.target.value)}
@@ -609,10 +609,10 @@ export default function UserManager() {
               onValueChange={value => handleFilterChange('status', value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="选择状? />
+                <SelectValue placeholder="选择状 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">全部状?/SelectItem>
+                <SelectItem value="">全部状态/SelectItem>
                 {getStatusOptions().map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
@@ -621,7 +621,7 @@ export default function UserManager() {
               </SelectContent>
             </Select>
 
-            <Button onClick={applyFilters}>应用筛?/Button>
+            <Button onClick={applyFilters}>应用筛/Button>
           </div>
         </CardContent>
       </Card>
@@ -655,7 +655,7 @@ export default function UserManager() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              管理?
+              管理员
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -690,10 +690,10 @@ export default function UserManager() {
         <CardHeader>
           <CardTitle>用户列表</CardTitle>
           <CardDescription>
-            �?{filteredUsers.length} 个用?
+            {filteredUsers.length} 个用
             {selectedIds.length > 0 && (
               <span className="ml-2 text-blue-600">
-                已选择 {selectedIds.length} �?
+                已选择 {selectedIds.length} 
               </span>
             )}
           </CardDescription>
@@ -710,7 +710,7 @@ export default function UserManager() {
                       onClick={selectAll}
                       className="p-1"
                     >
-                      {selectedIds.length === filteredUsers.length && filteredUsers.length > 0 ? (
+                      {selectedIds.length === filteredUsers.length && filteredUsers.length > 0  (
                         <CheckSquare className="w-4 h-4" />
                       ) : (
                         <Square className="w-4 h-4" />
@@ -725,7 +725,7 @@ export default function UserManager() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {loading ? (
+                {loading  (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -733,11 +733,11 @@ export default function UserManager() {
                     >
                       <div className="flex items-center justify-center">
                         <RefreshCw className="w-5 h-5 animate-spin mr-2" />
-                        加载?..
+                        加载中..
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredUsers.length === 0 ? (
+                ) : filteredUsers.length === 0  (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -756,7 +756,7 @@ export default function UserManager() {
                           onClick={() => toggleSelection(user.id)}
                           className="p-1"
                         >
-                          {selectedIds.includes(user.id) ? (
+                          {selectedIds.includes(user.id)  (
                             <CheckSquare className="w-4 h-4 text-blue-600" />
                           ) : (
                             <Square className="w-4 h-4" />
@@ -774,7 +774,7 @@ export default function UserManager() {
                       <TableCell>{renderStatusTag(user.status)}</TableCell>
                       <TableCell>
                         {user.last_login
-                          ? new Date(user.last_login).toLocaleString()
+                           new Date(user.last_login).toLocaleString()
                           : '从未登录'}
                       </TableCell>
                       <TableCell>
@@ -814,21 +814,21 @@ export default function UserManager() {
             </Table>
           </div>
 
-          {/* 批量操作工具?*/}
+          {/* 批量操作工具*/}
           {selectedIds.length > 0 && (
             <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-blue-800">
-                  已选择 {selectedIds.length} 个用?
+                  已选择 {selectedIds.length} 个用
                 </div>
                 <div className="flex items-center space-x-2">
                   <Select onValueChange={handleBatchUpdateStatus}>
                     <SelectTrigger className="w-32 h-8 text-xs">
-                      <SelectValue placeholder="批量状? />
+                      <SelectValue placeholder="批量状 />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="active">设为活跃</SelectItem>
-                      <SelectItem value="inactive">设为非活?/SelectItem>
+                      <SelectItem value="inactive">设为非活/SelectItem>
                       <SelectItem value="suspended">设为禁用</SelectItem>
                     </SelectContent>
                   </Select>
@@ -838,10 +838,10 @@ export default function UserManager() {
                       <SelectValue placeholder="批量角色" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="admin">设为管理?/SelectItem>
+                      <SelectItem value="admin">设为管理员/SelectItem>
                       <SelectItem value="manager">设为经理</SelectItem>
                       <SelectItem value="staff">设为员工</SelectItem>
-                      <SelectItem value="viewer">设为查看?/SelectItem>
+                      <SelectItem value="viewer">设为查看/SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -872,15 +872,15 @@ export default function UserManager() {
         </CardContent>
       </Card>
 
-      {/* 详情/编辑对话?*/}
+      {/* 详情/编辑对话*/}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
               {dialogMode === 'view'
-                ? '用户详情'
+                 '用户详情'
                 : dialogMode === 'edit'
-                  ? '编辑用户'
+                   '编辑用户'
                   : '新增用户'}
             </DialogTitle>
           </DialogHeader>
@@ -889,7 +889,7 @@ export default function UserManager() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    用户?
+                    用户
                   </label>
                   <Input
                     value={selectedUser.username}
@@ -908,7 +908,7 @@ export default function UserManager() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    手机?
+                    手机
                   </label>
                   <Input
                     value={selectedUser.phone || ''}
@@ -956,7 +956,7 @@ export default function UserManager() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    状?
+                    状
                   </label>
                   <Select
                     value={selectedUser.status}
@@ -989,7 +989,7 @@ export default function UserManager() {
               {selectedUser.last_login && (
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    最后登录时?
+                    最后登录时
                   </label>
                   <Input
                     value={new Date(selectedUser.last_login).toLocaleString()}
@@ -1006,7 +1006,7 @@ export default function UserManager() {
                   >
                     取消
                   </Button>
-                  <Button>{dialogMode === 'edit' ? '保存' : '创建'}</Button>
+                  <Button>{dialogMode === 'edit'  '保存' : '创建'}</Button>
                 </div>
               )}
             </div>
@@ -1014,7 +1014,7 @@ export default function UserManager() {
         </DialogContent>
       </Dialog>
 
-      {/* 导入对话?*/}
+      {/* 导入对话*/}
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -1026,11 +1026,11 @@ export default function UserManager() {
               <Input
                 type="file"
                 accept=".csv,.xlsx,.xls"
-                onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                onChange={(e) => setImportFile(e.target.files.[0] || null)}
                 className="mb-2"
               />
               <p className="text-xs text-gray-500">
-                支持 CSV �?Excel 格式文件
+                支持 CSV Excel 格式文件
               </p>
             </div>
 
@@ -1041,7 +1041,7 @@ export default function UserManager() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="create">创建新用?/SelectItem>
+                  <SelectItem value="create">创建新用/SelectItem>
                   <SelectItem value="update">更新现有用户</SelectItem>
                   <SelectItem value="sync">同步用户数据</SelectItem>
                 </SelectContent>
@@ -1050,9 +1050,9 @@ export default function UserManager() {
 
             {importResult && (
               <div className="p-3 bg-gray-50 rounded border">
-                <h4 className="font-medium mb-2">导入结果?/h4>
-                <p>成功导入: {importResult.importedCount} 个用?/p>
-                <p>失败: {importResult.failedCount} �?/p>
+                <h4 className="font-medium mb-2">导入结果/h4>
+                <p>成功导入: {importResult.importedCount} 个用/p>
+                <p>失败: {importResult.failedCount} /p>
                 {importResult.errors && importResult.errors.length > 0 && (
                   <div className="mt-2">
                     <p className="font-medium">错误详情:</p>
@@ -1072,7 +1072,7 @@ export default function UserManager() {
             </Button>
             <Button onClick={handleImport} disabled={!importFile}>
               <Upload className="w-4 h-4 mr-2" />
-              开始导?
+              开始导
             </Button>
           </DialogFooter>
         </DialogContent>

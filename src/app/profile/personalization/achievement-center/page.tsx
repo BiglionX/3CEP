@@ -29,10 +29,10 @@ interface Achievement {
   points: number;
   category: 'basic' | 'intermediate' | 'advanced' | 'special';
   status: 'completed' | 'in_progress' | 'locked';
-  progress?: number; // 0-100
+  progress: number; // 0-100
   requirement: string;
-  completedDate?: string;
-  unlockCondition?: string;
+  completedDate: string;
+  unlockCondition: string;
 }
 
 export default function AchievementCenterPage() {
@@ -62,7 +62,7 @@ export default function AchievementCenterPage() {
         {
           id: 'ach_002',
           title: '完善资料',
-          description: '填写完整的个人资?,
+          description: '填写完整的个人资料',
           icon: <CheckCircle className="w-6 h-6" />,
           points: 100,
           category: 'basic',
@@ -74,13 +74,13 @@ export default function AchievementCenterPage() {
         {
           id: 'ach_003',
           title: '首次维修',
-          description: '完成第一个维修订?,
+          description: '完成第一个维修订单',
           icon: <Wrench className="w-6 h-6" />,
           points: 200,
           category: 'basic',
           status: 'completed',
           progress: 100,
-          requirement: '完成1个维修订?,
+          requirement: '完成1个维修订单',
           completedDate: '2024-01-05',
         },
         {
@@ -92,7 +92,7 @@ export default function AchievementCenterPage() {
           category: 'basic',
           status: 'completed',
           progress: 100,
-          requirement: '绑定手机和邮?,
+          requirement: '绑定手机和邮箱',
           completedDate: '2024-01-03',
         },
 
@@ -100,82 +100,82 @@ export default function AchievementCenterPage() {
         {
           id: 'ach_005',
           title: '维修专家',
-          description: '累计完成10个维修订?,
+          description: '累计完成10个维修订单',
           icon: <Trophy className="w-6 h-6" />,
           points: 500,
           category: 'intermediate',
           status: 'in_progress',
           progress: 60,
-          requirement: '完成10个维修订?,
-          unlockCondition: '还需完成4个订?,
+          requirement: '完成10个维修订单',
+          unlockCondition: '还需完成4个订单',
         },
         {
           id: 'ach_006',
           title: '购物狂人',
-          description: '累计购买50件配?,
+          description: '累计购买50件配件',
           icon: <ShoppingCart className="w-6 h-6" />,
           points: 300,
           category: 'intermediate',
           status: 'in_progress',
           progress: 75,
-          requirement: '购买50件配?,
-          unlockCondition: '还需购买13�?,
+          requirement: '购买50件配件',
+          unlockCondition: '还需购买13件',
         },
         {
           id: 'ach_007',
           title: '连续签到',
-          description: '连续签到30�?,
+          description: '连续签到30天',
           icon: <Calendar className="w-6 h-6" />,
           points: 400,
           category: 'intermediate',
           status: 'in_progress',
           progress: 45,
-          requirement: '连续签到30�?,
-          unlockCondition: '还需签到17�?,
+          requirement: '连续签到30天',
+          unlockCondition: '还需签到17天',
         },
         {
           id: 'ach_008',
           title: '分享大使',
-          description: '成功邀?位好?,
+          description: '成功邀请5位好友',
           icon: <Users className="w-6 h-6" />,
           points: 250,
           category: 'intermediate',
           status: 'locked',
           progress: 0,
-          requirement: '邀?位好?,
-          unlockCondition: '邀?位好友即可解?,
+          requirement: '邀请5位好友',
+          unlockCondition: '邀请5位好友即可解锁',
         },
 
         // 高级成就
         {
           id: 'ach_009',
           title: '金牌用户',
-          description: '累计消费10000�?,
+          description: '累计消费10000元',
           icon: <Star className="w-6 h-6" />,
           points: 1000,
           category: 'advanced',
           status: 'in_progress',
           progress: 35,
-          requirement: '消费10000�?,
-          unlockCondition: '还需消费6500�?,
+          requirement: '消费10000元',
+          unlockCondition: '还需消费6500元',
         },
         {
           id: 'ach_010',
           title: '忠实粉丝',
-          description: '成为VIP会员?�?,
+          description: '成为VIP会员',
           icon: <Award className="w-6 h-6" />,
           points: 800,
           category: 'advanced',
           status: 'locked',
           progress: 0,
-          requirement: 'VIP会员?�?,
+          requirement: 'VIP会员',
           unlockCondition: '升级为VIP会员即可解锁',
         },
 
         // 特殊成就
         {
           id: 'ach_011',
-          title: '年度最?,
+          title: '年度之星',
           description: '年度维修订单冠军',
           icon: <Trophy className="w-6 h-6" />,
           points: 2000,
@@ -183,19 +183,19 @@ export default function AchievementCenterPage() {
           status: 'locked',
           progress: 0,
           requirement: '年度维修订单数第一',
-          unlockCondition: '年底评?,
+          unlockCondition: '年底评选',
         },
         {
           id: 'ach_012',
           title: '口碑之星',
-          description: '获得100个五星好?,
+          description: '获得100个五星好评',
           icon: <Flame className="w-6 h-6" />,
           points: 1500,
           category: 'special',
           status: 'locked',
           progress: 0,
-          requirement: '获得100个五星好?,
-          unlockCondition: '当前好评? 23�?,
+          requirement: '获得100个五星好评',
+          unlockCondition: '当前好评数 23',
         },
       ]);
       setLoading(false);
@@ -203,9 +203,7 @@ export default function AchievementCenterPage() {
   }, []);
 
   const filteredAchievements =
-    selectedCategory === 'all'
-      ? achievements
-      : achievements.filter(a => a.category === selectedCategory);
+    selectedCategory === 'all' ? achievements : achievements.filter(a => a.category === selectedCategory);
 
   const getCategoryCounts = () => {
     return {
@@ -302,7 +300,7 @@ export default function AchievementCenterPage() {
     }
   };
 
-  const formatDate = (dateString?: string) => {
+  const formatDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('zh-CN', {
@@ -322,11 +320,11 @@ export default function AchievementCenterPage() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和等级信?*/}
+      {/* 页面标题和等级信息 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">成就中心</h1>
-          <p className="text-gray-600 mt-1">解锁成就，赢取丰厚奖?/p>
+          <p className="text-gray-600 mt-1">解锁成就，赢取丰厚奖励</p>
         </div>
 
         <div className="flex items-center space-x-6">
@@ -355,7 +353,7 @@ export default function AchievementCenterPage() {
                 <p className="text-2xl font-bold text-gray-900">
                   {completedCounts.total}
                 </p>
-                <p className="text-sm text-gray-600">已完?/p>
+                <p className="text-sm text-gray-600">已完成</p>
               </div>
             </div>
           </CardContent>
@@ -371,7 +369,7 @@ export default function AchievementCenterPage() {
                 <p className="text-2xl font-bold text-gray-900">
                   {categoryCounts.all - completedCounts.total}
                 </p>
-                <p className="text-sm text-gray-600">进行?/p>
+                <p className="text-sm text-gray-600">进行中</p>
               </div>
             </div>
           </CardContent>
@@ -390,7 +388,7 @@ export default function AchievementCenterPage() {
                   )}
                   %
                 </p>
-                <p className="text-sm text-gray-600">完成?/p>
+                <p className="text-sm text-gray-600">完成率</p>
               </div>
             </div>
           </CardContent>
@@ -411,7 +409,7 @@ export default function AchievementCenterPage() {
         </Card>
       </div>
 
-      {/* 分类筛?*/}
+      {/* 分类筛选 */}
       <Card>
         <CardContent className="p-4">
           <div className="flex flex-wrap gap-2">
@@ -446,12 +444,12 @@ export default function AchievementCenterPage() {
               key={achievement.id}
               className={`
                 overflow-hidden relative
-                ${isCompleted ? 'border-green-200 bg-green-50' : ''}
-                ${isInProgress ? 'border-blue-200 bg-blue-50' : ''}
-                ${achievement.status === 'locked' ? 'opacity-80' : ''}
+                ${isCompleted  'border-green-200 bg-green-50' : ''}
+                ${isInProgress  'border-blue-200 bg-blue-50' : ''}
+                ${achievement.status === 'locked'  'opacity-80' : ''}
               `}
             >
-              {/* 状态装?*/}
+              {/* 状态装饰 */}
               {isCompleted && (
                 <div className="absolute top-2 right-2">
                   <CheckCircle className="w-6 h-6 text-green-500 fill-current" />
@@ -472,9 +470,9 @@ export default function AchievementCenterPage() {
                     p-3 rounded-full
                     ${
                       isCompleted
-                        ? 'bg-green-100'
+                         'bg-green-100'
                         : isInProgress
-                          ? 'bg-blue-100'
+                           'bg-blue-100'
                           : 'bg-gray-100'
                     }
                   `}
@@ -483,9 +481,9 @@ export default function AchievementCenterPage() {
                       className={`
                       ${
                         isCompleted
-                          ? 'text-green-600'
+                           'text-green-600'
                           : isInProgress
-                            ? 'text-blue-600'
+                             'text-blue-600'
                             : 'text-gray-400'
                       }
                     `}
@@ -500,9 +498,9 @@ export default function AchievementCenterPage() {
                       text-lg font-bold mb-1
                       ${
                         isCompleted
-                          ? 'text-green-800'
+                           'text-green-800'
                           : isInProgress
-                            ? 'text-blue-800'
+                             'text-blue-800'
                             : 'text-gray-800'
                       }
                     `}
@@ -527,11 +525,11 @@ export default function AchievementCenterPage() {
                   <Badge
                     variant={
                       achievement.category === 'special'
-                        ? 'default'
+                         'default'
                         : achievement.category === 'advanced'
-                          ? 'destructive'
+                           'destructive'
                           : achievement.category === 'intermediate'
-                            ? 'secondary'
+                             'secondary'
                             : 'outline'
                     }
                     className="capitalize"
@@ -543,7 +541,7 @@ export default function AchievementCenterPage() {
                   </Badge>
                 </div>
 
-                {/* 进度?*/}
+                {/* 进度条 */}
                 {achievement.progress !== undefined &&
                   achievement.progress < 100 && (
                     <div className="mb-4">
@@ -567,7 +565,7 @@ export default function AchievementCenterPage() {
                     </div>
                   )}
 
-                {/* 要求和完成时?*/}
+                {/* 要求和完成时间 */}
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center text-gray-600">
                     <Target className="w-4 h-4 mr-2" />
@@ -578,7 +576,7 @@ export default function AchievementCenterPage() {
                     <div className="flex items-center text-green-600">
                       <Calendar className="w-4 h-4 mr-2" />
                       <span>
-                        完成? {formatDate(achievement.completedDate)}
+                        完成于 {formatDate(achievement.completedDate)}
                       </span>
                     </div>
                   )}
@@ -588,10 +586,10 @@ export default function AchievementCenterPage() {
                 {!isCompleted && (
                   <Button
                     className="w-full mt-4"
-                    variant={isInProgress ? 'default' : 'outline'}
+                    variant={isInProgress  'default' : 'outline'}
                     disabled={achievement.status === 'locked'}
                   >
-                    {achievement.status === 'locked' ? '未解? : '查看详情'}
+                    {achievement.status === 'locked'  '未解锁' : '查看详情'}
                   </Button>
                 )}
               </CardContent>

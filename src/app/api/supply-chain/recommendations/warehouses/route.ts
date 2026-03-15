@@ -1,5 +1,5 @@
 ﻿/**
- * 浠撳簱浣嶇疆鎺ㄨ崘API
+ * 撳簱浣嶇疆鎺ㄨ崘API
  */
 
 import { NextResponse } from 'next/server';
@@ -61,10 +61,10 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('浠撳簱鎺ㄨ崘閿欒:', error);
+    console.error('撳簱鎺ㄨ崘閿欒:', error);
     return NextResponse.json(
       {
-        error: '浠撳簱鎺ㄨ崘澶辫触',
+        error: '撳簱鎺ㄨ崘澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }

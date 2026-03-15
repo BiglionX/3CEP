@@ -110,11 +110,11 @@ export default function UserDevicesPage() {
       case 'normal':
         return '正常使用';
       case 'repairing':
-        return '维修?;
+        return '维修中';
       case 'broken':
-        return '已损?;
+        return '已损坏';
       default:
-        return '未知状?;
+        return '未知状态';
     }
   };
 
@@ -127,7 +127,7 @@ export default function UserDevicesPage() {
 
   const handleScanQRCode = () => {
     // 模拟扫码功能
-    alert('请使用摄像头扫描设备二维?);
+    alert('请使用摄像头扫描设备二维码');
   };
 
   const handleAddDevice = () => {
@@ -148,7 +148,7 @@ export default function UserDevicesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">我的设备</h1>
-          <p className="text-gray-600 mt-1">管理您的所有设备信?/p>
+          <p className="text-gray-600 mt-1">管理您的所有设备信息</p>
         </div>
         <div className="flex items-center space-x-3">
           <div className="relative">
@@ -215,7 +215,7 @@ export default function UserDevicesPage() {
                 <p className="text-2xl font-bold text-gray-900">
                   {devices.filter(d => d.status === 'repairing').length}
                 </p>
-                <p className="text-sm text-gray-600">维修?/p>
+                <p className="text-sm text-gray-600">维修中</p>
               </div>
             </div>
           </CardContent>
@@ -250,7 +250,7 @@ export default function UserDevicesPage() {
               <div className="flex items-start justify-between">
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
-                    {device.imageUrl ? (
+                    {device.imageUrl  (
                       <img
                         src={device.imageUrl}
                         alt={device.name}
@@ -274,7 +274,7 @@ export default function UserDevicesPage() {
             </CardHeader>
 
             <CardContent className="space-y-3">
-              {/* 状态标?*/}
+              {/* 状态标签 */}
               <div className="flex items-center justify-between">
                 <span
                   className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(device.status)}`}
@@ -320,13 +320,13 @@ export default function UserDevicesPage() {
         ))}
       </div>
 
-      {/* 空状?*/}
+      {/* 空状态 */}
       {filteredDevices.length === 0 && (
         <div className="text-center py-12">
           <Smartphone className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">暂无设备</h3>
           <p className="mt-1 text-sm text-gray-500">
-            {searchTerm ? '没有找到匹配的设? : '添加您的第一台设备开始管?}
+            {searchTerm  '没有找到匹配的设备' : '添加您的第一台设备开始管理'}
           </p>
           <div className="mt-6">
             <Button onClick={handleAddDevice}>
@@ -339,4 +339,3 @@ export default function UserDevicesPage() {
     </div>
   );
 }
-

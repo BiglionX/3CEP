@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  CheckCircle, 
-  Circle, 
-  Play, 
+import type { ReactNode } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle,
+  Circle,
+  Play,
   AlertTriangle,
   Lightbulb,
   Video,
@@ -61,7 +62,7 @@ interface StepByStepTutorialProps {
   onComplete?: () => void;
 }
 
-export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialProps) {
+export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialProps): ReactNode {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<boolean[]>(
     new Array(tutorial.steps.length).fill(false)

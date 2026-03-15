@@ -43,8 +43,8 @@ interface PurchaseOrder {
   created_at: string;
   updated_at: string;
   expected_delivery: string;
-  actual_delivery?: string;
-  notes?: string;
+  actual_delivery: string;
+  notes: string;
 }
 
 interface PurchaseItem {
@@ -103,10 +103,10 @@ export default function ProcurementManagementPage() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
         search: searchTerm,
-        status: statusFilter === 'all' ? '' : statusFilter,
+        status: statusFilter === 'all'  '' : statusFilter,
       });
 
-      const response = await fetch(`/api/admin/procurement/orders?${params}`);
+      const response = await fetch(`/api/admin/procurement/orders${params}`);
       const result = await response.json();
 
       if (result.data) {
@@ -120,7 +120,7 @@ export default function ProcurementManagementPage() {
     }
   };
 
-  // 获取供应商列?
+  // 获取供应商列
   const fetchSuppliers = async () => {
     try {
       setLoading(true);
@@ -131,7 +131,7 @@ export default function ProcurementManagementPage() {
         setSuppliers(result.data);
       }
     } catch (error) {
-      console.error('获取供应商列表失?', error);
+      console.error('获取供应商列表失', error);
     } finally {
       setLoading(false);
     }
@@ -145,7 +145,7 @@ export default function ProcurementManagementPage() {
     }
   }, [activeTab, pagination.page, searchTerm, statusFilter]);
 
-  // 处理全?
+  // 处理全
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(orders.map(order => order.id));
@@ -194,10 +194,10 @@ export default function ProcurementManagementPage() {
 
     try {
       const url = editingOrder.id
-        ? `/api/admin/procurement/orders/${editingOrder.id}`
+         `/api/admin/procurement/orders/${editingOrder.id}`
         : '/api/admin/procurement/orders';
 
-      const method = editingOrder.id ? 'PUT' : 'POST';
+      const method = editingOrder.id  'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -209,7 +209,7 @@ export default function ProcurementManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert(editingOrder.id ? '采购订单更新成功' : '采购订单创建成功');
+        alert(editingOrder.id  '采购订单更新成功' : '采购订单创建成功');
         setShowOrderDialog(false);
         setEditingOrder(null);
         fetchOrders();
@@ -222,15 +222,15 @@ export default function ProcurementManagementPage() {
     }
   };
 
-  // 更新订单状?
+  // 更新订单状
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     const statusText =
       {
         approved: '审批通过',
-        processing: '处理?,
-        shipped: '已发?,
-        completed: '已完?,
-        cancelled: '已取?,
+        processing: '处理,
+        shipped: '已发,
+        completed: '已完,
+        cancelled: '已取,
       }[newStatus] || newStatus;
 
     if (!confirm(`确定要将订单状态更新为"${statusText}"吗？`)) return;
@@ -248,29 +248,29 @@ export default function ProcurementManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert('状态更新成?);
+        alert('状态更新成);
         fetchOrders();
       } else {
         alert(`操作失败: ${result.error}`);
       }
     } catch (error) {
-      console.error('状态更新失?', error);
+      console.error('状态更新失', error);
       alert('操作失败');
     }
   };
 
-  // 获取状态标签样?
+  // 获取状态标签样
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
-      pending: { text: '待审?, className: 'bg-yellow-100 text-yellow-800' },
-      approved: { text: '已批?, className: 'bg-blue-100 text-blue-800' },
+      pending: { text: '待审, className: 'bg-yellow-100 text-yellow-800' },
+      approved: { text: '已批, className: 'bg-blue-100 text-blue-800' },
       processing: {
-        text: '处理?,
+        text: '处理,
         className: 'bg-indigo-100 text-indigo-800',
       },
-      shipped: { text: '已发?, className: 'bg-purple-100 text-purple-800' },
-      completed: { text: '已完?, className: 'bg-green-100 text-green-800' },
-      cancelled: { text: '已取?, className: 'bg-red-100 text-red-800' },
+      shipped: { text: '已发, className: 'bg-purple-100 text-purple-800' },
+      completed: { text: '已完, className: 'bg-green-100 text-green-800' },
+      cancelled: { text: '已取, className: 'bg-red-100 text-red-800' },
     };
 
     const config = statusMap[status] || {
@@ -286,7 +286,7 @@ export default function ProcurementManagementPage() {
     );
   };
 
-  // 格式化金?
+  // 格式化金
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('zh-CN', {
       style: 'currency',
@@ -302,14 +302,14 @@ export default function ProcurementManagementPage() {
         <p className="text-gray-600 mt-1">管理采购订单和供应商信息</p>
       </div>
 
-      {/* 标签页导?*/}
+      {/* 标签页导*/}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('orders')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'orders'
-                ? 'border-blue-500 text-blue-600'
+                 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -319,23 +319,23 @@ export default function ProcurementManagementPage() {
             onClick={() => setActiveTab('suppliers')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'suppliers'
-                ? 'border-blue-500 text-blue-600'
+                 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            供应商管?
+            供应商管
           </button>
         </nav>
       </div>
 
-      {/* 采购订单标签?*/}
+      {/* 采购订单标签*/}
       {activeTab === 'orders' && (
         <div className="space-y-6">
-          {/* 操作?*/}
+          {/* 操作*/}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex gap-2 flex-wrap">
               <Input
-                placeholder="搜索订单号或供应?.."
+                placeholder="搜索订单号或供应.."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="w-64"
@@ -346,13 +346,13 @@ export default function ProcurementManagementPage() {
                 onChange={e => setStatusFilter(e.target.value)}
                 className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">全部状?/option>
-                <option value="pending">待审?/option>
-                <option value="approved">已批?/option>
-                <option value="processing">处理?/option>
-                <option value="shipped">已发?/option>
-                <option value="completed">已完?/option>
-                <option value="cancelled">已取?/option>
+                <option value="all">全部状态/option>
+                <option value="pending">待审/option>
+                <option value="approved">已批/option>
+                <option value="processing">处理/option>
+                <option value="shipped">已发/option>
+                <option value="completed">已完/option>
+                <option value="cancelled">已取/option>
               </select>
 
               <Button onClick={handleCreateOrder}>新建订单</Button>
@@ -369,7 +369,7 @@ export default function ProcurementManagementPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>待审?/CardDescription>
+                <CardDescription>待审/CardDescription>
                 <CardTitle className="text-2xl text-yellow-600">
                   {orders.filter(o => o.status === 'pending').length}
                 </CardTitle>
@@ -378,7 +378,7 @@ export default function ProcurementManagementPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>处理?/CardDescription>
+                <CardDescription>处理/CardDescription>
                 <CardTitle className="text-2xl text-blue-600">
                   {orders.filter(o => o.status === 'processing').length}
                 </CardTitle>
@@ -387,7 +387,7 @@ export default function ProcurementManagementPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>本月采购?/CardDescription>
+                <CardDescription>本月采购/CardDescription>
                 <CardTitle className="text-2xl text-green-600">
                   {formatCurrency(
                     orders.reduce((sum, order) => sum + order.total_amount, 0)
@@ -408,10 +408,10 @@ export default function ProcurementManagementPage() {
 
           {/* 订单列表表格 */}
           <div className="bg-white shadow rounded-lg overflow-hidden">
-            {loading ? (
+            {loading  (
               <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-2 text-gray-600">加载?..</span>
+                <span className="ml-2 text-gray-600">加载中..</span>
               </div>
             ) : (
               <Table>
@@ -428,10 +428,10 @@ export default function ProcurementManagementPage() {
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     </TableHead>
-                    <TableHead>订单?/TableHead>
-                    <TableHead>供应?/TableHead>
+                    <TableHead>订单/TableHead>
+                    <TableHead>供应/TableHead>
                     <TableHead>金额</TableHead>
-                    <TableHead>状?/TableHead>
+                    <TableHead>状/TableHead>
                     <TableHead>创建时间</TableHead>
                     <TableHead>预计交付</TableHead>
                     <TableHead className="text-right">操作</TableHead>
@@ -514,12 +514,12 @@ export default function ProcurementManagementPage() {
             {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between px-4 py-3 border-t">
                 <div className="text-sm text-gray-700">
-                  显示?{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
+                  显示{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
                   {Math.min(
                     pagination.page * pagination.pageSize,
                     pagination.total
                   )}{' '}
-                  条， �?{pagination.total} 条记?
+                  条， {pagination.total} 条记
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -533,7 +533,7 @@ export default function ProcurementManagementPage() {
                     variant="outline"
                     size="sm"
                   >
-                    上一?
+                    上一
                   </Button>
                   <Button
                     onClick={() =>
@@ -546,7 +546,7 @@ export default function ProcurementManagementPage() {
                     variant="outline"
                     size="sm"
                   >
-                    下一?
+                    下一
                   </Button>
                 </div>
               </div>
@@ -559,9 +559,9 @@ export default function ProcurementManagementPage() {
       {activeTab === 'suppliers' && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">供应商管?/h2>
+            <h2 className="text-lg font-medium text-gray-900">供应商管/h2>
             <Button onClick={() => setShowSupplierDialog(true)}>
-              添加供应?
+              添加供应
             </Button>
           </div>
 
@@ -604,12 +604,12 @@ export default function ProcurementManagementPage() {
         </div>
       )}
 
-      {/* 编辑采购订单对话?*/}
+      {/* 编辑采购订单对话*/}
       <Dialog open={showOrderDialog} onOpenChange={setShowOrderDialog}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingOrder?.id ? '编辑采购订单' : '新建采购订单'}
+              {editingOrder.id  '编辑采购订单' : '新建采购订单'}
             </DialogTitle>
           </DialogHeader>
 
@@ -618,7 +618,7 @@ export default function ProcurementManagementPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    订单?
+                    订单
                   </label>
                   <Input
                     value={editingOrder.order_number}
@@ -629,7 +629,7 @@ export default function ProcurementManagementPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    供应商名?*
+                    供应商名*
                   </label>
                   <Input
                     value={editingOrder.supplier_name}
@@ -645,7 +645,7 @@ export default function ProcurementManagementPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    联系?*
+                    联系*
                   </label>
                   <Input
                     value={editingOrder.supplier_contact}
@@ -694,7 +694,7 @@ export default function ProcurementManagementPage() {
                     }
                     rows={3}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="请输入备注信?.."
+                    placeholder="请输入备注信.."
                   />
                 </div>
               </div>
@@ -706,7 +706,7 @@ export default function ProcurementManagementPage() {
               取消
             </Button>
             <Button onClick={saveOrder}>
-              {editingOrder?.id ? '保存更改' : '创建订单'}
+              {editingOrder.id  '保存更改' : '创建订单'}
             </Button>
           </DialogFooter>
         </DialogContent>

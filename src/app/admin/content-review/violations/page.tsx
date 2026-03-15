@@ -50,8 +50,8 @@ import {
 } from '@/lib/violation-management-service';
 
 interface ViolationWithDetails extends ViolationRecord {
-  userName?: string;
-  contentTitle?: string;
+  userName: string;
+  contentTitle: string;
 }
 
 const ViolationSeverityBadge: React.FC<{ severity: string }> = ({
@@ -75,11 +75,11 @@ const ViolationSeverityBadge: React.FC<{ severity: string }> = ({
   return (
     <Badge className={`${getSeverityStyle()} font-medium capitalize`}>
       {severity === 'severe'
-        ? '严重'
+         '严重'
         : severity === 'serious'
-          ? '重度'
+           '重度'
           : severity === 'moderate'
-            ? '中度'
+             '中度'
             : '轻微'}
     </Badge>
   );
@@ -102,9 +102,9 @@ const PenaltyStatusBadge: React.FC<{ status: string }> = ({ status }) => {
   return (
     <Badge className={`${getStatusStyle()} capitalize`}>
       {status === 'active'
-        ? '生效中'
+         '生效中'
         : status === 'expired'
-          ? '已过期'
+           '已过期'
           : '已解除'}
     </Badge>
   );
@@ -143,13 +143,13 @@ const ViolationListItem: React.FC<{
             <ViolationSeverityBadge severity={violation.severity} />
             <Badge variant="outline" className="text-xs capitalize">
               {violation.status === 'pending'
-                ? '待处理'
+                 '待处理'
                 : violation.status === 'processing'
-                  ? '处理中'
+                   '处理中'
                   : violation.status === 'resolved'
-                    ? '已解决'
+                     '已解决'
                     : violation.status === 'appealed'
-                      ? '申诉中'
+                       '申诉中'
                       : '已驳回'}
             </Badge>
           </div>
@@ -164,7 +164,7 @@ const ViolationListItem: React.FC<{
             <span className="flex items-center">
               <User className="w-3 h-3 mr-1" />
               {violation.userName ||
-                violation.reporterId?.substring(0, 8) ||
+                violation.reporterId.substring(0, 8) ||
                 '匿名用户'}
             </span>
             <span className="flex items-center">
@@ -220,16 +220,16 @@ const PenaltyManagementPanel: React.FC<{
                   <Badge
                     variant={
                       penalty.penaltyType === 'warning'
-                        ? 'secondary'
+                         'secondary'
                         : penalty.penaltyType === 'temporary_suspension'
-                          ? 'destructive'
+                           'destructive'
                           : 'outline'
                     }
                   >
                     {penalty.penaltyType === 'warning'
-                      ? '警告'
+                       '警告'
                       : penalty.penaltyType === 'temporary_suspension'
-                        ? '临时封禁'
+                         '临时封禁'
                         : '永久封禁'}
                   </Badge>
                   <PenaltyStatusBadge status={penalty.status} />
@@ -250,7 +250,7 @@ const PenaltyManagementPanel: React.FC<{
 
               <div className="flex items-center justify-between mt-3 pt-3 border-t">
                 <span className="text-xs text-gray-500">
-                  处理? {penalty.issuerId}
+                  处理 {penalty.issuerId}
                 </span>
                 {penalty.status === 'active' && (
                   <Button size="sm" variant="outline">
@@ -329,7 +329,7 @@ export default function ViolationManagementPage() {
           violationType: 'copyright',
           severity: 'severe',
           description: '未经授权使用受版权保护的内容',
-          evidence: ['原作品对?pdf', '侵权内容.docx'],
+          evidence: ['原作品对pdf', '侵权内容.docx'],
           detectionMethod: 'manual',
           detectedAt: Date.now() - 259200000, // 3天前
           status: 'resolved',
@@ -384,10 +384,10 @@ export default function ViolationManagementPage() {
   const filteredViolations = violations.filter(violation => {
     const matchesSearch =
       violation.contentTitle
-        ?.toLowerCase()
+        .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       violation.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      violation.userName?.toLowerCase().includes(searchTerm.toLowerCase());
+      violation.userName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType =
       typeFilter === 'all' || violation.violationType === typeFilter;
     const matchesStatus =
@@ -446,7 +446,7 @@ export default function ViolationManagementPage() {
                 onCheckedChange={setShowResolved}
               />
               <Label htmlFor="show-resolved" className="text-sm text-gray-600">
-                显示已解?              </Label>
+                显示已解              </Label>
             </div>
 
             <Button variant="outline" onClick={loadData}>
@@ -555,7 +555,7 @@ export default function ViolationManagementPage() {
                 </span>
               </CardTitle>
 
-              {/* 搜索和筛?*/}
+              {/* 搜索和筛*/}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4">
                 <div className="relative md:col-span-2">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -641,7 +641,7 @@ export default function ViolationManagementPage() {
 
         {/* 详细信息面板 */}
         <div className="lg:col-span-1">
-          {selectedViolation ? (
+          {selectedViolation  (
             <div className="space-y-6">
               {/* 违规详情 */}
               <Card>
@@ -671,9 +671,9 @@ export default function ViolationManagementPage() {
                       <Label className="text-sm font-medium">检测方式</Label>
                       <Badge variant="outline" className="capitalize">
                         {selectedViolation.detectionMethod === 'auto'
-                          ? '自动检测'
+                           '自动检测'
                           : selectedViolation.detectionMethod === 'manual'
-                            ? '人工审核'
+                             '人工审核'
                             : '用户举报'}
                       </Badge>
                     </div>
@@ -710,22 +710,22 @@ export default function ViolationManagementPage() {
                             <Badge variant="secondary">
                               {selectedViolation.resolution.action ===
                               'content_removed'
-                                ? '内容移除'
+                                 '内容移除'
                                 : selectedViolation.resolution.action ===
                                     'content_modified'
-                                  ? '内容修改'
+                                   '内容修改'
                                   : selectedViolation.resolution.action ===
                                       'account_warned'
-                                    ? '账户警告'
+                                     '账户警告'
                                     : selectedViolation.resolution.action ===
                                         'account_suspended'
-                                      ? '账户暂停'
+                                       '账户暂停'
                                       : '账户封禁'}
                             </Badge>
                           </div>
                           <div className="flex items-center">
                             <span className="text-sm text-gray-600 w-20">
-                              处理?
+                              处理
                             </span>
                             <span className="text-sm">
                               {selectedViolation.resolution.resolverId}
@@ -787,7 +787,7 @@ export default function ViolationManagementPage() {
                   选择违规记录
                 </h3>
                 <p className="text-gray-600">
-                  从左侧列表中选择一条违规记录查看详?                </p>
+                  从左侧列表中选择一条违规记录查看详                </p>
               </CardContent>
             </Card>
           )}

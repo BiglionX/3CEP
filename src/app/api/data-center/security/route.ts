@@ -5,23 +5,23 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'status';
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
 
-    // 楠岃瘉浠ょ墝锛堥櫎浜嗚璇佺浉鍏虫搷浣滐級
+    // 楠岃瘉ょ墝锛堥櫎浜嗚璇佺浉鍏虫搷浣滐級
     if (action !== 'authenticate' && action !== 'status') {
       if (!token) {
-        return NextResponse.json({ error: '缂哄皯璁块棶浠ょ墝' }, { status: 401 });
+        return NextResponse.json({ error: '缂哄皯璁块棶ょ墝' }, { status: 401 });
       }
 
       const tokenVerification = securityService.verifyToken(token);
       if (!tokenVerification.valid) {
-        return NextResponse.json({ error: '鏃犳晥鐨勮闂护? }, { status: 401 });
+        return NextResponse.json({ error: '犳晥鐨勮闂护 }, { status: 401 });
       }
     }
 
     switch (action) {
       case 'status':
-        // 鑾峰彇瀹夊叏绯荤粺鐘?        const securityStats = securityService.getSecurityStats();
+        // 鑾峰彇瀹夊叏绯荤粺鐘        const securityStats = securityService.getSecurityStats();
         return NextResponse.json({
           status: 'active',
           stats: securityStats,
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
         const permissions = securityService.getUserPermissions(userId);
         if (!permissions) {
-          return NextResponse.json({ error: '鐢ㄦ埛涓嶅瓨? }, { status: 404 });
+          return NextResponse.json({ error: '鐢ㄦ埛涓嶅 }, { status: 404 });
         }
 
         return NextResponse.json({
@@ -108,13 +108,13 @@ export async function GET(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瀹夊叏API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -150,8 +150,8 @@ export async function POST(request: NextRequest) {
           resource: 'login',
           ipAddress,
           userAgent: request.headers.get('user-agent') || 'unknown',
-          status: authResult.success ? 'success' : 'failed',
-          details: authResult.error ? { error: authResult.error } : undefined,
+          status: authResult.success  'success' : 'failed',
+          details: authResult.error  { error: authResult.error } : undefined,
         });
 
         if (authResult.success) {
@@ -172,15 +172,15 @@ export async function POST(request: NextRequest) {
       case 'mask-data':
         const token = request.headers
           .get('authorization')
-          ?.replace('Bearer ', '');
+          .replace('Bearer ', '');
         if (!token) {
-          return NextResponse.json({ error: '缂哄皯璁块棶浠ょ墝' }, { status: 401 });
+          return NextResponse.json({ error: '缂哄皯璁块棶ょ墝' }, { status: 401 });
         }
 
         const tokenVerification = securityService.verifyToken(token);
         if (!tokenVerification.valid) {
           return NextResponse.json(
-            { error: '鏃犳晥鐨勮闂护? },
+            { error: '犳晥鐨勮闂护 },
             { status: 401 }
           );
         }
@@ -204,15 +204,15 @@ export async function POST(request: NextRequest) {
       case 'batch-mask':
         const batchToken = request.headers
           .get('authorization')
-          ?.replace('Bearer ', '');
+          .replace('Bearer ', '');
         if (!batchToken) {
-          return NextResponse.json({ error: '缂哄皯璁块棶浠ょ墝' }, { status: 401 });
+          return NextResponse.json({ error: '缂哄皯璁块棶ょ墝' }, { status: 401 });
         }
 
         const batchTokenVerification = securityService.verifyToken(batchToken);
         if (!batchTokenVerification.valid) {
           return NextResponse.json(
-            { error: '鏃犳晥鐨勮闂护? },
+            { error: '犳晥鐨勮闂护 },
             { status: 401 }
           );
         }
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
         const dataArray = body.dataArray;
         if (!dataArray || !Array.isArray(dataArray)) {
           return NextResponse.json(
-            { error: '缂哄皯dataArray鍙傛暟鎴栧弬鏁颁笉鏄暟? },
+            { error: '缂哄皯dataArray鍙傛暟鎴栧弬鏁颁笉鏄暟 },
             { status: 400 }
           );
         }
@@ -241,15 +241,15 @@ export async function POST(request: NextRequest) {
       case 'access-request':
         const accessToken = request.headers
           .get('authorization')
-          ?.replace('Bearer ', '');
+          .replace('Bearer ', '');
         if (!accessToken) {
-          return NextResponse.json({ error: '缂哄皯璁块棶浠ょ墝' }, { status: 401 });
+          return NextResponse.json({ error: '缂哄皯璁块棶ょ墝' }, { status: 401 });
         }
 
         const accessVerification = securityService.verifyToken(accessToken);
         if (!accessVerification.valid) {
           return NextResponse.json(
-            { error: '鏃犳晥鐨勮闂护? },
+            { error: '犳晥鐨勮闂护 },
             { status: 401 }
           );
         }
@@ -274,9 +274,9 @@ export async function POST(request: NextRequest) {
           resource,
           ipAddress,
           userAgent: request.headers.get('user-agent') || 'unknown',
-          status: accessResult.allowed ? 'success' : 'failed',
+          status: accessResult.allowed  'success' : 'failed',
           details: accessResult.reason
-            ? { reason: accessResult.reason }
+             { reason: accessResult.reason }
             : undefined,
         });
 
@@ -291,12 +291,12 @@ export async function POST(request: NextRequest) {
         });
 
       case 'log-audit':
-        // 鎵嬪姩璁板綍瀹¤鏃ュ織锛堥€氬父鐢辩郴缁熻嚜鍔ㄨ褰曪級
+        // 鎵嬪姩璁板綍瀹¤ュ織锛堥€氬父鐢辩郴缁熻嚜鍔ㄨ褰曪級
         const auditToken = request.headers
           .get('authorization')
-          ?.replace('Bearer ', '');
+          .replace('Bearer ', '');
         if (!auditToken) {
-          return NextResponse.json({ error: '缂哄皯璁块棶浠ょ墝' }, { status: 401 });
+          return NextResponse.json({ error: '缂哄皯璁块棶ょ墝' }, { status: 401 });
         }
 
         const auditVerification = securityService.verifyToken(auditToken);
@@ -326,18 +326,18 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json({
-          message: '瀹¤鏃ュ織璁板綍鎴愬姛',
+          message: '瀹¤ュ織璁板綍鎴愬姛',
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瀹夊叏API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

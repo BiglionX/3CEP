@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'status':
-        // 鑾峰彇鏈嶅姟鐘?        const stats = autoModerationService.getStatistics();
+        // 鑾峰彇鏈嶅姟鐘        const stats = autoModerationService.getStatistics();
         return NextResponse.json({
           success: true,
           service: 'auto_moderation',
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'health':
-        // 鍋ュ悍妫€?        return NextResponse.json({
+        // 鍋ュ悍妫€        return NextResponse.json({
           success: true,
           status: 'healthy',
           service: 'auto-moderation',
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         // 楠岃瘉蹇呴渶瀛楁
         if (!content.id || !content.content || !content.authorId) {
           return NextResponse.json(
-            { success: false, error: '缂哄皯蹇呴渶鐨勫唴瀹瑰瓧? },
+            { success: false, error: '缂哄皯蹇呴渶鐨勫唴瀹瑰瓧 },
             { status: 400 }
           );
         }
@@ -250,7 +250,7 @@ export async function POST(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -259,7 +259,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -278,7 +278,7 @@ export async function PUT(request: NextRequest) {
         // 鏇存柊瀹℃牳瑙勫垯
         if (!ruleId || !updates) {
           return NextResponse.json(
-            { success: false, error: '瑙勫垯ID鍜屾洿鏂版暟鎹笉鑳戒负? },
+            { success: false, error: '瑙勫垯ID鍜屾洿鏂版暟鎹笉鑳戒负 },
             { status: 400 }
           );
         }
@@ -295,13 +295,13 @@ export async function PUT(request: NextRequest) {
           });
         } else {
           return NextResponse.json(
-            { success: false, error: '瑙勫垯涓嶅瓨? },
+            { success: false, error: '瑙勫垯涓嶅 },
             { status: 404 }
           );
         }
 
       case 'toggle_rule':
-        // 鍒囨崲瑙勫垯鍚敤鐘?        if (!ruleId) {
+        // 鍒囨崲瑙勫垯鍚敤鐘        if (!ruleId) {
           return NextResponse.json(
             { success: false, error: '瑙勫垯ID涓嶈兘涓虹┖' },
             { status: 400 }
@@ -313,7 +313,7 @@ export async function PUT(request: NextRequest) {
           .find(r => r.id === ruleId);
         if (!rule) {
           return NextResponse.json(
-            { success: false, error: '瑙勫垯涓嶅瓨? },
+            { success: false, error: '瑙勫垯涓嶅 },
             { status: 404 }
           );
         }
@@ -324,11 +324,11 @@ export async function PUT(request: NextRequest) {
 
         if (toggleSuccess) {
           logger.info(
-            `Moderation rule ${ruleId} ${rule.enabled ? 'disabled' : 'enabled'}`
+            `Moderation rule ${ruleId} ${rule.enabled  'disabled' : 'enabled'}`
           );
           return NextResponse.json({
             success: true,
-            message: `瀹℃牳瑙勫垯?{rule.enabled ? '绂佺敤' : '鍚敤'}`,
+            message: `瀹℃牳瑙勫垯{rule.enabled  '绂佺敤' : '鍚敤'}`,
             rule_id: ruleId,
             enabled: !rule.enabled,
             timestamp: new Date().toISOString(),
@@ -337,7 +337,7 @@ export async function PUT(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -346,7 +346,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -381,14 +381,14 @@ export async function DELETE(request: NextRequest) {
         });
       } else {
         return NextResponse.json(
-          { success: false, error: '瑙勫垯涓嶅瓨? },
+          { success: false, error: '瑙勫垯涓嶅 },
           { status: 404 }
         );
       }
     }
 
     return NextResponse.json(
-      { success: false, error: '鏈煡鐨勬搷浣滅被? },
+      { success: false, error: '鏈煡鐨勬搷浣滅被 },
       { status: 400 }
     );
   } catch (error: any) {
@@ -396,7 +396,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

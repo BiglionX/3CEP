@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const months = parseInt(searchParams.get('months') || '6');
 
-    // 杩斿洖鎸囧畾鏈堟暟鐨勬暟?    const resultData = mockMonthlyData.slice(-months);
+    // 杩斿洖鎸囧畾鏈堟暟鐨勬暟    const resultData = mockMonthlyData.slice(-months);
 
     return NextResponse.json({
       success: true,

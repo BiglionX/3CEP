@@ -48,7 +48,7 @@ export default function ProfileSettingsPage() {
         birthday: '1990-01-01',
         gender: 'male',
         location: '北京市朝阳区',
-        bio: '热爱科技产品的数码爱好者，专注于手机和平板设备的维修保养?,
+        bio: '热爱科技产品的数码爱好者，专注于手机和平板设备的维修保养',
         avatar: '',
       };
       setPersonalInfo(mockData);
@@ -83,7 +83,7 @@ export default function ProfileSettingsPage() {
 
   const handleSave = async () => {
     if (!validateForm()) {
-      alert('请检查表单填写是否正?);
+      alert('请检查表单填写是否正确');
       return;
     }
 
@@ -112,60 +112,61 @@ export default function ProfileSettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-64">"
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
-  return (
+  return ("
     <div className="space-y-6">
-      {/* 页面标题 */}
+      {/* 页面标题 */}"
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">账户设置</h1>
+        <div>"
+          <h1 className="text-2xl font-bold text-gray-900">账户设置</h1>"
           <p className="text-gray-600 mt-1">管理您的个人信息</p>
         </div>
-        {hasChanges && (
-          <div className="flex items-center space-x-3">
-            <Button variant="outline" onClick={handleCancel}>
+        {hasChanges && ("
+          <div className="flex items-center space-x-3">"
+            <Button variant="outline" onClick={handleCancel}>"
               <X className="w-4 h-4 mr-2" />
               取消
             </Button>
-            <Button onClick={handleSave} disabled={saving}>
+            <Button onClick={handleSave} disabled={saving}>"
               <Save className="w-4 h-4 mr-2" />
-              {saving ? '保存?..' : '保存更改'}
+              {saving  '保存中...' : '保存更改'}
             </Button>
           </div>
         )}
       </div>
-
+"
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左侧：头像上?*/}
+        {/* 左侧：头像上传 */}"
         <div className="lg:col-span-1">
           <Card>
-            <CardHeader>
+            <CardHeader>"
               <CardTitle className="text-lg">头像</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div className="relative inline-block">
+            </CardHeader>"
+            <CardContent className="text-center">"
+              <div className="relative inline-block">"
                 <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
-                  {personalInfo.avatar ? (
+                  {personalInfo.avatar  (
                     <img
-                      src={personalInfo.avatar}
-                      alt="头像"
+                      src={personalInfo.avatar}"
+                      alt="头像""
                       className="w-32 h-32 rounded-full object-cover"
                     />
-                  ) : (
+                  ) : ("
                     <User className="w-16 h-16 text-gray-400" />
                   )}
-                </div>
-                <button className="absolute bottom-4 right-4 p-2 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition-colors">
+                </div>"
+                <button className="absolute bottom-4 right-4 p-2 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition-colors">"
                   <Camera className="w-4 h-4" />
                 </button>
-              </div>
+              </div>"
               <p className="text-sm text-gray-600 mt-2">
-                点击相机图标上传新头?              </p>
+                点击相机图标上传新头像
+              </p>"
               <Button variant="outline" size="sm" className="mt-3">
                 选择文件
               </Button>
@@ -173,79 +174,79 @@ export default function ProfileSettingsPage() {
           </Card>
         </div>
 
-        {/* 右侧：个人信息表?*/}
+        {/* 右侧：个人信息表单 */}"
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader>
+            <CardHeader>"
               <CardTitle className="text-lg">基本信息</CardTitle>
-            </CardHeader>
+            </CardHeader>"
             <CardContent className="space-y-6">
-              {/* 姓名 */}
-              <div className="space-y-2">
+              {/* 姓名 */}"
+              <div className="space-y-2">"
                 <Label htmlFor="name">姓名 *</Label>
-                <Input
+                <Input"
                   id="name"
                   value={personalInfo.name}
                   onChange={e =>
                     setPersonalInfo({ ...personalInfo, name: e.target.value })
                   }
-                  className={errors.name ? 'border-red-500' : ''}
+                  className={errors.name  'border-red-500' : ''}
                 />
                 {errors.name && (
-                  <div className="flex items-center text-red-500 text-sm">
+                  <div className="flex items-center text-red-500 text-sm">"
                     <AlertCircle className="w-4 h-4 mr-1" />
                     {errors.name}
                   </div>
                 )}
               </div>
 
-              {/* 邮箱 */}
-              <div className="space-y-2">
+              {/* 邮箱 */}"
+              <div className="space-y-2">"
                 <Label htmlFor="email">邮箱 *</Label>
-                <Input
-                  id="email"
+                <Input"
+                  id="email""
                   type="email"
                   value={personalInfo.email}
                   onChange={e =>
                     setPersonalInfo({ ...personalInfo, email: e.target.value })
                   }
-                  className={errors.email ? 'border-red-500' : ''}
+                  className={errors.email  'border-red-500' : ''}
                 />
                 {errors.email && (
-                  <div className="flex items-center text-red-500 text-sm">
+                  <div className="flex items-center text-red-500 text-sm">"
                     <AlertCircle className="w-4 h-4 mr-1" />
                     {errors.email}
                   </div>
                 )}
               </div>
 
-              {/* 手机?*/}
-              <div className="space-y-2">
-                <Label htmlFor="phone">手机?/Label>
-                <Input
-                  id="phone"
+              {/* 手机号 */}"
+              <div className="space-y-2">"
+                <Label htmlFor="phone">手机号</Label>
+                <Input"
+                  id="phone""
                   type="tel"
                   value={personalInfo.phone}
                   onChange={e =>
                     setPersonalInfo({ ...personalInfo, phone: e.target.value })
                   }
-                  className={errors.phone ? 'border-red-500' : ''}
-                  placeholder="请输入手机号?
+                  className={errors.phone  'border-red-500' : ''}
+                  placeholder="请输入手机号"
                 />
-                {errors.phone && (
-                  <div className="flex items-center text-red-500 text-sm">
+                {errors.phone && ("
+                  <div className="flex items-center text-red-500 text-sm">"
                     <AlertCircle className="w-4 h-4 mr-1" />
                     {errors.phone}
                   </div>
                 )}
               </div>
 
-              {/* 生日和性别 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+              {/* 生日和性别 */}"
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">"
+                <div className="space-y-2">"
                   <Label htmlFor="birthday">生日</Label>
-                  <Input
-                    id="birthday"
+                  <Input"
+                    id="birthday""
                     type="date"
                     value={personalInfo.birthday}
                     onChange={e =>
@@ -257,9 +258,9 @@ export default function ProfileSettingsPage() {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2">"
                   <Label htmlFor="gender">性别</Label>
-                  <select
+                  <select"
                     id="gender"
                     value={personalInfo.gender}
                     onChange={e =>
@@ -269,19 +270,19 @@ export default function ProfileSettingsPage() {
                       })
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">请选择</option>
-                    <option value="male">�?/option>
-                    <option value="female">�?/option>
+                  >"
+                    <option value="">请选择</option>"
+                    <option value="male">男</option>"
+                    <option value="female">女</option>"
                     <option value="other">其他</option>
                   </select>
                 </div>
               </div>
 
-              {/* 地址 */}
-              <div className="space-y-2">
-                <Label htmlFor="location">所在地?/Label>
-                <Input
+              {/* 地址 */}"
+              <div className="space-y-2">"
+                <Label htmlFor="location">所在地</Label>
+                <Input"
                   id="location"
                   value={personalInfo.location}
                   onChange={e =>
@@ -290,43 +291,43 @@ export default function ProfileSettingsPage() {
                       location: e.target.value,
                     })
                   }
-                  placeholder="请输入所在地?
+                  placeholder="请输入所在地"
                 />
               </div>
 
-              {/* 个人简?*/}
-              <div className="space-y-2">
-                <Label htmlFor="bio">个人简?/Label>
-                <Textarea
+              {/* 个人简介 */}"
+              <div className="space-y-2">"
+                <Label htmlFor="bio">个人简介</Label>
+                <Textarea"
                   id="bio"
                   value={personalInfo.bio}
                   onChange={e =>
                     setPersonalInfo({ ...personalInfo, bio: e.target.value })
                   }
-                  placeholder="简单介绍一下自?.."
+                  placeholder="简单介绍一下自己..."
                   rows={4}
-                />
+                />"
                 <p className="text-sm text-gray-500">
                   {personalInfo.bio.length}/200 字符
                 </p>
               </div>
 
-              {/* 固定保存按钮（移动端?*/}
-              <div className="md:hidden pt-4 border-t">
+              {/* 固定保存按钮（移动端） */}"
+              <div className="md:hidden pt-4 border-t">"
                 <div className="flex space-x-3">
-                  <Button
-                    variant="outline"
+                  <Button"
+                    variant="outline""
                     className="flex-1"
                     onClick={handleCancel}
                   >
                     取消
                   </Button>
-                  <Button
+                  <Button"
                     className="flex-1"
                     onClick={handleSave}
                     disabled={saving || !hasChanges}
                   >
-                    {saving ? '保存?..' : '保存更改'}
+                    {saving  '保存中...' : '保存更改'}
                   </Button>
                 </div>
               </div>
@@ -338,3 +339,4 @@ export default function ProfileSettingsPage() {
   );
 }
 
+'"

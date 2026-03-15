@@ -22,10 +22,10 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('鏌ヨ寰呭鏍哥敵璇烽敊?', error);
+    console.error('鏌ヨ寰呭鏍哥敵璇烽敊', error);
     return NextResponse.json(
       {
-        error: '鏌ヨ寰呭鏍哥敵璇峰け?,
+        error: '鏌ヨ寰呭鏍哥敵璇峰け,
         details: (error as Error).message,
       },
       { status: 500 }

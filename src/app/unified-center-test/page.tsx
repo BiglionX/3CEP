@@ -7,10 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserSidebarNavigation from '@/components/user/UserSidebarNavigation';
 import DynamicModuleMenu from '@/components/user/DynamicModuleMenu';
 import {
-  moduleRegistry,
   getAllModules,
   getModulesByCategory,
-  getModulesByPermissions,
+  type ModuleConfig,
 } from '@/lib/module-registry';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 
@@ -36,7 +35,8 @@ export default function UnifiedCenterTestPage() {
               </h1>
               {is_admin && (
                 <span className="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                  管理员模?                </span>
+                  管理员模式
+                </span>
               )}
             </div>
             <div className="flex items-center space-x-4">
@@ -49,14 +49,14 @@ export default function UnifiedCenterTestPage() {
       </header>
 
       <div className="flex">
-        {/* 侧边栏导?*/}
+        {/* 侧边栏导航 */}
         <UserSidebarNavigation />
 
         {/* 主内容区 */}
         <main className="flex-1">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              {/* 标签页导?*/}
+              {/* 标签页导航 */}
               <Tabs
                 value={activeTab}
                 onValueChange={setActiveTab}
@@ -69,14 +69,15 @@ export default function UnifiedCenterTestPage() {
                   <TabsTrigger value="settings">设置</TabsTrigger>
                 </TabsList>
 
-                {/* 概览标签?*/}
+                {/* 概览标签页 */}
                 <TabsContent value="overview" className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
                       统一用户中心概览
                     </h2>
                     <p className="text-gray-600">
-                      查看当前用户中心的各项功能和模块状?                    </p>
+                      查看当前用户中心的各项功能和模块状态
+                    </p>
                   </div>
 
                   {/* 统计卡片 */}
@@ -92,7 +93,8 @@ export default function UnifiedCenterTestPage() {
                           {allModules.length}
                         </div>
                         <p className="text-xs text-gray-500">
-                          所有可用功能模?                        </p>
+                          所有可用功能模块
+                        </p>
                       </CardContent>
                     </Card>
 
@@ -151,7 +153,7 @@ export default function UnifiedCenterTestPage() {
                             业务功能模块
                           </h3>
                           <ul className="space-y-2">
-                            {businessModules.slice(0, 5).map(module => (
+                            {businessModules.slice(0, 5).map((module: ModuleConfig) => (
                               <li
                                 key={module.id}
                                 className="flex items-center justify-between text-sm"
@@ -172,7 +174,7 @@ export default function UnifiedCenterTestPage() {
                             管理功能模块
                           </h3>
                           <ul className="space-y-2">
-                            {managementModules.slice(0, 5).map(module => (
+                            {managementModules.slice(0, 5).map((module: ModuleConfig) => (
                               <li
                                 key={module.id}
                                 className="flex items-center justify-between text-sm"
@@ -192,7 +194,7 @@ export default function UnifiedCenterTestPage() {
                   </Card>
                 </TabsContent>
 
-                {/* 模块管理标签?*/}
+                {/* 模块管理标签页 */}
                 <TabsContent value="modules" className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -205,7 +207,7 @@ export default function UnifiedCenterTestPage() {
 
                   <Card>
                     <CardHeader>
-                      <CardTitle>动态模块菜单测?/CardTitle>
+                      <CardTitle>动态模块菜单测试</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="border rounded-lg p-4">
@@ -219,7 +221,7 @@ export default function UnifiedCenterTestPage() {
                   </Card>
                 </TabsContent>
 
-                {/* 导航测试标签?*/}
+                {/* 导航测试标签页 */}
                 <TabsContent value="navigation" className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -263,13 +265,13 @@ export default function UnifiedCenterTestPage() {
                   </div>
                 </TabsContent>
 
-                {/* 设置标签?*/}
+                {/* 设置标签页 */}
                 <TabsContent value="settings" className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
                       系统设置
                     </h2>
-                    <p className="text-gray-600">统一用户中心的相关配?/p>
+                    <p className="text-gray-600">统一用户中心的相关配置</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -280,15 +282,16 @@ export default function UnifiedCenterTestPage() {
                       <CardContent className="space-y-4">
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">
-                            管理员权?                          </span>
+                            管理员权限
+                          </span>
                           <span
                             className={`px-2 py-1 rounded text-xs font-medium ${
                               is_admin
-                                ? 'bg-red-100 text-red-800'
+                                 'bg-red-100 text-red-800'
                                 : 'bg-gray-100 text-gray-800'
                             }`}
                           >
-                            {is_admin ? '已启? : '未启?}
+                            {is_admin  '已启用' : '未启用'}
                           </span>
                         </div>
 
@@ -297,7 +300,8 @@ export default function UnifiedCenterTestPage() {
                             模块访问控制
                           </span>
                           <span className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
-                            已启?                          </span>
+                            已启用
+                          </span>
                         </div>
                       </CardContent>
                     </Card>
@@ -316,7 +320,7 @@ export default function UnifiedCenterTestPage() {
                         <div className="flex justify-between">
                           <span className="text-gray-600">启用模块:</span>
                           <span className="font-medium">
-                            {allModules.filter(m => m.enabled).length}
+                            {allModules.filter((m: ModuleConfig) => m.enabled).length}
                           </span>
                         </div>
                         <div className="flex justify-between">
@@ -335,4 +339,3 @@ export default function UnifiedCenterTestPage() {
     </div>
   );
 }
-

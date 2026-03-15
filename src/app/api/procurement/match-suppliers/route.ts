@@ -1,5 +1,5 @@
 ﻿/**
- * 渚涘簲鍟嗗尮閰岮PI璺敱澶勭悊? * 鎻愪緵 /api/procurement/match-suppliers 鎺ュ彛
+ * 渚涘簲鍟嗗尮閰岮PI璺敱澶勭悊 * 鎻愪緵 /api/procurement/match-suppliers 鎺ュ彛
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -23,12 +23,12 @@ import { VectorRetrievalService } from '@/b2b-procurement-agent/services/vector-
 let supplierMatchingService: SupplierMatchingService | null = null;
 
 /**
- * 鍒濆鍖栨湇? */
+ * 鍒濆鍖栨湇 */
 async function initializeServices(): Promise<void> {
   if (supplierMatchingService) return;
 
   try {
-    // 鍚戦噺鏁版嵁搴撻厤?    const vectorDbConfig = {
+    // 鍚戦噺鏁版嵁搴撻厤    const vectorDbConfig = {
       type:
         (process.env.VECTOR_DB_TYPE as VectorDbType) || VectorDbType.PINECONE,
       apiKey:
@@ -75,22 +75,22 @@ async function initializeServices(): Promise<void> {
  */
 export async function POST(request: NextRequest) {
   try {
-    // 鍒濆鍖栨湇?    await initializeServices();
+    // 鍒濆鍖栨湇    await initializeServices();
 
-    // 瑙ｆ瀽璇锋眰?    const requestBody = await request.json();
+    // 瑙ｆ瀽璇眰    const requestBody = await request.json();
 
     // 楠岃瘉蹇呴渶瀛楁
     if (!requestBody.procurementRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: '缂哄皯閲囪喘闇€姹傚弬?,
+          error: '缂哄皯閲囪喘闇€姹傚弬,
         },
         { status: 400 }
       );
     }
 
-    // 鏋勫缓鍖归厤璇锋眰
+    // 鏋勫缓鍖归厤璇眰
     const matchRequest: MatchSuppliersRequest = {
       requestId:
         requestBody.requestId ||
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       excludeSuppliers: requestBody.excludeSuppliers || [],
     };
 
-    console.log(`鏀跺埌渚涘簲鍟嗗尮閰嶈? ${matchRequest.requestId}`);
+    console.log(`鏀跺埌渚涘簲鍟嗗尮閰嶈 ${matchRequest.requestId}`);
 
     // 鎵ц鍖归厤
     const result = await supplierMatchingService!.matchSuppliers(matchRequest);
@@ -121,9 +121,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '渚涘簲鍟嗗尮閰嶅け?,
+        error: error.message || '渚涘簲鍟嗗尮閰嶅け,
         details:
-          process.env.NODE_ENV === 'development' ? error.stack : undefined,
+          process.env.NODE_ENV === 'development'  error.stack : undefined,
       },
       { status: 500 }
     );
@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'health':
-        // 鍋ュ悍妫€?        return NextResponse.json({
+        // 鍋ュ悍妫€        return NextResponse.json({
           success: true,
           data: {
             status: 'healthy',
@@ -170,22 +170,22 @@ export async function GET(request: NextRequest) {
             name: '渚涘簲鍟嗘櫤鑳藉尮閰岮PI',
             version: '1.0.0',
             endpoints: {
-              'POST /api/procurement/match-suppliers': '鍖归厤渚涘簲?,
-              'GET /api/procurement/match-suppliers?action=statistics':
+              'POST /api/procurement/match-suppliers': '鍖归厤渚涘簲,
+              'GET /api/procurement/match-suppliersaction=statistics':
                 '鑾峰彇缁熻淇℃伅',
-              'GET /api/procurement/match-suppliers?action=health': '鍋ュ悍妫€?,
+              'GET /api/procurement/match-suppliersaction=health': '鍋ュ悍妫€,
             },
-            description: '鍩轰簬鍚戦噺妫€绱㈠拰澶氬洜瀛愯瘎鍒嗙殑鏅鸿兘渚涘簲鍟嗗尮閰嶇郴?,
+            description: '鍩轰簬鍚戦噺妫€绱㈠拰澶氬洜瀛愯瘎鍒嗙殑鏅鸿兘渚涘簲鍟嗗尮閰嶇郴,
           },
         });
     }
   } catch (error: any) {
-    console.error('渚涘簲鍟嗗尮閰岮PI鐘舵€佹鏌ラ敊?', error);
+    console.error('渚涘簲鍟嗗尮閰岮PI鐘舵€佹鏌ラ敊', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鏈嶅姟鐘舵€佹鏌ュけ?,
+        error: error.message || '鏈嶅姟鐘舵€佹鏌ュけ,
       },
       { status: 500 }
     );
@@ -193,7 +193,7 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * 鏋勫缓瑙ｆ瀽鍚庣殑閲囪喘闇€姹傚? */
+ * 鏋勫缓瑙ｆ瀽鍚庣殑閲囪喘闇€姹傚 */
 function buildParsedProcurementRequest(
   rawRequest: any
 ): ParsedProcurementRequest {
@@ -208,9 +208,9 @@ function buildParsedProcurementRequest(
       id: item.id || `item_${index}`,
       productId: item.productId || `prod_${index}`,
       productName: item.productName || `浜у搧${index + 1}`,
-      category: item.category || '閫氱敤鍟嗗搧',
+      category: item.category || '氱敤鍟嗗搧',
       quantity: item.quantity || 1,
-      unit: item.unit || '锟?,
+      unit: item.unit || ',
       specifications: item.specifications,
       requiredQuality: item.requiredQuality,
       estimatedUnitPrice: item.estimatedUnitPrice,
@@ -218,7 +218,7 @@ function buildParsedProcurementRequest(
     })
   );
 
-  // 鏋勫缓閲囪喘闇€姹傚?  const procurementRequest: ParsedProcurementRequest = {
+  // 鏋勫缓閲囪喘闇€姹傚  const procurementRequest: ParsedProcurementRequest = {
     id: rawRequest.id || `pr_${Date.now()}`,
     rawRequestId: rawRequest.rawRequestId || `raw_${Date.now()}`,
     companyId: rawRequest.companyId || 'default_company',
@@ -228,7 +228,7 @@ function buildParsedProcurementRequest(
     urgency: rawRequest.urgency || UrgencyLevel.MEDIUM,
     budgetRange: rawRequest.budgetRange,
     deliveryDeadline: rawRequest.deliveryDeadline
-      ? new Date(rawRequest.deliveryDeadline)
+       new Date(rawRequest.deliveryDeadline)
       : undefined,
     deliveryLocation: rawRequest.deliveryLocation,
     specialRequirements: rawRequest.specialRequirements,
@@ -247,7 +247,7 @@ function buildParsedProcurementRequest(
 
 /**
  * PUT /api/procurement/match-suppliers/suppliers
- * 鎵归噺鏇存柊渚涘簲鍟嗗悜閲忕储? */
+ * 鎵归噺鏇存柊渚涘簲鍟嗗悜閲忕储 */
 export async function PUT(request: NextRequest) {
   try {
     await initializeServices();
@@ -258,7 +258,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: '蹇呴』鎻愪緵渚涘簲鍟嗘暟?,
+          error: '蹇呴』鎻愪緵渚涘簲鍟嗘暟,
         },
         { status: 400 }
       );
@@ -271,7 +271,7 @@ export async function PUT(request: NextRequest) {
       message: `鎴愬姛鏇存柊 ${suppliers.length} 涓緵搴斿晢鍚戦噺`,
     });
   } catch (error: any) {
-    console.error('鎵归噺鏇存柊渚涘簲鍟嗗悜閲忓け?', error);
+    console.error('鎵归噺鏇存柊渚涘簲鍟嗗悜閲忓け', error);
 
     return NextResponse.json(
       {

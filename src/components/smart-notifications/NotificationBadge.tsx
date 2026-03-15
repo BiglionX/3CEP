@@ -6,6 +6,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { Bell, X, XCircle, AlertTriangle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +24,7 @@ export function NotificationBadge({
   maxCount = 99,
   position = 'top-right',
   className = '',
-}: NotificationBadgeProps) {
+}: NotificationBadgeProps): ReactNode {
   const { unreadCount, notifications, markAsRead, settings, updateSettings } =
     useNotifications();
 

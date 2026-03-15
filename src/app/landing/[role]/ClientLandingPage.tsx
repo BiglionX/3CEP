@@ -51,15 +51,15 @@ export default function ClientLandingPage({ role }: { role: string }) {
         <div>
           <SeoHead
             title={
-              SEO_PRESETS[role as keyof typeof SEO_PRESETS]?.title ||
+              SEO_PRESETS[role as keyof typeof SEO_PRESETS].title ||
               `FixCycle ${role}解决方案`
             }
             description={
-              SEO_PRESETS[role as keyof typeof SEO_PRESETS]?.description ||
+              SEO_PRESETS[role as keyof typeof SEO_PRESETS].description ||
               '专业的企业自动化解决方案'
             }
             keywords={
-              SEO_PRESETS[role as keyof typeof SEO_PRESETS]?.keywords ||
+              SEO_PRESETS[role as keyof typeof SEO_PRESETS].keywords ||
               '企业自动化'
             }
           />

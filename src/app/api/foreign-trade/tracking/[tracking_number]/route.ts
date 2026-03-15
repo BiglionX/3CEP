@@ -180,10 +180,10 @@ export async function POST(request: Request) {
           status,
           updated_at: new Date().toISOString(),
           ...((status === 'in_transit' && !shipment.actual_departure
-            ? ({ actual_departure: new Date().toISOString() } as any)
+             ({ actual_departure: new Date().toISOString() } as any)
             : {}) as any),
           ...(status === 'delivered' && !shipment.actual_arrival
-            ? { actual_arrival: new Date().toISOString() }
+             { actual_arrival: new Date().toISOString() }
             : {}),
         })
         .eq('id', shipment_id);

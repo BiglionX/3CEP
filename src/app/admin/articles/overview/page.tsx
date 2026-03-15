@@ -71,11 +71,11 @@ export default function ArticlesOverviewPage() {
       setLoading(true);
       const params = new URLSearchParams({
         search: searchTerm,
-        status: statusFilter === 'all' ? '' : statusFilter,
+        status: statusFilter === 'all'  '' : statusFilter,
         sortBy,
       });
 
-      const response = await fetch(`/api/admin/articles?${params.toString()}`);
+      const response = await fetch(`/api/admin/articles${params.toString()}`);
       const result = await response.json();
 
       if (response.ok) {
@@ -146,12 +146,12 @@ export default function ArticlesOverviewPage() {
 
   return (
     <div className="p-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按*/}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">文章管理</h1>
           <p className="mt-1 text-sm text-gray-500">
-            管理和维护平台的所有文章内?{' '}
+            管理和维护平台的所有文章内{' '}
           </p>
         </div>
         <div className="mt-4 sm:mt-0">
@@ -198,7 +198,7 @@ export default function ArticlesOverviewPage() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">
-                    已发?{' '}
+                    已发{' '}
                   </dt>
                   <dd className="flex items-baseline">
                     <div className="text-2xl font-semibold text-gray-900">
@@ -260,7 +260,7 @@ export default function ArticlesOverviewPage() {
       <div className="bg-white shadow rounded-lg mb-6">
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* 搜索?*/}
+            {/* 搜索*/}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -274,7 +274,7 @@ export default function ArticlesOverviewPage() {
               />
             </div>
 
-            {/* 状态筛?*/}
+            {/* 状态筛*/}
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
@@ -304,7 +304,7 @@ export default function ArticlesOverviewPage() {
       {/* 文章列表 */}
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
         <ul className="divide-y divide-gray-200">
-          {articles.length === 0 ? (
+          {articles.length === 0  (
             <li className="px-6 py-12 text-center">
               <div className="text-gray-400">
                 <Edit3 className="mx-auto h-12 w-12" />
@@ -343,10 +343,10 @@ export default function ArticlesOverviewPage() {
                         {article.summary || '暂无摘要'}
                       </p>
                       <div className="mt-2 flex items-center text-xs text-gray-500">
-                        <span>{article?.authors?.name || '未知作者'}</span>
+                        <span>{article.authors.name || '未知作者'}</span>
                         <span className="mx-2">•</span>
                         <span>
-                          {article?.article_categories?.name || '未分类'}
+                          {article.article_categories.name || '未分类'}
                         </span>
                         <span className="mx-2">•</span>
                         <span>创建于 {formatDate(article.created_at)}</span>
@@ -364,11 +364,11 @@ export default function ArticlesOverviewPage() {
                         {article.view_count}
                       </div>
                       <div className="flex items-center text-sm text-gray-500">
-                        <span className="mr-1">??</span>
+                        <span className="mr-1"></span>
                         {article.like_count}
                       </div>
                       <div className="flex items-center text-sm text-gray-500">
-                        ?? {article.comment_count}
+                         {article.comment_count}
                       </div>
                       <div className="flex space-x-1">
                         <Link

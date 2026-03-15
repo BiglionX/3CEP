@@ -46,7 +46,7 @@ export default function LinkLibraryManagementPage() {
         sortOrder: filters.sortOrder,
       });
 
-      const response = await fetch(`/api/links/priority?${params}`);
+      const response = await fetch(`/api/links/priority${params}`);
       const result = await response.json();
 
       if (result.links) {
@@ -59,11 +59,11 @@ export default function LinkLibraryManagementPage() {
     }
   };
 
-  // 页面加载时获取数?  useEffect(() => {
+  // 页面加载时获取数  useEffect(() => {
     fetchLinks();
   }, [filters]);
 
-  // 处理全?  const handleSelectAll = (checked: boolean) => {
+  // 处理全  const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(links.map(link => link.id));
     } else {
@@ -80,7 +80,7 @@ export default function LinkLibraryManagementPage() {
     }
   };
 
-  // 批量更新优先?  const handleBulkPriorityUpdate = async () => {
+  // 批量更新优先  const handleBulkPriorityUpdate = async () => {
     if (selectedIds.length === 0) {
       alert('请先选择要更新的链接');
       return;
@@ -115,7 +115,7 @@ export default function LinkLibraryManagementPage() {
     }
   };
 
-  // 自动调整优先?  const handleAutoAdjust = async () => {
+  // 自动调整优先  const handleAutoAdjust = async () => {
     try {
       const response = await fetch('/api/links/priority/auto-adjust', {
         method: 'POST',
@@ -140,7 +140,7 @@ export default function LinkLibraryManagementPage() {
     }
   };
 
-  // 格式化日?  const formatDate = (dateString: string) => {
+  // 格式化日  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-CN');
   };
 
@@ -156,7 +156,7 @@ export default function LinkLibraryManagementPage() {
     <div className="container mx-auto px-4 py-8">
       {/* 页面头部 */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">链接库管?/h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">链接库管/h1>
         <p className="text-gray-600">管理链接优先级和内容审核</p>
       </div>
 
@@ -165,23 +165,23 @@ export default function LinkLibraryManagementPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              状态筛?            </label>
+              状态筛            </label>
             <select
               value={filters.status}
               onChange={e => setFilters({ ...filters, status: e.target.value })}
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             >
-              <option value="">全部状?/option>
+              <option value="">全部状态/option>
               <option value="active">活跃</option>
-              <option value="inactive">非活?/option>
-              <option value="pending_review">待审?/option>
-              <option value="rejected">已驳?/option>
+              <option value="inactive">非活/option>
+              <option value="pending_review">待审/option>
+              <option value="rejected">已驳/option>
             </select>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              分类筛?            </label>
+              分类筛            </label>
             <select
               value={filters.category}
               onChange={e =>
@@ -191,7 +191,7 @@ export default function LinkLibraryManagementPage() {
             >
               <option value="">全部分类</option>
               <option value="维修教程">维修教程</option>
-              <option value="技术分?>技术分?/option>
+              <option value="技术分>技术分/option>
               <option value="行业资讯">行业资讯</option>
               <option value="工具推荐">工具推荐</option>
               <option value="案例分析">案例分析</option>
@@ -207,10 +207,10 @@ export default function LinkLibraryManagementPage() {
               onChange={e => setFilters({ ...filters, sortBy: e.target.value })}
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             >
-              <option value="priority">优先?/option>
+              <option value="priority">优先/option>
               <option value="created_at">创建时间</option>
-              <option value="views">浏览?/option>
-              <option value="likes">点赞?/option>
+              <option value="views">浏览/option>
+              <option value="likes">点赞/option>
             </select>
           </div>
 
@@ -237,7 +237,7 @@ export default function LinkLibraryManagementPage() {
             onClick={() => setShowAutoAdjustModal(true)}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
           >
-            自动调整优先?          </button>
+            自动调整优先          </button>
 
           {selectedIds.length > 0 && (
             <div className="flex items-center gap-2">
@@ -253,7 +253,7 @@ export default function LinkLibraryManagementPage() {
                 onClick={handleBulkPriorityUpdate}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               >
-                批量更新 ({selectedIds.length}�?
+                批量更新 ({selectedIds.length}
               </button>
             </div>
           )}
@@ -286,12 +286,12 @@ export default function LinkLibraryManagementPage() {
                   分类
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  优先?                </th>
+                  优先                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   互动数据
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  状?                </th>
+                  状                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   创建时间
                 </th>
@@ -336,11 +336,11 @@ export default function LinkLibraryManagementPage() {
                       <span
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           link.priority >= 80
-                            ? 'bg-red-100 text-red-800'
+                             'bg-red-100 text-red-800'
                             : link.priority >= 60
-                              ? 'bg-yellow-100 text-yellow-800'
+                               'bg-yellow-100 text-yellow-800'
                               : link.priority >= 40
-                                ? 'bg-blue-100 text-blue-800'
+                                 'bg-blue-100 text-blue-800'
                                 : 'bg-gray-100 text-gray-800'
                         }`}
                       >
@@ -354,26 +354,26 @@ export default function LinkLibraryManagementPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div>👁�?{link.views}</div>
+                    <div>👁{link.views}</div>
                     <div>👍 {link.likes}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         link.status === 'active'
-                          ? 'bg-green-100 text-green-800'
+                           'bg-green-100 text-green-800'
                           : link.status === 'pending_review'
-                            ? 'bg-yellow-100 text-yellow-800'
+                             'bg-yellow-100 text-yellow-800'
                             : 'bg-red-100 text-red-800'
                       }`}
                     >
                       {link.status === 'active'
-                        ? '活跃'
+                         '活跃'
                         : link.status === 'pending_review'
-                          ? '待审?
+                           '待审
                           : link.status === 'rejected'
-                            ? '已驳?
-                            : '非活?}
+                             '已驳
+                            : '非活}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -387,7 +387,7 @@ export default function LinkLibraryManagementPage() {
 
         {links.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-gray-500">暂无符合条件的链?/div>
+            <div className="text-gray-500">暂无符合条件的链/div>
           </div>
         )}
       </div>
@@ -396,7 +396,7 @@ export default function LinkLibraryManagementPage() {
       {showAutoAdjustModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">自动调整优先?/h3>
+            <h3 className="text-lg font-semibold mb-4">自动调整优先/h3>
 
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">

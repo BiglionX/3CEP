@@ -14,13 +14,13 @@ const mockContents = [
     likes: 89,
     created_at: '2024-01-15T10:30:00Z',
     updated_at: '2024-02-20T14:22:00Z',
-    content: '鏈暀绋嬪皢涓烘偍璇︾粏浠嬬粛鎵嬫満缁翠慨鐨勫熀纭€鐭ヨ瘑...',
+    content: '鏈暀绋嬪皢涓烘偍璇︾粏嬬粛鎵嬫満缁翠慨鐨勫熀纭€鐭ヨ瘑...',
   },
   {
     id: 'content_002',
-    title: '2024骞存暟鐮佷骇鍝佺淮淇涓氳秼鍔垮垎?,
+    title: '2024骞存暟鐮佷骇鍝佺淮淇涓氳秼鍔垮垎,
     type: 'article',
-    author: '甯傚満?,
+    author: '甯傚満,
     status: 'published',
     category: '琛屼笟鍒嗘瀽',
     tags: ['琛屼笟瓒嬪娍', '甯傚満鍒嗘瀽', '2024'],
@@ -28,13 +28,13 @@ const mockContents = [
     likes: 67,
     created_at: '2024-01-20T09:15:00Z',
     updated_at: '2024-02-18T16:45:00Z',
-    content: '闅忕潃绉戞妧鐨勫彂灞曪紝鏁扮爜浜у搧缁翠慨琛屼笟姝ｉ潰涓存柊鐨勬満閬囧拰鎸戞垬...',
+    content: '闅忕潃绉戞妧鐨勫彂灞曪紝鏁扮爜浜у搧缁翠慨琛屼笟姝ｉ潰涓存柊鐨勬満囧拰鎸戞垬...',
   },
   {
     id: 'content_003',
     title: '甯歌鎵嬫満鏁呴殰鎺掓煡鎸囧崡',
     type: 'faq',
-    author: '瀹㈡湇?,
+    author: '瀹㈡湇,
     status: 'draft',
     category: '鏁呴殰鎺掗櫎',
     tags: ['鏁呴殰鎺掓煡', '鎵嬫満闂', '鑷姪缁翠慨'],
@@ -42,13 +42,13 @@ const mockContents = [
     likes: 0,
     created_at: '2024-02-01T11:20:00Z',
     updated_at: '2024-02-25T09:30:00Z',
-    content: 'Q: 鎵嬫満鏃犳硶寮€鏈烘€庝箞鍔烇紵\nA: 璇峰厛妫€鏌ョ數姹犵數?..',
+    content: 'Q: 鎵嬫満犳硶寮€鏈烘€庝箞鍔烇紵\nA: 璇峰厛妫€鏌ョ數姹犵數..',
   },
   {
     id: 'content_004',
     title: '鏈€鏂癷Phone缁翠慨鏀跨瓥瑙ｈ',
     type: 'news',
-    author: '娉曞姟?,
+    author: '娉曞姟,
     status: 'published',
     category: '鏀跨瓥娉曡',
     tags: ['鑻规灉', '缁翠慨鏀跨瓥', '娉曞緥瑙ｈ'],
@@ -56,21 +56,21 @@ const mockContents = [
     likes: 156,
     created_at: '2024-01-10T08:45:00Z',
     updated_at: '2024-02-22T13:15:00Z',
-    content: '鑻规灉鍏徃杩戞湡鍙戝竷浜嗘柊鐨勭淮淇斂绛栵紝瀵规秷璐硅€呭拰缁翠慨鍟嗛兘鏈夐噸瑕佸奖?..',
+    content: '鑻规灉鍏徃杩戞湡鍙戝竷浜嗘柊鐨勭淮淇斂绛栵紝瀵规秷璐硅€呭拰缁翠慨鍟嗛兘鏈夐噸瑕佸奖..',
   },
   {
     id: 'content_005',
-    title: '绗旇鏈數鑴戝睆骞曟洿鎹㈡暀?,
+    title: '绗旇鏈數鑴戝睆骞曟洿鎹㈡暀,
     type: 'tutorial',
     author: '鎶€鏈儴',
     status: 'archived',
     category: '缁翠慨鏁欑▼',
-    tags: ['绗旇?, '灞忓箷鏇存崲', '纭欢缁翠慨'],
+    tags: ['绗旇, '灞忓箷鏇存崲', '纭欢缁翠慨'],
     views: 650,
     likes: 42,
     created_at: '2024-02-10T14:30:00Z',
     updated_at: '2024-02-28T11:20:00Z',
-    content: '鏈暀绋嬪皢鎸囧鎮ㄥ浣曞畨鍏ㄥ湴鏇存崲绗旇鏈數鑴戝睆?..',
+    content: '鏈暀绋嬪皢鎸囧鎮ㄥ浣曞畨鍏ㄥ湴鏇存崲绗旇鏈數鑴戝睆..',
   },
 ];
 
@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 鐘舵€佽繃?    if (status && status !== 'all') {
+    // 鐘舵€佽繃    if (status && status !== 'all') {
       filteredContents = filteredContents.filter(
         content => content.status === status
       );
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
     // 鐢熸垚鏂癐D
     const newId = `content_${String(mockContents.length + 1).padStart(3, '0')}`;
 
-    // 鍒涘缓鏂板唴?    const newContent = {
+    // 鍒涘缓鏂板唴    const newContent = {
       id: newId,
       ...body,
       created_at: new Date().toISOString(),

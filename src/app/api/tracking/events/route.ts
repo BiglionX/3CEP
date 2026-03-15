@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -13,7 +13,7 @@ interface TrackingEvent {
   eventId: string;
   eventType: string;
   timestamp: string;
-  userId?: string;
+  userId: string;
   sessionId: string;
   pageContext: {
     pageName: string;
@@ -36,7 +36,7 @@ interface TrackingEvent {
     collectedAt: string;
     processingTime: number;
     isValid: boolean;
-    validationErrors?: string[];
+    validationErrors: string[];
   };
 }
 
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // 楠岃瘉璇锋眰鏁版嵁
+    // 楠岃瘉璇眰鏁版嵁
     if (!body.appId || !body.events || !Array.isArray(body.events)) {
       return NextResponse.json(
         { error: 'Invalid request format' },
@@ -62,17 +62,17 @@ export async function POST(request: NextRequest) {
       event_type: event.eventType,
       timestamp: event.timestamp,
       user_id: event.userId,
-      page_name: event?.pageName,
-      page_path: event?.pagePath,
-      referrer: event?.referrer,
-      url: event?.url,
-      title: event?.title,
-      user_agent: event?.userAgent,
-      screen_width: event?.screenWidth,
-      screen_height: event?.screenHeight,
-      device_type: event?.deviceType,
-      browser: event?.browser,
-      os: event?.os,
+      page_name: event.pageName,
+      page_path: event.pagePath,
+      referrer: event.referrer,
+      url: event.url,
+      title: event.title,
+      user_agent: event.userAgent,
+      screen_width: event.screenWidth,
+      screen_height: event.screenHeight,
+      device_type: event.deviceType,
+      browser: event.browser,
+      os: event.os,
       event_data: event.eventData,
       metadata: event.metadata,
       created_at: new Date().toISOString(),
@@ -152,7 +152,7 @@ export async function GET(request: NextRequest) {
 
     // 璁＄畻缁熻淇℃伅
     const stats = {
-      totalEvents: (data as any)?.length || 0,
+      totalEvents: (data as any).length || 0,
       eventTypeDistribution: {} as Record<string, number>,
       deviceTypeDistribution: {} as Record<string, number>,
       pageViews: 0,
@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
           stats.pageViews++;
         }
 
-        // 鍞竴鐢ㄦ埛鍜屼細璇濈粺?        if (event.user_id) users.add(event.user_id);
+        // 鍞竴鐢ㄦ埛鍜屼細璇濈粺        if (event.user_id) users.add(event.user_id);
         if (event.session_id) sessions.add(event.session_id);
       });
 

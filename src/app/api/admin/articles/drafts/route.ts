@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     // 楠岃瘉蹇呰鍙傛暟
     if (!title || !content) {
       return NextResponse.json(
-        { error: '鏍囬鍜屽唴瀹逛笉鑳戒负? },
+        { error: '鏍囬鍜屽唴瀹逛笉鑳戒负 },
         { status: 400 }
       );
     }
@@ -25,12 +25,12 @@ export async function POST(request: Request) {
     const session = cookieStore.get('supabase-auth-token');
 
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const userId = JSON.parse(session.value).user.id;
 
-    // 鏌ユ壘瀵瑰簲鐨勫垎?    let categoryId = null;
+    // 鏌ユ壘瀵瑰簲鐨勫垎    let categoryId = null;
     if (category) {
       const { data: categoryData } = await supabase
         .from('article_categories')
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         .eq('name', category)
         .single();
 
-      categoryId = categoryData?.id || null;
+      categoryId = categoryData.id || null;
     }
 
     // 鍒涘缓鑽夌鏂囩珷
@@ -47,8 +47,8 @@ export async function POST(request: Request) {
       .insert({
         title: title.trim(),
         content: content.trim(),
-        summary: summary?.trim() || '',
-        cover_image_url: coverImageUrl?.trim() || null,
+        summary: summary.trim() || '',
+        cover_image_url: coverImageUrl.trim() || null,
         author_id: userId,
         status: 'draft',
         tags: tags || [],
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 濡傛灉鏈夊叧鑱旂殑閾炬帴锛屾洿鏂伴摼鎺ョ姸?    if (linkId) {
+    // 濡傛灉鏈夊叧鑱旂殑炬帴锛屾洿鏂伴摼鎺ョ姸    if (linkId) {
       await supabase
         .from('hot_link_pool')
         .update({
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('鍒涘缓鑽夌寮傚父:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -115,7 +115,7 @@ export async function GET() {
   } catch (error) {
     console.error('鑾峰彇鍒嗙被寮傚父:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
       { status: 500 }
     );
   }

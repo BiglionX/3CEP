@@ -1,12 +1,12 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 鏅鸿兘浣撶姸鎬佹帴?interface AgentStatus {
+// 鏅鸿兘浣撶姸鎬佹帴interface AgentStatus {
   name: string;
   status: 'online' | 'offline' | 'degraded';
   last_heartbeat: string;
@@ -25,17 +25,17 @@ import { createClient } from '@supabase/supabase-js';
 
 /**
  * GET /api/agents/status
- * 鑾峰彇鎵€鏈夋櫤鑳戒綋鐘? */
+ * 鑾峰彇鎵€鏈夋櫤鑳戒綋鐘 */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const agentName = searchParams.get('agentName');
 
-    // 濡傛灉鎸囧畾浜嗙壒瀹氭櫤鑳戒綋锛岃繑鍥炶鏅鸿兘浣撶姸?    if (agentName) {
+    // 濡傛灉鎸囧畾浜嗙壒瀹氭櫤鑳戒綋锛岃繑鍥炶鏅鸿兘浣撶姸    if (agentName) {
       const status = await getAgentStatus(agentName);
       if (!status) {
         return NextResponse.json(
-          { error: '鏅鸿兘浣撲笉瀛樺湪鎴栨棤鐘舵€佷俊? },
+          { error: '鏅鸿兘浣撲笉瀛樺湪鎴栨棤鐘舵€佷俊 },'
           { status: 404 }
         );
       }
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 杩斿洖鎵€鏈夋櫤鑳戒綋鐘?    const statuses = await getAllAgentStatuses();
+    // 杩斿洖鎵€鏈夋櫤鑳戒綋鐘    const statuses = await getAllAgentStatuses();
 
     return NextResponse.json({
       success: true,
@@ -55,9 +55,9 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('鑾峰彇鏅鸿兘浣撶姸鎬侀敊?', error);
+    console.error('鑾峰彇鏅鸿兘浣撶姸鎬侀敊', error);
     return NextResponse.json(
-      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊 },'
       { status: 500 }
     );
   }
@@ -79,15 +79,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 楠岃瘉鐘舵€?    const validStatuses = ['online', 'offline', 'degraded'];
+    // 楠岃瘉鐘舵€    const validStatuses = ['online', 'offline', 'degraded'];
     if (!validStatuses.includes(body.status)) {
       return NextResponse.json(
-        { error: '鏃犳晥鐨勭姸鎬佸€硷紝蹇呴』?online, offline 锟?degraded' },
+        { error: '犳晥鐨勭姸鎬佸€硷紝蹇呴』online, offline degraded' },
         { status: 400 }
       );
     }
 
-    // 鏇存柊鎴栨彃鍏ョ姸鎬佷俊?    const { data, error } = await supabase
+    // 鏇存柊鎴栨彃鍏ョ姸鎬佷俊    const { data, error } = await supabase
       .from('agent_status')
       .upsert(
         {
@@ -114,26 +114,26 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('鏇存柊鏅鸿兘浣撶姸鎬佸け?', error);
-      return NextResponse.json({ error: '鏇存柊鐘舵€佸け? }, { status: 500 });
+      console.error('鏇存柊鏅鸿兘浣撶姸鎬佸け', error);
+      return NextResponse.json({ error: '鏇存柊鐘舵€佸け }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
       data,
-      message: '鐘舵€佹洿鏂版垚?,
+      message: '鐘舵€佹洿鏂版垚,'
     });
   } catch (error: any) {
-    console.error('鏇存柊鏅鸿兘浣撶姸鎬侀敊?', error);
+    console.error('鏇存柊鏅鸿兘浣撶姸鎬侀敊', error);
     return NextResponse.json(
-      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊 },'
       { status: 500 }
     );
   }
 }
 
 /**
- * 鑾峰彇鐗瑰畾鏅鸿兘浣撶姸? */
+ * 鑾峰彇鐗瑰畾鏅鸿兘浣撶姸 */
 async function getAgentStatus(agentName: string): Promise<AgentStatus | null> {
   const { data, error } = await supabase
     .from('agent_status')
@@ -142,7 +142,7 @@ async function getAgentStatus(agentName: string): Promise<AgentStatus | null> {
     .single();
 
   if (error) {
-    console.error(`鑾峰彇鏅鸿兘?${agentName} 鐘舵€佸け?`, error);
+    console.error(`鑾峰彇鏅鸿兘${agentName} 鐘舵€佸け`, error);
     return null;
   }
 
@@ -150,7 +150,7 @@ async function getAgentStatus(agentName: string): Promise<AgentStatus | null> {
 }
 
 /**
- * 鑾峰彇鎵€鏈夋櫤鑳戒綋鐘? */
+ * 鑾峰彇鎵€鏈夋櫤鑳戒綋鐘 */
 async function getAllAgentStatuses(): Promise<AgentStatus[]> {
   // 鍏堣幏鍙栨墍鏈夊凡娉ㄥ唽鐨勬櫤鑳戒綋
   const { data: registeredAgents, error: registryError } = await supabase
@@ -158,7 +158,7 @@ async function getAllAgentStatuses(): Promise<AgentStatus[]> {
     .select('name');
 
   if (registryError) {
-    console.error('鑾峰彇娉ㄥ唽鏅鸿兘浣撳垪琛ㄥけ?', registryError);
+    console.error('鑾峰彇娉ㄥ唽鏅鸿兘浣撳垪琛ㄥけ', registryError);
     return [];
   }
 
@@ -166,7 +166,7 @@ async function getAllAgentStatuses(): Promise<AgentStatus[]> {
     return [];
   }
 
-  // 鑾峰彇杩欎簺鏅鸿兘浣撶殑鐘?  const agentNames = registeredAgents.map(agent => agent.name);
+  // 鑾峰彇杩欎簺鏅鸿兘浣撶殑鐘  const agentNames = registeredAgents.map(agent => agent.name);
 
   const { data: statuses, error: statusError } = await supabase
     .from('agent_status')
@@ -174,17 +174,17 @@ async function getAllAgentStatuses(): Promise<AgentStatus[]> {
     .in('agent_name', agentNames);
 
   if (statusError) {
-    console.error('鑾峰彇鏅鸿兘浣撶姸鎬佸け?', statusError);
+    console.error('鑾峰彇鏅鸿兘浣撶姸鎬佸け', statusError);
     return [];
   }
 
-  // 灏嗘敞鍐屼俊鎭拰鐘舵€佷俊鎭悎?  const result: AgentStatus[] = registeredAgents.map(agent => {
-    const status = statuses?.find(s => s.agent_name === agent.name);
+  // 灏嗘敞鍐屼俊鎭拰鐘舵€佷俊鎭悎  const result: AgentStatus[] = registeredAgents.map(agent => {
+    const status = statuses.find(s => s.agent_name === agent.name);
 
     if (status) {
       return status as AgentStatus;
     } else {
-      // 濡傛灉娌℃湁鐘舵€佽褰曪紝杩斿洖榛樿鐘?      return {
+      // 濡傛灉娌℃湁鐘舵€佽褰曪紝杩斿洖榛樿鐘      return {
         name: agent.name,
         status: 'offline',
         last_heartbeat: new Date(0).toISOString(),
@@ -205,4 +205,5 @@ async function getAllAgentStatuses(): Promise<AgentStatus[]> {
 
   return result;
 }
+
 

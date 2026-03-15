@@ -6,7 +6,7 @@ export default function DebugNavigationPage() {
   const [domElements, setDomElements] = useState<any[]>([]);
 
   useEffect(() => {
-    // 检查页面中的导航相关元?    const checkNavigationElements = () => {
+    // 检查页面中的导航相关元    const checkNavigationElements = () => {
       const headers = document.querySelectorAll(
         'header, nav, .navbar, .navigation'
       );
@@ -30,13 +30,13 @@ export default function DebugNavigationPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
             导航调试页面
           </h1>
-          <p className="text-lg text-gray-600">检测页面中存在的导航元?/p>
+          <p className="text-lg text-gray-600">检测页面中存在的导航元素/p>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">检测到的导航元?</h2>
+          <h2 className="text-xl font-semibold mb-4">检测到的导航元素</h2>
 
-          {domElements.length > 0 ? (
+          {domElements.length > 0  (
             <div className="space-y-4">
               {domElements.map((element, index) => (
                 <div
@@ -53,7 +53,7 @@ export default function DebugNavigationPage() {
                     <div>
                       <span className="font-medium text-gray-700">类名:</span>
                       <span className="ml-2 text-sm text-gray-600 break-all">
-                        {element.className || '�?}
+                        {element.className || '}
                       </span>
                     </div>
                     <div className="md:col-span-2">
@@ -71,7 +71,7 @@ export default function DebugNavigationPage() {
           ) : (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">正在检测导航元?..</p>
+              <p className="text-gray-600">正在检测导航元素..</p>
             </div>
           )}
         </div>
@@ -81,9 +81,9 @@ export default function DebugNavigationPage() {
             调试信息
           </h3>
           <ul className="text-yellow-700 space-y-1 text-sm">
-            <li>�?检查是否存在重复的导航?/li>
-            <li>�?验证统一导航组件是否正常工作</li>
-            <li>�?确认页面布局是否正确</li>
+            <li>检查是否存在重复的导航/li>
+            <li>验证统一导航组件是否正常工作</li>
+            <li>确认页面布局是否正确</li>
           </ul>
         </div>
 

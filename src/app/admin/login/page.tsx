@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   const handleLoginSuccess = (user: any) => {
     // 登录成功处理逻辑
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('登录成功:', user)if (redirect?.startsWith('/admin') && !user?.is_admin) {
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('登录成功:', user)if (redirect.startsWith('/admin') && !user.is_admin) {
       router.push('/unauthorized');
       return;
     }

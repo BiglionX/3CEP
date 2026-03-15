@@ -6,29 +6,29 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 鑾峰彇鐢ㄦ埛鐢诲儚 (绉诲姩绔紭鍖栫増?
+// 鑾峰彇鐢ㄦ埛鐢诲儚 (绉诲姩绔紭鍖栫増
 export async function GET(request: Request) {
   try {
     // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
-    if (!authHeader?.startsWith('Bearer ')) {
+    if (!authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '鏈巿鏉冭?,
+          message: '鏈巿鏉冭,
           data: null,
         },
         { status: 401 }
       );
     }
 
-    // 楠岃瘉JWT浠ょ墝骞惰幏鍙栫敤鎴蜂俊?    const token = authHeader.substring(7);
+    // 楠岃瘉JWTょ墝骞惰幏鍙栫敤鎴蜂俊    const token = authHeader.substring(7);
 
-    // 杩欓噷搴旇楠岃瘉JWT浠ょ墝锛岀畝鍖栧疄鐜扮洿鎺ヤ娇鐢╩ock鏁版嵁
+    // 杩欓噷搴旇楠岃瘉JWTょ墝锛岀畝鍖栧疄鐜扮洿鎺ヤ娇鐢╩ock鏁版嵁
     // 瀹為檯搴旂敤涓渶瑕佽皟鐢ㄨ璇佹湇鍔￠獙璇乼oken
 
-    // Mock鐢ㄦ埛鏁版嵁 - 瀹為檯搴旇浠庤璇佹湇鍔¤幏?    const mockUserId = 'user_123'; // 搴旇浠巘oken涓В?
+    // Mock鐢ㄦ埛鏁版嵁 - 瀹為檯搴旇庤璇佹湇鍔¤幏    const mockUserId = 'user_123'; // 搴旇巘oken涓В
     // 鑾峰彇鐢ㄦ埛鍩烘湰淇℃伅
     const { data: user, error: userError } = await supabase
       .from('users')
@@ -49,19 +49,19 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           code: 40401,
-          message: '鐢ㄦ埛涓嶅瓨?,
+          message: '鐢ㄦ埛涓嶅,
           data: null,
         },
         { status: 404 }
       );
     }
 
-    // 鑾峰彇鐢ㄦ埛鍓鑹蹭俊?    const { data: userRoles } = await supabase
+    // 鑾峰彇鐢ㄦ埛鍓鑹蹭俊    const { data: userRoles } = await supabase
       .from('user_roles')
       .select('role_name')
       .eq('user_id', user.id);
 
-    const subRoles = userRoles?.map((ur: any) => ur.role_name) || [];
+    const subRoles = userRoles.map((ur: any) => ur.role_name) || [];
 
     // 鑾峰彇鐢ㄦ埛甯镐慨璁惧鍋忓ソ
     const { data: favoriteDevices } = await supabase
@@ -95,7 +95,7 @@ export async function GET(request: Request) {
       name: `${pref.parts.brand} ${pref.parts.name}`,
     }));
 
-    // 鑾峰彇鐢ㄦ埛鏀惰棌鐨勫簵?    const { data: favoriteShops } = await supabase
+    // 鑾峰彇鐢ㄦ埛鏀惰棌鐨勫簵    const { data: favoriteShops } = await supabase
       .from('user_shop_favorites')
       .select(
         `
@@ -120,11 +120,11 @@ export async function GET(request: Request) {
       .single();
 
     const stats = {
-      articles_count: userStats?.articles_created || 0,
-      uploads_count: userStats?.knowledge_uploads || 0,
-      adopts_count: userStats?.adoptions_made || 0,
-      total_reads: userStats?.total_reads || 0,
-      total_likes: userStats?.total_likes_received || 0,
+      articles_count: userStats.articles_created || 0,
+      uploads_count: userStats.knowledge_uploads || 0,
+      adopts_count: userStats.adoptions_made || 0,
+      total_reads: userStats.total_reads || 0,
+      total_likes: userStats.total_likes_received || 0,
     };
 
     // 鑾峰彇鐢ㄦ埛绉垎淇℃伅
@@ -134,9 +134,9 @@ export async function GET(request: Request) {
       .eq('user_id', user.id)
       .single();
 
-    const points = pointBalance?.balance || 0;
+    const points = pointBalance.balance || 0;
 
-    // 鏍煎紡鍖栧搷搴旀暟?    const userProfile = {
+    // 鏍煎紡鍖栧搷搴旀暟    const userProfile = {
       id: user.id,
       email: user.email,
       name: user.name,
@@ -149,7 +149,7 @@ export async function GET(request: Request) {
       stats,
       points,
       member_since: user.created_at,
-      last_active: new Date().toISOString(), // 瀹為檯搴旇浠庣敤鎴锋椿鍔ㄨ褰曡幏?    };
+      last_active: new Date().toISOString(), // 瀹為檯搴旇庣敤鎴椿鍔ㄨ褰曡幏    };
 
     return NextResponse.json({
       code: 0,
@@ -162,7 +162,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         code: 50001,
-        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         data: null,
       },
       { status: 500 }

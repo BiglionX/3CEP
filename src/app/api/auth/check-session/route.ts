@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   try {
     let session;
 
-    // 浼樺厛浣跨敤Authorization header涓殑token
+    // 樺厛浣跨敤Authorization header涓殑token
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
       const { data, error } = await supabase.auth.getUser(token);
@@ -28,16 +28,16 @@ export async function GET(request: Request) {
 
     // 濡傛灉header涓病鏈夋湁鏁堢殑token锛屽皾璇曚粠cookie鑾峰彇
     if (!session) {
-      // 浣跨敤cookieStore鑾峰彇浼氳瘽
+      // 浣跨敤cookieStore鑾峰彇氳瘽
       const { data: sessionData, error: sessionError } =
         await supabase.auth.getSession();
 
       if (!sessionError && sessionData.session) {
         session = sessionData.session;
       } else {
-        // 澶囩敤鏂规锛氫粠cookie涓墜鍔ㄨВ?        const cookieHeader = request.headers.get('cookie');
+        // 澶囩敤鏂规锛氫粠cookie涓墜鍔ㄨВ        const cookieHeader = request.headers.get('cookie');
         if (cookieHeader) {
-          const supabaseCookieName = `sb-${process.env?.split('//')[1].split('.')[0]}-auth-token`;
+          const supabaseCookieName = `sb-${process.env.split('//')[1].split('.')[0]}-auth-token`;
           const cookieMatch = cookieHeader.match(
             new RegExp(`${supabaseCookieName}=([^;]+)`)
           );
@@ -62,11 +62,11 @@ export async function GET(request: Request) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    // 妫€鏌ユ槸鍚︿负绠＄悊?    let isAdmin = false;
+    // 妫€鏌ユ槸鍚︿负绠＄悊    let isAdmin = false;
     let adminRole = null;
 
     // 棣栧厛妫€鏌ョ敤鎴峰厓鏁版嵁
-    if (session.user?.isAdmin === true) {
+    if (session.user.isAdmin === true) {
       isAdmin = true;
       adminRole = session.user.user_metadata.role || 'admin';
     } else {
@@ -84,7 +84,7 @@ export async function GET(request: Request) {
           adminRole = adminUser.role;
         }
       } catch (dbError) {
-        // 鏁版嵁搴撴鏌ュけ璐ワ紝浣跨敤鐢ㄦ埛鍏冩暟鎹綔涓哄垽鏂緷?        console.log('鏁版嵁搴撶鐞嗗憳妫€鏌ュけ璐ワ紝浣跨敤鐢ㄦ埛鍏冩暟鎹垽?);
+        // 鏁版嵁搴撴鏌ュけ璐ワ紝浣跨敤鐢ㄦ埛鍏冩暟鎹綔涓哄垽鏂緷        console.log('鏁版嵁搴撶鐞嗗憳妫€鏌ュけ璐ワ紝浣跨敤鐢ㄦ埛鍏冩暟鎹垽);
       }
     }
 
@@ -99,7 +99,8 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('浼氳瘽妫€鏌ュけ?', error);
+    console.error('氳瘽妫€鏌ュけ', error);
     return NextResponse.json({ authenticated: false }, { status: 500 });
   }
 }
+

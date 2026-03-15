@@ -33,7 +33,8 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
-  // 重定向到仪表板页?  useEffect(() => {
+  // 重定向到仪表板页面
+  useEffect(() => {
     window.location.href = '/profile/dashboard';
   }, []);
 

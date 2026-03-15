@@ -9,15 +9,15 @@ import { toast } from 'sonner';
 
 export default function SearchDemoPage() {
   const handleSimpleSearch = (query: string) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('简单搜?', query)toast.success(`执行搜索: ${query}`);
+    toast.success(`执行搜索: ${query}`);
   };
 
   const handleEnhancedSearch = (result: any) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('选择结果:', result)toast.info(`选择? ${result.title}`);
+    toast.info(`选择了: ${result.title}`);
   };
 
   const handleResultSelect = (result: any) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('结果被选中:', result)toast.success(`跳转? ${result.url}`);
+    toast.success(`跳转到: ${result.url}`);
   };
 
   return (
@@ -27,21 +27,22 @@ export default function SearchDemoPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             搜索组件演示
           </h1>
-          <p className="text-gray-600">展示兼容Next.js的搜索组件实?/p>
+          <p className="text-gray-600">展示兼容Next.js的搜索组件实现</p>
         </div>
 
         <div className="grid gap-8">
-          {/* 简单搜索组?*/}
+          {/* 简单搜索组件 */}
           <Card>
             <CardHeader>
-              <CardTitle>简单搜索组?/CardTitle>
+              <CardTitle>简单搜索组件</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <p className="text-gray-600">
-                  基础搜索输入框，支持回车和按钮触发搜?                </p>
+                  基础搜索输入框，支持回车和按钮触发搜索
+                </p>
                 <SimpleSearch
-                  placeholder="输入搜索关键?.."
+                  placeholder="输入搜索关键字..."
                   onSearch={handleSimpleSearch}
                   className="max-w-md"
                 />
@@ -62,7 +63,7 @@ export default function SearchDemoPage() {
                 <p className="text-gray-600">带搜索结果展示的完整搜索组件</p>
                 <div className="max-w-md">
                   <EnhancedSearch
-                    placeholder="搜索工单、客户、设?.."
+                    placeholder="搜索工单、客户、设备..."
                     onResultSelect={handleResultSelect}
                   />
                 </div>
@@ -73,41 +74,42 @@ export default function SearchDemoPage() {
             </CardContent>
           </Card>
 
-          {/* 技术说?*/}
+          {/* 技术说明 */}
           <Card>
             <CardHeader>
-              <CardTitle>技术实现说?/CardTitle>
+              <CardTitle>技术实现说明</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">
-                    解决的兼容性问?                  </h3>
+                    解决的兼容性问题
+                  </h3>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>�?移除了复杂的类实例传?/li>
-                    <li>�?使用纯函数式API设计</li>
-                    <li>�?避免了不可序列化对象的传?/li>
-                    <li>�?完全兼容Next.js App Router</li>
+                    <li>• 移除了复杂的类实例传递</li>
+                    <li>• 使用纯函数式API设计</li>
+                    <li>• 避免了不可序列化对象的传递</li>
+                    <li>• 完全兼容Next.js App Router</li>
                   </ul>
                 </div>
 
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">性能优化</h3>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>�?使用useCallback优化函数引用</li>
-                    <li>�?合理的状态管?/li>
-                    <li>�?防抖和节流机?/li>
-                    <li>�?懒加载搜索结?/li>
+                    <li>• 使用useCallback优化函数引用</li>
+                    <li>• 合理的状态管理</li>
+                    <li>• 防抖和节流机制</li>
+                    <li>• 懒加载搜索结果</li>
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-2">可扩展?/h3>
+                  <h3 className="font-medium text-gray-900 mb-2">可扩展性</h3>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>�?易于集成真实API</li>
-                    <li>�?支持自定义搜索逻辑</li>
-                    <li>�?可配置的UI组件</li>
-                    <li>�?完善的TypeScript支持</li>
+                    <li>• 易于集成真实API</li>
+                    <li>• 支持自定义搜索逻辑</li>
+                    <li>• 可配置的UI组件</li>
+                    <li>• 完善的TypeScript支持</li>
                   </ul>
                 </div>
               </div>
@@ -129,4 +131,3 @@ export default function SearchDemoPage() {
     </div>
   );
 }
-

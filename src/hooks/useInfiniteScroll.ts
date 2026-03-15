@@ -68,7 +68,7 @@ export function useInfiniteScroll<T>(
   // 合并所有页面的数据
   const flatData = data?.pages.flatMap(page => page.data) || [];
 
-  // 观察器检测是否接近底?
+  // 观察器检测是否接近底
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {

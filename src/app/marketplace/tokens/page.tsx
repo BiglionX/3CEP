@@ -1,6 +1,6 @@
 ﻿/**
  * Token钱包页面
- * FixCycle 6.0 智能体市场平?- Token经济系统
+ * FixCycle 6.0 智能体市场平台 - Token经济系统
  */
 'use client';
 
@@ -17,7 +17,6 @@ import {
   Banknote,
   PieChart,
   Calendar,
-  Filter,
   Search,
 } from 'lucide-react';
 
@@ -35,7 +34,7 @@ interface TokenTransaction {
   amount: number;
   balance_after: number;
   description: string;
-  related_agent?: {
+  related_agent: {
     id: string;
     name: string;
   };
@@ -66,7 +65,7 @@ export default function TokensPage() {
   const [packages] = useState<PurchasePackage[]>([
     {
       id: 'pkg-1',
-      name: '基础?,
+      name: '基础包',
       tokens: 100,
       price: 99,
       bonus_percentage: 0,
@@ -74,7 +73,7 @@ export default function TokensPage() {
     },
     {
       id: 'pkg-2',
-      name: '标准?,
+      name: '标准包',
       tokens: 500,
       price: 449,
       bonus_percentage: 10,
@@ -82,7 +81,7 @@ export default function TokensPage() {
     },
     {
       id: 'pkg-3',
-      name: '专业?,
+      name: '专业包',
       tokens: 1200,
       price: 999,
       bonus_percentage: 20,
@@ -90,7 +89,7 @@ export default function TokensPage() {
     },
     {
       id: 'pkg-4',
-      name: '企业?,
+      name: '企业包',
       tokens: 3000,
       price: 2299,
       bonus_percentage: 30,
@@ -125,7 +124,7 @@ export default function TokensPage() {
       type: 'purchase',
       amount: -500,
       balance_after: 1238.0,
-      description: '购买标准?(500 Tokens)',
+      description: '购买标准包(500 Tokens)',
       created_at: '2026-03-01T10:15:00Z',
       status: 'completed',
     },
@@ -134,10 +133,10 @@ export default function TokensPage() {
       type: 'usage',
       amount: -2.3,
       balance_after: 1738.0,
-      description: '采购智能体使用消?,
+      description: '采购智能体使用消费',
       related_agent: {
         id: 'agent-2',
-        name: '采购智能?,
+        name: '采购智能助手',
       },
       created_at: '2026-03-01T09:45:00Z',
       status: 'completed',
@@ -147,10 +146,10 @@ export default function TokensPage() {
       type: 'earning',
       amount: 8.2,
       balance_after: 1740.3,
-      description: '客服支持机器人使用收?,
+      description: '客服支持机器人使用收入',
       related_agent: {
         id: 'agent-3',
-        name: '客服支持机器?,
+        name: '客服支持机器人',
       },
       created_at: '2026-02-29T16:20:00Z',
       status: 'completed',
@@ -193,7 +192,7 @@ export default function TokensPage() {
       refund: {
         icon: <ArrowUpDown className="w-4 h-4" />,
         color: 'text-yellow-600',
-        text: '退?,
+        text: '退款',
       },
     };
     return configs[type] || configs.purchase;
@@ -202,14 +201,14 @@ export default function TokensPage() {
   const filteredTransactions = transactions.filter(tx => {
     const matchesSearch =
       tx.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tx.related_agent?.name.toLowerCase().includes(searchTerm.toLowerCase());
+      tx.related_agent.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = typeFilter === 'all' || tx.type === typeFilter;
     return matchesSearch && matchesType;
   });
 
   const formatAmount = (amount: number) => {
     const absAmount = Math.abs(amount);
-    const sign = amount >= 0 ? '+' : '-';
+    const sign = amount >= 0  '+' : '-';
     return `${sign}${absAmount.toFixed(2)}`;
   };
 
@@ -231,7 +230,7 @@ export default function TokensPage() {
     );
     const totalTokens = selectedPackage.tokens + bonusTokens;
 
-    alert(`成功购买 ${selectedPackage.name}！获?${totalTokens} Tokens`);
+    alert(`成功购买 ${selectedPackage.name}！获得${totalTokens} Tokens`);
     setShowPurchaseModal(false);
     setSelectedPackage(null);
 
@@ -248,7 +247,7 @@ export default function TokensPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载Token钱包?..</p>
+          <p className="mt-4 text-gray-600">加载Token钱包中...</p>
         </div>
       </div>
     );
@@ -280,7 +279,7 @@ export default function TokensPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">总余?/p>
+                <p className="text-sm text-gray-600">总余额</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {balance.total_balance.toFixed(2)} Tokens
                 </p>
@@ -341,7 +340,7 @@ export default function TokensPage() {
                     key={pkg.id}
                     className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                       pkg.popular
-                        ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                         'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                     onClick={() => handlePurchasePackage(pkg)}
@@ -385,16 +384,16 @@ export default function TokensPage() {
               <h3 className="font-medium text-gray-900 mb-4">使用统计</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">总使用次?/span>
-                  <span className="font-medium">1,247�?/span>
+                  <span className="text-gray-600">总使用次数</span>
+                  <span className="font-medium">1,247次</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">平均每次消?/span>
+                  <span className="text-gray-600">平均每次消费</span>
                   <span className="font-medium">1.2 Tokens</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">最常使?/span>
-                  <span className="font-medium">销售助?/span>
+                  <span className="text-gray-600">最常使用</span>
+                  <span className="font-medium">销售助手</span>
                 </div>
               </div>
             </div>
@@ -427,12 +426,12 @@ export default function TokensPage() {
                       value={typeFilter}
                       onChange={e => setTypeFilter(e.target.value)}
                     >
-                      <option value="all">所有类?/option>
+                      <option value="all">所有类型</option>
                       <option value="purchase">购买</option>
                       <option value="usage">使用</option>
                       <option value="earning">收入</option>
                       <option value="withdrawal">提现</option>
-                      <option value="refund">退?/option>
+                      <option value="refund">退款</option>
                     </select>
                   </div>
                 </div>
@@ -451,11 +450,11 @@ export default function TokensPage() {
                           <div
                             className={`p-3 rounded-full ${
                               transaction.type === 'earning'
-                                ? 'bg-green-100'
+                                 'bg-green-100'
                                 : transaction.type === 'purchase'
-                                  ? 'bg-blue-100'
+                                   'bg-blue-100'
                                   : transaction.type === 'usage'
-                                    ? 'bg-red-100'
+                                     'bg-red-100'
                                     : 'bg-gray-100'
                             }`}
                           >
@@ -471,7 +470,7 @@ export default function TokensPage() {
                             </p>
                             {transaction.related_agent && (
                               <p className="text-xs text-gray-500">
-                                相关智能? {transaction.related_agent.name}
+                                相关智能体: {transaction.related_agent.name}
                               </p>
                             )}
                             <p className="text-xs text-gray-400 mt-1">
@@ -492,16 +491,16 @@ export default function TokensPage() {
                           <div
                             className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${
                               transaction.status === 'completed'
-                                ? 'bg-green-100 text-green-800'
+                                 'bg-green-100 text-green-800'
                                 : transaction.status === 'pending'
-                                  ? 'bg-yellow-100 text-yellow-800'
+                                   'bg-yellow-100 text-yellow-800'
                                   : 'bg-red-100 text-red-800'
                             }`}
                           >
                             {transaction.status === 'completed'
-                              ? '已完?
+                               '已完成'
                               : transaction.status === 'pending'
-                                ? '处理?
+                                 '处理中'
                                 : '失败'}
                           </div>
                         </div>
@@ -579,4 +578,3 @@ export default function TokensPage() {
     </div>
   );
 }
-

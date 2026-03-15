@@ -1,6 +1,7 @@
 ﻿/**
  * 分页组件
- * 支持标准分页导航和页码显? */
+ * 支持标准分页导航和页码显示
+ */
 
 import { Button } from '@/components/ui/button';
 import {
@@ -43,9 +44,10 @@ export function Pagination({
   // 生成页码数组
   const getPageNumbers = () => {
     const pages: (number | 'ellipsis')[] = [];
-    const delta = 2; // 当前页前后显示的页码?
+    const delta = 2; // 当前页前后显示的页码数
     if (totalPages <= 7) {
-      // 总页数较少时显示所有页?      for (let i = 1; i <= totalPages; i++) {
+      // 总页数较少时显示所有页码
+      for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
@@ -89,12 +91,13 @@ export function Pagination({
     <div
       className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}
     >
-      {/* 左侧：总条数和每页条数选择?*/}
+      {/* 左侧：总条数和每页条数选择器 */}
       <div className="flex items-center gap-4">
         {showTotal && (
           <div className="text-sm text-gray-700">
-            显示?{(currentPage - 1) * pageSize + 1} 到{' '}
-            {Math.min(currentPage * pageSize, total)} 条， �?{total} 条记?          </div>
+            显示 {(currentPage - 1) * pageSize + 1} 到{' '}
+            {Math.min(currentPage * pageSize, total)} 条，共 {total} 条记录
+          </div>
         )}
 
         {showPageSizeSelector && onPageSizeChange && (
@@ -107,14 +110,15 @@ export function Pagination({
             >
               {pageSizeOptions.map(size => (
                 <option key={size} value={size}>
-                  {size} �?                </option>
+                  {size} 条
+                </option>
               ))}
             </select>
           </div>
         )}
       </div>
 
-      {/* 右侧：分页导?*/}
+      {/* 右侧：分页导航 */}
       <div className="flex items-center gap-1">
         {/* 首页按钮 */}
         <Button
@@ -127,7 +131,7 @@ export function Pagination({
           <ChevronsLeft className="h-4 w-4" />
         </Button>
 
-        {/* 上一页按?*/}
+        {/* 上一页按钮 */}
         <Button
           variant="outline"
           size="sm"
@@ -135,7 +139,7 @@ export function Pagination({
           disabled={isFirstPage}
         >
           <ChevronLeft className="h-4 w-4" />
-          <span className="hidden sm:inline ml-1">上一?/span>
+          <span className="hidden sm:inline ml-1">上一页</span>
         </Button>
 
         {/* 页码按钮 */}
@@ -164,14 +168,14 @@ export function Pagination({
             )
           )}
 
-        {/* 下一页按?*/}
+        {/* 下一页按钮 */}
         <Button
           variant="outline"
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={isLastPage}
         >
-          <span className="hidden sm:inline mr-1">下一?/span>
+          <span className="hidden sm:inline mr-1">下一页</span>
           <ChevronRight className="h-4 w-4" />
         </Button>
 
@@ -189,3 +193,5 @@ export function Pagination({
     </div>
   );
 }
+
+export default Pagination;

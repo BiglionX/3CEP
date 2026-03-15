@@ -5,7 +5,15 @@ module.exports = {
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './src/app/**/*.{ts,tsx}',
+    './src/components/**/*.{ts,tsx}',
+    './src/lib/**/*.{ts,tsx}',
+    './src/contexts/**/*.{ts,tsx}',
+    './src/hooks/**/*.{ts,tsx}',
+    './src/services/**/*.{ts,tsx}',
+    './src/types/**/*.{ts,tsx}',
+    './src/stores/**/*.{ts,tsx}',
+    './src/tech/**/*.{ts,tsx}',
   ],
   theme: {
     container: {

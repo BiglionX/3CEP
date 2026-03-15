@@ -1,7 +1,6 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Search,
   Filter,
@@ -9,7 +8,6 @@ import {
   MoreHorizontal,
   Eye,
   Edit,
-  Trash2,
   Download,
   FileText,
   Calendar,
@@ -69,7 +67,6 @@ interface Contract {
 }
 
 export default function ContractsPage() {
-  const router = useRouter();
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -100,15 +97,15 @@ export default function ContractsPage() {
             renewalDate: '2026-11-30',
             amount: 50000000,
             currency: 'USD',
-            paymentTerms: '30天账?,
-            responsiblePerson: '张经?,
+            paymentTerms: '30天账期',
+            responsiblePerson: '张经理',
             lastModified: '2026-02-25',
             attachments: 3,
           },
           {
             id: '2',
             contractNumber: 'CNT-2026-002',
-            title: 'TechGlobal 智能手机销售合?,
+            title: 'TechGlobal 智能手机销售合同',
             partner: {
               name: 'TechGlobal Ltd.',
               type: 'customer',
@@ -121,7 +118,7 @@ export default function ContractsPage() {
             renewalDate: '2026-06-30',
             amount: 35000000,
             currency: 'USD',
-            paymentTerms: '预付?0%',
+            paymentTerms: '预付款50%',
             responsiblePerson: '李总监',
             lastModified: '2026-02-24',
             attachments: 5,
@@ -129,7 +126,7 @@ export default function ContractsPage() {
           {
             id: '3',
             contractNumber: 'CNT-2026-003',
-            title: 'Sony 游戏机独家代理协?,
+            title: 'Sony 游戏机独家代理协议',
             partner: {
               name: 'Sony Corporation',
               type: 'supplier',
@@ -142,15 +139,15 @@ export default function ContractsPage() {
             renewalDate: '2027-01-31',
             amount: 25000000,
             currency: 'USD',
-            paymentTerms: '60天账?,
-            responsiblePerson: '王主?,
+            paymentTerms: '60天账期',
+            responsiblePerson: '王主管',
             lastModified: '2026-02-23',
             attachments: 2,
           },
           {
             id: '4',
             contractNumber: 'CNT-2026-004',
-            title: 'Digital Solutions 服务器采购合?,
+            title: 'Digital Solutions 服务器采购合同',
             partner: {
               name: 'Digital Solutions GmbH',
               type: 'customer',
@@ -163,8 +160,8 @@ export default function ContractsPage() {
             renewalDate: '',
             amount: 18000000,
             currency: 'EUR',
-            paymentTerms: '待确?,
-            responsiblePerson: '陈经?,
+            paymentTerms: '待确认',
+            responsiblePerson: '陈经理',
             lastModified: '2026-02-22',
             attachments: 1,
           },
@@ -184,8 +181,8 @@ export default function ContractsPage() {
             renewalDate: '',
             amount: 12000000,
             currency: 'USD',
-            paymentTerms: '已结?,
-            responsiblePerson: '刘专?,
+            paymentTerms: '已结算',
+            responsiblePerson: '刘专员',
             lastModified: '2026-01-15',
             attachments: 4,
           },
@@ -218,7 +215,8 @@ export default function ContractsPage() {
     return matchesSearch && matchesStatus && matchesType && matchesPartnerType;
   });
 
-  // 状态颜色映?  const getStatusColor = (status: string) => {
+  // 状态颜色映射
+  const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       draft: 'bg-gray-100 text-gray-800',
       pending: 'bg-yellow-100 text-yellow-800',
@@ -232,10 +230,10 @@ export default function ContractsPage() {
   const getStatusText = (status: string) => {
     const textMap: Record<string, string> = {
       draft: '草稿',
-      pending: '待审?,
-      active: '生效?,
-      expired: '已过?,
-      terminated: '已终?,
+      pending: '待审批',
+      active: '生效中',
+      expired: '已过期',
+      terminated: '已终止',
     };
     return textMap[status] || status;
   };
@@ -253,7 +251,7 @@ export default function ContractsPage() {
   const getTypeText = (type: string) => {
     const textMap: Record<string, string> = {
       purchase: '采购合同',
-      sales: '销售合?,
+      sales: '销售合同',
       service: '服务合同',
       nda: '保密协议',
     };
@@ -270,22 +268,25 @@ export default function ContractsPage() {
 
   const handleViewContract = (contractId: string) => {
     // TODO: 实现查看详情功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看合同详情:', contractId)};
+    console.debug('查看合同详情:', contractId);
+  };
 
   const handleCreateContract = () => {
     // TODO: 实现创建合同功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('创建新合?)};
+    console.debug('创建新合同');
+  };
 
   const handleExport = () => {
     // TODO: 实现导出功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出合同数据')};
+    console.debug('导出合同数据');
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载合同数据?..</p>
+          <p className="mt-4 text-gray-600">加载合同数据中...</p>
         </div>
       </div>
     );
@@ -322,13 +323,13 @@ export default function ContractsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{contracts.length}</div>
-            <p className="text-xs text-muted-foreground">所有合同档?/p>
+            <p className="text-xs text-muted-foreground">所有合同档案</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">生效?/CardTitle>
+            <CardTitle className="text-sm font-medium">生效中</CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -341,7 +342,7 @@ export default function ContractsPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待处?/CardTitle>
+            <CardTitle className="text-sm font-medium">待处理</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -377,7 +378,7 @@ export default function ContractsPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">总金?/CardTitle>
+            <CardTitle className="text-sm font-medium">总金额</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -388,7 +389,7 @@ export default function ContractsPage() {
               ).toFixed(1)}
               M
             </div>
-            <p className="text-xs text-muted-foreground">合同总价?/p>
+            <p className="text-xs text-muted-foreground">合同总价值</p>
           </CardContent>
         </Card>
       </div>
@@ -398,7 +399,8 @@ export default function ContractsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            筛选条?          </CardTitle>
+            筛选条件
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -416,15 +418,15 @@ export default function ContractsPage() {
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="合同状? />
+                <SelectValue placeholder="合同状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状?/SelectItem>
+                <SelectItem value="all">全部状态</SelectItem>
                 <SelectItem value="draft">草稿</SelectItem>
-                <SelectItem value="pending">待审?/SelectItem>
-                <SelectItem value="active">生效?/SelectItem>
-                <SelectItem value="expired">已过?/SelectItem>
-                <SelectItem value="terminated">已终?/SelectItem>
+                <SelectItem value="pending">待审批</SelectItem>
+                <SelectItem value="active">生效中</SelectItem>
+                <SelectItem value="expired">已过期</SelectItem>
+                <SelectItem value="terminated">已终止</SelectItem>
               </SelectContent>
             </Select>
 
@@ -435,7 +437,7 @@ export default function ContractsPage() {
               <SelectContent>
                 <SelectItem value="all">全部类型</SelectItem>
                 <SelectItem value="purchase">采购合同</SelectItem>
-                <SelectItem value="sales">销售合?/SelectItem>
+                <SelectItem value="sales">销售合同</SelectItem>
                 <SelectItem value="service">服务合同</SelectItem>
                 <SelectItem value="nda">保密协议</SelectItem>
               </SelectContent>
@@ -446,11 +448,11 @@ export default function ContractsPage() {
               onValueChange={setPartnerTypeFilter}
             >
               <SelectTrigger>
-                <SelectValue placeholder="合作方类? />
+                <SelectValue placeholder="合作方类型" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">全部类型</SelectItem>
-                <SelectItem value="supplier">供应?/SelectItem>
+                <SelectItem value="supplier">供应商</SelectItem>
                 <SelectItem value="customer">客户</SelectItem>
               </SelectContent>
             </Select>
@@ -463,7 +465,7 @@ export default function ContractsPage() {
         <CardHeader>
           <CardTitle>合同列表</CardTitle>
           <CardDescription>
-            共找?{filteredContracts.length} 个符合条件的合同
+            共找到 {filteredContracts.length} 个符合条件的合同
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -472,16 +474,16 @@ export default function ContractsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>合同信息</TableHead>
-                  <TableHead>合作?/TableHead>
-                  <TableHead>类型/状?/TableHead>
+                  <TableHead>合作伙伴</TableHead>
+                  <TableHead>类型/状态</TableHead>
                   <TableHead>金额/条款</TableHead>
-                  <TableHead>有效?/TableHead>
-                  <TableHead>负责?/TableHead>
+                  <TableHead>有效期</TableHead>
+                  <TableHead>负责人</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredContracts.length === 0 ? (
+                {filteredContracts.length === 0  (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-12">
                       <FileText className="mx-auto h-12 w-12 text-gray-400" />
@@ -493,7 +495,7 @@ export default function ContractsPage() {
                         statusFilter !== 'all' ||
                         typeFilter !== 'all' ||
                         partnerTypeFilter !== 'all'
-                          ? '没有找到匹配的合?
+                           '没有找到匹配的合同'
                           : '开始创建第一个合同吧'}
                       </p>
                       {!searchTerm &&
@@ -542,7 +544,8 @@ export default function ContractsPage() {
                             </div>
                             <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
                               <FileText className="h-3 w-3" />
-                              {contract.attachments} 个附?                            </div>
+                              {contract.attachments} 个附件
+                            </div>
                           </div>
                         </TableCell>
 
@@ -576,7 +579,7 @@ export default function ContractsPage() {
                         <TableCell>
                           <div className="flex flex-col">
                             <div className="font-medium">
-                              {contract.currency === 'USD' ? '$' : '�?}
+                              {contract.currency === 'USD'  '$' : '€'}
                               {(contract.amount / 1000000).toFixed(1)}M
                             </div>
                             <div className="text-sm text-gray-500">
@@ -589,7 +592,7 @@ export default function ContractsPage() {
                           <div className="flex flex-col">
                             <div className="text-sm">
                               <Calendar className="inline h-3 w-3 mr-1" />
-                              {contract.startDate} �?{contract.endDate}
+                              {contract.startDate} 至{contract.endDate}
                             </div>
                             {contract.renewalDate && (
                               <div className="text-xs text-gray-500 mt-1">
@@ -644,4 +647,3 @@ export default function ContractsPage() {
     </div>
   );
 }
-

@@ -8,12 +8,12 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'dashboard':
-        // 鑾峰彇鐩戞帶浠〃鏉挎暟?        const activeAlerts = monitoringService.getActiveAlerts();
+        // 鑾峰彇鐩戞帶〃鏉挎暟        const activeAlerts = monitoringService.getActiveAlerts();
         const dataQuality = monitoringService.getDataQualityReport();
 
         return NextResponse.json({
           systemHealth: {
-            status: activeAlerts.length === 0 ? 'healthy' : 'degraded',
+            status: activeAlerts.length === 0  'healthy' : 'degraded',
             activeAlerts: activeAlerts.length,
             criticalAlerts: activeAlerts.filter(a => a.severity === 'critical')
               .length,
@@ -65,13 +65,13 @@ export async function GET(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鐩戞帶API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       case 'record-metric':
         if (!metric || !metric.name || metric.value === undefined) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勬寚鏍囧弬? },
+            { error: '缂哄皯蹇呰鐨勬寚鏍囧弬 },
             { status: 400 }
           );
         }
@@ -157,19 +157,19 @@ export async function POST(request: NextRequest) {
         monitoringService.recordMetric(testMetricName, testValue);
 
         return NextResponse.json({
-          message: '娴嬭瘯鍛婅宸茶Е?,
+          message: '娴嬭瘯鍛婅宸茶Е,
           testMetric: { name: testMetricName, value: testValue },
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鐩戞帶API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

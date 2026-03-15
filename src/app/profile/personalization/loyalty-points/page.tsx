@@ -77,7 +77,7 @@ export default function LoyaltyPointsPage() {
           id: 'tx_004',
           type: 'earn',
           amount: 30,
-          description: '分享应用给好?,
+          description: '分享应用给好友',
           date: '2024-01-17',
           balance: 1300,
         },
@@ -86,8 +86,8 @@ export default function LoyaltyPointsPage() {
       setRewards([
         {
           id: 'reward_001',
-          name: '精美无线充电?,
-          description: '支持快充的无线充电设?,
+          name: '精美无线充电器',
+          description: '支持快充的无线充电设备',
           points: 800,
           image: '/images/rewards/charger.jpg',
           category: '数码配件',
@@ -113,7 +113,7 @@ export default function LoyaltyPointsPage() {
         },
         {
           id: 'reward_004',
-          name: '定制手机?,
+          name: '定制手机壳',
           description: '个性定制保护壳',
           points: 300,
           image: '/images/rewards/case.jpg',
@@ -172,7 +172,7 @@ export default function LoyaltyPointsPage() {
       {/* 页面标题 */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">积分商城</h1>
-        <p className="text-gray-600 mt-1">用积分兑换心仪好?/p>
+        <p className="text-gray-600 mt-1">用积分兑换心仪好物</p>
       </div>
 
       {/* 积分概览卡片 */}
@@ -211,7 +211,7 @@ export default function LoyaltyPointsPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-600">累计兑换</p>
-                <p className="text-xl font-bold text-gray-900">12�?/p>
+                <p className="text-xl font-bold text-gray-900">12件</p>
               </div>
             </div>
           </CardContent>
@@ -219,9 +219,9 @@ export default function LoyaltyPointsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左侧：商品列?*/}
+        {/* 左侧：商品列表 */}
         <div className="lg:col-span-2 space-y-6">
-          {/* 搜索和筛?*/}
+          {/* 搜索和筛选 */}
           <Card>
             <CardContent className="p-4">
               <div className="flex flex-col sm:flex-row gap-4">
@@ -285,15 +285,15 @@ export default function LoyaltyPointsPage() {
                         <span
                           className={`text-sm px-2 py-1 rounded-full ${
                             reward.stock > 10
-                              ? 'bg-green-100 text-green-800'
+                               'bg-green-100 text-green-800'
                               : reward.stock > 0
-                                ? 'bg-yellow-100 text-yellow-800'
+                                 'bg-yellow-100 text-yellow-800'
                                 : 'bg-red-100 text-red-800'
                           }`}
                         >
                           {reward.stock > 0
-                            ? `剩余${reward.stock}件`
-                            : '已售?}
+                             `剩余${reward.stock}件`
+                            : '已售罄'}
                         </span>
                       </div>
 
@@ -305,9 +305,9 @@ export default function LoyaltyPointsPage() {
                         }
                       >
                         {reward.stock <= 0
-                          ? '已售?
+                           '已售罄'
                           : pointsBalance < reward.points
-                            ? '积分不足'
+                             '积分不足'
                             : '立即兑换'}
                       </Button>
                     </div>
@@ -318,7 +318,7 @@ export default function LoyaltyPointsPage() {
           </div>
         </div>
 
-        {/* 右侧：交易记?*/}
+        {/* 右侧：交易记录 */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -338,7 +338,7 @@ export default function LoyaltyPointsPage() {
                       <div
                         className={`p-2 rounded-full ${
                           transaction.type === 'earn'
-                            ? 'bg-green-100'
+                             'bg-green-100'
                             : 'bg-red-100'
                         }`}
                       >
@@ -360,11 +360,11 @@ export default function LoyaltyPointsPage() {
                     <div
                       className={`text-sm font-medium ${
                         transaction.type === 'earn'
-                          ? 'text-green-600'
+                           'text-green-600'
                           : 'text-red-600'
                       }`}
                     >
-                      {transaction.type === 'earn' ? '+' : ''}
+                      {transaction.type === 'earn'  '+' : ''}
                       {transaction.amount}
                     </div>
                   </div>
@@ -390,7 +390,7 @@ export default function LoyaltyPointsPage() {
             <CardContent>
               <div className="space-y-3">
                 {[
-                  { action: '每日签到', points: '+10', frequency: '每天一? },
+                  { action: '每日签到', points: '+10', frequency: '每天一次' },
                   {
                     action: '完成维修订单',
                     points: '+50~200',
@@ -398,13 +398,13 @@ export default function LoyaltyPointsPage() {
                   },
                   {
                     action: '购买配件',
-                    points: '+1�?1积分',
+                    points: '+1~10积分',
                     frequency: '消费返利',
                   },
                   {
-                    action: '邀请好?,
+                    action: '邀请好友',
                     points: '+100',
-                    frequency: '每成功邀?,
+                    frequency: '每成功邀请',
                   },
                   { action: '评价服务', points: '+20', frequency: '每次评价' },
                 ].map((item, index) => (

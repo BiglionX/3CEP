@@ -79,24 +79,24 @@ export default function FinanceManagementPage() {
 
       // 获取交易列表
       const transactionsResponse = await fetch(
-        `/api/admin/finance/transactions?days=${dateRange}`
+        `/api/admin/finance/transactionsdays=${dateRange}`
       );
       const transactionsResult = await transactionsResponse.json();
 
-      // 获取财务汇?      const summaryResponse = await fetch(
-        `/api/admin/finance/summary?days=${dateRange}`
+      // 获取财务汇      const summaryResponse = await fetch(
+        `/api/admin/finance/summarydays=${dateRange}`
       );
       const summaryResult = await summaryResponse.json();
 
       // 获取月度数据
       const monthlyResponse = await fetch(
-        `/api/admin/finance/monthly?months=6`
+        `/api/admin/finance/monthlymonths=6`
       );
       const monthlyResult = await monthlyResponse.json();
 
       // 获取分类数据
       const categoriesResponse = await fetch(
-        `/api/admin/finance/categories?days=${dateRange}`
+        `/api/admin/finance/categoriesdays=${dateRange}`
       );
       const categoriesResult = await categoriesResponse.json();
 
@@ -127,17 +127,17 @@ export default function FinanceManagementPage() {
     fetchFinancialData();
   }, [dateRange]);
 
-  // 格式化金?  const formatCurrency = (amount: number) => {
+  // 格式化金  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('zh-CN', {
       style: 'currency',
       currency: 'CNY',
     }).format(amount);
   };
 
-  // 获取状态标签样?  const getStatusBadge = (status: string) => {
+  // 获取状态标签样  const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
-      completed: { text: '已完?, className: 'bg-green-100 text-green-800' },
-      pending: { text: '处理?, className: 'bg-yellow-100 text-yellow-800' },
+      completed: { text: '已完, className: 'bg-green-100 text-green-800' },
+      pending: { text: '处理, className: 'bg-yellow-100 text-yellow-800' },
       failed: { text: '失败', className: 'bg-red-100 text-red-800' },
     };
 
@@ -182,54 +182,54 @@ export default function FinanceManagementPage() {
       {/* 页面标题 */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">财务管理</h1>
-        <p className="text-gray-600 mt-1">监控和管理系统财务状?/p>
+        <p className="text-gray-600 mt-1">监控和管理系统财务状/p>
       </div>
 
       {/* 时间范围选择 */}
       <div className="flex gap-2">
         <Button
-          variant={dateRange === '7' ? 'default' : 'outline'}
+          variant={dateRange === '7'  'default' : 'outline'}
           onClick={() => setDateRange('7')}
           size="sm"
         >
-          最?�?        </Button>
+          最        </Button>
         <Button
-          variant={dateRange === '30' ? 'default' : 'outline'}
+          variant={dateRange === '30'  'default' : 'outline'}
           onClick={() => setDateRange('30')}
           size="sm"
         >
-          最?0�?        </Button>
+          最0        </Button>
         <Button
-          variant={dateRange === '90' ? 'default' : 'outline'}
+          variant={dateRange === '90'  'default' : 'outline'}
           onClick={() => setDateRange('90')}
           size="sm"
         >
-          最?0�?        </Button>
+          最0        </Button>
       </div>
 
       {/* 财务概览卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>总收?/CardDescription>
+            <CardDescription>总收/CardDescription>
             <CardTitle className="text-2xl text-green-600">
               {formatCurrency(summary.total_income)}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-gray-500">统计周期内所有收?/p>
+            <p className="text-xs text-gray-500">统计周期内所有收/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>总支?/CardDescription>
+            <CardDescription>总支/CardDescription>
             <CardTitle className="text-2xl text-red-600">
               {formatCurrency(summary.total_expense)}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-gray-500">统计周期内所有支?/p>
+            <p className="text-xs text-gray-500">统计周期内所有支/p>
           </CardContent>
         </Card>
 
@@ -237,7 +237,7 @@ export default function FinanceManagementPage() {
           <CardHeader className="pb-2">
             <CardDescription>净利润</CardDescription>
             <CardTitle
-              className={`text-2xl ${summary.net_profit >= 0 ? 'text-green-600' : 'text-red-600'}`}
+              className={`text-2xl ${summary.net_profit >= 0  'text-green-600' : 'text-red-600'}`}
             >
               {formatCurrency(summary.net_profit)}
             </CardTitle>
@@ -264,11 +264,11 @@ export default function FinanceManagementPage() {
 
       {/* 图表区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 收入支出趋势?*/}
+        {/* 收入支出趋势*/}
         <Card>
           <CardHeader>
             <CardTitle>收支趋势</CardTitle>
-            <CardDescription>�?个月收支变化</CardDescription>
+            <CardDescription>个月收支变化</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -362,10 +362,10 @@ export default function FinanceManagementPage() {
           <CardDescription>最近的财务交易明细</CardDescription>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading  (
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <span className="ml-2 text-gray-600">加载?..</span>
+              <span className="ml-2 text-gray-600">加载中..</span>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -388,7 +388,7 @@ export default function FinanceManagementPage() {
                       描述
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      状?                    </th>
+                      状                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -406,11 +406,11 @@ export default function FinanceManagementPage() {
                       <td
                         className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${
                           transaction.type === 'income'
-                            ? 'text-green-600'
+                             'text-green-600'
                             : 'text-red-600'
                         }`}
                       >
-                        {transaction.type === 'income' ? '+' : '-'}
+                        {transaction.type === 'income'  '+' : '-'}
                         {formatCurrency(Math.abs(transaction.amount))}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">

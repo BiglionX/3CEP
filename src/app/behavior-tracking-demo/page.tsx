@@ -1,6 +1,6 @@
 ﻿/**
  * 用户行为追踪系统演示页面
- * 展示用户行为埋点和数据分析功? */
+ * 展示用户行为埋点和数据分析功 */
 
 'use client';
 
@@ -74,7 +74,7 @@ export default function UserBehaviorTrackingDemoPage() {
   const [analyticsData, setAnalyticsData] = useState(mockAnalyticsData);
   const [isTrackingEnabled, setIsTrackingEnabled] = useState(true);
 
-  // 初始化行为追?  const { trackEvent, getEvents, flush, getEventIcon } =
+  // 初始化行为追  const { trackEvent, getEvents, flush, getEventIcon } =
     useUserBehaviorTracking({
       enabled: isTrackingEnabled,
       debug: true,
@@ -97,7 +97,7 @@ export default function UserBehaviorTrackingDemoPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       const events = getEvents();
-      setTrackedEvents(events.slice(-20)); // 只显示最?0个事?
+      setTrackedEvents(events.slice(-20)); // 只显示最0个事
       // 模拟数据分析更新
       if (events.length > 0) {
         setAnalyticsData(prev => ({
@@ -113,7 +113,7 @@ export default function UserBehaviorTrackingDemoPage() {
 
   // 手动触发测试事件
   const triggerTestEvents = () => {
-    // 触发各种类型的事?    trackEvent('click', undefined, { test: 'manual-trigger' });
+    // 触发各种类型的事    trackEvent('click', undefined, { test: 'manual-trigger' });
     trackEvent('search', undefined, { searchTerm: '测试搜索' });
     trackEvent('add_to_cart', undefined, {
       productId: 'test-001',
@@ -122,11 +122,11 @@ export default function UserBehaviorTrackingDemoPage() {
     trackEvent('share', undefined, { platform: 'wechat', content: '测试分享' });
   };
 
-  // 清除所有事?  const clearEvents = () => {
+  // 清除所有事  const clearEvents = () => {
     setTrackedEvents([]);
-    flush(); // 强制发送剩余事?  };
+    flush(); // 强制发送剩余事  };
 
-  // 切换追踪状?  const toggleTracking = () => {
+  // 切换追踪状  const toggleTracking = () => {
     setIsTrackingEnabled(!isTrackingEnabled);
   };
 
@@ -142,7 +142,7 @@ export default function UserBehaviorTrackingDemoPage() {
     }
   };
 
-  // 格式化时?  const formatTime = (timestamp: number) => {
+  // 格式化时  const formatTime = (timestamp: number) => {
     return new Date(timestamp).toLocaleTimeString();
   };
 
@@ -153,15 +153,15 @@ export default function UserBehaviorTrackingDemoPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             用户行为追踪系统
           </h1>
-          <p className="text-gray-600">实时监控和分析用户交互行?/p>
+          <p className="text-gray-600">实时监控和分析用户交互行/p>
         </div>
 
         <div className="flex items-center gap-4 mb-6">
           <Button
             onClick={toggleTracking}
-            variant={isTrackingEnabled ? 'default' : 'outline'}
+            variant={isTrackingEnabled  'default' : 'outline'}
           >
-            {isTrackingEnabled ? '停止追踪' : '开始追?}
+            {isTrackingEnabled  '停止追踪' : '开始追}
           </Button>
           <Button onClick={triggerTestEvents} variant="secondary">
             触发测试事件
@@ -169,8 +169,8 @@ export default function UserBehaviorTrackingDemoPage() {
           <Button onClick={clearEvents} variant="outline">
             清除事件
           </Button>
-          <Badge variant={isTrackingEnabled ? 'default' : 'secondary'}>
-            {isTrackingEnabled ? '追踪? : '已暂?}
+          <Badge variant={isTrackingEnabled  'default' : 'secondary'}>
+            {isTrackingEnabled  '追踪 : '已暂}
           </Badge>
         </div>
 
@@ -232,7 +232,7 @@ export default function UserBehaviorTrackingDemoPage() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">跳出?/CardTitle>
+                  <CardTitle className="text-sm font-medium">跳出/CardTitle>
                   <TrendingUp className="h-4 w-4 text-red-500" />
                 </CardHeader>
                 <CardContent>
@@ -325,19 +325,19 @@ export default function UserBehaviorTrackingDemoPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>实时事件?/CardTitle>
+                    <CardTitle>实时事件/CardTitle>
                     <CardDescription>最近发生的用户行为事件</CardDescription>
                   </div>
                   <Badge variant="secondary">
-                    {trackedEvents.length} 个事?                  </Badge>
+                    {trackedEvents.length} 个事                  </Badge>
                 </div>
               </CardHeader>
               <CardContent>
-                {trackedEvents.length === 0 ? (
+                {trackedEvents.length === 0  (
                   <div className="text-center py-12 text-gray-500">
                     <MousePointer className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>暂无事件记录</p>
-                    <p className="text-sm mt-1">在页面上进行交互以生成事?/p>
+                    <p className="text-sm mt-1">在页面上进行交互以生成事/p>
                   </div>
                 ) : (
                   <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -371,7 +371,7 @@ export default function UserBehaviorTrackingDemoPage() {
                           <div>
                             <span className="font-medium">位置:</span>
                             {event.x !== undefined && event.y !== undefined
-                              ? `(${event.x}, ${event.y})`
+                               `(${event.x}, ${event.y})`
                               : 'N/A'}
                           </div>
                           {event.elementText && (
@@ -414,21 +414,21 @@ export default function UserBehaviorTrackingDemoPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Monitor className="h-4 w-4 text-blue-500" />
-                            <span className="text-sm">桌面?/span>
+                            <span className="text-sm">桌面/span>
                           </div>
                           <span className="text-sm">65%</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Smartphone className="h-4 w-4 text-green-500" />
-                            <span className="text-sm">移动?/span>
+                            <span className="text-sm">移动/span>
                           </div>
                           <span className="text-sm">28%</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Tablet className="h-4 w-4 text-yellow-500" />
-                            <span className="text-sm">平板?/span>
+                            <span className="text-sm">平板/span>
                           </div>
                           <span className="text-sm">7%</span>
                         </div>
@@ -438,7 +438,7 @@ export default function UserBehaviorTrackingDemoPage() {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm">时段分布</span>
-                        <span className="text-xs text-gray-500">活跃?/span>
+                        <span className="text-xs text-gray-500">活跃/span>
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center justify-between text-xs">
@@ -512,7 +512,7 @@ export default function UserBehaviorTrackingDemoPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <ShoppingCart className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm">加入购物?/span>
+                          <span className="text-sm">加入购物/span>
                         </div>
                         <span className="text-sm font-medium">450</span>
                       </div>
@@ -537,7 +537,7 @@ export default function UserBehaviorTrackingDemoPage() {
                         <div className="text-2xl font-bold text-green-600">
                           18%
                         </div>
-                        <div className="text-sm text-gray-600">整体转化?/div>
+                        <div className="text-sm text-gray-600">整体转化/div>
                       </div>
                     </div>
                   </div>
@@ -555,15 +555,15 @@ export default function UserBehaviorTrackingDemoPage() {
                         <Navigation className="h-4 w-4 text-blue-500" />
                         <span className="text-sm">导航菜单</span>
                       </div>
-                      <Badge variant="secondary">342次点?/Badge>
+                      <Badge variant="secondary">342次点/Badge>
                     </div>
 
                     <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
                       <div className="flex items-center gap-2">
                         <Search className="h-4 w-4 text-green-500" />
-                        <span className="text-sm">搜索?/span>
+                        <span className="text-sm">搜索/span>
                       </div>
-                      <Badge variant="secondary">156次使?/Badge>
+                      <Badge variant="secondary">156次使/Badge>
                     </div>
 
                     <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
@@ -571,7 +571,7 @@ export default function UserBehaviorTrackingDemoPage() {
                         <Heart className="h-4 w-4 text-red-500" />
                         <span className="text-sm">收藏按钮</span>
                       </div>
-                      <Badge variant="secondary">89次点?/Badge>
+                      <Badge variant="secondary">89次点/Badge>
                     </div>
 
                     <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
@@ -579,7 +579,7 @@ export default function UserBehaviorTrackingDemoPage() {
                         <Share2 className="h-4 w-4 text-purple-500" />
                         <span className="text-sm">分享按钮</span>
                       </div>
-                      <Badge variant="secondary">67次分?/Badge>
+                      <Badge variant="secondary">67次分/Badge>
                     </div>
 
                     <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
@@ -587,7 +587,7 @@ export default function UserBehaviorTrackingDemoPage() {
                         <Download className="h-4 w-4 text-red-500" />
                         <span className="text-sm">下载链接</span>
                       </div>
-                      <Badge variant="secondary">43次下?/Badge>
+                      <Badge variant="secondary">43次下/Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -600,36 +600,36 @@ export default function UserBehaviorTrackingDemoPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>可追踪元?/CardTitle>
-                  <CardDescription>点击下面的按钮测试事件追?/CardDescription>
+                  <CardTitle>可追踪元/CardTitle>
+                  <CardDescription>点击下面的按钮测试事件追/CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Button className="trackable-button w-full" variant="default">
-                    主要按钮 (已追?
+                    主要按钮 (已追
                   </Button>
 
                   <Button
                     className="trackable-button w-full"
                     variant="secondary"
                   >
-                    次要按钮 (已追?
+                    次要按钮 (已追
                   </Button>
 
                   <div className="grid grid-cols-2 gap-2">
                     <Button className="trackable-button" size="sm">
-                      小按?
+                      小按
                     </Button>
                     <Button
                       className="trackable-button"
                       size="sm"
                       variant="outline"
                     >
-                      小按?
+                      小按
                     </Button>
                   </div>
 
                   <div className="p-4 bg-gray-100 rounded-lg">
-                    <h4 className="font-medium mb-2">导航链接 (已追?</h4>
+                    <h4 className="font-medium mb-2">导航链接 (已追</h4>
                     <div className="space-y-1">
                       <a
                         href="#"
@@ -669,7 +669,7 @@ export default function UserBehaviorTrackingDemoPage() {
                         type="text"
                         name="name"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="请输入姓?
+                        placeholder="请输入姓
                       />
                     </div>
 
@@ -681,7 +681,7 @@ export default function UserBehaviorTrackingDemoPage() {
                         type="email"
                         name="email"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="请输入邮?
+                        placeholder="请输入邮
                       />
                     </div>
 
@@ -708,17 +708,17 @@ export default function UserBehaviorTrackingDemoPage() {
             <Card>
               <CardHeader>
                 <CardTitle>追踪配置</CardTitle>
-                <CardDescription>当前追踪系统的配置状?/CardDescription>
+                <CardDescription>当前追踪系统的配置状/CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm">追踪状?/span>
+                      <span className="text-sm">追踪状/span>
                       <Badge
-                        variant={isTrackingEnabled ? 'default' : 'secondary'}
+                        variant={isTrackingEnabled  'default' : 'secondary'}
                       >
-                        {isTrackingEnabled ? '启用' : '禁用'}
+                        {isTrackingEnabled  '启用' : '禁用'}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
@@ -726,12 +726,12 @@ export default function UserBehaviorTrackingDemoPage() {
                       <Badge variant="secondary">启用</Badge>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm">批处理大?/span>
-                      <Badge variant="secondary">5个事?/Badge>
+                      <span className="text-sm">批处理大/span>
+                      <Badge variant="secondary">5个事/Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">刷新间隔</span>
-                      <Badge variant="secondary">3�?/Badge>
+                      <Badge variant="secondary">3/Badge>
                     </div>
                   </div>
 
@@ -746,7 +746,7 @@ export default function UserBehaviorTrackingDemoPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Cookie同意</span>
-                      <Badge variant="secondary">不需?/Badge>
+                      <Badge variant="secondary">不需/Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">数据端点</span>

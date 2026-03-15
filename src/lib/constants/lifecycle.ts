@@ -6,17 +6,26 @@
 // 事件类型枚举
 export enum DeviceEventType {
   MANUFACTURED = 'manufactured', // 出厂
-  ACTIVATED = 'activated', // 激?  REPAIRED = 'repaired', // 维修
+  ACTIVATED = 'activated', // 激活
+  REPAIRED = 'repaired', // 维修
   PART_REPLACED = 'part_replaced', // 更换配件
   TRANSFERRED = 'transferred', // 转移
   RECYCLED = 'recycled', // 回收
-  INSPECTED = 'inspected', // 检?  MAINTAINED = 'maintained', // 保养
+  INSPECTED = 'inspected', // 检查
+  MAINTAINED = 'maintained', // 保养
   UPGRADED = 'upgraded', // 升级
 }
 
-// 设备状态枚?export enum DeviceStatus {
-  MANUFACTURED = 'manufactured', // 已制?  ACTIVATED = 'activated', // 已激?  IN_REPAIR = 'in_repair', // 维修?  ACTIVE = 'active', // 正常使用
-  TRANSFERRED = 'transferred', // 已转?  RECYCLED = 'recycled', // 已回?  ARCHIVED = 'archived', // 已归?}
+// 设备状态枚举
+export enum DeviceStatus {
+  MANUFACTURED = 'manufactured', // 已制造
+  ACTIVATED = 'activated', // 已激活
+  IN_REPAIR = 'in_repair', // 维修中
+  ACTIVE = 'active', // 正常使用
+  TRANSFERRED = 'transferred', // 已转移
+  RECYCLED = 'recycled', // 已回收
+  ARCHIVED = 'archived', // 已归档
+}
 
 // 维修类型枚举
 export enum RepairType {
@@ -32,13 +41,16 @@ export enum RepairType {
 export enum PartType {
   SCREEN = 'screen', // 屏幕
   BATTERY = 'battery', // 电池
-  CAMERA = 'camera', // 摄像?  CHARGER = 'charger', // 充电?  CASE = 'case', // 外壳
+  CAMERA = 'camera', // 摄像头
+  CHARGER = 'charger', // 充电器
+  CASE = 'case', // 外壳
   OTHER = 'other', // 其他
 }
 
 // 转移类型枚举
 export enum TransferType {
-  SALE = 'sale', // 销?  LEASE = 'lease', // 租赁
+  SALE = 'sale', // 销售
+  LEASE = 'lease', // 租赁
   LOAN = 'loan', // 借用
   INTERNAL = 'internal', // 内部转移
   WARRANTY = 'warranty', // 保修转移
@@ -172,24 +184,24 @@ export interface RecordLifecycleEventParams {
 // 常量映射对象
 export const DEVICE_EVENT_TYPE_LABELS: Record<DeviceEventType, string> = {
   [DeviceEventType.MANUFACTURED]: '出厂',
-  [DeviceEventType.ACTIVATED]: '激?,
+  [DeviceEventType.ACTIVATED]: '激活',
   [DeviceEventType.REPAIRED]: '维修',
   [DeviceEventType.PART_REPLACED]: '更换配件',
   [DeviceEventType.TRANSFERRED]: '转移',
   [DeviceEventType.RECYCLED]: '回收',
-  [DeviceEventType.INSPECTED]: '检?,
+  [DeviceEventType.INSPECTED]: '检查',
   [DeviceEventType.MAINTAINED]: '保养',
   [DeviceEventType.UPGRADED]: '升级',
 };
 
 export const DEVICE_STATUS_LABELS: Record<DeviceStatus, string> = {
-  [DeviceStatus.MANUFACTURED]: '已制?,
-  [DeviceStatus.ACTIVATED]: '已激?,
-  [DeviceStatus.IN_REPAIR]: '维修?,
+  [DeviceStatus.MANUFACTURED]: '已制造',
+  [DeviceStatus.ACTIVATED]: '已激活',
+  [DeviceStatus.IN_REPAIR]: '维修中',
   [DeviceStatus.ACTIVE]: '正常使用',
-  [DeviceStatus.TRANSFERRED]: '已转?,
-  [DeviceStatus.RECYCLED]: '已回?,
-  [DeviceStatus.ARCHIVED]: '已归?,
+  [DeviceStatus.TRANSFERRED]: '已转移',
+  [DeviceStatus.RECYCLED]: '已回收',
+  [DeviceStatus.ARCHIVED]: '已归档',
 };
 
 export const REPAIR_TYPE_LABELS: Record<RepairType, string> = {
@@ -204,13 +216,14 @@ export const REPAIR_TYPE_LABELS: Record<RepairType, string> = {
 export const PART_TYPE_LABELS: Record<PartType, string> = {
   [PartType.SCREEN]: '屏幕',
   [PartType.BATTERY]: '电池',
-  [PartType.CAMERA]: '摄像?,
-  [PartType.CHARGER]: '充电?,
+  [PartType.CAMERA]: '摄像头',
+  [PartType.CHARGER]: '充电器',
   [PartType.CASE]: '外壳',
   [PartType.OTHER]: '其他配件',
 };
 
-// 状态颜色映?export const STATUS_COLORS: Record<DeviceStatus, string> = {
+// 状态颜色映射
+export const STATUS_COLORS: Record<DeviceStatus, string> = {
   [DeviceStatus.MANUFACTURED]: 'bg-blue-100 text-blue-800',
   [DeviceStatus.ACTIVATED]: 'bg-green-100 text-green-800',
   [DeviceStatus.IN_REPAIR]: 'bg-yellow-100 text-yellow-800',
@@ -223,13 +236,13 @@ export const PART_TYPE_LABELS: Record<PartType, string> = {
 // 事件图标映射
 export const EVENT_ICONS: Record<DeviceEventType, string> = {
   [DeviceEventType.MANUFACTURED]: '🏭',
-  [DeviceEventType.ACTIVATED]: '�?,
+  [DeviceEventType.ACTIVATED]: '✅',
   [DeviceEventType.REPAIRED]: '🔧',
   [DeviceEventType.PART_REPLACED]: '⚙️',
   [DeviceEventType.TRANSFERRED]: '🚚',
   [DeviceEventType.RECYCLED]: '♻️',
   [DeviceEventType.INSPECTED]: '🔍',
-  [DeviceEventType.MAINTAINED]: '🛠�?,
+  [DeviceEventType.MAINTAINED]: '🛠️',
   [DeviceEventType.UPGRADED]: '⬆️',
 };
 

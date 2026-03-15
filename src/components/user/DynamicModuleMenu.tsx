@@ -29,25 +29,25 @@ import {
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 
 interface DynamicModuleMenuProps {
-  /** 显示模式：完整菜?| 紧凑模式 | 图标模式 */
+  /** 显示模式：完整菜单 | 紧凑模式 | 图标模式 */
   mode?: 'full' | 'compact' | 'icons';
 
-  /** 是否显示搜索?*/
+  /** 是否显示搜索框 */
   showSearch?: boolean;
 
   /** 是否显示筛选器 */
   showFilters?: boolean;
 
-  /** 默认展开的分?*/
+  /** 默认展开的分类 */
   defaultExpandedCategories?: string[];
 
-  /** 自定义样式类?*/
+  /** 自定义样式类名 */
   className?: string;
 
   /** 点击模块回调 */
   onModuleClick?: (module: ModuleConfig) => void;
 
-  /** 是否只显示收藏模?*/
+  /** 是否只显示收藏模块 */
   favoritesOnly?: boolean;
 }
 
@@ -95,7 +95,7 @@ export default function DynamicModuleMenu({
       modules = modules.filter(
         module =>
           module.name.toLowerCase().includes(term) ||
-          module?.toLowerCase().includes(term)
+          module.description?.toLowerCase().includes(term)
       );
     }
 
@@ -131,7 +131,8 @@ export default function DynamicModuleMenu({
   // 获取图标组件
   const getIconComponent = (iconName: string) => {
     // 这里应该导入所有可能的图标组件
-    // 为简化，返回一个通用的图标函?    return ({ className }: { className?: string }) => (
+    // 为简化，返回一个通用的图标函数
+    return ({ className }: { className?: string }) => (
       <div className={`w-5 h-5 ${className || ''}`} />
     );
   };
@@ -147,11 +148,13 @@ export default function DynamicModuleMenu({
     return names[category] || category;
   };
 
-  // 判断模块是否激?  const isActiveModule = (path: string) => {
+  // 判断模块是否激活
+  const isActiveModule = (path: string) => {
     return pathname === path;
   };
 
-  // 切换分类展开状?  const toggleCategory = (category: string) => {
+  // 切换分类展开状态
+  const toggleCategory = (category: string) => {
     const newExpanded = new Set(expandedCategories);
     if (newExpanded.has(category)) {
       newExpanded.delete(category);
@@ -168,7 +171,8 @@ export default function DynamicModuleMenu({
     }
   };
 
-  // 渲染模块?  const renderModuleItem = (module: ModuleConfig) => {
+  // 渲染模块项
+  const renderModuleItem = (module: ModuleConfig) => {
     const Icon = getIconComponent(module.icon);
     const isActive = isActiveModule(module.path);
 
@@ -206,7 +210,8 @@ export default function DynamicModuleMenu({
     );
   };
 
-  // 渲染分类?  const renderCategoryGroup = (
+  // 渲染分类组
+  const renderCategoryGroup = (
     categoryKey: string,
     categoryData: {
       name: string;
@@ -243,7 +248,8 @@ export default function DynamicModuleMenu({
     );
   };
 
-  // 按分类组织模?  const modulesByCategory = useMemo(() => {
+  // 按分类组织模块
+  const modulesByCategory = useMemo(() => {
     const categories: Record<
       string,
       {
@@ -268,7 +274,7 @@ export default function DynamicModuleMenu({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* 搜索和筛选区?*/}
+      {/* 搜索和筛选区域 */}
       {(showSearch || showFilters) && (
         <div className="space-y-3">
           {showSearch && (
@@ -310,9 +316,9 @@ export default function DynamicModuleMenu({
                   <SelectValue placeholder="排序" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="priority">优先?/SelectItem>
+                  <SelectItem value="priority">优先级</SelectItem>
                   <SelectItem value="name">名称</SelectItem>
-                  <SelectItem value="recent">最近使?/SelectItem>
+                  <SelectItem value="recent">最近使用</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -321,7 +327,7 @@ export default function DynamicModuleMenu({
                 size="sm"
                 className="text-sm"
                 onClick={() => {
-                  /* 切换收藏状?*/
+                  /* 切换收藏状态 */
                 }}
               >
                 <Star className="w-4 h-4 mr-1" />
@@ -341,7 +347,7 @@ export default function DynamicModuleMenu({
         ) : (
           <div className="text-center py-8 text-gray-500">
             <Search className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm">没有找到匹配的模?/p>
+            <p className="text-sm">没有找到匹配的模块</p>
           </div>
         )}
       </div>
@@ -349,7 +355,7 @@ export default function DynamicModuleMenu({
       {/* 底部操作 */}
       <div className="pt-4 border-t border-gray-200">
         <div className="flex justify-between items-center text-xs text-gray-500">
-          <span>{filteredAndSortedModules.length} 个模?/span>
+          <span>{filteredAndSortedModules.length} 个模块</span>
           <Button variant="ghost" size="sm" className="text-xs">
             管理模块
           </Button>

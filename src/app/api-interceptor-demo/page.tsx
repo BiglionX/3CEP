@@ -1,5 +1,5 @@
 ﻿/**
- * API拦截器系统演示页? * 展示完整的API请求拦截、认证和安全功能
+ * API拦截器系统演示页 * 展示完整的API请求拦截、认证和安全功能
  */
 
 'use client';
@@ -56,21 +56,21 @@ function ApiInterceptorDemo() {
 
   // 初始化演示拦截器
   const initializeDemo = () => {
-    // 认证拦截?    const authInterceptor = createAuthInterceptor({
+    // 认证拦截    const authInterceptor = createAuthInterceptor({
       tokenGetter: getAuthToken,
       tokenSetter: setAuthToken,
       unauthorizedRedirect: '/login',
     });
     registerInterceptor('demo-auth', authInterceptor);
 
-    // 安全拦截?    const securityInterceptor = createSecurityInterceptor({
+    // 安全拦截    const securityInterceptor = createSecurityInterceptor({
       enableCSRF: true,
       enableRateLimiting: true,
       maxRequestsPerMinute: 30,
     });
     registerInterceptor('demo-security', securityInterceptor);
 
-    // 日志拦截?    const loggingInterceptor = createLoggingInterceptor({
+    // 日志拦截    const loggingInterceptor = createLoggingInterceptor({
       enableRequestLogging: true,
       enableResponseLogging: true,
       enableErrorLogging: true,
@@ -102,7 +102,7 @@ function ApiInterceptorDemo() {
       {
         name: '错误处理测试',
         url: 'https://httpbin.org/status/404',
-        description: '测试错误拦截和日?,
+        description: '测试错误拦截和日,
       },
     ];
 
@@ -169,13 +169,13 @@ function ApiInterceptorDemo() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
             <Shield className="w-8 h-8 text-blue-600" />
-            API拦截器演?          </h1>
+            API拦截器演          </h1>
           <p className="text-gray-600">
             展示企业级API请求拦截、认证和安全保护功能
           </p>
         </div>
 
-        {/* 系统状态概?*/}
+        {/* 系统状态概*/}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-2">
@@ -195,12 +195,12 @@ function ApiInterceptorDemo() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" />
-                成功?              </CardTitle>
+                成功              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">
                 {stats.totalRequests > 0
-                  ? `${Math.round((stats.successfulRequests / stats.totalRequests) * 100)}%`
+                   `${Math.round((stats.successfulRequests / stats.totalRequests) * 100)}%`
                   : '0%'}
               </div>
             </CardContent>
@@ -237,7 +237,7 @@ function ApiInterceptorDemo() {
         <Tabs defaultValue="demo" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="demo">功能演示</TabsTrigger>
-            <TabsTrigger value="management">拦截器管?/TabsTrigger>
+            <TabsTrigger value="management">拦截器管/TabsTrigger>
             <TabsTrigger value="monitoring">监控分析</TabsTrigger>
           </TabsList>
 
@@ -265,15 +265,15 @@ function ApiInterceptorDemo() {
                   </div>
 
                   <div className="flex items-center gap-2 p-3 bg-gray-50 rounded">
-                    <span className="text-sm font-medium">认证状?</span>
-                    {isAuthenticated ? (
+                    <span className="text-sm font-medium">认证状</span>
+                    {isAuthenticated  (
                       <Badge variant="default">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        已认?                      </Badge>
+                        已认                      </Badge>
                     ) : (
                       <Badge variant="secondary">
                         <XCircle className="w-3 h-3 mr-1" />
-                        未认?                      </Badge>
+                        未认                      </Badge>
                     )}
                   </div>
 
@@ -281,7 +281,7 @@ function ApiInterceptorDemo() {
                     <div className="p-3 bg-blue-50 rounded">
                       <div className="text-sm text-blue-800">
                         <strong>当前Token:</strong>{' '}
-                        {getAuthToken()?.substring(0, 20)}...
+                        {getAuthToken().substring(0, 20)}...
                       </div>
                     </div>
                   )}
@@ -295,13 +295,13 @@ function ApiInterceptorDemo() {
                     <Zap className="w-5 h-5" />
                     API测试套件
                   </CardTitle>
-                  <CardDescription>运行综合测试验证拦截器功?/CardDescription>
+                  <CardDescription>运行综合测试验证拦截器功/CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex gap-3">
                     <Button onClick={initializeDemo} variant="secondary">
                       <Shield className="w-4 h-4 mr-2" />
-                      初始化演?                    </Button>
+                      初始化演                    </Button>
                     <Button onClick={runTestSuite}>
                       <Zap className="w-4 h-4 mr-2" />
                       运行测试套件
@@ -324,7 +324,7 @@ function ApiInterceptorDemo() {
                             key={index}
                             className={`p-3 rounded border ${
                               result.status === 'success'
-                                ? 'bg-green-50 border-green-200'
+                                 'bg-green-50 border-green-200'
                                 : 'bg-red-50 border-red-200'
                             }`}
                           >
@@ -340,11 +340,11 @@ function ApiInterceptorDemo() {
                               <div>{result.description}</div>
                               {result.response && (
                                 <div>
-                                  状? {result.response.status} (
+                                  状 {result.response.status} (
                                   {result.response.statusText})
                                 </div>
                               )}
-                              {result?.responseTime && (
+                              {result.responseTime && (
                                 <div>
                                   耗时: {result.response.responseTime}ms
                                 </div>
@@ -363,10 +363,10 @@ function ApiInterceptorDemo() {
                 </CardContent>
               </Card>
 
-              {/* 功能特性展?*/}
+              {/* 功能特性展*/}
               <Card>
                 <CardHeader>
-                  <CardTitle>核心功能特?/CardTitle>
+                  <CardTitle>核心功能特/CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -376,7 +376,7 @@ function ApiInterceptorDemo() {
                         <h3 className="font-medium text-blue-800">统一认证</h3>
                       </div>
                       <p className="text-sm text-blue-600">
-                        自动添加JWT Token，支持Token刷新和过期处?                      </p>
+                        自动添加JWT Token，支持Token刷新和过期处                      </p>
                     </div>
 
                     <div className="p-4 bg-green-50 rounded-lg">
@@ -397,7 +397,7 @@ function ApiInterceptorDemo() {
                         </h3>
                       </div>
                       <p className="text-sm text-purple-600">
-                        网络错误自动重试，指数退避算法优?                      </p>
+                        网络错误自动重试，指数退避算法优                      </p>
                     </div>
 
                     <div className="p-4 bg-yellow-50 rounded-lg">
@@ -408,7 +408,7 @@ function ApiInterceptorDemo() {
                         </h3>
                       </div>
                       <p className="text-sm text-yellow-600">
-                        完整的请求日志、性能统计和错误追?                      </p>
+                        完整的请求日志、性能统计和错误追                      </p>
                     </div>
 
                     <div className="p-4 bg-red-50 rounded-lg">

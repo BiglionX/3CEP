@@ -3,7 +3,7 @@
  * 鑾峰彇瀹㈡埛鍒楄〃锛堟敮鎸佸垎椤靛拰绛涢€夛級
  *
  * POST /api/sales/customers
- * 鍒涘缓鏂板? */
+ * 鍒涘缓鏂板 */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { customerService } from '@/modules/sales-agent';

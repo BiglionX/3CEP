@@ -1,6 +1,6 @@
 ﻿/**
  * Token缁忔祹绯荤粺API璺敱
- * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩? */
+ * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩 */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
@@ -39,7 +39,7 @@ const mockTokenTransactions = [
     type: 'purchase',
     amount: -500,
     balance_after: 1238.0,
-    description: '璐拱鏍囧噯?(500 Tokens)',
+    description: '璐拱鏍囧噯(500 Tokens)',
     created_at: '2026-03-01T10:15:00Z',
     status: 'completed',
   },
@@ -49,9 +49,9 @@ const mockTokenTransactions = [
     type: 'usage',
     amount: -2.3,
     balance_after: 1738.0,
-    description: '閲囪喘鏅鸿兘浣撲娇鐢ㄦ秷?,
+    description: '閲囪喘鏅鸿兘浣撲娇鐢ㄦ秷,
     related_agent_id: 'agent-2',
-    related_agent_name: '閲囪喘鏅鸿兘?,
+    related_agent_name: '閲囪喘鏅鸿兘,
     created_at: '2026-03-01T09:45:00Z',
     status: 'completed',
   },
@@ -61,9 +61,9 @@ const mockTokenTransactions = [
     type: 'earning',
     amount: 8.2,
     balance_after: 1740.3,
-    description: '瀹㈡湇鏀寔鏈哄櫒浜轰娇鐢ㄦ敹?,
+    description: '瀹㈡湇鏀寔鏈哄櫒浜轰娇鐢ㄦ敹,
     related_agent_id: 'agent-3',
-    related_agent_name: '瀹㈡湇鏀寔鏈哄櫒?,
+    related_agent_name: '瀹㈡湇鏀寔鏈哄櫒,
     created_at: '2026-02-29T16:20:00Z',
     status: 'completed',
   },
@@ -73,7 +73,7 @@ const mockTokenTransactions = [
 const tokenPackages = [
   {
     id: 'pkg-1',
-    name: '鍩虹?,
+    name: '鍩虹,
     tokens: 100,
     price: 99,
     bonus_percentage: 0,
@@ -81,7 +81,7 @@ const tokenPackages = [
   },
   {
     id: 'pkg-2',
-    name: '鏍囧噯?,
+    name: '鏍囧噯,
     tokens: 500,
     price: 449,
     bonus_percentage: 10,
@@ -89,7 +89,7 @@ const tokenPackages = [
   },
   {
     id: 'pkg-3',
-    name: '涓撲笟?,
+    name: '涓撲笟,
     tokens: 1200,
     price: 999,
     bonus_percentage: 20,
@@ -97,7 +97,7 @@ const tokenPackages = [
   },
   {
     id: 'pkg-4',
-    name: '浼佷笟?,
+    name: '佷笟,
     tokens: 3000,
     price: 2299,
     bonus_percentage: 30,
@@ -113,7 +113,7 @@ export async function GET(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -186,7 +186,7 @@ export async function GET(request: Request) {
           );
         }
 
-        // 鎺掑簭锛堟寜鏃堕棿鍊掑簭?        transactions.sort(
+        // 鎺掑簭锛堟寜堕棿鍊掑簭        transactions.sort(
           (a, b) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
@@ -217,7 +217,7 @@ export async function GET(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -226,7 +226,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         message: error.message,
       },
       { status: 500 }
@@ -242,7 +242,7 @@ export async function POST(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -264,7 +264,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
     const { action, package_id, amount } = body;
 
     switch (action) {
@@ -280,13 +280,13 @@ export async function POST(request: Request) {
         const selectedPackage = tokenPackages.find(p => p.id === package_id);
         if (!selectedPackage) {
           return NextResponse.json(
-            { success: false, error: '濂楅涓嶅瓨? },
+            { success: false, error: '濂楅涓嶅 },
             { status: 404 }
           );
         }
 
         // 妯℃嫙鏀粯澶勭悊
-        // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細闆嗘垚鐪熷疄鐨勬敮浠樼綉?
+        // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細闆嗘垚鐪熷疄鐨勬敮樼綉
         // 璁＄畻濂栧姳Token
         const bonusTokens = Math.floor(
           selectedPackage.tokens * (selectedPackage.bonus_percentage / 100)
@@ -318,7 +318,7 @@ export async function POST(request: Request) {
           user_id: user.id,
           type: 'purchase',
           amount: -selectedPackage.tokens, // 璐熸暟琛ㄧず鏀嚭
-          balance_after: userBalance ? userBalance.total_balance : totalTokens,
+          balance_after: userBalance  userBalance.total_balance : totalTokens,
           description: `璐拱${selectedPackage.name} (${selectedPackage.tokens} Tokens)`,
           created_at: new Date().toISOString(),
           status: 'completed',
@@ -341,9 +341,9 @@ export async function POST(request: Request) {
         );
 
       case 'consume':
-        // 娑堣€桾oken锛堟櫤鑳戒綋浣跨敤?        if (!amount || amount <= 0) {
+        // 娑堣€桾oken锛堟櫤鑳戒綋浣跨敤        if (!amount || amount <= 0) {
           return NextResponse.json(
-            { success: false, error: '娑堣€楁暟閲忓繀椤诲ぇ?' },
+            { success: false, error: '娑堣€楁暟閲忓繀椤诲ぇ' },
             { status: 400 }
           );
         }
@@ -361,13 +361,13 @@ export async function POST(request: Request) {
         balance.total_balance -= amount;
         balance.updated_at = new Date().toISOString();
 
-        // 璁板綍娑堣€椾氦?        const consumeTransaction = {
+        // 璁板綍娑堣€椾氦        const consumeTransaction = {
           id: `tx-${Date.now()}`,
           user_id: user.id,
           type: 'usage',
           amount: -amount,
           balance_after: balance.total_balance,
-          description: body.description || '鏅鸿兘浣撲娇鐢ㄦ秷?,
+          description: body.description || '鏅鸿兘浣撲娇鐢ㄦ秷,
           related_agent_id: body.agent_id,
           related_agent_name: body.agent_name,
           created_at: new Date().toISOString(),
@@ -378,7 +378,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
           success: true,
-          message: 'Token娑堣€楁垚?,
+          message: 'Token娑堣€楁垚,
           data: {
             consumed_amount: amount,
             remaining_balance: balance.available_balance,
@@ -423,8 +423,8 @@ export async function POST(request: Request) {
           user_id: user.id,
           type: 'earning',
           amount: amount,
-          balance_after: earnerBalance ? earnerBalance.total_balance : amount,
-          description: body.description || '鏅鸿兘浣撲娇鐢ㄦ敹?,
+          balance_after: earnerBalance  earnerBalance.total_balance : amount,
+          description: body.description || '鏅鸿兘浣撲娇鐢ㄦ敹,
           related_agent_id: body.agent_id,
           related_agent_name: body.agent_name,
           created_at: new Date().toISOString(),
@@ -438,14 +438,14 @@ export async function POST(request: Request) {
           message: 'Token鏀跺叆璁板綍鎴愬姛',
           data: {
             earned_amount: amount,
-            total_balance: earnerBalance ? earnerBalance.total_balance : amount,
+            total_balance: earnerBalance  earnerBalance.total_balance : amount,
             transaction: earnTransaction,
           },
         });
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -454,7 +454,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         message: error.message,
       },
       { status: 500 }

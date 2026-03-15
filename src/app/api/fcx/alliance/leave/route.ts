@@ -1,6 +1,6 @@
 ﻿/**
  * 缁翠慨搴楅€€鍑鸿仈鐩烝PI
- * 澶勭悊搴楅摵閫€鍑篎CX鑱旂洘鍜岃В闄よ川? */
+ * 澶勭悊搴楅摵€鍑篎CX鑱旂洘鍜岃В闄よ川 */
 
 import { NextResponse } from 'next/server';
 import { AllianceService } from '@/fcx-system';
@@ -25,14 +25,14 @@ export async function POST(request: Request) {
       success: true,
       data: {
         shop: updatedShop,
-        message: '鎴愬姛閫€鍑篎CX鑱旂洘',
+        message: '鎴愬姛€鍑篎CX鑱旂洘',
       },
     });
   } catch (error) {
-    console.error('缁翠慨搴楅€€鍑鸿仈鐩熼敊?', error);
+    console.error('缁翠慨搴楅€€鍑鸿仈鐩熼敊', error);
     return NextResponse.json(
       {
-        error: '閫€鍑哄鐞嗗け?,
+        error: '€鍑哄鐞嗗け,
         details: (error as Error).message,
       },
       { status: 500 }

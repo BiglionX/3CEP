@@ -44,7 +44,7 @@ export default function EnterpriseProcurementPage() {
   const [orders] = useState<ProcurementOrder[]>([
     {
       id: 'PO-2024-001',
-      title: '电子元器件采?,
+      title: '电子元器件采,
       status: 'processing',
       supplier: '华强北电子科技有限公司',
       amount: 125000,
@@ -55,9 +55,9 @@ export default function EnterpriseProcurementPage() {
     },
     {
       id: 'PO-2024-002',
-      title: '机械零部件订?,
+      title: '机械零部件订,
       status: 'approved',
-      supplier: '长三角精密制造集?,
+      supplier: '长三角精密制造集,
       amount: 89000,
       items: 23,
       createdAt: '2024-01-19',
@@ -79,7 +79,7 @@ export default function EnterpriseProcurementPage() {
       id: 'PO-2024-004',
       title: '办公设备采购',
       status: 'pending',
-      supplier: '待确?,
+      supplier: '待确,
       amount: 156000,
       items: 8,
       createdAt: '2024-01-20',
@@ -109,25 +109,25 @@ export default function EnterpriseProcurementPage() {
     switch (status) {
       case 'pending':
         return {
-          label: '待审?,
+          label: '待审,
           color: 'bg-yellow-100 text-yellow-800',
           icon: Clock,
         };
       case 'approved':
         return {
-          label: '已批?,
+          label: '已批,
           color: 'bg-blue-100 text-blue-800',
           icon: CheckCircle,
         };
       case 'processing':
         return {
-          label: '处理?,
+          label: '处理,
           color: 'bg-purple-100 text-purple-800',
           icon: Package,
         };
       case 'shipped':
         return {
-          label: '已发?,
+          label: '已发,
           color: 'bg-indigo-100 text-indigo-800',
           icon: Truck,
         };
@@ -139,7 +139,7 @@ export default function EnterpriseProcurementPage() {
         };
       case 'cancelled':
         return {
-          label: '已取?,
+          label: '已取,
           color: 'bg-red-100 text-red-800',
           icon: XCircle,
         };
@@ -155,13 +155,13 @@ export default function EnterpriseProcurementPage() {
   const getPriorityConfig = (priority: string) => {
     switch (priority) {
       case 'low':
-        return { label: '�?, color: 'bg-gray-100 text-gray-800' };
+        return { label: ', color: 'bg-gray-100 text-gray-800' };
       case 'medium':
-        return { label: '�?, color: 'bg-blue-100 text-blue-800' };
+        return { label: ', color: 'bg-blue-100 text-blue-800' };
       case 'high':
-        return { label: '�?, color: 'bg-orange-100 text-orange-800' };
+        return { label: ', color: 'bg-orange-100 text-orange-800' };
       case 'urgent':
-        return { label: '紧?, color: 'bg-red-100 text-red-800' };
+        return { label: '紧, color: 'bg-red-100 text-red-800' };
       default:
         return { label: priority, color: 'bg-gray-100 text-gray-800' };
     }
@@ -189,7 +189,7 @@ export default function EnterpriseProcurementPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 页面标题和操作按?*/}
+        {/* 页面标题和操作按*/}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">采购管理</h1>
@@ -204,11 +204,11 @@ export default function EnterpriseProcurementPage() {
             </Button>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              新建采购?            </Button>
+              新建采购            </Button>
           </div>
         </div>
 
-        {/* 搜索和过?*/}
+        {/* 搜索和过*/}
         <Card className="mb-8">
           <CardContent className="pt-6">
             <div className="flex flex-col sm:flex-row gap-4">
@@ -216,7 +216,7 @@ export default function EnterpriseProcurementPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   type="text"
-                  placeholder="搜索采购单号、标题或供应?.."
+                  placeholder="搜索采购单号、标题或供应.."
                   className="pl-10"
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
@@ -229,13 +229,13 @@ export default function EnterpriseProcurementPage() {
                   value={filterStatus}
                   onChange={e => setFilterStatus(e.target.value)}
                 >
-                  <option value="all">所有状?/option>
-                  <option value="pending">待审?/option>
-                  <option value="approved">已批?/option>
-                  <option value="processing">处理?/option>
-                  <option value="shipped">已发?/option>
+                  <option value="all">所有状/option>
+                  <option value="pending">待审/option>
+                  <option value="approved">已批/option>
+                  <option value="processing">处理/option>
+                  <option value="shipped">已发/option>
                   <option value="delivered">已送达</option>
-                  <option value="cancelled">已取?/option>
+                  <option value="cancelled">已取/option>
                 </select>
 
                 <select
@@ -244,10 +244,10 @@ export default function EnterpriseProcurementPage() {
                   onChange={e => setFilterPriority(e.target.value)}
                 >
                   <option value="all">所有优先级</option>
-                  <option value="low">�?/option>
-                  <option value="medium">�?/option>
-                  <option value="high">�?/option>
-                  <option value="urgent">紧?/option>
+                  <option value="low">/option>
+                  <option value="medium">/option>
+                  <option value="high">/option>
+                  <option value="urgent">紧/option>
                 </select>
               </div>
             </div>
@@ -264,7 +264,7 @@ export default function EnterpriseProcurementPage() {
               <p className="text-2xl font-bold text-gray-900">
                 {statusCounts.pending}
               </p>
-              <p className="text-xs text-gray-600">待审?/p>
+              <p className="text-xs text-gray-600">待审/p>
             </CardContent>
           </Card>
 
@@ -276,7 +276,7 @@ export default function EnterpriseProcurementPage() {
               <p className="text-2xl font-bold text-gray-900">
                 {statusCounts.approved}
               </p>
-              <p className="text-xs text-gray-600">已批?/p>
+              <p className="text-xs text-gray-600">已批/p>
             </CardContent>
           </Card>
 
@@ -288,7 +288,7 @@ export default function EnterpriseProcurementPage() {
               <p className="text-2xl font-bold text-gray-900">
                 {statusCounts.processing}
               </p>
-              <p className="text-xs text-gray-600">处理?/p>
+              <p className="text-xs text-gray-600">处理/p>
             </CardContent>
           </Card>
 
@@ -300,7 +300,7 @@ export default function EnterpriseProcurementPage() {
               <p className="text-2xl font-bold text-gray-900">
                 {statusCounts.shipped}
               </p>
-              <p className="text-xs text-gray-600">已发?/p>
+              <p className="text-xs text-gray-600">已发/p>
             </CardContent>
           </Card>
 
@@ -326,8 +326,8 @@ export default function EnterpriseProcurementPage() {
                 {(
                   orders.reduce((sum, order) => sum + order.amount, 0) / 10000
                 ).toFixed(1)}
-                �?              </p>
-              <p className="text-xs text-gray-600">总金?/p>
+                              </p>
+              <p className="text-xs text-gray-600">总金/p>
             </CardContent>
           </Card>
         </div>
@@ -359,7 +359,7 @@ export default function EnterpriseProcurementPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${priorityConfig.color}`}
                             >
-                              {priorityConfig.label}优先?                            </span>
+                              {priorityConfig.label}优先                            </span>
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusConfig.color}`}
                             >
@@ -368,14 +368,14 @@ export default function EnterpriseProcurementPage() {
                             </span>
                           </div>
                           <p className="text-gray-600 mb-2">
-                            供应? {order.supplier}
+                            供应 {order.supplier}
                           </p>
 
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                             <div>
                               <span className="text-gray-500">商品数量:</span>
                               <span className="ml-2 font-medium">
-                                {order.items} �?                              </span>
+                                {order.items}                               </span>
                             </div>
                             <div>
                               <span className="text-gray-500">订单金额:</span>
@@ -432,10 +432,10 @@ export default function EnterpriseProcurementPage() {
                   未找到匹配的采购订单
                 </h3>
                 <p className="text-gray-500 mb-4">
-                  尝试调整搜索条件或创建新的采购订?                </p>
+                  尝试调整搜索条件或创建新的采购订                </p>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  新建采购?                </Button>
+                  新建采购                </Button>
               </CardContent>
             </Card>
           )}

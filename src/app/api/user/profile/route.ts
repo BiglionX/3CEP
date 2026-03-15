@@ -10,7 +10,7 @@ const mockUserProfiles: Record<string, any> = {
     avatar: null,
     joinDate: '2024-01-15',
     lastActive: '2024-03-01T10:30:00Z',
-    memberLevel: '闈掗摐浼氬憳',
+    memberLevel: '闈掗摐氬憳',
     points: 1250,
     achievements: [
       {
@@ -23,7 +23,7 @@ const mockUserProfiles: Record<string, any> = {
       },
       {
         id: 'quick_learner',
-        title: '蹇€熶笂?,
+        title: '蹇€熶笂,
         description: '瀹屾垚鏂版墜寮曞',
         icon: '馃帗',
         earnedDate: '2024-01-16',
@@ -31,16 +31,16 @@ const mockUserProfiles: Record<string, any> = {
       },
       {
         id: 'explorer',
-        title: '鎺㈢储?,
-        description: '璁块棶5涓笉鍚屽姛鑳芥ā?,
+        title: '鎺㈢储,
+        description: '璁块棶5涓笉鍚屽姛鑳芥ā,
         icon: '馃Л',
         earnedDate: '',
         isUnlocked: false,
       },
       {
         id: 'contributor',
-        title: '璐＄尞?,
-        description: '鍒涘缓绗竴涓淮淇伐?,
+        title: '璐＄尞,
+        description: '鍒涘缓绗竴涓淮淇伐,
         icon: '馃敡',
         earnedDate: '',
         isUnlocked: false,
@@ -60,8 +60,8 @@ const mockUserProfiles: Record<string, any> = {
       {
         id: 'act_1',
         type: 'login',
-        title: '浠婃棩鐧诲綍',
-        timestamp: '2灏忔椂?,
+        title: '婃棩鐧诲綍',
+        timestamp: '2灏忔椂,
         pointsEarned: 10,
       },
       {
@@ -87,7 +87,7 @@ const mockUserProfiles: Record<string, any> = {
     avatar: null,
     joinDate: '2024-02-20',
     lastActive: '2024-03-01T09:15:00Z',
-    memberLevel: '鐧介摱浼氬憳',
+    memberLevel: '鐧介摱氬憳',
     points: 2800,
     achievements: [
       {
@@ -100,7 +100,7 @@ const mockUserProfiles: Record<string, any> = {
       },
       {
         id: 'quick_learner',
-        title: '蹇€熶笂?,
+        title: '蹇€熶笂,
         description: '瀹屾垚鏂版墜寮曞',
         icon: '馃帗',
         earnedDate: '2024-02-21',
@@ -108,16 +108,16 @@ const mockUserProfiles: Record<string, any> = {
       },
       {
         id: 'explorer',
-        title: '鎺㈢储?,
-        description: '璁块棶5涓笉鍚屽姛鑳芥ā?,
+        title: '鎺㈢储,
+        description: '璁块棶5涓笉鍚屽姛鑳芥ā,
         icon: '馃Л',
         earnedDate: '2024-02-25',
         isUnlocked: true,
       },
       {
         id: 'contributor',
-        title: '璐＄尞?,
-        description: '鍒涘缓绗竴涓淮淇伐?,
+        title: '璐＄尞,
+        description: '鍒涘缓绗竴涓淮淇伐,
         icon: '馃敡',
         earnedDate: '2024-02-28',
         isUnlocked: true,
@@ -137,8 +137,8 @@ const mockUserProfiles: Record<string, any> = {
       {
         id: 'act_1',
         type: 'login',
-        title: '浠婃棩鐧诲綍',
-        timestamp: '3灏忔椂?,
+        title: '婃棩鐧诲綍',
+        timestamp: '3灏忔椂,
         pointsEarned: 10,
       },
       {
@@ -164,7 +164,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
 
-    // 浠巆ookie鑾峰彇鐢ㄦ埛淇℃伅浣滀负澶囩敤
+    // 巆ookie鑾峰彇鐢ㄦ埛淇℃伅浣滀负澶囩敤
     const cookieStore = cookies();
     const userCookie = cookieStore.get('user-profile');
 
@@ -176,7 +176,7 @@ export async function GET(request: Request) {
       try {
         userProfile = JSON.parse(userCookie.value);
       } catch (e) {
-        // 濡傛灉cookie瑙ｆ瀽澶辫触锛屼娇鐢ㄩ粯璁ら厤?        userProfile = mockUserProfiles['user_123'];
+        // 濡傛灉cookie瑙ｆ瀽澶辫触锛屼娇鐢ㄩ粯璁ら厤        userProfile = mockUserProfiles['user_123'];
       }
     } else {
       // 杩斿洖榛樿鐢ㄦ埛妗ｆ
@@ -194,28 +194,28 @@ export async function GET(request: Request) {
       quickActions: [
         {
           title: '璁惧绠＄悊',
-          description: '鏌ョ湅鍜岀鐞嗘偍鐨勮澶囪祫?,
+          description: '鏌ョ湅鍜岀鐞嗘偍鐨勮澶囪祫,
           icon: '馃摫',
           href: '/devices',
           color: 'blue',
         },
         {
           title: '缁翠慨宸ュ崟',
-          description: '鍒涘缓鍜岃窡韪淮淇?,
+          description: '鍒涘缓鍜岃窡韪淮淇,
           icon: '馃敡',
           href: '/tickets',
           color: 'green',
         },
         {
           title: '鏁版嵁鍒嗘瀽',
-          description: '鏌ョ湅涓氬姟娲炲療鍜屾姤?,
+          description: '鏌ョ湅涓氬姟娲炲療鍜屾姤,
           icon: '馃搳',
           href: '/analytics',
           color: 'purple',
         },
         {
           title: '涓汉涓績',
-          description: '绠＄悊璐︽埛鍜屽亸濂借?,
+          description: '绠＄悊璐︽埛鍜屽亸濂借,
           icon: '馃懁',
           href: '/profile',
           color: 'orange',
@@ -260,7 +260,7 @@ export async function POST(request: Request) {
         {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
-          maxAge: 60 * 60 * 24 * 7, // 7锟?          path: '/',
+          maxAge: 60 * 60 * 24 * 7, // 7          path: '/',
         }
       );
 
@@ -273,7 +273,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '鐢ㄦ埛涓嶅瓨?,
+          error: '鐢ㄦ埛涓嶅,
         },
         { status: 404 }
       );

@@ -17,12 +17,12 @@ export async function GET(request: Request) {
 
     if (!session) {
       return NextResponse.json(
-        { success: false, error: '闇€瑕佺櫥? },
+        { success: false, error: '闇€瑕佺櫥 },
         { status: 401 }
       );
     }
 
-    // 妫€鏌ョ敤鎴锋槸鍚︽湁瀹℃牳鏉冮檺
+    // 妫€鏌ョ敤鎴槸鍚︽湁瀹℃牳鏉冮檺
     const { data: userProfile } = await supabase
       .from('user_profiles_ext')
       .select('role')
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
     if (!userProfile || (userProfile as any).role !== 'admin') {
       return NextResponse.json(
-        { success: false, error: '鏃犲鏍告潈? },
+        { success: false, error: '犲鏍告潈 },
         { status: 403 }
       );
     }
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || 'pending_review';
 
-    // 鑾峰彇寰呭鏍哥殑璇存槑涔﹀垪?    const manuals = await manualService.getUserManuals('', [status]);
+    // 鑾峰彇寰呭鏍哥殑璇存槑涔﹀垪    const manuals = await manualService.getUserManuals('', [status]);
 
     return NextResponse.json({
       success: true,
@@ -63,12 +63,12 @@ export async function POST(request: Request) {
 
     if (!session) {
       return NextResponse.json(
-        { success: false, error: '闇€瑕佺櫥? },
+        { success: false, error: '闇€瑕佺櫥 },
         { status: 401 }
       );
     }
 
-    // 妫€鏌ュ鏍告潈?    const { data: userProfile } = await supabase
+    // 妫€鏌ュ鏍告潈    const { data: userProfile } = await supabase
       .from('user_profiles_ext')
       .select('role')
       .eq('user_id', session.user.id)
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
 
     if (!userProfile || (userProfile as any).role !== 'admin') {
       return NextResponse.json(
-        { success: false, error: '鏃犲鏍告潈? },
+        { success: false, error: '犲鏍告潈 },
         { status: 403 }
       );
     }
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
 
     if (!['approve', 'reject'].includes(action)) {
       return NextResponse.json(
-        { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+        { success: false, error: '犳晥鐨勬搷浣滅被 },
         { status: 400 }
       );
     }
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `璇存槑?{action === 'approve' ? '宸查€氳繃' : '宸叉嫆?}瀹℃牳`,
+      message: `璇存槑{action === 'approve'  '宸查€氳繃' : '宸叉嫆}瀹℃牳`,
     });
   } catch (error: any) {
     console.error('瀹℃牳鎿嶄綔澶辫触:', error);

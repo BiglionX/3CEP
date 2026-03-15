@@ -1,5 +1,5 @@
 ﻿/**
- * 智能体市场主? * FixCycle 6.0 智能体市场平? */
+ * 智能体市场主页面 - FixCycle 6.0 智能体市场平台 */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,14 +8,11 @@ import {
   Filter,
   Grid,
   List,
-  ShoppingCart,
   Star,
   Download,
-  TrendingUp,
   Calendar,
   User,
   Tag,
-  ChevronDown,
   SlidersHorizontal,
 } from 'lucide-react';
 
@@ -31,7 +28,7 @@ interface MarketplaceAgent {
   download_count: number;
   developer: {
     name: string;
-    avatar?: string;
+    avatar: string;
   };
   tags: string[];
   featured: boolean;
@@ -53,7 +50,7 @@ export default function MarketplacePage() {
     {
       id: '1',
       name: '销售助手智能体',
-      description: '专业的销售对话助手，能够自动跟进客户、生成报价单和合?,
+      description: '专业的销售对话助手，能够自动跟进客户、生成报价单和合同',
       category: 'sales',
       version: '2.1.0',
       price: 99.99,
@@ -64,14 +61,14 @@ export default function MarketplacePage() {
         name: 'AI Solutions Inc.',
         avatar: '',
       },
-      tags: ['销?, 'CRM', '自动?],
+      tags: ['销售', 'CRM', '自动化'],
       featured: true,
       created_at: '2026-01-15T10:30:00Z',
       updated_at: '2026-02-28T14:22:00Z',
     },
     {
       id: '2',
-      name: '采购智能?,
+      name: '采购智能助手',
       description: '智能采购决策助手，支持供应商比价、风险评估和合同管理',
       category: 'procurement',
       version: '1.5.2',
@@ -83,14 +80,14 @@ export default function MarketplacePage() {
         name: 'Procurement Pro',
         avatar: '',
       },
-      tags: ['采购', '供应?, '成本优化'],
+      tags: ['采购', '供应链', '成本优化'],
       featured: true,
       created_at: '2026-01-20T09:15:00Z',
       updated_at: '2026-02-25T16:45:00Z',
     },
     {
       id: '3',
-      name: '客服支持机器?,
+      name: '客服支持机器人',
       description: '24/7智能客服支持，支持多语言、情绪识别和问题升级',
       category: 'support',
       version: '3.0.1',
@@ -167,9 +164,9 @@ export default function MarketplacePage() {
     setFilteredAgents(filtered);
   };
 
-  const getCategoryLabel = (category: string) => {
+  const _getCategoryLabel = (category: string) => {
     const labels: Record<string, string> = {
-      sales: '销?,
+      sales: '销售',
       procurement: '采购',
       support: '客服',
       marketing: '营销',
@@ -181,10 +178,10 @@ export default function MarketplacePage() {
   };
 
   const formatPrice = (price: number) => {
-    return price === 0 ? '免费' : `¥${price.toFixed(2)}`;
+    return price === 0  '免费' : `¥${price.toFixed(2)}`;
   };
 
-  const formatDate = (dateString: string) => {
+  const _formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-CN');
   };
 
@@ -205,14 +202,14 @@ export default function MarketplacePage() {
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">智能体市?/h1>
+            <h1 className="text-4xl font-bold mb-4">智能体市场</h1>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto">
               发现、获取和管理企业级AI智能体，像招聘员工一样轻松使用AI助手
             </p>
             <div className="mt-8 flex justify-center space-x-8">
               <div className="text-center">
                 <div className="text-2xl font-bold">{agents.length}</div>
-                <div className="text-blue-200">可用智能?/div>
+                <div className="text-blue-200">可用智能体</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">
@@ -224,7 +221,7 @@ export default function MarketplacePage() {
                 <div className="text-2xl font-bold">
                   {agents.filter(a => a.featured).length}
                 </div>
-                <div className="text-blue-200">精选推?/div>
+                <div className="text-blue-200">精选推荐</div>
               </div>
             </div>
           </div>
@@ -236,7 +233,7 @@ export default function MarketplacePage() {
         {/* 搜索和过滤栏 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
-            {/* 搜索?*/}
+            {/* 搜索框 */}
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -248,7 +245,7 @@ export default function MarketplacePage() {
               />
             </div>
 
-            {/* 分类筛?*/}
+            {/* 分类筛选 */}
             <div className="flex items-center space-x-2">
               <Filter className="text-gray-500 w-5 h-5" />
               <select
@@ -257,7 +254,7 @@ export default function MarketplacePage() {
                 onChange={e => setSelectedCategory(e.target.value)}
               >
                 <option value="all">全部分类</option>
-                <option value="sales">销?/option>
+                <option value="sales">销售</option>
                 <option value="procurement">采购</option>
                 <option value="support">客服</option>
                 <option value="marketing">营销</option>
@@ -275,11 +272,11 @@ export default function MarketplacePage() {
                 onChange={e => setSortBy(e.target.value)}
               >
                 <option value="featured">推荐排序</option>
-                <option value="rating">评分最?/option>
-                <option value="downloads">下载最?/option>
-                <option value="price-low">价格最?/option>
-                <option value="price-high">价格最?/option>
-                <option value="newest">最新发?/option>
+                <option value="rating">评分最高</option>
+                <option value="downloads">下载最多</option>
+                <option value="price-low">价格最低</option>
+                <option value="price-high">价格最高</option>
+                <option value="newest">最新发布</option>
               </select>
             </div>
 
@@ -287,13 +284,13 @@ export default function MarketplacePage() {
             <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
+                className={`p-2 rounded ${viewMode === 'grid'  'bg-white shadow-sm' : 'text-gray-500'}`}
               >
                 <Grid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
+                className={`p-2 rounded ${viewMode === 'list'  'bg-white shadow-sm' : 'text-gray-500'}`}
               >
                 <List className="w-5 h-5" />
               </button>
@@ -301,11 +298,11 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        {/* 智能体列?*/}
+        {/* 智能体列表 */}
         <div
           className={
             viewMode === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+               'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
               : 'space-y-4'
           }
         >
@@ -313,13 +310,13 @@ export default function MarketplacePage() {
             <div
               key={agent.id}
               className={`bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow ${
-                viewMode === 'list' ? 'p-6' : 'p-6'
+                viewMode === 'list'  'p-6' : 'p-6'
               }`}
             >
               <div
                 className={
                   viewMode === 'grid'
-                    ? 'h-full flex flex-col'
+                     'h-full flex flex-col'
                     : 'flex items-start space-x-4'
                 }
               >
@@ -334,7 +331,8 @@ export default function MarketplacePage() {
                         {agent.featured && (
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                             <Star className="w-3 h-3 mr-1" />
-                            精?                          </span>
+                            精选
+                          </span>
                         )}
                       </div>
                       <p className="text-gray-600 text-sm mb-3">
@@ -378,14 +376,15 @@ export default function MarketplacePage() {
                     </div>
                   </div>
 
-                  {/* 价格和操作按?*/}
+                  {/* 价格和操作按钮 */}
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-2xl font-bold text-gray-900">
                         {formatPrice(agent.price)}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {agent.token_cost_per_use} Token/次使?                      </div>
+                        {agent.token_cost_per_use} Token/次使用
+                      </div>
                     </div>
                     <div className="flex space-x-2">
                       <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
@@ -408,12 +407,12 @@ export default function MarketplacePage() {
               <Search className="w-12 h-12 mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              未找到匹配的智能?            </h3>
-            <p className="text-gray-500">尝试调整搜索条件或浏览其他分?/p>
+              未找到匹配的智能体
+            </h3>
+            <p className="text-gray-500">尝试调整搜索条件或浏览其他分类</p>
           </div>
         )}
       </div>
     </div>
   );
 }
-

@@ -60,11 +60,11 @@ export default function MaintenancePage() {
   };
 
   const maintenanceInfo = {
-    startTime: '2024�?�?5�?02:00',
-    endTime: '2024�?�?5�?06:00',
+    startTime: '2024年3月15日 02:00',
+    endTime: '2024年3月15日 06:00',
     reason: '系统升级维护',
-    impact: '部分功能暂时不可?,
-    status: '进行?,
+    impact: '部分功能暂时不可用',
+    status: '进行中',
   };
 
   return (
@@ -78,9 +78,11 @@ export default function MaintenancePage() {
         {/* 主要信息 */}
         <div className="mb-12">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            系统维护?          </h1>
+            系统维护中
+          </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            我们正在进行系统升级维护，以提供更好的服务体?          </p>
+            我们正在进行系统升级维护，以提供更好的服务体验
+          </p>
         </div>
 
         {/* 维护详情卡片 */}
@@ -88,7 +90,7 @@ export default function MaintenancePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="text-center">
               <Calendar className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-              <h3 className="font-semibold text-lg mb-2">开始时?/h3>
+              <h3 className="font-semibold text-lg mb-2">开始时间</h3>
               <p className="text-gray-300">{maintenanceInfo.startTime}</p>
             </div>
             <div className="text-center">
@@ -113,7 +115,7 @@ export default function MaintenancePage() {
           </div>
         </div>
 
-        {/* 倒计?*/}
+        {/* 倒计时 */}
         <div className="mb-12">
           <h2 className="text-2xl font-semibold mb-6 flex items-center justify-center">
             <Clock className="w-6 h-6 mr-2" />
@@ -142,7 +144,7 @@ export default function MaintenancePage() {
               <div className="text-4xl md:text-5xl font-bold text-pink-400">
                 {formatTime(countdown.seconds)}
               </div>
-              <div className="text-gray-300 mt-2">�?/div>
+              <div className="text-gray-300 mt-2">秒</div>
             </div>
           </div>
         </div>
@@ -154,13 +156,15 @@ export default function MaintenancePage() {
             服务恢复通知
           </h3>
           <p className="text-gray-300 mb-6">
-            留下您的邮箱，我们将在服务恢复后第一时间通知?          </p>
+            留下您的邮箱，我们将在服务恢复后第一时间通知您
+          </p>
 
-          {isSubscribed ? (
+          {isSubscribed  (
             <div className="text-center py-4">
               <div className="inline-flex items-center px-4 py-2 bg-green-500/20 text-green-400 rounded-lg">
                 <Bell className="w-5 h-5 mr-2" />
-                订阅成功！我们会在服务恢复后通知?              </div>
+                订阅成功！我们会在服务恢复后通知您
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubscribe} className="max-w-md mx-auto">
@@ -187,7 +191,7 @@ export default function MaintenancePage() {
 
         {/* 联系信息 */}
         <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10">
-          <h4 className="font-semibold mb-3">紧急联?/h4>
+          <h4 className="font-semibold mb-3">紧急联系</h4>
           <div className="flex flex-col sm:flex-row gap-4 justify-center text-gray-300">
             <div className="flex items-center">
               <Phone className="w-4 h-4 mr-2" />
@@ -215,4 +219,3 @@ export default function MaintenancePage() {
     </div>
   );
 }
-

@@ -57,7 +57,7 @@ interface TestResult {
   status: 'pass' | 'fail' | 'skip';
   duration: number;
   metrics: Record<string, any>;
-  errorMessage?: string;
+  errorMessage: string;
 }
 
 export default function PerformanceTestingDemoPage() {
@@ -225,7 +225,7 @@ export default function PerformanceTestingDemoPage() {
             disabled={isRunning}
             size="lg"
           >
-            {isRunning ? (
+            {isRunning  (
               <>
                 <RotateCcw className="h-4 w-4 mr-2 animate-spin" />
                 测试执行中...
@@ -254,8 +254,8 @@ export default function PerformanceTestingDemoPage() {
             </Button>
           )}
 
-          <Badge variant={isRunning ? 'default' : 'secondary'}>
-            {isRunning ? '执行中' : '就绪'}
+          <Badge variant={isRunning  'default' : 'secondary'}>
+            {isRunning  '执行中' : '就绪'}
           </Badge>
         </div>
 
@@ -268,7 +268,7 @@ export default function PerformanceTestingDemoPage() {
 
           {/* 当前测试结果 */}
           <TabsContent value="current" className="space-y-6">
-            {selectedReport ? (
+            {selectedReport  (
               <>
                 {/* 测试摘要 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -378,7 +378,7 @@ export default function PerformanceTestingDemoPage() {
                                   >
                                     {key}:{' '}
                                     {typeof value === 'number'
-                                      ? value.toFixed(2)
+                                       value.toFixed(2)
                                       : value}
                                   </p>
                                 )
@@ -390,9 +390,9 @@ export default function PerformanceTestingDemoPage() {
                             <Badge
                               variant={
                                 result.status === 'pass'
-                                  ? 'default'
+                                   'default'
                                   : result.status === 'fail'
-                                    ? 'destructive'
+                                     'destructive'
                                     : 'secondary'
                               }
                             >
@@ -469,7 +469,7 @@ export default function PerformanceTestingDemoPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      {selectedReport.recommendations.length > 0 ? (
+                      {selectedReport.recommendations.length > 0  (
                         <ul className="space-y-2">
                           {selectedReport.recommendations.map(
                             (recommendation, index) => (
@@ -542,7 +542,7 @@ export default function PerformanceTestingDemoPage() {
                 <CardDescription>查看以往的性能测试结果</CardDescription>
               </CardHeader>
               <CardContent>
-                {testHistory.length === 0 ? (
+                {testHistory.length === 0  (
                   <div className="text-center py-12 text-gray-500">
                     <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>暂无测试记录</p>

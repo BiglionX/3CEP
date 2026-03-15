@@ -1,5 +1,5 @@
 ﻿/**
- * 审计日志可视化页? * 提供日志查询、过滤、统计图表和异常检测功? */
+ * 审计日志可视化页 * 提供日志查询、过滤、统计图表和异常检测功 */
 
 'use client';
 
@@ -75,7 +75,7 @@ export default function AuditPage() {
         if (value) queryParams.append(key, value);
       });
 
-      const response = await fetch(`/api/audit/logs?${queryParams.toString()}`);
+      const response = await fetch(`/api/audit/logs${queryParams.toString()}`);
 
       if (!response.ok) {
         throw new Error('获取审计日志失败');
@@ -152,7 +152,7 @@ export default function AuditPage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `audit_logs.${exportFormat === 'csv' ? 'csv' : 'json'}`;
+      a.download = `audit_logs.${exportFormat === 'csv'  'csv' : 'json'}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -169,7 +169,7 @@ export default function AuditPage() {
     title: string,
     value: number | string,
     icon: React.ReactNode,
-    trend?: 'up' | 'down'
+    trend: 'up' | 'down'
   ) => (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
       <div className="flex items-center justify-between">
@@ -184,9 +184,9 @@ export default function AuditPage() {
                 <TrendingDown className="w-4 h-4 text-red-500 mr-1" />
               )}
               <span
-                className={`text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}
+                className={`text-sm ${trend === 'up'  'text-green-600' : 'text-red-600'}`}
               >
-                {trend === 'up' ? '上升' : '下降'}
+                {trend === 'up'  '上升' : '下降'}
               </span>
             </div>
           )}
@@ -197,7 +197,7 @@ export default function AuditPage() {
   );
 
   const renderActionDistribution = () => {
-    if (!stats?.actions) return null;
+    if (!stats.actions) return null;
 
     const total = Object.values(stats.actions).reduce(
       (sum, count) => sum + count,
@@ -235,7 +235,7 @@ export default function AuditPage() {
   };
 
   const renderSeverityChart = () => {
-    if (!stats?.severities) return null;
+    if (!stats.severities) return null;
 
     const severityColors = {
       info: 'bg-blue-500',
@@ -271,7 +271,7 @@ export default function AuditPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载审计日志?..</p>
+          <p className="mt-4 text-gray-600">加载审计日志..</p>
         </div>
       </div>
     );
@@ -305,7 +305,7 @@ export default function AuditPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">审计日志</h1>
-              <p className="text-gray-600 mt-1">系统操作审计和安全监?/p>
+              <p className="text-gray-600 mt-1">系统操作审计和安全监/p>
             </div>
             <div className="flex items-center space-x-3">
               <button
@@ -318,7 +318,7 @@ export default function AuditPage() {
             </div>
           </div>
 
-          {/* 过滤?*/}
+          {/* 过滤*/}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -362,7 +362,7 @@ export default function AuditPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                开始日?              </label>
+                开始日              </label>
               <input
                 type="date"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -396,24 +396,24 @@ export default function AuditPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {renderStatCard(
             '总日志数',
-            stats?.totalLogs || 0,
+            stats.totalLogs || 0,
             <FileText className="w-6 h-6 text-blue-600" />
           )}
           {renderStatCard(
             '警告日志',
-            stats?.severities.warning || 0,
+            stats.severities.warning || 0,
             <AlertTriangle className="w-6 h-6 text-yellow-600" />,
             'up'
           )}
           {renderStatCard(
             '错误日志',
-            stats?.severities.error || 0,
+            stats.severities.error || 0,
             <XCircle className="w-6 h-6 text-red-600" />,
             'down'
           )}
           {renderStatCard(
             '活跃用户',
-            Object.keys(stats?.userActivity || {}).length || 0,
+            Object.keys(stats.userActivity || {}).length || 0,
             <User className="w-6 h-6 text-green-600" />
           )}
         </div>
@@ -426,11 +426,11 @@ export default function AuditPage() {
           <div>{renderSeverityChart()}</div>
         </div>
 
-        {/* 最近活?*/}
-        {stats?.recentActivity && stats.recentActivity.length > 0 && (
+        {/* 最近活*/}
+        {stats.recentActivity && stats.recentActivity.length > 0 && (
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              最?4小时活动
+              最4小时活动
             </h3>
             <div className="space-y-3">
               {stats.recentActivity.map((activity: any, index: number) => (
@@ -471,7 +471,7 @@ export default function AuditPage() {
             <h3 className="text-lg font-semibold text-gray-900">详细日志</h3>
           </div>
 
-          {logs.length === 0 ? (
+          {logs.length === 0  (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
                 <FileText className="w-12 h-12 mx-auto" />
@@ -479,7 +479,7 @@ export default function AuditPage() {
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 暂无日志记录
               </h3>
-              <p className="text-gray-500">根据当前筛选条件没有找到相关日?/p>
+              <p className="text-gray-500">根据当前筛选条件没有找到相关日/p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
@@ -522,7 +522,7 @@ export default function AuditPage() {
                         <div className="flex items-center space-x-2">
                           <Activity className="w-4 h-4" />
                           <span className="capitalize">
-                            {log?.substring(0, 30)}...
+                            {log.substring(0, 30)}...
                           </span>
                         </div>
                       </div>
@@ -561,7 +561,7 @@ export default function AuditPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               导出审计日志
             </h2>
-            <p className="text-gray-600 mb-6">选择导出格式和范?/p>
+            <p className="text-gray-600 mb-6">选择导出格式和范/p>
 
             <div className="space-y-4">
               <div>
@@ -599,7 +599,7 @@ export default function AuditPage() {
                   导出范围
                 </label>
                 <p className="text-sm text-gray-500">
-                  将导出当前筛选条件下的所有日志记?                </p>
+                  将导出当前筛选条件下的所有日志记                </p>
               </div>
             </div>
 

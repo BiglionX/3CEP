@@ -1,12 +1,12 @@
 ﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// GET /api/affiliate/links - 鑾峰彇閰嶄欢鐨勮仈鐩熼摼?export async function GET(request: Request) {
+// GET /api/affiliate/links - 鑾峰彇閰嶄欢鐨勮仈鐩熼摼export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const partName = searchParams.get('partName');
@@ -39,13 +39,13 @@ import { createClient } from '@supabase/supabase-js';
     const { data, error } = await query;
 
     if (error) {
-      console.error('鑾峰彇鑱旂洘閾炬帴澶辫触:', error);
-      return NextResponse.json({ error: '鑾峰彇鑱旂洘閾炬帴澶辫触' }, { status: 500 });
+      console.error('鑾峰彇鑱旂洘炬帴澶辫触:', error);
+      return NextResponse.json({ error: '鑾峰彇鑱旂洘炬帴澶辫触' }, { status: 500 });
     }
 
     // 澶勭悊鍏宠仈鏁版嵁
     const processedLinks =
-      data?.map(link => ({
+      data.map(link => ({
         ...link,
         part_mappings: link.part_affiliate_mappings || [],
       })) || [];
@@ -56,11 +56,11 @@ import { createClient } from '@supabase/supabase-js';
     });
   } catch (error) {
     console.error('API閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
-// POST /api/affiliate/links - 鐢熸垚甯﹁拷韪弬鏁扮殑璐拱閾炬帴
+// POST /api/affiliate/links - 鐢熸垚甯﹁拷韪弬鏁扮殑璐拱炬帴
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鏌ユ壘鍖归厤鐨勮仈鐩熼摼?    let query = supabase
+    // 鏌ユ壘鍖归厤鐨勮仈鐩熼摼    let query = supabase
       .from('part_affiliate_links')
       .select('*')
       .eq('is_active', true)
@@ -90,14 +90,14 @@ export async function POST(request: Request) {
     const { data: affiliateLinks, error: linkError } = await query;
 
     if (linkError) {
-      console.error('鏌ヨ鑱旂洘閾炬帴澶辫触:', linkError);
-      return NextResponse.json({ error: '鏌ヨ鑱旂洘閾炬帴澶辫触' }, { status: 500 });
+      console.error('鏌ヨ鑱旂洘炬帴澶辫触:', linkError);
+      return NextResponse.json({ error: '鏌ヨ鑱旂洘炬帴澶辫触' }, { status: 500 });
     }
 
     if (!affiliateLinks || affiliateLinks.length === 0) {
       return NextResponse.json(
         {
-          error: '鏈壘鍒板尮閰嶇殑鑱旂洘閾炬帴',
+          error: '鏈壘鍒板尮閰嶇殑鑱旂洘炬帴',
           availableParts: await getAvailableParts(),
         },
         { status: 404 }
@@ -106,7 +106,7 @@ export async function POST(request: Request) {
 
     const affiliateLink = affiliateLinks[0];
 
-    // 鐢熸垚甯﹁拷韪弬鏁扮殑鏈€缁堥摼?    const trackingParams = {
+    // 鐢熸垚甯﹁拷韪弬鏁扮殑鏈€缁堥摼    const trackingParams = {
       utm_source: utmSource || 'fixcycle',
       utm_medium: utmMedium || 'affiliate',
       utm_campaign: utmCampaign || 'tutorial_purchase',
@@ -140,8 +140,8 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('鐢熸垚鑱旂洘閾炬帴閿欒:', error);
-    return NextResponse.json({ error: '鐢熸垚鑱旂洘閾炬帴澶辫触' }, { status: 500 });
+    console.error('鐢熸垚鑱旂洘炬帴閿欒:', error);
+    return NextResponse.json({ error: '鐢熸垚鑱旂洘炬帴澶辫触' }, { status: 500 });
   }
 }
 
@@ -177,10 +177,10 @@ async function recordClickTracking(
     } as any);
   } catch (error) {
     console.error('璁板綍鐐瑰嚮杩借釜澶辫触:', error);
-    // 涓嶅奖鍝嶄富娴佺▼锛岄潤榛樺?  }
+    // 涓嶅奖鍝嶄富娴佺▼锛岄潤榛樺  }
 }
 
-// 鑾峰彇鍙敤鐨勯厤浠跺垪?async function getAvailableParts(): Promise<string[]> {
+// 鑾峰彇鍙敤鐨勯厤跺垪async function getAvailableParts(): Promise<string[]> {
   try {
     const { data, error } = await supabase
       .from('part_affiliate_links')
@@ -193,7 +193,7 @@ async function recordClickTracking(
       return [];
     }
 
-    // 鍘婚噸骞惰繑鍥為厤浠跺悕?    const partNames = [...new Set(data?.map(item => item.part_name) || [])];
+    // 鍘婚噸骞惰繑鍥為厤跺悕    const partNames = [...new Set(data.map(item => item.part_name) || [])];
     return partNames;
   } catch (error) {
     console.error('鑾峰彇閰嶄欢鍒楄〃閿欒:', error);

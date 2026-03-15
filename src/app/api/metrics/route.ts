@@ -1,19 +1,19 @@
 ﻿/**
  * 鐩戞帶鎸囨爣API绔偣
- * 鎻愪緵Prometheus鏍煎紡鐨勭洃鎺ф寚? */
+ * 鎻愪緵Prometheus鏍煎紡鐨勭洃鎺ф寚 */
 
 import { NextResponse } from 'next/server';
 
 // 绠€鍗曠殑鎸囨爣瀛樺偍
 const metricsStore: Record<
   string,
-  { value: number; labels?: Record<string, string>; timestamp: Date }
+  { value: number; labels: Record<string, string>; timestamp: Date }
 > = {};
 
-// 璁板綍鎸囨爣鐨勮緟鍔╁嚱?function recordMetric(
+// 璁板綍鎸囨爣鐨勮緟鍔╁嚱function recordMetric(
   name: string,
   value: number,
-  labels?: Record<string, string>
+  labels: Record<string, string>
 ) {
   metricsStore[name] = {
     value,
@@ -68,31 +68,31 @@ export async function GET() {
     // 鏇存柊瀹炴椂鎸囨爣
     initializeMetrics();
 
-    // 璁＄畻涓€浜涙淳鐢熸寚?    const requestTotal =
-      metricsStore['procurement_intelligence_api_requests_total']?.value || 1;
+    // 璁＄畻涓€浜涙淳鐢熸寚    const requestTotal =
+      metricsStore['procurement_intelligence_api_requests_total'].value || 1;
     const errorTotal =
-      metricsStore['procurement_intelligence_api_errors_total']?.value || 0;
+      metricsStore['procurement_intelligence_api_errors_total'].value || 0;
     const errorRate = ((errorTotal / requestTotal) * 100).toFixed(2);
 
     const lines = [
       '# HELP nodejs_up 1 = up, 0 = down',
       '# TYPE nodejs_up gauge',
-      `nodejs_up ${metricsStore['nodejs_up']?.value || 1}`,
+      `nodejs_up ${metricsStore['nodejs_up'].value || 1}`,
       '',
 
       '# HELP nodejs_heap_used_bytes Node.js heap memory used in bytes',
       '# TYPE nodejs_heap_used_bytes gauge',
-      `nodejs_heap_used_bytes ${metricsStore['nodejs_heap_used_bytes']?.value || 0}`,
+      `nodejs_heap_used_bytes ${metricsStore['nodejs_heap_used_bytes'].value || 0}`,
       '',
 
       '# HELP nodejs_heap_limit_bytes Node.js heap memory limit in bytes',
       '# TYPE nodejs_heap_limit_bytes gauge',
-      `nodejs_heap_limit_bytes ${metricsStore['nodejs_heap_limit_bytes']?.value || 0}`,
+      `nodejs_heap_limit_bytes ${metricsStore['nodejs_heap_limit_bytes'].value || 0}`,
       '',
 
       '# HELP procurement_intelligence_active_users Number of active users',
       '# TYPE procurement_intelligence_active_users gauge',
-      `procurement_intelligence_active_users ${metricsStore['procurement_intelligence_active_users']?.value || 0}`,
+      `procurement_intelligence_active_users ${metricsStore['procurement_intelligence_active_users'].value || 0}`,
       '',
 
       '# HELP procurement_intelligence_api_requests_total Total number of API requests',
@@ -112,27 +112,27 @@ export async function GET() {
 
       '# HELP procurement_intelligence_api_response_time_seconds API response time in seconds',
       '# TYPE procurement_intelligence_api_response_time_seconds histogram',
-      `procurement_intelligence_api_response_time_seconds ${metricsStore['procurement_intelligence_api_response_time_seconds']?.value.toFixed(4) || 0}`,
+      `procurement_intelligence_api_response_time_seconds ${metricsStore['procurement_intelligence_api_response_time_seconds'].value.toFixed(4) || 0}`,
       '',
 
       '# HELP procurement_intelligence_supplier_matches_total Total supplier matches',
       '# TYPE procurement_intelligence_supplier_matches_total counter',
-      `procurement_intelligence_supplier_matches_total ${metricsStore['procurement_intelligence_supplier_matches_total']?.value || 0}`,
+      `procurement_intelligence_supplier_matches_total ${metricsStore['procurement_intelligence_supplier_matches_total'].value || 0}`,
       '',
 
       '# HELP procurement_intelligence_price_optimizations_total Total price optimizations',
       '# TYPE procurement_intelligence_price_optimizations_total counter',
-      `procurement_intelligence_price_optimizations_total ${metricsStore['procurement_intelligence_price_optimizations_total']?.value || 0}`,
+      `procurement_intelligence_price_optimizations_total ${metricsStore['procurement_intelligence_price_optimizations_total'].value || 0}`,
       '',
 
       '# HELP redis_connected_clients Number of connected Redis clients',
       '# TYPE redis_connected_clients gauge',
-      `redis_connected_clients ${metricsStore['redis_connected_clients']?.value || 0}`,
+      `redis_connected_clients ${metricsStore['redis_connected_clients'].value || 0}`,
       '',
 
       '# HELP redis_memory_used_bytes Redis memory used in bytes',
       '# TYPE redis_memory_used_bytes gauge',
-      `redis_memory_used_bytes ${metricsStore['redis_memory_used_bytes']?.value || 0}`,
+      `redis_memory_used_bytes ${metricsStore['redis_memory_used_bytes'].value || 0}`,
       '',
     ];
 
@@ -153,7 +153,7 @@ export async function GET() {
   }
 }
 
-// POST鏂规硶鐢ㄤ簬璁板綍鑷畾涔夋寚?export async function POST(request: Request) {
+// POST鏂规硶鐢ㄤ簬璁板綍鑷畾涔夋寚export async function POST(request: Request) {
   try {
     const body = await request.json();
 

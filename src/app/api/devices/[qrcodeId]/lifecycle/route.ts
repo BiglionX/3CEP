@@ -109,7 +109,7 @@ export async function POST(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error  error.message : '服务器内部错误',
       },
       { status: 500 }
     );
@@ -128,10 +128,10 @@ export async function GET(
     // 解析查询参数
     const eventType = searchParams.get('eventType') as DeviceEventType | null;
     const limit = searchParams.get('limit')
-      ? parseInt(searchParams.get('limit')!)
+       parseInt(searchParams.get('limit')!)
       : undefined;
     const offset = searchParams.get('offset')
-      ? parseInt(searchParams.get('offset')!)
+       parseInt(searchParams.get('offset')!)
       : undefined;
     const orderBy = searchParams.get('orderBy') || 'timestamp';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
@@ -166,7 +166,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error  error.message : '服务器内部错误',
       },
       { status: 500 }
     );

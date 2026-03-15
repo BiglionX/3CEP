@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import { useWorkOrdersPaginated } from '@/hooks/use-repair-shop';
+import { WorkOrder } from '@/types/repair-shop.types';
 
 export default function PaginationTestPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,13 +38,13 @@ export default function PaginationTestPage() {
   // 使用分页Hook
   const { data, isLoading, isError, error, isFetching } =
     useWorkOrdersPaginated(
-      testScenario === 'error' ? { status: 'invalid' as any } : undefined,
+      testScenario === 'error'  { status: 'invalid' as any } : undefined,
       currentPage,
       pageSize
     );
 
-  const workOrders = data?.data || [];
-  const pagination = data?.pagination || {
+  const workOrders: WorkOrder[] = data.data || [];
+  const pagination = data.pagination || {
     currentPage,
     pageSize,
     total: workOrders.length,
@@ -54,9 +55,9 @@ export default function PaginationTestPage() {
   const getTestScenarioConfig = () => {
     switch (testScenario) {
       case 'slow':
-        return { delay: 2000, label: '慢速网?, color: 'yellow' };
+        return { delay: 2000, label: '慢速网络', color: 'yellow' };
       case 'error':
-        return { delay: 0, label: '错误状?, color: 'red' };
+        return { delay: 0, label: '错误状态', color: 'red' };
       default:
         return { delay: 500, label: '正常速度', color: 'green' };
     }
@@ -86,7 +87,7 @@ export default function PaginationTestPage() {
               <h3 className="font-medium mb-3">测试场景</h3>
               <div className="space-y-2">
                 <Button
-                  variant={testScenario === 'normal' ? 'default' : 'outline'}
+                  variant={testScenario === 'normal'  'default' : 'outline'}
                   onClick={() => setTestScenario('normal')}
                   className="w-full justify-start"
                 >
@@ -94,14 +95,15 @@ export default function PaginationTestPage() {
                   正常响应
                 </Button>
                 <Button
-                  variant={testScenario === 'slow' ? 'default' : 'outline'}
+                  variant={testScenario === 'slow'  'default' : 'outline'}
                   onClick={() => setTestScenario('slow')}
                   className="w-full justify-start"
                 >
                   <Clock className="h-4 w-4 mr-2 text-yellow-500" />
-                  慢速网?                </Button>
+                  慢速网络
+                </Button>
                 <Button
-                  variant={testScenario === 'error' ? 'default' : 'outline'}
+                  variant={testScenario === 'error'  'default' : 'outline'}
                   onClick={() => setTestScenario('error')}
                   className="w-full justify-start"
                 >
@@ -127,16 +129,17 @@ export default function PaginationTestPage() {
                     }}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value={5}>5 �?�?/option>
-                    <option value={10}>10 �?�?/option>
-                    <option value={20}>20 �?�?/option>
-                    <option value={50}>50 �?�?/option>
+                    <option value={5}>5 条/页</option>
+                    <option value={10}>10 条/页</option>
+                    <option value={20}>20 条/页</option>
+                    <option value={50}>50 条/页</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    当前?                  </label>
+                    当前页
+                  </label>
                   <input
                     type="number"
                     min="1"
@@ -159,9 +162,9 @@ export default function PaginationTestPage() {
               </div>
             </div>
 
-            {/* 状态信?*/}
+            {/* 状态信息 */}
             <div>
-              <h3 className="font-medium mb-3">当前状?/h3>
+              <h3 className="font-medium mb-3">当前状态</h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">响应速度:</span>
@@ -169,9 +172,9 @@ export default function PaginationTestPage() {
                     variant="outline"
                     className={`capitalize ${
                       scenarioConfig.color === 'green'
-                        ? 'text-green-600 border-green-200'
+                         'text-green-600 border-green-200'
                         : scenarioConfig.color === 'yellow'
-                          ? 'text-yellow-600 border-yellow-200'
+                           'text-yellow-600 border-yellow-200'
                           : 'text-red-600 border-red-200'
                     }`}
                   >
@@ -179,23 +182,23 @@ export default function PaginationTestPage() {
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">数据状?</span>
+                  <span className="text-sm text-gray-600">数据状态:</span>
                   <Badge
                     variant={
                       isLoading
-                        ? 'secondary'
+                         'secondary'
                         : isError
-                          ? 'destructive'
+                           'destructive'
                           : 'default'
                     }
                   >
-                    {isLoading ? '加载? : isError ? '错误' : '就绪'}
+                    {isLoading  '加载中' : isError  '错误' : '就绪'}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">获取时间:</span>
                   <span className="text-sm">
-                    {isFetching ? '正在获取...' : '已缓?}
+                    {isFetching  '正在获取...' : '已缓存'}
                   </span>
                 </div>
               </div>
@@ -213,21 +216,22 @@ export default function PaginationTestPage() {
               <CardTitle className="flex items-center justify-between">
                 <span className="flex items-center gap-2">
                   <Database className="h-5 w-5" />
-                  工单数据 ({workOrders.length} �?
+                  工单数据 ({workOrders.length} 条)
                 </span>
                 {isFetching && (
                   <div className="flex items-center gap-2 text-sm text-blue-600">
                     <Activity className="h-4 w-4 animate-spin" />
-                    获取?..
+                    获取中...
                   </div>
                 )}
               </CardTitle>
               <CardDescription>
-                当前?{pagination.currentPage} 页，�?{pagination.totalPages}{' '}
-                �?              </CardDescription>
+                当前第 {pagination.currentPage} 页，共 {pagination.totalPages}{' '}
+                页
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoading ? (
+              {isLoading  (
                 <div className="space-y-3">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="animate-pulse">
@@ -236,20 +240,20 @@ export default function PaginationTestPage() {
                     </div>
                   ))}
                 </div>
-              ) : isError ? (
+              ) : isError  (
                 <div className="text-center py-8">
                   <XCircle className="mx-auto h-12 w-12 text-red-500 mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">
                     数据加载失败
                   </h3>
                   <p className="text-gray-500 mb-4">
-                    {(error as Error)?.message || '未知错误'}
+                    {(error as Error).message || '未知错误'}
                   </p>
                   <Button variant="outline" size="sm">
                     重试
                   </Button>
                 </div>
-              ) : workOrders.length === 0 ? (
+              ) : workOrders.length === 0  (
                 <div className="text-center py-8">
                   <Database className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">
@@ -257,8 +261,8 @@ export default function PaginationTestPage() {
                   </h3>
                   <p className="text-gray-500">
                     {testScenario === 'error'
-                      ? '模拟错误场景下无数据'
-                      : '当前筛选条件下无匹配数?}
+                       '模拟错误场景下无数据'
+                      : '当前筛选条件下无匹配数据'}
                   </p>
                 </div>
               ) : (
@@ -277,23 +281,23 @@ export default function PaginationTestPage() {
                             客户: {order.customerName}
                           </div>
                           <div className="text-sm text-gray-500">
-                            设备: {order?.brand} {order?.model}
+                            设备: {order.deviceInfo.brand} {order.deviceInfo.model}
                           </div>
                         </div>
                         <div className="text-right">
                           <Badge
                             variant={
                               order.status === 'completed'
-                                ? 'default'
+                                 'default'
                                 : order.status === 'in_progress'
-                                  ? 'secondary'
+                                   'secondary'
                                   : 'outline'
                             }
                           >
                             {order.status}
                           </Badge>
                           <div className="text-sm text-gray-500 mt-1">
-                            ¥{order?.toFixed(2) || '0.00'}
+                            ¥{(order.price || 0).toFixed(2)}
                           </div>
                         </div>
                       </div>
@@ -321,11 +325,11 @@ export default function PaginationTestPage() {
                   <span className="font-medium">{pagination.total}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">总页?/span>
+                  <span className="text-sm text-gray-600">总页数</span>
                   <span className="font-medium">{pagination.totalPages}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">当前页记?/span>
+                  <span className="text-sm text-gray-600">当前页记录</span>
                   <span className="font-medium">
                     {Math.min(
                       pageSize,
@@ -334,19 +338,19 @@ export default function PaginationTestPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">缓存状?/span>
+                  <span className="text-sm text-gray-600">缓存状态</span>
                   <Badge variant="outline">
-                    {isFetching ? '刷新? : '已缓?}
+                    {isFetching  '刷新中' : '已缓存'}
                   </Badge>
                 </div>
                 <div className="pt-4 border-t">
                   <h4 className="font-medium mb-2">分页特点</h4>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>�?平滑的页面切?/li>
-                    <li>�?智能的页码显?/li>
-                    <li>�?响应式布局适配</li>
-                    <li>�?键盘导航支持</li>
-                    <li>�?加载状态指?/li>
+                    <li>• 平滑的页面切换</li>
+                    <li>• 智能的页码显示</li>
+                    <li>• 响应式布局适配</li>
+                    <li>• 键盘导航支持</li>
+                    <li>• 加载状态指示</li>
                   </ul>
                 </div>
               </div>
@@ -383,9 +387,9 @@ export default function PaginationTestPage() {
               </div>
             </div>
 
-            {/* 简化分?*/}
+            {/* 简化分页 */}
             <div>
-              <h3 className="font-medium mb-3">简化分页控?/h3>
+              <h3 className="font-medium mb-3">简化分页控件</h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <Pagination
                   currentPage={pagination.currentPage}
@@ -399,9 +403,9 @@ export default function PaginationTestPage() {
               </div>
             </div>
 
-            {/* 移动端优化分?*/}
+            {/* 移动端优化分页 */}
             <div>
-              <h3 className="font-medium mb-3">移动端优化分?/h3>
+              <h3 className="font-medium mb-3">移动端优化分页</h3>
               <div className="bg-gray-50 rounded-lg p-4 max-w-sm mx-auto">
                 <Pagination
                   currentPage={pagination.currentPage}
@@ -420,4 +424,3 @@ export default function PaginationTestPage() {
     </div>
   );
 }
-

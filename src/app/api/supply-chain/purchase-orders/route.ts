@@ -1,5 +1,5 @@
 ﻿/**
- * 閲囪喘璁㈠崟API璺敱 - 鍒楄〃鍜屽垱? */
+ * 閲囪喘璁㈠崟API璺敱 - 鍒楄〃鍜屽垱 */
 import { NextResponse } from 'next/server';
 import { PurchaseOrderService } from '@/supply-chain/services/purchase-order.service';
 
@@ -10,10 +10,10 @@ export async function GET(request: Request) {
     const warehouseId = searchParams.get('warehouseId') || undefined;
     const status = searchParams.get('status') || undefined;
     const limit = searchParams.get('limit')
-      ? parseInt(searchParams.get('limit')!)
+       parseInt(searchParams.get('limit')!)
       : undefined;
     const offset = searchParams.get('offset')
-      ? parseInt(searchParams.get('offset')!)
+       parseInt(searchParams.get('offset')!)
       : undefined;
 
     const purchaseOrderService = new PurchaseOrderService();
@@ -51,19 +51,19 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涙湁鏁堢殑閲囪喘鍟嗗搧鍒楄〃' },
+        { success: false, error: '璇彁渚涙湁鏁堢殑閲囪喘鍟嗗搧鍒楄〃' },
         { status: 400 }
       );
     }
 
     if (!warehouseId) {
       return NextResponse.json(
-        { success: false, error: '璇烽€夋嫨鐩爣浠撳簱' },
+        { success: false, error: '璇烽€夋嫨鐩爣撳簱' },
         { status: 400 }
       );
     }
 
-    // 楠岃瘉姣忎釜鍟嗗搧?    for (const item of items) {
+    // 楠岃瘉姣忎釜鍟嗗搧    for (const item of items) {
       if (
         !item.productId ||
         !item.quantity ||
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
         !item.unitPrice
       ) {
         return NextResponse.json(
-          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬? },
+          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬 },
           { status: 400 }
         );
       }

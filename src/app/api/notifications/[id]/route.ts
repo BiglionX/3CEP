@@ -39,7 +39,7 @@ function getUserIdFromToken(token: string): string {
 export async function PATCH(request: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token')?.value;
+    const token = cookieStore.get('auth-token').value;
 
     if (!token) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
@@ -94,7 +94,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json(
       {
         error: '更新通知状态失败',
-        message: error instanceof Error ? error.message : '未知错误',
+        message: error instanceof Error  error.message : '未知错误',
       },
       { status: 500 }
     );
@@ -104,7 +104,7 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token')?.value;
+    const token = cookieStore.get('auth-token').value;
 
     if (!token) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
@@ -149,7 +149,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json(
       {
         error: '删除通知失败',
-        message: error instanceof Error ? error.message : '未知错误',
+        message: error instanceof Error  error.message : '未知错误',
       },
       { status: 500 }
     );

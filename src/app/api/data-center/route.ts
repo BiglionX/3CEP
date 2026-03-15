@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const initialized = await ensureInitialized();
     if (!initialized) {
       return NextResponse.json(
-        { error: '鏁版嵁涓績鍒濆鍖栧け? },
+        { error: '鏁版嵁涓績鍒濆鍖栧け },
         { status: 500 }
       );
     }
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         break;
 
       case 'parts-price':
-        const partIds = partIdsParam ? partIdsParam.split(',') : undefined;
+        const partIds = partIdsParam  partIdsParam.split(',') : undefined;
         result =
           await dataVirtualizationService.getPartsPriceAggregation(partIds);
         break;
@@ -54,14 +54,14 @@ export async function GET(request: NextRequest) {
         break;
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
 
     return NextResponse.json(result);
   } catch (error: any) {
     console.error('鏁版嵁涓績API閿欒:', error);
     return NextResponse.json(
-      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊 },
       { status: 500 }
     );
   }
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const initialized = await ensureInitialized();
     if (!initialized) {
       return NextResponse.json(
-        { error: '鏁版嵁涓績鍒濆鍖栧け? },
+        { error: '鏁版嵁涓績鍒濆鍖栧け },
         { status: 500 }
       );
     }
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '缂哄皯鏌ヨ鍙傛暟' }, { status: 400 });
     }
 
-    // 娉ㄦ剰锛氳繖閲屽簲璇ユ坊鍔犳潈闄愰獙璇佸拰鏌ヨ瀹夊叏妫€?    const result = await trinoClientInstance.executeQuery(
+    // 娉ㄦ剰锛氳繖閲屽簲璇ユ坊鍔犳潈闄愰獙璇佸拰鏌ヨ瀹夊叏妫€    const result = await trinoClientInstance.executeQuery(
       query,
       catalog,
       schema

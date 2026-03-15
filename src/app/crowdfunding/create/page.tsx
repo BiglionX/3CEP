@@ -49,7 +49,7 @@ export default function CreateProjectPage() {
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState(1); // 1: 基本信息, 2: 回报设置, 3: 预览发布
 
-  // 检查用户权?
+  // 检查用户权
   const checkPermission = async () => {
     if (!isAuthenticated || !user) {
       router.push("/login");
@@ -125,7 +125,7 @@ export default function CreateProjectPage() {
       !formData.start_date ||
       !formData.end_date
     ) {
-      setError("请填写所有必填字?);
+      setError("请填写所有必填字);
       return;
     }
 
@@ -133,11 +133,11 @@ export default function CreateProjectPage() {
     const startDate = new Date(formData.start_date);
     const endDate = new Date(formData.end_date);
     const deliveryDate = formData.delivery_date
-      ? new Date(formData.delivery_date)
+       new Date(formData.delivery_date)
       : null;
 
     if (endDate <= startDate) {
-      setError("结束时间必须晚于开始时?);
+      setError("结束时间必须晚于开始时);
       return;
     }
 
@@ -162,7 +162,7 @@ export default function CreateProjectPage() {
         target_amount: parseFloat(formData.target_amount),
         min_pledge_amount: parseFloat(formData.min_pledge_amount),
         max_pledge_amount: formData.max_pledge_amount
-          ? parseFloat(formData.max_pledge_amount)
+           parseFloat(formData.max_pledge_amount)
           : undefined,
         start_date: new Date(formData.start_date).toISOString(),
         end_date: new Date(formData.end_date).toISOString(),
@@ -191,7 +191,7 @@ export default function CreateProjectPage() {
               description: reward.description,
               minimum_amount: parseFloat(reward.minimum_amount),
               quantity_limit: reward.quantity_limit
-                ? parseInt(reward.quantity_limit)
+                 parseInt(reward.quantity_limit)
                 : undefined,
               delivery_estimate: reward.delivery_estimate || undefined,
               is_digital: false,
@@ -220,7 +220,7 @@ export default function CreateProjectPage() {
     if (step > 1) setStep(step - 1);
   };
 
-  // 渲染步骤指示?
+  // 渲染步骤指示
   const renderStepIndicator = () => (
     <div className="flex items-center justify-center mb-8">
       {[1, 2, 3].map((num) => (
@@ -228,7 +228,7 @@ export default function CreateProjectPage() {
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center ${
               step >= num
-                ? "bg-blue-600 text-white"
+                 "bg-blue-600 text-white"
                 : "bg-gray-200 text-gray-600"
             }`}
           >
@@ -237,7 +237,7 @@ export default function CreateProjectPage() {
           {num < 3 && (
             <div
               className={`w-16 h-1 mx-2 ${
-                step > num ? "bg-blue-600" : "bg-gray-200"
+                step > num  "bg-blue-600" : "bg-gray-200"
               }`}
             ></div>
           )}
@@ -269,7 +269,7 @@ export default function CreateProjectPage() {
         {/* 页面标题 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">发起众筹项目</h1>
-          <p className="mt-2 text-gray-600">填写项目信息，吸引支持?/p>
+          <p className="mt-2 text-gray-600">填写项目信息，吸引支持/p>
         </div>
 
         {renderStepIndicator()}
@@ -357,7 +357,7 @@ export default function CreateProjectPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      兼容旧机?
+                      兼容旧机
                     </label>
                     <input
                       type="text"
@@ -374,7 +374,7 @@ export default function CreateProjectPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      目标金额 (�? *
+                      目标金额 ( *
                     </label>
                     <input
                       type="number"
@@ -411,7 +411,7 @@ export default function CreateProjectPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      开始时?*
+                      开始时*
                     </label>
                     <input
                       type="date"
@@ -546,7 +546,7 @@ export default function CreateProjectPage() {
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            最低支持金?(�? *
+                            最低支持金( *
                           </label>
                           <input
                             type="number"
@@ -618,7 +618,7 @@ export default function CreateProjectPage() {
               </div>
             )}
 
-            {/* 第三步：预览和发?*/}
+            {/* 第三步：预览和发*/}
             {step === 3 && (
               <div className="space-y-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
@@ -685,9 +685,9 @@ export default function CreateProjectPage() {
                       <div className="mt-2 text-sm text-yellow-700">
                         <ul className="list-disc pl-5 space-y-1">
                           <li>项目创建后初始状态为"草稿"</li>
-                          <li>您可以在草稿状态下继续编辑和完善项?/li>
-                          <li>准备好后可以发布项目开始众?/li>
-                          <li>项目一旦发布就不能再修改基本信?/li>
+                          <li>您可以在草稿状态下继续编辑和完善项/li>
+                          <li>准备好后可以发布项目开始众/li>
+                          <li>项目一旦发布就不能再修改基本信/li>
                         </ul>
                       </div>
                     </div>
@@ -704,20 +704,20 @@ export default function CreateProjectPage() {
                 disabled={step === 1}
                 className={`px-6 py-3 rounded-lg font-medium ${
                   step === 1
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                     "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
-                上一?
+                上一
               </button>
 
-              {step < 3 ? (
+              {step < 3  (
                 <button
                   type="button"
                   onClick={nextStep}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium"
                 >
-                  下一?
+                  下一
                 </button>
               ) : (
                 <button
@@ -725,10 +725,10 @@ export default function CreateProjectPage() {
                   disabled={loading}
                   className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-6 py-3 rounded-lg font-medium flex items-center"
                 >
-                  {loading ? (
+                  {loading  (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      创建?..
+                      创建..
                     </>
                   ) : (
                     "创建项目"

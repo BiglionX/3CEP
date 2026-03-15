@@ -1,11 +1,11 @@
 ﻿/**
  * 缁翠慨搴楅摵鏁版嵁API璺敱
- * 鎻愪緵缁翠慨搴楅摵淇℃伅鐨勭湡瀹炴暟鎹帴? */
+ * 鎻愪緵缁翠慨搴楅摵淇℃伅鐨勭湡瀹炴暟鎹帴 */
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
@@ -19,21 +19,21 @@ interface RepairShop {
   phone: string;
   services: string[];
   price_range: string;
-  latitude?: number;
-  longitude?: number;
+  latitude: number;
+  longitude: number;
   is_active: boolean;
   created_at: string;
   updated_at: string;
 }
 
-// 榛樿搴楅摵鏁版嵁锛堝綋鏁版嵁搴撴棤鏁版嵁鏃朵娇鐢級
+// 榛樿搴楅摵鏁版嵁锛堝綋鏁版嵁搴撴棤鏁版嵁朵娇鐢級
 const DEFAULT_SHOPS: RepairShop[] = [
   {
     id: 'shop_001',
     name: '鑻规灉瀹樻柟鎺堟潈缁翠慨涓績',
     rating: 4.9,
     review_count: 324,
-    address: '鍖椾含甯傛湞闃冲尯寤哄浗?8锟?,
+    address: '鍖椾含甯傛湞闃冲尯寤哄浗8,
     phone: '010-12345678',
     services: ['iPhone缁翠慨', 'iPad缁翠慨', 'Mac缁翠慨'],
     price_range: '楼楼楼楼',
@@ -45,10 +45,10 @@ const DEFAULT_SHOPS: RepairShop[] = [
   },
   {
     id: 'shop_002',
-    name: '蹇慨鎵嬫満缁翠慨?,
+    name: '蹇慨鎵嬫満缁翠慨,
     rating: 4.6,
     review_count: 156,
-    address: '鍖椾含甯傛捣娣€鍖轰腑鍏虫潙澶ц1锟?,
+    address: '鍖椾含甯傛捣娣€鍖轰腑鍏虫潙澶ц1,
     phone: '010-87654321',
     services: ['瀹夊崜缁翠慨', '灞忓箷鏇存崲', '鐢垫睜鏇存崲'],
     price_range: '楼楼',
@@ -63,9 +63,9 @@ const DEFAULT_SHOPS: RepairShop[] = [
     name: '涓撲笟鎶€鏈淮淇伐浣滃',
     rating: 4.8,
     review_count: 89,
-    address: '鍖椾含甯傝タ鍩庡尯瑗垮崟鍖楀ぇ?6锟?,
+    address: '鍖椾含甯傝タ鍩庡尯瑗垮崟鍖楀ぇ6,
     phone: '010-11223344',
-    services: ['楂樼鏈虹淮?, '鏁版嵁鎭㈠', '涓绘澘缁翠慨'],
+    services: ['楂樼鏈虹淮, '鏁版嵁鎭㈠', '涓绘澘缁翠慨'],
     price_range: '楼楼楼',
     latitude: 39.9087,
     longitude: 116.3666,
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
     const userLat = parseFloat(searchParams.get('lat') || '39.9042'); // 榛樿鍖椾含鍧愭爣
     const userLng = parseFloat(searchParams.get('lng') || '116.4074');
 
-    // 浠庢暟鎹簱鑾峰彇搴楅摵鏁版嵁
+    // 庢暟鎹簱鑾峰彇搴楅摵鏁版嵁
     let { data: shops, error } = await supabase
       .from('repair_shops')
       .select('*')
@@ -97,9 +97,9 @@ export async function GET(request: Request) {
       .gte('rating', minRating)
       .order('rating', { ascending: false });
 
-    // 濡傛灉鏁版嵁搴撴煡璇㈠け璐ユ垨鏃犳暟鎹紝浣跨敤榛樿鏁版嵁
+    // 濡傛灉鏁版嵁搴撴煡璇㈠け璐ユ垨犳暟鎹紝浣跨敤榛樿鏁版嵁
     if (error || !shops || shops.length === 0) {
-      console.warn('浣跨敤榛樿搴楅摵鏁版嵁:', error?.message);
+      console.warn('浣跨敤榛樿搴楅摵鏁版嵁:', error.message);
       shops = DEFAULT_SHOPS;
     }
 
@@ -137,7 +137,7 @@ export async function GET(request: Request) {
           );
           return distance <= maxDistance;
         }
-        return true; // 娌℃湁鍧愭爣鐨勫簵閾轰笉杩囨护
+        return true; // 娌℃湁鍧愭爣鐨勫簵轰笉杩囨护
       });
     }
 
@@ -146,7 +146,7 @@ export async function GET(request: Request) {
       ...shop,
       distance:
         shop.latitude && shop.longitude
-          ? calculateDistance(
+           calculateDistance(
               userLat,
               userLng,
               shop.latitude,
@@ -187,7 +187,7 @@ export async function GET(request: Request) {
   }
 }
 
-// 璁＄畻涓ょ偣闂磋窛绂伙紙绠€鍖栫増?function calculateDistance(
+// 璁＄畻涓ょ偣闂磋窛绂伙紙绠€鍖栫増function calculateDistance(
   lat1: number,
   lon1: number,
   lat2: number,

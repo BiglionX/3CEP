@@ -18,7 +18,6 @@ import {
   Calendar,
   User,
   Tag,
-  TrendingUp,
 } from 'lucide-react';
 
 interface CategoryAgent {
@@ -33,7 +32,7 @@ interface CategoryAgent {
   download_count: number;
   developer: {
     name: string;
-    avatar?: string;
+    avatar: string;
   };
   tags: string[];
   featured: boolean;
@@ -82,8 +81,8 @@ export default function CategoryPage() {
     },
   };
 
-  const categoryName = categoryMap[categorySlug]?.name || '未知分类';
-  const categoryDescription = categoryMap[categorySlug]?.description || '';
+  const categoryName = categoryMap[categorySlug].name || '未知分类';
+  const categoryDescription = categoryMap[categorySlug].description || '';
 
   // 模拟数据
   const mockAgents: CategoryAgent[] = [
@@ -207,7 +206,7 @@ export default function CategoryPage() {
   };
 
   const formatPrice = (price: number) => {
-    return price === 0 ? '免费' : `¥${price.toFixed(2)}`;
+    return price === 0  '免费' : `¥${price.toFixed(2)}`;
   };
 
   if (isLoading) {
@@ -338,13 +337,13 @@ export default function CategoryPage() {
             <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
+                className={`p-2 rounded ${viewMode === 'grid'  'bg-white shadow-sm' : 'text-gray-500'}`}
               >
                 <Grid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
+                className={`p-2 rounded ${viewMode === 'list'  'bg-white shadow-sm' : 'text-gray-500'}`}
               >
                 <List className="w-5 h-5" />
               </button>
@@ -367,7 +366,7 @@ export default function CategoryPage() {
         <div
           className={
             viewMode === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+               'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
               : 'space-y-4'
           }
         >
@@ -375,14 +374,14 @@ export default function CategoryPage() {
             <div
               key={agent.id}
               className={`bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
-                viewMode === 'list' ? 'p-6' : 'p-6'
+                viewMode === 'list'  'p-6' : 'p-6'
               }`}
               onClick={() => router.push(`/marketplace/${agent.id}`)}
             >
               <div
                 className={
                   viewMode === 'grid'
-                    ? 'h-full flex flex-col'
+                     'h-full flex flex-col'
                     : 'flex items-start space-x-4'
                 }
               >

@@ -6,7 +6,7 @@ import {
 } from '@/modules/data-center/virtualization/view-executor';
 import { ViewManager } from '@/modules/data-center/virtualization/views-definition';
 
-// 瑙嗗浘绠＄悊鍣ㄥ疄?const viewManager = new ViewManager();
+// 瑙嗗浘绠＄悊鍣ㄥ疄const viewManager = new ViewManager();
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'list':
-        // 鍒楀嚭鎵€鏈夊彲鐢ㄨ?        const views = viewManager.getAllViews().map(view => ({
+        // 鍒楀嚭鎵€鏈夊彲鐢ㄨ        const views = viewManager.getAllViews().map(view => ({
           name: view.name,
           description: view.description,
           sourceCatalogs: view.sourceCatalogs,
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'metadata':
-        // 鑾峰彇瑙嗗浘鍏冩暟?        if (!viewName) {
+        // 鑾峰彇瑙嗗浘鍏冩暟        if (!viewName) {
           return NextResponse.json({ error: '缂哄皯view鍙傛暟' }, { status: 400 });
         }
 
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
           useCache,
           forceRefresh,
           parameters:
-            Object.keys(parameters).length > 0 ? parameters : undefined,
+            Object.keys(parameters).length > 0  parameters : undefined,
         });
 
         return NextResponse.json(result);
@@ -78,27 +78,27 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(batchResults);
 
       case 'warmup':
-        // 棰勭儹瑙嗗浘缂撳瓨
+        // 棰勭儹瑙嗗浘缂撳
         const warmupViews = searchParams.get('views');
         const viewsToWarm = warmupViews
-          ? warmupViews.split(',').map(v => v.trim())
+           warmupViews.split(',').map(v => v.trim())
           : undefined;
 
         await virtualViewExecutor.warmupViews(viewsToWarm);
 
         return NextResponse.json({
-          message: '瑙嗗浘缂撳瓨棰勭儹瀹屾垚',
+          message: '瑙嗗浘缂撳棰勭儹瀹屾垚',
           warmedViews: viewsToWarm || 'all_cached_views',
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('铏氭嫙瑙嗗浘API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -121,9 +121,9 @@ export async function POST(request: NextRequest) {
         }
 
         const result = await executeVirtualView(viewName, {
-          useCache: options?.useCache ?? true,
-          forceRefresh: options?.forceRefresh ?? false,
-          timeoutMs: options?.timeoutMs,
+          useCache: options.useCache  true,
+          forceRefresh: options.forceRefresh  false,
+          timeoutMs: options.timeoutMs,
           parameters,
         });
 
@@ -138,9 +138,9 @@ export async function POST(request: NextRequest) {
         }
 
         const batchResults = await executeMultipleViews(viewNames, {
-          useCache: options?.useCache ?? true,
-          forceRefresh: options?.forceRefresh ?? false,
-          timeoutMs: options?.timeoutMs,
+          useCache: options.useCache  true,
+          forceRefresh: options.forceRefresh  false,
+          timeoutMs: options.timeoutMs,
           parameters,
         });
 
@@ -149,18 +149,18 @@ export async function POST(request: NextRequest) {
       case 'warmup':
         await virtualViewExecutor.warmupViews(viewNames);
         return NextResponse.json({
-          message: '瑙嗗浘缂撳瓨棰勭儹瀹屾垚',
+          message: '瑙嗗浘缂撳棰勭儹瀹屾垚',
           warmedViews: viewNames || 'all_cached_views',
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('铏氭嫙瑙嗗浘API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

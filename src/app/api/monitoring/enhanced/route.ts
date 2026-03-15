@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { enhancedMonitoring } from '@/lib/enhanced-monitoring';
 import { performance } from 'perf_hooks';
 
-// 绯荤粺鍋ュ悍鐘舵€佹帴?interface SystemHealth {
+// 绯荤粺鍋ュ悍鐘舵€佹帴interface SystemHealth {
   status: 'healthy' | 'degraded' | 'unhealthy';
   uptime: number;
   timestamp: string;
@@ -15,7 +15,7 @@ import { performance } from 'perf_hooks';
   };
 }
 
-// 浠〃鏉挎暟鎹帴?interface DashboardData {
+// 〃鏉挎暟鎹帴interface DashboardData {
   systemHealth: SystemHealth;
   requestMetrics: {
     totalRequests: number;
@@ -39,7 +39,7 @@ import { performance } from 'perf_hooks';
   timestamp: string;
 }
 
-// 鑾峰彇绯荤粺鍋ュ悍鐘?async function getSystemHealth(): Promise<SystemHealth> {
+// 鑾峰彇绯荤粺鍋ュ悍鐘async function getSystemHealth(): Promise<SystemHealth> {
   try {
     // 鑾峰彇绯荤粺鎸囨爣
     const memoryUsage = process.memoryUsage();
@@ -48,9 +48,9 @@ import { performance } from 'perf_hooks';
     const cpuUsage = process.cpuUsage();
     const cpuPercent = (cpuUsage.user + cpuUsage.system) / 1000000;
 
-    // 鑾峰彇娲昏穬璇锋眰鏁板拰浼氳瘽?    const activeRequests = 0; // 闇€瑕佷粠鐩戞帶涓棿浠惰幏?    const activeSessions = 0; // 闇€瑕佷粠璁よ瘉鏈嶅姟鑾峰彇
+    // 鑾峰彇娲昏穬璇眰鏁板拰氳瘽    const activeRequests = 0; // 闇€瑕佷粠鐩戞帶涓棿惰幏    const activeSessions = 0; // 闇€瑕佷粠璁よ瘉鏈嶅姟鑾峰彇
 
-    // 纭畾鍋ュ悍鐘?    let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+    // 纭畾鍋ュ悍鐘    let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
     if (cpuPercent > 80 || memoryPercent > 85) {
       status = 'degraded';
     }
@@ -84,9 +84,9 @@ import { performance } from 'perf_hooks';
   }
 }
 
-// 鑾峰彇璇锋眰鎸囨爣鎽樿
+// 鑾峰彇璇眰鎸囨爣鎽樿
 async function getRequestMetricsSummary(): Promise<any> {
-  // 杩欓噷闇€瑕佷粠Prometheus鎸囨爣涓彁鍙栨暟?  // 鏆傛椂杩斿洖妯℃嫙鏁版嵁
+  // 杩欓噷闇€瑕佷粠Prometheus鎸囨爣涓彁鍙栨暟  // 鏆傛椂杩斿洖妯℃嫙鏁版嵁
   return {
     totalRequests: Math.floor(Math.random() * 10000) + 1000,
     errorRate: parseFloat((Math.random() * 5).toFixed(2)),
@@ -132,7 +132,7 @@ async function getBusinessMetricsSummary(): Promise<any> {
   };
 }
 
-// 鑾峰彇浠〃鏉挎暟?async function getDashboardData(): Promise<DashboardData> {
+// 鑾峰彇〃鏉挎暟async function getDashboardData(): Promise<DashboardData> {
   const [systemHealth, requestMetrics, authMetrics, businessMetrics] =
     await Promise.all([
       getSystemHealth(),
@@ -151,7 +151,7 @@ async function getBusinessMetricsSummary(): Promise<any> {
   };
 }
 
-// API璺敱澶勭悊?export async function GET(request: NextRequest) {
+// API璺敱澶勭悊export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'dashboard';
@@ -162,7 +162,7 @@ async function getBusinessMetricsSummary(): Promise<any> {
         return NextResponse.json(dashboardData);
 
       case 'metrics':
-        // 杩斿洖Prometheus鏍煎紡鐨勫師濮嬫寚?        const metricsText = await enhancedMonitoring.getMetricsText();
+        // 杩斿洖Prometheus鏍煎紡鐨勫師濮嬫寚        const metricsText = await enhancedMonitoring.getMetricsText();
         return new Response(metricsText, {
           headers: {
             'Content-Type': 'text/plain; version=0.0.4',
@@ -171,7 +171,7 @@ async function getBusinessMetricsSummary(): Promise<any> {
         });
 
       case 'health':
-        // 绯荤粺鍋ュ悍妫€?        const health = await getSystemHealth();
+        // 绯荤粺鍋ュ悍妫€        const health = await getSystemHealth();
         return NextResponse.json(health);
 
       case 'summary':
@@ -185,7 +185,7 @@ async function getBusinessMetricsSummary(): Promise<any> {
         return NextResponse.json(summary);
 
       case 'custom-metrics':
-        // 鑷畾涔変笟鍔℃寚?        const limit = parseInt(searchParams.get('limit') || '100');
+        // 鑷畾涔変笟鍔℃寚        const limit = parseInt(searchParams.get('limit') || '100');
         const customMetrics = enhancedMonitoring.getCustomMetrics(limit);
         return NextResponse.json({
           metrics: customMetrics,
@@ -194,7 +194,7 @@ async function getBusinessMetricsSummary(): Promise<any> {
         });
 
       case 'reset':
-        // 閲嶇疆鎸囨爣锛堥渶瑕佺鐞嗗憳鏉冮檺?        const isAdmin = request.headers.get('x-user-role') === 'admin';
+        // 閲嶇疆鎸囨爣锛堥渶瑕佺鐞嗗憳鏉冮檺        const isAdmin = request.headers.get('x-user-role') === 'admin';
         if (!isAdmin) {
           return NextResponse.json(
             { error: '闇€瑕佺鐞嗗憳鏉冮檺鎵嶈兘閲嶇疆鎸囨爣' },
@@ -208,13 +208,13 @@ async function getBusinessMetricsSummary(): Promise<any> {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鐩戞帶API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -222,19 +222,19 @@ async function getBusinessMetricsSummary(): Promise<any> {
   }
 }
 
-// POST鏂规硶鐢ㄤ簬璁板綍鑷畾涔夋寚?export async function POST(request: NextRequest) {
+// POST鏂规硶鐢ㄤ簬璁板綍鑷畾涔夋寚export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { name, value, labels } = body;
 
     if (!name || value === undefined) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呰鐨勫弬? name 锟?value' },
+        { error: '缂哄皯蹇呰鐨勫弬 name value' },
         { status: 400 }
       );
     }
 
-    // 璁板綍鑷畾涔夋寚?    enhancedMonitoring.recordCustomMetric(name, value, labels);
+    // 璁板綍鑷畾涔夋寚    enhancedMonitoring.recordCustomMetric(name, value, labels);
 
     return NextResponse.json({
       message: '鎸囨爣璁板綍鎴愬姛',

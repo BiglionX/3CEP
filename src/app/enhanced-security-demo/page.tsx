@@ -1,5 +1,5 @@
 ﻿/**
- * 增强版数据安全演示页? * 展示数据加密、脱敏、哈希等安全功能
+ * 增强版数据安全演示页 * 展示数据加密、脱敏、哈希等安全功能
  */
 
 'use client';
@@ -94,9 +94,9 @@ function SecurityDemo() {
   // 获取角色描述
   const getRoleDescription = (role: string) => {
     const descriptions: Record<string, string> = {
-      admin: '超级管理?- 可查看所有原始数?,
-      manager: '管理?- 可查看大部分敏感数据',
-      viewer: '查看?- 只能看到脱敏后的数据',
+      admin: '超级管理员- 可查看所有原始数,
+      manager: '管理员- 可查看大部分敏感数据',
+      viewer: '查看- 只能看到脱敏后的数据',
       external_partner: '外部合作伙伴 - 数据访问受限',
     };
     return descriptions[role] || role;
@@ -112,10 +112,10 @@ function SecurityDemo() {
             数据安全演示
           </h1>
           <p className="text-gray-600">
-            展示数据加密、脱敏、哈希等企业级安全保护机?          </p>
+            展示数据加密、脱敏、哈希等企业级安全保护机          </p>
         </div>
 
-        {/* 角色选择?*/}
+        {/* 角色选择*/}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -128,7 +128,7 @@ function SecurityDemo() {
               {['admin', 'manager', 'viewer', 'external_partner'].map(role => (
                 <Button
                   key={role}
-                  variant={currentUserRole === role ? 'default' : 'outline'}
+                  variant={currentUserRole === role  'default' : 'outline'}
                   onClick={() => setCurrentUserRole(role)}
                   className="capitalize"
                 >
@@ -163,7 +163,7 @@ function SecurityDemo() {
                     用户信息安全展示
                   </CardTitle>
                   <CardDescription>
-                    根据不同用户角色展示不同程度的数据脱敏效?                  </CardDescription>
+                    根据不同用户角色展示不同程度的数据脱敏效                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -172,7 +172,7 @@ function SecurityDemo() {
                       <CardHeader className="pb-3">
                         <CardTitle className="text-lg flex items-center gap-2">
                           <Eye className="w-5 h-5" />
-                          原始数据 (管理员视?
+                          原始数据 (管理员视
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-3">
@@ -191,7 +191,7 @@ function SecurityDemo() {
                         </div>
 
                         <div className="p-3 bg-blue-50 rounded">
-                          <div className="text-sm text-gray-600">手机?/div>
+                          <div className="text-sm text-gray-600">手机/div>
                           <div className="font-medium">
                             {SAMPLE_USER_DATA.phone}
                           </div>
@@ -251,7 +251,7 @@ function SecurityDemo() {
                         </div>
 
                         <div className="p-3 bg-gray-50 rounded">
-                          <div className="text-sm text-gray-600">手机?/div>
+                          <div className="text-sm text-gray-600">手机/div>
                           <MaskedData
                             data={SAMPLE_USER_DATA.phone}
                             table="users"
@@ -305,10 +305,10 @@ function SecurityDemo() {
                 </CardContent>
               </Card>
 
-              {/* 安全特性说?*/}
+              {/* 安全特性说*/}
               <Card>
                 <CardHeader>
-                  <CardTitle>安全保护特?/CardTitle>
+                  <CardTitle>安全保护特/CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -328,7 +328,7 @@ function SecurityDemo() {
                         <h3 className="font-medium text-blue-800">角色脱敏</h3>
                       </div>
                       <p className="text-sm text-blue-600">
-                        根据用户角色自动应用不同的数据脱敏规?                      </p>
+                        根据用户角色自动应用不同的数据脱敏规                      </p>
                     </div>
 
                     <div className="p-4 bg-purple-50 rounded-lg">
@@ -357,7 +357,7 @@ function SecurityDemo() {
                     <Lock className="w-5 h-5" />
                     加密解密演示
                   </CardTitle>
-                  <CardDescription>实时展示数据加密和解密过?/CardDescription>
+                  <CardDescription>实时展示数据加密和解密过/CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex gap-3">
@@ -377,7 +377,7 @@ function SecurityDemo() {
                       <div className="space-y-2">
                         <div>
                           <span className="text-sm font-medium">
-                            原始手机?
+                            原始手机
                           </span>
                           <div className="font-mono text-sm p-2 bg-white rounded mt-1">
                             {encryptionDemo.original}
@@ -394,7 +394,7 @@ function SecurityDemo() {
                             <span className="text-sm font-medium">
                               解密结果:
                             </span>
-                            {encryptionDemo.success ? (
+                            {encryptionDemo.success  (
                               <CheckCircle className="w-4 h-4 text-green-500" />
                             ) : (
                               <XCircle className="w-4 h-4 text-red-500" />
@@ -435,13 +435,13 @@ function SecurityDemo() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">验证结果:</span>
-                          {hashDemo.success ? (
+                          {hashDemo.success  (
                             <CheckCircle className="w-4 h-4 text-green-500" />
                           ) : (
                             <XCircle className="w-4 h-4 text-red-500" />
                           )}
                           <span className="text-sm">
-                            {hashDemo.verified ? '验证通过' : '验证失败'}
+                            {hashDemo.verified  '验证通过' : '验证失败'}
                           </span>
                         </div>
                       </div>
@@ -460,9 +460,9 @@ function SecurityDemo() {
                     <div className="flex items-start gap-3 p-3 bg-red-50 rounded">
                       <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5" />
                       <div>
-                        <h4 className="font-medium text-red-800">高安全等?/h4>
+                        <h4 className="font-medium text-red-800">高安全等/h4>
                         <p className="text-sm text-red-600">
-                          适用于生产环境，采用AES-256-GCM加密，完整的密钥管理和轮换机?                        </p>
+                          适用于生产环境，采用AES-256-GCM加密，完整的密钥管理和轮换机                        </p>
                       </div>
                     </div>
 
@@ -483,7 +483,7 @@ function SecurityDemo() {
                       <div>
                         <h4 className="font-medium text-green-800">合规认证</h4>
                         <p className="text-sm text-green-600">
-                          符合GDPR、网络安全法等法规要求，通过第三方安全审?                        </p>
+                          符合GDPR、网络安全法等法规要求，通过第三方安全审                        </p>
                       </div>
                     </div>
                   </div>

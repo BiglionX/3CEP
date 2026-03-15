@@ -12,7 +12,7 @@ interface Part {
   brand: string;
   model: string;
   price: number;
-  originalPrice?: number;
+  originalPrice: number;
   image: string;
   rating: number;
   reviewCount: number;
@@ -292,9 +292,9 @@ export default function PartsMarketPage() {
                   <Button
                     className="flex-1"
                     disabled={!part.inStock}
-                    variant={part.inStock ? 'default' : 'outline'}
+                    variant={part.inStock  'default' : 'outline'}
                   >
-                    {part.inStock ? (
+                    {part.inStock  (
                       <>
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         加入购物车

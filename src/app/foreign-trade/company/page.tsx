@@ -14,7 +14,6 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
 import {
-  Ship,
   ShoppingCart,
   DollarSign,
   Package,
@@ -24,10 +23,8 @@ import {
   AlertCircle,
   CheckCircle,
   ArrowLeft,
-  SwitchCamera,
   Building,
   BarChart3,
-  Zap,
 } from 'lucide-react';
 
 interface TradeOrder {
@@ -45,7 +42,7 @@ interface TradeOrder {
     | 'delivered'
     | 'cancelled';
   expectedDelivery: string;
-  country?: string;
+  country: string;
 }
 
 interface CompanyStats {
@@ -84,7 +81,7 @@ export default function ForeignTradeCompanyPage() {
     // 模拟加载贸易数据
     const mockOrders: TradeOrder[] =
       activeRole === 'importer'
-        ? [
+         [
             {
               id: 'PO-2026-001',
               type: 'import',
@@ -197,17 +194,17 @@ export default function ForeignTradeCompanyPage() {
   const getStatusText = (status: TradeOrder['status']) => {
     switch (status) {
       case 'delivered':
-        return '已交?;
+        return '已交付';
       case 'shipped':
-        return '已发?;
+        return '已发货';
       case 'processing':
-        return '处理?;
+        return '处理中';
       case 'confirmed':
-        return '已确?;
+        return '已确认';
       case 'pending':
-        return '待确?;
+        return '待确认';
       case 'cancelled':
-        return '已取?;
+        return '已取消';
       default:
         return status;
     }
@@ -222,7 +219,7 @@ export default function ForeignTradeCompanyPage() {
   };
 
   const getTypeColor = (type: 'import' | 'export') => {
-    return type === 'import' ? 'text-blue-600' : 'text-green-600';
+    return type === 'import'  'text-blue-600' : 'text-green-600';
   };
 
   return (
@@ -240,8 +237,8 @@ export default function ForeignTradeCompanyPage() {
               <div className="flex items-center">
                 <h1 className="text-xl font-bold text-gray-900">
                   {activeRole === 'importer'
-                    ? '进口商业务中?
-                    : '出口商业务中?}
+                     '进口商业务中心'
+                    : '出口商业务中心'}
                 </h1>
               </div>
               <div className="flex items-center space-x-4">
@@ -254,25 +251,25 @@ export default function ForeignTradeCompanyPage() {
         </header>
 
         <div className="px-4 sm:px-6 lg:px-8 py-8">
-          {/* 业务模式指示?*/}
+          {/* 业务模式指示器 */}
           <div className="mb-6">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
                   {activeRole === 'importer'
-                    ? '进口商业务模?
-                    : '出口商业务模?}
+                     '进口商业务模式'
+                    : '出口商业务模式'}
                 </h2>
                 <p className="text-gray-600 mt-1">
                   {activeRole === 'importer'
-                    ? '管理全球采购订单和供应商关系'
+                     '管理全球采购订单和供应商关系'
                     : '管理国际销售订单和客户关系'}
                 </p>
               </div>
               <Badge
-                variant={activeRole === 'importer' ? 'default' : 'secondary'}
+                variant={activeRole === 'importer'  'default' : 'secondary'}
               >
-                {activeRole === 'importer' ? '进口商视? : '出口商视?}
+                {activeRole === 'importer'  '进口商视角' : '出口商视角'}
               </Badge>
             </div>
           </div>
@@ -306,11 +303,11 @@ export default function ForeignTradeCompanyPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-500">
-                      {activeRole === 'importer' ? '采购订单' : '销售订?}
+                      {activeRole === 'importer'  '采购订单' : '销售订单'}
                     </p>
                     <p className="text-2xl font-bold text-blue-600">
                       {activeRole === 'importer'
-                        ? stats.importOrders
+                         stats.importOrders
                         : stats.exportOrders}
                     </p>
                   </div>
@@ -334,7 +331,8 @@ export default function ForeignTradeCompanyPage() {
                   <div>
                     <p className="text-sm text-gray-500">交易总额</p>
                     <p className="text-2xl font-bold text-green-600">
-                      ¥{(stats.totalAmount / 10000).toFixed(0)}�?                    </p>
+                      ¥{(stats.totalAmount / 10000).toFixed(0)}万元
+                    </p>
                   </div>
                   <div className="p-3 bg-green-100 rounded-lg">
                     <DollarSign className="h-6 w-6 text-green-600" />
@@ -350,7 +348,7 @@ export default function ForeignTradeCompanyPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-500">待处理事?/p>
+                    <p className="text-sm text-gray-500">待处理事项</p>
                     <p className="text-2xl font-bold text-yellow-600">
                       {stats.pendingApprovals}
                     </p>
@@ -378,8 +376,8 @@ export default function ForeignTradeCompanyPage() {
                     <CardTitle className="flex items-center gap-2">
                       <Package className="h-5 w-5" />
                       {activeRole === 'importer'
-                        ? '采购订单跟踪'
-                        : '销售订单管?}
+                         '采购订单跟踪'
+                        : '销售订单管理'}
                     </CardTitle>
                     <Button
                       onClick={() =>
@@ -387,13 +385,13 @@ export default function ForeignTradeCompanyPage() {
                       }
                     >
                       {activeRole === 'importer'
-                        ? '创建采购订单'
-                        : '创建销售订?}
+                         '创建采购订单'
+                        : '创建销售订单'}
                     </Button>
                   </div>
                   <CardDescription>
                     {activeRole === 'importer'
-                      ? '跟踪全球采购订单状态和供应商交付情?
+                       '跟踪全球采购订单状态和供应商交付情况'
                       : '管理国际销售订单和客户交付进度'}
                   </CardDescription>
                 </CardHeader>
@@ -406,7 +404,8 @@ export default function ForeignTradeCompanyPage() {
                         onClick={e => {
                           e.preventDefault();
                           e.stopPropagation();
-                          // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('点击订单:', order.id)router.push(
+                          console.debug('点击订单:', order.id);
+                          router.push(
                             `/foreign-trade/company/order/${order.id}`
                           );
                         }}
@@ -436,7 +435,7 @@ export default function ForeignTradeCompanyPage() {
                                 className={getTypeColor(order.type)}
                               >
                                 {getTypeIcon(order.type)}
-                                {order.type === 'import' ? '进口' : '出口'}
+                                {order.type === 'import'  '进口' : '出口'}
                               </Badge>
                             </div>
                             <p className="text-sm text-gray-600">
@@ -487,13 +486,13 @@ export default function ForeignTradeCompanyPage() {
                       {
                         name: 'Samsung Electronics',
                         country: '韩国',
-                        type: '供应?,
+                        type: '供应商',
                         status: 'active',
                       },
                       {
                         name: 'Apple Inc.',
                         country: '美国',
-                        type: '供应?,
+                        type: '供应商',
                         status: 'active',
                       },
                       {
@@ -505,7 +504,7 @@ export default function ForeignTradeCompanyPage() {
                       {
                         name: 'Sony Corporation',
                         country: '日本',
-                        type: '供应?,
+                        type: '供应商',
                         status: 'pending',
                       },
                     ].map((partner, index) => (
@@ -520,11 +519,11 @@ export default function ForeignTradeCompanyPage() {
                           <Badge
                             variant={
                               partner.status === 'active'
-                                ? 'default'
+                                 'default'
                                 : 'secondary'
                             }
                           >
-                            {partner.status === 'active' ? '活跃' : '待审?}
+                            {partner.status === 'active'  '活跃' : '待审核'}
                           </Badge>
                         </div>
                         <p className="text-sm text-gray-600 mb-1">
@@ -546,14 +545,16 @@ export default function ForeignTradeCompanyPage() {
                     业务数据分析
                   </CardTitle>
                   <CardDescription>
-                    查看您的贸易业务关键指标和趋势分?                  </CardDescription>
+                    查看您的贸易业务关键指标和趋势分析
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="text-center p-6 bg-blue-50 rounded-lg">
                       <BarChart3 className="h-8 w-8 text-blue-600 mx-auto mb-2" />
                       <p className="text-2xl font-bold text-blue-600">
-                        ¥{(stats.totalAmount / 10000).toFixed(0)}�?                      </p>
+                        ¥{(stats.totalAmount / 10000).toFixed(0)}万元
+                      </p>
                       <p className="text-sm text-gray-600">总交易额</p>
                     </div>
                     <div className="text-center p-6 bg-green-50 rounded-lg">
@@ -561,14 +562,14 @@ export default function ForeignTradeCompanyPage() {
                       <p className="text-2xl font-bold text-green-600">
                         {stats.totalOrders - stats.pendingApprovals}
                       </p>
-                      <p className="text-sm text-gray-600">已完成订?/p>
+                      <p className="text-sm text-gray-600">已完成订单</p>
                     </div>
                     <div className="text-center p-6 bg-yellow-50 rounded-lg">
                       <Calendar className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
                       <p className="text-2xl font-bold text-yellow-600">
                         {stats.pendingApprovals}
                       </p>
-                      <p className="text-sm text-gray-600">待处理订?/p>
+                      <p className="text-sm text-gray-600">待处理订单</p>
                     </div>
                   </div>
                 </CardContent>
@@ -580,4 +581,3 @@ export default function ForeignTradeCompanyPage() {
     </div>
   );
 }
-

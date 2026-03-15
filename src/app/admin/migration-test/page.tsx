@@ -11,28 +11,28 @@ export default function MigrationTestPage() {
 
       // 测试1: 检查是否使用了RoleAwareLayout
       results.push({
-        test: '布局系统检?,
+        test: '布局系统检,
         status: '通过',
         description: '已成功迁移到RoleAwareLayout统一组件系统',
       });
 
-      // 测试2: 检查顶部导航是否存?      const topbarExists = document.querySelector('header.bg-white.border-b');
+      // 测试2: 检查顶部导航是否存      const topbarExists = document.querySelector('header.bg-white.border-b');
       results.push({
         test: '统一顶部导航',
-        status: topbarExists ? '通过' : '失败',
+        status: topbarExists  '通过' : '失败',
         description: topbarExists
-          ? 'RoleAwareTopbar组件已正确加?
+           'RoleAwareTopbar组件已正确加
           : '未找到统一顶部导航',
       });
 
-      // 测试3: 检查登录状态控?      const loginControls = document.querySelectorAll('button');
+      // 测试3: 检查登录状态控      const loginControls = document.querySelectorAll('button');
       const hasLoginButton = Array.from(loginControls).some(
-        btn => btn?.includes('登录') || btn?.includes('注册')
+        btn => btn.includes('登录') || btn.includes('注册')
       );
       results.push({
-        test: '登录状态控?,
-        status: hasLoginButton ? '待验? : '待验?,
-        description: '请手动检查右上角是否显示正确的登?用户状态控?,
+        test: '登录状态控,
+        status: hasLoginButton  '待验 : '待验,
+        description: '请手动检查右上角是否显示正确的登用户状态控,
       });
 
       setTestResults(results);
@@ -66,26 +66,26 @@ export default function MigrationTestPage() {
                 <div
                   className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
                     result.status === '通过'
-                      ? 'bg-green-100'
+                       'bg-green-100'
                       : result.status === '失败'
-                        ? 'bg-red-100'
+                         'bg-red-100'
                         : 'bg-yellow-100'
                   }`}
                 >
                   <span
                     className={`text-lg ${
                       result.status === '通过'
-                        ? 'text-green-600'
+                         'text-green-600'
                         : result.status === '失败'
-                          ? 'text-red-600'
+                           'text-red-600'
                           : 'text-yellow-600'
                     }`}
                   >
                     {result.status === '通过'
-                      ? '�?
+                       '
                       : result.status === '失败'
-                        ? '�?
-                        : '�?}
+                         '
+                        : '}
                   </span>
                 </div>
                 <div>
@@ -106,8 +106,8 @@ export default function MigrationTestPage() {
             <li>
               观察右上角控件：
               <ul className="list-disc list-inside ml-6 mt-1">
-                <li>未登录时应显?登录"�?免费注册"按钮</li>
-                <li>登录后应显示用户头像、邮箱、角色和退出按?/li>
+                <li>未登录时应显登录"免费注册"按钮</li>
+                <li>登录后应显示用户头像、邮箱、角色和退出按/li>
               </ul>
             </li>
             <li>确认两种状态完全互斥，不会同时显示</li>
@@ -119,7 +119,7 @@ export default function MigrationTestPage() {
             href="/admin/dashboard"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            返回管理仪表?          </a>
+            返回管理仪表          </a>
         </div>
       </div>
     </div>

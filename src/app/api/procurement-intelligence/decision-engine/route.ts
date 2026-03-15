@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?
+// 鍒濆鍖朣upabase瀹㈡埛
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
           return NextResponse.json(
             {
               success: false,
-              error: '缂哄皯蹇呰鍙傛暟: requirements 锟?suppliers',
+              error: '缂哄皯蹇呰鍙傛暟: requirements suppliers',
             },
             { status: 400 }
           );
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -200,7 +200,7 @@ async function makeProcurementDecision(params: any) {
     if (!requirements || !suppliers || !Array.isArray(suppliers)) {
       return {
         success: false,
-        error: '缂哄皯蹇呰鍙傛暟: requirements 锟?suppliers',
+        error: '缂哄皯蹇呰鍙傛暟: requirements suppliers',
       };
     }
 
@@ -227,10 +227,10 @@ async function makeProcurementDecision(params: any) {
       throw new Error(`鍒涘缓鍐崇瓥璁板綍澶辫触: ${decisionError.message}`);
     }
 
-    // 3. 鎵ц澶氱淮搴﹁瘎?
+    // 3. 鎵ц澶氱淮搴﹁瘎
     const evaluationResults = await evaluateSuppliers(requirements, suppliers);
     if (!evaluationResults.success) {
-      throw new Error(`渚涘簲鍟嗚瘎浼板け? ${evaluationResults.error}`);
+      throw new Error(`渚涘簲鍟嗚瘎板け ${evaluationResults.error}`);
     }
 
     // 4. 椋庨櫓褰卞搷璇勪及
@@ -239,7 +239,7 @@ async function makeProcurementDecision(params: any) {
       riskTolerance,
     });
 
-    // 5. 鐢熸垚鏈€缁堝喅?
+    // 5. 鐢熸垚鏈€缁堝喅
     const finalDecision = generateFinalDecision(
       evaluationResults.rankedSuppliers,
       riskAssessment,
@@ -294,7 +294,7 @@ async function makeProcurementDecision(params: any) {
 async function evaluateSuppliers(requirements: any, suppliers: any[]) {
   try {
     const evaluatedSuppliers = suppliers.map(supplier => {
-      // 璁＄畻鍚勭淮搴﹀緱?
+      // 璁＄畻鍚勭淮搴﹀緱
       const qualityScore = calculateQualityScore(supplier, requirements);
       const priceScore = calculatePriceScore(supplier, requirements);
       const deliveryScore = calculateDeliveryScore(supplier, requirements);
@@ -324,7 +324,7 @@ async function evaluateSuppliers(requirements: any, suppliers: any[]) {
       };
     });
 
-    // 鎸夌患鍚堝緱鍒嗘帓?
+    // 鎸夌患鍚堝緱鍒嗘帓
     const rankedSuppliers = evaluatedSuppliers.sort(
       (a, b) => b.scores.overall - a.scores.overall
     );
@@ -341,7 +341,7 @@ async function evaluateSuppliers(requirements: any, suppliers: any[]) {
       },
     };
   } catch (error) {
-    console.error('渚涘簲鍟嗚瘎浼伴敊?', error);
+    console.error('渚涘簲鍟嗚瘎伴敊', error);
     return {
       success: false,
       error: `璇勪及澶辫触: ${(error as Error).message}`,
@@ -363,10 +363,10 @@ async function optimizeContractTerms(proposals: any[], weights: any = {}) {
 
     const optimizedProposals = proposals.map(proposal => {
       // 鏍囧噯鍖栧悇椤规寚鏍囧埌0-100鑼冨洿
-      const normalizedPrice = normalizeValue(proposal.price, 'min'); // 浠锋牸瓒婁綆瓒婂ソ
+      const normalizedPrice = normalizeValue(proposal.price, 'min'); // 牸瓒婁綆瓒婂ソ
       const normalizedQuality = proposal.quality || 80;
       const normalizedDelivery = proposal.deliveryTime
-        ? Math.max(0, 100 - (proposal.deliveryTime / 30) * 100)
+         Math.max(0, 100 - (proposal.deliveryTime / 30) * 100)
         : 70;
       const normalizedService = proposal.serviceLevel || 75;
       const normalizedInnovation = proposal.innovation || 60;
@@ -392,7 +392,7 @@ async function optimizeContractTerms(proposals: any[], weights: any = {}) {
       };
     });
 
-    // 鎸夌患鍚堝緱鍒嗘帓?
+    // 鎸夌患鍚堝緱鍒嗘帓
     const rankedProposals = optimizedProposals.sort(
       (a, b) => b.compositeScore - a.compositeScore
     );
@@ -404,10 +404,10 @@ async function optimizeContractTerms(proposals: any[], weights: any = {}) {
       weights: defaultWeights,
     };
   } catch (error) {
-    console.error('鍚堝悓鏉℃浼樺寲閿欒:', error);
+    console.error('鍚堝悓鏉℃樺寲閿欒:', error);
     return {
       success: false,
-      error: `浼樺寲澶辫触: ${(error as Error).message}`,
+      error: `樺寲澶辫触: ${(error as Error).message}`,
     };
   }
 }
@@ -426,11 +426,11 @@ async function assessRiskImpact(params: any) {
       riskLevels[riskTolerance as keyof typeof riskLevels] || riskLevels.medium;
 
     const assessedSuppliers = suppliers.map((supplier: any) => {
-      // 鍩轰簬渚涘簲鍟嗛闄╄瘎鍒嗚皟鏁寸患鍚堝緱?
+      // 鍩轰簬渚涘簲鍟嗛闄╄瘎鍒嗚皟鏁寸患鍚堝緱
       const riskScore = supplier.riskScore || 50;
-      const riskAdjustedScore = supplier?.overall || 70;
+      const riskAdjustedScore = supplier.overall || 70;
 
-      // 椋庨櫓瀹瑰繊搴﹁皟?
+      // 椋庨櫓瀹瑰繊搴﹁皟
       let finalScore = riskAdjustedScore;
       if (riskScore > toleranceConfig.threshold) {
         finalScore = riskAdjustedScore / toleranceConfig.multiplier;
@@ -444,7 +444,7 @@ async function assessRiskImpact(params: any) {
           riskTolerance,
           adjustmentFactor:
             riskScore > toleranceConfig.threshold
-              ? 1 / toleranceConfig.multiplier
+               1 / toleranceConfig.multiplier
               : 1,
           finalScore,
         },
@@ -475,7 +475,7 @@ async function generateAlternativeScenarios(params: any) {
       {
         id: 'conservative',
         name: '淇濆畧鏂规',
-        description: '浼樺厛鑰冭檻椋庨櫓鏈€灏忓寲',
+        description: '樺厛鑰冭檻椋庨櫓鏈€灏忓寲',
         weights: {
           quality: 0.35,
           price: 0.2,
@@ -488,7 +488,7 @@ async function generateAlternativeScenarios(params: any) {
       {
         id: 'balanced',
         name: '骞宠　鏂规',
-        description: '缁煎悎鑰冭檻鍚勬柟闈㈠洜?,
+        description: '缁煎悎鑰冭檻鍚勬柟闈㈠洜,
         weights: {
           quality: 0.3,
           price: 0.25,
@@ -500,8 +500,8 @@ async function generateAlternativeScenarios(params: any) {
       },
       {
         id: 'aggressive',
-        name: '婵€杩涙柟?,
-        description: '浼樺厛鑰冭檻鎴愭湰鏁堢泭',
+        name: '婵€杩涙柟,
+        description: '樺厛鑰冭檻鎴愭湰鏁堢泭',
         weights: {
           quality: 0.25,
           price: 0.35,
@@ -513,12 +513,12 @@ async function generateAlternativeScenarios(params: any) {
       },
     ];
 
-    // 搴旂敤鑷畾涔夊彉?
+    // 搴旂敤鑷畾涔夊彉
     variations.forEach((variation: any, index: number) => {
       scenarios.push({
         id: `custom_${index + 1}`,
-        name: variation.name || `鑷畾涔夋柟?${index + 1}`,
-        description: variation.description || '鐢ㄦ埛鑷畾涔夋柟?,
+        name: variation.name || `鑷畾涔夋柟${index + 1}`,
+        description: variation.description || '鐢ㄦ埛鑷畾涔夋柟,
         weights: { ...scenarios[1].weights, ...variation.weights },
         riskTolerance: variation.riskTolerance || 'medium',
       });
@@ -541,19 +541,19 @@ async function generateAlternativeScenarios(params: any) {
 // 杈呭姪鍑芥暟
 function calculateQualityScore(supplier: any, requirements: any): number {
   const baseScore = supplier.qualityScore || 75;
-  const requirementMatch = requirements.qualityRequirements ? 85 : 75;
+  const requirementMatch = requirements.qualityRequirements  85 : 75;
   return (baseScore + requirementMatch) / 2;
 }
 
 function calculatePriceScore(supplier: any, requirements: any): number {
   const baseScore = supplier.priceCompetitiveness || 70;
-  const budgetAlignment = requirements.budget ? 80 : 70;
+  const budgetAlignment = requirements.budget  80 : 70;
   return (baseScore + budgetAlignment) / 2;
 }
 
 function calculateDeliveryScore(supplier: any, requirements: any): number {
   const baseScore = supplier.deliveryReliability || 80;
-  const timelineMatch = requirements.timeline ? 85 : 75;
+  const timelineMatch = requirements.timeline  85 : 75;
   return (baseScore + timelineMatch) / 2;
 }
 
@@ -597,12 +597,12 @@ function getDynamicWeights(priority: string = 'balanced') {
 }
 
 function normalizeValue(value: number, optimization: 'min' | 'max'): number {
-  // 绠€鍗曠殑褰掍竴鍖栧疄?
+  // 绠€鍗曠殑褰掍竴鍖栧疄
   const minValue = 1;
   const maxValue = 1000;
   const normalized = ((value - minValue) / (maxValue - minValue)) * 100;
 
-  return optimization === 'min' ? 100 - normalized : normalized;
+  return optimization === 'min'  100 - normalized : normalized;
 }
 
 function generateFinalDecision(
@@ -615,13 +615,13 @@ function generateFinalDecision(
 
   // 鐢熸垚鎺ㄨ崘鐞嗙敱
   const rationale = [
-    `鍩轰簬缁煎悎璇勪及锛屾帹鑽愰€夋嫨渚涘簲?"${topSupplier.companyName}"`,
-    `缁煎悎寰楀垎?${topSupplier.scores.overall.toFixed(1)} 鍒嗭紝鎺掑悕绗竴`,
+    `鍩轰簬缁煎悎璇勪及锛屾帹鑽愰€夋嫨渚涘簲"${topSupplier.companyName}"`,
+    `缁煎悎寰楀垎${topSupplier.scores.overall.toFixed(1)} 鍒嗭紝鎺掑悕绗竴`,
     `鍦ㄨ川閲忓拰浜や粯鍙潬鎬ф柟闈㈣〃鐜颁紭绉€`,
     `绗﹀悎棰勭畻鍜屾椂闂磋姹俙,
   ];
 
-  // 鐢熸垚澶囬€夋柟?
+  // 鐢熸垚澶囬€夋柟
   const alternatives = rankedSuppliers
     .slice(1, 4)
     .map((supplier: any, index: number) => ({
@@ -629,22 +629,22 @@ function generateFinalDecision(
       supplierName: supplier.companyName,
       score: supplier.scores.overall,
       keyAdvantages: [
-        `浠锋牸鏇村叿绔炰簤?(+${(supplier.scores.price - topSupplier.scores.price).toFixed(1)}锟?`,
-        `浜や粯鏃堕棿鏇寸煭 (-${(topSupplier.scores.delivery - supplier.scores.delivery).toFixed(1)}鍒嗗樊?`,
+        `牸鏇村叿绔炰簤(+${(supplier.scores.price - topSupplier.scores.price).toFixed(1)}`,
+        `浜や粯堕棿鏇寸煭 (-${(topSupplier.scores.delivery - supplier.scores.delivery).toFixed(1)}鍒嗗樊`,
       ].filter(Boolean),
     }));
 
   return {
     recommendedSupplier: topSupplier.companyName,
     confidence: Math.min(0.95, 0.7 + (topSupplier.scores.overall / 100) * 0.25),
-    rationale: rationale.join('锟?),
+    rationale: rationale.join('),
     alternatives,
     keyMetrics: {
       totalSuppliersEvaluated: rankedSuppliers.length,
       topScore: topSupplier.scores.overall,
       scoreGap:
         rankedSuppliers.length > 1
-          ? topSupplier.scores.overall - rankedSuppliers[1].scores.overall
+           topSupplier.scores.overall - rankedSuppliers[1].scores.overall
           : 0,
     },
   };
@@ -691,7 +691,7 @@ async function getDecisionStatistics() {
     }
 
     const stats = {
-      totalDecisions: (data as any)?.length || 0,
+      totalDecisions: (data as any).length || 0,
       byType: {} as Record<string, number>,
       byStatus: {} as Record<string, number>,
       avgConfidence: 0,

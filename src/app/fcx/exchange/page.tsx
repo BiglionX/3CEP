@@ -35,7 +35,6 @@ import {
   Plus,
   Minus,
   Package,
-  MapPin,
 } from 'lucide-react';
 
 interface Part {
@@ -76,7 +75,6 @@ interface ExchangeOrder {
 }
 
 const FcxExchangePage = () => {
-  // @ts-ignore
   const [parts, setParts] = useState<Part[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<ExchangeOrder[]>([]);
@@ -94,7 +92,8 @@ const FcxExchangePage = () => {
     postalCode: '',
   });
 
-  // 获取可兑换配件列?  const fetchAvailableParts = async () => {
+  // 获取可兑换配件列表
+  const fetchAvailableParts = async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/parts/available?includeFcxPrice=true');
@@ -118,7 +117,7 @@ const FcxExchangePage = () => {
       const result = await response.json();
 
       if (result.success) {
-        setUserFcxBalance(result.data.availableBalance || 0);
+        setUserFcxBalance(result.data?.availableBalance || 0);
       }
     } catch (error) {
       console.error('获取FCX余额失败:', error);
@@ -151,7 +150,7 @@ const FcxExchangePage = () => {
       setCart(
         cart.map(item =>
           item.id === part.id
-            ? {
+             ? {
                 ...item,
                 quantity: item.quantity + 1,
                 subtotal: (item.quantity + 1) * part.fcx_price,
@@ -171,7 +170,8 @@ const FcxExchangePage = () => {
     setCart(cart.filter(item => item.id !== partId));
   };
 
-  // 更新购物车数?  const updateCartQuantity = (partId: string, quantity: number) => {
+  // 更新购物车数量
+  const updateCartQuantity = (partId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(partId);
       return;
@@ -185,8 +185,7 @@ const FcxExchangePage = () => {
 
     setCart(
       cart.map(item =>
-        item.id === partId
-          ? { ...item, quantity, subtotal: quantity * item.fcx_price }
+        item.id === partId ? { ...item, quantity, subtotal: quantity * item.fcx_price }
           : item
       )
     );
@@ -197,7 +196,8 @@ const FcxExchangePage = () => {
     return cart.reduce((total, item) => total + item.subtotal, 0);
   };
 
-  // 检查是否可以兑?  const canCheckout = () => {
+  // 检查是否可以兑换
+  const canCheckout = () => {
     return cart.length > 0 && calculateCartTotal() <= userFcxBalance;
   };
 
@@ -215,21 +215,23 @@ const FcxExchangePage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          repairShopId: 'current-repair-shop-id', // 实际应用中从上下文获?          userId: 'current-user-id', // 实际应用中从认证获取
+          repairShopId: 'current-repair-shop-id', // 实际应用中从上下文获取
+          userId: 'current-user-id', // 实际应用中从认证获取
           items: cart.map(item => ({
             productId: item.id,
             quantity: item.quantity,
             fcxPrice: item.fcx_price,
           })),
-          shippingAddress: shippingAddress.name ? shippingAddress : undefined,
+          shippingAddress: shippingAddress.nameshippingAddress:undefined,
         }),
       });
 
       const result = await response.json();
 
       if (result.success) {
-        alert('兑换成功?);
-        setCart([]); // 清空购物?        setShowCheckoutDialog(false);
+        alert('兑换成功！');
+        setCart([]); // 清空购物车
+        setShowCheckoutDialog(false);
         fetchUserBalance(); // 更新余额
         fetchExchangeHistory(); // 刷新订单历史
       } else {
@@ -241,7 +243,8 @@ const FcxExchangePage = () => {
     }
   };
 
-  // 获取订单状态标?  const getOrderStatusBadge = (status: string) => {
+  // 获取订单状态标识
+  const getOrderStatusBadge = (status: string) => {
     const statusMap: Record<string, { color: string; icon: React.ReactNode }> =
       {
         pending: {
@@ -276,12 +279,12 @@ const FcxExchangePage = () => {
 
     const statusText =
       {
-        pending: '待处?,
-        confirmed: '已确?,
-        processing: '处理?,
-        shipped: '已发?,
+        pending: '待处理',
+        confirmed: '已确认',
+        processing: '处理中',
+        shipped: '已发货',
         delivered: '已送达',
-        cancelled: '已取?,
+        cancelled: '已取消',
         failed: '失败',
       }[status] || status;
 
@@ -300,11 +303,12 @@ const FcxExchangePage = () => {
     );
   };
 
-  // 筛选配?  const filteredParts = parts.filter(part => {
+  // 筛选配件
+  const filteredParts = parts.filter(part => {
     const matchesSearch =
       part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part?.toLowerCase().includes(searchTerm.toLowerCase());
+      part.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      part.model.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory =
       categoryFilter === 'all' || part.category === categoryFilter;
@@ -350,7 +354,7 @@ const FcxExchangePage = () => {
               <div className="flex items-center">
                 <ShoppingCart className="h-8 w-8 text-blue-500 mr-3" />
                 <div>
-                  <p className="text-sm text-gray-500">购物车商?/p>
+                  <p className="text-sm text-gray-500">购物车商品</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {cart.length}
                   </p>
@@ -364,7 +368,7 @@ const FcxExchangePage = () => {
               <div className="flex items-center">
                 <Truck className="h-8 w-8 text-green-500 mr-3" />
                 <div>
-                  <p className="text-sm text-gray-500">待处理订?/p>
+                  <p className="text-sm text-gray-500">待处理订单</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {
                       orders.filter(
@@ -379,19 +383,20 @@ const FcxExchangePage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* 配件列表区域 */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Package className="mr-2 h-5 w-5" />
-                可兑换配?              </CardTitle>
+                可兑换配件
+              </CardTitle>
               <CardDescription>浏览并选择您需要的配件</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* 搜索和筛?*/}
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              {/* 搜索和筛选 */}
+              <div className="flex flex-col flex:row gap-4 mb-6">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
@@ -405,7 +410,7 @@ const FcxExchangePage = () => {
                 <select
                   value={categoryFilter}
                   onChange={e => setCategoryFilter(e.target.value)}
-                  className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full w:48 px-3 py-2 border border-gray-300 rounded-md"
                 >
                   <option value="all">全部分类</option>
                   {categories.map(category => (
@@ -417,10 +422,10 @@ const FcxExchangePage = () => {
               </div>
 
               {/* 配件列表 */}
-              {loading ? (
+              {loading  (
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                  <p className="mt-4 text-gray-500">加载?..</p>
+                  <p className="mt-4 text-gray-500">加载中...</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -431,7 +436,7 @@ const FcxExchangePage = () => {
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start space-x-4">
-                          {part.image_url ? (
+                          {part.image_url  (
                             <img
                               src={part.image_url}
                               alt={part.name}
@@ -497,16 +502,17 @@ const FcxExchangePage = () => {
           </Card>
         </div>
 
-        {/* 购物车区?*/}
+        {/* 购物车区域 */}
         <div className="lg:col-span-1">
           <Card className="sticky top-8">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                我的购物?              </CardTitle>
+                我的购物车
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              {cart.length === 0 ? (
+              {cart.length === 0  (
                 <div className="text-center py-8">
                   <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500">购物车是空的</p>
@@ -579,7 +585,7 @@ const FcxExchangePage = () => {
                     {!canCheckout() && cart.length > 0 && (
                       <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
                         <p className="text-red-700 text-sm">
-                          FCX余额不足，当前余?{' '}
+                          FCX余额不足，当前余额{' '}
                           {userFcxBalance.toLocaleString()} FCX
                         </p>
                       </div>
@@ -616,7 +622,8 @@ const FcxExchangePage = () => {
                                     (sum, item) => sum + item.quantity,
                                     0
                                   )}{' '}
-                                  �?                                </span>
+                                  件
+                                </span>
                               </div>
                               <div className="flex justify-between">
                                 <span>消耗FCX:</span>
@@ -640,7 +647,7 @@ const FcxExchangePage = () => {
                             <h4 className="font-medium mb-2">收货地址</h4>
                             <div className="space-y-2">
                               <Input
-                                placeholder="收货人姓?
+                                placeholder="收货人姓名"
                                 value={shippingAddress.name}
                                 onChange={e =>
                                   setShippingAddress({
@@ -724,7 +731,7 @@ const FcxExchangePage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {orders.length === 0 ? (
+            {orders.length === 0  (
               <div className="text-center py-8">
                 <Truck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500">暂无兑换记录</p>
@@ -733,12 +740,12 @@ const FcxExchangePage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>订单?/TableHead>
+                    <TableHead>订单号</TableHead>
                     <TableHead>商品数量</TableHead>
                     <TableHead>消耗FCX</TableHead>
                     <TableHead>仓库</TableHead>
                     <TableHead>预计送达</TableHead>
-                    <TableHead>状?/TableHead>
+                    <TableHead>状态</TableHead>
                     <TableHead>下单时间</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -748,7 +755,7 @@ const FcxExchangePage = () => {
                       <TableCell className="font-medium">
                         {order.order_number}
                       </TableCell>
-                      <TableCell>{order.total_items} �?/TableCell>
+                      <TableCell>{order.total_items} 件</TableCell>
                       <TableCell className="font-medium text-yellow-600">
                         {order.total_fcx_cost.toLocaleString()} FCX
                       </TableCell>
@@ -773,4 +780,3 @@ const FcxExchangePage = () => {
 };
 
 export default FcxExchangePage;
-

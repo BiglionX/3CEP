@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     if (productRequirements.length === 0) {
       return NextResponse.json(
-        { error: '浜у搧闇€姹傚垪琛ㄤ笉鑳戒负? },
+        { error: '浜у搧闇€姹傚垪琛ㄤ笉鑳戒负 },
         { status: 400 }
       );
     }
@@ -47,10 +47,10 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('渚涘簲鍟嗗尮閰嶉敊?', error);
+    console.error('渚涘簲鍟嗗尮閰嶉敊', error);
     return NextResponse.json(
       {
-        error: '渚涘簲鍟嗗尮閰嶅け?,
+        error: '渚涘簲鍟嗗尮閰嶅け,
         details: (error as Error).message,
       },
       { status: 500 }

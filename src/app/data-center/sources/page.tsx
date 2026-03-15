@@ -30,10 +30,10 @@ interface DataSource {
   type: 'postgresql' | 'mysql' | 'mongodb' | 'redis' | 'elasticsearch' | 'kafka'
   host: string
   port: number
-  database?: string
-  username?: string
+  database: string
+  username: string
   status: 'connected' | 'disconnected' | 'connecting' | 'error'
-  lastConnected?: string
+  lastConnected: string
   recordCount: number
   syncFrequency: string
   createdAt: string
@@ -64,7 +64,7 @@ export default function DataSourcesPage() {
       const mockSources: DataSource[] = [
         {
           id: '1',
-          name: '设备管理系统数据?,
+          name: '设备管理系统数据源,
           type: 'postgresql',
           host: 'db.devices.local',
           port: 5432,
@@ -78,7 +78,7 @@ export default function DataSourcesPage() {
         },
         {
           id: '2',
-          name: '供应链数据仓?,
+          name: '供应链数据仓库,
           type: 'mysql',
           host: 'warehouse.supply.local',
           port: 3306,
@@ -87,7 +87,7 @@ export default function DataSourcesPage() {
           status: 'connected',
           lastConnected: '2026-02-28 14:25:00',
           recordCount: 8734,
-          syncFrequency: '�?分钟',
+          syncFrequency: '5分钟',
           createdAt: '2026-01-20'
         },
         {
@@ -100,7 +100,7 @@ export default function DataSourcesPage() {
           username: 'service',
           status: 'error',
           recordCount: 5621,
-          syncFrequency: '每小?,
+          syncFrequency: '每小时',
           createdAt: '2026-01-25'
         },
         {
@@ -118,7 +118,7 @@ export default function DataSourcesPage() {
       ]
       setSources(mockSources)
     } catch (error) {
-      console.error('加载数据源失?', error)
+      console.error('加载数据源失败', error)
     } finally {
       setLoading(false)
     }
@@ -158,9 +158,9 @@ export default function DataSourcesPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'connected': return '已连?
+      case 'connected': return '已连接
       case 'disconnected': return '已断开'
-      case 'connecting': return '连接?
+      case 'connecting': return '连接
       case 'error': return '错误'
       default: return '未知'
     }
@@ -182,15 +182,15 @@ export default function DataSourcesPage() {
     // 模拟连接测试
     const source = sources.find(s => s.id === sourceId)
     if (source) {
-      // 更新状态为连接?
+      // 更新状态为连接
       setSources(prev => prev.map(s => 
-        s.id === sourceId ? {...s, status: 'connecting'} : s
+        s.id === sourceId  {...s, status: 'connecting'} : s
       ))
       
       // 模拟测试延迟
       setTimeout(() => {
         setSources(prev => prev.map(s => 
-          s.id === sourceId ? {...s, status: 'connected', lastConnected: new Date().toLocaleString('zh-CN')} : s
+          s.id === sourceId  {...s, status: 'connected', lastConnected: new Date().toLocaleString('zh-CN')} : s
         ))
       }, 2000)
     }
@@ -220,16 +220,16 @@ export default function DataSourcesPage() {
       {/* 页面头部 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">数据源管?/h1>
+          <h1 className="text-2xl font-bold text-gray-900">数据源管理/h1>
           <p className="text-gray-600 mt-1">管理和监控所有数据连接源</p>
         </div>
         <Button onClick={() => setShowAddDialog(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          添加数据?
+          添加数据源
         </Button>
       </div>
 
-      {/* 搜索和过?*/}
+      {/* 搜索和过*/}
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -246,13 +246,13 @@ export default function DataSourcesPage() {
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="状态筛? />
+                <SelectValue placeholder="状态筛 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状?/SelectItem>
-                <SelectItem value="connected">已连?/SelectItem>
+                <SelectItem value="all">全部状态/SelectItem>
+                <SelectItem value="connected">已连接/SelectItem>
                 <SelectItem value="disconnected">已断开</SelectItem>
-                <SelectItem value="connecting">连接?/SelectItem>
+                <SelectItem value="connecting">连接/SelectItem>
                 <SelectItem value="error">错误</SelectItem>
               </SelectContent>
             </Select>
@@ -260,7 +260,7 @@ export default function DataSourcesPage() {
         </CardContent>
       </Card>
 
-      {/* 数据源列?*/}
+      {/* 数据源列表*/}
       <div className="grid gap-6">
         {filteredSources.map((source) => (
           <Card key={source.id}>
@@ -276,8 +276,8 @@ export default function DataSourcesPage() {
                 <div className="flex items-center space-x-2">
                   {getStatusIcon(source.status)}
                   <Badge variant={
-                    source.status === 'connected' ? 'default' : 
-                    source.status === 'error' ? 'destructive' : 'secondary'
+                    source.status === 'connected'  'default' : 
+                    source.status === 'error'  'destructive' : 'secondary'
                   }>
                     {getStatusText(source.status)}
                   </Badge>
@@ -291,11 +291,11 @@ export default function DataSourcesPage() {
                   <p className="font-medium">{getTypeName(source.type)}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">数据?/p>
+                  <p className="text-sm text-gray-500">数据源/p>
                   <p className="font-medium">{source.database || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">记录?/p>
+                  <p className="text-sm text-gray-500">记录/p>
                   <p className="font-medium">{source.recordCount.toLocaleString()}</p>
                 </div>
                 <div>
@@ -306,7 +306,7 @@ export default function DataSourcesPage() {
               
               {source.lastConnected && (
                 <div className="text-sm text-gray-500 mb-4">
-                  最后连接时? {source.lastConnected}
+                  最后连接时 {source.lastConnected}
                 </div>
               )}
 
@@ -336,11 +336,11 @@ export default function DataSourcesPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <Database className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无数据?/h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无数据源/h3>
               <p className="text-gray-500 mb-4">开始添加您的第一个数据源</p>
               <Button onClick={() => setShowAddDialog(true)}>
                 <Plus className="mr-2 h-4 w-4" />
-                添加数据?
+                添加数据源
               </Button>
             </CardContent>
           </Card>
@@ -351,19 +351,19 @@ export default function DataSourcesPage() {
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>添加数据?/DialogTitle>
+            <DialogTitle>添加数据源/DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">数据源名?/Label>
-              <Input id="name" placeholder="输入数据源名? required />
+              <Label htmlFor="name">数据源名/Label>
+              <Input id="name" placeholder="输入数据源名 required />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="type">数据库类?/Label>
+              <Label htmlFor="type">数据库类/Label>
               <Select>
                 <SelectTrigger>
-                  <SelectValue placeholder="选择数据库类? />
+                  <SelectValue placeholder="选择数据库类 />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="postgresql">PostgreSQL</SelectItem>
@@ -388,13 +388,13 @@ export default function DataSourcesPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="database">数据库名?/Label>
+              <Label htmlFor="database">数据库名/Label>
               <Input id="database" placeholder="database_name" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="username">用户?/Label>
+                <Label htmlFor="username">用户/Label>
                 <Input id="username" placeholder="username" />
               </div>
               <div className="space-y-2">
@@ -407,7 +407,7 @@ export default function DataSourcesPage() {
               <Button type="button" variant="outline" onClick={() => setShowAddDialog(false)}>
                 取消
               </Button>
-              <Button type="submit">添加数据?/Button>
+              <Button type="submit">添加数据源/Button>
             </DialogFooter>
           </form>
         </DialogContent>

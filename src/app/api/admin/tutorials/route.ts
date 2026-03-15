@@ -1,7 +1,7 @@
 ﻿import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-// 鍒濆鍖朣upabase瀹㈡埛绔紙浣跨敤鏈嶅姟瑙掕壊瀵嗛挜?const supabaseAdmin = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛绔紙浣跨敤鏈嶅姟瑙掕壊瀵嗛挜const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -9,9 +9,9 @@ import { NextResponse } from 'next/server';
 // GET /api/admin/tutorials - 绠＄悊鍛樿幏鍙栨暀绋嬪垪琛紙鍖呭惈鎵€鏈夌姸鎬侊級
 export async function GET(request: Request) {
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+    // 楠岃瘉绠＄悊鍛樻潈    const authHeader = request.headers.get('authorization');
+    if (!authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const token = authHeader.substring(7);
@@ -21,10 +21,10 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏃犳晥鐨勮璇佷护? }, { status: 401 });
+      return NextResponse.json({ error: '犳晥鐨勮璇佷护 }, { status: 401 });
     }
 
-    // 妫€鏌ョ敤鎴锋槸鍚︿负绠＄悊?    const { data: profile } = await supabase
+    // 妫€鏌ョ敤鎴槸鍚︿负绠＄悊    const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -41,10 +41,10 @@ export async function GET(request: Request) {
     const pageSize = parseInt(searchParams.get('pageSize') || '10');
     const deviceModel = searchParams.get('deviceModel');
     const faultType = searchParams.get('faultType');
-    const status = searchParams.get('status'); // 绠＄悊鍛樺彲浠ユ煡鐪嬫墍鏈夌姸?    const search = searchParams.get('search');
+    const status = searchParams.get('status'); // 绠＄悊鍛樺彲ユ煡鐪嬫墍鏈夌姸    const search = searchParams.get('search');
     const createdBy = searchParams.get('createdBy');
 
-    // 璁＄畻鍋忕Щ?    const offset = (page - 1) * pageSize;
+    // 璁＄畻鍋忕Щ    const offset = (page - 1) * pageSize;
 
     // 鏋勫缓鏌ヨ
     let query = supabaseAdmin
@@ -77,7 +77,7 @@ export async function GET(request: Request) {
     const { data, error, count } = await query;
 
     if (error) {
-      console.error('鑾峰彇绠＄悊鍛樻暀绋嬪垪琛ㄥけ?', error);
+      console.error('鑾峰彇绠＄悊鍛樻暀绋嬪垪琛ㄥけ', error);
       return NextResponse.json(
         { error: '鑾峰彇鏁欑▼鍒楄〃澶辫触', details: error.message },
         { status: 500 }
@@ -100,15 +100,15 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('绠＄悊鍛楢PI閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
-// POST /api/admin/tutorials - 绠＄悊鍛樺垱寤烘暀?export async function POST(request: Request) {
+// POST /api/admin/tutorials - 绠＄悊鍛樺垱寤烘暀export async function POST(request: Request) {
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+    // 楠岃瘉绠＄悊鍛樻潈    const authHeader = request.headers.get('authorization');
+    if (!authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const token = authHeader.substring(7);
@@ -118,10 +118,10 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏃犳晥鐨勮璇佷护? }, { status: 401 });
+      return NextResponse.json({ error: '犳晥鐨勮璇佷护 }, { status: 401 });
     }
 
-    // 妫€鏌ョ敤鎴锋槸鍚︿负绠＄悊?    const { data: profile } = await supabase
+    // 妫€鏌ョ敤鎴槸鍚︿负绠＄悊    const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -145,7 +145,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 璁剧疆榛樿?    const tutorial = {
+    // 璁剧疆榛樿    const tutorial = {
       ...tutorialData,
       steps: tutorialData.steps || [],
       tools: tutorialData.tools || [],
@@ -165,7 +165,7 @@ export async function GET(request: Request) {
       .single();
 
     if (error) {
-      console.error('绠＄悊鍛樺垱寤烘暀绋嬪け?', error);
+      console.error('绠＄悊鍛樺垱寤烘暀绋嬪け', error);
       return NextResponse.json(
         { error: '鍒涘缓鏁欑▼澶辫触', details: error.message },
         { status: 500 }
@@ -181,7 +181,7 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     console.error('绠＄悊鍛楢PI閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 

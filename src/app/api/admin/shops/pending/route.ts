@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
     const offset = (page - 1) * pageSize;
 
-    // 鏌ヨ寰呭鏍稿簵?    let query = supabase
+    // 鏌ヨ寰呭鏍稿簵    let query = supabase
       .from('repair_shops')
       .select('*', { count: 'exact' })
       .eq('status', 'pending')
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 娣诲姞鍒嗙被绛?    if (category) {
+    // 娣诲姞鍒嗙被绛    if (category) {
       query = query.eq('category', category);
     }
 
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
     );
 
     if (error) {
-      console.error('鑾峰彇寰呭鏍稿簵閾哄け?', error);
+      console.error('鑾峰彇寰呭鏍稿簵哄け', error);
       return NextResponse.json(
         { error: '鑾峰彇鏁版嵁澶辫触', details: error.message },
         { status: 500 }
@@ -58,7 +58,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('API閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '涓嶆敮鎸佺殑鎿嶄綔绫诲瀷' }, { status: 400 });
     }
 
-    // 鎵归噺鏇存柊搴楅摵鐘?    const { data, error } = await supabase
+    // 鎵归噺鏇存柊搴楅摵鐘    const { data, error } = await supabase
       .from('repair_shops')
       .update(updateData as any)
       .in('id', ids);
@@ -111,12 +111,12 @@ export async function POST(request: Request) {
 
     // 濡傛灉鏄€氳繃瀹℃牳锛岄渶瑕佺粰搴椾富鐢ㄦ埛娣诲姞shop_owner瑙掕壊
     if (action === 'approve') {
-      // 鑾峰彇瀹℃牳閫氳繃鐨勫簵閾轰俊?      const { data: approvedShops } = await supabase
+      // 鑾峰彇瀹℃牳氳繃鐨勫簵轰俊      const { data: approvedShops } = await supabase
         .from('repair_shops')
         .select('id, owner_user_id')
         .in('id', ids);
 
-      // 涓烘瘡涓簵閾虹殑搴椾富娣诲姞shop_owner瀛愯?      if (approvedShops) {
+      // 涓烘瘡涓簵虹殑搴椾富娣诲姞shop_owner瀛愯      if (approvedShops) {
         for (const shop of approvedShops) {
           if (shop.owner_user_id) {
             // 鑾峰彇鐢ㄦ埛褰撳墠鐨剆ub_roles
@@ -127,7 +127,7 @@ export async function POST(request: Request) {
               .single();
 
             // 娣诲姞shop_owner瑙掕壊锛堥伩鍏嶉噸澶嶏級
-            const currentSubRoles = userProfile?.sub_roles || [];
+            const currentSubRoles = userProfile.sub_roles || [];
             const newSubRoles = Array.from(
               new Set([...currentSubRoles, 'shop_owner'])
             );
@@ -143,12 +143,12 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: action === 'approve' ? '瀹℃牳閫氳繃鎴愬姛' : '椹冲洖鎿嶄綔鎴愬姛',
+      message: action === 'approve'  '瀹℃牳氳繃鎴愬姛' : '椹冲洖鎿嶄綔鎴愬姛',
       affected: ids.length,
     });
   } catch (error) {
     console.error('鎵归噺瀹℃牳API閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 

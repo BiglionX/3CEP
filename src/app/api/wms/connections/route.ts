@@ -1,6 +1,6 @@
 ﻿/**
  * WMS杩炴帴绠＄悊API璺敱
- * 澶勭悊WMS杩炴帴鐨勫鍒犳敼鏌ユ搷? */
+ * 澶勭悊WMS杩炴帴鐨勫鍒犳敼鏌ユ搷 */
 
 import { WMSManager } from '@/lib/warehouse/wms-manager';
 import { createClient } from '@supabase/supabase-js';
@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server';
 
 const wmsManager = new WMSManager();
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -21,38 +21,39 @@ export async function GET(request: Request) {
     if (connectionId) {
       // 鑾峰彇鍗曚釜杩炴帴璇︽儏
       const connection = wmsManager.getConnection(connectionId);
-      if (!connection) {
-        return NextResponse.json({ error: '杩炴帴涓嶅瓨? }, { status: 404 });
+      if (!connection) {'
+        return NextResponse.json({ error: '杩炴帴涓嶅 },
+{ status: 404 });
       }
 
-      // 鑾峰彇杩炴帴鍋ュ悍鐘?      const healthResult = wmsManager.getConnectionHealth(connectionId);
+      // 鑾峰彇杩炴帴鍋ュ悍鐘      const healthResult = wmsManager.getConnectionHealth(connectionId);
 
       return NextResponse.json({
         success: true,
         data: {
           ...connection,
-          health: healthResult.success ? healthResult.data : null,
+          health: healthResult.success  healthResult.data : null,
         },
       });
     } else {
-      // 鑾峰彇鎵€鏈夎繛鎺ュ垪?      const connections = wmsManager.getConnections();
+      // 鑾峰彇鎵€鏈夎繛鎺ュ垪      const connections = wmsManager.getConnections();
 
-      // 琛ュ厖鏁版嵁搴撲腑鐨勮缁嗕俊?      const connectionIds = connections.map(conn => conn.id);
+      // 琛ュ厖鏁版嵁搴撲腑鐨勮缁嗕俊      const connectionIds = connections.map(conn => conn.id);
       if (connectionIds.length > 0) {
-        const { data: dbConnections, error } = await supabase
-          .from('wms_connections')
-          .select('*')
+        const { data: dbConnections, error } = await supabase'
+          .from('wms_connections')'
+          .select('*')'
           .in('id', connectionIds);
 
         if (!error && dbConnections) {
-          // 鍚堝苟鍐呭瓨鍜屾暟鎹簱淇℃伅
+          // 鍚堝苟鍐呭鍜屾暟鎹簱淇℃伅
           const enrichedConnections = connections.map(conn => {
             const dbConn = dbConnections.find(db => db.id === conn.id);
             return {
               ...conn,
               ...dbConn,
-              created_at: dbConn?.created_at,
-              updated_at: dbConn?.updated_at,
+              created_at: dbConn.created_at,
+              updated_at: dbConn.updated_at,
             };
           });
 
@@ -72,7 +73,7 @@ export async function GET(request: Request) {
     console.error('鑾峰彇WMS杩炴帴鍒楄〃澶辫触:', error);
     return NextResponse.json(
       { error: '鑾峰彇杩炴帴鍒楄〃澶辫触', details: (error as Error).message },
-      { status: 500 }
+{ status: 500 }
     );
   }
 }
@@ -105,22 +106,22 @@ export async function POST(request: Request) {
           error:
             '缂哄皯蹇呰鍙傛暟: name, provider, warehouseId, baseUrl, clientId, clientSecret',
         },
-        { status: 400 }
+{ status: 400 }
       );
     }
 
-    // 楠岃瘉鎻愪緵?    const validProviders = ['goodcang', '4px', 'winit', 'custom'];
+    // 楠岃瘉鎻愪緵    const validProviders = ['goodcang', '4px', 'winit', 'custom'];
     if (!validProviders.includes(provider)) {
       return NextResponse.json(
-        { error: `涓嶆敮鎸佺殑鎻愪緵? ${provider}` },
-        { status: 400 }
+        { error: `涓嶆敮鎸佺殑鎻愪緵 ${provider}` },
+{ status: 400 }
       );
     }
 
     // 鍔犲瘑瀵嗛挜锛堢畝鍖栧鐞嗭紝瀹為檯搴旇浣跨敤鏇村己鐨勫姞瀵嗭級
     const encryptedSecret = Buffer.from(clientSecret).toString('base64');
 
-    // 淇濆瓨鍒版暟鎹簱
+    // 淇濆鍒版暟鎹簱
     const { data: dbConnection, error: dbError } = await supabase
       .from('wms_connections')
       .insert({
@@ -137,13 +138,13 @@ export async function POST(request: Request) {
       .single();
 
     if (dbError) {
-      return NextResponse.json(
-        { error: '淇濆瓨杩炴帴閰嶇疆澶辫触', details: dbError.message },
-        { status: 500 }
+      return NextResponse.json('
+        { error: '淇濆杩炴帴閰嶇疆澶辫触', details: dbError.message },
+{ status: 500 }
       );
     }
 
-    // 娣诲姞鍒癢MS绠＄悊?    const config = {
+    // 娣诲姞鍒癢MS绠＄悊    const config = {
       provider: provider as any,
       baseUrl,
       clientId,
@@ -166,7 +167,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { error: '杩炴帴娴嬭瘯澶辫触', details: result.error },
-        { status: 400 }
+{ status: 400 }
       );
     }
 
@@ -181,7 +182,7 @@ export async function POST(request: Request) {
     console.error('鍒涘缓WMS杩炴帴澶辫触:', error);
     return NextResponse.json(
       { error: '鍒涘缓杩炴帴澶辫触', details: (error as Error).message },
-      { status: 500 }
+{ status: 500 }
     );
   }
 }
@@ -191,8 +192,9 @@ export async function PUT(request: Request) {
     const { searchParams } = new URL(request.url);
     const connectionId = searchParams.get('connectionId');
 
-    if (!connectionId) {
-      return NextResponse.json({ error: '缂哄皯杩炴帴ID鍙傛暟' }, { status: 400 });
+    if (!connectionId) {'
+      return NextResponse.json({ error: '缂哄皯杩炴帴ID鍙傛暟' },
+{ status: 400 });
     }
 
     const body = await request.json();
@@ -200,11 +202,12 @@ export async function PUT(request: Request) {
       name,
       isActive,
       syncFrequency,
-      clientSecret, // 鍙€夋洿?    } = body;
+      clientSecret, // 鍙€夋洿    } = body;
 
-    // 妫€鏌ヨ繛鎺ユ槸鍚﹀瓨?    const existingConnection = wmsManager.getConnection(connectionId);
+    // 妫€鏌ヨ繛鎺ユ槸鍚﹀    const existingConnection = wmsManager.getConnection(connectionId);
     if (!existingConnection) {
-      return NextResponse.json({ error: '杩炴帴涓嶅瓨? }, { status: 404 });
+      return NextResponse.json({ error: '杩炴帴涓嶅 },
+{ status: 404 });
     }
 
     // 鏋勫缓鏇存柊鏁版嵁
@@ -213,23 +216,23 @@ export async function PUT(request: Request) {
     if (isActive !== undefined) updateData.is_active = isActive;
     if (syncFrequency !== undefined) updateData.sync_frequency = syncFrequency;
     if (clientSecret) {
-      updateData.client_secret_encrypted =
+      updateData.client_secret_encrypted ='
         Buffer.from(clientSecret).toString('base64');
     }
 
-    // 鏇存柊鏁版嵁?    const { error: dbError } = await supabase
+    // 鏇存柊鏁版嵁    const { error: dbError } = await supabase'
       .from('wms_connections')
-      .update(updateData)
+      .update(updateData)'
       .eq('id', connectionId);
 
     if (dbError) {
       return NextResponse.json(
         { error: '鏇存柊杩炴帴閰嶇疆澶辫触', details: dbError.message },
-        { status: 500 }
+{ status: 500 }
       );
     }
 
-    // 鏇存柊鍐呭瓨涓殑杩炴帴鐘?    if (isActive !== undefined) {
+    // 鏇存柊鍐呭涓殑杩炴帴鐘    if (isActive !== undefined) {
       wmsManager.toggleConnection(connectionId, isActive);
     }
 
@@ -243,7 +246,7 @@ export async function PUT(request: Request) {
     console.error('鏇存柊WMS杩炴帴澶辫触:', error);
     return NextResponse.json(
       { error: '鏇存柊杩炴帴澶辫触', details: (error as Error).message },
-      { status: 500 }
+{ status: 500 }
     );
   }
 }
@@ -253,35 +256,37 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const connectionId = searchParams.get('connectionId');
 
-    if (!connectionId) {
-      return NextResponse.json({ error: '缂哄皯杩炴帴ID鍙傛暟' }, { status: 400 });
+    if (!connectionId) {'
+      return NextResponse.json({ error: '缂哄皯杩炴帴ID鍙傛暟' },
+{ status: 400 });
     }
 
-    // 妫€鏌ヨ繛鎺ユ槸鍚﹀瓨?    const existingConnection = wmsManager.getConnection(connectionId);
+    // 妫€鏌ヨ繛鎺ユ槸鍚﹀    const existingConnection = wmsManager.getConnection(connectionId);
     if (!existingConnection) {
-      return NextResponse.json({ error: '杩炴帴涓嶅瓨? }, { status: 404 });
+      return NextResponse.json({ error: '杩炴帴涓嶅 },
+{ status: 404 });
     }
 
-    // 浠庢暟鎹簱鍒犻櫎
-    const { error: dbError } = await supabase
+    // 庢暟鎹簱鍒犻櫎
+    const { error: dbError } = await supabase'
       .from('wms_connections')
-      .delete()
+      .delete()'
       .eq('id', connectionId);
 
     if (dbError) {
       return NextResponse.json(
         { error: '鍒犻櫎杩炴帴閰嶇疆澶辫触', details: dbError.message },
-        { status: 500 }
+{ status: 500 }
       );
     }
 
-    // 浠庡唴瀛樹腑绉婚櫎
+    // 庡唴瀛樹腑绉婚櫎
     const result = wmsManager.removeConnection(connectionId);
 
     if (!result.success) {
       return NextResponse.json(
         { error: '绉婚櫎杩炴帴澶辫触', details: result.error },
-        { status: 500 }
+{ status: 500 }
       );
     }
 
@@ -295,7 +300,7 @@ export async function DELETE(request: Request) {
     console.error('鍒犻櫎WMS杩炴帴澶辫触:', error);
     return NextResponse.json(
       { error: '鍒犻櫎杩炴帴澶辫触', details: (error as Error).message },
-      { status: 500 }
+{ status: 500 }
     );
   }
 }

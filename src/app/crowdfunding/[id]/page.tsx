@@ -154,7 +154,7 @@ export default function ProjectDetailPage() {
         // 支付成功，更新UI
         setShowPaymentModal(false);
         router.push(
-          `/crowdfunding/success?pledgeId=${
+          `/crowdfunding/successpledgeId=${
             (window as any).currentPledgeId
           }&payment=fcx`
         );
@@ -184,12 +184,12 @@ export default function ProjectDetailPage() {
     const amount = parseFloat(selectedAmount);
 
     // 验证金额范围
-    if (amount < (project?.min_pledge_amount || 0)) {
-      alert(`支持金额不能低于 ${project?.min_pledge_amount} 元`);
+    if (amount < (project.min_pledge_amount || 0)) {
+      alert(`支持金额不能低于 ${project.min_pledge_amount} 元`);
       return;
     }
 
-    if (project?.max_pledge_amount && amount > project.max_pledge_amount) {
+    if (project.max_pledge_amount && amount > project.max_pledge_amount) {
       alert(`支持金额不能超过 ${project.max_pledge_amount} 元`);
       return;
     }
@@ -213,7 +213,7 @@ export default function ProjectDetailPage() {
         project_id: projectId,
         amount: amount,
         pledge_type: 'reservation' as const,
-        reward_level: selectedReward?.title,
+        reward_level: selectedReward.title,
       };
 
       const result = await CrowdfundingPledgeService.createPledge(
@@ -240,7 +240,7 @@ export default function ProjectDetailPage() {
         setShowPaymentModal(true);
       } else {
         // 直接跳转到成功页面
-        router.push(`/crowdfunding/success?pledgeId=${result.id}`);
+        router.push(`/crowdfunding/successpledgeId=${result.id}`);
       }
     } catch (err: any) {
       alert(err.message || '预定失败，请重试');
@@ -265,7 +265,7 @@ export default function ProjectDetailPage() {
     const now = new Date();
     const diffTime = end.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
+    return diffDays > 0  diffDays : 0;
   };
 
   if (loading) {
@@ -342,7 +342,7 @@ export default function ProjectDetailPage() {
             {/* 项目图片 */}
             <div className="lg:w-1/2">
               <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                {project.cover_image_url ? (
+                {project.cover_image_url  (
                   <img
                     src={project.cover_image_url}
                     alt={project.title}
@@ -476,8 +476,8 @@ export default function ProjectDetailPage() {
                                 );
                               }}
                               className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                                selectedReward?.id === reward.id
-                                  ? 'border-blue-500 bg-blue-50'
+                                selectedReward.id === reward.id
+                                   'border-blue-500 bg-blue-50'
                                   : 'border-gray-200 hover:border-gray-300'
                               }`}
                             >
@@ -517,7 +517,7 @@ export default function ProjectDetailPage() {
                           onClick={() => setSelectedReward(null)}
                           className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                             !selectedReward
-                              ? 'border-blue-500 bg-blue-50'
+                               'border-blue-500 bg-blue-50'
                               : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
@@ -739,7 +739,7 @@ export default function ProjectDetailPage() {
                 disabled={bookingLoading}
                 className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center"
               >
-                {bookingLoading ? (
+                {bookingLoading  (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     处理中...
@@ -814,7 +814,7 @@ export default function ProjectDetailPage() {
                 disabled={paymentProcessing}
                 className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center"
               >
-                {paymentProcessing ? (
+                {paymentProcessing  (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     支付中...

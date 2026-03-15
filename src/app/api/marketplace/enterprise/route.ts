@@ -1,11 +1,11 @@
 ﻿/**
- * 浼佷笟璁㈤槄绠＄悊API璺敱
- * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩? */
+ * 佷笟璁㈤槄绠＄悊API璺敱
+ * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩 */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
 
-// 妯℃嫙浼佷笟璁㈤槄鏁版嵁
+// 妯℃嫙佷笟璁㈤槄鏁版嵁
 const mockEnterpriseSubscriptions = [
   {
     id: 'sub-enterprise-001',
@@ -32,8 +32,8 @@ const mockTeams = [
   {
     id: 'team-sales',
     subscription_id: 'sub-enterprise-001',
-    name: '閿€鍞洟?,
-    description: '璐熻矗瀹㈡埛寮€鍙戝拰閿€鍞笟?,
+    name: '閿€鍞洟,
+    description: '璐熻矗瀹㈡埛寮€鍙戝拰閿€鍞笟,
     members: 8,
     assigned_agents: ['agent-1', 'agent-4'],
     usage: 2156,
@@ -55,7 +55,7 @@ const mockTeams = [
     id: 'team-support',
     subscription_id: 'sub-enterprise-001',
     name: '瀹㈡湇鍥㈤槦',
-    description: '璐熻矗瀹㈡埛鏈嶅姟鍜屾敮鎸佸伐?,
+    description: '璐熻矗瀹㈡埛鏈嶅姟鍜屾敮鎸佸伐,
     members: 11,
     assigned_agents: ['agent-3', 'agent-5'],
     usage: 2244,
@@ -70,7 +70,7 @@ let mockTeamMembers = [
     id: 'member-1',
     team_id: 'team-sales',
     user_id: 'user-2',
-    name: '寮犵粡?,
+    name: '寮犵粡,
     email: 'zhang.manager@company.com',
     role: 'admin',
     assigned_agents: ['agent-1', 'agent-2'],
@@ -82,7 +82,7 @@ let mockTeamMembers = [
     id: 'member-2',
     team_id: 'team-procurement',
     user_id: 'user-3',
-    name: '鏉庝富?,
+    name: '鏉庝富,
     email: 'li.supervisor@company.com',
     role: 'member',
     assigned_agents: ['agent-3'],
@@ -94,7 +94,7 @@ let mockTeamMembers = [
     id: 'member-3',
     team_id: 'team-support',
     user_id: 'user-4',
-    name: '鐜嬩笓?,
+    name: '鐜嬩笓,
     email: 'wang.specialist@company.com',
     role: 'member',
     assigned_agents: ['agent-1', 'agent-4'],
@@ -104,31 +104,31 @@ let mockTeamMembers = [
   },
 ];
 
-// 浼佷笟濂楅閰嶇疆
+// 佷笟濂楅閰嶇疆
 const enterprisePlans = [
   {
     id: 'starter',
-    name: '鍏ラ棬?,
+    name: '鍏ラ棬,
     price: 999,
     max_members: 10,
     token_budget: 1000,
-    features: ['鍩虹鏅鸿兘?, '鍥㈤槦绠＄悊', '浣跨敤缁熻'],
+    features: ['鍩虹鏅鸿兘, '鍥㈤槦绠＄悊', '浣跨敤缁熻'],
   },
   {
     id: 'professional',
-    name: '涓撲笟?,
+    name: '涓撲笟,
     price: 2999,
     max_members: 30,
     token_budget: 5000,
-    features: ['鍏ㄩ儴鏅鸿兘?, '楂樼骇鍒嗘瀽', 'API璁块棶', '浼樺厛鏀寔'],
+    features: ['鍏ㄩ儴鏅鸿兘, '楂樼骇鍒嗘瀽', 'API璁块棶', '樺厛鏀寔'],
   },
   {
     id: 'enterprise',
-    name: '浼佷笟?,
+    name: '佷笟,
     price: 9999,
     max_members: 100,
     token_budget: 20000,
-    features: ['鏃犻檺鏅鸿兘?, '涓撳睘鏀寔', '瀹氬埗寮€?, 'SLA淇濋殰'],
+    features: ['犻檺鏅鸿兘, '涓撳睘鏀寔', '瀹氬埗寮€, 'SLA淇濋殰'],
   },
 ];
 
@@ -140,7 +140,7 @@ export async function GET(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -168,7 +168,7 @@ export async function GET(request: Request) {
 
     switch (action) {
       case 'subscription':
-        // 鑾峰彇浼佷笟璁㈤槄淇℃伅
+        // 鑾峰彇佷笟璁㈤槄淇℃伅
         const subscription = mockEnterpriseSubscriptions.find(
           s => s.user_id === user.id
         );
@@ -177,7 +177,7 @@ export async function GET(request: Request) {
           return NextResponse.json({
             success: true,
             data: null,
-            message: '鏈壘鍒颁紒涓氳?,
+            message: '鏈壘鍒颁紒涓氳,
           });
         }
 
@@ -187,7 +187,7 @@ export async function GET(request: Request) {
         });
 
       case 'plans':
-        // 鑾峰彇浼佷笟濂楅鍒楄〃
+        // 鑾峰彇佷笟濂楅鍒楄〃
         return NextResponse.json({
           success: true,
           data: enterprisePlans,
@@ -219,7 +219,7 @@ export async function GET(request: Request) {
         const search = searchParams.get('search') || '';
 
         let members = teamId
-          ? mockTeamMembers.filter(m => m.team_id === teamId)
+           mockTeamMembers.filter(m => m.team_id === teamId)
           : mockTeamMembers;
 
         // 鎼滅储杩囨护
@@ -272,16 +272,16 @@ export async function GET(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
   } catch (error: any) {
-    console.error('浼佷笟璁㈤槄API閿欒:', error);
+    console.error('佷笟璁㈤槄API閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         message: error.message,
       },
       { status: 500 }
@@ -297,7 +297,7 @@ export async function POST(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -319,17 +319,17 @@ export async function POST(request: Request) {
       );
     }
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
     const { action } = body;
 
     switch (action) {
       case 'subscribe':
-        // 鍒涘缓浼佷笟璁㈤槄
+        // 鍒涘缓佷笟璁㈤槄
         const { plan_id, company_name, billing_cycle } = body;
 
         if (!plan_id || !company_name) {
           return NextResponse.json(
-            { success: false, error: '濂楅ID鍜屽叕鍙稿悕绉颁负蹇呭～? },
+            { success: false, error: '濂楅ID鍜屽叕鍙稿悕绉颁负蹇呭～ },
             { status: 400 }
           );
         }
@@ -337,13 +337,13 @@ export async function POST(request: Request) {
         const plan = enterprisePlans.find(p => p.id === plan_id);
         if (!plan) {
           return NextResponse.json(
-            { success: false, error: '濂楅涓嶅瓨? },
+            { success: false, error: '濂楅涓嶅 },
             { status: 404 }
           );
         }
 
         // 妯℃嫙鏀粯澶勭悊
-        // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細闆嗘垚鐪熷疄鐨勬敮浠樼綉?
+        // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細闆嗘垚鐪熷疄鐨勬敮樼綉
         const newSubscription = {
           id: `sub-${Date.now()}`,
           user_id: user.id,
@@ -370,7 +370,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             success: true,
-            message: '浼佷笟璁㈤槄鍒涘缓鎴愬姛',
+            message: '佷笟璁㈤槄鍒涘缓鎴愬姛',
             data: newSubscription,
           },
           { status: 201 }
@@ -382,7 +382,7 @@ export async function POST(request: Request) {
 
         if (!subscription_id || !name) {
           return NextResponse.json(
-            { success: false, error: '璁㈤槄ID鍜屽洟闃熷悕绉颁负蹇呭～? },
+            { success: false, error: '璁㈤槄ID鍜屽洟闃熷悕绉颁负蹇呭～ },
             { status: 400 }
           );
         }
@@ -393,7 +393,7 @@ export async function POST(request: Request) {
 
         if (!subscriptionExists) {
           return NextResponse.json(
-            { success: false, error: '璁㈤槄涓嶅瓨鍦ㄦ垨鏃犳潈? },
+            { success: false, error: '璁㈤槄涓嶅鍦ㄦ垨犳潈 },
             { status: 404 }
           );
         }
@@ -427,7 +427,7 @@ export async function POST(request: Request) {
 
         if (!team_id || !email) {
           return NextResponse.json(
-            { success: false, error: '鍥㈤槦ID鍜岄偖绠变负蹇呭～? },
+            { success: false, error: '鍥㈤槦ID鍜岄偖绠变负蹇呭～ },
             { status: 400 }
           );
         }
@@ -435,12 +435,12 @@ export async function POST(request: Request) {
         const team = mockTeams.find(t => t.id === team_id);
         if (!team) {
           return NextResponse.json(
-            { success: false, error: '鍥㈤槦涓嶅瓨? },
+            { success: false, error: '鍥㈤槦涓嶅 },
             { status: 404 }
           );
         }
 
-        // 妫€鏌ユ垚鍛樻暟閲忛檺?        const subscription = mockEnterpriseSubscriptions.find(
+        // 妫€鏌ユ垚鍛樻暟閲忛檺        const subscription = mockEnterpriseSubscriptions.find(
           s => s.id === team.subscription_id
         );
 
@@ -449,7 +449,7 @@ export async function POST(request: Request) {
           subscription.member_count >= subscription.max_members
         ) {
           return NextResponse.json(
-            { success: false, error: '宸茶揪鍒版渶澶ф垚鍛樻暟閲忛檺? },
+            { success: false, error: '宸茶揪鍒版渶澶ф垚鍛樻暟閲忛檺 },
             { status: 400 }
           );
         }
@@ -458,7 +458,7 @@ export async function POST(request: Request) {
           id: `member-${Date.now()}`,
           team_id,
           user_id: `user-${Date.now()}`, // 妯℃嫙鐢ㄦ埛ID
-          name: email.split('@')[0], // 绠€鍗曠殑鐢ㄦ埛鍚嶆彁?          email,
+          name: email.split('@')[0], // 绠€鍗曠殑鐢ㄦ埛鍚嶆彁          email,
           role: role || 'member',
           assigned_agents: [],
           joined_date: new Date().toISOString().split('T')[0],
@@ -468,7 +468,7 @@ export async function POST(request: Request) {
 
         mockTeamMembers.push(newMember);
 
-        // 鏇存柊鍥㈤槦鎴愬憳?        if (subscription) {
+        // 鏇存柊鍥㈤槦鎴愬憳        if (subscription) {
           subscription.member_count += 1;
           subscription.updated_at = new Date().toISOString();
         }
@@ -484,7 +484,7 @@ export async function POST(request: Request) {
         );
 
       case 'assign_agent':
-        // 鍒嗛厤鏅鸿兘浣撶粰鍥㈤槦鎴栨垚?        const { target_id, target_type, agent_ids } = body; // target_type: 'team' or 'member'
+        // 鍒嗛厤鏅鸿兘浣撶粰鍥㈤槦鎴栨垚        const { target_id, target_type, agent_ids } = body; // target_type: 'team' or 'member'
 
         if (
           !target_id ||
@@ -516,21 +516,21 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
           success: true,
-          message: '鏅鸿兘浣撳垎閰嶆垚?,
+          message: '鏅鸿兘浣撳垎閰嶆垚,
         });
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
   } catch (error: any) {
-    console.error('浼佷笟璁㈤槄鎿嶄綔澶辫触:', error);
+    console.error('佷笟璁㈤槄鎿嶄綔澶辫触:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         message: error.message,
       },
       { status: 500 }
@@ -546,7 +546,7 @@ export async function PUT(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -568,7 +568,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
     const { action, id } = body;
 
     switch (action) {
@@ -580,12 +580,12 @@ export async function PUT(request: Request) {
 
         if (!subscription) {
           return NextResponse.json(
-            { success: false, error: '璁㈤槄涓嶅瓨鍦ㄦ垨鏃犳潈? },
+            { success: false, error: '璁㈤槄涓嶅鍦ㄦ垨犳潈 },
             { status: 404 }
           );
         }
 
-        // 鏇存柊鍏佽鐨勫瓧?        if (body.auto_renew !== undefined) {
+        // 鏇存柊鍏佽鐨勫瓧        if (body.auto_renew !== undefined) {
           subscription.auto_renew = body.auto_renew;
         }
         if (body.billing_cycle) {
@@ -605,7 +605,7 @@ export async function PUT(request: Request) {
         const team = mockTeams.find(t => t.id === id);
         if (!team) {
           return NextResponse.json(
-            { success: false, error: '鍥㈤槦涓嶅瓨? },
+            { success: false, error: '鍥㈤槦涓嶅 },
             { status: 404 }
           );
         }
@@ -624,7 +624,7 @@ export async function PUT(request: Request) {
         const member = mockTeamMembers.find(m => m.id === id);
         if (!member) {
           return NextResponse.json(
-            { success: false, error: '鎴愬憳涓嶅瓨? },
+            { success: false, error: '鎴愬憳涓嶅 },
             { status: 404 }
           );
         }
@@ -639,16 +639,16 @@ export async function PUT(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
   } catch (error: any) {
-    console.error('浼佷笟璁㈤槄鏇存柊澶辫触:', error);
+    console.error('佷笟璁㈤槄鏇存柊澶辫触:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         message: error.message,
       },
       { status: 500 }
@@ -664,7 +664,7 @@ export async function DELETE(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -697,12 +697,12 @@ export async function DELETE(request: Request) {
         const teamIndex = mockTeams.findIndex(t => t.id === id);
         if (teamIndex === -1) {
           return NextResponse.json(
-            { success: false, error: '鍥㈤槦涓嶅瓨? },
+            { success: false, error: '鍥㈤槦涓嶅 },
             { status: 404 }
           );
         }
 
-        // 鍒犻櫎鍥㈤槦鍙婂叾鎵€鏈夋垚?        mockTeams.splice(teamIndex, 1);
+        // 鍒犻櫎鍥㈤槦鍙婂叾鎵€鏈夋垚        mockTeams.splice(teamIndex, 1);
         mockTeamMembers = mockTeamMembers.filter(m => m.team_id !== id);
 
         return NextResponse.json({
@@ -715,19 +715,19 @@ export async function DELETE(request: Request) {
         const memberIndex = mockTeamMembers.findIndex(m => m.id === id);
         if (memberIndex === -1) {
           return NextResponse.json(
-            { success: false, error: '鎴愬憳涓嶅瓨? },
+            { success: false, error: '鎴愬憳涓嶅 },
             { status: 404 }
           );
         }
 
-        // 鏇存柊鍥㈤槦鎴愬憳?        const member = mockTeamMembers[memberIndex];
+        // 鏇存柊鍥㈤槦鎴愬憳        const member = mockTeamMembers[memberIndex];
         const team = mockTeams.find(t => t.id === member.team_id);
         if (team) {
           team.members = Math.max(0, team.members - 1);
         }
 
         const subscription = mockEnterpriseSubscriptions.find(
-          s => s.id === (team?.subscription_id || '')
+          s => s.id === (team.subscription_id || '')
         );
         if (subscription) {
           subscription.member_count = Math.max(
@@ -746,16 +746,16 @@ export async function DELETE(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
   } catch (error: any) {
-    console.error('浼佷笟璁㈤槄鍒犻櫎澶辫触:', error);
+    console.error('佷笟璁㈤槄鍒犻櫎澶辫触:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         message: error.message,
       },
       { status: 500 }

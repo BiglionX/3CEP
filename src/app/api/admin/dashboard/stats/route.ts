@@ -3,22 +3,22 @@ import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 export async function GET(request: Request) {
-  // 鍒涘缓Supabase瀹㈡埛?  const supabase = createClient(
+  // 鍒涘缓Supabase瀹㈡埛  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 寮€鍙戠幆澧冧复鏃剁粫杩囪璇佹?  if (process.env.NODE_ENV === 'development') {
-    console.log('寮€鍙戠幆? 缁曡繃璁よ瘉妫€?);
+  // 寮€鍙戠幆澧冧复剁粫杩囪璇佹  if (process.env.NODE_ENV === 'development') {
+    console.log('寮€鍙戠幆 缁曡繃璁よ瘉妫€);
   }
 
   try {
-    // 鑾峰彇浠婂ぉ鐨勫紑濮嬪拰缁撴潫鏃堕棿
+    // 鑾峰彇婂ぉ鐨勫紑濮嬪拰缁撴潫堕棿
     const today = new Date();
     const todayStart = new Date(today.setHours(0, 0, 0, 0)).toISOString();
     const todayEnd = new Date(today.setHours(23, 59, 59, 999)).toISOString();
 
-    // 鑾峰彇鏈懆鐨勫紑濮嬪拰缁撴潫鏃堕棿
+    // 鑾峰彇鏈懆鐨勫紑濮嬪拰缁撴潫堕棿
     const weekStart = new Date(today);
     weekStart.setDate(today.getDate() - today.getDay());
     weekStart.setHours(0, 0, 0, 0);
@@ -26,11 +26,11 @@ export async function GET(request: Request) {
     weekEnd.setDate(weekStart.getDate() + 6);
     weekEnd.setHours(23, 59, 59, 999);
 
-    // 鑾峰彇?澶╃殑鏃堕棿鑼冨洿
+    // 鑾峰彇澶╃殑堕棿鑼冨洿
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // 1. 浠婃棩鏂板鐑偣閾炬帴?    const { count: todayHotLinks } = await supabase
+    // 1. 婃棩鏂板鐑偣炬帴    const { count: todayHotLinks } = await supabase
       .from('unified_link_library')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', todayStart)
@@ -42,30 +42,30 @@ export async function GET(request: Request) {
       .select('*', { count: 'exact', head: true })
       .eq('status', 'pending_review');
 
-    // 3. 鏈懆鏂板鏂囩珷?    const { count: weekArticles } = await supabase
+    // 3. 鏈懆鏂板鏂囩珷    const { count: weekArticles } = await supabase
       .from('articles')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', weekStart.toISOString())
       .lte('created_at', weekEnd.toISOString());
 
-    // 4. 鎬绘敞鍐屽伐绋嬪笀?    const { count: totalEngineers } = await supabase
+    // 4. 鎬绘敞鍐屽伐绋嬪笀    const { count: totalEngineers } = await supabase
       .from('user_profiles_ext')
       .select('*', { count: 'exact', head: true })
       .eq('user_type', 'engineer');
 
-    // 5. 鎬诲簵閾烘暟
+    // 5. 鎬诲簵烘暟
     const { count: totalShops } = await supabase
       .from('repair_shops')
       .select('*', { count: 'exact', head: true });
 
-    // 6. 锟?澶╅绾﹂噺瓒嬪娍鏁版嵁
+    // 6. 澶╅绾﹂噺瓒嬪娍鏁版嵁
     const { data: appointmentTrends } = await supabase
       .from('appointments')
       .select('created_at, status')
       .gte('created_at', sevenDaysAgo.toISOString())
       .order('created_at', { ascending: true });
 
-    // 澶勭悊瓒嬪娍鏁版嵁锛屾寜鏃ユ湡鍒嗙粍缁熻
+    // 澶勭悊瓒嬪娍鏁版嵁锛屾寜ユ湡鍒嗙粍缁熻
     const trendData = processTrendData(appointmentTrends || []);
 
     const stats = {

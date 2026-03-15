@@ -118,7 +118,7 @@ export default function SystemSettingsPage() {
     try {
       // 模拟保存配置
       await new Promise(resolve => setTimeout(resolve, 1000));
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('配置已保?', config)} catch (error) {
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('配置已保', config)} catch (error) {
       console.error('保存配置失败:', error);
     } finally {
       setSaving(false);
@@ -126,7 +126,7 @@ export default function SystemSettingsPage() {
   };
 
   const handleReset = () => {
-    // 重置为默认配?    setConfig({
+    // 重置为默认配    setConfig({
       general: {
         siteName: '数据管理中心',
         timezone: 'Asia/Shanghai',
@@ -160,7 +160,7 @@ export default function SystemSettingsPage() {
       {/* 页面头部 */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">系统设置</h1>
-        <p className="text-gray-600 mt-1">配置数据管理中心的各项系统参?/p>
+        <p className="text-gray-600 mt-1">配置数据管理中心的各项系统参/p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -171,7 +171,7 @@ export default function SystemSettingsPage() {
           </TabsTrigger>
           <TabsTrigger value="database" className="flex items-center">
             <Database className="mr-2 h-4 w-4" />
-            数据?          </TabsTrigger>
+            数据源          </TabsTrigger>
           <TabsTrigger value="notifications" className="flex items-center">
             <Bell className="mr-2 h-4 w-4" />
             通知
@@ -242,7 +242,7 @@ export default function SystemSettingsPage() {
                       <SelectValue placeholder="选择语言" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="zh-CN">中文 (简?</SelectItem>
+                      <SelectItem value="zh-CN">中文 (简</SelectItem>
                       <SelectItem value="en-US">English</SelectItem>
                     </SelectContent>
                   </Select>
@@ -275,7 +275,7 @@ export default function SystemSettingsPage() {
                     <Button
                       key={theme}
                       variant={
-                        config.general.theme === theme ? 'default' : 'outline'
+                        config.general.theme === theme  'default' : 'outline'
                       }
                       onClick={() =>
                         handleInputChange('general', 'theme', theme)
@@ -283,9 +283,9 @@ export default function SystemSettingsPage() {
                       className="capitalize"
                     >
                       {theme === 'light'
-                        ? '明亮'
+                         '明亮'
                         : theme === 'dark'
-                          ? '暗黑'
+                           '暗黑'
                           : '自动'}
                     </Button>
                   ))}
@@ -300,7 +300,7 @@ export default function SystemSettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Server className="mr-2 h-5 w-5" />
-                数据库配?              </CardTitle>
+                数据库配              </CardTitle>
               <CardDescription>数据库连接和性能相关设置</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -358,7 +358,7 @@ export default function SystemSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="backupSchedule">备份计划 (Cron表达?</Label>
+                <Label htmlFor="backupSchedule">备份计划 (Cron表达</Label>
                 <Input
                   id="backupSchedule"
                   value={config.database.backupSchedule}
@@ -371,7 +371,7 @@ export default function SystemSettingsPage() {
                   }
                   placeholder="0 2 * * *"
                 />
-                <p className="text-sm text-gray-500">每天凌晨2点执行备?/p>
+                <p className="text-sm text-gray-500">每天凌晨2点执行备/p>
               </div>
             </CardContent>
           </Card>
@@ -384,7 +384,7 @@ export default function SystemSettingsPage() {
                 <Bell className="mr-2 h-5 w-5" />
                 通知配置
               </CardTitle>
-              <CardDescription>系统通知和告警设?/CardDescription>
+              <CardDescription>系统通知和告警设/CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -411,7 +411,7 @@ export default function SystemSettingsPage() {
                   <div className="space-y-1">
                     <Label>Slack通知</Label>
                     <p className="text-sm text-gray-500">
-                      通过Slack发送重要告?                    </p>
+                      通过Slack发送重要告                    </p>
                   </div>
                   <Switch
                     checked={config.notifications.slackEnabled}
@@ -443,7 +443,7 @@ export default function SystemSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="alertThreshold">告警阈?/Label>
+                <Label htmlFor="alertThreshold">告警阈/Label>
                 <Input
                   id="alertThreshold"
                   type="number"
@@ -473,12 +473,12 @@ export default function SystemSettingsPage() {
                 <Shield className="mr-2 h-5 w-5" />
                 安全配置
               </CardTitle>
-              <CardDescription>用户安全和访问控制设?/CardDescription>
+              <CardDescription>用户安全和访问控制设/CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="passwordMinLength">密码最小长?/Label>
+                  <Label htmlFor="passwordMinLength">密码最小长/Label>
                   <Input
                     id="passwordMinLength"
                     type="number"
@@ -496,7 +496,7 @@ export default function SystemSettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="sessionTimeout">会话超时 (�?</Label>
+                  <Label htmlFor="sessionTimeout">会话超时 (</Label>
                   <Input
                     id="sessionTimeout"
                     type="number"
@@ -516,9 +516,9 @@ export default function SystemSettingsPage() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <Label>双因素认?/Label>
+                  <Label>双因素认/Label>
                   <p className="text-sm text-gray-500">
-                    启用双因素认证增强账户安?                  </p>
+                    启用双因素认证增强账户安                  </p>
                 </div>
                 <Switch
                   checked={config.security.twoFactorEnabled}
@@ -529,7 +529,7 @@ export default function SystemSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>IP白名?/Label>
+                <Label>IP白名/Label>
                 <Input
                   placeholder="输入允许访问的IP地址，多个IP用逗号分隔"
                   value={config.security.ipWhitelist.join(', ')}
@@ -555,10 +555,10 @@ export default function SystemSettingsPage() {
           重置
         </Button>
         <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
+          {saving  (
             <>
               <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-              保存?..
+              保存..
             </>
           ) : (
             <>

@@ -38,9 +38,9 @@ const MonitoringModuleCard: React.FC<{
   const getStatusText = () => {
     switch (status) {
       case 'active':
-        return '运行?;
+        return '运行中';
       case 'maintenance':
-        return '维护?;
+        return '维护中';
       case 'coming-soon':
         return '即将上线';
       default:
@@ -82,7 +82,7 @@ export default function MonitoringHomePage() {
     {
       title: '性能监控面板',
       description:
-        '实时监控系统性能指标，包括API响应时间、系统可用率、资源使用情况等核心指标?,
+        '实时监控系统性能指标，包括API响应时间、系统可用率、资源使用情况等核心指标',
       icon: <Activity className="w-6 h-6" />,
       href: '/monitoring/performance',
       status: 'active' as const,
@@ -90,35 +90,35 @@ export default function MonitoringHomePage() {
     {
       title: '告警管理中心',
       description:
-        '统一管理各类告警规则和通知配置，支持多级告警和自定义通知渠道?,
+        '统一管理各类告警规则和通知配置，支持多级告警和自定义通知渠道',
       icon: <AlertTriangle className="w-6 h-6" />,
       href: '/monitoring/alerts',
       status: 'active' as const,
     },
     {
       title: '日志分析系统',
-      description: '集中收集、存储和分析系统日志，提供强大的搜索和分析功能?,
+      description: '集中收集、存储和分析系统日志，提供强大的搜索和分析功能',
       icon: <FileText className="w-6 h-6" />,
       href: '/monitoring/logs',
       status: 'maintenance' as const,
     },
     {
       title: '业务数据分析',
-      description: '深入分析业务指标，提供数据洞察和商业智能报告?,
+      description: '深入分析业务指标，提供数据洞察和商业智能报告',
       icon: <BarChart3 className="w-6 h-6" />,
       href: '/monitoring/analytics',
       status: 'active' as const,
     },
     {
       title: '安全监控中心',
-      description: '全面监控系统安全状况，检测威胁和异常行为?,
+      description: '全面监控系统安全状况，检测威胁和异常行为',
       icon: <Shield className="w-6 h-6" />,
       href: '/monitoring/security',
       status: 'coming-soon' as const,
     },
     {
       title: '系统配置管理',
-      description: '管理监控系统的各项配置参数和规则设置?,
+      description: '管理监控系统的各项配置参数和规则设置',
       icon: <Settings className="w-6 h-6" />,
       href: '/monitoring/settings',
       status: 'coming-soon' as const,
@@ -147,7 +147,7 @@ export default function MonitoringHomePage() {
           </div>
         </div>
 
-        {/* 快速统?*/}
+        {/* 快速统计 */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg p-4 border">
             <div className="flex items-center">
@@ -155,7 +155,7 @@ export default function MonitoringHomePage() {
                 <Activity className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">系统状?/p>
+                <p className="text-sm text-gray-600">系统状态</p>
                 <p className="text-lg font-semibold text-green-600">正常</p>
               </div>
             </div>
@@ -217,8 +217,9 @@ export default function MonitoringHomePage() {
             <div>
               <p className="text-sm font-medium text-blue-900">系统更新提醒</p>
               <p className="text-sm text-blue-700">
-                监控系统将于今晚23:00进行例行维护，预计持?0分钟?              </p>
-              <p className="text-xs text-blue-500 mt-1">2小时?/p>
+                监控系统将于今晚23:00进行例行维护，预计持续30分钟
+              </p>
+              <p className="text-xs text-blue-500 mt-1">2小时前</p>
             </div>
           </div>
 
@@ -229,7 +230,8 @@ export default function MonitoringHomePage() {
             <div>
               <p className="text-sm font-medium text-green-900">性能优化完成</p>
               <p className="text-sm text-green-700">
-                API响应时间优化已完成，平均响应时间提升25%�?              </p>
+                API响应时间优化已完成，平均响应时间提升25%
+              </p>
               <p className="text-xs text-green-500 mt-1">1天前</p>
             </div>
           </div>
@@ -238,4 +240,3 @@ export default function MonitoringHomePage() {
     </div>
   );
 }
-

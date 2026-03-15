@@ -27,7 +27,6 @@ import {
   MoreHorizontal,
 } from 'lucide-react';
 import { SimpleSearch } from '@/components/search/SimpleSearch';
-import { AdvancedSearchFilters } from '@/types/search.types';
 
 interface WorkOrder {
   id: string;
@@ -41,7 +40,7 @@ interface WorkOrder {
   createdAt: string;
   updatedAt: string;
   estimatedCompletion: string;
-  actualCompletion?: string;
+  actualCompletion: string;
   price: number;
 }
 
@@ -61,10 +60,10 @@ export default function WorkOrdersPage() {
         customerName: '张三',
         customerPhone: '138****1234',
         deviceModel: 'iPhone 14 Pro',
-        deviceIssue: '屏幕碎裂，无法开?,
+        deviceIssue: '屏幕碎裂，无法开机',
         status: 'in_progress',
         priority: 'high',
-        technician: '李师?,
+        technician: '李师傅',
         createdAt: '2026-02-21T09:30:00',
         updatedAt: '2026-02-21T14:20:00',
         estimatedCompletion: '2026-02-21T15:00:00',
@@ -75,10 +74,10 @@ export default function WorkOrdersPage() {
         customerName: '李四',
         customerPhone: '139****5678',
         deviceModel: 'Samsung Galaxy S23',
-        deviceIssue: '电池鼓包，充电异?,
+        deviceIssue: '电池鼓包，充电异常',
         status: 'pending',
         priority: 'medium',
-        technician: '王师?,
+        technician: '王师傅',
         createdAt: '2026-02-21T10:15:00',
         updatedAt: '2026-02-21T10:15:00',
         estimatedCompletion: '2026-02-22T14:00:00',
@@ -89,10 +88,10 @@ export default function WorkOrdersPage() {
         customerName: '王五',
         customerPhone: '137****9012',
         deviceModel: 'iPad Air 5',
-        deviceIssue: 'WiFi连接不稳?,
+        deviceIssue: 'WiFi连接不稳定',
         status: 'completed',
         priority: 'low',
-        technician: '张师?,
+        technician: '张师傅',
         createdAt: '2026-02-21T08:45:00',
         updatedAt: '2026-02-21T12:30:00',
         estimatedCompletion: '2026-02-21T12:30:00',
@@ -107,7 +106,7 @@ export default function WorkOrdersPage() {
         deviceIssue: '键盘按键失灵',
         status: 'cancelled',
         priority: 'medium',
-        technician: '陈师?,
+        technician: '陈师傅',
         createdAt: '2026-02-20T16:20:00',
         updatedAt: '2026-02-21T09:15:00',
         estimatedCompletion: '2026-02-22T16:00:00',
@@ -148,13 +147,13 @@ export default function WorkOrdersPage() {
   const getStatusText = (status: WorkOrder['status']) => {
     switch (status) {
       case 'completed':
-        return '已完?;
+        return '已完成';
       case 'in_progress':
-        return '进行?;
+        return '进行中';
       case 'pending':
-        return '待处?;
+        return '待处理';
       case 'cancelled':
-        return '已取?;
+        return '已取消';
       default:
         return status;
     }
@@ -163,11 +162,11 @@ export default function WorkOrdersPage() {
   const getPriorityText = (priority: WorkOrder['priority']) => {
     switch (priority) {
       case 'high':
-        return '紧?;
+        return '紧急';
       case 'medium':
         return '中等';
       case 'low':
-        return '普?;
+        return '普通';
       default:
         return priority;
     }
@@ -196,17 +195,14 @@ export default function WorkOrdersPage() {
   };
 
   // 处理高级搜索
-  const handleAdvancedSearch = (
-    query: string,
-    filters: AdvancedSearchFilters
-  ) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('高级搜索:', { query, filters })setSearchTerm(query);
+  const handleAdvancedSearch = (query: string) => {
+    setSearchTerm(query);
     // 这里可以添加更复杂的搜索逻辑
   };
 
   // 处理搜索结果选择
   const handleSearchResultSelect = (result: any) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('选择搜索结果:', result)// 可以直接跳转到选中的工单详情页
+    // 可以直接跳转到选中的工单详情页
     if (result.id) {
       router.push(`/repair-shop/work-orders/${result.id}`);
     }
@@ -224,7 +220,7 @@ export default function WorkOrdersPage() {
                 onClick={() => router.back()}
                 className="mr-4"
               >
-                �?返回
+                ← 返回
               </Button>
               <h1 className="text-xl font-semibold text-gray-900">工单管理</h1>
             </div>
@@ -237,7 +233,7 @@ export default function WorkOrdersPage() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 搜索和筛选区?*/}
+        {/* 搜索和筛选区域 */}
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -250,22 +246,19 @@ export default function WorkOrdersPage() {
                 size="sm"
                 onClick={() => setAdvancedSearchMode(!advancedSearchMode)}
               >
-                {advancedSearchMode ? '基础搜索' : '高级搜索'}
+                {advancedSearchMode  '基础搜索' : '高级搜索'}
               </Button>
             </div>
             <CardDescription>
               {advancedSearchMode
-                ? '使用高级搜索功能进行精准查找'
-                : '快速搜索工单信?}
+                 '使用高级搜索功能进行精准查找'
+                : '快速搜索工单信息'}
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            {advancedSearchMode ? (
+            {advancedSearchMode  (
               <SimpleSearch
-                entityType="work_order"
                 placeholder="搜索工单号、客户姓名或设备型号..."
-                showHistory={true}
-                showSuggestions={true}
                 onSearch={handleAdvancedSearch}
                 onResultSelect={handleSearchResultSelect}
                 className="max-w-2xl"
@@ -276,7 +269,7 @@ export default function WorkOrdersPage() {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <Input
-                      placeholder="搜索客户姓名、设备型号或工单?.."
+                      placeholder="搜索客户姓名、设备型号或工单号..."
                       value={searchTerm}
                       onChange={e => setSearchTerm(e.target.value)}
                       className="pl-10"
@@ -290,11 +283,11 @@ export default function WorkOrdersPage() {
                     onChange={e => setStatusFilter(e.target.value)}
                     className="border border-gray-300 rounded-md px-3 py-2 text-sm"
                   >
-                    <option value="all">全部状?/option>
-                    <option value="pending">待处?/option>
-                    <option value="in_progress">进行?/option>
-                    <option value="completed">已完?/option>
-                    <option value="cancelled">已取?/option>
+                    <option value="all">全部状态</option>
+                    <option value="pending">待处理</option>
+                    <option value="in_progress">进行中</option>
+                    <option value="completed">已完成</option>
+                    <option value="cancelled">已取消</option>
                   </select>
 
                   <select
@@ -302,10 +295,10 @@ export default function WorkOrdersPage() {
                     onChange={e => setPriorityFilter(e.target.value)}
                     className="border border-gray-300 rounded-md px-3 py-2 text-sm"
                   >
-                    <option value="all">全部优先?/option>
-                    <option value="high">紧?/option>
+                    <option value="all">全部优先级</option>
+                    <option value="high">紧急</option>
                     <option value="medium">中等</option>
-                    <option value="low">普?/option>
+                    <option value="low">普通</option>
                   </select>
                 </div>
               </div>
@@ -329,7 +322,7 @@ export default function WorkOrdersPage() {
               <div className="text-2xl font-bold text-yellow-600">
                 {workOrders.filter(o => o.status === 'pending').length}
               </div>
-              <div className="text-sm text-gray-600">待处?/div>
+              <div className="text-sm text-gray-600">待处理</div>
             </CardContent>
           </Card>
 
@@ -338,7 +331,7 @@ export default function WorkOrdersPage() {
               <div className="text-2xl font-bold text-green-600">
                 {workOrders.filter(o => o.status === 'completed').length}
               </div>
-              <div className="text-sm text-gray-600">已完?/div>
+              <div className="text-sm text-gray-600">已完成</div>
             </CardContent>
           </Card>
 
@@ -351,7 +344,7 @@ export default function WorkOrdersPage() {
                   .reduce((sum, order) => sum + order.price, 0)
                   .toLocaleString()}
               </div>
-              <div className="text-sm text-gray-600">总收?/div>
+              <div className="text-sm text-gray-600">总收入</div>
             </CardContent>
           </Card>
         </div>
@@ -367,7 +360,7 @@ export default function WorkOrdersPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {filteredOrders.length === 0 ? (
+              {filteredOrders.length === 0  (
                 <div className="text-center py-12">
                   <FileText className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">
@@ -377,7 +370,7 @@ export default function WorkOrdersPage() {
                     {searchTerm ||
                     statusFilter !== 'all' ||
                     priorityFilter !== 'all'
-                      ? '没有找到匹配的工?
+                       '没有找到匹配的工单'
                       : '开始创建第一个工单吧'}
                   </p>
                   {!searchTerm &&
@@ -386,7 +379,8 @@ export default function WorkOrdersPage() {
                       <div className="mt-6">
                         <Button onClick={handleCreateOrder}>
                           <Plus className="h-4 w-4 mr-2" />
-                          创建新工?                        </Button>
+                          创建新工单
+                        </Button>
                       </div>
                     )}
                 </div>
@@ -431,7 +425,7 @@ export default function WorkOrdersPage() {
                             </p>
                             <div className="flex items-center gap-2 text-sm text-gray-600">
                               <User className="h-4 w-4" />
-                              <span>技? {order.technician}</span>
+                              <span>技师: {order.technician}</span>
                             </div>
                           </div>
                         </div>
@@ -482,4 +476,3 @@ export default function WorkOrdersPage() {
     </div>
   );
 }
-

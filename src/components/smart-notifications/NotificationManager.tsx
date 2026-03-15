@@ -11,6 +11,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  type ReactNode,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -26,8 +27,11 @@ import {
 
 // 通知级别枚举
 export enum NotificationLevel {
-  LOW = 'low', // 低优先级 - 一般信?  MEDIUM = 'medium', // 中优先级 - 重要提醒
-  HIGH = 'high', // 高优先级 - 紧急事?  CRITICAL = 'critical', // 关键优先?- 系统级紧?}
+  LOW = 'low', // 低优先级 - 一般信息
+  MEDIUM = 'medium', // 中优先级 - 重要提醒
+  HIGH = 'high', // 高优先级 - 紧急事项
+  CRITICAL = 'critical', // 关键优先级 - 系统级紧急
+}
 
 // 通知类型枚举
 export enum NotificationType {
@@ -38,10 +42,13 @@ export enum NotificationType {
   REMINDER = 'reminder', // 提醒通知
 }
 
-// 通知状态枚?export enum NotificationStatus {
+// 通知状态枚举
+export enum NotificationStatus {
   UNREAD = 'unread', // 未读
   READ = 'read', // 已读
-  ARCHIVED = 'archived', // 已归?  DISMISSED = 'dismissed', // 已忽?}
+  ARCHIVED = 'archived', // 已归档
+  DISMISSED = 'dismissed', // 已忽略
+}
 
 // 通知接口
 export interface Notification {
@@ -130,8 +137,8 @@ const DEFAULT_SETTINGS: NotificationSettings = {
 export function NotificationProvider({
   children,
 }: {
-  children: React.ReactNode;
-}) {
+  children: ReactNode;
+}): ReactNode {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [settings, setSettings] =
     useState<NotificationSettings>(DEFAULT_SETTINGS);

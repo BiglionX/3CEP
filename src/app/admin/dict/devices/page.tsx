@@ -23,7 +23,7 @@ export default function DevicesDictPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingDevice, setEditingDevice] = useState<Device | null>(null)
   
-  // 表单状?
+  // 表单状
   const [formData, setFormData] = useState({
     brand: '',
     model: '',
@@ -101,7 +101,7 @@ export default function DevicesDictPage() {
       // 模拟更新设备
       const updatedDevices = devices.map(device => 
         device.id === editingDevice.id 
-          ? { ...device, ...formData, updated_at: new Date().toISOString() }
+           { ...device, ...formData, updated_at: new Date().toISOString() }
           : device
       )
       
@@ -175,23 +175,23 @@ export default function DevicesDictPage() {
   }
 
   const importFromCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files.[0]
     if (!file) return
 
     const reader = new FileReader()
     reader.onload = (e) => {
-      const text = e?.result as string
+      const text = e.result as string
       const lines = text.split('\n')
       const headers = lines[0].split(',')
       
-      // 跳过标题行，处理数据?
+      // 跳过标题行，处理数据源
       const importedDevices: Device[] = lines.slice(1).map((line, index) => {
         const values = line.split(',')
         return {
           id: `imported_${Date.now()}_${index}`,
-          brand: values[0]?.trim() || '',
-          model: values[1]?.trim() || '',
-          category: values[2]?.trim() || '',
+          brand: values[0].trim() || '',
+          model: values[1].trim() || '',
+          category: values[2].trim() || '',
           release_year: parseInt(values[3]) || new Date().getFullYear(),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -257,7 +257,7 @@ export default function DevicesDictPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{editingDevice ? '编辑设备' : '添加设备'}</DialogTitle>
+                <DialogTitle>{editingDevice  '编辑设备' : '添加设备'}</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
@@ -304,8 +304,8 @@ export default function DevicesDictPage() {
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button variant="outline" onClick={() => setIsDialogOpen(false)}>取消</Button>
-                  <Button onClick={editingDevice ? handleUpdate : handleCreate}>
-                    {editingDevice ? '更新' : '创建'}
+                  <Button onClick={editingDevice  handleUpdate : handleCreate}>
+                    {editingDevice  '更新' : '创建'}
                   </Button>
                 </div>
               </div>
@@ -314,7 +314,7 @@ export default function DevicesDictPage() {
         </div>
       </div>
 
-      {/* 搜索?*/}
+      {/* 搜索*/}
       <div className="bg-white shadow rounded-lg p-4">
         <Input
           placeholder="搜索品牌、型号或类别..."
@@ -338,10 +338,10 @@ export default function DevicesDictPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredDevices.length === 0 ? (
+            {filteredDevices.length === 0  (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                  {searchTerm ? '没有找到匹配的设备' : '暂无设备数据'}
+                  {searchTerm  '没有找到匹配的设备' : '暂无设备数据'}
                 </TableCell>
               </TableRow>
             ) : (

@@ -1,7 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { dataQualityService } from '@/modules/data-center/monitoring/data-quality-service';
 
-// GET璇锋眰澶勭悊
+// GET璇眰澶勭悊
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(report);
 
       case 'rules':
-        // 鑾峰彇妫€鏌ヨ?        const rules = dataQualityService.getAllCheckRules();
+        // 鑾峰彇妫€鏌ヨ        const rules = dataQualityService.getAllCheckRules();
         const enabledOnly = searchParams.get('enabled') === 'true';
         const filteredRules = enabledOnly
-          ? rules.filter(rule => rule.enabled)
+           rules.filter(rule => rule.enabled)
           : rules;
 
         return NextResponse.json({
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'results':
-        // 鑾峰彇妫€鏌ョ粨?        const ruleId = searchParams.get('ruleId');
+        // 鑾峰彇妫€鏌ョ粨        const ruleId = searchParams.get('ruleId');
         const limit = parseInt(searchParams.get('limit') || '10');
 
         let results;
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'health':
-        // 鏁版嵁璐ㄩ噺鏈嶅姟鍋ュ悍妫€?        return NextResponse.json({
+        // 鏁版嵁璐ㄩ噺鏈嶅姟鍋ュ悍妫€        return NextResponse.json({
           status: 'healthy',
           service: 'data-quality',
           rulesCount: dataQualityService.getAllCheckRules().length,
@@ -62,13 +62,13 @@ export async function GET(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鏁版嵁璐ㄩ噺API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST璇锋眰澶勭悊
+// POST璇眰澶勭悊
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'run-check':
-        // 鎵ц鍗曚釜妫€?        const { ruleId } = params;
+        // 鎵ц鍗曚釜妫€        const { ruleId } = params;
         if (!ruleId) {
           return NextResponse.json(
             { error: '缂哄皯妫€鏌ヨ鍒橧D' },
@@ -101,15 +101,15 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json({
-          message: '妫€鏌ユ墽琛屽畬?,
+          message: '妫€鏌ユ墽琛屽畬,
           result,
           timestamp: new Date().toISOString(),
         });
 
       case 'run-all-checks':
-        // 鎵ц鎵€鏈夋?        const allResults = await dataQualityService.runAllChecks();
+        // 鎵ц鎵€鏈夋        const allResults = await dataQualityService.runAllChecks();
         return NextResponse.json({
-          message: `鎵ц?${allResults.length} 涓暟鎹川閲忔鏌,
+          message: `鎵ц${allResults.length} 涓暟鎹川閲忔鏌,
           results: allResults,
           summary: {
             total: allResults.length,
@@ -121,24 +121,24 @@ export async function POST(request: NextRequest) {
         });
 
       case 'run-table-checks':
-        // 鎵ц鐗瑰畾琛ㄧ殑妫€?        const { tableName } = params;
+        // 鎵ц鐗瑰畾琛ㄧ殑妫€        const { tableName } = params;
         if (!tableName) {
           return NextResponse.json({ error: '缂哄皯琛ㄥ悕鍙傛暟' }, { status: 400 });
         }
 
         const tableResults = await dataQualityService.runTableChecks(tableName);
         return NextResponse.json({
-          message: `鎵ц?${tableName} 琛ㄧ殑 ${tableResults.length} 涓鏌,
+          message: `鎵ц${tableName} 琛ㄧ殑 ${tableResults.length} 涓鏌,
           tableName,
           results: tableResults,
           timestamp: new Date().toISOString(),
         });
 
       case 'add-rule':
-        // 娣诲姞妫€鏌ヨ?        const ruleData = params.rule;
+        // 娣诲姞妫€鏌ヨ        const ruleData = params.rule;
         if (!ruleData) {
           return NextResponse.json(
-            { error: '缂哄皯妫€鏌ヨ鍒欐暟? },
+            { error: '缂哄皯妫€鏌ヨ鍒欐暟 },
             { status: 400 }
           );
         }
@@ -160,16 +160,16 @@ export async function POST(request: NextRequest) {
         dataQualityService.addCheckRule(newRule);
 
         return NextResponse.json({
-          message: '妫€鏌ヨ鍒欐坊鍔犳垚?,
+          message: '妫€鏌ヨ鍒欐坊鍔犳垚,
           rule: newRule,
           timestamp: new Date().toISOString(),
         });
 
       case 'update-rule':
-        // 鏇存柊妫€鏌ヨ?        const { ruleId: updateRuleId, updates } = params;
+        // 鏇存柊妫€鏌ヨ        const { ruleId: updateRuleId, updates } = params;
         if (!updateRuleId || !updates) {
           return NextResponse.json(
-            { error: '缂哄皯瑙勫垯ID鎴栨洿鏂版暟? },
+            { error: '缂哄皯瑙勫垯ID鎴栨洿鏂版暟 },
             { status: 400 }
           );
         }
@@ -186,13 +186,13 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json({
-          message: '妫€鏌ヨ鍒欐洿鏂版垚?,
+          message: '妫€鏌ヨ鍒欐洿鏂版垚,
           ruleId: updateRuleId,
           timestamp: new Date().toISOString(),
         });
 
       case 'remove-rule':
-        // 鍒犻櫎妫€鏌ヨ?        const { ruleId: removeRuleId } = params;
+        // 鍒犻櫎妫€鏌ヨ        const { ruleId: removeRuleId } = params;
         if (!removeRuleId) {
           return NextResponse.json({ error: '缂哄皯瑙勫垯ID' }, { status: 400 });
         }
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json({
-          message: '妫€鏌ヨ鍒欏垹闄ゆ垚?,
+          message: '妫€鏌ヨ鍒欏垹闄ゆ垚,
           ruleId: removeRuleId,
           timestamp: new Date().toISOString(),
         });
@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
         });
 
       case 'test-rule':
-        // 娴嬭瘯妫€鏌ヨ?        const testRuleData = params.rule;
+        // 娴嬭瘯妫€鏌ヨ        const testRuleData = params.rule;
         if (!testRuleData) {
           return NextResponse.json(
             { error: '缂哄皯娴嬭瘯瑙勫垯鏁版嵁' },
@@ -260,13 +260,13 @@ export async function POST(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('鏁版嵁璐ㄩ噺API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

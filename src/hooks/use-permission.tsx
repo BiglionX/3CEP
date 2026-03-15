@@ -1,6 +1,6 @@
 /**
- * 权限检?Hook
- * 用于?React 组件中进行权限判?
+ * 权限检查Hook
+ * 用于在React 组件中进行权限判断
  */
 
 'use client';
@@ -10,10 +10,25 @@ import { usePathname } from 'next/navigation';
 
 import type { UserRole, UserInfo, Permission } from '@/types/common';
 
+interface UsePermissionReturn {
+  userInfo: UserInfo | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  hasPermission: (permission: Permission) => boolean;
+  hasAnyPermission: (permissions: Permission[]) => boolean;
+  hasAllPermissions: (permissions: Permission[]) => boolean;
+  hasRole: (role: UserRole) => boolean;
+  hasAnyRole: (roles: UserRole[]) => boolean;
+  getAccessibleMenus: (menuItems: any[]) => any[];
+  getUserInfo: () => UserInfo | null;
+  login: (token: string) => Promise<void>;
+  logout: () => void;
+}
+
 /**
- * 权限检?Hook
+ * 权限检查Hook
  */
-export function usePermission() {
+export function usePermission(): UsePermissionReturn {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
 

@@ -6,13 +6,13 @@ import {
 import { supabase } from '@/lib/supabase';
 
 /**
- * GET /api/crowdfunding/recommend?userId=xxx
+ * GET /api/crowdfunding/recommenduserId=xxx
  * 鑾峰彇鐢ㄦ埛鏈哄瀷鍗囩骇鎺ㄨ崘
  *
  * 鏌ヨ鍙傛暟:
  * - userId: 鐢ㄦ埛ID (蹇呴渶)
- * - limit: 杩斿洖鎺ㄨ崘鏁伴噺锛岄粯?
- * - useCache: 鏄惁浣跨敤缂撳瓨鎺ㄨ崘锛岄粯璁rue
+ * - limit: 杩斿洖鎺ㄨ崘鏁伴噺锛岄粯
+ * - useCache: 鏄惁浣跨敤缂撳鎺ㄨ崘锛岄粯璁rue
  *
  * 杩斿洖:
  * - success: boolean - 鏄惁鎴愬姛
@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
     const limit = parseInt(searchParams.get('limit') || '5');
-    const useCache = searchParams.get('useCache') !== 'false'; // 榛樿浣跨敤缂撳瓨
+    const useCache = searchParams.get('useCache') !== 'false'; // 榛樿浣跨敤缂撳
 
     // 楠岃瘉蹇呴渶鍙傛暟
     if (!userId) {
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '鐢ㄦ埛涓嶅瓨?,
+          error: '鐢ㄦ埛涓嶅,
         },
         { status: 404 }
       );
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
 
     let recommendations: UpgradeRecommendation[] = [];
 
-    // 濡傛灉浣跨敤缂撳瓨锛屽厛灏濊瘯鑾峰彇缂撳瓨鐨勬帹?    if (useCache) {
+    // 濡傛灉浣跨敤缂撳锛屽厛灏濊瘯鑾峰彇缂撳鐨勬帹    if (useCache) {
       const cachedRecommendations =
         await upgradeRecommendationService.getCachedRecommendations(
           userId,
@@ -65,7 +65,7 @@ export async function GET(request: Request) {
       recommendations = cachedRecommendations;
     }
 
-    // 濡傛灉缂撳瓨涓虹┖鎴栦笉浣跨敤缂撳瓨锛屽垯鐢熸垚鏂扮殑鎺ㄨ崘
+    // 濡傛灉缂撳涓虹┖鎴栦笉浣跨敤缂撳锛屽垯鐢熸垚鏂扮殑鎺ㄨ崘
     if (recommendations.length === 0) {
       const freshRecommendations =
         await upgradeRecommendationService.generateRecommendations(
@@ -87,8 +87,8 @@ export async function GET(request: Request) {
       },
       message:
         recommendations.length > 0
-          ? `涓烘偍鎵惧埌${recommendations.length}涓崌绾ф帹鑽恅
-          : '鏆傛棤閫傚悎鐨勫崌绾ф帹?,
+           `涓烘偍鎵惧埌${recommendations.length}涓崌绾ф帹鑽恅
+          : '鏆傛棤傚悎鐨勫崌绾ф帹,
     };
 
     return NextResponse.json(responseData);
@@ -99,7 +99,7 @@ export async function GET(request: Request) {
       {
         success: false,
         error: '鑾峰彇鎺ㄨ崘澶辫触',
-        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );
@@ -108,10 +108,10 @@ export async function GET(request: Request) {
 
 /**
  * POST /api/crowdfunding/recommend
- * 寮哄埗鍒锋柊鐢ㄦ埛鐨勬帹鑽愶紙蹇界暐缂撳瓨? *
- * 璇锋眰?
+ * 寮哄埗鍒柊鐢ㄦ埛鐨勬帹鑽愶紙蹇界暐缂撳 *
+ * 璇眰
  * - userId: string - 鐢ㄦ埛ID (蹇呴渶)
- * - limit: number - 杩斿洖鎺ㄨ崘鏁伴噺锛岄粯?
+ * - limit: number - 杩斿洖鎺ㄨ崘鏁伴噺锛岄粯
  *
  * 杩斿洖:
  * - success: boolean - 鏄惁鎴愬姛
@@ -144,13 +144,13 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '鐢ㄦ埛涓嶅瓨?,
+          error: '鐢ㄦ埛涓嶅,
         },
         { status: 404 }
       );
     }
 
-    // 鐩存帴鐢熸垚鏂扮殑鎺ㄨ崘锛堜笉浣跨敤缂撳瓨?    const recommendations =
+    // 鐩存帴鐢熸垚鏂扮殑鎺ㄨ崘锛堜笉浣跨敤缂撳    const recommendations =
       await upgradeRecommendationService.generateRecommendations(userId, limit);
 
     const responseData = {
@@ -164,19 +164,19 @@ export async function POST(request: Request) {
       },
       message:
         recommendations.length > 0
-          ? `宸蹭负鎮ㄥ埛?{recommendations.length}涓崌绾ф帹鑽恅
-          : '鏆傛棤閫傚悎鐨勫崌绾ф帹?,
+           `宸蹭负鎮ㄥ埛{recommendations.length}涓崌绾ф帹鑽恅
+          : '鏆傛棤傚悎鐨勫崌绾ф帹,
     };
 
     return NextResponse.json(responseData);
   } catch (error: any) {
-    console.error('鍒锋柊鍗囩骇鎺ㄨ崘澶辫触:', error);
+    console.error('鍒柊鍗囩骇鎺ㄨ崘澶辫触:', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: '鍒锋柊鎺ㄨ崘澶辫触',
-        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鍒柊鎺ㄨ崘澶辫触',
+        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );
@@ -187,10 +187,10 @@ export async function POST(request: Request) {
  * PUT /api/crowdfunding/recommend/click
  * 璁板綍鎺ㄨ崘鐐瑰嚮
  *
- * 璇锋眰?
+ * 璇眰
  * - userId: string - 鐢ㄦ埛ID (蹇呴渶)
- * - oldModel: string - 鏃ф満?(蹇呴渶)
- * - newModel: string - 鏂版満?(蹇呴渶)
+ * - oldModel: string - ф満(蹇呴渶)
+ * - newModel: string - 鏂版満(蹇呴渶)
  *
  * 杩斿洖:
  * - success: boolean - 鏄惁鎴愬姛
@@ -229,7 +229,7 @@ export async function PUT(request: Request) {
       {
         success: false,
         error: '璁板綍鐐瑰嚮澶辫触',
-        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );
@@ -240,10 +240,10 @@ export async function PUT(request: Request) {
  * PATCH /api/crowdfunding/recommend/conversion
  * 璁板綍鎺ㄨ崘杞寲锛堢敤鎴蜂笅鍗曪級
  *
- * 璇锋眰?
+ * 璇眰
  * - userId: string - 鐢ㄦ埛ID (蹇呴渶)
- * - oldModel: string - 鏃ф満?(蹇呴渶)
- * - newModel: string - 鏂版満?(蹇呴渶)
+ * - oldModel: string - ф満(蹇呴渶)
+ * - newModel: string - 鏂版満(蹇呴渶)
  *
  * 杩斿洖:
  * - success: boolean - 鏄惁鎴愬姛
@@ -282,7 +282,7 @@ export async function PATCH(request: Request) {
       {
         success: false,
         error: '璁板綍杞寲澶辫触',
-        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: error.message || '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );

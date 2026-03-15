@@ -7,7 +7,7 @@ import {
   ScheduleConfig,
 } from '../../../../data-center/scheduler/report-scheduler';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -16,7 +16,7 @@ import {
  * @swagger
  * /api/data-center/scheduler:
  *   get:
- *     summary: 鑾峰彇璋冨害浠诲姟鍜岃闃呬俊? *     description: 鑾峰彇鎶ヨ〃璋冨害浠诲姟鍒楄〃銆佽闃呬俊鎭拰璋冨害鍣ㄧ姸? *     tags: [鏁版嵁涓績-璋冨害鍣╙
+ *     summary: 鑾峰彇璋冨害诲姟鍜岃闃呬俊 *     description: 鑾峰彇鎶ヨ〃璋冨害诲姟鍒楄〃銆佽闃呬俊鎭拰璋冨害鍣ㄧ姸 *     tags: [鏁版嵁涓績-璋冨害鍣╙
  *     parameters:
  *       - name: action
  *         in: query
@@ -27,12 +27,12 @@ import {
  *           enum: [list, status, subscriptions, templates]
  *       - name: scheduleId
  *         in: query
- *         description: 璋冨害浠诲姟ID锛堢敤浜庤幏鍙栫壒瀹氫换鍔＄殑璁㈤槄? *         required: false
+ *         description: 璋冨害诲姟ID锛堢敤浜庤幏鍙栫壒瀹氫换鍔＄殑璁㈤槄 *         required: false
  *         schema:
  *           type: string
  *   post:
- *     summary: 鍒涘缓鏂扮殑璋冨害浠诲姟
- *     description: 鍒涘缓鏂扮殑鎶ヨ〃瀹氭椂璋冨害浠诲姟
+ *     summary: 鍒涘缓鏂扮殑璋冨害诲姟
+ *     description: 鍒涘缓鏂扮殑鎶ヨ〃瀹氭椂璋冨害诲姟
  *     tags: [鏁版嵁涓績-璋冨害鍣╙
  *     requestBody:
  *       required: true
@@ -52,10 +52,10 @@ import {
  *                 description: 鎶ヨ〃妯℃澘ID
  *               name:
  *                 type: string
- *                 description: 璋冨害浠诲姟鍚嶇О
+ *                 description: 璋冨害诲姟鍚嶇О
  *               description:
  *                 type: string
- *                 description: 浠诲姟鎻忚堪
+ *                 description: 诲姟鎻忚堪
  *               schedule:
  *                 type: object
  *                 description: 璋冨害閰嶇疆
@@ -88,7 +88,7 @@ import {
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: 鎺ユ敹鑰呴偖绠卞垪? *               format:
+ *                 description: 鎺ユ敹鑰呴偖绠卞垪 *               format:
  *                 type: string
  *                 enum: [pdf, excel, csv, html]
  *                 description: 鎶ヨ〃鏍煎紡
@@ -96,15 +96,15 @@ import {
  *                 type: boolean
  *                 description: 鏄惁鍚敤
  *   put:
- *     summary: 鏇存柊璋冨害浠诲姟
- *     description: 鏇存柊鐜版湁鐨勮皟搴︿换鍔￠厤? *     tags: [鏁版嵁涓績-璋冨害鍣╙
+ *     summary: 鏇存柊璋冨害诲姟
+ *     description: 鏇存柊鐜版湁鐨勮皟搴︿换鍔￠厤 *     tags: [鏁版嵁涓績-璋冨害鍣╙
  *     parameters:
  *       - name: id
  *         in: query
  *         required: true
  *         schema:
  *           type: string
- *         description: 璋冨害浠诲姟ID
+ *         description: 璋冨害诲姟ID
  *     requestBody:
  *       required: true
  *       content:
@@ -128,15 +128,15 @@ import {
  *               enabled:
  *                 type: boolean
  *   delete:
- *     summary: 鍒犻櫎璋冨害浠诲姟
- *     description: 鍒犻櫎鎸囧畾鐨勮皟搴︿换? *     tags: [鏁版嵁涓績-璋冨害鍣╙
+ *     summary: 鍒犻櫎璋冨害诲姟
+ *     description: 鍒犻櫎鎸囧畾鐨勮皟搴︿换 *     tags: [鏁版嵁涓績-璋冨害鍣╙
  *     parameters:
  *       - name: id
  *         in: query
  *         required: true
  *         schema:
  *           type: string
- *         description: 璋冨害浠诲姟ID
+ *         description: 璋冨害诲姟ID
  */
 
 export async function GET(request: Request) {
@@ -147,12 +147,12 @@ export async function GET(request: Request) {
 
     switch (action) {
       case 'list':
-        // 鑾峰彇鎵€鏈夎皟搴︿换?- 杩斿洖绀轰緥鏁版嵁
+        // 鑾峰彇鎵€鏈夎皟搴︿换- 杩斿洖绀轰緥鏁版嵁
         const sampleSchedules = [
           {
             id: 'sched_1',
             templateId: 'device-overview',
-            name: '璁惧鏃ユ姤',
+            name: '璁惧ユ姤',
             description: '姣忔棩璁惧缁熻鎶ヨ〃',
             schedule: { frequency: 'day', interval: 1 },
             recipients: ['admin@example.com'],
@@ -173,7 +173,7 @@ export async function GET(request: Request) {
         });
 
       case 'status':
-        // 鑾峰彇璋冨害鍣ㄧ姸?        const status = reportScheduler.getScheduleStatus();
+        // 鑾峰彇璋冨害鍣ㄧ姸        const status = reportScheduler.getScheduleStatus();
         return NextResponse.json({
           success: true,
           data: status,
@@ -190,17 +190,17 @@ export async function GET(request: Request) {
         });
 
       case 'templates':
-        // 鑾峰彇鍙敤鐨勬姤琛ㄦā?- 杩斿洖绀轰緥妯℃澘
+        // 鑾峰彇鍙敤鐨勬姤琛ㄦā- 杩斿洖绀轰緥妯℃澘
         const sampleTemplates = [
           {
             id: 'device-overview',
             name: '璁惧姒傝鎶ヨ〃',
-            description: '灞曠ず璁惧鍩烘湰淇℃伅鍜岀粺璁℃暟?,
+            description: '灞曠ず璁惧鍩烘湰淇℃伅鍜岀粺璁℃暟,
             type: 'dashboard',
           },
           {
             id: 'sales-analysis',
-            name: '閿€鍞垎鏋愭姤?,
+            name: '閿€鍞垎鏋愭姤,
             description: '閿€鍞暟鎹秼鍔垮拰鍒嗘瀽',
             type: 'chart',
           },
@@ -215,7 +215,7 @@ export async function GET(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鐨勬搷浣滅被? },
+          { success: false, error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -224,7 +224,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -235,23 +235,23 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const url = new URL(request.url);
 
-  // 妫€鏌ユ槸鍚︽槸瑙﹀彂璇锋眰
+  // 妫€鏌ユ槸鍚︽槸瑙﹀彂璇眰
   if (url.searchParams.has('scheduleId')) {
     const scheduleId = url.searchParams.get('scheduleId');
 
     if (!scheduleId) {
       return NextResponse.json(
-        { success: false, error: '缂哄皯璋冨害浠诲姟ID' },
+        { success: false, error: '缂哄皯璋冨害诲姟ID' },
         { status: 400 }
       );
     }
 
     // 鎵嬪姩瑙﹀彂鎶ヨ〃鐢熸垚 - 妯℃嫙鎴愬姛
-    console.log(`馃搳 鎵嬪姩瑙﹀彂鎶ヨ〃鐢熸垚浠诲姟: ${scheduleId}`);
+    console.log(`馃搳 鎵嬪姩瑙﹀彂鎶ヨ〃鐢熸垚诲姟: ${scheduleId}`);
 
     return NextResponse.json({
       success: true,
-      message: '鎶ヨ〃鐢熸垚浠诲姟宸茶Е?,
+      message: '鎶ヨ〃鐢熸垚诲姟宸茶Е,
       timestamp: new Date().toISOString(),
     });
   }
@@ -280,7 +280,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鍒涘缓璋冨害浠诲姟 - 杩斿洖妯℃嫙鏁版嵁
+    // 鍒涘缓璋冨害诲姟 - 杩斿洖妯℃嫙鏁版嵁
     const result = {
       id: 'sched_' + Date.now(),
       templateId,
@@ -297,15 +297,15 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: result,
-      message: '璋冨害浠诲姟鍒涘缓鎴愬姛',
+      message: '璋冨害诲姟鍒涘缓鎴愬姛',
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('鍒涘缓璋冨害浠诲姟閿欒:', error);
+    console.error('鍒涘缓璋冨害诲姟閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍒涘缓璋冨害浠诲姟澶辫触',
+        error: error.message || '鍒涘缓璋冨害诲姟澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -320,14 +320,14 @@ export async function PUT(request: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { success: false, error: '缂哄皯璋冨害浠诲姟ID' },
+        { success: false, error: '缂哄皯璋冨害诲姟ID' },
         { status: 400 }
       );
     }
 
     const body = await request.json();
 
-    // 鏇存柊璋冨害浠诲姟 - 杩斿洖妯℃嫙鏁版嵁
+    // 鏇存柊璋冨害诲姟 - 杩斿洖妯℃嫙鏁版嵁
     const result = {
       id,
       ...body,
@@ -337,15 +337,15 @@ export async function PUT(request: Request) {
     return NextResponse.json({
       success: true,
       data: result,
-      message: '璋冨害浠诲姟鏇存柊鎴愬姛',
+      message: '璋冨害诲姟鏇存柊鎴愬姛',
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('鏇存柊璋冨害浠诲姟閿欒:', error);
+    console.error('鏇存柊璋冨害诲姟閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鏇存柊璋冨害浠诲姟澶辫触',
+        error: error.message || '鏇存柊璋冨害诲姟澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -360,23 +360,23 @@ export async function DELETE(request: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { success: false, error: '缂哄皯璋冨害浠诲姟ID' },
+        { success: false, error: '缂哄皯璋冨害诲姟ID' },
         { status: 400 }
       );
     }
 
-    // 鍒犻櫎璋冨害浠诲姟 - 妯℃嫙鎴愬姛
+    // 鍒犻櫎璋冨害诲姟 - 妯℃嫙鎴愬姛
     return NextResponse.json({
       success: true,
-      message: '璋冨害浠诲姟鍒犻櫎鎴愬姛',
+      message: '璋冨害诲姟鍒犻櫎鎴愬姛',
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('鍒犻櫎璋冨害浠诲姟閿欒:', error);
+    console.error('鍒犻櫎璋冨害诲姟閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍒犻櫎璋冨害浠诲姟澶辫触',
+        error: error.message || '鍒犻櫎璋冨害诲姟澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

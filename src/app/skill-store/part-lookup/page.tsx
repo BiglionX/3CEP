@@ -13,7 +13,7 @@ export default function PartLookupSkillPage() {
             href="/skill-store"
             className="text-indigo-600 hover:text-indigo-700 font-medium"
           >
-            �?返回商店首页
+            ← 返回商店首页
           </Link>
         </div>
       </div>
@@ -26,18 +26,19 @@ export default function PartLookupSkillPage() {
             <div>
               <h1 className="text-4xl font-bold mb-2">procyc-part-lookup</h1>
               <p className="text-xl text-blue-100">
-                根据设备型号查询兼容配件的技?              </p>
+                根据设备型号查询兼容配件的技能
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap gap-4 mt-8">
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
-              🔧 配件?(PART)
+              🔧 配件类 (PART)
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
               v1.0.0
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
-              �?4.7/5.0
+              ⭐ 4.7/5.0
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
               ⬇️ 623 下载
@@ -58,44 +59,52 @@ export default function PartLookupSkillPage() {
             {/* Overview */}
             <section className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📋 技能简?              </h2>
+                📋 技能简介
+              </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
                 <code className="bg-gray-100 px-2 py-1 rounded text-sm">
                   procyc-part-lookup
                 </code>{' '}
-                是一个专业的配件兼容性查询技能，支持根据设备型号快速查找兼容的配件信息?                内置多维度筛选和智能排序功能，帮助维修人员快速找到合适的配件?              </p>
+                是一个专业的配件兼容性查询技能，支持根据设备型号快速查找兼容的配件信息。
+                内置多维度筛选和智能排序功能，帮助维修人员快速找到合适的配件。
+              </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-                核心特?              </h3>
+                核心特性
+              </h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>精准匹配</strong> - 基于设备型号的配件兼容性验?                  </span>
+                    <strong>精准匹配</strong> - 基于设备型号的配件兼容性验证
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>多维筛?/strong> - 支持按分类、价格、库存筛?                  </span>
+                    <strong>多维筛选</strong> - 支持按分类、价格、库存筛选
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>智能排序</strong> - 价格、库存、相关性多种排序方?                  </span>
+                    <strong>智能排序</strong> - 价格、库存、相关性多种排序方式
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>实时库存</strong> - 显示配件库存状?                  </span>
+                    <strong>实时库存</strong> - 显示配件库存状态
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
                     <strong>FCX 定价</strong> - 支持平台积分定价
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
                     <strong>高性能</strong> - P95 响应时间 &lt; 500ms
                   </span>
@@ -162,7 +171,10 @@ const result = await partLookup.execute({
   deviceModel: 'iPhone 13 Pro',
 });
 
-// TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(result.data?.parts)// 带筛选条?const filtered = await partLookup.execute({
+// TODO: 移除调试日志 - console.log(result.data.parts)
+
+// 带筛选条件
+const filtered = await partLookup.execute({
   deviceModel: 'Samsung Galaxy S21',
   category: '电池',
   minPrice: 50,
@@ -171,7 +183,7 @@ const result = await partLookup.execute({
   sortBy: 'price_asc',
 });
 
-// TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(filtered.data?.parts)`}
+// TODO: 移除调试日志 - console.log(filtered.data.parts)`}
                     </pre>
                   </div>
                 </div>
@@ -193,7 +205,8 @@ result = skill.execute({
 
 print(result.data.parts)
 
-# 带筛选条?filtered = skill.execute({
+# 带筛选条件
+filtered = skill.execute({
     "deviceModel": "Samsung Galaxy S21",
     "category": "电池",
     "minPrice": 50,
@@ -210,7 +223,8 @@ print(result.data.parts)
             {/* API Reference */}
             <section className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📖 API 参?              </h2>
+                📖 API 参考
+              </h2>
 
               <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
                 输入参数
@@ -229,7 +243,8 @@ print(result.data.parts)
                         必填
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        默认?                      </th>
+                        默认值
+                      </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                         说明
                       </th>
@@ -243,10 +258,11 @@ print(result.data.parts)
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        设备型号（如 "iPhone 13 Pro"�?                      </td>
+                        设备型号（如 "iPhone 13 Pro"）
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 font-mono text-sm text-gray-900">
@@ -255,7 +271,7 @@ print(result.data.parts)
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-yellow-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-yellow-600">否</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         配件分类（电池、屏幕、摄像头等）
@@ -268,10 +284,11 @@ print(result.data.parts)
                       <td className="px-4 py-3 text-sm text-gray-500">
                         number
                       </td>
-                      <td className="px-4 py-3 text-sm text-yellow-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-yellow-600">否</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        最低价?                      </td>
+                        最低价格
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 font-mono text-sm text-gray-900">
@@ -280,10 +297,11 @@ print(result.data.parts)
                       <td className="px-4 py-3 text-sm text-gray-500">
                         number
                       </td>
-                      <td className="px-4 py-3 text-sm text-yellow-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-yellow-600">否</td>
                       <td className="px-4 py-3 text-sm text-gray-500">-</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        最高价?                      </td>
+                        最高价格
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 font-mono text-sm text-gray-900">
@@ -292,7 +310,7 @@ print(result.data.parts)
                       <td className="px-4 py-3 text-sm text-gray-500">
                         boolean
                       </td>
-                      <td className="px-4 py-3 text-sm text-yellow-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-yellow-600">否</td>
                       <td className="px-4 py-3 text-sm text-gray-500">false</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         仅显示有库存
@@ -305,7 +323,7 @@ print(result.data.parts)
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-yellow-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-yellow-600">否</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         relevance
                       </td>
@@ -324,7 +342,7 @@ print(result.data.parts)
                 <pre className="text-gray-800 font-mono text-sm">
                   {`{
   success: boolean;
-  data?: {
+  data: {
     parts: Array<{
       id: string;
       name: string;
@@ -343,7 +361,7 @@ print(result.data.parts)
       priceRange: { min: number; max: number };
     };
   };
-  error?: {
+  error: {
     code: string;
     message: string;
   };
@@ -363,10 +381,11 @@ print(result.data.parts)
             {/* Quick Actions */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                快速操?              </h3>
+                快速操作
+              </h3>
               <div className="space-y-3">
                 <Link
-                  href="/skill-store/sandbox?skill=procyc-part-lookup"
+                  href="/skill-store/sandboxskill=procyc-part-lookup"
                   className="block w-full px-4 py-2 bg-indigo-600 text-white text-center font-medium rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   🧪 在线测试
@@ -383,7 +402,8 @@ print(result.data.parts)
                   href="/docs/spec"
                   className="block w-full px-4 py-2 bg-gray-100 text-gray-700 text-center font-medium rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                  📚 技能规?                </Link>
+                  📚 技能规范
+                </Link>
               </div>
             </div>
 
@@ -402,7 +422,7 @@ print(result.data.parts)
                   <span className="font-medium">~800 KB</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">许可?/span>
+                  <span className="text-gray-600">许可证</span>
                   <span className="font-medium">MIT</span>
                 </div>
                 <div className="flex justify-between">
@@ -415,7 +435,8 @@ print(result.data.parts)
             {/* Related Skills */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                相关技?              </h3>
+                相关技能
+              </h3>
               <div className="space-y-3">
                 <Link
                   href="/skill-store/find-shop"
@@ -428,7 +449,8 @@ print(result.data.parts)
                         procyc-find-shop
                       </div>
                       <div className="text-sm text-gray-500">
-                        附近维修店查?                      </div>
+                        附近维修店查询
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -468,4 +490,3 @@ print(result.data.parts)
     </div>
   );
 }
-

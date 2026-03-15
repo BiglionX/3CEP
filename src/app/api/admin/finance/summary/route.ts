@@ -5,7 +5,7 @@ const mockTransactions = [
   {
     id: 'txn_001',
     type: 'income',
-    category: '缁翠慨鏈嶅姟?,
+    category: '缁翠慨鏈嶅姟,
     amount: 288.0,
     description: 'iPhone 12 Pro灞忓箷鏇存崲',
     status: 'completed',
@@ -15,9 +15,9 @@ const mockTransactions = [
   {
     id: 'txn_002',
     type: 'income',
-    category: '閰嶄欢閿€?,
+    category: '閰嶄欢閿€,
     amount: 156.0,
-    description: '鍘熻鐢垫睜 + 鏁版嵁绾垮?,
+    description: '鍘熻鐢垫睜 + 鏁版嵁绾垮,
     status: 'completed',
     created_at: '2024-02-28T14:15:00Z',
     updated_at: '2024-02-28T14:15:00Z',
@@ -35,7 +35,7 @@ const mockTransactions = [
   {
     id: 'txn_004',
     type: 'income',
-    category: '缁翠慨鏈嶅姟?,
+    category: '缁翠慨鏈嶅姟,
     amount: 420.0,
     description: 'MacBook Pro閿洏缁翠慨',
     status: 'completed',
@@ -47,7 +47,7 @@ const mockTransactions = [
     type: 'expense',
     category: '浜哄伐鎴愭湰',
     amount: 1200.0,
-    description: '鎶€甯堝伐?,
+    description: '鎶€甯堝伐,
     status: 'completed',
     created_at: '2024-02-26T17:00:00Z',
     updated_at: '2024-02-26T17:00:00Z',
@@ -75,9 +75,9 @@ const mockTransactions = [
   {
     id: 'txn_008',
     type: 'income',
-    category: '缁翠慨鏈嶅姟?,
+    category: '缁翠慨鏈嶅姟,
     amount: 198.0,
-    description: '鍗庝负鎵嬫満鍏呯數鍙ｇ淮?,
+    description: '鍗庝负鎵嬫満鍏呯數鍙ｇ淮,
     status: 'pending',
     created_at: '2024-02-28T15:20:00Z',
     updated_at: '2024-02-28T15:20:00Z',
@@ -95,7 +95,7 @@ const mockTransactions = [
   {
     id: 'txn_010',
     type: 'income',
-    category: '閰嶄欢閿€?,
+    category: '閰嶄欢閿€,
     amount: 234.0,
     description: 'AirPods Pro鑰虫満',
     status: 'completed',
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
       txn => new Date(txn.created_at) >= cutoffDate
     );
 
-    // 璁＄畻璐㈠姟姹?    const completedTransactions = filteredTransactions.filter(
+    // 璁＄畻璐㈠姟姹    const completedTransactions = filteredTransactions.filter(
       txn => txn.status === 'completed'
     );
 
@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
     const transaction_count = completedTransactions.length;
     const avg_transaction_amount =
       transaction_count > 0
-        ? (total_income + total_expense) / transaction_count
+         (total_income + total_expense) / transaction_count
         : 0;
 
     return NextResponse.json({
@@ -147,9 +147,9 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('鑾峰彇璐㈠姟姹囨€诲け?', error);
+    console.error('鑾峰彇璐㈠姟姹囨€诲け', error);
     return NextResponse.json(
-      { success: false, error: '鑾峰彇璐㈠姟姹囨€诲け?, data: null },
+      { success: false, error: '鑾峰彇璐㈠姟姹囨€诲け, data: null },
       { status: 500 }
     );
   }

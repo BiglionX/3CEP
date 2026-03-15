@@ -79,7 +79,7 @@ export async function POST(
       try {
         // 模拟执行结果
         const executionResult = {
-          status: Math.random() > 0.1 ? 'completed' : 'failed',
+          status: Math.random() > 0.1  'completed' : 'failed',
           output_data: {
             result: 'success',
             response: generateMockResponse(agent.name, body.input_data),
@@ -242,9 +242,9 @@ export async function PATCH(
 function generateMockResponse(agentName: string, inputData: any) {
   const responses = [
     `您好！我是${agentName}，我已经收到您的请求。让我来帮您处理这个问题...`,
-    `基于您的输入"${inputData?.query || '查询内容'}"，我分析得出以下结论...`,
-    `感谢您的咨询。关于${inputData?.topic || '这个话题'}，我的建议是...`,
-    `我理解您想要了解${inputData?.subject || '相关信息'}。根据我的知识库...`
+    `基于您的输入"${inputData.query || '查询内容'}"，我分析得出以下结论...`,
+    `感谢您的咨询。关于${inputData.topic || '这个话题'}，我的建议是...`,
+    `我理解您想要了解${inputData.subject || '相关信息'}。根据我的知识库...`
   ];
   
   const mockData = [

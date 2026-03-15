@@ -2,23 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  LineChart,
-  Line,
   AreaChart,
   Area,
   PieChart,
   Pie,
   Cell,
-  ComposedChart,
-  Scatter,
 } from 'recharts';
 import {
   Card,
@@ -31,7 +25,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
-  Calendar,
   Filter,
   Download,
   AlertTriangle,
@@ -157,7 +150,7 @@ export default function WMSEfficiencyDashboard() {
       });
 
       const response = await fetch(
-        `/api/wms/dashboard/performance?${queryParams}`
+        `/api/wms/dashboard/performance${queryParams}`
       );
       const result = await response.json();
 
@@ -184,7 +177,9 @@ export default function WMSEfficiencyDashboard() {
 
   const exportData = () => {
     // 实现数据导出功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出数据')};
+    // TODO: 移除调试日志
+    console.log('导出数据');
+  };
 
   // 渲染指标卡片
   const renderMetricCard = (
@@ -241,11 +236,11 @@ export default function WMSEfficiencyDashboard() {
             className={`${getStatusBg(status)} ${getStatusColor(status)} mt-2`}
           >
             {status === 'excellent'
-              ? '优秀'
+               '优秀'
               : status === 'good'
-                ? '良好'
+                 '良好'
                 : status === 'warning'
-                  ? '警告'
+                   '警告'
                   : '危险'}
           </Badge>
         </CardContent>
@@ -254,7 +249,7 @@ export default function WMSEfficiencyDashboard() {
   };
 
   // 渲染趋势图标
-  const renderTrendIcon = (trend: string, variance: number) => {
+  const renderTrendIcon = (trend: string) => {
     if (trend === 'up') {
       return <TrendingUp className="w-4 h-4 text-green-500" />;
     } else if (trend === 'down') {
@@ -291,7 +286,8 @@ export default function WMSEfficiencyDashboard() {
         <div>
           <h1 className="text-3xl font-bold">WMS效能分析看板</h1>
           <p className="text-gray-600 mt-2">
-            监控各海外仓运营数据，实时掌握仓储效?          </p>
+            监控各海外仓运营数据，实时掌握仓储效能
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={exportData}>
@@ -306,12 +302,13 @@ export default function WMSEfficiencyDashboard() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="w-5 h-5" />
-            数据筛?          </CardTitle>
+            数据筛选
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1 block">开始日?/label>
+              <label className="text-sm font-medium mb-1 block">开始日期</label>
               <Input
                 type="date"
                 value={filters.dateRange.startDate}
@@ -345,21 +342,22 @@ export default function WMSEfficiencyDashboard() {
                 }
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="daily">�?/option>
-                <option value="weekly">�?/option>
-                <option value="monthly">�?/option>
+                <option value="daily">日</option>
+                <option value="weekly">周</option>
+                <option value="monthly">月</option>
                 <option value="quarterly">季度</option>
               </select>
             </div>
             <div className="flex items-end">
               <Button onClick={handleApplyFilters} className="w-full">
-                应用筛?              </Button>
+                应用筛选
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 汇总指?*/}
+      {/* 汇总指标 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
           <CardHeader className="pb-2">
@@ -402,10 +400,10 @@ export default function WMSEfficiencyDashboard() {
           </CardHeader>
           <CardContent>
             <div
-              className={`text-2xl font-bold ${dashboardData.summary.periodComparison.scoreChange >= 0 ? 'text-green-600' : 'text-red-600'}`}
+              className={`text-2xl font-bold ${dashboardData.summary.periodComparison.scoreChange >= 0  'text-green-600' : 'text-red-600'}`}
             >
               {dashboardData.summary.periodComparison.scoreChange >= 0
-                ? '+'
+                 '+'
                 : ''}
               {dashboardData.summary.periodComparison.scoreChange.toFixed(1)}%
             </div>
@@ -451,30 +449,30 @@ export default function WMSEfficiencyDashboard() {
                 inventory_turnover: {
                   name: '库存周转',
                   icon: <BarChart3 className="w-4 h-4" />,
-                  unit: '�?,
+                  unit: '次',
                 },
                 exception_rate: {
-                  name: '异常?,
+                  name: '异常率',
                   icon: <AlertTriangle className="w-4 h-4" />,
                   unit: '%',
                 },
                 accuracy_rate: {
-                  name: '准确?,
+                  name: '准确率',
                   icon: <CheckCircle className="w-4 h-4" />,
                   unit: '%',
                 },
                 on_time_rate: {
-                  name: '准时?,
+                  name: '准时率',
                   icon: <Clock className="w-4 h-4" />,
                   unit: '%',
                 },
                 damage_rate: {
-                  name: '损坏?,
+                  name: '损坏率',
                   icon: <AlertTriangle className="w-4 h-4" />,
                   unit: '%',
                 },
                 storage_utilization: {
-                  name: '存储利用?,
+                  name: '存储利用率',
                   icon: <BarChart3 className="w-4 h-4" />,
                   unit: '%',
                 },
@@ -484,9 +482,9 @@ export default function WMSEfficiencyDashboard() {
                   unit: '订单/小时',
                 },
                 cost_per_order: {
-                  name: '单订单成?,
+                  name: '单订单成本',
                   icon: <DollarSign className="w-4 h-4" />,
-                  unit: '�?,
+                  unit: '美元',
                 },
               };
 
@@ -509,11 +507,11 @@ export default function WMSEfficiencyDashboard() {
 
       {/* 图表区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 综合评分趋势?*/}
+        {/* 综合评分趋势图 */}
         <Card>
           <CardHeader>
             <CardTitle>综合评分趋势</CardTitle>
-            <CardDescription>各仓库综合效能评分变化趋?/CardDescription>
+            <CardDescription>各仓库综合效能评分变化趋势</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -526,7 +524,7 @@ export default function WMSEfficiencyDashboard() {
                 <Area
                   type="monotone"
                   dataKey="metrics.inventory_turnover"
-                  name="库存周转?
+                  name="库存周转"
                   stroke="#8884d8"
                   fill="#8884d8"
                   fillOpacity={0.3}
@@ -534,7 +532,7 @@ export default function WMSEfficiencyDashboard() {
                 <Area
                   type="monotone"
                   dataKey="metrics.accuracy_rate"
-                  name="准确?
+                  name="准确率"
                   stroke="#82ca9d"
                   fill="#82ca9d"
                   fillOpacity={0.3}
@@ -548,7 +546,7 @@ export default function WMSEfficiencyDashboard() {
         <Card>
           <CardHeader>
             <CardTitle>仓库效能排名</CardTitle>
-            <CardDescription>各仓库综合评分排?/CardDescription>
+            <CardDescription>各仓库综合评分排名</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -609,15 +607,15 @@ export default function WMSEfficiencyDashboard() {
                   <Badge
                     variant={
                       trend.trend === 'up'
-                        ? 'default'
+                         'default'
                         : trend.trend === 'down'
-                          ? 'destructive'
+                           'destructive'
                           : 'secondary'
                     }
                   >
-                    {renderTrendIcon(trend.trend, trend.variance)}
+                    {renderTrendIcon(trend.trend)}
                     <span className="ml-1">
-                      {trend.variance > 0 ? '+' : ''}
+                      {trend.variance > 0  '+' : ''}
                       {trend.variance.toFixed(1)}%
                     </span>
                   </Badge>
@@ -659,7 +657,7 @@ export default function WMSEfficiencyDashboard() {
                       {alert.warehouseName} - {alert.message}
                     </div>
                     <div className="text-sm text-gray-600 mt-1">
-                      当前? {alert.currentValue.toFixed(2)} | 阈?{' '}
+                      当前值: {alert.currentValue.toFixed(2)} | 阈值:{' '}
                       {alert.thresholdValue}
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
@@ -669,17 +667,17 @@ export default function WMSEfficiencyDashboard() {
                   <Badge
                     variant={
                       alert.severity === 'critical'
-                        ? 'destructive'
+                         'destructive'
                         : 'secondary'
                     }
                   >
                     {alert.severity === 'critical'
-                      ? '严重'
+                       '严重'
                       : alert.severity === 'high'
-                        ? '�?
+                         '高'
                         : alert.severity === 'medium'
-                          ? '�?
-                          : '�?}
+                           '中'
+                          : '低'}
                   </Badge>
                 </div>
               ))}
@@ -704,9 +702,9 @@ export default function WMSEfficiencyDashboard() {
                   <th className="text-left py-3 px-4">综合评分</th>
                   <th className="text-left py-3 px-4">入库时效</th>
                   <th className="text-left py-3 px-4">出库时效</th>
-                  <th className="text-left py-3 px-4">准确?/th>
-                  <th className="text-left py-3 px-4">准时?/th>
-                  <th className="text-left py-3 px-4">异常?/th>
+                  <th className="text-left py-3 px-4">准确率</th>
+                  <th className="text-left py-3 px-4">准时率</th>
+                  <th className="text-left py-3 px-4">异常率</th>
                 </tr>
               </thead>
               <tbody>
@@ -732,9 +730,9 @@ export default function WMSEfficiencyDashboard() {
                       <Badge
                         variant={
                           warehouse.compositeScore.overallScore >= 90
-                            ? 'default'
+                             'default'
                             : warehouse.compositeScore.overallScore >= 80
-                              ? 'secondary'
+                               'secondary'
                               : 'destructive'
                         }
                       >
@@ -781,4 +779,3 @@ export default function WMSEfficiencyDashboard() {
     </div>
   );
 }
-

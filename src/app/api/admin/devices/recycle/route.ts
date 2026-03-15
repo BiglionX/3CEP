@@ -12,9 +12,9 @@ import { NextResponse } from 'next/server';
 interface RecycleDeviceRequest {
   qrcodeId: string;
   reason: string;
-  userId?: string;
-  location?: string;
-  notes?: string;
+  userId: string;
+  location: string;
+  notes: string;
 }
 
 export async function POST(request: Request) {
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 
     if (!reason || reason.trim().length === 0) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涘洖鏀跺師? },
+        { success: false, error: '璇彁渚涘洖鏀跺師 },
         { status: 400 }
       );
     }
@@ -48,12 +48,12 @@ export async function POST(request: Request) {
 
     if (deviceError || !deviceExists) {
       return NextResponse.json(
-        { success: false, error: '璁惧涓嶅瓨? },
+        { success: false, error: '璁惧涓嶅 },
         { status: 404 }
       );
     }
 
-    // 鍒濆鍖栫敓鍛藉懆鏈熸湇?    const lifecycleService = new DeviceLifecycleService();
+    // 鍒濆鍖栫敓鍛藉懆鏈熸湇    const lifecycleService = new DeviceLifecycleService();
 
     // 璁板綍鍥炴敹浜嬩欢
     const recycleEvent = await lifecycleService.recordEvent({
@@ -61,8 +61,8 @@ export async function POST(request: Request) {
       eventType: DeviceEventType.RECYCLED,
       eventSubtype: 'manual_recycle',
       location: location || '绠＄悊鍚庡彴',
-      technician: '绠＄悊?,
-      notes: `鎵嬪姩鍥炴敹: ${reason}${notes ? ` - ${notes}` : ''}`,
+      technician: '绠＄悊,
+      notes: `鎵嬪姩鍥炴敹: ${reason}${notes  ` - ${notes}` : ''}`,
       metadata: {
         recycleReason: reason,
         initiatedBy: userId || 'admin',
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
   }
 }
 
-// GET /api/admin/devices/recycle/history?qrcodeId=xxx - 鑾峰彇璁惧鍥炴敹鍘嗗彶
+// GET /api/admin/devices/recycle/historyqrcodeId=xxx - 鑾峰彇璁惧鍥炴敹鍘嗗彶
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -143,7 +143,7 @@ export async function GET(request: Request) {
 }
 
 /**
- * 鏇存柊璁惧鐘? */
+ * 鏇存柊璁惧鐘 */
 async function updateDeviceStatus(
   qrcodeId: string,
   status: string
@@ -151,10 +151,10 @@ async function updateDeviceStatus(
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
 
-    // 杩欓噷鍙互鏍规嵁瀹為檯闇€姹傛洿鏂拌澶囩姸?    // 渚嬪鏇存柊鍒拌澶囨。妗堣〃鎴栧叾浠栫浉鍏宠〃
+    // 杩欓噷鍙互鏍规嵁瀹為檯闇€姹傛洿鏂拌澶囩姸    // 渚嬪鏇存柊鍒拌澶囨。妗堣〃鎴栧叾栫浉鍏宠〃
     console.log(`璁惧 ${qrcodeId} 鐘舵€佹洿鏂颁负: ${status}`);
   } catch (error) {
-    console.error('鏇存柊璁惧鐘舵€侀敊?', error);
-    // 涓嶆姏鍑哄紓甯革紝閬垮厤褰卞搷涓绘祦?  }
+    console.error('鏇存柊璁惧鐘舵€侀敊', error);
+    // 涓嶆姏鍑哄紓甯革紝垮厤褰卞搷涓绘祦  }
 }
 

@@ -56,7 +56,7 @@ export default function CrowdfundingManagementPage() {
       },
       {
         id: '2',
-        title: '便携式健康监测设?,
+        title: '便携式健康监测设,
         description: '可穿戴健康监测手环，实时监测心率、血压等健康指标',
         target_amount: 300000,
         current_amount: 315000,
@@ -80,10 +80,10 @@ export default function CrowdfundingManagementPage() {
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; color: string }> = {
       draft: { text: '草稿', color: 'bg-gray-100 text-gray-800' },
-      active: { text: '筹集?, color: 'bg-blue-100 text-blue-800' },
+      active: { text: '筹集, color: 'bg-blue-100 text-blue-800' },
       successful: { text: '成功', color: 'bg-green-100 text-green-800' },
       failed: { text: '失败', color: 'bg-red-100 text-red-800' },
-      closed: { text: '已关?, color: 'bg-purple-100 text-purple-800' },
+      closed: { text: '已关, color: 'bg-purple-100 text-purple-800' },
     };
 
     const config = statusMap[status] || statusMap.draft;
@@ -115,11 +115,11 @@ export default function CrowdfundingManagementPage() {
 
   return (
     <div className="p-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按*/}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">新品众筹管理</h1>
-          <p className="text-gray-600 mt-1">管理和监控企业新品众筹项?/p>
+          <p className="text-gray-600 mt-1">管理和监控企业新品众筹项/p>
         </div>
         <Button className="bg-green-600 hover:bg-green-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -136,13 +136,13 @@ export default function CrowdfundingManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{projects.length}</div>
-            <p className="text-xs text-muted-foreground">所有众筹项?/p>
+            <p className="text-xs text-muted-foreground">所有众筹项/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">筹集?/CardTitle>
+            <CardTitle className="text-sm font-medium">筹集/CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -164,20 +164,20 @@ export default function CrowdfundingManagementPage() {
                 projects.reduce((sum, p) => sum + p.current_amount, 0)
               )}
             </div>
-            <p className="text-xs text-muted-foreground">总筹集金?/p>
+            <p className="text-xs text-muted-foreground">总筹集金/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">支持?/CardTitle>
+            <CardTitle className="text-sm font-medium">支持/CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {projects.reduce((sum, p) => sum + p.supporters_count, 0)}
             </div>
-            <p className="text-xs text-muted-foreground">总支持人?/p>
+            <p className="text-xs text-muted-foreground">总支持人/p>
           </CardContent>
         </Card>
       </div>
@@ -196,8 +196,8 @@ export default function CrowdfundingManagementPage() {
                   <th className="text-left py-3 px-4 font-medium">目标金额</th>
                   <th className="text-left py-3 px-4 font-medium">当前筹集</th>
                   <th className="text-left py-3 px-4 font-medium">进度</th>
-                  <th className="text-left py-3 px-4 font-medium">支持?/th>
-                  <th className="text-left py-3 px-4 font-medium">状?/th>
+                  <th className="text-left py-3 px-4 font-medium">支持/th>
+                  <th className="text-left py-3 px-4 font-medium">状/th>
                   <th className="text-left py-3 px-4 font-medium">截止时间</th>
                   <th className="text-left py-3 px-4 font-medium">操作</th>
                 </tr>
@@ -236,9 +236,9 @@ export default function CrowdfundingManagementPage() {
                           <div
                             className={`h-2 rounded-full ${
                               project.funding_progress >= 100
-                                ? 'bg-green-600'
+                                 'bg-green-600'
                                 : project.funding_progress >= 50
-                                  ? 'bg-yellow-500'
+                                   'bg-yellow-500'
                                   : 'bg-red-500'
                             }`}
                             style={{

@@ -22,7 +22,6 @@ import {
   Anchor,
   AlertCircle,
   CheckCircle,
-  XCircle,
 } from 'lucide-react';
 
 interface Shipment {
@@ -35,10 +34,10 @@ interface Shipment {
   status: 'pending' | 'in_transit' | 'customs' | 'delivered' | 'delayed';
   currentLocation: string;
   estimatedArrival: string;
-  actualArrival?: string;
+  actualArrival: string;
   events: ShipmentEvent[];
-  containerNumber?: string;
-  vesselName?: string;
+  containerNumber: string;
+  vesselName: string;
 }
 
 interface ShipmentEvent {
@@ -63,10 +62,10 @@ export default function LogisticsPage() {
       {
         id: 'SH-2026-001',
         orderId: 'PO-2026-001',
-        carrier: '马士基航?,
+        carrier: '马士基航运',
         trackingNumber: 'MSKU123456789',
-        origin: '韩国釜山?,
-        destination: '中国上海?,
+        origin: '韩国釜山港',
+        destination: '中国上海港',
         status: 'in_transit',
         currentLocation: '东海海域',
         estimatedArrival: '2026-03-15T08:00:00',
@@ -76,26 +75,26 @@ export default function LogisticsPage() {
           {
             id: 'evt-001',
             timestamp: '2026-02-20T10:00:00',
-            location: '韩国釜山?,
+            location: '韩国釜山港',
             description: '货物装船完毕',
-            status: '已装?,
+            status: '已装船',
           },
           {
             id: 'evt-002',
             timestamp: '2026-02-21T14:30:00',
             location: '东海海域',
-            description: '船舶离港，航程开?,
-            status: '航行?,
+            description: '船舶离港，航程开始',
+            status: '航行中',
           },
         ],
       },
       {
         id: 'SH-2026-002',
         orderId: 'SO-2026-001',
-        carrier: '联邦快?,
+        carrier: '联邦快递',
         trackingNumber: 'FX123456789US',
         origin: '中国深圳',
-        destination: '美国洛杉?,
+        destination: '美国洛杉矶',
         status: 'customs',
         currentLocation: '美国海关',
         estimatedArrival: '2026-03-10T16:00:00',
@@ -105,15 +104,15 @@ export default function LogisticsPage() {
             id: 'evt-003',
             timestamp: '2026-02-15T09:00:00',
             location: '中国深圳机场',
-            description: '包裹已收?,
-            status: '已收?,
+            description: '包裹已收寄',
+            status: '已收寄',
           },
           {
             id: 'evt-004',
             timestamp: '2026-02-16T03:45:00',
             location: '美国海关',
-            description: '包裹正在清关?,
-            status: '清关?,
+            description: '包裹正在清关',
+            status: '清关中',
           },
         ],
       },
@@ -123,9 +122,9 @@ export default function LogisticsPage() {
         carrier: '中远海运',
         trackingNumber: 'COSU987654321',
         origin: '新加坡港',
-        destination: '中国宁波?,
+        destination: '中国宁波港',
         status: 'delivered',
-        currentLocation: '中国宁波?,
+        currentLocation: '中国宁波港',
         estimatedArrival: '2026-03-05T12:00:00',
         actualArrival: '2026-03-04T16:30:00',
         containerNumber: 'COSU9876543',
@@ -135,14 +134,14 @@ export default function LogisticsPage() {
             id: 'evt-005',
             timestamp: '2026-02-15T08:00:00',
             location: '新加坡港',
-            description: '集装箱装载完?,
-            status: '已装?,
+            description: '集装箱装载完毕',
+            status: '已装船',
           },
           {
             id: 'evt-006',
             timestamp: '2026-03-04T16:30:00',
-            location: '中国宁波?,
-            description: '货物已送达目的地港?,
+            location: '中国宁波港',
+            description: '货物已送达目的地港口',
             status: '已送达',
           },
         ],
@@ -213,7 +212,7 @@ export default function LogisticsPage() {
                 onClick={() => router.back()}
                 className="mr-4"
               >
-                �?返回
+                ← 返回
               </Button>
               <h1 className="text-xl font-semibold text-gray-900">物流跟踪</h1>
             </div>
@@ -229,7 +228,7 @@ export default function LogisticsPage() {
               <Search className="h-5 w-5" />
               物流查询
             </CardTitle>
-            <CardDescription>输入运单号或订单号查询物流状?/CardDescription>
+            <CardDescription>输入运单号或订单号查询物流状态</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex gap-4">
@@ -274,7 +273,7 @@ export default function LogisticsPage() {
               <div className="text-2xl font-bold text-blue-600">
                 {shipments.filter(s => s.status === 'in_transit').length}
               </div>
-              <div className="text-sm text-gray-600">运输?/div>
+              <div className="text-sm text-gray-600">运输中</div>
             </CardContent>
           </Card>
 
@@ -283,7 +282,7 @@ export default function LogisticsPage() {
               <div className="text-2xl font-bold text-purple-600">
                 {shipments.filter(s => s.status === 'customs').length}
               </div>
-              <div className="text-sm text-gray-600">清关?/div>
+              <div className="text-sm text-gray-600">清关中</div>
             </CardContent>
           </Card>
 
@@ -306,7 +305,7 @@ export default function LogisticsPage() {
                   <Package className="h-5 w-5" />
                   运输列表
                 </CardTitle>
-                <CardDescription>当前所有运输订单状?/CardDescription>
+                <CardDescription>当前所有运输订单状态</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -314,8 +313,8 @@ export default function LogisticsPage() {
                     <div
                       key={shipment.id}
                       className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                        selectedShipment?.id === shipment.id
-                          ? 'border-blue-500 bg-blue-50'
+                        selectedShipment.id === shipment.id
+                           'border-blue-500 bg-blue-50'
                           : 'border-gray-200 hover:bg-gray-50'
                       }`}
                       onClick={() => setSelectedShipment(shipment)}
@@ -334,13 +333,13 @@ export default function LogisticsPage() {
                             {getStatusIcon(shipment.status)}
                             <span>
                               {shipment.status === 'delivered'
-                                ? '已送达'
+                                 '已送达'
                                 : shipment.status === 'in_transit'
-                                  ? '运输?
+                                   '运输中'
                                   : shipment.status === 'customs'
-                                    ? '清关?
+                                     '清关中'
                                     : shipment.status === 'pending'
-                                      ? '待发?
+                                       '待发货'
                                       : '延误'}
                             </span>
                           </div>
@@ -381,7 +380,7 @@ export default function LogisticsPage() {
 
           {/* 详细跟踪信息 */}
           <div>
-            {selectedShipment ? (
+            {selectedShipment  (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -399,25 +398,25 @@ export default function LogisticsPage() {
                       </h3>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <span className="text-gray-500">承运?</span>
+                          <span className="text-gray-500">承运商</span>
                           <div className="font-medium">
                             {selectedShipment.carrier}
                           </div>
                         </div>
                         <div>
-                          <span className="text-gray-500">订单?</span>
+                          <span className="text-gray-500">订单号</span>
                           <div className="font-medium">
                             {selectedShipment.orderId}
                           </div>
                         </div>
                         <div>
-                          <span className="text-gray-500">起运?</span>
+                          <span className="text-gray-500">起运地</span>
                           <div className="font-medium">
                             {selectedShipment.origin}
                           </div>
                         </div>
                         <div>
-                          <span className="text-gray-500">目的?</span>
+                          <span className="text-gray-500">目的地</span>
                           <div className="font-medium">
                             {selectedShipment.destination}
                           </div>
@@ -479,7 +478,7 @@ export default function LogisticsPage() {
                             <div className="flex flex-col items-center">
                               <div
                                 className={`w-3 h-3 rounded-full ${
-                                  index === 0 ? 'bg-blue-500' : 'bg-gray-300'
+                                  index === 0  'bg-blue-500' : 'bg-gray-300'
                                 }`}
                               ></div>
                               {index < selectedShipment.events.length - 1 && (
@@ -512,7 +511,7 @@ export default function LogisticsPage() {
                 <CardContent className="flex items-center justify-center h-96">
                   <div className="text-center text-gray-500">
                     <Package className="mx-auto h-12 w-12 mb-4" />
-                    <p>请选择一个运单查看详?/p>
+                    <p>请选择一个运单查看详细信息</p>
                   </div>
                 </CardContent>
               </Card>
@@ -523,4 +522,3 @@ export default function LogisticsPage() {
     </div>
   );
 }
-

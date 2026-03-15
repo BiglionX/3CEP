@@ -1,6 +1,7 @@
 ﻿/**
  * 带分页功能的工单列表页面
- * 演示分页和懒加载机制的实际应? */
+ * 演示分页和懒加载机制的实际应用
+ */
 
 'use client';
 
@@ -30,11 +31,11 @@ import {
 } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import { useWorkOrdersPaginated } from '@/hooks/use-repair-shop';
-import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
+import { WorkOrderStatus, PriorityLevel, WorkOrder } from '@/types/repair-shop.types';
 
 interface WorkOrderListPageProps {
-  initialPage?: number;
-  initialPageSize?: number;
+  initialPage: number;
+  initialPageSize: number;
 }
 
 export default function WorkOrderListWithPagination({
@@ -66,8 +67,8 @@ export default function WorkOrderListWithPagination({
     pageSize
   );
 
-  const workOrders = data?.data || [];
-  const pagination = data?.pagination || {
+  const workOrders: WorkOrder[] = data.data || [];
+  const pagination = data.pagination || {
     currentPage,
     pageSize,
     total: workOrders.length,
@@ -108,12 +109,14 @@ export default function WorkOrderListWithPagination({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // 滚动到顶?    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setCurrentPage(1); // 重置到第一?  };
+    setCurrentPage(1); // 重置到第一页
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -127,7 +130,7 @@ export default function WorkOrderListWithPagination({
                 onClick={() => router.back()}
                 className="mr-4"
               >
-                �?返回
+                ← 返回
               </Button>
               <h1 className="text-xl font-semibold text-gray-900">工单管理</h1>
             </div>
@@ -140,22 +143,22 @@ export default function WorkOrderListWithPagination({
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 搜索和筛选区?*/}
+        {/* 搜索和筛选区域 */}
         <Card className="mb-6">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* 搜索?*/}
+              {/* 搜索框 */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
-                  placeholder="搜索客户姓名、设备型号或工单?.."
+                  placeholder="搜索客户姓名、设备型号或工单号..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
 
-              {/* 状态筛?*/}
+              {/* 状态筛选 */}
               <div>
                 <select
                   value={statusFilter}
@@ -164,16 +167,16 @@ export default function WorkOrderListWithPagination({
                   }
                   className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="all">所有状?/option>
-                  <option value="pending">待处?/option>
-                  <option value="in_progress">进行?/option>
-                  <option value="completed">已完?/option>
-                  <option value="cancelled">已取?/option>
+                  <option value="all">所有状态</option>
+                  <option value="pending">待处理</option>
+                  <option value="in_progress">进行中</option>
+                  <option value="completed">已完成</option>
+                  <option value="cancelled">已取消</option>
                   <option value="on_hold">暂停</option>
                 </select>
               </div>
 
-              {/* 优先级筛?*/}
+              {/* 优先级筛选 */}
               <div>
                 <select
                   value={priorityFilter}
@@ -186,7 +189,7 @@ export default function WorkOrderListWithPagination({
                   <option value="low">低优先级</option>
                   <option value="medium">中优先级</option>
                   <option value="high">高优先级</option>
-                  <option value="urgent">紧?/option>
+                  <option value="urgent">紧急</option>
                 </select>
               </div>
 
@@ -194,7 +197,8 @@ export default function WorkOrderListWithPagination({
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">
                   <Filter className="h-4 w-4 mr-2" />
-                  高级筛?                </Button>
+                  高级筛选
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -203,9 +207,11 @@ export default function WorkOrderListWithPagination({
         {/* 结果统计 */}
         <div className="mb-4 flex items-center justify-between">
           <div className="text-sm text-gray-600">
-            找到 {pagination.total} 条工单记?          </div>
+            找到 {pagination.total} 条工单记录
+          </div>
           <div className="text-sm text-gray-500">
-            �?{pagination.currentPage} 页，�?{pagination.totalPages} �?          </div>
+            第 {pagination.currentPage} 页，共 {pagination.totalPages} 页
+          </div>
         </div>
 
         {/* 工单列表 */}
@@ -218,12 +224,12 @@ export default function WorkOrderListWithPagination({
             <CardDescription>管理所有维修工单的状态和进度</CardDescription>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {isLoading  (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                <span className="ml-2 text-gray-600">加载?..</span>
+                <span className="ml-2 text-gray-600">加载中...</span>
               </div>
-            ) : isError ? (
+            ) : isError  (
               <div className="text-center py-12">
                 <div className="text-red-500 mb-2">
                   <FileText className="mx-auto h-12 w-12" />
@@ -232,7 +238,7 @@ export default function WorkOrderListWithPagination({
                   加载失败
                 </h3>
                 <p className="text-gray-500 mb-4">
-                  {(error as Error)?.message || '未知错误'}
+                  {(error as Error).message || '未知错误'}
                 </p>
                 <Button
                   variant="outline"
@@ -241,7 +247,7 @@ export default function WorkOrderListWithPagination({
                   重新加载
                 </Button>
               </div>
-            ) : workOrders.length === 0 ? (
+            ) : workOrders.length === 0  (
               <div className="text-center py-12">
                 <FileText className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">
@@ -251,7 +257,7 @@ export default function WorkOrderListWithPagination({
                   {searchTerm ||
                   statusFilter !== 'all' ||
                   priorityFilter !== 'all'
-                    ? '没有找到匹配的工?
+                     '没有找到匹配的工单'
                     : '开始创建第一个工单吧'}
                 </p>
                 {!searchTerm &&
@@ -264,7 +270,8 @@ export default function WorkOrderListWithPagination({
                         }
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        创建新工?                      </Button>
+                        创建新工单
+                      </Button>
                     </div>
                   )}
               </div>
@@ -286,26 +293,26 @@ export default function WorkOrderListWithPagination({
                           </span>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status === 'in_progress'
-                              ? '进行?
+                               '进行中'
                               : order.status === 'pending'
-                                ? '待处?
+                                 '待处理'
                                 : order.status === 'completed'
-                                  ? '已完?
+                                   '已完成'
                                   : order.status === 'cancelled'
-                                    ? '已取?
+                                     '已取消'
                                     : order.status === 'on_hold'
-                                      ? '暂停'
+                                       '暂停'
                                       : order.status}
                           </Badge>
                           <Badge className={getPriorityColor(order.priority)}>
                             {order.priority === 'high'
-                              ? '紧?
+                               '紧急'
                               : order.priority === 'medium'
-                                ? '中等'
+                                 '中等'
                                 : order.priority === 'low'
-                                  ? '普?
+                                   '普通'
                                   : order.priority === 'urgent'
-                                    ? '特?
+                                     '特急'
                                     : order.priority}
                           </Badge>
                         </div>
@@ -326,7 +333,7 @@ export default function WorkOrderListWithPagination({
 
                           <div>
                             <div className="text-sm text-gray-600 mb-1">
-                              技? {order.technicianName || '未分?}
+                              技师: {order.technicianName || '未分配'}
                             </div>
                             <div className="text-sm text-gray-600">
                               创建时间:{' '}
@@ -338,13 +345,13 @@ export default function WorkOrderListWithPagination({
                         </div>
 
                         <div className="text-sm text-gray-700 line-clamp-2">
-                          问题描述: {order.faultDescription || '无描?}
+                          问题描述: {order.faultDescription || '无描述'}
                         </div>
                       </div>
 
                       <div className="text-right ml-4">
                         <div className="text-lg font-semibold text-gray-900">
-                          ¥{order?.toFixed(2) || '0.00'}
+                          ¥{order.price.toFixed(2)}
                         </div>
                         <div className="text-sm text-gray-500">
                           {order.estimatedCompletion &&
@@ -377,4 +384,3 @@ export default function WorkOrderListWithPagination({
     </div>
   );
 }
-

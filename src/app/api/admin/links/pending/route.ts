@@ -2,12 +2,12 @@
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// GET - 鑾峰彇寰呭鏍搁摼鎺ュ垪?export async function GET(request: Request) {
+// GET - 鑾峰彇寰呭鏍搁摼鎺ュ垪export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -52,7 +52,7 @@ import { cookies } from 'next/headers';
       .eq('status', status)
       .order('created_at', { ascending: false });
 
-    // 娣诲姞鍒嗙被绛?    if (category) {
+    // 娣诲姞鍒嗙被绛    if (category) {
       query = query.eq('category', category);
     }
 
@@ -68,7 +68,7 @@ import { cookies } from 'next/headers';
     );
 
     if (error) {
-      console.error('鑾峰彇寰呭鏍搁摼鎺ュけ?', error);
+      console.error('鑾峰彇寰呭鏍搁摼鎺ュけ', error);
       return NextResponse.json(
         { error: '鑾峰彇鏁版嵁澶辫触', details: error.message },
         { status: 500 }
@@ -86,23 +86,23 @@ import { cookies } from 'next/headers';
     });
   } catch (error) {
     console.error('API閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
-// POST - 鎵归噺鎿嶄綔锛堝彂甯冩垨椹冲洖?export async function POST(request: Request) {
+// POST - 鎵归噺鎿嶄綔锛堝彂甯冩垨椹冲洖export async function POST(request: Request) {
   try {
     const { action, ids, rejectionReason } = await request.json();
 
     if (!action || !ids || !Array.isArray(ids)) {
-      return NextResponse.json({ error: '鍙傛暟涓嶅畬? }, { status: 400 });
+      return NextResponse.json({ error: '鍙傛暟涓嶅畬 }, { status: 400 });
     }
 
     const cookieStore = await cookies();
     const session = cookieStore.get('supabase-auth-token');
 
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const userId = JSON.parse(session.value).user.id;
@@ -114,7 +114,7 @@ import { cookies } from 'next/headers';
 
     switch (action) {
       case 'publish':
-        // 鍙戝竷鎿嶄綔锛氬垱寤烘枃绔犺崏绋垮苟鏇存柊閾炬帴鐘?        updateData.status = 'promoted';
+        // 鍙戝竷鎿嶄綔锛氬垱寤烘枃绔犺崏绋垮苟鏇存柊炬帴鐘        updateData.status = 'promoted';
 
         // 涓烘瘡涓摼鎺ュ垱寤哄搴旂殑鏂囩珷
         for (const id of ids) {
@@ -130,18 +130,18 @@ import { cookies } from 'next/headers';
               .insert({
                 title: linkData.title,
                 content: linkData.description,
-                summary: linkData?.substring(0, 200),
+                summary: linkData.substring(0, 200),
                 cover_image_url: linkData.image_url,
                 author_id: userId,
                 status: 'published', // 鐩存帴鍙戝竷
-                tags: linkData?.tags || [],
+                tags: linkData.tags || [],
                 publish_at: new Date().toISOString(),
               } as any)
               .select()
               .single();
 
             if (articleData && !articleError) {
-              // 鏇存柊閾炬帴鍏宠仈鐨勬枃绔營D
+              // 鏇存柊炬帴鍏宠仈鐨勬枃绔營D
               await supabase
                 .from('unified_link_library')
                 .update({
@@ -174,7 +174,7 @@ import { cookies } from 'next/headers';
 
     return NextResponse.json({
       success: true,
-      message: `鎴愬姛${action === 'publish' ? '鍙戝竷' : '椹冲洖'} ${ids.length} 鏉¤褰昤,
+      message: `鎴愬姛${action === 'publish'  '鍙戝竷' : '椹冲洖'} ${ids.length} 鏉¤褰昤,
     }) as any;
   } catch (error) {
     console.error('鎵归噺鎿嶄綔澶辫触:', error);

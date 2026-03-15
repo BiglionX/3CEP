@@ -14,17 +14,17 @@ const mockUserData: UserBehavior[] = [
 
 let isTrained = false;
 
-// 鍒濆鍖栨帹鑽愭ā?
+// 鍒濆鍖栨帹鑽愭ā
 async function initializeRecommender() {
   if (isTrained) return;
   
   try {
-    console.log('馃 鍒濆鍖栨帹鑽愮郴?..');
+    console.log('馃 鍒濆鍖栨帹鑽愮郴..');
     await hybridRecommender.train(mockUserData);
     isTrained = true;
-    console.log('锟?鎺ㄨ崘绯荤粺鍒濆鍖栧畬?);
+    console.log('鎺ㄨ崘绯荤粺鍒濆鍖栧畬);
   } catch (error) {
-    console.error('锟?鎺ㄨ崘绯荤粺鍒濆鍖栧け?', error);
+    console.error('鎺ㄨ崘绯荤粺鍒濆鍖栧け', error);
     throw error;
   }
 }
@@ -59,10 +59,10 @@ export async function GET(request: NextRequest) {
 
       case 'model-info':
         return NextResponse.json({
-          status: isTrained ? 'trained' : 'pending',
+          status: isTrained  'trained' : 'pending',
           modelTypes: ['collaborative-filter', 'content-based'],
           trainingDataSize: mockUserData.length,
-          lastTrained: isTrained ? new Date().toISOString() : null,
+          lastTrained: isTrained  new Date().toISOString() : null,
           timestamp: new Date().toISOString()
         });
 
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
         const popularItems = [
           { itemId: 'iphone_15_pro_max', itemType: 'device', score: 95, reason: '鏈懆鏈€鐑棬', confidence: 0.95 },
           { itemId: 'galaxy_s24_ultra', itemType: 'device', score: 92, reason: '鐑攢鏂板搧', confidence: 0.92 },
-          { itemId: 'premium_screen', itemType: 'part', score: 88, reason: '楂樻€т环?, confidence: 0.88 }
+          { itemId: 'premium_screen', itemType: 'part', score: 88, reason: '楂樻€т环, confidence: 0.88 }
         ];
         
         return NextResponse.json({
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { error: '鏈煡鐨勬搷浣滅被? },
+          { error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     console.error('鎺ㄨ崘绯荤粺API閿欒:', error);
     return NextResponse.json(
       { 
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString()
       },
       { status: 500 }
@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
             } catch (error) {
               batchResults[uid] = {
                 success: false,
-                error: error instanceof Error ? error.message : '鎺ㄨ崘鐢熸垚澶辫触'
+                error: error instanceof Error  error.message : '鎺ㄨ崘鐢熸垚澶辫触'
               };
             }
           })
@@ -180,13 +180,13 @@ export async function POST(request: NextRequest) {
         
         if (!recommendationId || rating === undefined) {
           return NextResponse.json(
-            { error: '缂哄皯鎺ㄨ崘ID鎴栬瘎? },
+            { error: '缂哄皯鎺ㄨ崘ID鎴栬瘎 },
             { status: 400 }
           );
         }
 
         // 璁板綍鐢ㄦ埛鍙嶉锛堢敤浜庢ā鍨嬩紭鍖栵級
-        console.log(`馃摑 鐢ㄦ埛鍙嶉: ${recommendationId}, 璇勫垎: ${rating}, 鍙嶉: ${feedback || '锟?}`);
+        console.log(`馃摑 鐢ㄦ埛鍙嶉: ${recommendationId}, 璇勫垎: ${rating}, 鍙嶉: ${feedback || '}`);
         
         return NextResponse.json({
           message: '鍙嶉璁板綍鎴愬姛',
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { error: '鏈煡鐨勬搷浣滅被? },
+          { error: '鏈煡鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
     console.error('鎺ㄨ崘绯荤粺API閿欒:', error);
     return NextResponse.json(
       { 
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString()
       },
       { status: 500 }

@@ -1,6 +1,6 @@
 ﻿/**
- * 浼佷笟閰嶄欢绠＄悊 API 璺敱
- * 鎻愪緵閰嶄欢鐨勫鍒犳敼鏌ュ姛? */
+ * 佷笟閰嶄欢绠＄悊 API 璺敱
+ * 鎻愪緵閰嶄欢鐨勫鍒犳敼鏌ュ姛 */
 
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
@@ -11,15 +11,15 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 鑾峰彇浼佷笟閰嶄欢鍒楄〃
+// 鑾峰彇佷笟閰嶄欢鍒楄〃
 export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('sb-access-token')?.value;
+    const token = cookieStore.get('sb-access-token').value;
 
     if (!token) {
       return NextResponse.json(
-        { success: false, error: '鏈巿鏉冭? },
+        { success: false, error: '鏈巿鏉冭 },
         { status: 401 }
       );
     }
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 鑾峰彇浼佷笟淇℃伅
+    // 鑾峰彇佷笟淇℃伅
     const { data: enterpriseUser, error: enterpriseError } = await supabase
       .from('enterprise_users')
       .select('id')
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '浼佷笟鐢ㄦ埛淇℃伅涓嶅瓨? },
+        { success: false, error: '佷笟鐢ㄦ埛淇℃伅涓嶅 },
         { status: 403 }
       );
     }
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
       query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
     }
 
-    // 鍒嗛〉鍜屾帓?    const {
+    // 鍒嗛〉鍜屾帓    const {
       data: parts,
       error,
       count,
@@ -107,20 +107,20 @@ export async function GET(request: Request) {
   } catch (error: any) {
     console.error('鑾峰彇閰嶄欢鍒楄〃閿欒:', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }
 }
 
-// 鍒涘缓鏂伴厤?export async function POST(request: Request) {
+// 鍒涘缓鏂伴厤export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('sb-access-token')?.value;
+    const token = cookieStore.get('sb-access-token').value;
 
     if (!token) {
       return NextResponse.json(
-        { success: false, error: '鏈巿鏉冭? },
+        { success: false, error: '鏈巿鏉冭 },
         { status: 401 }
       );
     }
@@ -138,7 +138,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 鑾峰彇浼佷笟淇℃伅
+    // 鑾峰彇佷笟淇℃伅
     const { data: enterpriseUser, error: enterpriseError } = await supabase
       .from('enterprise_users')
       .select('id')
@@ -147,7 +147,7 @@ export async function GET(request: Request) {
 
     if (enterpriseError || !enterpriseUser) {
       return NextResponse.json(
-        { success: false, error: '浼佷笟鐢ㄦ埛淇℃伅涓嶅瓨? },
+        { success: false, error: '佷笟鐢ㄦ埛淇℃伅涓嶅 },
         { status: 403 }
       );
     }
@@ -157,7 +157,7 @@ export async function GET(request: Request) {
     // 楠岃瘉蹇呴渶瀛楁
     if (!body.name || !body.category) {
       return NextResponse.json(
-        { success: false, error: '閰嶄欢鍚嶇О鍜屽垎绫讳负蹇呭～? },
+        { success: false, error: '閰嶄欢鍚嶇О鍜屽垎绫讳负蹇呭～ },
         { status: 400 }
       );
     }
@@ -204,7 +204,7 @@ export async function GET(request: Request) {
   } catch (error: any) {
     console.error('鍒涘缓閰嶄欢閿欒:', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }

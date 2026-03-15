@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// 鍏ㄥ眬鎼滅储API (绉诲姩绔紭鍖栫増?
+// 鍏ㄥ眬鎼滅储API (绉诲姩绔紭鍖栫増
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '鎼滅储鍏抽敭璇嶄笉鑳戒负?,
+          message: '鎼滅储鍏抽敭璇嶄笉鑳戒负,
           data: null,
         },
         { status: 400 }
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     const offset = (page - 1) * pageSize;
     const results: any[] = [];
 
-    // 鏍规嵁鎼滅储绫诲瀷杩涜涓嶅悓鐨勬煡?    if (type === 'all' || type === 'article') {
+    // 鏍规嵁鎼滅储绫诲瀷杩涜涓嶅悓鐨勬煡    if (type === 'all' || type === 'article') {
       // 鎼滅储鏂囩珷
       const { data: articles, error: articleError } = await supabase
         .from('articles')
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
         )
         .eq('status', 'published')
         .or(`title.ilike.%${query}%,summary.ilike.%${query}%`)
-        .range(offset, offset + Math.floor(pageSize * 0.6) - 1); // 鏂囩珷?0%
+        .range(offset, offset + Math.floor(pageSize * 0.6) - 1); // 鏂囩珷0%
 
       if (!articleError && articles) {
         articles.forEach((article: any) => {
@@ -58,10 +58,10 @@ export async function GET(request: Request) {
             title: article.title,
             description: article.summary,
             extra: {
-              author: article?.name || '鍖垮悕浣?,
+              author: article.name || '鍖垮悕浣,
               likes: article.like_count,
               image: article.cover_image_url,
-              category: article?.name || '鍏朵粬',
+              category: article.name || '鍏朵粬',
             },
             created_at: article.created_at,
           });
@@ -87,10 +87,10 @@ export async function GET(request: Request) {
         .or(
           `name.ilike.%${query}%,part_number.ilike.%${query}%,description.ilike.%${query}%`
         )
-        .range(offset, offset + Math.floor(pageSize * 0.3) - 1); // 閰嶄欢?0%
+        .range(offset, offset + Math.floor(pageSize * 0.3) - 1); // 閰嶄欢0%
 
       if (!partError && parts) {
-        // 鑾峰彇閰嶄欢瀹炴椂浠锋牸
+        // 鑾峰彇閰嶄欢瀹炴椂牸
         const partIds = parts.map((part: any) => part.id);
         let partPrices: any = {};
 
@@ -103,20 +103,20 @@ export async function GET(request: Request) {
               {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ part_ids: partIds.slice(0, 10) }), // 闄愬埗璇锋眰鏁伴噺
+                body: JSON.stringify({ part_ids: partIds.slice(0, 10) }), // 闄愬埗璇眰鏁伴噺
               }
             );
 
             if (priceResponse.ok) {
               const priceData = await priceResponse.json();
               partPrices =
-                priceData?.reduce((acc: any, price: any) => {
+                priceData.reduce((acc: any, price: any) => {
                   acc[price.part_id] = price;
                   return acc;
                 }, {}) || {};
             }
           } catch (error) {
-            console.warn('鑾峰彇閰嶄欢浠锋牸澶辫触:', error);
+            console.warn('鑾峰彇閰嶄欢牸澶辫触:', error);
           }
         }
 
@@ -129,7 +129,7 @@ export async function GET(request: Request) {
             id: part.id,
             type: 'part',
             title: `${part.brand} ${part.name}`,
-            description: part.description || `閫傜敤?{part.category}绫昏澶嘸,
+            description: part.description || `傜敤{part.category}绫昏澶嘸,
             extra: {
               current_price: priceInfo.current_price,
               platform: priceInfo.platform,
@@ -159,7 +159,7 @@ export async function GET(request: Request) {
         )
         .eq('status', 'approved')
         .or(`name.ilike.%${query}%,address.ilike.%${query}%`)
-        .range(offset, offset + Math.floor(pageSize * 0.1) - 1); // 搴楅摵?0%
+        .range(offset, offset + Math.floor(pageSize * 0.1) - 1); // 搴楅摵0%
 
       if (!shopError && shops) {
         shops.forEach((shop: any) => {
@@ -167,9 +167,9 @@ export async function GET(request: Request) {
             id: shop.id,
             type: 'shop',
             title: shop.name,
-            description: `${shop.address} | 璇勫垎: ${shop.rating} (${shop.review_count}鏉¤瘎?`,
+            description: `${shop.address} | 璇勫垎: ${shop.rating} (${shop.review_count}鏉¤瘎`,
             extra: {
-              distance: 0, // 闇€瑕佸湴鐞嗕綅缃俊?              address: shop.address,
+              distance: 0, // 闇€瑕佸湴鐞嗕綅缃俊              address: shop.address,
               phone: shop.phone,
               rating: shop.rating,
               review_count: shop.review_count,
@@ -181,7 +181,7 @@ export async function GET(request: Request) {
       }
     }
 
-    // 鎼滅储鐑偣閾炬帴 (浠呭湪'all'绫诲瀷鏃舵樉?
+    // 鎼滅储鐑偣炬帴 (呭湪'all'绫诲瀷舵樉
     if (type === 'all') {
       const { data: hotLinks, error: hotLinkError } = await supabase
         .from('hot_link_pool')
@@ -197,7 +197,7 @@ export async function GET(request: Request) {
         )
         .eq('status', 'active')
         .ilike('title', `%${query}%`)
-        .range(offset, offset + Math.floor(pageSize * 0.3) - 1); // 鐑偣閾炬帴?0%
+        .range(offset, offset + Math.floor(pageSize * 0.3) - 1); // 鐑偣炬帴0%
 
       if (!hotLinkError && hotLinks) {
         hotLinks.forEach((link: any) => {
@@ -244,7 +244,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         code: 50001,
-        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         data: null,
       },
       { status: 500 }

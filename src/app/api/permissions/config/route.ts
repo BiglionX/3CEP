@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鑾峰彇鏉冮檺閰嶇疆澶辫触',
+        error: error instanceof Error  error.message : '鑾峰彇鏉冮檺閰嶇疆澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -64,11 +64,11 @@ export async function GET(request: NextRequest) {
 // POST /api/permissions/config - 鏇存柊鏉冮檺閰嶇疆
 export async function POST(request: NextRequest) {
   try {
-    // 楠岃瘉璇锋眰鏉冮檺锛堣繖閲屽簲璇ユ坊鍔犵鐞嗗憳鏉冮檺妫€鏌ワ級
+    // 楠岃瘉璇眰鏉冮檺锛堣繖閲屽簲璇ユ坊鍔犵鐞嗗憳鏉冮檺妫€鏌ワ級
     // const user = await getCurrentUser(request);
     // if (!user || !user.roles.includes('admin')) {
     //   return NextResponse.json(
-    //     { success: false, error: '鏃犳潈闄愭墽琛屾鎿嶄綔' },
+    //     { success: false, error: '犳潈闄愭墽琛屾鎿嶄綔' },
     //     { status: 403 }
     //   );
     // }
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鏇存柊鏉冮檺閰嶇疆澶辫触',
+        error: error instanceof Error  error.message : '鏇存柊鏉冮檺閰嶇疆澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -159,7 +159,7 @@ export async function GET_ROLES(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鑾峰彇瑙掕壊鍒楄〃澶辫触',
+        error: error instanceof Error  error.message : '鑾峰彇瑙掕壊鍒楄〃澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -183,7 +183,7 @@ export async function GET_PERMISSIONS(request: NextRequest) {
       })
     );
 
-    // 鎸夊垎绫昏繃?    if (category) {
+    // 鎸夊垎绫昏繃    if (category) {
       permissions = permissions.filter(perm => perm.category === category);
     }
 
@@ -197,7 +197,7 @@ export async function GET_PERMISSIONS(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鑾峰彇鏉冮檺鍒楄〃澶辫触',
+        error: error instanceof Error  error.message : '鑾峰彇鏉冮檺鍒楄〃澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -223,7 +223,7 @@ export async function VALIDATE_CONFIG(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '閰嶇疆楠岃瘉澶辫触',
+        error: error instanceof Error  error.message : '閰嶇疆楠岃瘉澶辫触',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -231,7 +231,7 @@ export async function VALIDATE_CONFIG(request: NextRequest) {
   }
 }
 
-// 鍋ュ悍妫€鏌ョ?export async function HEALTH_CHECK(request: NextRequest) {
+// 鍋ュ悍妫€鏌ョexport async function HEALTH_CHECK(request: NextRequest) {
   try {
     const configManager = PermissionConfigManager.getInstance();
     const permissionLoader = PermissionLoader.getInstance();
@@ -252,11 +252,11 @@ export async function VALIDATE_CONFIG(request: NextRequest) {
       data: healthData,
     });
   } catch (error) {
-    console.error('鏉冮檺绯荤粺鍋ュ悍妫€鏌ュけ?', error);
+    console.error('鏉冮檺绯荤粺鍋ュ悍妫€鏌ュけ', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏉冮檺绯荤粺涓嶅仴?,
+        error: '鏉冮檺绯荤粺涓嶅仴,
         timestamp: new Date().toISOString(),
       },
       { status: 503 }

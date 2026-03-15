@@ -10,14 +10,15 @@ export default function UltimateMinimalLogin() {
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
 
     setLoading(true);
 
     try {
-      // 最简化的验证逻辑 - 直接硬编?      if (email === '1055603323@qq.com' && password === '12345678') {
+      // 最简化的验证逻辑 - 直接硬编码
+      if (email === '1055603323@qq.com' && password === '12345678') {
         // 直接设置登录状态，不使用任何Hook或复杂逻辑
         setLoggedIn(true);
 
@@ -54,9 +55,9 @@ export default function UltimateMinimalLogin() {
             textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: '48px', marginBottom: '20px' }}>�?/div>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>✓</div>
           <h2 style={{ color: '#2d3748', marginBottom: '10px' }}>登录成功</h2>
-          <p style={{ color: '#718096' }}>正在跳转到管理后?..</p>
+          <p style={{ color: '#718096' }}>正在跳转到管理后台...</p>
         </div>
       </div>
     );
@@ -95,7 +96,8 @@ export default function UltimateMinimalLogin() {
             系统登录
           </h1>
           <p style={{ color: '#718096', fontSize: '16px' }}>
-            请输入您的账户信?          </p>
+            请输入您的账户信息
+          </p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -161,16 +163,16 @@ export default function UltimateMinimalLogin() {
             style={{
               width: '100%',
               padding: '14px',
-              background: loading ? '#a0aec0' : '#667eea',
+              background: loading  '#a0aec0' : '#667eea',
               color: 'white',
               border: 'none',
               borderRadius: '6px',
               fontSize: '16px',
               fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
+              cursor: loading  'not-allowed' : 'pointer',
             }}
           >
-            {loading ? '登录?..' : '登录'}
+            {loading  '登录中...' : '登录'}
           </button>
         </form>
 
@@ -189,4 +191,3 @@ export default function UltimateMinimalLogin() {
     </div>
   );
 }
-

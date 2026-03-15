@@ -10,7 +10,7 @@ export async function GET() {
   );
 
   try {
-    // 鑾峰彇褰撳墠浼氳瘽
+    // 鑾峰彇褰撳墠氳瘽
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -27,7 +27,7 @@ export async function GET() {
       );
     }
 
-    // 鑾峰彇绠＄悊鍛樼敤鎴蜂俊?    const { data: adminUser } = await supabase
+    // 鑾峰彇绠＄悊鍛樼敤鎴蜂俊    const { data: adminUser } = await supabase
       .from('admin_users')
       .select('id, user_id, role, is_active, created_at, updated_at')
       .eq('user_id', session.user.id)
@@ -44,11 +44,11 @@ export async function GET() {
         .eq('is_active', true)
         .limit(1);
 
-      tenantId = userTenants?.[0]?.tenant_id || null;
+      tenantId = userTenants.[0].tenant_id || null;
     }
 
     // 纭畾鐢ㄦ埛瑙掕壊
-    const roles = adminUser ? [adminUser.role] : ['viewer'];
+    const roles = adminUser  [adminUser.role] : ['viewer'];
 
     return NextResponse.json({
       user: {
@@ -70,7 +70,7 @@ export async function GET() {
         roles: [],
         tenantId: null,
         isAuthenticated: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );

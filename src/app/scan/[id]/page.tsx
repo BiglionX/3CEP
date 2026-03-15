@@ -35,21 +35,21 @@ interface DeviceProfile {
   id: string;
   qrcodeId: string;
   productModel: string;
-  productCategory?: string;
-  brandName?: string;
-  serialNumber?: string;
-  manufacturingDate?: string;
-  firstActivatedAt?: string;
-  warrantyStartDate?: string;
-  warrantyExpiry?: string;
-  warrantyPeriod?: number;
+  productCategory: string;
+  brandName: string;
+  serialNumber: string;
+  manufacturingDate: string;
+  firstActivatedAt: string;
+  warrantyStartDate: string;
+  warrantyExpiry: string;
+  warrantyPeriod: number;
   currentStatus: DeviceStatus;
-  lastEventAt?: string;
-  lastEventType?: DeviceEventType;
+  lastEventAt: string;
+  lastEventType: DeviceEventType;
   totalRepairCount: number;
   totalPartReplacementCount: number;
   totalTransferCount: number;
-  currentLocation?: string;
+  currentLocation: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -57,12 +57,12 @@ interface DeviceProfile {
 interface LifecycleEvent {
   id: string;
   eventType: DeviceEventType;
-  eventSubtype?: string;
+  eventSubtype: string;
   eventTimestamp: string;
-  location?: string;
-  notes?: string;
-  eventData?: Record<string, any>;
-  isVerified?: boolean;
+  location: string;
+  notes: string;
+  eventData: Record<string, any>;
+  isVerified: boolean;
 }
 
 interface DeviceDetectionResult {
@@ -120,7 +120,7 @@ export default function ScanLandingPage() {
         setProduct(data.product);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : '获取产品信息失败');
+      setError(err instanceof Error  err.message : '获取产品信息失败');
     } finally {
       setLoading(false);
     }
@@ -177,7 +177,7 @@ export default function ScanLandingPage() {
       setError(null);
 
       const response = await fetch(
-        `/api/lifecycle/profile?qrcodeId=${qrcodeId}`,
+        `/api/lifecycle/profileqrcodeId=${qrcodeId}`,
         {
           headers: {
             Authorization: `Bearer ${
@@ -196,7 +196,7 @@ export default function ScanLandingPage() {
         setError(result.error || '获取设备档案失败');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : '网络错误');
+      setError(err instanceof Error  err.message : '网络错误');
     } finally {
       setProfileLoading(false);
       setEventsLoading(false);
@@ -238,7 +238,7 @@ export default function ScanLandingPage() {
 
   // 获取当前语言的说明书
   const getCurrentLanguageManuals = () => {
-    if (!product?.manuals) return [];
+    if (!product.manuals) return [];
     return product.manuals.filter(
       manual =>
         manual.is_published && manual.language_codes.includes(currentLanguage)
@@ -385,7 +385,7 @@ export default function ScanLandingPage() {
                     🎯 设备识别
                   </h3>
 
-                  {detectedDevice ? (
+                  {detectedDevice  (
                     <div className="bg-blue-50 rounded-lg p-4 mb-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -402,11 +402,11 @@ export default function ScanLandingPage() {
                         </div>
                         <div className="text-2xl">
                           {detectedDevice.brand === 'Apple'
-                            ? '🍎'
+                             '🍎'
                             : detectedDevice.brand === 'Samsung'
-                              ? '📱'
+                               '📱'
                               : detectedDevice.deviceType === 'computer'
-                                ? '💻'
+                                 '💻'
                                 : '📱'}
                         </div>
                       </div>
@@ -457,9 +457,9 @@ export default function ScanLandingPage() {
                           )
                         }
                         className={`p-3 rounded-lg border-2 transition-all ${
-                          detectedDevice?.brand === device.brand &&
-                          detectedDevice?.model === device.model
-                            ? 'border-blue-500 bg-blue-50'
+                          detectedDevice.brand === device.brand &&
+                          detectedDevice.model === device.model
+                             'border-blue-500 bg-blue-50'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -485,7 +485,7 @@ export default function ScanLandingPage() {
                       onClick={() => switchLanguage('zh')}
                       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                         currentLanguage === 'zh'
-                          ? 'bg-blue-500 text-white'
+                           'bg-blue-500 text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -495,7 +495,7 @@ export default function ScanLandingPage() {
                       onClick={() => switchLanguage('en')}
                       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                         currentLanguage === 'en'
-                          ? 'bg-blue-500 text-white'
+                           'bg-blue-500 text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -539,7 +539,7 @@ export default function ScanLandingPage() {
                         </div>
                       </div>
 
-                      {getCurrentLanguageManuals().length > 0 ? (
+                      {getCurrentLanguageManuals().length > 0  (
                         <div className="mb-4">
                           <div className="flex flex-wrap gap-2">
                             {getCurrentLanguageManuals().map(manual => (
@@ -569,13 +569,13 @@ export default function ScanLandingPage() {
                         className={`w-full py-3 rounded-lg font-medium transition-colors ${
                           detectedDevice &&
                           getCurrentLanguageManuals().length > 0
-                            ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                             'bg-blue-500 hover:bg-blue-600 text-white'
                             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                         }`}
                       >
                         {detectedDevice
-                          ? getCurrentLanguageManuals().length > 0
-                            ? '查看说明书'
+                           getCurrentLanguageManuals().length > 0
+                             '查看说明书'
                             : '暂无说明书'
                           : '请先识别设备'}
                       </button>
@@ -615,11 +615,11 @@ export default function ScanLandingPage() {
                         disabled={!detectedDevice}
                         className={`w-full py-3 rounded-lg font-medium transition-colors ${
                           detectedDevice
-                            ? 'bg-green-500 hover:bg-green-600 text-white'
+                             'bg-green-500 hover:bg-green-600 text-white'
                             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                         }`}
                       >
-                        {detectedDevice ? '开始诊断' : '请先识别设备'}
+                        {detectedDevice  '开始诊断' : '请先识别设备'}
                       </button>
                     </div>
                   </div>
@@ -630,12 +630,12 @@ export default function ScanLandingPage() {
             {/* 设备档案 Tab */}
             <TabsContent value="archive">
               <div className="space-y-6">
-                {profileLoading ? (
+                {profileLoading  (
                   <div className="bg-white rounded-xl shadow-lg p-8 text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">正在加载设备档案...</p>
                   </div>
-                ) : error ? (
+                ) : error  (
                   <div className="bg-white rounded-xl shadow-lg p-8 text-center">
                     <div className="text-red-500 text-4xl mb-4">⚠️</div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -649,7 +649,7 @@ export default function ScanLandingPage() {
                       重新加载
                     </button>
                   </div>
-                ) : deviceProfile ? (
+                ) : deviceProfile  (
                   <>
                     {/* 设备档案摘要 */}
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -797,7 +797,7 @@ export default function ScanLandingPage() {
                         </div>
                       </div>
                       <div className="p-6">
-                        {lifecycleEvents.length === 0 ? (
+                        {lifecycleEvents.length === 0  (
                           <div className="text-center py-12">
                             <div className="text-gray-400 mb-4">
                               <svg
@@ -834,7 +834,7 @@ export default function ScanLandingPage() {
                                 }}
                                 onDetailClick={eventId => {
                                   // TODO: 实现查看维修工单详情功能
-                                  // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看工单详情:', eventId)}}
+                                }}
                               />
                             ))}
                           </div>

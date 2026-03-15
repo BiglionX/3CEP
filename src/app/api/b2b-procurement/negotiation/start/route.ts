@@ -79,7 +79,7 @@ export async function GET(request: Request) {
 
     // 濡傛灉鎸囧畾浜嗙瓥鐣ョ被鍨嬶紝杩涜杩囨护
     const filteredStrategies = strategyType
-      ? strategies.filter(s => s.strategyType === strategyType)
+       strategies.filter(s => s.strategyType === strategyType)
       : strategies;
 
     return NextResponse.json({
@@ -97,3 +97,4 @@ export async function GET(request: Request) {
     );
   }
 }
+

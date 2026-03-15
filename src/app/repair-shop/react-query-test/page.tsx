@@ -1,6 +1,6 @@
 ﻿/**
  * React Query 集成测试页面
- * 用于验证缓存和数据获取功?
+ * 用于验证缓存和数据获取功能
  */
 
 'use client'
@@ -22,7 +22,7 @@ import { useWorkOrders, useDeviceTypes, useTechnicians } from '@/hooks/use-repai
 export default function ReactQueryTestPage() {
   const [shopId] = useState('test-shop-001')
   
-  // 测试不同的查询钩?
+  // 测试不同的查询钩子
   const workOrdersQuery = useWorkOrders(
     { status: undefined },
     { page: 1, pageSize: 5 }
@@ -56,7 +56,7 @@ export default function ReactQueryTestPage() {
           <div className="flex flex-wrap gap-3">
             <Button onClick={refetchAll}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              重新获取所有数?
+              重新获取所有数据
             </Button>
             <Button 
               variant="outline" 
@@ -78,34 +78,34 @@ export default function ReactQueryTestPage() {
                 <Database className="h-5 w-5" />
                 工单数据
               </span>
-              <Badge variant={workOrdersQuery.isLoading ? "secondary" : workOrdersQuery.isError ? "destructive" : "default"}>
-                {workOrdersQuery.isLoading ? '加载? : workOrdersQuery.isError ? '错误' : '就绪'}
+              <Badge variant={workOrdersQuery.isLoading  "secondary" : workOrdersQuery.isError  "destructive" : "default"}>
+                {workOrdersQuery.isLoading  '加载中' : workOrdersQuery.isError  '错误' : '就绪'}
               </Badge>
             </CardTitle>
             <CardDescription>
-              测试分页数据获取和缓?
+              测试分页数据获取和缓存
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between text-sm">
-                <span>数据状?</span>
+                <span>数据状态</span>
                 <div className="flex items-center gap-2">
                   {workOrdersQuery.isSuccess && <CheckCircle className="h-4 w-4 text-green-500" />}
                   {workOrdersQuery.isError && <XCircle className="h-4 w-4 text-red-500" />}
                   <span>
-                    {workOrdersQuery.isLoading ? '加载?..' : 
-                     workOrdersQuery.isError ? '加载失败' : 
-                     workOrdersQuery.isSuccess ? `成功加载 ${workOrdersQuery.(data as any)?.length || 0} 条记录` : 
-                     '未加?}
+                    {workOrdersQuery.isLoading  '加载中...' : 
+                     workOrdersQuery.isError  '加载失败' : 
+                     workOrdersQuery.isSuccess  `成功加载 ${(workOrdersQuery.data as any).length || 0} 条记录` : 
+                     '未加载'}
                   </span>
                 </div>
               </div>
               
               <div className="flex items-center justify-between text-sm">
-                <span>缓存状?</span>
+                <span>缓存状态</span>
                 <Badge variant="outline">
-                  {workOrdersQuery.isStale ? '过期' : '新鲜'}
+                  {workOrdersQuery.isStale  '过期' : '新鲜'}
                 </Badge>
               </div>
               
@@ -113,7 +113,7 @@ export default function ReactQueryTestPage() {
                 <span>获取时间:</span>
                 <span className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
-                  {workOrdersQuery.dataUpdatedAt ? 
+                  {workOrdersQuery.dataUpdatedAt  
                     new Date(workOrdersQuery.dataUpdatedAt).toLocaleTimeString() : 
                     '从未获取'}
                 </span>
@@ -122,7 +122,7 @@ export default function ReactQueryTestPage() {
               {workOrdersQuery.isError && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-sm text-red-700">
-                    错误信息: {(workOrdersQuery.error as Error)?.message || '未知错误'}
+                    错误信息: {(workOrdersQuery.error as Error).message || '未知错误'}
                   </p>
                 </div>
               )}
@@ -138,7 +138,7 @@ export default function ReactQueryTestPage() {
                       </li>
                     ))}
                     {workOrdersQuery.data.length > 3 && (
-                      <li className="text-gray-500 text-xs">...还有 {workOrdersQuery.data.length - 3} �?/li>
+                      <li className="text-gray-500 text-xs">...还有 {workOrdersQuery.data.length - 3} 条</li>
                     )}
                   </ul>
                 </div>
@@ -155,26 +155,26 @@ export default function ReactQueryTestPage() {
                 <Database className="h-5 w-5" />
                 设备类型
               </span>
-              <Badge variant={deviceTypesQuery.isLoading ? "secondary" : deviceTypesQuery.isError ? "destructive" : "default"}>
-                {deviceTypesQuery.isLoading ? '加载? : deviceTypesQuery.isError ? '错误' : '就绪'}
+              <Badge variant={deviceTypesQuery.isLoading  "secondary" : deviceTypesQuery.isError  "destructive" : "default"}>
+                {deviceTypesQuery.isLoading  '加载中' : deviceTypesQuery.isError  '错误' : '就绪'}
               </Badge>
             </CardTitle>
             <CardDescription>
-              测试静态数据缓?
+              测试静态数据缓存
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between text-sm">
-                <span>数据状?</span>
+                <span>数据状态</span>
                 <div className="flex items-center gap-2">
                   {deviceTypesQuery.isSuccess && <CheckCircle className="h-4 w-4 text-green-500" />}
                   {deviceTypesQuery.isError && <XCircle className="h-4 w-4 text-red-500" />}
                   <span>
-                    {deviceTypesQuery.isLoading ? '加载?..' : 
-                     deviceTypesQuery.isError ? '加载失败' : 
-                     deviceTypesQuery.isSuccess ? `成功加载 ${deviceTypesQuery.(data as any)?.length || 0} 条记录` : 
-                     '未加?}
+                    {deviceTypesQuery.isLoading  '加载中...' : 
+                     deviceTypesQuery.isError  '加载失败' : 
+                     deviceTypesQuery.isSuccess  `成功加载 ${(deviceTypesQuery.data as any).length || 0} 条记录` : 
+                     '未加载'}
                   </span>
                 </div>
               </div>
@@ -215,23 +215,23 @@ export default function ReactQueryTestPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">
-                {workOrdersQuery.fetchStatus === 'fetching' ? '...' : workOrdersQuery.(data as any)?.length || 0}
+                {workOrdersQuery.fetchStatus === 'fetching'  '...' : (workOrdersQuery.data as any).length || 0}
               </div>
               <div className="text-sm text-gray-600">工单记录</div>
             </div>
             
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="text-2xl font-bold text-green-600">
-                {deviceTypesQuery.fetchStatus === 'fetching' ? '...' : deviceTypesQuery.(data as any)?.length || 0}
+                {deviceTypesQuery.fetchStatus === 'fetching'  '...' : (deviceTypesQuery.data as any).length || 0}
               </div>
               <div className="text-sm text-gray-600">设备类型</div>
             </div>
             
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
-                {techniciansQuery.fetchStatus === 'fetching' ? '...' : techniciansQuery.(data as any)?.length || 0}
+                {techniciansQuery.fetchStatus === 'fetching'  '...' : (techniciansQuery.data as any).length || 0}
               </div>
-              <div className="text-sm text-gray-600">技师数?/div>
+              <div className="text-sm text-gray-600">技师数量</div>
             </div>
             
             <div className="text-center p-4 bg-orange-50 rounded-lg">

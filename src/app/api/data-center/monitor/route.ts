@@ -1,4 +1,4 @@
-﻿// API缃戝叧鐩戞帶鍜岀鐞嗘帴?// 鎻愪緵缃戝叧鐘舵€佹煡璇€佹寚鏍囩洃鎺у拰閰嶇疆绠＄悊鍔熻兘
+﻿// API缃戝叧鐩戞帶鍜岀鐞嗘帴// 鎻愪緵缃戝叧鐘舵€佹煡璇€佹寚鏍囩洃鎺у拰閰嶇疆绠＄悊鍔熻兘
 
 import { NextRequest, NextResponse } from 'next/server';
 import { apiGatewayService } from '@/modules/data-center/core/api-gateway.service';
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'status':
-        // 鑾峰彇缃戝叧鐘?        return NextResponse.json({
+        // 鑾峰彇缃戝叧鐘        return NextResponse.json({
           success: true,
           data: {
             status: 'running',
@@ -35,11 +35,11 @@ export async function GET(request: NextRequest) {
           success: true,
           data: {
             available_routes: [
-              '/api/data-center?module={module}&endpoint={path}',
-              '/api/data-center?action=health',
-              '/api/data-center?action=aggregate&modules={modules}',
-              '/api/data-center/monitor?action=metrics',
-              '/api/data-center/monitor?action=status',
+              '/api/data-centermodule={module}&endpoint={path}',
+              '/api/data-centeraction=health',
+              '/api/data-centeraction=aggregate&modules={modules}',
+              '/api/data-center/monitoraction=metrics',
+              '/api/data-center/monitoraction=status',
             ],
             supported_modules: [
               'devices',
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            error: '鏈煡鐨勬搷浣滅被?,
+            error: '鏈煡鐨勬搷浣滅被,
             available_actions: ['metrics', 'status', 'routes'],
           },
           { status: 400 }
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
         apiGatewayService.resetMetrics();
         return NextResponse.json({
           success: true,
-          message: '鐩戞帶鎸囨爣宸查噸?,
+          message: '鐩戞帶鎸囨爣宸查噸,
           timestamp: new Date().toISOString(),
         });
 
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
         // 閲嶆柊鍔犺浇閰嶇疆锛堟ā鎷燂級
         return NextResponse.json({
           success: true,
-          message: '閰嶇疆宸查噸鏂板姞?,
+          message: '閰嶇疆宸查噸鏂板姞,
           timestamp: new Date().toISOString(),
         });
 
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            error: '鏈煡鐨勬搷浣滅被?,
+            error: '鏈煡鐨勬搷浣滅被,
             available_actions: ['reset-metrics', 'reload-config'],
           },
           { status: 400 }
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

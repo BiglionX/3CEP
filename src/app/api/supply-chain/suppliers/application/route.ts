@@ -37,21 +37,21 @@ export async function POST(request: Request) {
       }
     }
 
-    // 楠岃瘉閭鏍煎紡
+    // 楠岃瘉鏍煎紡
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: '閭鏍煎紡涓嶆? }, { status: 400 });
+      return NextResponse.json({ error: '鏍煎紡涓嶆 }, { status: 400 });
     }
 
-    // 楠岃瘉鎵嬫満鍙锋牸寮忥紙绠€鍗曢獙璇侊級
+    // 楠岃瘉鎵嬫満鍙牸寮忥紙绠€鍗曢獙璇侊級
     const phoneRegex = /^[\d\s\-\+\(\)]+$/;
     if (!phoneRegex.test(phone)) {
-      return NextResponse.json({ error: '鎵嬫満鍙锋牸寮忎笉姝ｇ‘' }, { status: 400 });
+      return NextResponse.json({ error: '鎵嬫満鍙牸寮忎笉姝ｇ‘' }, { status: 400 });
     }
 
-    // 妯℃嫙渚涘簲鍟嗙敵璇峰鐞嗭紙瀹為檯搴旇璋冪敤SupplierService锟?    const applicationId = `APP_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // 妯℃嫙渚涘簲鍟嗙敵璇峰鐞嗭紙瀹為檯搴旇璋冪敤SupplierService    const applicationId = `APP_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    // 妯℃嫙澶勭悊鏃堕棿
+    // 妯℃嫙澶勭悊堕棿
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // 妯℃嫙90%鐨勬垚鍔熺巼
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
-    console.error('渚涘簲鍟嗙敵璇烽敊?', error);
+    console.error('渚涘簲鍟嗙敵璇烽敊', error);
     return NextResponse.json(
       {
         error: '鐢宠澶勭悊澶辫触',

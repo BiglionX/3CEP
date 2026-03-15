@@ -1,6 +1,6 @@
 ﻿/**
  * 权限控制演示页面
- * 展示各种权限控制组件的使用方? */
+ * 展示各种权限控制组件的使用方 */
 
 'use client';
 
@@ -63,12 +63,12 @@ export default function PermissionsDemoPage() {
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           权限控制系统演示
         </h1>
-        <p className="text-gray-600">展示基于角色的界面元素动态显示控?/p>
+        <p className="text-gray-600">展示基于角色的界面元素动态显示控/p>
       </div>
 
-      {/* 角色切换?*/}
+      {/* 角色切换*/}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">角色模拟?/h2>
+        <h2 className="text-lg font-semibold mb-4">角色模拟/h2>
         <div className="flex flex-wrap gap-2">
           {[
             'admin',
@@ -82,7 +82,7 @@ export default function PermissionsDemoPage() {
               onClick={() => setSelectedRole(role)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedRole === role
-                  ? 'bg-blue-500 text-white'
+                   'bg-blue-500 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -156,7 +156,7 @@ export default function PermissionsDemoPage() {
             <div className="border rounded-lg p-4 bg-blue-50">
               <h3 className="font-medium text-blue-800 mb-2">用户管理面板</h3>
               <p className="text-blue-600 text-sm">
-                只有具有用户查看权限的用户才能看到这个面?              </p>
+                只有具有用户查看权限的用户才能看到这个面              </p>
             </div>
           </PermissionControl>
 
@@ -164,14 +164,14 @@ export default function PermissionsDemoPage() {
             <div className="border rounded-lg p-4 bg-green-50">
               <h3 className="font-medium text-green-800 mb-2">内容管理面板</h3>
               <p className="text-green-600 text-sm">
-                只有具有内容查看权限的用户才能看到这个面?              </p>
+                只有具有内容查看权限的用户才能看到这个面              </p>
             </div>
           </PermissionControl>
 
           <PermissionControl role={['admin', 'manager']} className="mt-4">
             <div className="border rounded-lg p-4 bg-purple-50">
               <h3 className="font-medium text-purple-800 mb-2">高级管理面板</h3>
-              <p className="text-purple-600 text-sm">仅管理员和经理角色可?/p>
+              <p className="text-purple-600 text-sm">仅管理员和经理角色可/p>
             </div>
           </PermissionControl>
         </div>
@@ -180,7 +180,7 @@ export default function PermissionsDemoPage() {
       {/* 表格权限控制演示 */}
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b">
-          <h2 className="text-lg font-semibold">用户列表（带权限控制?/h2>
+          <h2 className="text-lg font-semibold">用户列表（带权限控制/h2>
         </div>
 
         <div className="overflow-x-auto">
@@ -188,7 +188,7 @@ export default function PermissionsDemoPage() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  用户?                </th>
+                  用户                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   邮箱
                 </th>
@@ -233,11 +233,11 @@ export default function PermissionsDemoPage() {
         <h2 className="text-lg font-semibold mb-4">表单字段权限控制</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <PermissionField permission="users_create" label="用户?>
+          <PermissionField permission="users_create" label="用户>
             <input
               type="text"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="输入用户?
+              placeholder="输入用户
             />
           </PermissionField>
 
@@ -252,9 +252,9 @@ export default function PermissionsDemoPage() {
           <PermissionField requiredRole={['admin', 'manager']} label="用户角色">
             <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="">请选择角色</option>
-              <option value="admin">管理?/option>
-              <option value="content_manager">内容管理?/option>
-              <option value="viewer">查看?/option>
+              <option value="admin">管理员/option>
+              <option value="content_manager">内容管理员/option>
+              <option value="viewer">查看/option>
             </select>
           </PermissionField>
 
@@ -295,7 +295,7 @@ export default function PermissionsDemoPage() {
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                 <div className="flex items-center">
                   <Shield className="w-5 h-5 text-red-500 mr-2" />
-                  <span className="text-red-700">仅管理员可见的内容区?/span>
+                  <span className="text-red-700">仅管理员可见的内容区/span>
                 </div>
               </div>
             }
@@ -304,11 +304,11 @@ export default function PermissionsDemoPage() {
               <div className="flex items-center">
                 <User className="w-5 h-5 text-green-500 mr-2" />
                 <span className="text-green-700 font-medium">
-                  管理员专?- 系统核心配置
+                  管理员专- 系统核心配置
                 </span>
               </div>
               <p className="mt-2 text-green-600 text-sm">
-                这里包含系统最重要的配置选项，只有管理员才能访问和修改?              </p>
+                这里包含系统最重要的配置选项，只有管理员才能访问和修改              </p>
             </div>
           </RoleGuard>
 
@@ -316,14 +316,14 @@ export default function PermissionsDemoPage() {
             permission={['content_create', 'content_update']}
             fallback={
               <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <span className="text-yellow-700">您没有内容管理权?/span>
+                <span className="text-yellow-700">您没有内容管理权/span>
               </div>
             }
           >
             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <span className="text-blue-700 font-medium">内容创作工作?/span>
+              <span className="text-blue-700 font-medium">内容创作工作/span>
               <p className="mt-1 text-blue-600 text-sm">
-                欢迎进入内容创作空间，您可以在这里创建和编辑精彩内容?              </p>
+                欢迎进入内容创作空间，您可以在这里创建和编辑精彩内容              </p>
             </div>
           </PermissionGuard>
         </div>

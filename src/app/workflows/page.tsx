@@ -1,5 +1,5 @@
 ﻿/**
- * 工作流管理页?
+ * 工作流管理页面
  * 提供工作流列表、创建、执行和回放功能
  */
 
@@ -15,8 +15,6 @@ import {
   MoreHorizontal,
   Edit,
   Trash2,
-  Eye,
-  Copy,
   Clock,
   CheckCircle,
   XCircle,
@@ -32,7 +30,7 @@ interface Workflow {
   workflow_data: any;
   created_at: string;
   updated_at: string;
-  executions?: WorkflowExecution[];
+  executions: WorkflowExecution[];
 }
 
 interface WorkflowExecution {
@@ -56,7 +54,6 @@ export default function WorkflowsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
 
   useEffect(() => {
     loadWorkflows();
@@ -74,7 +71,7 @@ export default function WorkflowsPage() {
       const response = await fetch('/api/workflows');
       
       if (!response.ok) {
-        throw new Error('获取工作流列表失?);
+        throw new Error('获取工作流列表失败');
       }
       
       const result = await response.json();
@@ -86,7 +83,7 @@ export default function WorkflowsPage() {
       }
       
     } catch (err: any) {
-      console.error('加载工作流失?', err);
+      console.error('加载工作流失败', err);
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -104,7 +101,7 @@ export default function WorkflowsPage() {
       );
     }
     
-    // 状态过?
+    // 状态过滤
     if (statusFilter !== 'all') {
       filtered = filtered.filter(workflow => workflow.status === statusFilter);
     }
@@ -155,14 +152,14 @@ export default function WorkflowsPage() {
       });
       
       if (!response.ok) {
-        throw new Error('执行工作流失?);
+        throw new Error('执行工作流失败');
       }
       
       const result = await response.json();
-      alert(`工作流开始执? ${result.data.workflowName}`);
+      alert(`工作流开始执行: ${result.data.workflowName}`);
       
     } catch (err: any) {
-      console.error('执行工作流失?', err);
+      console.error('执行工作流失败', err);
       alert(`执行失败: ${err.message}`);
     }
   };
@@ -181,7 +178,7 @@ export default function WorkflowsPage() {
       }
       
       const result = await response.json();
-      alert(`工作流回放开? ${result.data.workflowName}`);
+      alert(`工作流回放开始: ${result.data.workflowName}`);
       
     } catch (err: any) {
       console.error('回放执行失败:', err);
@@ -231,19 +228,19 @@ export default function WorkflowsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">工作流管?/h1>
-              <p className="text-gray-600 mt-1">管理和执行自动化工作?/p>
+              <h1 className="text-2xl font-bold text-gray-900">工作流管理</h1>
+              <p className="text-gray-600 mt-1">管理和执行自动化工作流</p>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
               className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-4 h-4" />
-              <span>新建工作?/span>
+              <span>新建工作流</span>
             </button>
           </div>
           
-          {/* 搜索和过?*/}
+          {/* 搜索和过滤 */}
           <div className="mt-6 flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -263,11 +260,11 @@ export default function WorkflowsPage() {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
-                <option value="all">全部状?/option>
-                <option value="active">已激?/option>
+                <option value="all">全部状态</option>
+                <option value="active">已激活</option>
                 <option value="draft">草稿</option>
-                <option value="inactive">未激?/option>
-                <option value="archived">已归?/option>
+                <option value="inactive">未激活</option>
+                <option value="archived">已归档</option>
               </select>
             </div>
           </div>
@@ -276,9 +273,9 @@ export default function WorkflowsPage() {
 
       {/* 主要内容区域 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 工作流列?*/}
+        {/* 工作流列表 */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          {filteredWorkflows.length === 0 ? (
+          {filteredWorkflows.length === 0  (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
                 <div className="w-12 h-12 mx-auto flex items-center justify-center bg-gray-100 rounded-lg">
@@ -287,7 +284,7 @@ export default function WorkflowsPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无工作?/h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无工作流</h3>
               <p className="text-gray-500">创建您的第一个工作流来开始自动化流程</p>
             </div>
           ) : (
@@ -310,27 +307,27 @@ export default function WorkflowsPage() {
                       )}
                       
                       <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
-                        <span>创建?{formatDate(workflow.created_at)}</span>
-                        <span>更新?{formatDate(workflow.updated_at)}</span>
+                        <span>创建时间: {formatDate(workflow.created_at)}</span>
+                        <span>更新时间: {formatDate(workflow.updated_at)}</span>
                         {workflow.executions && workflow.executions.length > 0 && (
-                          <span>{workflow.executions.length} 次执?/span>
+                          <span>{workflow.executions.length} 次执行</span>
                         )}
                       </div>
                       
                       {/* 执行记录预览 */}
                       {workflow.executions && workflow.executions.length > 0 && (
                         <div className="mb-4">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">最近执?</h4>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">最近执行</h4>
                           <div className="space-y-2">
                             {workflow.executions.slice(0, 3).map((execution) => (
                               <div key={execution.id} className="flex items-center justify-between text-sm">
                                 <div className="flex items-center space-x-2">
                                   <Clock className="w-4 h-4 text-gray-400" />
                                   <span className={getExecutionStatusColor(execution.status)}>
-                                    {execution.status === 'completed' && '�?'}
-                                    {execution.status === 'failed' && '�?'}
-                                    {execution.status === 'running' && '🔄 '}
-                                    {execution.status === 'pending' && '�?'}
+                                    {execution.status === 'completed' && '✅'}
+                                    {execution.status === 'failed' && '❌'}
+                                    {execution.status === 'running' && '🔄'}
+                                    {execution.status === 'pending' && '⏳'}
                                     {execution.status}
                                   </span>
                                   <span className="text-gray-500">
@@ -351,7 +348,7 @@ export default function WorkflowsPage() {
                                   <button
                                     onClick={() => replayExecution(execution.id)}
                                     className="text-blue-600 hover:text-blue-800 text-sm flex items-center space-x-1"
-                                    title="回放此执?
+                                    title="回放此执行"
                                   >
                                     <RotateCcw className="w-3 h-3" />
                                     <span>回放</span>
@@ -397,12 +394,12 @@ export default function WorkflowsPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  工作流名?*
+                  工作流名称 *
                 </label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="输入工作流名?
+                  placeholder="输入工作流名称"
                 />
               </div>
               
@@ -419,11 +416,11 @@ export default function WorkflowsPage() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  状?
+                  状态
                 </label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                   <option value="draft">草稿</option>
-                  <option value="active">激?/option>
+                  <option value="active">激活</option>
                 </select>
               </div>
             </div>
@@ -442,7 +439,7 @@ export default function WorkflowsPage() {
                 }}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                创建工作?
+                创建工作流
               </button>
             </div>
           </div>

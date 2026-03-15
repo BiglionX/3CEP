@@ -8,17 +8,18 @@ export default function LoginJumpTest() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/admin/dashboard';
 
-  const [testResults, setTestResults] = useState([]);
+  const [testResults, setTestResults] = useState<any[]>([]);
   const [isTesting, setIsTesting] = useState(false);
 
   const runTest = async () => {
     setIsTesting(true);
-    const results = [];
+    const results: any[] = [];
 
     try {
-      // 测试1: 检查当前认证状?      results.push({
-        step: '检查认证状?,
-        status: '进行?..',
+      // 测试1: 检查当前认证状态
+      results.push({
+        step: '检查认证状态',
+        status: '进行中...',
         details: '',
       });
 
@@ -26,16 +27,16 @@ export default function LoginJumpTest() {
       const authData = await authResponse.json();
 
       results[0] = {
-        step: '检查认证状?,
-        status: authData.authenticated ? '�?已登? : '�?未登?,
-        details: `用户: ${authData?.email || '�?}, 管理? ${authData.is_admin || false}`,
+        step: '检查认证状态',
+        status: authData.authenticated  '✓ 已登录' : '✗ 未登录',
+        details: `用户: ${authData.email || '无'}, 管理员: ${authData.is_admin || false}`,
       };
 
       // 测试2: 尝试登录
       if (!authData.authenticated) {
         results.push({
           step: '执行登录测试',
-          status: '进行?..',
+          status: '进行中...',
           details: '使用测试账号登录',
         });
 
@@ -54,17 +55,18 @@ export default function LoginJumpTest() {
 
         results[1] = {
           step: '执行登录测试',
-          status: loginResponse.ok ? '�?登录成功' : '�?登录失败',
+          status: loginResponse.ok  '✓ 登录成功' : '✗ 登录失败',
           details: loginResponse.ok
-            ? `用户: ${loginData?.email}, 管理? ${loginData?.is_admin}`
+             `用户: ${loginData.email}, 管理员: ${loginData.is_admin}`
             : `错误: ${loginData.error}`,
         };
 
-        // 测试3: 检查跳转行?        if (loginResponse.ok && loginData?.is_admin) {
+        // 测试3: 检查跳转行为
+        if (loginResponse.ok && loginData.is_admin) {
           results.push({
             step: '验证跳转行为',
-            status: '进行?..',
-            details: `期望跳转? ${redirect}`,
+            status: '进行中...',
+            details: `期望跳转到: ${redirect}`,
           });
 
           // 模拟跳转
@@ -76,7 +78,7 @@ export default function LoginJumpTest() {
         // 已登录状态下测试跳转
         results.push({
           step: '测试跳转行为',
-          status: '进行?..',
+          status: '进行中...',
           details: `将跳转到: ${redirect}`,
         });
 
@@ -84,10 +86,10 @@ export default function LoginJumpTest() {
           router.push(redirect);
         }, 2000);
       }
-    } catch (error) {
+    } catch (error: any) {
       results.push({
         step: '测试执行',
-        status: '�?发生错误',
+        status: '✗ 发生错误',
         details: error.message,
       });
     }
@@ -124,7 +126,7 @@ export default function LoginJumpTest() {
               disabled={isTesting}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
             >
-              {isTesting ? '测试进行?..' : '开始测?}
+              {isTesting  '测试进行中...' : '开始测试'}
             </button>
           </div>
 
@@ -143,10 +145,10 @@ export default function LoginJumpTest() {
                       </h3>
                       <span
                         className={
-                          result.status.includes('�?)
-                            ? 'text-green-600'
-                            : result.status.includes('�?)
-                              ? 'text-red-600'
+                          result.status.includes('✓')
+                             'text-green-600'
+                            : result.status.includes('✗')
+                               'text-red-600'
                               : 'text-yellow-600'
                         }
                       >
@@ -166,16 +168,16 @@ export default function LoginJumpTest() {
             <h2 className="text-xl font-semibold mb-4">手动测试链接</h2>
             <div className="space-y-2">
               <a
-                href="/login?redirect=/admin/dashboard"
+                href="/loginredirect=/admin/dashboard"
                 className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition-colors"
               >
-                管理员登录测?(/admin/dashboard)
+                管理员登录测试 (/admin/dashboard)
               </a>
               <a
-                href="/login?redirect=/profile"
+                href="/loginredirect=/profile"
                 className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition-colors"
               >
-                普通用户登录测?(/profile)
+                普通用户登录测试 (/profile)
               </a>
             </div>
           </div>
@@ -184,4 +186,3 @@ export default function LoginJumpTest() {
     </div>
   );
 }
-

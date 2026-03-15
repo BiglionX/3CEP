@@ -36,7 +36,7 @@ export async function POST(request: Request) {
           );
         }
 
-        const useHistoricalSuppliers = body.useHistoricalSuppliersOnly ?? true;
+        const useHistoricalSuppliers = body.useHistoricalSuppliersOnly  true;
         const createResult =
           await smartProcurementAgentService.createSmartQuotationFromHistory(
             orderId,
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
         return NextResponse.json(executeResult);
 
       case 'auto_complete':
-        // 鑷姩瀹屾垚璇环?        if (!quotationRequestId) {
+        // 鑷姩瀹屾垚璇环        if (!quotationRequestId) {
           return NextResponse.json(
             { success: false, error: '缂哄皯quotationRequestId鍙傛暟' },
             { status: 400 }
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
         return NextResponse.json(autoCompleteResult);
 
       case 'modify_and_resend':
-        // 淇敼骞堕噸鍙戣?        if (!orderId || !modifications) {
+        // 淇敼骞堕噸鍙戣        if (!orderId || !modifications) {
           return NextResponse.json(
             { success: false, error: '缂哄皯orderId鎴杕odifications鍙傛暟' },
             { status: 400 }
@@ -104,11 +104,11 @@ export async function POST(request: Request) {
         );
     }
   } catch (error) {
-    console.error('鏅鸿兘閲囪喘浠ｇ悊API閿欒:', error);
+    console.error('鏅鸿兘閲囪喘ｇ悊API閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -129,14 +129,14 @@ export async function GET(request: Request) {
       );
     }
 
-    // 杩欓噷鍙互娣诲姞鏌ヨ鍘嗗彶璁板綍绛夊姛?    return NextResponse.json({
+    // 杩欓噷鍙互娣诲姞鏌ヨ鍘嗗彶璁板綍绛夊姛    return NextResponse.json({
       success: true,
-      message: '鏅鸿兘閲囪喘浠ｇ悊鏈嶅姟杩愯姝ｅ父',
+      message: '鏅鸿兘閲囪喘ｇ悊鏈嶅姟杩愯姝ｅ父',
       action,
       userId,
     });
   } catch (error) {
-    console.error('鏅鸿兘閲囪喘浠ｇ悊GET閿欒:', error);
+    console.error('鏅鸿兘閲囪喘ｇ悊GET閿欒:', error);
     return NextResponse.json(
       {
         success: false,

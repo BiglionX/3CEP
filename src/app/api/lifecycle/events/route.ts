@@ -4,13 +4,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const lifecycleService = new DeviceLifecycleService();
 
-// API瀵嗛挜楠岃瘉涓棿?function validateApiKey(request: NextRequest): boolean {
+// API瀵嗛挜楠岃瘉涓棿function validateApiKey(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
   const apiKey = process.env.LIFECYCLE_API_KEY;
 
   // 寮€鍙戠幆澧冧笅濡傛灉娌℃湁閰嶇疆API瀵嗛挜锛屽垯鍏佽璁块棶
   if (!apiKey) {
-    console.warn('鈿狅笍  LIFECYCLE_API_KEY 鏈厤缃紝璇峰湪鐢熶骇鐜涓?);
+    console.warn('鈿狅笍  LIFECYCLE_API_KEY 鏈厤缃紝璇峰湪鐢熶骇鐜涓);
     return true;
   }
 
@@ -22,14 +22,14 @@ const lifecycleService = new DeviceLifecycleService();
   return token === apiKey;
 }
 
-// POST /api/lifecycle/events - 璁板綍璁惧鐢熷懡鍛ㄦ湡浜嬩欢锛堜緵鍐呴儴鏈嶅姟璋冪敤?export async function POST(request: NextRequest) {
+// POST /api/lifecycle/events - 璁板綍璁惧鐢熷懡鍛ㄦ湡浜嬩欢锛堜緵鍐呴儴鏈嶅姟璋冪敤export async function POST(request: NextRequest) {
   try {
     // API瀵嗛挜楠岃瘉
     if (!validateApiKey(request)) {
       return NextResponse.json(
         {
           success: false,
-          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
+          error: '鏈巿鏉冭闂紝璇彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -63,7 +63,7 @@ const lifecycleService = new DeviceLifecycleService();
       return NextResponse.json(
         {
           success: false,
-          error: `鏃犳晥鐨勪簨浠剁被? ${body.eventType}`,
+          error: `犳晥鐨勪簨剁被 ${body.eventType}`,
         },
         { status: 400 }
       );
@@ -74,7 +74,7 @@ const lifecycleService = new DeviceLifecycleService();
       return NextResponse.json(
         {
           success: false,
-          error: 'cost蹇呴』鏄潪璐熸暟?,
+          error: 'cost蹇呴』鏄潪璐熸暟,
         },
         { status: 400 }
       );
@@ -85,7 +85,7 @@ const lifecycleService = new DeviceLifecycleService();
       return NextResponse.json(
         {
           success: false,
-          error: 'attachments蹇呴』鏄暟缁勬牸?,
+          error: 'attachments蹇呴』鏄暟缁勬牸,
         },
         { status: 400 }
       );
@@ -121,7 +121,7 @@ const lifecycleService = new DeviceLifecycleService();
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: error instanceof Error  error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );
@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
+          error: '鏈巿鏉冭闂紝璇彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -148,15 +148,15 @@ export async function GET(request: NextRequest) {
     const qrcodeId = searchParams.get('qrcodeId');
     const eventType = searchParams.get('eventType') as DeviceEventType | null;
     const limit = searchParams.get('limit')
-      ? parseInt(searchParams.get('limit')!)
+       parseInt(searchParams.get('limit')!)
       : 50;
     const offset = searchParams.get('offset')
-      ? parseInt(searchParams.get('offset')!)
+       parseInt(searchParams.get('offset')!)
       : 0;
     const orderBy = searchParams.get('orderBy') || 'event_timestamp';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
-    // 濡傛灉娌℃湁鎸囧畾璁惧ID锛岃繑鍥為敊?    if (!qrcodeId) {
+    // 濡傛灉娌℃湁鎸囧畾璁惧ID锛岃繑鍥為敊    if (!qrcodeId) {
       return NextResponse.json(
         {
           success: false,
@@ -201,7 +201,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: error instanceof Error  error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );

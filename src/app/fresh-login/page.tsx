@@ -15,7 +15,6 @@ export default function FreshLoginPage() {
     isInitializing,
     hasPendingOperations,
     login,
-    logout,
   } = useIsolatedAuth();
 
   const [email, setEmail] = useState('1055603323@qq.com');
@@ -24,20 +23,22 @@ export default function FreshLoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
-  // 处理已认证用?  useEffect(() => {
+  // 处理已认证用户
+  useEffect(() => {
     if (isAuthenticated && !isInitializing) {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('用户已认证，执行跳转')const timer = setTimeout(() => {
-        if (redirect?.startsWith('/admin') || isAdmin) {
+      console.debug('用户已认证，执行跳转');
+      const timer = setTimeout(() => {
+        if (redirect.startsWith('/admin') || isAdmin) {
           router.push(redirect);
         } else {
           router.push('/');
         }
-      }, 300); // 短暂延迟确保状态稳?
+      }, 300); // 短暂延迟确保状态稳定
       return () => clearTimeout(timer);
     }
   }, [isAuthenticated, isAdmin, redirect, router, isInitializing]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting || hasPendingOperations) return;
 
@@ -46,13 +47,16 @@ export default function FreshLoginPage() {
     setLoginSuccess(false);
 
     try {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('开始登录流?)const result = await login(email, password);
+      console.debug('开始登录流程');
+      const result = await login(email, password);
 
-      if (result.success) {
-        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('登录成功，准备跳?)setLoginSuccess(true);
+      if (result && result.success) {
+        console.debug('登录成功，准备跳转');
+        setLoginSuccess(true);
 
-        // 延迟跳转确保状态同?        setTimeout(() => {
-          if (redirect?.startsWith('/admin') || result?.isAdmin) {
+        // 延迟跳转确保状态同步
+        setTimeout(() => {
+          if (redirect.startsWith('/admin') || (result as any).isAdmin) {
             router.push(redirect);
           } else {
             router.push('/');
@@ -63,14 +67,15 @@ export default function FreshLoginPage() {
         console.error('登录失败:', result.error);
       }
     } catch (err) {
-      setError('登录过程中发生错?);
+      setError('登录过程中发生错误');
       console.error('登录异常:', err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // 如果正在初始化或已认证，显示加载状?  if (isInitializing || (isAuthenticated && !loginSuccess)) {
+  // 如果正在初始化或已认证，显示加载状态
+  if (isInitializing || (isAuthenticated && !loginSuccess)) {
     return (
       <div
         style={{
@@ -102,7 +107,7 @@ export default function FreshLoginPage() {
             }}
           ></div>
           <p style={{ color: '#4a5568', fontSize: '18px' }}>
-            {isInitializing ? '初始化认证系?..' : '验证用户身份...'}
+            {isInitializing  '初始化认证系统...' : '验证用户身份...'}
           </p>
         </div>
         <style jsx>{`
@@ -166,8 +171,8 @@ export default function FreshLoginPage() {
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: '24px', marginBottom: '10px' }}>�?/div>
-            <strong>登录成功?/strong>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}>✓</div>
+            <strong>登录成功!</strong>
             <p>正在为您跳转...</p>
           </div>
         )}
@@ -251,7 +256,7 @@ export default function FreshLoginPage() {
               width: '100%',
               padding: '14px',
               background:
-                isSubmitting || hasPendingOperations ? '#a0aec0' : '#667eea',
+                isSubmitting || hasPendingOperations  '#a0aec0' : '#667eea',
               color: 'white',
               border: 'none',
               borderRadius: '6px',
@@ -259,12 +264,12 @@ export default function FreshLoginPage() {
               fontWeight: '600',
               cursor:
                 isSubmitting || hasPendingOperations
-                  ? 'not-allowed'
+                   'not-allowed'
                   : 'pointer',
               transition: 'all 0.3s',
             }}
           >
-            {isSubmitting || hasPendingOperations ? '登录?..' : '登录'}
+            {isSubmitting || hasPendingOperations  '登录中...' : '登录'}
           </button>
         </form>
 
@@ -283,4 +288,3 @@ export default function FreshLoginPage() {
     </div>
   );
 }
-

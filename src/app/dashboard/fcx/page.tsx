@@ -85,8 +85,8 @@ export default function FcxDashboardPage() {
     title: string;
     value: string | number;
     icon: React.ElementType;
-    color?: string;
-    subtitle?: string;
+    color: string;
+    subtitle: string;
   }) => {
     // @ts-ignore
     const colorClasses = {
@@ -133,9 +133,9 @@ export default function FcxDashboardPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
             <Coins className="w-8 h-8 text-yellow-500 mr-3" />
-            FCX联盟仪表?          </h1>
+            FCX联盟仪表          </h1>
           <p className="mt-1 text-sm text-gray-600">
-            管理您的FCX2期权和联盟权?          </p>
+            管理您的FCX2期权和联盟权          </p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -149,13 +149,13 @@ export default function FcxDashboardPage() {
         </div>
       </div>
 
-      {/* 标签页导?*/}
+      {/* 标签页导*/}
       <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg w-fit">
         <button
           onClick={() => setActiveTab('overview')}
           className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
             activeTab === 'overview'
-              ? 'bg-white shadow-sm text-blue-600'
+               'bg-white shadow-sm text-blue-600'
               : 'text-gray-600 hover:text-gray-800'
           }`}
         >
@@ -166,7 +166,7 @@ export default function FcxDashboardPage() {
           onClick={() => setActiveTab('equity')}
           className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
             activeTab === 'equity'
-              ? 'bg-white shadow-sm text-blue-600'
+               'bg-white shadow-sm text-blue-600'
               : 'text-gray-600 hover:text-gray-800'
           }`}
         >
@@ -184,21 +184,21 @@ export default function FcxDashboardPage() {
               value={`${stats.fcx2Balance.toLocaleString()} FCX2`}
               icon={Coins}
               color="yellow"
-              subtitle="可兑换权?
+              subtitle="可兑换权
             />
             <StatCard
               title="活跃期权"
               value={stats.activeOptions}
               icon={Zap}
               color="green"
-              subtitle={`�?{stats.totalOptions}个期权`}
+              subtitle={`{stats.totalOptions}个期权`}
             />
             <StatCard
               title="联盟等级"
               value={
                 stats.level.charAt(0).toUpperCase() +
                 stats.level.slice(1) +
-                '�?
+                '
               }
               icon={Trophy}
               color="purple"
@@ -209,7 +209,7 @@ export default function FcxDashboardPage() {
               value={`${stats.recentRewards.length}笔`}
               icon={TrendingUp}
               color="blue"
-              subtitle="最?�?
+              subtitle="最
             />
           </div>
 
@@ -223,13 +223,13 @@ export default function FcxDashboardPage() {
               />
             </div>
 
-            {/* 最近奖励记?*/}
+            {/* 最近奖励记*/}
             <div className="lg:col-span-2">
               <Card className="h-full">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <TrendingUp className="w-5 h-5 text-green-500 mr-2" />
-                    最近奖励记?                  </CardTitle>
+                    最近奖励记                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -258,7 +258,7 @@ export default function FcxDashboardPage() {
                             +{reward.amount} FCX2
                           </p>
                           <Badge variant="secondary" className="mt-1">
-                            已到?                          </Badge>
+                            已到                          </Badge>
                         </div>
                       </div>
                     ))}
@@ -275,10 +275,10 @@ export default function FcxDashboardPage() {
             </div>
           </div>
 
-          {/* 期权状态概?*/}
+          {/* 期权状态概*/}
           <Card>
             <CardHeader>
-              <CardTitle>期权状态概?/CardTitle>
+              <CardTitle>期权状态概/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -287,13 +287,13 @@ export default function FcxDashboardPage() {
                     {stats.activeOptions}
                   </div>
                   <div className="text-sm text-green-700">活跃期权</div>
-                  <div className="text-xs text-green-500 mt-1">可随时兑?/div>
+                  <div className="text-xs text-green-500 mt-1">可随时兑/div>
                 </div>
                 <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
                   <div className="text-3xl font-bold text-yellow-600">
                     {stats.expiredOptions}
                   </div>
-                  <div className="text-sm text-yellow-700">已过期期?/div>
+                  <div className="text-sm text-yellow-700">已过期期/div>
                   <div className="text-xs text-yellow-500 mt-1">无法使用</div>
                 </div>
                 <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">

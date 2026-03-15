@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -54,7 +54,7 @@ import { createClient } from '@supabase/supabase-js';
  *                     activeMonitors:
  *                       type: integer
  *       500:
- *         description: 鏈嶅姟鍣ㄩ敊? */
+ *         description: 鏈嶅姟鍣ㄩ敊 */
 
 export async function GET(request: Request) {
   try {
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
     const module = searchParams.get('module');
     const action = searchParams.get('action') || 'status';
 
-    console.log(`馃攳 鐩戞帶鏁村悎鍣ㄦ敹鍒拌? module=${module}, action=${action}`);
+    console.log(`馃攳 鐩戞帶鏁村悎鍣ㄦ敹鍒拌 module=${module}, action=${action}`);
 
     let result;
 
@@ -81,7 +81,7 @@ export async function GET(request: Request) {
         break;
       default:
         return NextResponse.json(
-          { success: false, message: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, message: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -93,12 +93,12 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('锟?鐩戞帶鏁村悎鍣ㄦ墽琛屽け?', error);
+    console.error('鐩戞帶鏁村悎鍣ㄦ墽琛屽け', error);
     return NextResponse.json(
       {
         success: false,
-        message: '鐩戞帶鏁村悎鍣ㄦ墽琛屽け?,
-        error: error instanceof Error ? error.message : '鏈煡閿欒',
+        message: '鐩戞帶鏁村悎鍣ㄦ墽琛屽け,
+        error: error instanceof Error  error.message : '鏈煡閿欒',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -107,11 +107,11 @@ export async function GET(request: Request) {
 }
 
 /**
- * 鑾峰彇鐩戞帶鏁村悎鐘? */
+ * 鑾峰彇鐩戞帶鏁村悎鐘 */
 async function getIntegrationStatus() {
-  console.log('馃搳 鑾峰彇鐩戞帶鏁村悎鐘?..');
+  console.log('馃搳 鑾峰彇鐩戞帶鏁村悎鐘..');
 
-  // 妯℃嫙鍚勬ā鍧楃洃鎺х姸?  const moduleStatus = {
+  // 妯℃嫙鍚勬ā鍧楃洃鎺х姸  const moduleStatus = {
     devices: {
       integrated: true,
       monitors: 15,
@@ -182,19 +182,19 @@ async function getIntegrationStatus() {
 }
 
 /**
- * 鏁村悎鎸囧畾妯″潡鐨勭洃鎺у姛? */
+ * 鏁村悎鎸囧畾妯″潡鐨勭洃鎺у姛 */
 async function integrateModuleMonitoring(moduleName: string | null) {
   if (!moduleName) {
     throw new Error('蹇呴』鎸囧畾瑕佹暣鍚堢殑妯″潡鍚嶇О');
   }
 
-  console.log(`馃敡 寮€濮嬫暣鍚堟ā鍧楃洃? ${moduleName}`);
+  console.log(`馃敡 寮€濮嬫暣鍚堟ā鍧楃洃 ${moduleName}`);
 
   // 妯℃嫙鏁村悎杩囩▼
   const integrationSteps = [
     `杩炴帴${moduleName}鐩戞帶鏁版嵁婧恅,
     `鍚屾鍛婅瑙勫垯閰嶇疆`,
-    `寤虹珛瀹炴椂鏁版嵁閫氶亾`,
+    `寤虹珛瀹炴椂鏁版嵁氶亾`,
     `閰嶇疆鍛婅杞彂鏈哄埗`,
     `楠岃瘉鏁村悎缁撴灉`,
   ];
@@ -202,11 +202,11 @@ async function integrateModuleMonitoring(moduleName: string | null) {
   const integrationLog: string[] = [];
 
   for (let i = 0; i < integrationSteps.length; i++) {
-    await new Promise(resolve => setTimeout(resolve, 500)); // 妯℃嫙澶勭悊鏃堕棿
+    await new Promise(resolve => setTimeout(resolve, 500)); // 妯℃嫙澶勭悊堕棿
     integrationLog.push(
       `${new Date().toISOString()} - ${integrationSteps[i]} 鉁揱
     );
-    console.log(`锟?${integrationSteps[i]}`);
+    console.log(`${integrationSteps[i]}`);
   }
 
   return {
@@ -219,17 +219,17 @@ async function integrateModuleMonitoring(moduleName: string | null) {
 }
 
 /**
- * 璺ㄦā鍧楀悓姝ュ憡? */
+ * 璺ㄦā鍧楀悓姝ュ憡 */
 async function syncAlertsAcrossModules() {
   console.log('馃攧 寮€濮嬭法妯″潡鍛婅鍚屾...');
 
   // 妯℃嫙鍛婅鍚屾杩囩▼
   const syncOperations = [
     '鏀堕泦鍚勬ā鍧楀緟澶勭悊鍛婅',
-    '鍘婚噸鍜屽悎骞剁浉浼煎憡?,
+    '鍘婚噸鍜屽悎骞剁浉煎憡,
     '鎸変紭鍏堢骇閲嶆柊鎺掑簭',
     '鍒嗗彂鍒扮粺涓€鍛婅涓績',
-    '鏇存柊鍚勬ā鍧楀憡璀︾姸?,
+    '鏇存柊鍚勬ā鍧楀憡璀︾姸,
   ];
 
   const syncResults: any[] = [];
@@ -243,7 +243,7 @@ async function syncAlertsAcrossModules() {
     };
     syncResults.push(result);
     console.log(
-      `馃搳 ${syncOperations[i]}: 澶勭悊?{result.processedAlerts}涓憡璀
+      `馃搳 ${syncOperations[i]}: 澶勭悊{result.processedAlerts}涓憡璀
     );
   }
 
@@ -261,11 +261,11 @@ async function syncAlertsAcrossModules() {
  * 楠岃瘉鏁村悎鏁堟灉
  */
 async function validateIntegration() {
-  console.log('锟?楠岃瘉鐩戞帶鏁村悎鏁堟灉...');
+  console.log('楠岃瘉鐩戞帶鏁村悎鏁堟灉...');
 
   // 妯℃嫙楠岃瘉娴嬭瘯
   const validationTests = [
-    { name: '鏁版嵁杩為€氭€ф祴?, expected: true, actual: true },
+    { name: '鏁版嵁杩為€氭€ф祴, expected: true, actual: true },
     { name: '鍛婅杞彂娴嬭瘯', expected: true, actual: true },
     { name: '鏉冮檺楠岃瘉娴嬭瘯', expected: true, actual: true },
     { name: '鎬ц兘鍩哄噯娴嬭瘯', expected: '>1000req/s', actual: '1250req/s' },
@@ -283,7 +283,7 @@ async function validateIntegration() {
     passedTests,
     successRate: Math.round((passedTests / validationTests.length) * 100),
     testResults: validationTests,
-    overallStatus: passedTests === validationTests.length ? 'PASSED' : 'FAILED',
+    overallStatus: passedTests === validationTests.length  'PASSED' : 'FAILED',
   };
 }
 

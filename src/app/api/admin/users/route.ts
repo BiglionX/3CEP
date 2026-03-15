@@ -13,15 +13,15 @@ export async function GET(request: Request) {
   );
 
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥 }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ヨ闂敤鎴风? },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲ヨ闂敤鎴风 },
         { status: 403 }
       );
     }
@@ -38,9 +38,9 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
 
-    // 鐢熸垚缂撳瓨?    const cacheKey = `admin_users:${search}:${role}:${status}:${dateStart}:${dateEnd}:${lastActive}:${regSource}:${page}:${limit}`;
+    // 鐢熸垚缂撳    const cacheKey = `admin_users:${search}:${role}:${status}:${dateStart}:${dateEnd}:${lastActive}:${regSource}:${page}:${limit}`;
 
-    // 灏濊瘯浠庣紦瀛樿幏?    const cachedResult = await cache.get<{ data: any[]; meta: any }>(cacheKey);
+    // 灏濊瘯庣紦瀛樿幏    const cachedResult = await cache.get<{ data: any[]; meta: any }>(cacheKey);
     if (cachedResult) {
       return NextResponse.json({
         success: true,
@@ -60,22 +60,22 @@ export async function GET(request: Request) {
       query = query.or(`email.ilike.%${search}%,user_id.ilike.%${search}%`);
     }
 
-    // 娣诲姞瑙掕壊绛?    if (role) {
+    // 娣诲姞瑙掕壊绛    if (role) {
       query = query.eq('role', role);
     }
 
-    // 娣诲姞鐘舵€佺瓫?    if (status) {
+    // 娣诲姞鐘舵€佺瓫    if (status) {
       query = query.eq('status', status);
     }
 
-    // 娣诲姞娉ㄥ唽鏃堕棿鑼冨洿绛?    if (dateStart) {
+    // 娣诲姞娉ㄥ唽堕棿鑼冨洿绛    if (dateStart) {
       query = query.gte('created_at', dateStart);
     }
     if (dateEnd) {
       query = query.lte('created_at', dateEnd);
     }
 
-    // 娣诲姞鏈€鍚庢椿璺冩椂闂寸瓫?    if (lastActive) {
+    // 娣诲姞鏈€鍚庢椿璺冩椂闂寸瓫    if (lastActive) {
       const now = new Date();
       let activeDate: Date;
 
@@ -109,8 +109,8 @@ export async function GET(request: Request) {
       }
     }
 
-    // 娣诲姞娉ㄥ唽鏉ユ簮绛涢€夛紙鍋囪鍦╱ser_profiles_ext琛ㄤ腑鏈塻ource瀛楁?    if (regSource) {
-      // 杩欓噷鍙互鏍规嵁瀹為檯鐨勬敞鍐屾潵婧愬瓧娈佃繘琛岀瓫?      // 绀轰緥锛歲uery = query.eq('registration_source', regSource);
+    // 娣诲姞娉ㄥ唽鏉ユ簮绛涢€夛紙鍋囪鍦╱ser_profiles_ext琛ㄤ腑鏈塻ource瀛楁    if (regSource) {
+      // 杩欓噷鍙互鏍规嵁瀹為檯鐨勬敞鍐屾潵婧愬瓧娈佃繘琛岀瓫      // 绀轰緥锛歲uery = query.eq('registration_source', regSource);
     }
 
     // 鍒嗛〉
@@ -125,7 +125,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: '鑾峰彇鐢ㄦ埛鍒楄〃澶辫触' }, { status: 500 });
     }
 
-    // 缂撳瓨缁撴灉锛堜粎缂撳瓨闈炴悳绱㈢粨鏋滐紝閬垮厤缂撳瓨姹℃煋?    const shouldCache =
+    // 缂撳缁撴灉锛堜粎缂撳闈炴悳绱㈢粨鏋滐紝垮厤缂撳姹℃煋    const shouldCache =
       !search &&
       !role &&
       !status &&
@@ -149,7 +149,7 @@ export async function GET(request: Request) {
     };
 
     if (shouldCache) {
-      await cache.set(cacheKey, result, { ttl: 300 }); // 缂撳瓨5鍒嗛挓
+      await cache.set(cacheKey, result, { ttl: 300 }); // 缂撳5鍒嗛挓
     }
 
     return NextResponse.json({
@@ -161,8 +161,8 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -177,15 +177,15 @@ export async function PUT(request: Request) {
   );
 
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥 }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ヤ慨鏀圭敤鎴蜂俊? },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲ヤ慨鏀圭敤鎴蜂俊 },
         { status: 403 }
       );
     }
@@ -206,20 +206,20 @@ export async function PUT(request: Request) {
       updateData.role = updates.role;
     }
 
-    // 澶勭悊瀛愯鑹叉洿?    if (updates.sub_roles !== undefined) {
+    // 澶勭悊瀛愯鑹叉洿    if (updates.sub_roles !== undefined) {
       updateData.sub_roles = updates.sub_roles;
     }
 
-    // 澶勭悊婵€娲荤姸鎬佹洿?    if (updates.is_active !== undefined) {
+    // 澶勭悊婵€娲荤姸鎬佹洿    if (updates.is_active !== undefined) {
       updateData.is_active = updates.is_active;
     }
 
-    // 澶勭悊灏佺鐘舵€佹洿?    if (updates.status) {
+    // 澶勭悊灏佺鐘舵€佹洿    if (updates.status) {
       updateData.status = updates.status;
 
       if (updates.status === 'banned') {
         updateData.banned_at = new Date().toISOString();
-        updateData.banned_reason = updates.banned_reason || '绠＄悊鍛樺皝?;
+        updateData.banned_reason = updates.banned_reason || '绠＄悊鍛樺皝;
       } else if (updates.status === 'active') {
         updateData.unbanned_at = new Date().toISOString();
         updateData.banned_reason = null;
@@ -252,8 +252,8 @@ export async function PUT(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -268,15 +268,15 @@ export async function POST(request: Request) {
   );
 
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥 }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ユ墽琛屾壒閲忔搷? },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲ユ墽琛屾壒閲忔搷 },
         { status: 403 }
       );
     }
@@ -330,7 +330,7 @@ export async function POST(request: Request) {
         );
     }
 
-    // 鎵归噺鏇存柊鐢ㄦ埛鐘?    const { data, error } = await supabase
+    // 鎵归噺鏇存柊鐢ㄦ埛鐘    const { data, error } = await supabase
       .from('user_profiles_ext')
       .update(updateData)
       .in('id', userIds);
@@ -347,11 +347,11 @@ export async function POST(request: Request) {
       success: true,
       message: `鎵归噺${
         action === 'ban'
-          ? '灏佺'
+           '灏佺'
           : action === 'unban'
-            ? '瑙ｅ皝'
+             '瑙ｅ皝'
             : action === 'activate'
-              ? '婵€?
+               '婵€
               : '鍋滅敤'
       }鎿嶄綔鎴愬姛`,
       affected: userIds.length,
@@ -361,8 +361,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );

@@ -1,5 +1,5 @@
 ﻿'use client';
-
+'
 import { UnifiedLogin } from '@/components/auth/UnifiedLogin';
 import { useSearchParams, useRouter } from 'next/navigation';
 
@@ -9,8 +9,8 @@ export default function LoginPage() {
   const redirect = searchParams.get('redirect') || '/brand/dashboard';
 
   const handleLoginSuccess = (user: any) => {
-    // 登录成功处理逻辑
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('登录成功:', user)if (redirect?.startsWith('/admin') && !user?.is_admin) {
+    // 登录成功处理逻辑'
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('登录成功:', user)if (redirect.startsWith('/admin') && !user.is_admin) {'
       router.push('/unauthorized');
       return;
     }
@@ -20,13 +20,14 @@ export default function LoginPage() {
 
   return (
     <UnifiedLogin
-      isOpen={true}
+      isOpen={true}'
       onClose={() => router.push('/')}
       onLoginSuccess={handleLoginSuccess}
       redirectUrl={redirect}
-      mode="page"
+      mode="page""
       theme="brand"
     />
   );
 }
 
+'"

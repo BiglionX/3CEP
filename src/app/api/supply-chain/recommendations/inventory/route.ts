@@ -1,5 +1,5 @@
 ﻿/**
- * 搴撳瓨浼樺寲寤鸿API
+ * 搴撳樺寲寤鸿API
  */
 
 import { NextResponse } from 'next/server';
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const recommendationRequest: InventoryOptimizationRequest = {
       warehouseId,
       productIds:
-        productIds && Array.isArray(productIds) ? productIds : undefined,
+        productIds && Array.isArray(productIds)  productIds : undefined,
       analysisPeriodDays: analysisPeriodDays || 90,
       optimizationStrategy: optimizationStrategy || 'cost_optimization',
     };
@@ -47,10 +47,10 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('搴撳瓨浼樺寲寤鸿閿欒:', error);
+    console.error('搴撳樺寲寤鸿閿欒:', error);
     return NextResponse.json(
       {
-        error: '鐢熸垚搴撳瓨浼樺寲寤鸿澶辫触',
+        error: '鐢熸垚搴撳樺寲寤鸿澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }

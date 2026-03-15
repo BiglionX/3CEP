@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '100');
 
     if (metricName) {
-      // 鑾峰彇鐗瑰畾鎸囨爣鐨勭粺璁℃暟?      const stats = performanceMonitor.getMetricStats(metricName, timeframe);
+      // 鑾峰彇鐗瑰畾鎸囨爣鐨勭粺璁℃暟      const stats = performanceMonitor.getMetricStats(metricName, timeframe);
       return NextResponse.json({
         success: true,
         metric: metricName,
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
         timeframe,
       });
     } else {
-      // 鑾峰彇鎵€鏈夋寚鏍囩殑鏈€鏂版暟?      const snapshot = performanceMonitor.getPerformanceSnapshot();
+      // 鑾峰彇鎵€鏈夋寚鏍囩殑鏈€鏂版暟      const snapshot = performanceMonitor.getPerformanceSnapshot();
       return NextResponse.json({
         success: true,
         data: snapshot,

@@ -1,5 +1,5 @@
 ﻿/**
- * 璁惧绠＄悊 API 绔偣锛堝甫绉熸埛楠岃瘉? * 婕旂ず濡備綍浣跨敤 requireTenant 涓棿? */
+ * 璁惧绠＄悊 API 绔偣锛堝甫绉熸埛楠岃瘉 * 婕旂ず濡備綍浣跨敤 requireTenant 涓棿 */
 
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   );
 
   try {
-    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+    // 鑾峰彇绉熸埛涓婁笅    const tenantContext = await getUserTenantContext(request);
 
     if (!tenantContext.success) {
       return NextResponse.json({ error: tenantContext.error }, { status: 401 });
@@ -30,14 +30,14 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const offset = (page - 1) * limit;
 
-    // 鏌ヨ璇ョ鎴蜂笅鐨勮澶囷紙鑷姩搴旂敤绉熸埛杩囨护?    const {
+    // 鏌ヨ璇ョ鎴蜂笅鐨勮澶囷紙鑷姩搴旂敤绉熸埛杩囨护    const {
       data: devices,
       error,
       count,
     } = await supabase
       .from('devices')
       .select('*', { count: 'exact' })
-      .eq('tenant_id', tenantId) // 鍏抽敭锛氬彧鏌ヨ褰撳墠绉熸埛鐨勬暟?      .range(offset, offset + limit - 1)
+      .eq('tenant_id', tenantId) // 鍏抽敭锛氬彧鏌ヨ褰撳墠绉熸埛鐨勬暟      .range(offset, offset + limit - 1)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     console.error('璁惧 API 閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
   );
 
   try {
-    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+    // 鑾峰彇绉熸埛涓婁笅    const tenantContext = await getUserTenantContext(request);
 
     if (!tenantContext.success) {
       return NextResponse.json({ error: tenantContext.error }, { status: 401 });
@@ -80,12 +80,12 @@ export async function POST(request: Request) {
 
     const { tenantId, userId, role } = tenantContext;
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
 
     // 楠岃瘉蹇呰瀛楁
     if (!body.name || !body.type) {
       return NextResponse.json(
-        { error: '璁惧鍚嶇О鍜岀被鍨嬩负蹇呭～? },
+        { error: '璁惧鍚嶇О鍜岀被鍨嬩负蹇呭～ },
         { status: 400 }
       );
     }
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
       .insert({
         name: body.name.trim(),
         type: body.type.trim(),
-        description: body?.trim() || null,
+        description: body.trim() || null,
         status: body.status || 'active',
         tenant_id: tenantId, // 鍏抽敭锛氳嚜鍔ㄨ缃鎴稩D
         created_by: userId,
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
     ) as any;
   } catch (error: any) {
     console.error('鍒涘缓璁惧閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -133,7 +133,7 @@ export async function PUT(request: Request) {
   );
 
   try {
-    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+    // 鑾峰彇绉熸埛涓婁笅    const tenantContext = await getUserTenantContext(request);
 
     if (!tenantContext.success) {
       return NextResponse.json({ error: tenantContext.error }, { status: 401 });
@@ -141,22 +141,22 @@ export async function PUT(request: Request) {
 
     const { tenantId, userId, role } = tenantContext;
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
     const { id, ...updateData } = body;
 
     if (!id) {
       return NextResponse.json({ error: '璁惧ID涓哄繀濉」' }, { status: 400 });
     }
 
-    // 楠岃瘉鐢ㄦ埛鏄惁鏈夋潈鏇存柊璇ヨ澶囷紙蹇呴』灞炰簬鍚屼竴绉熸埛?    const { data: existingDevice, error: checkError } = await supabase
+    // 楠岃瘉鐢ㄦ埛鏄惁鏈夋潈鏇存柊璇ヨ澶囷紙蹇呴』灞炰簬鍚屼竴绉熸埛    const { data: existingDevice, error: checkError } = await supabase
       .from('devices')
       .select('id, tenant_id')
       .eq('id', id)
-      .eq('tenant_id', tenantId) // 鍏抽敭锛氱‘淇濊澶囧睘浜庡綋鍓嶇?      .single();
+      .eq('tenant_id', tenantId) // 鍏抽敭锛氱‘淇濊澶囧睘浜庡綋鍓嶇      .single();
 
     if (checkError || !existingDevice) {
       return NextResponse.json(
-        { error: '璁惧涓嶅瓨鍦ㄦ垨鏃犳潈璁块棶' },
+        { error: '璁惧涓嶅鍦ㄦ垨犳潈璁块棶' },
         { status: 404 }
       );
     }
@@ -188,7 +188,7 @@ export async function PUT(request: Request) {
     });
   } catch (error: any) {
     console.error('鏇存柊璁惧閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -199,7 +199,7 @@ export async function DELETE(request: Request) {
   );
 
   try {
-    // 鑾峰彇绉熸埛涓婁笅?    const tenantContext = await getUserTenantContext(request);
+    // 鑾峰彇绉熸埛涓婁笅    const tenantContext = await getUserTenantContext(request);
 
     if (!tenantContext.success) {
       return NextResponse.json({ error: tenantContext.error }, { status: 401 });
@@ -215,7 +215,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: '璁惧ID涓哄繀濉」' }, { status: 400 });
     }
 
-    // 楠岃瘉鐢ㄦ埛鏄惁鏈夋潈鍒犻櫎璇ヨ?    const { data: existingDevice, error: checkError } = await supabase
+    // 楠岃瘉鐢ㄦ埛鏄惁鏈夋潈鍒犻櫎璇ヨ    const { data: existingDevice, error: checkError } = await supabase
       .from('devices')
       .select('id, tenant_id')
       .eq('id', deviceId)
@@ -224,12 +224,12 @@ export async function DELETE(request: Request) {
 
     if (checkError || !existingDevice) {
       return NextResponse.json(
-        { error: '璁惧涓嶅瓨鍦ㄦ垨鏃犳潈璁块棶' },
+        { error: '璁惧涓嶅鍦ㄦ垨犳潈璁块棶' },
         { status: 404 }
       );
     }
 
-    // 鎵ц杞垹?    const { error } = await supabase
+    // 鎵ц杞垹    const { error } = await supabase
       .from('devices')
       .update({
         status: 'deleted',
@@ -252,7 +252,7 @@ export async function DELETE(request: Request) {
     });
   } catch (error: any) {
     console.error('鍒犻櫎璁惧閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 

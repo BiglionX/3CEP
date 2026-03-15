@@ -1,6 +1,6 @@
 ﻿/**
  * 鐢ㄦ埛FCX璐︽埛浣欓鏌ヨAPI
- * 涓轰紬绛规敮浠樻彁渚涘疄鏃朵綑棰濅俊? */
+ * 涓轰紬绛规敮樻彁渚涘疄朵綑棰濅俊 */
 
 import { supabase } from '@/lib/supabase';
 import { CrowdfundingFcxPaymentService } from '@/services/crowdfunding/fcx-payment.service';
@@ -9,9 +9,9 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const {
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       error: authError,
     } = await supabase.auth.getUser(token);
     if (authError || !user) {
-      return NextResponse.json({ error: '鏃犳晥鐨勮璇佷护? }, { status: 401 });
+      return NextResponse.json({ error: '犳晥鐨勮璇佷护 }, { status: 401 });
     }
 
     // 鑾峰彇鐢ㄦ埛FCX浣欓
@@ -40,9 +40,9 @@ export async function GET(request: Request) {
         fcxBalance: balance,
         usdValue: balance / 10, // 鍋囪10 FCX = 1 USD
         accountExists: !!account,
-        accountId: account?.id || null,
-        accountType: account?.accountType || null,
-        frozenBalance: account?.frozenBalance || 0,
+        accountId: account.id || null,
+        accountType: account.accountType || null,
+        frozenBalance: account.frozenBalance || 0,
         availableBalance: balance,
       },
     });

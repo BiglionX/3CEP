@@ -35,7 +35,13 @@ export interface GestureEvent {
 }
 
 // 手势识别Hook
-export function useGestureRecognizer(onGesture: (event: GestureEvent) => void) {
+export interface GestureHandlers {
+  onTouchStart: (e: React.TouchEvent) => void;
+  onTouchMove: (e: React.TouchEvent) => void;
+  onTouchEnd: (e: React.TouchEvent) => void;
+}
+
+export function useGestureRecognizer(onGesture: (event: GestureEvent) => void): GestureHandlers {
   const [touchStart, setTouchStart] = useState<{
     x: number;
     y: number;

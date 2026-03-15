@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?
+// 鍒濆鍖朣upabase瀹㈡埛
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -69,16 +69,16 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        totalClicks: clicks?.length || 0,
+        totalClicks: clicks.length || 0,
         stats,
-        recentClicks: clicks?.slice(0, 50) || [] // 杩斿洖鏈€?0鏉¤?
+        recentClicks: clicks.slice(0, 50) || [] // 杩斿洖鏈€0鏉¤
       }
     });
 
   } catch (error) {
     console.error('API閿欒:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }
@@ -96,15 +96,15 @@ function calculateClickStats(clicks: any[], groupBy: string) {
   };
 
   clicks.forEach(click => {
-    // 鎸夊钩鍙扮粺?
-    const platform = click?.platform || 'unknown';
+    // 鎸夊钩鍙扮粺
+    const platform = click.platform || 'unknown';
     stats.byPlatform[platform] = (stats.byPlatform[platform] || 0) + 1;
 
-    // 鎸夐厤浠剁粺?
-    const partName = click?.part_name || 'unknown';
+    // 鎸夐厤剁粺
+    const partName = click.part_name || 'unknown';
     stats.byPart[partName] = (stats.byPart[partName] || 0) + 1;
 
-    // 鎸夋潵婧愮粺?
+    // 鎸夋潵婧愮粺
     const source = click.utm_source || 'direct';
     stats.bySource[source] = (stats.bySource[source] || 0) + 1;
 
@@ -113,7 +113,7 @@ function calculateClickStats(clicks: any[], groupBy: string) {
       stats.totalUniqueVisitors.add(click.ip_address);
     }
 
-    // 鎸夋椂闂村垎?
+    // 鎸夋椂闂村垎
     const date = new Date(click.clicked_at);
     let timeKey: string;
     
@@ -146,19 +146,19 @@ function calculateClickStats(clicks: any[], groupBy: string) {
     
     stats.byTime[timeKey].count++;
     
-    // 鏃堕棿鍒嗙粍鍐呯殑骞冲彴鍒嗗竷
+    // 堕棿鍒嗙粍鍐呯殑骞冲彴鍒嗗竷
     stats.byTime[timeKey].platforms[platform] = 
       (stats.byTime[timeKey].platforms[platform] || 0) + 1;
     
-    // 鏃堕棿鍒嗙粍鍐呯殑鏉ユ簮鍒嗗竷
+    // 堕棿鍒嗙粍鍐呯殑鏉ユ簮鍒嗗竷
     stats.byTime[timeKey].sources[source] = 
       (stats.byTime[timeKey].sources[source] || 0) + 1;
   });
 
   // 璁＄畻杞寲鐜囷紙濡傛灉鏈夋敹鍏ユ暟鎹殑璇濓級
-  // 杩欓噷绠€鍖栧鐞嗭紝瀹為檯搴旇鍏宠仈鏀跺叆琛ㄨ?
+  // 杩欓噷绠€鍖栧鐞嗭紝瀹為檯搴旇鍏宠仈鏀跺叆琛ㄨ
   stats.conversionRate = stats.totalUniqueVisitors.size > 0 
-    ? ((clicks.length * 0.02) / stats.totalUniqueVisitors.size * 100).toFixed(2)
+     ((clicks.length * 0.02) / stats.totalUniqueVisitors.size * 100).toFixed(2)
     : 0;
 
   stats.totalUniqueVisitors = stats.totalUniqueVisitors.size;
@@ -166,7 +166,7 @@ function calculateClickStats(clicks: any[], groupBy: string) {
   return stats;
 }
 
-// POST /api/affiliate/analytics/clicks - 鎵归噺鑾峰彇澶氫釜閾炬帴鐨勭粺?
+// POST /api/affiliate/analytics/clicks - 鎵归噺鑾峰彇澶氫釜炬帴鐨勭粺
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -179,7 +179,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鎵归噺鏌ヨ姣忎釜閾炬帴鐨勭粺?
+    // 鎵归噺鏌ヨ姣忎釜炬帴鐨勭粺
     const promises = affiliateLinkIds.map(async (linkId: string) => {
       const { data: clicks, error } = await supabase
         .from('affiliate_click_tracking')
@@ -189,14 +189,14 @@ export async function POST(request: Request) {
         .lte('clicked_at', endDate || new Date().toISOString());
 
       if (error) {
-        console.error(`鑾峰彇閾炬帴${linkId}缁熻澶辫触:`, error);
+        console.error(`鑾峰彇炬帴${linkId}缁熻澶辫触:`, error);
         return { affiliateLinkId: linkId, error: error.message, totalClicks: 0 };
       }
 
       return {
         affiliateLinkId: linkId,
-        totalClicks: clicks?.length || 0,
-        recentClicks: clicks?.slice(0, 10) || []
+        totalClicks: clicks.length || 0,
+        recentClicks: clicks.slice(0, 10) || []
       };
     });
 

@@ -16,11 +16,11 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('pageSize') || '20');
 
-    // 楠岃瘉绠＄悊鍛樻潈?    const cookieStore = await cookies();
+    // 楠岃瘉绠＄悊鍛樻潈    const cookieStore = await cookies();
     const session = cookieStore.get('supabase-auth-token');
 
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 鏋勫缓鏌ヨ
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
       query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`);
     }
 
-    // 娣诲姞鐘舵€佺瓫?    if (status) {
+    // 娣诲姞鐘舵€佺瓫    if (status) {
       query = query.eq('status', status);
     }
 
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('鑾峰彇鏂囩珷鍒楄〃寮傚父:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
       { status: 500 }
     );
   }

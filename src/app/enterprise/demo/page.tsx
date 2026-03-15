@@ -58,9 +58,9 @@ export default function EnterpriseDemoPage() {
 
   // 模拟表格数据
   const [tableData, setTableData] = useState<DemoData[]>([
-    { id: '1', name: '智能客服机器?, status: 'active', createdAt: '2024-01-15', value: 125000 },
+    { id: '1', name: '智能客服机器, status: 'active', createdAt: '2024-01-15', value: 125000 },
     { id: '2', name: '采购管理系统', status: 'active', createdAt: '2024-01-16', value: 89000 },
-    { id: '3', name: '供应商对接平?, status: 'pending', createdAt: '2024-01-14', value: 245000 },
+    { id: '3', name: '供应商对接平, status: 'pending', createdAt: '2024-01-14', value: 245000 },
     { id: '4', name: '数据分析看板', status: 'inactive', createdAt: '2024-01-13', value: 67500 }
   ])
 
@@ -74,20 +74,20 @@ export default function EnterpriseDemoPage() {
     },
     {
       key: 'status',
-      title: '状?,
+      title: '状,
       render: (value: string) => (
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          value === 'active' ? 'bg-green-100 text-green-800' :
-          value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+          value === 'active'  'bg-green-100 text-green-800' :
+          value === 'pending'  'bg-yellow-100 text-yellow-800' :
           'bg-gray-100 text-gray-800'
         }`}>
-          {value === 'active' ? '运行? : value === 'pending' ? '待启? : '已停?}
+          {value === 'active'  '运行 : value === 'pending'  '待启 : '已停}
         </span>
       )
     },
     {
       key: 'value',
-      title: '价?,
+      title: '价,
       render: (value: number) => `¥${value.toLocaleString()}`
     },
     {
@@ -114,7 +114,7 @@ export default function EnterpriseDemoPage() {
     {
       label: '删除',
       onClick: (record: DemoData) => {
-        showError('删除确认', `确定要删?${record.name} 吗？`)
+        showError('删除确认', `确定要删${record.name} 吗？`)
       },
       condition: (record: DemoData) => record.status === 'inactive'
     }
@@ -125,14 +125,14 @@ export default function EnterpriseDemoPage() {
     try {
       // 这里可以调用实际的API
       console.log('表单数据:', data)
-      showSuccess('提交成功', '采购订单已成功创?)
+      showSuccess('提交成功', '采购订单已成功创)
     } catch (error) {
       showError('提交失败', '请检查网络连接后重试')
     }
   }
 
   const tabs = [
-    { id: 'dashboard', name: '仪表?, icon: Building },
+    { id: 'dashboard', name: '仪表, icon: Building },
     { id: 'services', name: '服务管理', icon: Bot },
     { id: 'orders', name: '采购订单', icon: ShoppingCart },
     { id: 'form', name: '表单示例', icon: Users }
@@ -151,7 +151,7 @@ export default function EnterpriseDemoPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
+                     'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -163,7 +163,7 @@ export default function EnterpriseDemoPage() {
         </div>
       </div>
 
-      {/* 仪表板内?*/}
+      {/* 仪表板内*/}
       {activeTab === 'dashboard' && (
         <div className="space-y-6">
           <LoadingState
@@ -178,17 +178,17 @@ export default function EnterpriseDemoPage() {
                   <ShoppingCart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{dashboardData?.totalOrders || 0}</div>
+                  <div className="text-2xl font-bold">{dashboardData.totalOrders || 0}</div>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">智能体数?/CardTitle>
+                  <CardTitle className="text-sm font-medium">智能体数/CardTitle>
                   <Bot className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{dashboardData?.totalAgents || 0}</div>
+                  <div className="text-2xl font-bold">{dashboardData.totalAgents || 0}</div>
                 </CardContent>
               </Card>
               
@@ -198,18 +198,18 @@ export default function EnterpriseDemoPage() {
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{dashboardData?.totalSuppliers || 0}</div>
+                  <div className="text-2xl font-bold">{dashboardData.totalSuppliers || 0}</div>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">总收?/CardTitle>
+                  <CardTitle className="text-sm font-medium">总收/CardTitle>
                   <Building className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    ¥{(dashboardData?.revenue || 0).toLocaleString()}
+                    ¥{(dashboardData.revenue || 0).toLocaleString()}
                   </div>
                 </CardContent>
               </Card>
@@ -224,7 +224,7 @@ export default function EnterpriseDemoPage() {
           <CardHeader>
             <CardTitle>企业服务列表</CardTitle>
             <CardDescription>
-              管理您的企业AI服务和应?
+              管理您的企业AI服务和应
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -242,10 +242,10 @@ export default function EnterpriseDemoPage() {
                 showInfo('导出功能', '正在准备导出数据...')
               }}
               onRefresh={() => {
-                showSuccess('刷新成功', '数据已更?)
+                showSuccess('刷新成功', '数据已更)
               }}
               onRowClick={(record) => {
-                showInfo('行点?, `选择? ${record.name}`)
+                showInfo('行点, `选择 ${record.name}`)
               }}
               emptyText="暂无服务数据"
             />
@@ -266,15 +266,15 @@ export default function EnterpriseDemoPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="text-blue-800 font-medium">待审?/div>
+                  <div className="text-blue-800 font-medium">待审/div>
                   <div className="text-2xl font-bold text-blue-600">12</div>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <div className="text-green-800 font-medium">处理?/div>
+                  <div className="text-green-800 font-medium">处理/div>
                   <div className="text-2xl font-bold text-green-600">8</div>
                 </div>
                 <div className="bg-purple-50 p-4 rounded-lg">
-                  <div className="text-purple-800 font-medium">已完?/div>
+                  <div className="text-purple-800 font-medium">已完/div>
                   <div className="text-2xl font-bold text-purple-600">36</div>
                 </div>
               </div>
@@ -282,19 +282,19 @@ export default function EnterpriseDemoPage() {
               <DataTable
                 data={[
                   { id: '1', orderNumber: 'PO-2024-001', supplier: '深圳电子科技', amount: 125000, status: 'pending', date: '2024-01-15' },
-                  { id: '2', orderNumber: 'PO-2024-002', supplier: '广州精密制?, amount: 89000, status: 'approved', date: '2024-01-16' }
+                  { id: '2', orderNumber: 'PO-2024-002', supplier: '广州精密制, amount: 89000, status: 'approved', date: '2024-01-16' }
                 ]}
                 columns={[
-                  { key: 'orderNumber', title: '订单? },
-                  { key: 'supplier', title: '供应? },
+                  { key: 'orderNumber', title: '订单 },
+                  { key: 'supplier', title: '供应 },
                   { key: 'amount', title: '金额', render: (value: number) => `¥${value.toLocaleString()}` },
-                  { key: 'status', title: '状?, render: (value: string) => (
+                  { key: 'status', title: '状, render: (value: string) => (
                     <span className={`px-2 py-1 rounded text-xs ${
-                      value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      value === 'approved' ? 'bg-green-100 text-green-800' :
+                      value === 'pending'  'bg-yellow-100 text-yellow-800' :
+                      value === 'approved'  'bg-green-100 text-green-800' :
                       'bg-gray-100 text-gray-800'
                     }`}>
-                      {value === 'pending' ? '待审? : value === 'approved' ? '已批? : '未知'}
+                      {value === 'pending'  '待审 : value === 'approved'  '已批 : '未知'}
                     </span>
                   )},
                   { key: 'date', title: '日期' }
@@ -332,15 +332,15 @@ export default function EnterpriseDemoPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-3">
-              <Button onClick={() => showSuccess('操作成功', '数据已保存到数据?)}>
+              <Button onClick={() => showSuccess('操作成功', '数据已保存到数据源)}>
                 <CheckCircle className="w-4 h-4 mr-2" />
                 成功通知
               </Button>
-              <Button variant="destructive" onClick={() => showError('操作失败', '请检查输入数?)}>
+              <Button variant="destructive" onClick={() => showError('操作失败', '请检查输入数)}>
                 <AlertCircle className="w-4 h-4 mr-2" />
                 错误通知
               </Button>
-              <Button variant="outline" onClick={() => showWarning('注意提醒', '某些字段需要特别注?)}>
+              <Button variant="outline" onClick={() => showWarning('注意提醒', '某些字段需要特别注)}>
                 ⚠️ 警告通知
               </Button>
               <Button variant="secondary" onClick={() => useToast().info('系统信息', '这是系统提示信息')}>

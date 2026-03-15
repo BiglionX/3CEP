@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { StepByStepTutorial } from '@/components/tutorial/StepByStepTutorial';
+import { StepByStepTutorial as StepByStepTutorialComponent } from '@/components/tutorial/StepByStepTutorial';
 import { Button } from '@/components/ui/button';
 import {
   ArrowLeft,
@@ -19,11 +19,11 @@ interface TutorialStep {
   id: string;
   title: string;
   description: string;
-  image_url?: string;
-  video_url?: string;
+  image_url: string;
+  video_url: string;
   estimated_time: number;
-  tips?: string[];
-  warnings?: string[];
+  tips: string[];
+  warnings: string[];
 }
 
 interface Tutorial {
@@ -68,7 +68,7 @@ export default function TutorialStepByStepPage() {
           apiUrl = `/api/tutorials/${tutorialId}`;
         } else if (deviceModel && faultType) {
           // 通过设备型号和故障类型获取教程
-          apiUrl = `/api/tutorials?deviceModel=${encodeURIComponent(deviceModel)}&faultType=${encodeURIComponent(faultType)}&pageSize=1`;
+          apiUrl = `/api/tutorialsdeviceModel=${encodeURIComponent(deviceModel)}&faultType=${encodeURIComponent(faultType)}&pageSize=1`;
         }
 
         if (!apiUrl) {
@@ -252,7 +252,7 @@ export default function TutorialStepByStepPage() {
       {/* 主要内容区域 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <StepByStepTutorial
+          <StepByStepTutorialComponent
             tutorial={tutorial}
             onComplete={() => {
               // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('教程完成!')// 可以在这里添加完成后的逻辑，比如显示完成弹窗、更新用户进度等

@@ -39,13 +39,13 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const warehouseId = searchParams.get('warehouseId') || undefined;
-    const timeRange = searchParams.get('timeRange') || '7d'; // 7锟? 30锟? 90锟?    const urgencyFilter = searchParams.get('urgency') || 'all'; // all, immediate, soon, planned
+    const timeRange = searchParams.get('timeRange') || '7d'; // 7 30 90    const urgencyFilter = searchParams.get('urgency') || 'all'; // all, immediate, soon, planned
 
-    // 鏋勫缓琛ヨ揣寤鸿璇锋眰
+    // 鏋勫缓琛ヨ揣寤鸿璇眰
     const replenishmentRequest: ReplenishmentRequest = {
       warehouseId: warehouseId || 'default-warehouse',
       forecastHorizonDays:
-        timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90,
+        timeRange === '7d'  7 : timeRange === '30d'  30 : 90,
       serviceLevelTarget: 0.95,
     };
 
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
         replenishmentRequest
       );
 
-    // 杩囨护绱ф€ョ▼?    let filteredSuggestions = suggestions;
+    // 杩囨护绱ф€ョ▼    let filteredSuggestions = suggestions;
     if (urgencyFilter !== 'all') {
       filteredSuggestions = suggestions.filter(
         s => s.urgency === urgencyFilter
@@ -111,7 +111,7 @@ function calculateDashboardStats(suggestions: any[]): DashboardStats {
   ); // 鍋囪骞冲潎鍗曚环100
   const avgOrderQuantity =
     totalSuggestions > 0
-      ? suggestions.reduce((sum, s) => sum + s.suggestedOrderQuantity, 0) /
+       suggestions.reduce((sum, s) => sum + s.suggestedOrderQuantity, 0) /
         totalSuggestions
       : 0;
 
@@ -119,14 +119,14 @@ function calculateDashboardStats(suggestions: any[]): DashboardStats {
     s => s.currentStock <= s.safetyStock * 0.5
   ).length;
 
-  // 浠撳簱鍒嗗竷缁熻
+  // 撳簱鍒嗗竷缁熻
   const warehouseDistribution: Record<string, number> = {};
   suggestions.forEach(s => {
     warehouseDistribution[s.warehouseId] =
       (warehouseDistribution[s.warehouseId] || 0) + 1;
   });
 
-  // 绫诲埆鍒嗗竷缁熻锛堥渶瑕佷粠浜у搧淇℃伅鑾峰彇绫诲埆?  const categoryDistribution: Record<string, number> = {
+  // 绫诲埆鍒嗗竷缁熻锛堥渶瑕佷粠浜у搧淇℃伅鑾峰彇绫诲埆  const categoryDistribution: Record<string, number> = {
     鐢靛瓙浜у搧: Math.floor(totalSuggestions * 0.4),
     鏈烘闆朵欢: Math.floor(totalSuggestions * 0.3),
     娑堣€楀搧: Math.floor(totalSuggestions * 0.2),
@@ -154,7 +154,7 @@ async function getTrendData(
   timeRange: string
 ) {
   // 妯℃嫙瓒嬪娍鏁版嵁
-  const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
+  const days = timeRange === '7d'  7 : timeRange === '30d'  30 : 90;
 
   const dailySuggestions = [];
   const valueTrends = [];
@@ -163,7 +163,7 @@ async function getTrendData(
     const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
     const dateString = date.toISOString().split('T')[0];
 
-    // 妯℃嫙姣忔棩寤鸿鏁伴噺锛堥€愭笎澧炲姞瓒嬪娍?    const baseCount = 5 + Math.floor(Math.random() * 10);
+    // 妯℃嫙姣忔棩寤鸿鏁伴噺锛堥€愭笎澧炲姞瓒嬪娍    const baseCount = 5 + Math.floor(Math.random() * 10);
     const trendFactor = 1 + (days - i) * 0.02;
     const count = Math.floor(baseCount * trendFactor);
 
@@ -172,7 +172,7 @@ async function getTrendData(
       count,
     });
 
-    // 妯℃嫙浠峰€艰秼?    valueTrends.push({
+    // 妯℃嫙峰€艰秼    valueTrends.push({
       date: dateString,
       value: count * (80 + Math.random() * 40), // 闅忔満鍗曚环80-120
     });
@@ -187,37 +187,37 @@ async function getTrendData(
 function generateAlerts(suggestions: any[]) {
   const alerts = [];
 
-  // 鍏抽敭搴撳瓨棰勮
+  // 鍏抽敭搴撳棰勮
   const criticalStockItems = suggestions.filter(
     s => s.currentStock <= s.safetyStock * 0.3
   );
   criticalStockItems.forEach(item => {
     alerts.push({
       type: 'critical_stock' as const,
-      message: `${item.productName}搴撳瓨涓ラ噸涓嶈冻锛屽綋鍓嶅簱?{item.currentStock}锛屽畨鍏ㄥ簱?{item.safetyStock}`,
+      message: `${item.productName}搴撳涓ラ噸涓嶈冻锛屽綋鍓嶅簱{item.currentStock}锛屽畨鍏ㄥ簱{item.safetyStock}`,
       severity: 'high' as const,
       productId: item.productId,
       warehouseId: item.warehouseId,
     });
   });
 
-  // 绱ф€ヨˉ璐ч?  const urgentItems = suggestions.filter(s => s.urgency === 'immediate');
+  // 绱ф€ヨˉ璐ч  const urgentItems = suggestions.filter(s => s.urgency === 'immediate');
   urgentItems.forEach(item => {
     alerts.push({
       type: 'urgent_replenishment' as const,
-      message: `${item.productName}闇€瑕佺珛鍗宠ˉ璐э紝寤鸿璁㈣喘${item.suggestedOrderQuantity}浠禶,
+      message: `${item.productName}闇€瑕佺珛鍗宠ˉ璐э紝寤鸿璁㈣喘${item.suggestedOrderQuantity}禶,
       severity: 'high' as const,
       productId: item.productId,
       warehouseId: item.warehouseId,
     });
   });
 
-  // 渚涘簲鍟嗗欢杩熼璀︼紙妯℃嫙?  if (suggestions.length > 0 && Math.random() > 0.7) {
+  // 渚涘簲鍟嗗欢杩熼璀︼紙妯℃嫙  if (suggestions.length > 0 && Math.random() > 0.7) {
     const randomItem =
       suggestions[Math.floor(Math.random() * suggestions.length)];
     alerts.push({
       type: 'supplier_delay' as const,
-      message: `渚涘簲鍟嗗${randomItem.productName}鐨勪氦璐у彲鑳藉欢杩燂紝璇锋彁鍓嶅噯澶嘸,
+      message: `渚涘簲鍟嗗${randomItem.productName}鐨勪氦璐у彲鑳藉欢杩燂紝璇彁鍓嶅噯澶嘸,
       severity: 'medium' as const,
       productId: randomItem.productId,
       warehouseId: randomItem.warehouseId,

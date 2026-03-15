@@ -83,19 +83,19 @@ export default function ScanLandingPage() {
       const response = await fetch(`/api/products/${id}`);
       
       if (!response.ok) {
-        throw new Error('产品未找?);
+        throw new Error('产品未找到');
       }
       
       const data = await response.json();
       setProduct(data.product);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '获取产品信息失败');
+      setError(err instanceof Error  err.message : '获取产品信息失败');
     } finally {
       setLoading(false);
     }
   };
 
-  // 从User-Agent检测设备信?
+  // 从User-Agent检测设备信息
   const detectDeviceFromUserAgent = () => {
     if (typeof window === 'undefined') return;
 
@@ -107,7 +107,7 @@ export default function ScanLandingPage() {
       confidence: 0
     };
 
-    // iOS设备检?
+    // iOS设备检测
     if (userAgent.includes('iphone')) {
       detectionResult.deviceType = 'smartphone';
       detectionResult.brand = 'Apple';
@@ -128,12 +128,12 @@ export default function ScanLandingPage() {
         }
       }
     }
-    // Android设备检?
+    // Android设备检测
     else if (userAgent.includes('android')) {
       detectionResult.deviceType = 'smartphone';
       detectionResult.confidence = 80;
       
-      // 品牌检?
+      // 品牌检测
       const androidBrands = [
         { brand: 'Samsung', identifiers: ['sm-', 'samsung'] },
         { brand: 'Huawei', identifiers: ['huawei', 'honor'] },
@@ -150,20 +150,20 @@ export default function ScanLandingPage() {
         }
       }
       
-      // 型号提取（简化版?
+      // 型号提取（简化版本）
       const modelMatch = userAgent.match(/\(([^)]+)\)/);
       if (modelMatch && modelMatch[1]) {
         detectionResult.model = modelMatch[1].split(';')[0].trim();
       }
     }
-    // Windows设备检?
+    // Windows设备检测
     else if (userAgent.includes('windows')) {
       detectionResult.deviceType = 'computer';
       detectionResult.brand = 'PC';
       detectionResult.model = 'Windows PC';
       detectionResult.confidence = 70;
     }
-    // Mac设备检?
+    // Mac设备检测
     else if (userAgent.includes('macintosh')) {
       detectionResult.deviceType = 'computer';
       detectionResult.brand = 'Apple';
@@ -174,7 +174,7 @@ export default function ScanLandingPage() {
     setDetectedDevice(detectionResult);
   };
 
-  // 获取附近维修?
+  // 获取附近维修店
   const fetchNearbyShops = async () => {
     try {
       setShopsLoading(true);
@@ -187,7 +187,7 @@ export default function ScanLandingPage() {
             
             try {
               const response = await fetch(
-                `/api/shops/nearby?lat=${latitude}&lng=${longitude}&radius=20&limit=5`
+                `/api/shops/nearbylat=${latitude}&lng=${longitude}&radius=20&limit=5`
               );
               
               if (response.ok) {
@@ -210,7 +210,7 @@ export default function ScanLandingPage() {
       } else {
         // 如果不支持地理位置，使用默认位置（北京）
         const response = await fetch(
-          `/api/shops/nearby?lat=39.9042&lng=116.4074&radius=20&limit=5`
+          `/api/shops/nearbylat=39.9042&lng=116.4074&radius=20&limit=5`
         );
         
         if (response.ok) {
@@ -244,7 +244,7 @@ export default function ScanLandingPage() {
     }
   };
 
-  // 跳转到诊断页?
+  // 跳转到诊断页面
   const goToDiagnosis = () => {
     if (product) {
       router.push(`/diagnosis/${product.id}`);
@@ -258,7 +258,7 @@ export default function ScanLandingPage() {
 
   // 获取当前语言的说明书
   const getCurrentLanguageManuals = () => {
-    if (!product?.manuals) return [];
+    if (!product.manuals) return [];
     return product.manuals.filter(manual => 
       manual.is_published && manual.language_codes.includes(currentLanguage)
     );
@@ -346,13 +346,13 @@ export default function ScanLandingPage() {
               </div>
             </div>
 
-            {/* 设备检测区?*/}
+            {/* 设备检测区域 */}
             <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 🎯 设备识别
               </h3>
               
-              {detectedDevice ? (
+              {detectedDevice  (
                 <div className="bg-blue-50 rounded-lg p-4 mb-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -360,13 +360,13 @@ export default function ScanLandingPage() {
                         检测到您的设备: <span className="text-blue-600">{detectedDevice.brand} {detectedDevice.model}</span>
                       </p>
                       <p className="text-sm text-gray-600">
-                        设备类型: {detectedDevice.deviceType} | 置信? {detectedDevice.confidence}%
+                        设备类型: {detectedDevice.deviceType} | 置信度: {detectedDevice.confidence}%
                       </p>
                     </div>
                     <div className="text-2xl">
-                      {detectedDevice.brand === 'Apple' ? '🍎' : 
-                       detectedDevice.brand === 'Samsung' ? '📱' : 
-                       detectedDevice.deviceType === 'computer' ? '💻' : '📱'}
+                      {detectedDevice.brand === 'Apple'  '🍎' : 
+                       detectedDevice.brand === 'Samsung'  '📱' : 
+                       detectedDevice.deviceType === 'computer'  '💻' : '📱'}
                     </div>
                   </div>
                 </div>
@@ -382,14 +382,14 @@ export default function ScanLandingPage() {
                   { type: 'smartphone', brand: 'Apple', model: 'iPhone', icon: '🍎' },
                   { type: 'smartphone', brand: 'Samsung', model: 'Galaxy', icon: '📱' },
                   { type: 'computer', brand: 'Apple', model: 'Mac', icon: '💻' },
-                  { type: 'computer', brand: 'PC', model: 'Windows', icon: '🖥�? }
+                  { type: 'computer', brand: 'PC', model: 'Windows', icon: '🖥️' }
                 ].map((device) => (
                   <button
                     key={`${device.brand}-${device.model}`}
                     onClick={() => handleDeviceSelection(device.type, device.brand, device.model)}
                     className={`p-3 rounded-lg border-2 transition-all ${
-                      detectedDevice?.brand === device.brand && detectedDevice?.model === device.model
-                        ? 'border-blue-500 bg-blue-50'
+                      detectedDevice.brand === device.brand && detectedDevice.model === device.model
+                         'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -411,7 +411,7 @@ export default function ScanLandingPage() {
                   onClick={() => switchLanguage('zh')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     currentLanguage === 'zh'
-                      ? 'bg-blue-500 text-white'
+                       'bg-blue-500 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -421,7 +421,7 @@ export default function ScanLandingPage() {
                   onClick={() => switchLanguage('en')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     currentLanguage === 'en'
-                      ? 'bg-blue-500 text-white'
+                       'bg-blue-500 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -431,7 +431,7 @@ export default function ScanLandingPage() {
               
               {getCurrentLanguageManuals().length > 0 && (
                 <div className="mt-4 pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-2">当前语言可用说明?</p>
+                  <p className="text-sm text-gray-600 mb-2">当前语言可用说明书:</p>
                   <div className="flex flex-wrap gap-2">
                     {getCurrentLanguageManuals().map(manual => (
                       <span 
@@ -448,18 +448,18 @@ export default function ScanLandingPage() {
 
             {/* 功能选择区域 */}
             <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {/* 说明书功?*/}
+              {/* 说明书功能 */}
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="p-6">
                   <div className="flex items-center mb-4">
                     <div className="text-3xl mr-3">📖</div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-800">查看说明?/h3>
-                      <p className="text-gray-600">获取详细的产品使用指?/p>
+                      <h3 className="text-xl font-semibold text-gray-800">查看说明书</h3>
+                      <p className="text-gray-600">获取详细的产品使用指南</p>
                     </div>
                   </div>
                   
-                  {getCurrentLanguageManuals().length > 0 ? (
+                  {getCurrentLanguageManuals().length > 0  (
                     <div className="mb-4">
                       <div className="flex flex-wrap gap-2">
                         {getCurrentLanguageManuals().map(manual => (
@@ -475,7 +475,7 @@ export default function ScanLandingPage() {
                   ) : (
                     <div className="mb-4">
                       <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">
-                        当前语言暂无说明?
+                        当前语言暂无说明书
                       </span>
                     </div>
                   )}
@@ -485,12 +485,12 @@ export default function ScanLandingPage() {
                     disabled={!detectedDevice || getCurrentLanguageManuals().length === 0}
                     className={`w-full py-3 rounded-lg font-medium transition-colors ${
                       detectedDevice && getCurrentLanguageManuals().length > 0
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                         'bg-blue-500 hover:bg-blue-600 text-white'
                         : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                     }`}
                   >
                     {detectedDevice 
-                      ? (getCurrentLanguageManuals().length > 0 ? '查看说明? : '暂无说明?)
+                       (getCurrentLanguageManuals().length > 0  '查看说明书' : '暂无说明书')
                       : '请先识别设备'}
                   </button>
                 </div>
@@ -527,23 +527,23 @@ export default function ScanLandingPage() {
                     disabled={!detectedDevice}
                     className={`w-full py-3 rounded-lg font-medium transition-colors ${
                       detectedDevice
-                        ? 'bg-green-500 hover:bg-green-600 text-white'
+                         'bg-green-500 hover:bg-green-600 text-white'
                         : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    {detectedDevice ? '开始诊? : '请先识别设备'}
+                    {detectedDevice  '开始诊断' : '请先识别设备'}
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* 附近维修店推?*/}
+            {/* 附近维修店推荐 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
                   <div className="text-3xl mr-3">🏪</div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-800">附近维修店推?/h3>
+                    <h3 className="text-xl font-semibold text-gray-800">附近维修店推荐</h3>
                     <p className="text-gray-600">为您找到附近的优质维修服务商</p>
                   </div>
                 </div>
@@ -552,14 +552,14 @@ export default function ScanLandingPage() {
                 </div>
               </div>
               
-              {shopsLoading ? (
+              {shopsLoading  (
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
                     <p className="text-gray-600">正在查找附近的维修店...</p>
                   </div>
                 </div>
-              ) : nearbyShops.length > 0 ? (
+              ) : nearbyShops.length > 0  (
                 <div className="space-y-4">
                   {nearbyShops.map((shop) => (
                     <div key={shop.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -589,13 +589,13 @@ export default function ScanLandingPage() {
                               {[...Array(5)].map((_, i) => (
                                 <span 
                                   key={i}
-                                  className={`text-lg ${i < Math.floor(shop.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
+                                  className={`text-lg ${i < Math.floor(shop.rating || 0)  'text-yellow-400' : 'text-gray-300'}`}
                                 >
-                                  �?
+                                  ★
                                 </span>
                               ))}
                               <span className="ml-2 text-sm text-gray-600">
-                                {shop?.toFixed(1) || '暂无评分'} ({shop.review_count || 0}条评?
+                                {(shop.rating || 0).toFixed(1)} ({shop.review_count || 0}条评价)
                               </span>
                             </div>
                           </div>
@@ -612,7 +612,7 @@ export default function ScanLandingPage() {
                               ))}
                               {shop.services.length > 3 && (
                                 <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                                  +{shop.services.length - 3}项服?
+                                  +{shop.services.length - 3}项服务
                                 </span>
                               )}
                             </div>
@@ -628,14 +628,14 @@ export default function ScanLandingPage() {
                   
                   <div className="text-center pt-4 border-t border-gray-200">
                     <button className="text-blue-500 hover:text-blue-700 font-medium">
-                      查看更多维修?�?
+                      查看更多维修店
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="text-center py-12">
                   <div className="text-5xl mb-4">🏪</div>
-                  <h4 className="text-lg font-medium text-gray-800 mb-2">暂无附近维修店信?/h4>
+                  <h4 className="text-lg font-medium text-gray-800 mb-2">暂无附近维修店信息</h4>
                   <p className="text-gray-600 mb-4">您可以尝试手动搜索或扩大搜索范围</p>
                   <button 
                     onClick={fetchNearbyShops}

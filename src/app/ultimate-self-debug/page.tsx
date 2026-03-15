@@ -17,7 +17,8 @@ export default function UltimateSelfDebug() {
       timestamp: new Date().toLocaleTimeString(),
     };
     setResults(prev => [...prev, result]);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`[阶段${phase}] [${status}] ${message}`)};
+    // TODO: 移除调试日志 - console.log(`[阶段${phase}] [${status}] ${message}`)
+  };
 
   const runCompleteDiagnostic = async () => {
     setResults([]);
@@ -25,24 +26,25 @@ export default function UltimateSelfDebug() {
     setTestPhase(1);
 
     try {
-      // 阶段1: 基础环境检?      log(1, '开始基础环境检?, 'start');
+      // 阶段1: 基础环境检查
+      log(1, '开始基础环境检查', 'start');
 
       // 检查window对象
       if (typeof window === 'undefined') {
-        log(1, '�?运行在服务器端，无法进行客户端测?, 'error');
+        log(1, '错误: 运行在服务器端，无法进行客户端测试', 'error');
         return;
       }
-      log(1, '�?客户端环境正?, 'success');
+      log(1, '成功: 客户端环境正常', 'success');
 
       // 检查基本API
       log(1, '测试基础API连接...', 'info');
       try {
         const healthResponse = await fetch('/api/health');
-        log(1, `健康检查响? ${healthResponse.status}`, 'data');
+        log(1, `健康检查响应: ${healthResponse.status}`, 'data');
       } catch (error: unknown) {
         const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        log(1, `健康检查失? ${errorMessage}`, 'warning');
+          error instanceof Error  error.message : String(error);
+        log(1, `健康检查失败: ${errorMessage}`, 'warning');
       }
 
       setTestPhase(2);
@@ -62,7 +64,7 @@ export default function UltimateSelfDebug() {
 
       const loginTime = Date.now() - loginStartTime;
       log(2, `登录请求耗时: ${loginTime}ms`, 'data');
-      log(2, `登录响应状? ${loginResponse.status}`, 'data');
+      log(2, `登录响应状态: ${loginResponse.status}`, 'data');
 
       if (!loginResponse.ok) {
         const errorData = await loginResponse.json();
@@ -73,16 +75,16 @@ export default function UltimateSelfDebug() {
       const loginResult = await loginResponse.json();
       log(
         2,
-        `登录成功 - 用户ID: ${loginResult?.id?.substring(0, 8)}...`,
+        `登录成功 - 用户ID: ${loginResult.id.substring(0, 8)}...`,
         'success'
       );
-      log(2, `管理员状? ${loginResult?.is_admin}`, 'data');
-      log(2, `会话令牌: ${loginResult?.access_token ? '�? : '�?}`, 'data');
+      log(2, `管理员状态: ${loginResult.is_admin}`, 'data');
+      log(2, `会话令牌: ${loginResult.access_token  '已生成' : '未生成'}`, 'data');
 
       setTestPhase(3);
 
       // 阶段3: 跳转机制测试
-      log(3, '开始跳转机制测?, 'start');
+      log(3, '开始跳转机制测试', 'start');
 
       // 测试1: 直接路由跳转
       log(3, '测试1: 直接Next.js路由跳转', 'info');
@@ -94,16 +96,16 @@ export default function UltimateSelfDebug() {
         setTimeout(() => {
           try {
             router.push('/admin/dashboard');
-            log(3, '�?Next.js路由跳转指令已发?, 'success');
+            log(3, '成功: Next.js路由跳转指令已发送', 'success');
           } catch (error: unknown) {
             const errorMessage =
-              error instanceof Error ? error.message : String(error);
-            log(3, `�?Next.js路由跳转失败: ${errorMessage}`, 'error');
+              error instanceof Error  error.message : String(error);
+            log(3, `错误: Next.js路由跳转失败: ${errorMessage}`, 'error');
           }
         }, 100);
       } catch (error: unknown) {
         const errorMessage =
-          error instanceof Error ? error.message : String(error);
+          error instanceof Error  error.message : String(error);
         log(3, `获取router失败: ${errorMessage}`, 'error');
       }
 
@@ -112,11 +114,11 @@ export default function UltimateSelfDebug() {
         log(3, '测试2: Window.location跳转', 'info');
         try {
           window.location.href = '/admin/dashboard';
-          log(3, '�?Window.location跳转已执?, 'success');
+          log(3, '成功: Window.location跳转已执行', 'success');
         } catch (error: unknown) {
           const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          log(3, `�?Window.location跳转失败: ${errorMessage}`, 'error');
+            error instanceof Error  error.message : String(error);
+          log(3, `错误: Window.location跳转失败: ${errorMessage}`, 'error');
         }
       }, 500);
 
@@ -126,21 +128,22 @@ export default function UltimateSelfDebug() {
         try {
           setTimeout(() => {
             window.location.href = '/admin/dashboard';
-            log(3, '�?延迟跳转已执?, 'success');
+            log(3, '成功: 延迟跳转已执行', 'success');
           }, 1000);
         } catch (error: unknown) {
           const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          log(3, `�?延迟跳转失败: ${errorMessage}`, 'error');
+            error instanceof Error  error.message : String(error);
+          log(3, `错误: 延迟跳转失败: ${errorMessage}`, 'error');
         }
       }, 1000);
 
       setTestPhase(4);
 
       // 阶段4: 综合模拟测试
-      log(4, '开始综合模拟测?, 'start');
+      log(4, '开始综合模拟测试', 'start');
 
-      // 模拟完整的登录跳转流?      setTimeout(async () => {
+      // 模拟完整的登录跳转流程
+      setTimeout(async () => {
         log(4, '模拟完整登录跳转流程', 'info');
 
         try {
@@ -159,7 +162,7 @@ export default function UltimateSelfDebug() {
             log(4, '模拟登录成功', 'success');
 
             // 模拟跳转逻辑
-            if (result?.is_admin) {
+            if (result.is_admin) {
               log(4, '检测到管理员用户，准备跳转', 'info');
 
               // 尝试多种跳转方式
@@ -183,30 +186,30 @@ export default function UltimateSelfDebug() {
               for (let i = 0; i < jumpMethods.length; i++) {
                 try {
                   const method = jumpMethods[i]();
-                  log(4, `�?跳转方式${i + 1}成功: ${method}`, 'success');
+                  log(4, `成功: 跳转方式${i + 1}成功: ${method}`, 'success');
                   break;
                 } catch (error: unknown) {
                   const errorMessage =
-                    error instanceof Error ? error.message : String(error);
-                  log(4, `�?跳转方式${i + 1}失败: ${errorMessage}`, 'warning');
+                    error instanceof Error  error.message : String(error);
+                  log(4, `警告: 跳转方式${i + 1}失败: ${errorMessage}`, 'warning');
                 }
               }
             }
           }
         } catch (error: unknown) {
           const errorMessage =
-            error instanceof Error ? error.message : String(error);
+            error instanceof Error  error.message : String(error);
           log(4, `综合测试失败: ${errorMessage}`, 'error');
         }
       }, 2000);
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : String(error);
+        error instanceof Error  error.message : String(error);
       log(testPhase, `测试过程出错: ${errorMessage}`, 'error');
     } finally {
       setIsTesting(false);
       setTestPhase(5);
-      log(5, '所有测试完?, 'end');
+      log(5, '所有测试完成', 'end');
     }
   };
 
@@ -237,7 +240,7 @@ export default function UltimateSelfDebug() {
                   className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
                   {isTesting
-                    ? `测试?.. (阶段${testPhase}/5)`
+                     `测试中... (阶段${testPhase}/5)`
                     : '运行完整诊断'}
                 </button>
 
@@ -250,9 +253,9 @@ export default function UltimateSelfDebug() {
               </div>
 
               <div className="text-sm text-gray-300">
-                <p>�?这个工具会完全独立地测试所有可能的跳转方式</p>
-                <p>�?包括Next.js路由、Window.location等多种方?/p>
-                <p>�?会详细记录每一步的执行结果</p>
+                <p>提示: 这个工具会完全独立地测试所有可能的跳转方式</p>
+                <p>包括Next.js路由、Window.location等多种方式</p>
+                <p>会详细记录每一步的执行结果</p>
               </div>
             </div>
 
@@ -267,16 +270,16 @@ export default function UltimateSelfDebug() {
                     key={phase}
                     className={`p-3 rounded-lg ${
                       testPhase === phase
-                        ? 'bg-blue-600'
+                         'bg-blue-600'
                         : testPhase > phase
-                          ? 'bg-green-600'
+                           'bg-green-600'
                           : 'bg-gray-600'
                     }`}
                   >
                     <div className="font-medium">
                       阶段 {phase}
-                      {testPhase === phase && ' (进行?'}
-                      {testPhase > phase && ' (已完?'}
+                      {testPhase === phase && ' (进行中)'}
+                      {testPhase > phase && ' (已完成)'}
                     </div>
                   </div>
                 ))}
@@ -289,25 +292,26 @@ export default function UltimateSelfDebug() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-green-400">测试结果</h2>
               <span className="text-sm text-gray-400">
-                �?{results.length} 条记?              </span>
+                共 {results.length} 条记录
+              </span>
             </div>
 
             <div className="bg-black rounded-lg p-4 h-96 overflow-y-auto font-mono text-sm">
-              {results.length === 0 ? (
-                <p className="text-gray-500">等待测试开?..</p>
+              {results.length === 0  (
+                <p className="text-gray-500">等待测试开始...</p>
               ) : (
                 results.map((result, index) => (
                   <div
                     key={index}
                     className={`mb-2 p-3 rounded ${
                       result.status === 'error'
-                        ? 'bg-red-900/30 border border-red-700'
+                         'bg-red-900/30 border border-red-700'
                         : result.status === 'success'
-                          ? 'bg-green-900/30 border border-green-700'
+                           'bg-green-900/30 border border-green-700'
                           : result.status === 'warning'
-                            ? 'bg-yellow-900/30 border border-yellow-700'
+                             'bg-yellow-900/30 border border-yellow-700'
                             : result.status === 'data'
-                              ? 'bg-blue-900/30 border border-blue-700'
+                               'bg-blue-900/30 border border-blue-700'
                               : 'bg-gray-800'
                     }`}
                   >
@@ -322,13 +326,13 @@ export default function UltimateSelfDebug() {
                     <div
                       className={
                         result.status === 'error'
-                          ? 'text-red-400'
+                           'text-red-400'
                           : result.status === 'success'
-                            ? 'text-green-400'
+                             'text-green-400'
                             : result.status === 'warning'
-                              ? 'text-yellow-400'
+                               'text-yellow-400'
                               : result.status === 'data'
-                                ? 'text-blue-400'
+                                 'text-blue-400'
                                 : 'text-yellow-400'
                       }
                     >
@@ -340,29 +344,30 @@ export default function UltimateSelfDebug() {
             </div>
           </div>
 
-          {/* 紧急诊?*/}
+          {/* 紧急诊断 */}
           <div className="mt-6 bg-red-900/30 border border-red-700 rounded-lg p-6">
-            <h3 className="font-semibold text-red-400 mb-3">🚨 紧急诊断模?/h3>
+            <h3 className="font-semibold text-red-400 mb-3">🚨 紧急诊断模式</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <h4 className="font-medium text-red-300 mb-2">
-                  如果所有测试都失败?                </h4>
+                  如果所有测试都失败:
+                </h4>
                 <ul className="space-y-1 text-red-200">
-                  <li>�?检查浏览器扩展是否干扰</li>
-                  <li>�?尝试无痕模式浏览?/li>
-                  <li>�?检查防火墙/杀毒软件设?/li>
-                  <li>�?验证localhost域名解析</li>
+                  <li>✓ 检查浏览器扩展是否干扰</li>
+                  <li>✓ 尝试无痕模式浏览</li>
+                  <li>✓ 检查防火墙/杀毒软件设置</li>
+                  <li>✓ 验证localhost域名解析</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-medium text-red-300 mb-2">
-                  技术层面排查：
+                  技术层面排查:
                 </h4>
                 <ul className="space-y-1 text-red-200">
-                  <li>�?Next.js路由配置问题</li>
-                  <li>�?浏览器同源策略限?/li>
-                  <li>�?Service Worker干扰</li>
-                  <li>�?浏览器缓存问?/li>
+                  <li>✓ Next.js路由配置问题</li>
+                  <li>✓ 浏览器同源策略限制</li>
+                  <li>✓ Service Worker干扰</li>
+                  <li>✓ 浏览器缓存问题</li>
                 </ul>
               </div>
             </div>
@@ -372,4 +377,3 @@ export default function UltimateSelfDebug() {
     </div>
   );
 }
-

@@ -111,7 +111,7 @@ export default function AnalyticsReportsPage() {
             <FileText className="w-10 h-10 text-purple-600" />
             分析报表系统
           </h1>
-          <p className="text-gray-600">生成专业的数据分析报表和可视化图?/p>
+          <p className="text-gray-600">生成专业的数据分析报表和可视化图/p>
         </div>
 
         {/* 报表配置 */}
@@ -153,8 +153,8 @@ export default function AnalyticsReportsPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="line">折线?/SelectItem>
-                    <SelectItem value="bar">柱状?/SelectItem>
+                    <SelectItem value="line">折线/SelectItem>
+                    <SelectItem value="bar">柱状/SelectItem>
                     <SelectItem value="pie">饼图</SelectItem>
                   </SelectContent>
                 </Select>
@@ -167,7 +167,7 @@ export default function AnalyticsReportsPage() {
                 disabled={loading || !selectedTemplate}
                 className="flex-1"
               >
-                {loading ? '生成?..' : '生成报表'}
+                {loading  '生成..' : '生成报表'}
               </Button>
               <Button variant="outline" onClick={() => setReportData(null)}>
                 清空结果
@@ -221,7 +221,7 @@ export default function AnalyticsReportsPage() {
               </CardHeader>
             </Card>
 
-            {/* 指标汇总卡?*/}
+            {/* 指标汇总卡*/}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {Object.entries(reportData.summary).map(([key, value]) => (
                 <Card key={key}>
@@ -233,7 +233,7 @@ export default function AnalyticsReportsPage() {
                         </p>
                         <p className="text-2xl font-bold text-purple-600">
                           {typeof value === 'number'
-                            ? value.toLocaleString()
+                             value.toLocaleString()
                             : String(value)}
                         </p>
                       </div>
@@ -260,7 +260,7 @@ export default function AnalyticsReportsPage() {
                   <div className="h-80 bg-gray-50 rounded-lg flex items-center justify-center">
                     <div className="text-center text-gray-500">
                       <BarChart className="w-12 h-12 mx-auto mb-2" />
-                      <p>趋势图表占位?/p>
+                      <p>趋势图表占位/p>
                       <p className="text-sm">
                         (实际项目中集成Chart.js或类似库)
                       </p>
@@ -302,7 +302,7 @@ export default function AnalyticsReportsPage() {
                   <div className="h-80 bg-gray-50 rounded-lg flex items-center justify-center">
                     <div className="text-center text-gray-500">
                       <PieChart className="w-12 h-12 mx-auto mb-2" />
-                      <p>维度分析图表占位?/p>
+                      <p>维度分析图表占位/p>
                       <p className="text-sm">
                         (实际项目中集成Chart.js或类似库)
                       </p>
@@ -351,7 +351,7 @@ export default function AnalyticsReportsPage() {
                     <thead>
                       <tr className="border-b">
                         <th className="text-left py-3 px-4">指标名称</th>
-                        <th className="text-left py-3 px-4">数?/th>
+                        <th className="text-left py-3 px-4">数/th>
                         <th className="text-left py-3 px-4">趋势</th>
                         <th className="text-left py-3 px-4">占比</th>
                       </tr>
@@ -365,7 +365,7 @@ export default function AnalyticsReportsPage() {
                             </td>
                             <td className="py-3 px-4 text-purple-600 font-semibold">
                               {typeof value === 'number'
-                                ? value.toLocaleString()
+                                 value.toLocaleString()
                                 : String(value)}
                             </td>
                             <td className="py-3 px-4">
@@ -403,9 +403,9 @@ export default function AnalyticsReportsPage() {
               <div className="text-center">
                 <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                  选择模板开始生成报?                </h3>
+                  选择模板开始生成报                </h3>
                 <p className="text-gray-500">
-                  从预设模板中选择或自定义配置来生成专业分析报?                </p>
+                  从预设模板中选择或自定义配置来生成专业分析报                </p>
               </div>
             </CardContent>
           </Card>

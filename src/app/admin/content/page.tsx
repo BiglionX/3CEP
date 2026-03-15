@@ -65,11 +65,11 @@ export default function ContentManagementPage() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
         search: searchTerm,
-        type: typeFilter === 'all' ? '' : typeFilter,
-        status: statusFilter === 'all' ? '' : statusFilter,
+        type: typeFilter === 'all'  '' : typeFilter,
+        status: statusFilter === 'all'  '' : statusFilter,
       });
 
-      const response = await fetch(`/api/admin/content?${params}`);
+      const response = await fetch(`/api/admin/content${params}`);
       const result = await response.json();
 
       if (result.data) {
@@ -87,7 +87,7 @@ export default function ContentManagementPage() {
     fetchContents();
   }, [pagination.page, searchTerm, typeFilter, statusFilter]);
 
-  // 处理全?
+  // 处理全
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(contents.map(content => content.id));
@@ -136,10 +136,10 @@ export default function ContentManagementPage() {
 
     try {
       const url = editingContent.id
-        ? `/api/admin/content/${editingContent.id}`
+         `/api/admin/content/${editingContent.id}`
         : '/api/admin/content';
 
-      const method = editingContent.id ? 'PUT' : 'POST';
+      const method = editingContent.id  'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -151,7 +151,7 @@ export default function ContentManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert(editingContent.id ? '内容更新成功' : '内容创建成功');
+        alert(editingContent.id  '内容更新成功' : '内容创建成功');
         setShowEditDialog(false);
         setEditingContent(null);
         fetchContents();
@@ -169,10 +169,10 @@ export default function ContentManagementPage() {
     contentId: string,
     currentStatus: string
   ) => {
-    const newStatus = currentStatus === 'published' ? 'draft' : 'published';
-    const actionText = newStatus === 'published' ? '发布' : '下架';
+    const newStatus = currentStatus === 'published'  'draft' : 'published';
+    const actionText = newStatus === 'published'  '发布' : '下架';
 
-    if (!confirm(`确定?{actionText}这篇内容吗？`)) return;
+    if (!confirm(`确定{actionText}这篇内容吗？`)) return;
 
     try {
       const response = await fetch(`/api/admin/content/${contentId}`, {
@@ -193,14 +193,14 @@ export default function ContentManagementPage() {
         alert(`操作失败: ${result.error}`);
       }
     } catch (error) {
-      console.error('状态切换失?', error);
+      console.error('状态切换失', error);
       alert('操作失败');
     }
   };
 
   // 删除内容
   const deleteContent = async (contentId: string, title: string) => {
-    if (!confirm(`确定要删除内?"${title}" 吗？此操作不可撤销！`)) return;
+    if (!confirm(`确定要删除内"${title}" 吗？此操作不可撤销！`)) return;
 
     try {
       const response = await fetch(`/api/admin/content/${contentId}`, {
@@ -220,7 +220,7 @@ export default function ContentManagementPage() {
     }
   };
 
-  // 获取状态标签样?
+  // 获取状态标签样
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
       draft: { text: '草稿', className: 'bg-gray-100 text-gray-800' },
@@ -315,7 +315,7 @@ export default function ContentManagementPage() {
 
       {/* 内容列表表格 */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        {loading ? (
+        {loading  (
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             <span className="ml-2 text-gray-600">加载中...</span>
@@ -400,14 +400,14 @@ export default function ContentManagementPage() {
                       </Button>
                       <Button
                         variant={
-                          content.status === 'published' ? 'outline' : 'default'
+                          content.status === 'published'  'outline' : 'default'
                         }
                         size="sm"
                         onClick={() =>
                           toggleContentStatus(content.id, content.status)
                         }
                       >
-                        {content.status === 'published' ? '下架' : '发布'}
+                        {content.status === 'published'  '下架' : '发布'}
                       </Button>
                     </div>
                   </TableCell>
@@ -426,7 +426,7 @@ export default function ContentManagementPage() {
                 pagination.page * pagination.pageSize,
                 pagination.total
               )}{' '}
-              条， �?{pagination.total} 条记?
+              条， {pagination.total} 条记
             </div>
             <div className="flex gap-2">
               <Button
@@ -454,12 +454,12 @@ export default function ContentManagementPage() {
         )}
       </div>
 
-      {/* 编辑内容对话?*/}
+      {/* 编辑内容对话*/}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingContent?.id ? '编辑内容' : '新建内容'}
+              {editingContent.id  '编辑内容' : '新建内容'}
             </DialogTitle>
           </DialogHeader>
 
@@ -484,7 +484,7 @@ export default function ContentManagementPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    作?*
+                    作*
                   </label>
                   <Input
                     value={editingContent.author}
@@ -569,7 +569,7 @@ export default function ContentManagementPage() {
                   }
                   rows={10}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="请输入内?.."
+                  placeholder="请输入内.."
                 />
               </div>
             </div>
@@ -580,7 +580,7 @@ export default function ContentManagementPage() {
               取消
             </Button>
             <Button onClick={saveContent}>
-              {editingContent?.id ? '保存更改' : '创建内容'}
+              {editingContent.id  '保存更改' : '创建内容'}
             </Button>
           </DialogFooter>
         </DialogContent>

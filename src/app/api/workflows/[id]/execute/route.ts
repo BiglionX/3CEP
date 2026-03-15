@@ -21,8 +21,9 @@ export async function POST(
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
 
-    if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+    if (!sessionCookie) {'
+      return NextResponse.json({ error: '用户未认证' },
+{ status: 401 });
     }
 
     const {
@@ -31,7 +32,8 @@ export async function POST(
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      return NextResponse.json({ error: '用户认证失败' },
+{ status: 401 });
     }
 
     const workflowId = params.id;
@@ -39,17 +41,19 @@ export async function POST(
 
     // 获取工作流信息
     const { data: workflow, error: workflowError } = await supabase
-      .from('workflows')
-      .select('id, name, workflow_data, status')
+      .from('workflows')'
+      .select('id, name, workflow_data, status')'
       .eq('id', workflowId)
       .single();
 
     if (workflowError || !workflow) {
-      return NextResponse.json({ error: '工作流不存在' }, { status: 404 });
+      return NextResponse.json({ error: '工作流不存在' },
+{ status: 404 });
     }
 
-    if (workflow.status !== 'active') {
-      return NextResponse.json({ error: '工作流未激活' }, { status: 400 });
+    if (workflow.status !== 'active') {'
+      return NextResponse.json({ error: '工作流未激活' },
+{ status: 400 });
     }
 
     // 创建执行记录
@@ -68,8 +72,8 @@ export async function POST(
     if (executionError) {
       console.error('创建工作流执行记录失败:', executionError);
       return NextResponse.json(
-        { error: '创建工作流执行记录失败' }, 
-        { status: 500 }
+        { error: '创建工作流执行记录失败' },
+{ status: 500 }
       );
     }
 
@@ -78,7 +82,7 @@ export async function POST(
       try {
         // 模拟执行结果
         const executionResult = {
-          status: Math.random() > 0.1 ? 'completed' : 'failed',
+          status: Math.random() > 0.1  'completed' : 'failed',
           output_data: {
             result: 'success',
             data: { message: '工作流执行完成', timestamp: new Date().toISOString() }
@@ -90,7 +94,7 @@ export async function POST(
         // 更新执行记录
         await supabase
           .from('workflow_executions')
-          .update(executionResult)
+          .update(executionResult)'
           .eq('id', execution.id);
       } catch (updateError) {
         console.error('更新执行记录失败:', updateError);
@@ -110,8 +114,8 @@ export async function POST(
   } catch (error: any) {
     console.error('执行工作流错误:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
+      { error: '服务器内部错误' },
+{ status: 500 }
     );
   }
 }
@@ -131,8 +135,9 @@ export async function PATCH(
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
 
-    if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+    if (!sessionCookie) {'
+      return NextResponse.json({ error: '用户未认证' },
+{ status: 401 });
     }
 
     const {
@@ -141,7 +146,8 @@ export async function PATCH(
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      return NextResponse.json({ error: '用户认证失败' },
+{ status: 401 });
     }
 
     const executionId = params.id;
@@ -158,20 +164,22 @@ export async function PATCH(
       .single();
 
     if (executionError || !execution) {
-      return NextResponse.json({ error: '执行记录不存在' }, { status: 404 });
+      return NextResponse.json({ error: '执行记录不存在' },
+{ status: 404 });
     }
 
     // 检查权限（只有相同用户或管理员可以回放）
     if (execution.triggered_by !== user.id) {
       // 这里应该检查用户是否为管理员
       const { data: userProfile } = await supabase
-        .from('profiles')
-        .select('role')
+        .from('profiles')'
+        .select('role')'
         .eq('id', user.id)
         .single();
       
-      if (userProfile?.role !== 'admin') {
-        return NextResponse.json({ error: '权限不足' }, { status: 403 });
+      if (userProfile.role !== 'admin') {'
+        return NextResponse.json({ error: '权限不足' },
+{ status: 403 });
       }
     }
 
@@ -193,8 +201,8 @@ export async function PATCH(
     if (replayError) {
       console.error('创建回放执行记录失败:', replayError);
       return NextResponse.json(
-        { error: '创建回放执行记录失败' }, 
-        { status: 500 }
+        { error: '创建回放执行记录失败' },
+{ status: 500 }
       );
     }
 
@@ -214,7 +222,7 @@ export async function PATCH(
 
         await supabase
           .from('workflow_executions')
-          .update(replayResult)
+          .update(replayResult)'
           .eq('id', replayExecution.id);
       } catch (updateError) {
         console.error('更新回放执行记录失败:', updateError);
@@ -227,15 +235,15 @@ export async function PATCH(
       data: {
         replayExecutionId: replayExecution.id,
         originalExecutionId: execution.id,
-        workflowName: execution?.name
+        workflowName: execution.name
       }
     }) as any;
 
   } catch (error: any) {
     console.error('回放工作流错误:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' }, 
-      { status: 500 }
+      { error: '服务器内部错误' },
+{ status: 500 }
     );
   }
 }

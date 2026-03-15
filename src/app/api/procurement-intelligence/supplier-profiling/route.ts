@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -98,7 +98,7 @@ export async function GET(request: Request) {
       case 'health_check':
         return NextResponse.json({
           success: true,
-          message: '渚涘簲鍟嗙敾鍍忔湇鍔¤繍琛屾?,
+          message: '渚涘簲鍟嗙敾鍍忔湇鍔¤繍琛屾,
           timestamp: new Date().toISOString(),
         });
 

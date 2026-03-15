@@ -33,14 +33,14 @@ export default function AdminAccessTestPage() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      const user = session?.user;
+      const user = session.user;
 
       setCurrentUser(user);
-      addTestResult('当前用户检查', user ? 'pass' : 'info', {
+      addTestResult('当前用户检查', user  'pass' : 'info', {
         hasSession: !!session,
-        userId: user?.id || '未登录',
-        userEmail: user?.email || '无邮箱',
-        userMetadata: user?.user_metadata || {},
+        userId: user.id || '未登录',
+        userEmail: user.email || '无邮箱',
+        userMetadata: user.user_metadata || {},
       });
 
       return user;
@@ -87,15 +87,15 @@ export default function AdminAccessTestPage() {
         localStorageCheck: {
           tempAdmin:
             typeof window !== 'undefined'
-              ? localStorage.getItem('temp-admin-access')
+               localStorage.getItem('temp-admin-access')
               : 'N/A',
           isAdminFlag:
             typeof window !== 'undefined'
-              ? localStorage.getItem('is-admin')
+               localStorage.getItem('is-admin')
               : 'N/A',
           userRole:
             typeof window !== 'undefined'
-              ? localStorage.getItem('user-role')
+               localStorage.getItem('user-role')
               : 'N/A',
           result: hasLocalStorageAdmin,
         },
@@ -109,7 +109,7 @@ export default function AdminAccessTestPage() {
     }
   };
 
-  // 测试3: 尝试访问管理员页?
+  // 测试3: 尝试访问管理员页
   const testAdminPageAccess = async () => {
     try {
       const response = await fetch('/admin/dashboard', {
@@ -120,7 +120,7 @@ export default function AdminAccessTestPage() {
       const isRedirected = response.status >= 300 && response.status < 400;
       const canAccess = response.status === 200;
 
-      addTestResult('管理员页面访问测试', canAccess ? 'pass' : 'fail', {
+      addTestResult('管理员页面访问测试', canAccess  'pass' : 'fail', {
         statusCode: response.status,
         statusText: response.statusText,
         isRedirected,
@@ -134,7 +134,7 @@ export default function AdminAccessTestPage() {
     }
   };
 
-  // 测试4: 中间件响应头检?
+  // 测试4: 中间件响应头检
   const testMiddlewareHeaders = async () => {
     try {
       const response = await fetch('/api/test-middleware', { method: 'GET' });
@@ -159,7 +159,7 @@ export default function AdminAccessTestPage() {
     }
   };
 
-  // 运行所有测?
+  // 运行所有测
   const runAllTests = async () => {
     setIsLoading(true);
     setTestResults([]);
@@ -185,7 +185,7 @@ export default function AdminAccessTestPage() {
     }
   };
 
-  // 设置临时管理员权?
+  // 设置临时管理员权
   const setTempAdminAccess = () => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('temp-admin-access', 'true');
@@ -230,7 +230,7 @@ export default function AdminAccessTestPage() {
               disabled={isLoading}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
-              {isLoading ? '测试中...' : '重新运行所有测试'}
+              {isLoading  '测试中...' : '重新运行所有测试'}
             </button>
 
             <button
@@ -288,9 +288,9 @@ export default function AdminAccessTestPage() {
                 key={index}
                 className={`p-4 rounded border-l-4 ${
                   result.status === 'pass'
-                    ? 'border-green-500 bg-green-50'
+                     'border-green-500 bg-green-50'
                     : result.status === 'fail'
-                      ? 'border-red-500 bg-red-50'
+                       'border-red-500 bg-red-50'
                       : 'border-blue-500 bg-blue-50'
                 }`}
               >
@@ -299,7 +299,7 @@ export default function AdminAccessTestPage() {
                     <h3 className="font-medium">{result.testName}</h3>
                     <p className="text-sm mt-1">
                       {typeof result.details === 'string'
-                        ? result.details
+                         result.details
                         : JSON.stringify(result.details, null, 2)}
                     </p>
                   </div>
@@ -316,10 +316,10 @@ export default function AdminAccessTestPage() {
         <div className="mt-6 text-center text-sm text-gray-500">
           <p>
             页面路径:{' '}
-            {typeof window !== 'undefined' ? window.location.pathname : ''}
+            {typeof window !== 'undefined'  window.location.pathname : ''}
           </p>
           <p>
-            主机: {typeof window !== 'undefined' ? window.location.host : ''}
+            主机: {typeof window !== 'undefined'  window.location.host : ''}
           </p>
         </div>
       </div>

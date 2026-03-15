@@ -1,19 +1,19 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 /**
  * GET /api/admin/valuation/stats
- * 鑾峰彇浼板€肩粺璁′俊? */
+ * 鑾峰彇板€肩粺璁′俊 */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const period = searchParams.get('period') || '7d'; // 榛樿鏈€?锟?
-    // 璁＄畻鏃ユ湡鑼冨洿
+    const period = searchParams.get('period') || '7d'; // 榛樿鏈€
+    // 璁＄畻ユ湡鑼冨洿
     const endDate = new Date();
     let startDate: Date;
 
@@ -46,15 +46,15 @@ export async function GET(request: NextRequest) {
     }
 
     // 璁＄畻鍩虹缁熻
-    const totalCount = totalStats?.length || 0;
+    const totalCount = totalStats.length || 0;
     const avgValue =
       totalCount > 0
-        ? totalStats!.reduce((sum, log) => sum + (log.final_value || 0), 0) /
+         totalStats!.reduce((sum, log) => sum + (log.final_value || 0), 0) /
           totalCount
         : 0;
     const avgConfidence =
       totalCount > 0
-        ? totalStats!.reduce(
+         totalStats!.reduce(
             (sum, log) => sum + (log.confidence_score || 0),
             0
           ) / totalCount
@@ -69,23 +69,23 @@ export async function GET(request: NextRequest) {
 
     methods.forEach(method => {
       const count =
-        totalStats?.filter(log => log.valuation_method === method).length || 0;
+        totalStats.filter(log => log.valuation_method === method).length || 0;
       methodDistribution[method] = {
         count,
-        percentage: totalCount > 0 ? (count / totalCount) * 100 : 0,
+        percentage: totalCount > 0  (count / totalCount) * 100 : 0,
       };
     });
 
-    // 缃俊搴﹀垎?    const confidenceDistribution = {
-      high: totalStats?.filter(log => log.confidence_score >= 0.8).length || 0,
+    // 缃俊搴﹀垎    const confidenceDistribution = {
+      high: totalStats.filter(log => log.confidence_score >= 0.8).length || 0,
       medium:
-        totalStats?.filter(
+        totalStats.filter(
           log => log.confidence_score >= 0.5 && log.confidence_score < 0.8
         ).length || 0,
-      low: totalStats?.filter(log => log.confidence_score < 0.5).length || 0,
+      low: totalStats.filter(log => log.confidence_score < 0.5).length || 0,
     };
 
-    // 鎸夋棩鏈熺粺璁¤秼?    const dailyStats: any[] = [];
+    // 鎸夋棩鏈熺粺璁¤秼    const dailyStats: any[] = [];
     const daysDiff = Math.ceil(
       (endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)
     );
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       nextDate.setDate(currentDate.getDate() + 1);
 
       const dayLogs =
-        totalStats?.filter(
+        totalStats.filter(
           log =>
             new Date(log.created_at) >= currentDate &&
             new Date(log.created_at) < nextDate
@@ -106,12 +106,12 @@ export async function GET(request: NextRequest) {
       const dayCount = dayLogs.length;
       const dayAvgValue =
         dayCount > 0
-          ? dayLogs.reduce((sum, log) => sum + (log.final_value || 0), 0) /
+           dayLogs.reduce((sum, log) => sum + (log.final_value || 0), 0) /
             dayCount
           : 0;
       const dayAvgConfidence =
         dayCount > 0
-          ? dayLogs.reduce((sum, log) => sum + (log.confidence_score || 0), 0) /
+           dayLogs.reduce((sum, log) => sum + (log.confidence_score || 0), 0) /
             dayCount
           : 0;
 
@@ -125,16 +125,16 @@ export async function GET(request: NextRequest) {
 
     // 鎬ц兘缁熻
     const processingTimes =
-      totalStats?.map(log => log.processing_time_ms || 0) || [];
+      totalStats.map(log => log.processing_time_ms || 0) || [];
     const avgProcessingTime =
       processingTimes.length > 0
-        ? processingTimes.reduce((sum, time) => sum + time, 0) /
+         processingTimes.reduce((sum, time) => sum + time, 0) /
           processingTimes.length
         : 0;
 
     // 鏉ユ簮鍒嗗竷
     const sourceDistribution: Record<string, number> = {};
-    totalStats?.forEach(log => {
+    totalStats.forEach(log => {
       const source = log.request_source || 'unknown';
       sourceDistribution[source] = (sourceDistribution[source] || 0) + 1;
     });
@@ -156,13 +156,13 @@ export async function GET(request: NextRequest) {
         methodDistribution,
         confidenceDistribution,
         sourceDistribution,
-        dailyTrend: dailyStats.reverse(), // 鏈€鏂版棩鏈熷湪?        lastUpdated: new Date().toISOString(),
+        dailyTrend: dailyStats.reverse(), // 鏈€鏂版棩鏈熷湪        lastUpdated: new Date().toISOString(),
       },
     });
   } catch (error) {
-    console.error('鑾峰彇浼板€肩粺璁″け?', error);
+    console.error('鑾峰彇板€肩粺璁″け', error);
     return NextResponse.json(
-      { success: false, error: '鑾峰彇浼板€肩粺璁″け? },
+      { success: false, error: '鑾峰彇板€肩粺璁″け },
       { status: 500 }
     );
   }

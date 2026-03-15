@@ -1,6 +1,6 @@
 ﻿/**
  * 绯荤粺宸ュ叿鎵ц API
- * 鎻愪緵鎵ц绯荤粺绠＄悊宸ュ叿鍜岃剼鏈殑鍔熻兘锛屽甫涓ユ牸鐨勬潈闄愰獙? */
+ * 鎻愪緵鎵ц绯荤粺绠＄悊宸ュ叿鍜岃剼鏈殑鍔熻兘锛屽甫涓ユ牸鐨勬潈闄愰獙 */
 
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server';
 import { requirePermission } from '@/tech/middleware/permissions';
 import { audit } from '@/lib/audit';
 
-// 鐧藉悕鍗曞伐鍏峰垪琛紙瀹為檯椤圭洰涓簲璇ヤ粠閰嶇疆鏂囦欢璇诲彇?const WHITELISTED_TOOLS = [
+// 鐧藉悕鍗曞伐鍏峰垪琛紙瀹為檯椤圭洰涓簲璇ヤ粠閰嶇疆鏂囦欢璇诲彇const WHITELISTED_TOOLS = [
   'system_health_check',
   'database_backup',
   'cache_clear',
@@ -17,29 +17,29 @@ import { audit } from '@/lib/audit';
 ];
 
 export async function POST(request: Request) {
-  // 鍒涘缓 Supabase 瀹㈡埛?  const supabase = createClient(
+  // 鍒涘缓 Supabase 瀹㈡埛  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 锟?cookies 鑾峰彇浼氳瘽淇℃伅
+  // cookies 鑾峰彇氳瘽淇℃伅
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('sb-access-token');
 
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 璁剧疆璁よ瘉浠ょ墝
+    // 璁剧疆璁よ瘉ょ墝
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 鑾峰彇鐢ㄦ埛瑙掕壊淇℃伅
@@ -54,13 +54,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '鐢ㄦ埛鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 鏋勯€犵敤鎴蜂笂涓嬫枃鐢ㄤ簬鏉冮檺妫€?    const userContext = {
+    // 鏋勯€犵敤鎴蜂笂涓嬫枃鐢ㄤ簬鏉冮檺妫€    const userContext = {
       id: user.id,
       roles: [adminUser.role],
       tenant_id: null,
     };
 
-    // 妯℃嫙 Express 璇锋眰瀵硅薄鐢ㄤ簬鏉冮檺涓棿?    const mockReq = {
+    // 妯℃嫙 Express 璇眰瀵硅薄鐢ㄤ簬鏉冮檺涓棿    const mockReq = {
       user: userContext,
       body: await request.json(),
     };
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       }),
     };
 
-    // 妫€?tools_execute 鏉冮檺
+    // 妫€tools_execute 鏉冮檺
     const permissionCheck = requirePermission('tools_execute');
     let permissionGranted = true;
     let permissionError = null;
@@ -94,24 +94,24 @@ export async function POST(request: Request) {
       return NextResponse.json(permissionError, { status: 403 });
     }
 
-    // 瑙ｆ瀽璇锋眰?    const { toolName, parameters, confirmationToken } = mockReq.body;
+    // 瑙ｆ瀽璇眰    const { toolName, parameters, confirmationToken } = mockReq.body;
 
     // 楠岃瘉蹇呰鍙傛暟
     if (!toolName) {
       return NextResponse.json({ error: '缂哄皯宸ュ叿鍚嶇О鍙傛暟' }, { status: 400 });
     }
 
-    // 楠岃瘉宸ュ叿鏄惁鍦ㄧ櫧鍚嶅崟?    if (!WHITELISTED_TOOLS.includes(toolName)) {
+    // 楠岃瘉宸ュ叿鏄惁鍦ㄧ櫧鍚嶅崟    if (!WHITELISTED_TOOLS.includes(toolName)) {
       return NextResponse.json({ error: '宸ュ叿涓嶅湪鐧藉悕鍗曚腑' }, { status: 403 });
     }
 
-    // 楠岃瘉浜屾纭浠ょ墝锛堥珮鍗辨搷浣滈渶瑕侀澶栫‘璁わ級
+    // 楠岃瘉浜屾纭ょ墝锛堥珮鍗辨搷浣滈渶瑕侀澶栫‘璁わ級
     const HIGH_RISK_TOOLS = ['database_backup', 'cache_clear'];
     if (HIGH_RISK_TOOLS.includes(toolName)) {
       if (!confirmationToken) {
         return NextResponse.json(
           {
-            error: '楂樺嵄鎿嶄綔闇€瑕佷簩娆＄‘?,
+            error: '楂樺嵄鎿嶄綔闇€瑕佷簩娆＄‘,
             confirmation_required: true,
             tool: toolName,
           },
@@ -119,12 +119,12 @@ export async function POST(request: Request) {
         );
       }
 
-      // 杩欓噷搴旇楠岃瘉纭浠ょ墝鐨勬湁鏁?      // 绠€鍖栧鐞嗭細妫€鏌ヤ护鐗屾牸?      if (confirmationToken.length < 10) {
-        return NextResponse.json({ error: '纭浠ょ墝鏃犳晥' }, { status: 400 });
+      // 杩欓噷搴旇楠岃瘉纭ょ墝鐨勬湁鏁      // 绠€鍖栧鐞嗭細妫€鏌ヤ护鐗屾牸      if (confirmationToken.length < 10) {
+        return NextResponse.json({ error: '纭ょ墝犳晥' }, { status: 400 });
       }
     }
 
-    // 璁板綍瀹¤鏃ュ織 - 寮€濮嬫墽?    await audit(
+    // 璁板綍瀹¤ュ織 - 寮€濮嬫墽    await audit(
       'tool_execute_start',
       {
         id: user.id,
@@ -146,8 +146,8 @@ export async function POST(request: Request) {
       }
     );
 
-    // 妯℃嫙宸ュ叿鎵ц锛堝疄闄呭簲璇ヨ皟鐢ㄥ叿浣撶殑宸ュ叿鑴氭湰?    try {
-      // 鏍规嵁宸ュ叿鍚嶇О鎵ц涓嶅悓閫昏緫
+    // 妯℃嫙宸ュ叿鎵ц锛堝疄闄呭簲璇ヨ皟鐢ㄥ叿浣撶殑宸ュ叿鑴氭湰    try {
+      // 鏍规嵁宸ュ叿鍚嶇О鎵ц涓嶅悓昏緫
       let executionResult;
 
       switch (toolName) {
@@ -205,10 +205,10 @@ export async function POST(request: Request) {
         executionId: `exec_${Date.now()}`,
         result: executionResult,
         timestamp: new Date().toISOString(),
-        duration: Math.floor(Math.random() * 1000) + 100, // 妯℃嫙鎵ц鏃堕棿
+        duration: Math.floor(Math.random() * 1000) + 100, // 妯℃嫙鎵ц堕棿
       };
 
-      // 璁板綍瀹¤鏃ュ織 - 鎵ц鎴愬姛
+      // 璁板綍瀹¤ュ織 - 鎵ц鎴愬姛
       await audit(
         'tool_execute_success',
         {
@@ -228,7 +228,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(finalResult);
     } catch (toolError: any) {
-      // 璁板綍瀹¤鏃ュ織 - 鎵ц澶辫触
+      // 璁板綍瀹¤ュ織 - 鎵ц澶辫触
       await audit(
         'tool_execute_failed',
         {
@@ -261,7 +261,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('宸ュ叿鎵ц API 閿欒:', error);
 
-    // 璁板綍瀹¤鏃ュ織 - 绯荤粺閿欒
+    // 璁板綍瀹¤ュ織 - 绯荤粺閿欒
     await audit(
       'tool_execute_error',
       {
@@ -282,7 +282,7 @@ export async function POST(request: Request) {
       }
     );
 
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 

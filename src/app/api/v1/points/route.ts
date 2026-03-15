@@ -16,11 +16,11 @@ export async function GET(request: Request) {
 
     // 楠岃瘉璁よ瘉
     const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ') && userId !== 'anonymous') {
+    if (!authHeader.startsWith('Bearer ') && userId !== 'anonymous') {
       return NextResponse.json(
         {
           code: 40101,
-          message: '鏈巿鏉冭?,
+          message: '鏈巿鏉冭,
           data: null,
         },
         { status: 401 }
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         code: 50001,
-        message: '绉垎鏈嶅姟鏆傛椂涓嶅彲?,
+        message: '绉垎鏈嶅姟鏆傛椂涓嶅彲,
         data: null,
       },
       { status: 500 }
@@ -64,7 +64,7 @@ async function getUserPointsBalance(userId: string) {
   try {
     const cacheKey = generateCacheKey('points_balance', userId);
 
-    // 灏濊瘯浠庣紦瀛樿幏?    const cachedBalance = await cacheManager.get(cacheKey);
+    // 灏濊瘯庣紦瀛樿幏    const cachedBalance = await cacheManager.get(cacheKey);
     if (cachedBalance) {
       return NextResponse.json({
         code: 0,
@@ -75,7 +75,7 @@ async function getUserPointsBalance(userId: string) {
       });
     }
 
-    // 浠庢暟鎹簱鑾峰彇
+    // 庢暟鎹簱鑾峰彇
     const { data: balanceRecord, error } = await supabase
       .from('user_points')
       .select('total_points, available_points, frozen_points, updated_at')
@@ -85,7 +85,7 @@ async function getUserPointsBalance(userId: string) {
     let balanceData;
 
     if (error || !balanceRecord) {
-      // 鐢ㄦ埛棣栨鏌ヨ锛屽垱寤洪粯璁よ?      const { data: newRecord, error: insertError } = await supabase
+      // 鐢ㄦ埛棣栨鏌ヨ锛屽垱寤洪粯璁よ      const { data: newRecord, error: insertError } = await supabase
         .from('user_points')
         .insert({
           user_id: userId,
@@ -117,7 +117,7 @@ async function getUserPointsBalance(userId: string) {
       };
     }
 
-    // 缂撳瓨缁撴灉?鍒嗛挓?    await cacheManager.set(cacheKey, balanceData, 300);
+    // 缂撳缁撴灉鍒嗛挓    await cacheManager.set(cacheKey, balanceData, 300);
 
     return NextResponse.json({
       code: 0,
@@ -203,7 +203,7 @@ async function getPointsRules() {
   try {
     const cacheKey = 'points_rules';
 
-    // 灏濊瘯浠庣紦瀛樿幏?    const cachedRules = await cacheManager.get(cacheKey);
+    // 灏濊瘯庣紦瀛樿幏    const cachedRules = await cacheManager.get(cacheKey);
     if (cachedRules) {
       return NextResponse.json({
         code: 0,
@@ -240,7 +240,7 @@ async function getPointsRules() {
       {
         action: 'share_content',
         points: 15,
-        description: '鍒嗕韩鍐呭鍒扮ぞ浜ゅ钩?,
+        description: '鍒嗕韩鍐呭鍒扮ぞ浜ゅ钩,
         frequency: 'per_action',
         limit_per_day: 10,
       },
@@ -261,13 +261,13 @@ async function getPointsRules() {
       {
         action: 'invite_friend',
         points: 200,
-        description: '閭€璇峰ソ鍙嬫敞?,
+        description: '€璇峰ソ鍙嬫敞,
         frequency: 'per_invite',
         limit_per_day: 10,
       },
     ];
 
-    // 缂撳瓨缁撴灉?灏忔椂?    await cacheManager.set(cacheKey, rules, 3600);
+    // 缂撳缁撴灉灏忔椂    await cacheManager.set(cacheKey, rules, 3600);
 
     return NextResponse.json({
       code: 0,
@@ -289,14 +289,14 @@ async function getPointsRules() {
   }
 }
 
-// 绉垎鎿嶄綔鎺ュ彛锛圥OST锟?export async function POST(request: Request) {
+// 绉垎鎿嶄綔鎺ュ彛锛圥OSTexport async function POST(request: Request) {
   try {
     const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
+    if (!authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '鏈巿鏉冭?,
+          message: '鏈巿鏉冭,
           data: null,
         },
         { status: 401 }
@@ -351,7 +351,7 @@ async function executePointsAction(
   action: string,
   amount: number,
   description: string,
-  relatedId?: string
+  relatedId: string
 ) {
   try {
     // 寮€濮嬫暟鎹簱浜嬪姟
@@ -362,7 +362,7 @@ async function executePointsAction(
       .single();
 
     if (userError) {
-      throw new Error('鐢ㄦ埛绉垎璁板綍涓嶅瓨?);
+      throw new Error('鐢ㄦ埛绉垎璁板綍涓嶅);
     }
 
     // 璁＄畻鏂扮殑绉垎浣欓
@@ -402,12 +402,12 @@ async function executePointsAction(
       console.warn('璁板綍绉垎鍘嗗彶澶辫触:', transError);
     }
 
-    // 娓呴櫎鐩稿叧缂撳瓨
+    // 娓呴櫎鐩稿叧缂撳
     const balanceCacheKey = generateCacheKey('points_balance', userId);
     await cacheManager.del(balanceCacheKey);
 
     return {
-      transaction_id: transaction?.id,
+      transaction_id: transaction.id,
       user_id: userId,
       action: action,
       points_change: amount,
@@ -429,10 +429,10 @@ function getDefaultDescription(action: string, amount: number) {
     share_content: '鍒嗕韩鍐呭濂栧姳',
     create_article: '鍙戝竷鏂囩珷濂栧姳',
     complete_repair: '瀹屾垚缁翠慨璁㈠崟濂栧姳',
-    invite_friend: '閭€璇峰ソ鍙嬪?,
+    invite_friend: '€璇峰ソ鍙嬪,
   };
 
   const baseDesc = actionDescriptions[action] || '绉垎鍙樺姩';
-  return `${baseDesc} ${amount > 0 ? '+' : ''}${amount}绉垎`;
+  return `${baseDesc} ${amount > 0  '+' : ''}${amount}绉垎`;
 }
 

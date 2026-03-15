@@ -6,17 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Smartphone,
-  Wrench,
   MapPin,
-  Camera,
   Plus,
   X,
   AlertCircle,
   CheckCircle,
   Clock,
   Tablet,
-  Laptop,
-  Monitor,
 } from 'lucide-react';
 
 interface ReportFormData {
@@ -48,17 +44,15 @@ export default function MobileReportPage() {
   const deviceTypes = [
     { id: 'phone', name: '手机', icon: Smartphone },
     { id: 'tablet', name: '平板', icon: Tablet },
-    { id: 'laptop', name: '笔记?, icon: Laptop },
-    { id: 'desktop', name: '台式?, icon: Monitor },
   ];
 
   const commonIssues = [
     '屏幕问题',
     '电池问题',
-    '无法开?,
+    '无法开机',
     '系统故障',
-    '摄像头故?,
-    '扬声器问?,
+    '摄像头故障',
+    '扬声器问题',
     '充电问题',
     '其他问题',
   ];
@@ -69,17 +63,17 @@ export default function MobileReportPage() {
     switch (currentStep) {
       case 1:
         if (!formData.deviceType) newErrors.deviceType = '请选择设备类型';
-        if (!formData.brand) newErrors.brand = '请输入品?;
-        if (!formData.model) newErrors.model = '请输入型?;
+        if (!formData.brand) newErrors.brand = '请输入品牌';
+        if (!formData.model) newErrors.model = '请输入型号';
         break;
       case 2:
         if (!formData.issue) newErrors.issue = '请选择故障类型';
         if (!formData.description.trim())
-          newErrors.description = '请描述具体问?;
+          newErrors.description = '请描述具体问题';
         break;
       case 3:
         if (!formData.location) newErrors.location = '请输入服务地址';
-        if (!formData.contact) newErrors.contact = '请输入联系方?;
+        if (!formData.contact) newErrors.contact = '请输入联系方式';
         break;
     }
 
@@ -133,7 +127,7 @@ export default function MobileReportPage() {
     try {
       // 模拟提交API调用
       await new Promise(resolve => setTimeout(resolve, 2000));
-      alert('报修申请提交成功?);
+      alert('报修申请提交成功!');
       // 重置表单
       setFormData({
         deviceType: '',
@@ -160,16 +154,16 @@ export default function MobileReportPage() {
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center ${
               step >= num
-                ? 'bg-blue-600 text-white'
+                 'bg-blue-600 text-white'
                 : 'bg-gray-300 text-gray-600'
             }`}
           >
-            {step > num ? <CheckCircle className="w-4 h-4" /> : num}
+            {step > num  <CheckCircle className="w-4 h-4" /> : num}
           </div>
           {num < 3 && (
             <div
               className={`w-12 h-1 mx-2 ${
-                step > num ? 'bg-blue-600' : 'bg-gray-300'
+                step > num  'bg-blue-600' : 'bg-gray-300'
               }`}
             />
           )}
@@ -191,8 +185,10 @@ export default function MobileReportPage() {
           </button>
         )}
         <div className="flex-1 text-center">
-          <h1 className="text-lg font-semibold text-gray-900">快速报?/h1>
-          <p className="text-sm text-gray-500">�?{step} 步，�?3 �?/p>
+          <h1 className="text-lg font-semibold text-gray-900">快速报修</h1>
+          <p className="text-sm text-gray-500">
+            第 {step} 步，共 3 步
+          </p>
         </div>
         <div className="w-10"></div>
       </div>
@@ -205,7 +201,7 @@ export default function MobileReportPage() {
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-2">设备信息</h2>
-              <p className="text-gray-600">请填写您的设备基本信?/p>
+              <p className="text-gray-600">请填写您的设备基本信息</p>
             </div>
 
             {/* 设备类型选择 */}
@@ -222,21 +218,21 @@ export default function MobileReportPage() {
                       onClick={() => handleInputChange('deviceType', type.id)}
                       className={`p-4 rounded-xl border-2 transition-all ${
                         formData.deviceType === type.id
-                          ? 'border-blue-500 bg-blue-50'
+                           'border-blue-500 bg-blue-50'
                           : 'border-gray-200 bg-white hover:border-gray-300'
                       }`}
                     >
                       <Icon
                         className={`w-8 h-8 mx-auto mb-2 ${
                           formData.deviceType === type.id
-                            ? 'text-blue-600'
+                             'text-blue-600'
                             : 'text-gray-400'
                         }`}
                       />
                       <span
                         className={`text-sm font-medium ${
                           formData.deviceType === type.id
-                            ? 'text-blue-600'
+                             'text-blue-600'
                             : 'text-gray-700'
                         }`}
                       >
@@ -254,7 +250,7 @@ export default function MobileReportPage() {
               )}
             </div>
 
-            {/* 品牌和型?*/}
+            {/* 品牌和型号 */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -263,8 +259,8 @@ export default function MobileReportPage() {
                 <Input
                   value={formData.brand}
                   onChange={e => handleInputChange('brand', e.target.value)}
-                  placeholder="如：苹果、华为、小?.."
-                  className={errors.brand ? 'border-red-500' : ''}
+                  placeholder="如：苹果、华为、小米..."
+                  className={errors.brand  'border-red-500' : ''}
                 />
                 {errors.brand && (
                   <div className="flex items-center text-red-500 text-sm mt-1">
@@ -282,7 +278,7 @@ export default function MobileReportPage() {
                   value={formData.model}
                   onChange={e => handleInputChange('model', e.target.value)}
                   placeholder="如：iPhone 14 Pro、Mate 50..."
-                  className={errors.model ? 'border-red-500' : ''}
+                  className={errors.model  'border-red-500' : ''}
                 />
                 {errors.model && (
                   <div className="flex items-center text-red-500 text-sm mt-1">
@@ -300,7 +296,7 @@ export default function MobileReportPage() {
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-2">故障描述</h2>
-              <p className="text-gray-600">请详细描述您遇到的问?/p>
+              <p className="text-gray-600">请详细描述您遇到的问题</p>
             </div>
 
             {/* 常见问题选择 */}
@@ -315,7 +311,7 @@ export default function MobileReportPage() {
                     onClick={() => handleInputChange('issue', issue)}
                     className={`p-3 rounded-lg text-sm text-left transition-colors ${
                       formData.issue === issue
-                        ? 'bg-blue-100 text-blue-700 border-2 border-blue-500'
+                         'bg-blue-100 text-blue-700 border-2 border-blue-500'
                         : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-gray-300'
                     }`}
                   >
@@ -341,7 +337,7 @@ export default function MobileReportPage() {
                 onChange={e => handleInputChange('description', e.target.value)}
                 placeholder="请详细描述设备的具体问题、出现时间、使用情况等..."
                 rows={5}
-                className={errors.description ? 'border-red-500' : ''}
+                className={errors.description  'border-red-500' : ''}
               />
               <div className="flex justify-between items-center mt-2">
                 {errors.description && (
@@ -362,7 +358,7 @@ export default function MobileReportPage() {
                 问题照片
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                {formData.images.length > 0 ? (
+                {formData.images.length > 0  (
                   <div className="grid grid-cols-3 gap-2 mb-3">
                     {formData.images.map((image, index) => (
                       <div key={index} className="relative">
@@ -400,7 +396,7 @@ export default function MobileReportPage() {
                         <Plus className="w-5 h-5 text-gray-400" />
                       </div>
                       <span className="text-sm text-gray-600">
-                        上传照片 ({3 - formData.images.length}张剩?
+                        上传照片 ({3 - formData.images.length}张剩余)
                       </span>
                     </label>
                   </div>
@@ -415,7 +411,7 @@ export default function MobileReportPage() {
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-2">服务信息</h2>
-              <p className="text-gray-600">请提供服务地址和联系方?/p>
+              <p className="text-gray-600">请提供服务地址和联系方式</p>
             </div>
 
             {/* 服务地址 */}
@@ -429,7 +425,7 @@ export default function MobileReportPage() {
                   value={formData.location}
                   onChange={e => handleInputChange('location', e.target.value)}
                   placeholder="请输入详细地址"
-                  className={`pl-10 ${errors.location ? 'border-red-500' : ''}`}
+                  className={`pl-10 ${errors.location  'border-red-500' : ''}`}
                 />
               </div>
               {errors.location && (
@@ -448,9 +444,9 @@ export default function MobileReportPage() {
               <Input
                 value={formData.contact}
                 onChange={e => handleInputChange('contact', e.target.value)}
-                placeholder="请输入手机号?
+                placeholder="请输入手机号码"
                 type="tel"
-                className={errors.contact ? 'border-red-500' : ''}
+                className={errors.contact  'border-red-500' : ''}
               />
               {errors.contact && (
                 <div className="flex items-center text-red-500 text-sm mt-1">
@@ -467,9 +463,9 @@ export default function MobileReportPage() {
                 <span className="font-medium text-blue-900">服务预估</span>
               </div>
               <ul className="text-sm text-blue-800 space-y-1">
-                <li>�?响应时间?0分钟内联?/li>
-                <li>�?到达时间?小时内上?/li>
-                <li>�?服务费用：根据检测结果确?/li>
+                <li>• 响应时间：10分钟内联系</li>
+                <li>• 到达时间：2小时内上门</li>
+                <li>• 服务费用：根据检测结果确定</li>
               </ul>
             </div>
           </div>
@@ -478,7 +474,7 @@ export default function MobileReportPage() {
         {/* 操作按钮 */}
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
           <div className="flex space-x-3">
-            {step < 3 ? (
+            {step < 3  (
               <>
                 <Button
                   variant="outline"
@@ -486,12 +482,14 @@ export default function MobileReportPage() {
                   className="flex-1"
                   disabled={step === 1}
                 >
-                  上一?                </Button>
+                  上一步
+                </Button>
                 <Button
                   onClick={nextStep}
                   className="flex-1 bg-blue-600 hover:bg-blue-700"
                 >
-                  下一?                </Button>
+                  下一步
+                </Button>
               </>
             ) : (
               <Button
@@ -499,7 +497,7 @@ export default function MobileReportPage() {
                 className="flex-1 bg-blue-600 hover:bg-blue-700"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? '提交?..' : '提交报修'}
+                {isSubmitting  '提交中...' : '提交报修'}
               </Button>
             )}
           </div>
@@ -508,4 +506,3 @@ export default function MobileReportPage() {
     </div>
   );
 }
-

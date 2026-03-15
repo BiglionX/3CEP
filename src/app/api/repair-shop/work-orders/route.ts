@@ -1,12 +1,12 @@
 ﻿/**
  * 缁翠慨搴楀伐鍗曠鐞咥PI璺敱
- * 澶勭悊宸ュ崟鐨勫鍒犳敼鏌ユ搷? */
+ * 澶勭悊宸ュ崟鐨勫鍒犳敼鏌ユ搷 */
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
 
-// 妯℃嫙鏁版嵁 - 瀹為檯椤圭洰涓簲杩炴帴鐪熷疄鏁版嵁?const MOCK_WORK_ORDERS = [
+// 妯℃嫙鏁版嵁 - 瀹為檯椤圭洰涓簲杩炴帴鐪熷疄鏁版嵁const MOCK_WORK_ORDERS = [
   {
     id: 'wo_001',
     orderNumber: 'WO20260228001',
@@ -20,12 +20,12 @@ import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
       serialNumber: 'F2LNY9D9Q6MJ',
       imei: '352098091234567',
     },
-    faultDescription: '灞忓箷纰庤锛屾棤娉曟甯告樉?,
+    faultDescription: '灞忓箷纰庤锛屾棤娉曟甯告樉,
     faultType: '灞忓箷缁翠慨',
     status: WorkOrderStatus.IN_PROGRESS,
     priority: PriorityLevel.HIGH,
     technicianId: 'tech_001',
-    technicianName: '鏉庡笀?,
+    technicianName: '鏉庡笀,
     assignedAt: '2026-02-28T09:30:00Z',
     estimatedCompletion: '2026-02-28T15:00:00Z',
     price: 880,
@@ -33,7 +33,7 @@ import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
     laborCost: 230,
     totalPrice: 880,
     paymentStatus: 'pending',
-    notes: '瀹㈡埛鎬ラ渶浣跨敤锛屼紭鍏堝?,
+    notes: '瀹㈡埛鎬ラ渶浣跨敤锛屼紭鍏堝,
     photos: ['/images/iphone-screen-damage.jpg'],
     createdAt: '2026-02-28T09:15:00Z',
     updatedAt: '2026-02-28T14:20:00Z',
@@ -51,12 +51,12 @@ import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
       serialNumber: 'R58N823MQYN',
       imei: '352098097654321',
     },
-    faultDescription: '鐢垫睜榧撳寘锛屽厖鐢靛紓?,
+    faultDescription: '鐢垫睜榧撳寘锛屽厖鐢靛紓,
     faultType: '鐢垫睜鏇存崲',
     status: WorkOrderStatus.PENDING,
     priority: PriorityLevel.MEDIUM,
     technicianId: 'tech_002',
-    technicianName: '鐜嬪笀?,
+    technicianName: '鐜嬪笀,
     assignedAt: '2026-02-28T10:15:00Z',
     estimatedCompletion: '2026-02-29T14:00:00Z',
     price: 450,
@@ -64,7 +64,7 @@ import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
     laborCost: 170,
     totalPrice: 450,
     paymentStatus: 'pending',
-    notes: '闇€瑕侀绾﹀埌搴楀?,
+    notes: '闇€瑕侀绾﹀埌搴楀,
     photos: ['/images/samsung-battery-issue.jpg'],
     createdAt: '2026-02-28T10:00:00Z',
     updatedAt: '2026-02-28T10:15:00Z',
@@ -87,7 +87,7 @@ import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
     status: WorkOrderStatus.COMPLETED,
     priority: PriorityLevel.LOW,
     technicianId: 'tech_003',
-    technicianName: '寮犲笀?,
+    technicianName: '寮犲笀,
     assignedAt: '2026-02-28T08:45:00Z',
     estimatedCompletion: '2026-02-28T12:30:00Z',
     actualCompletion: '2026-02-28T12:25:00Z',
@@ -96,7 +96,7 @@ import { WorkOrderStatus, PriorityLevel } from '@/types/repair-shop.types';
     laborCost: 200,
     totalPrice: 280,
     paymentStatus: 'paid',
-    notes: '宸叉洿鎹iFi妯″潡锛岄棶棰樿В?,
+    notes: '宸叉洿鎹iFi妯″潡锛岄棶棰樿В,
     photos: ['/images/ipad-wifi-repair.jpg'],
     createdAt: '2026-02-28T08:30:00Z',
     updatedAt: '2026-02-28T12:30:00Z',
@@ -154,8 +154,8 @@ export async function GET(request: Request) {
     }
 
     if (dateFrom || dateTo) {
-      const fromDate = dateFrom ? new Date(dateFrom) : new Date(0);
-      const toDate = dateTo ? new Date(dateTo) : new Date();
+      const fromDate = dateFrom  new Date(dateFrom) : new Date(0);
+      const toDate = dateTo  new Date(dateTo) : new Date();
 
       filteredOrders = filteredOrders.filter(order => {
         const orderDate = new Date(order.createdAt);
@@ -215,10 +215,10 @@ export async function POST(request: Request) {
       }
     }
 
-    // 鐢熸垚鏂扮殑宸ュ崟ID鍜岀紪?    const newId = `wo_${Date.now()}`;
+    // 鐢熸垚鏂扮殑宸ュ崟ID鍜岀紪    const newId = `wo_${Date.now()}`;
     const orderNumber = `WO${new Date().toISOString().slice(0, 10).replace(/-/g, '')}${String(MOCK_WORK_ORDERS.length + 1).padStart(3, '0')}`;
 
-    // 鍒涘缓鏂板伐?    const newOrder = {
+    // 鍒涘缓鏂板伐    const newOrder = {
       id: newId,
       orderNumber,
       ...body,
@@ -234,7 +234,7 @@ export async function POST(request: Request) {
       updatedAt: new Date().toISOString(),
     };
 
-    // 鍦ㄥ疄闄呴」鐩腑杩欓噷搴旇淇濆瓨鍒版暟鎹簱
+    // 鍦ㄥ疄闄呴」鐩腑杩欓噷搴旇淇濆鍒版暟鎹簱
     // MOCK_WORK_ORDERS.push(newOrder);
 
     return NextResponse.json({

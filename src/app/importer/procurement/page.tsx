@@ -43,7 +43,7 @@ interface ProcurementOrder {
   priority: 'low' | 'medium' | 'high';
   createdAt: string;
   expectedDelivery: string;
-  actualDelivery?: string;
+  actualDelivery: string;
   paymentStatus: 'unpaid' | 'partial' | 'paid';
 }
 
@@ -88,8 +88,8 @@ export default function ProcurementPage() {
       {
         id: 'PO-2026-003',
         supplier: 'Dell Technologies',
-        product: 'XPS 13 笔记本电?,
-        category: '笔记本电?,
+        product: 'XPS 13 笔记本电脑',
+        category: '笔记本电脑',
         quantity: 200,
         unitPrice: 6000,
         totalPrice: 1200000,
@@ -101,7 +101,7 @@ export default function ProcurementPage() {
       },
       {
         id: 'PO-2026-004',
-        supplier: '华为技?,
+        supplier: '华为技术',
         product: 'MatePad Pro 平板',
         category: '平板电脑',
         quantity: 150,
@@ -197,7 +197,7 @@ export default function ProcurementPage() {
                 onClick={() => router.back()}
                 className="mr-4"
               >
-                �?返回
+                ← 返回
               </Button>
               <h1 className="text-xl font-semibold text-gray-900">
                 采购订单管理
@@ -212,7 +212,7 @@ export default function ProcurementPage() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 搜索和筛选区?*/}
+        {/* 搜索和筛选区域 */}
         <Card className="mb-6">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-4">
@@ -220,7 +220,7 @@ export default function ProcurementPage() {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
-                    placeholder="搜索订单号、供应商或产?.."
+                    placeholder="搜索订单号、供应商或产品..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     className="pl-10"
@@ -234,13 +234,13 @@ export default function ProcurementPage() {
                   onChange={e => setStatusFilter(e.target.value)}
                   className="border border-gray-300 rounded-md px-3 py-2 text-sm"
                 >
-                  <option value="all">全部状?/option>
+                  <option value="all">全部状态</option>
                   <option value="draft">草稿</option>
-                  <option value="pending">待确?/option>
-                  <option value="confirmed">已确?/option>
-                  <option value="shipped">已发?/option>
-                  <option value="delivered">已交?/option>
-                  <option value="cancelled">已取?/option>
+                  <option value="pending">待确认</option>
+                  <option value="confirmed">已确认</option>
+                  <option value="shipped">已发货</option>
+                  <option value="delivered">已交付</option>
+                  <option value="cancelled">已取消</option>
                 </select>
 
                 <select
@@ -250,7 +250,7 @@ export default function ProcurementPage() {
                 >
                   <option value="all">全部类别</option>
                   <option value="智能手机">智能手机</option>
-                  <option value="笔记本电?>笔记本电?/option>
+                  <option value="笔记本电脑">笔记本电脑</option>
                   <option value="平板电脑">平板电脑</option>
                   <option value="配件">配件</option>
                 </select>
@@ -275,7 +275,7 @@ export default function ProcurementPage() {
               <div className="text-2xl font-bold text-yellow-600">
                 {orders.filter(o => o.status === 'pending').length}
               </div>
-              <div className="text-sm text-gray-600">待确?/div>
+              <div className="text-sm text-gray-600">待确认</div>
             </CardContent>
           </Card>
 
@@ -287,7 +287,8 @@ export default function ProcurementPage() {
                   orders.reduce((sum, order) => sum + order.totalPrice, 0) /
                   10000
                 ).toFixed(1)}
-                �?              </div>
+                万
+              </div>
               <div className="text-sm text-gray-600">总采购额</div>
             </CardContent>
           </Card>
@@ -297,7 +298,7 @@ export default function ProcurementPage() {
               <div className="text-2xl font-bold text-purple-600">
                 {orders.filter(o => o.paymentStatus === 'paid').length}
               </div>
-              <div className="text-sm text-gray-600">已付?/div>
+              <div className="text-sm text-gray-600">已付款</div>
             </CardContent>
           </Card>
         </div>
@@ -313,7 +314,7 @@ export default function ProcurementPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {filteredOrders.length === 0 ? (
+              {filteredOrders.length === 0  (
                 <div className="text-center py-12">
                   <Package className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">
@@ -323,7 +324,7 @@ export default function ProcurementPage() {
                     {searchTerm ||
                     statusFilter !== 'all' ||
                     categoryFilter !== 'all'
-                      ? '没有找到匹配的订?
+                       '没有找到匹配的订单'
                       : '开始创建第一个采购订单吧'}
                   </p>
                   {!searchTerm &&
@@ -332,7 +333,8 @@ export default function ProcurementPage() {
                       <div className="mt-6">
                         <Button onClick={handleCreateOrder}>
                           <Plus className="h-4 w-4 mr-2" />
-                          创建新订?                        </Button>
+                          创建新订单
+                        </Button>
                       </div>
                     )}
                 </div>
@@ -351,32 +353,32 @@ export default function ProcurementPage() {
                           </span>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status === 'confirmed'
-                              ? '已确?
+                               '已确认'
                               : order.status === 'pending'
-                                ? '待确?
+                                 '待确认'
                                 : order.status === 'shipped'
-                                  ? '已发?
+                                   '已发货'
                                   : order.status === 'delivered'
-                                    ? '已交?
+                                     '已交付'
                                     : order.status === 'draft'
-                                      ? '草稿'
-                                      : '已取?}
+                                       '草稿'
+                                      : '已取消'}
                           </Badge>
                           <Badge className={getPriorityColor(order.priority)}>
                             {order.priority === 'high'
-                              ? '紧?
+                               '紧急'
                               : order.priority === 'medium'
-                                ? '中等'
-                                : '普?}
+                                 '中等'
+                                : '普通'}
                           </Badge>
                           <Badge
                             className={getPaymentColor(order.paymentStatus)}
                           >
                             {order.paymentStatus === 'paid'
-                              ? '已付?
+                               '已付款'
                               : order.paymentStatus === 'partial'
-                                ? '部分付款'
-                                : '未付?}
+                                 '部分付款'
+                                : '未付款'}
                           </Badge>
                         </div>
 
@@ -384,7 +386,7 @@ export default function ProcurementPage() {
                           <div>
                             <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                               <Truck className="h-4 w-4" />
-                              <span>供应? {order.supplier}</span>
+                              <span>供应商: {order.supplier}</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-600">
                               <Package className="h-4 w-4" />
@@ -396,7 +398,7 @@ export default function ProcurementPage() {
 
                           <div>
                             <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                              <span>数量: {order.quantity} �?/span>
+                              <span>数量: {order.quantity} 件</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-600">
                               <DollarSign className="h-4 w-4" />
@@ -448,4 +450,3 @@ export default function ProcurementPage() {
     </div>
   );
 }
-

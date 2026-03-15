@@ -18,16 +18,16 @@ interface Manual {
   languageCodes: string[];
   version: number;
   status: 'draft' | 'pending_review' | 'published' | 'rejected';
-  coverImageUrl?: string;
-  videoUrl?: string;
+  coverImageUrl: string;
+  videoUrl: string;
   viewCount: number;
   downloadCount: number;
   createdAt: string;
   updatedAt: string;
-  product?: {
+  product: {
     name: string;
     model: string;
-    brand?: {
+    brand: {
       name: string;
     };
   };
@@ -37,7 +37,7 @@ interface Product {
   id: string;
   name: string;
   model: string;
-  brand?: {
+  brand: {
     name: string;
   };
 }
@@ -53,7 +53,7 @@ export default function ManualsManagementPage() {
   const [editingManual, setEditingManual] = useState<Manual | null>(null);
   const [currentLanguage, setCurrentLanguage] = useState('zh');
   
-  // 表单状?
+  // 表单状
   const [formData, setFormData] = useState({
     productId: '',
     title: {} as Record<string, string>,
@@ -63,7 +63,7 @@ export default function ManualsManagementPage() {
     languageCodes: ['zh']
   });
 
-  // 获取说明书列?
+  // 获取说明书列
   const fetchManuals = async () => {
     try {
       setLoading(true);
@@ -77,7 +77,7 @@ export default function ManualsManagementPage() {
       }
     } catch (err) {
       setError('网络请求失败');
-      console.error('获取说明书列表失?', err);
+      console.error('获取说明书列表失', err);
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ export default function ManualsManagementPage() {
     }
   };
 
-  // 创建说明?
+  // 创建说明
   const createManual = async () => {
     try {
       const response = await fetch('/api/manuals', {
@@ -123,11 +123,11 @@ export default function ManualsManagementPage() {
       }
     } catch (err) {
       alert('创建请求失败');
-      console.error('创建说明书失?', err);
+      console.error('创建说明书失', err);
     }
   };
 
-  // 更新说明?
+  // 更新说明
   const updateManual = async () => {
     if (!editingManual) return;
     
@@ -153,11 +153,11 @@ export default function ManualsManagementPage() {
       }
     } catch (err) {
       alert('更新请求失败');
-      console.error('更新说明书失?', err);
+      console.error('更新说明书失', err);
     }
   };
 
-  // 删除说明?
+  // 删除说明
   const deleteManual = async (manualId: string) => {
     if (!confirm('确定要删除这个说明书吗？')) return;
     
@@ -176,7 +176,7 @@ export default function ManualsManagementPage() {
       }
     } catch (err) {
       alert('删除请求失败');
-      console.error('删除说明书失?', err);
+      console.error('删除说明书失', err);
     }
   };
 
@@ -214,7 +214,7 @@ export default function ManualsManagementPage() {
     setCurrentLanguage('zh');
   };
 
-  // 编辑说明?
+  // 编辑说明
   const handleEdit = (manual: Manual) => {
     setEditingManual(manual);
     setFormData({
@@ -238,7 +238,7 @@ export default function ManualsManagementPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载?..</p>
+          <p className="mt-4 text-gray-600">加载中..</p>
         </div>
       </div>
     );
@@ -251,8 +251,8 @@ export default function ManualsManagementPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">说明书管?/h1>
-              <p className="mt-2 text-gray-600">管理产品的多语言电子说明?/p>
+              <h1 className="text-3xl font-bold text-gray-900">说明书管/h1>
+              <p className="mt-2 text-gray-600">管理产品的多语言电子说明/p>
             </div>
             <button
               onClick={() => {
@@ -264,7 +264,7 @@ export default function ManualsManagementPage() {
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              创建说明?
+              创建说明
             </button>
           </div>
         </div>
@@ -281,13 +281,13 @@ export default function ManualsManagementPage() {
           </div>
         )}
 
-        {/* 说明书列?*/}
+        {/* 说明书列*/}
         {activeTab === 'list' && (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            {manuals.length === 0 ? (
+            {manuals.length === 0  (
               <div className="p-12 text-center">
                 <div className="text-gray-400 text-6xl mb-4">📚</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">暂无说明?/h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">暂无说明/h3>
                 <p className="text-gray-500 mb-6">开始创建您的第一个产品说明书</p>
                 <button
                   onClick={() => {
@@ -296,7 +296,7 @@ export default function ManualsManagementPage() {
                   }}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
-                  创建说明?
+                  创建说明
                 </button>
               </div>
             ) : (
@@ -307,7 +307,7 @@ export default function ManualsManagementPage() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">产品信息</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">标题</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">语言</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状?/th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状/th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">统计</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                     </tr>
@@ -318,19 +318,19 @@ export default function ManualsManagementPage() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
                             <div className="text-sm font-medium text-gray-900">
-                              {manual?.name || '未知产品'}
+                              {manual.name || '未知产品'}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {manual?.model || '无型?}
+                              {manual.model || '无型}
                             </div>
                             <div className="text-xs text-gray-400 mt-1">
-                              {manual?.brand?.name || '未知品牌'}
+                              {manual.brand.name || '未知品牌'}
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">
-                            {manual.title[currentLanguage] || manual.title['zh'] || '无标?}
+                            {manual.title[currentLanguage] || manual.title['zh'] || '无标}
                           </div>
                           <div className="text-xs text-gray-500">
                             v{manual.version}
@@ -350,14 +350,14 @@ export default function ManualsManagementPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            manual.status === 'published' ? 'bg-green-100 text-green-800' :
-                            manual.status === 'pending_review' ? 'bg-yellow-100 text-yellow-800' :
-                            manual.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            manual.status === 'published'  'bg-green-100 text-green-800' :
+                            manual.status === 'pending_review'  'bg-yellow-100 text-yellow-800' :
+                            manual.status === 'rejected'  'bg-red-100 text-red-800' :
                             'bg-gray-100 text-gray-800'
                           }`}>
-                            {manual.status === 'published' ? '已发? :
-                             manual.status === 'pending_review' ? '审核? :
-                             manual.status === 'rejected' ? '已拒? : '草稿'}
+                            {manual.status === 'published'  '已发 :
+                             manual.status === 'pending_review'  '审核 :
+                             manual.status === 'rejected'  '已拒 : '草稿'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -402,7 +402,7 @@ export default function ManualsManagementPage() {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900">
-                {activeTab === 'create' ? '创建说明? : '编辑说明?}
+                {activeTab === 'create'  '创建说明 : '编辑说明}
               </h2>
               <button 
                 onClick={() => {
@@ -432,7 +432,7 @@ export default function ManualsManagementPage() {
                   <option value="">请选择产品</option>
                   {products.map(product => (
                     <option key={product.id} value={product.id}>
-                      {product.name} - {product.model} ({product?.name})
+                      {product.name} - {product.model} ({product.name})
                     </option>
                   ))}
                 </select>
@@ -450,7 +450,7 @@ export default function ManualsManagementPage() {
                       checked={formData.languageCodes.includes('zh')}
                       onChange={(e) => {
                         const codes = e.target.checked 
-                          ? [...formData.languageCodes, 'zh']
+                           [...formData.languageCodes, 'zh']
                           : formData.languageCodes.filter(c => c !== 'zh');
                         setFormData({...formData, languageCodes: codes});
                       }}
@@ -464,7 +464,7 @@ export default function ManualsManagementPage() {
                       checked={formData.languageCodes.includes('en')}
                       onChange={(e) => {
                         const codes = e.target.checked 
-                          ? [...formData.languageCodes, 'en']
+                           [...formData.languageCodes, 'en']
                           : formData.languageCodes.filter(c => c !== 'en');
                         setFormData({...formData, languageCodes: codes});
                       }}
@@ -485,11 +485,11 @@ export default function ManualsManagementPage() {
                         onClick={() => setCurrentLanguage(lang)}
                         className={`py-2 px-1 border-b-2 font-medium text-sm ${
                           currentLanguage === lang
-                            ? 'border-blue-500 text-blue-600'
+                             'border-blue-500 text-blue-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         }`}
                       >
-                        {lang === 'zh' ? '中文' : 'English'}
+                        {lang === 'zh'  '中文' : 'English'}
                       </button>
                     ))}
                   </nav>
@@ -500,7 +500,7 @@ export default function ManualsManagementPage() {
               {formData.languageCodes.includes(currentLanguage) && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {currentLanguage === 'zh' ? '中文标题' : 'English Title'} *
+                    {currentLanguage === 'zh'  '中文标题' : 'English Title'} *
                   </label>
                   <input
                     type="text"
@@ -513,7 +513,7 @@ export default function ManualsManagementPage() {
                       }
                     })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder={currentLanguage === 'zh' ? '请输入说明书标题' : 'Enter manual title'}
+                    placeholder={currentLanguage === 'zh'  '请输入说明书标题' : 'Enter manual title'}
                   />
                 </div>
               )}
@@ -522,7 +522,7 @@ export default function ManualsManagementPage() {
               {formData.languageCodes.includes(currentLanguage) && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {currentLanguage === 'zh' ? '中文内容' : 'English Content'} *
+                    {currentLanguage === 'zh'  '中文内容' : 'English Content'} *
                   </label>
                   <RichTextEditor
                     value={formData.content[currentLanguage] || ''}
@@ -533,7 +533,7 @@ export default function ManualsManagementPage() {
                         [currentLanguage]: content
                       }
                     })}
-                    placeholder={currentLanguage === 'zh' ? '请输入说明书内容...' : 'Enter manual content...'}
+                    placeholder={currentLanguage === 'zh'  '请输入说明书内容...' : 'Enter manual content...'}
                   />
                 </div>
               )}
@@ -585,7 +585,7 @@ export default function ManualsManagementPage() {
                 disabled={!formData.productId || !formData.title[currentLanguage] || !formData.content[currentLanguage]}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
               >
-                {activeTab === 'create' ? '创建说明? : '更新说明?}
+                {activeTab === 'create'  '创建说明 : '更新说明}
               </button>
             </div>
           </div>

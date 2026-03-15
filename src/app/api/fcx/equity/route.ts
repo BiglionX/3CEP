@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥? },
+        { success: false, error: '鐢ㄦ埛鏈櫥 },
         { status: 401 }
       );
     }
@@ -42,10 +42,10 @@ export async function GET(request: Request) {
           .single();
 
         const userLevel =
-          ((shopData as any)?.alliance_level as AllianceLevel) ||
+          ((shopData as any).alliance_level as AllianceLevel) ||
           AllianceLevel.BRONZE;
 
-        // 鑾峰彇鍙厬鎹㈡潈鐩婂垪?        const equities = await service.getAvailableEquities(userLevel);
+        // 鑾峰彇鍙厬鎹㈡潈鐩婂垪        const equities = await service.getAvailableEquities(userLevel);
 
         return NextResponse.json({
           success: true,
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -98,7 +98,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -119,7 +119,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥? },
+        { success: false, error: '鐢ㄦ埛鏈櫥 },
         { status: 401 }
       );
     }
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
 
     if (quantity <= 0 || quantity > 100) {
       return NextResponse.json(
-        { success: false, error: '鍏戞崲鏁伴噺蹇呴』?-100涔嬮棿' },
+        { success: false, error: '鍏戞崲鏁伴噺蹇呴』-100涔嬮棿' },
         { status: 400 }
       );
     }
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+          { success: false, error: '犳晥鐨勬搷浣滅被 },
           { status: 400 }
         );
     }
@@ -177,7 +177,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }

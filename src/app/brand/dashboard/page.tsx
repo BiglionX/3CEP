@@ -37,7 +37,7 @@ export default function BrandDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'analytics'>('overview');
 
   useEffect(() => {
-    // 检查认证状?
+    // 检查认证状
     const token = localStorage.getItem('brandToken');
     const brandInfo = localStorage.getItem('brandInfo');
     
@@ -66,14 +66,14 @@ export default function BrandDashboard() {
       }
 
       // 获取产品列表
-      const productsResponse = await fetch(`/api/brands/${brandId}/products?limit=5`);
+      const productsResponse = await fetch(`/api/brands/${brandId}/productslimit=5`);
       const productsData = await productsResponse.json();
       
       if (productsResponse.ok) {
         setProducts(productsData.products || []);
       }
     } catch (error) {
-      console.error('加载仪表板数据失?', error);
+      console.error('加载仪表板数据失', error);
     } finally {
       setLoading(false);
     }
@@ -90,7 +90,7 @@ export default function BrandDashboard() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载?..</p>
+          <p className="mt-4 text-gray-600">加载中..</p>
         </div>
       </div>
     );
@@ -98,7 +98,7 @@ export default function BrandDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 顶部导航?*/}
+      {/* 顶部导航*/}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -106,7 +106,7 @@ export default function BrandDashboard() {
               <div className="flex-shrink-0 flex items-center">
                 <h1 className="text-xl font-bold text-gray-900">FixCycle</h1>
                 <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                  品牌商后?
+                  品牌商后
                 </span>
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function BrandDashboard() {
                 onClick={handleLogout}
                 className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
               >
-                退出登?
+                退出登
               </button>
             </div>
           </div>
@@ -139,11 +139,11 @@ export default function BrandDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 页面标题 */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">仪表?/h1>
-          <p className="mt-2 text-gray-600">查看您的产品数据和系统统?/p>
+          <h1 className="text-3xl font-bold text-gray-900">仪表/h1>
+          <p className="mt-2 text-gray-600">查看您的产品数据和系统统/p>
         </div>
 
-        {/* 标签页导?*/}
+        {/* 标签页导*/}
         <div className="mb-8 border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
             {[
@@ -156,7 +156,7 @@ export default function BrandDashboard() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
+                     'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -167,7 +167,7 @@ export default function BrandDashboard() {
           </nav>
         </div>
 
-        {/* 概览标签页内?*/}
+        {/* 概览标签页内*/}
         {activeTab === 'overview' && (
           <div className="space-y-8">
             {/* 统计卡片 */}
@@ -195,7 +195,7 @@ export default function BrandDashboard() {
                       </div>
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-500">总扫描次?/p>
+                      <p className="text-sm font-medium text-gray-500">总扫描次/p>
                       <p className="text-2xl font-bold text-gray-900">{stats.totalScans}</p>
                       <p className="text-xs text-green-600">
                         今日: +{stats.recentScans}
@@ -240,11 +240,11 @@ export default function BrandDashboard() {
               </div>
             )}
 
-            {/* 最近产?*/}
+            {/* 最近产*/}
             <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-medium text-gray-900">最近产?/h2>
+                  <h2 className="text-lg font-medium text-gray-900">最近产/h2>
                   <button 
                     onClick={() => router.push('/brand/products')}
                     className="text-sm text-blue-600 hover:text-blue-800"
@@ -254,7 +254,7 @@ export default function BrandDashboard() {
                 </div>
               </div>
               <div className="divide-y divide-gray-200">
-                {products.length > 0 ? (
+                {products.length > 0  (
                   products.map((product) => (
                     <div key={product.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center justify-between">
@@ -282,7 +282,7 @@ export default function BrandDashboard() {
                   <div className="px-6 py-12 text-center">
                     <div className="text-gray-400 text-4xl mb-4">📦</div>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">暂无产品</h3>
-                    <p className="text-gray-500 mb-4">开始添加您的第一个产?/p>
+                    <p className="text-gray-500 mb-4">开始添加您的第一个产/p>
                     <button 
                       onClick={() => router.push('/brand/products/new')}
                       className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
@@ -296,7 +296,7 @@ export default function BrandDashboard() {
           </div>
         )}
 
-        {/* 产品管理标签页内?*/}
+        {/* 产品管理标签页内*/}
         {activeTab === 'products' && (
           <div className="bg-white rounded-lg shadow">
             <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
@@ -305,7 +305,7 @@ export default function BrandDashboard() {
                 onClick={() => router.push('/brand/products/new')}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
               >
-                添加新产?
+                添加新产
               </button>
             </div>
             <div className="p-6">
@@ -314,7 +314,7 @@ export default function BrandDashboard() {
           </div>
         )}
 
-        {/* 数据分析标签页内?*/}
+        {/* 数据分析标签页内*/}
         {activeTab === 'analytics' && (
           <div className="bg-white rounded-lg shadow">
             <div className="px-6 py-4 border-b border-gray-200">

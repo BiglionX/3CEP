@@ -13,8 +13,6 @@ import {
   Crown,
   Zap,
   TrendingUp,
-  Calendar,
-  MapPin,
 } from 'lucide-react';
 
 interface AllianceMember {
@@ -41,11 +39,11 @@ export default function FCXAlliancePage() {
         points: 12500,
         joinDate: '2023-06-15',
         benefits: [
-          '专属技术支?,
-          '优先参与新产品测?,
-          '月度技术培?,
+          '专属技术支持',
+          '优先参与新产品测试',
+          '月度技术培训',
           '维修工具折扣',
-          '联盟活动优先?,
+          '联盟活动优先权',
         ],
         achievements: 24,
       });
@@ -100,7 +98,7 @@ export default function FCXAlliancePage() {
   const getNextLevel = (currentLevel: string) => {
     const levels = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
     const currentIndex = levels.indexOf(currentLevel);
-    return currentIndex < levels.length - 1 ? levels[currentIndex + 1] : null;
+    return currentIndex < levels.length - 1  levels[currentIndex + 1] : null;
   };
 
   const getProgressToNextLevel = (points: number, currentLevel: string) => {
@@ -147,7 +145,7 @@ export default function FCXAlliancePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 px:6lg:px-8">
         {/* 页面标题 */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center">
@@ -159,7 +157,7 @@ export default function FCXAlliancePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* 会员信息卡片 */}
           <div className="lg:col-span-2 space-y-6">
             {/* 当前等级卡片 */}
@@ -171,7 +169,9 @@ export default function FCXAlliancePage() {
                       欢迎回来，{member.name}!
                     </h2>
                     <div className="flex items-center space-x-2">
-                      <LevelIcon className="w-6 h-6" />
+                      <div className="w-6 h-6">
+                        <LevelIcon />
+                      </div>
                       <span className="text-xl font-semibold">
                         {levelConfig.name}
                       </span>
@@ -185,17 +185,17 @@ export default function FCXAlliancePage() {
                   </div>
                 </div>
 
-                {/* 升级进度?*/}
+                {/* 升级进度条 */}
                 {nextLevel && (
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span>距离升级?{getLevelConfig(nextLevel).name}</span>
+                      <span>距离升级{getLevelConfig(nextLevel).name}</span>
                       <span>{Math.round(progress)}%</span>
                     </div>
                     <div className="w-full bg-white bg-opacity-30 rounded-full h-3">
                       <div
                         className="bg-white h-3 rounded-full transition-all duration-500"
-                        style={{ width: `${progress}%` }}
+                        style={{ width: `, {progress}%` }}
                       ></div>
                     </div>
                   </div>
@@ -218,7 +218,21 @@ export default function FCXAlliancePage() {
                       key={index}
                       className="flex items-center p-3 bg-green-50 rounded-lg"
                     >
-                      <CheckIcon />
+                      <div className="w-5 h-5 text-green-600 mr-2">
+                        <svg
+                          className="w-5 h-5 text-green-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
                       <span className="ml-2 text-green-800">{benefit}</span>
                     </div>
                   ))}
@@ -240,19 +254,19 @@ export default function FCXAlliancePage() {
                     <div className="text-4xl font-bold text-yellow-600 mb-2">
                       {member.achievements}
                     </div>
-                    <div className="text-gray-600">已完成成?/div>
+                    <div className="text-gray-600">已完成成就</div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* 侧边?*/}
+          {/* 侧边栏 */}
           <div className="space-y-6">
-            {/* 快速操?*/}
+            {/* 快速操作 */}
             <Card>
               <CardHeader>
-                <CardTitle>快速操?/CardTitle>
+                <CardTitle>快速操作</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button className="w-full">
@@ -270,16 +284,16 @@ export default function FCXAlliancePage() {
               </CardContent>
             </Card>
 
-            {/* 联盟动?*/}
+            {/* 联盟动态 */}
             <Card>
               <CardHeader>
-                <CardTitle>联盟动?/CardTitle>
+                <CardTitle>联盟动态</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { action: '新成员加?, user: '李四', time: '2小时? },
-                    { action: '技术分?, user: '王五', time: '5小时? },
+                    { action: '新成员加入', user: '李四', time: '2小时前' },
+                    { action: '技术分享', user: '王五', time: '5小时前' },
                     { action: '积分活动', user: '联盟官方', time: '1天前' },
                   ].map((item, index) => (
                     <div
@@ -332,24 +346,6 @@ export default function FCXAlliancePage() {
         </div>
       </div>
     </div>
-  );
-}
-
-// 简单的勾选图标组?function CheckIcon() {
-  return (
-    <svg
-      className="w-5 h-5 text-green-600"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M5 13l4 4L19 7"
-      />
-    </svg>
   );
 }
 

@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'collect':
-        if (!data?.metricName || data?.value === undefined) {
+        if (!data.metricName || data.value === undefined) {
           return NextResponse.json(
             { error: 'Missing required fields: metricName, value' },
             { status: 400 }
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
-    const metricNames = searchParams.get('metrics')?.split(',') || [];
+    const metricNames = searchParams.get('metrics').split(',') || [];
     const startTime = searchParams.get('startTime');
     const endTime = searchParams.get('endTime');
     const granularity = searchParams.get('granularity') || 'day';
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
 
       return new NextResponse(exportedData, {
         headers: {
-          'Content-Type': format === 'csv' ? 'text/csv' : 'application/json',
+          'Content-Type': format === 'csv'  'text/csv' : 'application/json',
           'Content-Disposition': `attachment; filename=data-export.${format}`,
         },
       });
@@ -117,9 +117,9 @@ export async function GET(request: NextRequest) {
       message: 'Data Pipeline API',
       endpoints: {
         POST: '/api/data-pipeline',
-        GET: '/api/data-pipeline?action=aggregated&metrics=metric1,metric2&startTime=...&endTime=...',
+        GET: '/api/data-pipelineaction=aggregated&metrics=metric1,metric2&startTime=...&endTime=...',
         GET_export:
-          '/api/data-pipeline?action=export&startTime=...&endTime=...&format=json',
+          '/api/data-pipelineaction=export&startTime=...&endTime=...&format=json',
       },
     });
   } catch (error) {

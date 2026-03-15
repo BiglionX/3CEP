@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const allianceService = new AllianceService();
 
     if (type === 'rankings') {
-      // 鑾峰彇鎺掕?      const rankings = await allianceService.getRankings(limit);
+      // 鑾峰彇鎺掕      const rankings = await allianceService.getRankings(limit);
 
       return NextResponse.json({
         success: true,

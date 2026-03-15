@@ -1,5 +1,5 @@
 ﻿/**
- * n8n 宸ヤ綔娴佹潈闄愭帶?API
+ * n8n 宸ヤ綔娴佹潈闄愭帶API
  * 鎻愪緵宸ヤ綔娴佽闂拰鎵ц鏉冮檺绠＄悊鎺ュ彛
  */
 
@@ -18,30 +18,30 @@ const N8N_CONFIG = {
 };
 
 export async function GET(request: Request) {
-  // 鍒涘缓 Supabase 瀹㈡埛?
+  // 鍒涘缓 Supabase 瀹㈡埛
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 锟?cookies 鑾峰彇浼氳瘽淇℃伅
+  // cookies 鑾峰彇氳瘽淇℃伅
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('sb-access-token');
 
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 璁剧疆璁よ瘉浠ょ墝
+    // 璁剧疆璁よ瘉ょ墝
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 瑙ｆ瀽鏌ヨ鍙傛暟
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
     const workflowId = searchParams.get('workflowId');
     const action = searchParams.get('action') || 'read';
 
-    // 濡傛灉鎸囧畾浜嗗伐浣滄祦ID锛屾鏌ュ叿浣撴潈?
+    // 濡傛灉鎸囧畾浜嗗伐浣滄祦ID锛屾鏌ュ叿浣撴潈
     if (workflowId) {
       const hasAccess = await checkWorkflowPermission(
         user.id,
@@ -61,14 +61,14 @@ export async function GET(request: Request) {
       if (!hasAccess) {
         return NextResponse.json(
           {
-            error: '鏃犳潈璁块棶姝ゅ伐浣滄祦',
+            error: '犳潈璁块棶姝ゅ伐浣滄祦',
             code: 'WORKFLOW_ACCESS_DENIED',
           },
           { status: 403 }
         );
       }
 
-      // 鑾峰彇宸ヤ綔娴佽缁嗕俊?
+      // 鑾峰彇宸ヤ綔娴佽缁嗕俊
       const workflowDetails = await getWorkflowDetails(workflowId);
 
       // 鏍规嵁鐢ㄦ埛瑙掕壊鑴辨晱鏁版嵁
@@ -107,7 +107,7 @@ export async function GET(request: Request) {
       });
     }
 
-    // 鑾峰彇鐢ㄦ埛鍙闂殑宸ヤ綔娴佸垪?
+    // 鑾峰彇鐢ㄦ埛鍙闂殑宸ヤ綔娴佸垪
     const accessibleWorkflows = await getUserAccessibleWorkflows(
       user.id,
       supabase
@@ -129,10 +129,10 @@ export async function GET(request: Request) {
       count: sanitizedWorkflows.length,
     });
   } catch (error) {
-    console.error('宸ヤ綔娴佹潈闄愭鏌ラ敊?', error);
+    console.error('宸ヤ綔娴佹潈闄愭鏌ラ敊', error);
     return NextResponse.json(
       {
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -141,33 +141,33 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  // 鍒涘缓 Supabase 瀹㈡埛?
+  // 鍒涘缓 Supabase 瀹㈡埛
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 锟?cookies 鑾峰彇浼氳瘽淇℃伅
+  // cookies 鑾峰彇氳瘽淇℃伅
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('sb-access-token');
 
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 璁剧疆璁よ瘉浠ょ墝
+    // 璁剧疆璁よ瘉ょ墝
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 瑙ｆ瀽璇锋眰?
+    // 瑙ｆ瀽璇眰
     const body = await request.json();
     const { workflowId, action = 'execute', inputData } = body;
 
@@ -203,7 +203,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '宸ヤ綔娴両D涓哄繀濉」' }, { status: 400 });
     }
 
-    // 妫€鏌ユ墽琛屾潈?
+    // 妫€鏌ユ墽琛屾潈
     const canExecute = await checkWorkflowPermission(
       user.id,
       workflowId,
@@ -214,21 +214,21 @@ export async function POST(request: Request) {
     if (!canExecute) {
       return NextResponse.json(
         {
-          error: '鏃犳潈鎵ц姝ゅ伐浣滄祦',
+          error: '犳潈鎵ц姝ゅ伐浣滄祦',
           code: 'WORKFLOW_EXECUTE_DENIED',
         },
         { status: 403 }
       );
     }
 
-    // 鎵ц宸ヤ綔?
+    // 鎵ц宸ヤ綔
     const executionResult = await executeN8nWorkflow(
       workflowId,
       inputData,
       user.id
     );
 
-    // 璁板綍瀹¤鏃ュ織
+    // 璁板綍瀹¤ュ織
     await logAuditEvent(
       'workflow_execute',
       user.id,
@@ -244,14 +244,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: '宸ヤ綔娴佹墽琛屾垚?,
+      message: '宸ヤ綔娴佹墽琛屾垚,
       data: executionResult,
     });
   } catch (error) {
-    console.error('宸ヤ綔娴佹墽琛岄敊?', error);
+    console.error('宸ヤ綔娴佹墽琛岄敊', error);
     return NextResponse.json(
       {
-        error: '宸ヤ綔娴佹墽琛屽け?,
+        error: '宸ヤ綔娴佹墽琛屽け,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -260,45 +260,45 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  // 鍒涘缓 Supabase 瀹㈡埛?
+  // 鍒涘缓 Supabase 瀹㈡埛
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 锟?cookies 鑾峰彇浼氳瘽淇℃伅
+  // cookies 鑾峰彇氳瘽淇℃伅
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('sb-access-token');
 
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 璁剧疆璁よ瘉浠ょ墝
+    // 璁剧疆璁よ瘉ょ墝
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 瑙ｆ瀽璇锋眰?
+    // 瑙ｆ瀽璇眰
     const body = await request.json();
     const { workflowId, permissions } = body;
 
     // 楠岃瘉蹇呴渶鍙傛暟
     if (!workflowId || !permissions) {
       return NextResponse.json(
-        { error: '宸ヤ綔娴両D鍜屾潈闄愰厤缃负蹇呭～? },
+        { error: '宸ヤ綔娴両D鍜屾潈闄愰厤缃负蹇呭～ },
         { status: 400 }
       );
     }
 
-    // 妫€鏌ョ鐞嗘潈?
+    // 妫€鏌ョ鐞嗘潈
     const canManage = await checkWorkflowPermission(
       user.id,
       workflowId,
@@ -309,20 +309,20 @@ export async function PUT(request: Request) {
     if (!canManage) {
       return NextResponse.json(
         {
-          error: '鏃犳潈绠＄悊姝ゅ伐浣滄祦鏉冮檺',
+          error: '犳潈绠＄悊姝ゅ伐浣滄祦鏉冮檺',
           code: 'WORKFLOW_MANAGE_DENIED',
         },
         { status: 403 }
       );
     }
 
-    // 鏇存柊宸ヤ綔娴佹潈?
+    // 鏇存柊宸ヤ綔娴佹潈
     const updateResult = await updateWorkflowPermissions(
       workflowId,
       permissions
     );
 
-    // 璁板綍瀹¤鏃ュ織
+    // 璁板綍瀹¤ュ織
     await logAuditEvent(
       'workflow_permissions_update',
       user.id,
@@ -337,11 +337,11 @@ export async function PUT(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: '宸ヤ綔娴佹潈闄愭洿鏂版垚?,
+      message: '宸ヤ綔娴佹潈闄愭洿鏂版垚,
       data: updateResult,
     });
   } catch (error) {
-    console.error('宸ヤ綔娴佹潈闄愭洿鏂伴敊?', error);
+    console.error('宸ヤ綔娴佹潈闄愭洿鏂伴敊', error);
     return NextResponse.json(
       {
         error: '鏉冮檺鏇存柊澶辫触',
@@ -352,18 +352,18 @@ export async function PUT(request: Request) {
   }
 }
 
-// DELETE /api/n8n/workflows/[id] - 鍒犻櫎宸ヤ綔娴佹潈闄愰厤?
+// DELETE /api/n8n/workflows/[id] - 鍒犻櫎宸ヤ綔娴佹潈闄愰厤
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  // 鍒涘缓 Supabase 瀹㈡埛?
+  // 鍒涘缓 Supabase 瀹㈡埛
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 锟?cookies 鑾峰彇浼氳瘽淇℃伅
+  // cookies 鑾峰彇氳瘽淇℃伅
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('sb-access-token');
   const workflowId = params.id;
@@ -371,20 +371,20 @@ export async function DELETE(
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 璁剧疆璁よ瘉浠ょ墝
+    // 璁剧疆璁よ瘉ょ墝
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 妫€鏌ョ鐞嗘潈?
+    // 妫€鏌ョ鐞嗘潈
     const canManage = await checkWorkflowPermission(
       user.id,
       workflowId,
@@ -395,7 +395,7 @@ export async function DELETE(
     if (!canManage) {
       return NextResponse.json(
         {
-          error: '鏃犳潈鍒犻櫎姝ゅ伐浣滄祦鏉冮檺閰嶇疆',
+          error: '犳潈鍒犻櫎姝ゅ伐浣滄祦鏉冮檺閰嶇疆',
           code: 'WORKFLOW_MANAGE_DENIED',
         },
         { status: 403 }
@@ -405,7 +405,7 @@ export async function DELETE(
     // 鍒犻櫎鏉冮檺閰嶇疆
     const deleteResult = await deleteWorkflowPermissions(workflowId);
 
-    // 璁板綍瀹¤鏃ュ織
+    // 璁板綍瀹¤ュ織
     await logAuditEvent(
       'workflow_permissions_delete',
       user.id,
@@ -416,11 +416,11 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: '宸ヤ綔娴佹潈闄愰厤缃垹闄ゆ垚?,
+      message: '宸ヤ綔娴佹潈闄愰厤缃垹闄ゆ垚,
       data: deleteResult,
     });
   } catch (error) {
-    console.error('宸ヤ綔娴佹潈闄愬垹闄ら敊?', error);
+    console.error('宸ヤ綔娴佹潈闄愬垹闄ら敊', error);
     return NextResponse.json(
       {
         error: '鏉冮檺閰嶇疆鍒犻櫎澶辫触',
@@ -456,16 +456,16 @@ async function checkWorkflowPermission(
 
     const userRole = userProfile.role;
 
-    // 瓒呯骇绠＄悊鍛樻嫢鏈夋墍鏈夋潈?
+    // 瓒呯骇绠＄悊鍛樻嫢鏈夋墍鏈夋潈
     if (userRole === 'admin') {
       return true;
     }
 
-    // 鑾峰彇宸ヤ綔娴佹潈闄愰厤?
+    // 鑾峰彇宸ヤ綔娴佹潈闄愰厤
     const workflowPermissions = await getWorkflowPermissionConfig(workflowId);
 
     if (!workflowPermissions) {
-      // 榛樿鏉冮檺锛氬彧鏈夌鐞嗗憳鍙互绠＄悊锛岃璇佺敤鎴峰彲浠ヨ?
+      // 榛樿鏉冮檺锛氬彧鏈夌鐞嗗憳鍙互绠＄悊锛岃璇佺敤鎴峰彲ヨ
       switch (action) {
         case 'manage':
           return userRole === 'admin';
@@ -478,17 +478,17 @@ async function checkWorkflowPermission(
       }
     }
 
-    // 鏍规嵁閰嶇疆妫€鏌ユ潈?
+    // 鏍规嵁閰嶇疆妫€鏌ユ潈
     const allowedRoles = workflowPermissions[`${action}Roles`] || [];
     return allowedRoles.includes(userRole);
   } catch (error) {
-    console.error('鏉冮檺妫€鏌ュけ?', error);
+    console.error('鏉冮檺妫€鏌ュけ', error);
     return false;
   }
 }
 
 /**
- * 鑾峰彇鐢ㄦ埛鍙闂殑宸ヤ綔娴佸垪?
+ * 鑾峰彇鐢ㄦ埛鍙闂殑宸ヤ綔娴佸垪
  */
 async function getUserAccessibleWorkflows(userId: string, supabase: any) {
   try {
@@ -499,17 +499,17 @@ async function getUserAccessibleWorkflows(userId: string, supabase: any) {
       .eq('id', userId)
       .single();
 
-    const userRole = userProfile?.role || 'viewer';
+    const userRole = userProfile.role || 'viewer';
 
-    // 锟?n8n 鑾峰彇宸ヤ綔娴佸垪?
+    // n8n 鑾峰彇宸ヤ綔娴佸垪
     const n8nWorkflows = await getAllN8nWorkflows();
 
-    // 杩囨护鐢ㄦ埛鍙闂殑宸ヤ綔?
+    // 杩囨护鐢ㄦ埛鍙闂殑宸ヤ綔
     const accessibleWorkflows = n8nWorkflows.filter((workflow: any) => {
-      const permissions = workflow?.permissions || {};
+      const permissions = workflow.permissions || {};
       const readRoles = permissions.readRoles || ['admin'];
 
-      // 瓒呯骇绠＄悊鍛樺彲浠ョ湅鍒版墍鏈夊伐浣滄祦
+      // 瓒呯骇绠＄悊鍛樺彲ョ湅鍒版墍鏈夊伐浣滄祦
       if (userRole === 'admin') {
         return true;
       }
@@ -537,14 +537,14 @@ async function getUserAccessibleWorkflows(userId: string, supabase: any) {
 }
 
 /**
- * 妫€鏌ョ壒瀹氭搷浣滄潈?
+ * 妫€鏌ョ壒瀹氭搷浣滄潈
  */
 function checkActionPermission(
   userRole: string,
   workflow: any,
   action: string
 ) {
-  const permissions = workflow?.permissions || {};
+  const permissions = workflow.permissions || {};
   const allowedRoles = permissions[`${action}Roles`] || [];
 
   if (userRole === 'admin') {
@@ -555,7 +555,7 @@ function checkActionPermission(
 }
 
 /**
- * 鎵ц n8n 宸ヤ綔?
+ * 鎵ц n8n 宸ヤ綔
  */
 async function executeN8nWorkflow(
   workflowId: string,
@@ -583,17 +583,17 @@ async function executeN8nWorkflow(
       data: response.data.data,
     };
   } catch (error) {
-    console.error('鎵ц n8n 宸ヤ綔娴佸け?', error);
+    console.error('鎵ц n8n 宸ヤ綔娴佸け', error);
     throw new Error(
-      `宸ヤ綔娴佹墽琛屽け? ${
-        (error as any)?.data?.message || (error as Error).message
+      `宸ヤ綔娴佹墽琛屽け ${
+        (error as any).data.message || (error as Error).message
       }`
     );
   }
 }
 
 /**
- * 鏇存柊宸ヤ綔娴佹潈?
+ * 鏇存柊宸ヤ綔娴佹潈
  */
 async function updateWorkflowPermissions(workflowId: string, permissions: any) {
   try {
@@ -618,17 +618,17 @@ async function updateWorkflowPermissions(workflowId: string, permissions: any) {
       changes: permissions,
     };
   } catch (error) {
-    console.error('鏇存柊宸ヤ綔娴佹潈闄愬け?', error);
+    console.error('鏇存柊宸ヤ綔娴佹潈闄愬け', error);
     throw new Error(
       `鏉冮檺鏇存柊澶辫触: ${
-        (error as any)?.data?.message || (error as Error).message
+        (error as any).data.message || (error as Error).message
       }`
     );
   }
 }
 
 /**
- * 鍒犻櫎宸ヤ綔娴佹潈闄愰厤?
+ * 鍒犻櫎宸ヤ綔娴佹潈闄愰厤
  */
 async function deleteWorkflowPermissions(workflowId: string) {
   try {
@@ -652,17 +652,17 @@ async function deleteWorkflowPermissions(workflowId: string) {
       deleted: true,
     };
   } catch (error) {
-    console.error('鍒犻櫎宸ヤ綔娴佹潈闄愰厤缃け?', error);
+    console.error('鍒犻櫎宸ヤ綔娴佹潈闄愰厤缃け', error);
     throw new Error(
       `鏉冮檺閰嶇疆鍒犻櫎澶辫触: ${
-        (error as any)?.data?.message || (error as Error).message
+        (error as any).data.message || (error as Error).message
       }`
     );
   }
 }
 
 /**
- * 鑾峰彇宸ヤ綔娴佽缁嗕俊?
+ * 鑾峰彇宸ヤ綔娴佽缁嗕俊
  */
 async function getWorkflowDetails(workflowId: string) {
   try {
@@ -677,13 +677,13 @@ async function getWorkflowDetails(workflowId: string) {
 
     return response.data;
   } catch (error) {
-    console.error('鑾峰彇宸ヤ綔娴佽鎯呭け?', error);
+    console.error('鑾峰彇宸ヤ綔娴佽鎯呭け', error);
     return null;
   }
 }
 
 /**
- * 鑾峰彇鎵€?n8n 宸ヤ綔?
+ * 鑾峰彇鎵€n8n 宸ヤ綔
  */
 async function getAllN8nWorkflows() {
   try {
@@ -695,26 +695,26 @@ async function getAllN8nWorkflows() {
 
     return response.data;
   } catch (error) {
-    console.error('鑾峰彇 n8n 宸ヤ綔娴佸垪琛ㄥけ?', error);
+    console.error('鑾峰彇 n8n 宸ヤ綔娴佸垪琛ㄥけ', error);
     return [];
   }
 }
 
 /**
- * 鑾峰彇宸ヤ綔娴佹潈闄愰厤?
+ * 鑾峰彇宸ヤ綔娴佹潈闄愰厤
  */
 async function getWorkflowPermissionConfig(workflowId: string) {
   try {
     const workflow = await getWorkflowDetails(workflowId);
-    return workflow??.permissions || null;
+    return workflow.permissions || null;
   } catch (error) {
-    console.error('鑾峰彇宸ヤ綔娴佹潈闄愰厤缃け?', error);
+    console.error('鑾峰彇宸ヤ綔娴佹潈闄愰厤缃け', error);
     return null;
   }
 }
 
 /**
- * 璁板綍瀹¤鏃ュ織
+ * 璁板綍瀹¤ュ織
  */
 async function logAuditEvent(
   action: string,
@@ -724,8 +724,8 @@ async function logAuditEvent(
   supabase: any
 ) {
   try {
-    // 杩欓噷搴旇璋冪敤瀹為檯鐨勫璁℃棩蹇楃郴?
-    console.log(`瀹¤鏃ュ織: ${action} by ${userId} on ${resource}`, details);
+    // 杩欓噷搴旇璋冪敤瀹為檯鐨勫璁℃棩蹇楃郴
+    console.log(`瀹¤ュ織: ${action} by ${userId} on ${resource}`, details);
 
     // 瀹為檯椤圭洰涓簲璇ュ啓鍏ユ暟鎹簱
     // await supabase.from('audit_logs').insert({
@@ -736,7 +736,7 @@ async function logAuditEvent(
     //   timestamp: new Date().toISOString()
     // } as any);
   } catch (error) {
-    console.error('璁板綍瀹¤鏃ュ織澶辫触:', error);
+    console.error('璁板綍瀹¤ュ織澶辫触:', error);
   }
 }
 

@@ -9,11 +9,11 @@ const supabase = createClient(
 
 export async function GET() {
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const cookieStore = await cookies();
+    // 楠岃瘉绠＄悊鍛樻潈    const cookieStore = await cookies();
     const session = cookieStore.get('supabase-auth-token');
 
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 鑾峰彇缁熻淇℃伅
@@ -28,12 +28,12 @@ export async function GET() {
           .select('id', { count: 'exact', head: true })
           .eq('status', 'published'),
 
-        // 鑽夌?        supabase
+        // 鑽夌        supabase
           .from('articles')
           .select('id', { count: 'exact', head: true })
           .eq('status', 'draft'),
 
-        // 浠婃棩娴忚閲忥紙绠€鍖栧鐞嗭紝瀹為檯搴旇鏈変笓闂ㄧ殑缁熻琛級
+        // 婃棩娴忚閲忥紙绠€鍖栧鐞嗭紝瀹為檯搴旇鏈変笓闂ㄧ殑缁熻琛級
         supabase
           .from('articles')
           .select('view_count')
@@ -45,7 +45,7 @@ export async function GET() {
       published: publishedResult.count || 0,
       draft: draftResult.count || 0,
       todayViews:
-        todayViewsResult?.reduce(
+        todayViewsResult.reduce(
           (sum, article) => sum + (article.view_count || 0),
           0
         ) || 0,
@@ -58,7 +58,7 @@ export async function GET() {
   } catch (error) {
     console.error('鑾峰彇缁熻淇℃伅寮傚父:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
       { status: 500 }
     );
   }

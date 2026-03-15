@@ -1,6 +1,6 @@
 ﻿/**
  * RBAC 閰嶇疆 API 绔偣
- * 鎻愪緵鍓嶇璁块棶 RBAC 閰嶇疆鐨勮兘? */
+ * 鎻愪緵鍓嶇璁块棶 RBAC 閰嶇疆鐨勮兘 */
 
 import { NextResponse } from 'next/server';
 import fs from 'fs';
@@ -17,7 +17,7 @@ export async function GET() {
   } catch (error) {
     console.error('璇诲彇 RBAC 閰嶇疆澶辫触:', error);
     return NextResponse.json(
-      { error: '鏃犳硶鍔犺浇 RBAC 閰嶇疆' },
+      { error: '犳硶鍔犺浇 RBAC 閰嶇疆' },
       { status: 500 }
     );
   }

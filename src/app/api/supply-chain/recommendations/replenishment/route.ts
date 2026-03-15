@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const recommendationRequest: ReplenishmentRequest = {
       warehouseId,
       productIds:
-        productIds && Array.isArray(productIds) ? productIds : undefined,
+        productIds && Array.isArray(productIds)  productIds : undefined,
       forecastHorizonDays: forecastHorizonDays || 30,
       serviceLevelTarget: serviceLevelTarget || 0.95,
     };

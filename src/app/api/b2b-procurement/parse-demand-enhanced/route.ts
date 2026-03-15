@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '璇锋彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿?,
+          error: '璇彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿,'
         },
         { status: 400 }
       );
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鍒涘缓鍘熷璇锋眰瀵硅薄
+    // 鍒涘缓鍘熷璇眰瀵硅薄
     const rawRequest: RawProcurementRequest = {
       id: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       companyId,
@@ -53,30 +53,31 @@ export async function POST(request: Request) {
         parsedRequest,
         enhancement: 'BERT + 瑙勫垯娣峰悎鏋舵瀯',
         confidenceImprovement:
-          parsedRequest.aiConfidence > 85 ? '鏄捐憲鎻愬崌' : '淇濇寔绋冲畾',
+          parsedRequest.aiConfidence > 85  '鏄捐憲鎻愬崌' : '淇濇寔绋冲畾',
       },
       message: '閲囪喘闇€姹傝В鏋愭垚鍔燂紙澧炲己鐗堬級',
     });
   } catch (error) {
-    console.error('閲囪喘闇€姹傝В鏋愰敊?', error);
+    console.error('閲囪喘闇€姹傝В鏋愰敊', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: '閲囪喘闇€姹傝В鏋愬け?,
-        details: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '閲囪喘闇€姹傝В鏋愬け,'
+        details: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€?export async function GET() {
+// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€export async function GET() {
   return NextResponse.json({
     success: true,
-    message: 'BERT澧炲己鐗圔2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾?,
-    enhancement: '闆嗘垚BERT妯″瀷鐨勬贩鍚堟灦?,
+    message: 'BERT澧炲己鐗圔2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾,'
+    enhancement: '闆嗘垚BERT妯″瀷鐨勬贩鍚堟灦,'
     timestamp: new Date().toISOString(),
   });
 }
+
 

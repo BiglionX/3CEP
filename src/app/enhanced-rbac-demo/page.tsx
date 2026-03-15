@@ -36,14 +36,14 @@ import {
 import { PermissionManagementPanel } from '@/components/enhanced-rbac/PermissionManagementPanel';
 import { RoleManagementPanel } from '@/components/enhanced-rbac/RoleManagementPanel';
 
-// 模拟用户权限上下?const MOCK_USER_CONTEXT = {
+// 模拟用户权限上下const MOCK_USER_CONTEXT = {
   userId: 'user_123',
   roles: ['manager'],
   directPermissions: ['dashboard_read'],
   effectivePermissions: ['dashboard_read', 'users_read', 'users_create'],
   tenantId: 'tenant_001',
   department: 'IT部门',
-  position: '系统管理?,
+  position: '系统管理员,
 };
 
 // 演示业务组件
@@ -68,7 +68,7 @@ function DemoBusinessComponents() {
     setConditionalResult(result);
   };
 
-  // 测试批量权限检?  const testBatchPermissions = () => {
+  // 测试批量权限检  const testBatchPermissions = () => {
     const permissionsToCheck = [
       'dashboard_read',
       'users_create',
@@ -79,7 +79,7 @@ function DemoBusinessComponents() {
     setBatchResult(results);
 
     const missing = getMissingPermissions(permissionsToCheck);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('缺少的权?', missing)};
+    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('缺少的权', missing)};
 
   return (
     <div className="space-y-6">
@@ -87,20 +87,20 @@ function DemoBusinessComponents() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="w-5 h-5" />
-            权限检查演?          </CardTitle>
+            权限检查演          </CardTitle>
           <CardDescription>实时展示各种权限检查功能的效果</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* 基础权限检?*/}
+          {/* 基础权限检*/}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg">基础权限检?/CardTitle>
+                <CardTitle className="text-lg">基础权限检/CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                  <span>仪表板查看权?/span>
-                  {hasPermission('dashboard_read') ? (
+                  <span>仪表板查看权/span>
+                  {hasPermission('dashboard_read')  (
                     <CheckCircle className="w-5 h-5 text-green-500" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-500" />
@@ -109,7 +109,7 @@ function DemoBusinessComponents() {
 
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <span>用户管理权限</span>
-                  {canAccessResource('users', 'create') ? (
+                  {canAccessResource('users', 'create')  (
                     <CheckCircle className="w-5 h-5 text-green-500" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-500" />
@@ -118,7 +118,7 @@ function DemoBusinessComponents() {
 
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <span>系统设置权限</span>
-                  {hasPermission('settings_update') ? (
+                  {hasPermission('settings_update')  (
                     <CheckCircle className="w-5 h-5 text-green-500" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-500" />
@@ -127,10 +127,10 @@ function DemoBusinessComponents() {
               </CardContent>
             </Card>
 
-            {/* 条件权限检?*/}
+            {/* 条件权限检*/}
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg">条件权限检?/CardTitle>
+                <CardTitle className="text-lg">条件权限检/CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button onClick={testConditionalPermission} className="w-full">
@@ -141,19 +141,19 @@ function DemoBusinessComponents() {
                 {conditionalResult && (
                   <div className="p-3 bg-blue-50 rounded">
                     <div className="flex items-center gap-2 mb-2">
-                      {conditionalResult.allowed ? (
+                      {conditionalResult.allowed  (
                         <CheckCircle className="w-4 h-4 text-green-500" />
                       ) : (
                         <XCircle className="w-4 h-4 text-red-500" />
                       )}
-                      <span className="font-medium">检查结?/span>
+                      <span className="font-medium">检查结/span>
                     </div>
                     <p className="text-sm text-gray-600">
-                      {conditionalResult.reason || '权限检查完?}
+                      {conditionalResult.reason || '权限检查完}
                     </p>
                     {conditionalResult.requiresApproval && (
                       <Badge className="mt-2" variant="destructive">
-                        需要审?                      </Badge>
+                        需要审                      </Badge>
                     )}
                   </div>
                 )}
@@ -161,16 +161,16 @@ function DemoBusinessComponents() {
             </Card>
           </div>
 
-          {/* 批量权限检?*/}
+          {/* 批量权限检*/}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <UserCheck className="w-5 h-5" />
-                批量权限检?              </CardTitle>
+                批量权限检              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <Button onClick={testBatchPermissions}>执行批量检?/Button>
+                <Button onClick={testBatchPermissions}>执行批量检/Button>
 
                 {Object.keys(batchResult).length > 0 && (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -180,13 +180,13 @@ function DemoBusinessComponents() {
                           {perm}
                         </div>
                         <div className="flex items-center gap-1">
-                          {allowed ? (
+                          {allowed  (
                             <CheckCircle className="w-4 h-4 text-green-500" />
                           ) : (
                             <XCircle className="w-4 h-4 text-red-500" />
                           )}
                           <span className="text-xs">
-                            {allowed ? '允许' : '拒绝'}
+                            {allowed  '允许' : '拒绝'}
                           </span>
                         </div>
                       </div>
@@ -204,7 +204,7 @@ function DemoBusinessComponents() {
         <CardHeader>
           <CardTitle>权限保护组件演示</CardTitle>
           <CardDescription>
-            展示如何使用权限保护组件控制UI元素的可见?          </CardDescription>
+            展示如何使用权限保护组件控制UI元素的可见          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* 权限保护 */}
@@ -217,7 +217,7 @@ function DemoBusinessComponents() {
                 </span>
               </div>
               <p className="text-sm text-green-600 mt-1">
-                因为您拥?users_create 权限，所以可以看到这个受保护的内?              </p>
+                因为您拥users_create 权限，所以可以看到这个受保护的内              </p>
             </div>
           </PermissionGuard>
 
@@ -233,7 +233,7 @@ function DemoBusinessComponents() {
                 </span>
               </div>
               <p className="text-sm text-blue-600 mt-1">
-                因为您拥有系统管理相关权限之一，所以可以看到这个内?              </p>
+                因为您拥有系统管理相关权限之一，所以可以看到这个内              </p>
             </div>
           </PermissionGuard>
 
@@ -245,10 +245,10 @@ function DemoBusinessComponents() {
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-yellow-600" />
                   <span className="font-medium text-yellow-800">
-                    采购审批功能不可?                  </span>
+                    采购审批功能不可                  </span>
                 </div>
                 <p className="text-sm text-yellow-600 mt-1">
-                  因为您没?procurement_approve 权限，所以这个功能被隐藏?                </p>
+                  因为您没procurement_approve 权限，所以这个功能被隐藏                </p>
               </div>
             }
           >
@@ -267,7 +267,7 @@ function DemoBusinessComponents() {
             roles={['admin', 'manager']}
             fallback={
               <div className="p-4 bg-gray-100 rounded text-gray-500">
-                此内容仅对管理员和经理可?              </div>
+                此内容仅对管理员和经理可              </div>
             }
           >
             <div className="p-4 bg-purple-50 border border-purple-200 rounded">
@@ -278,7 +278,7 @@ function DemoBusinessComponents() {
                 </span>
               </div>
               <p className="text-sm text-purple-600 mt-1">
-                作为管理员，您可以访问这些高级管理功?              </p>
+                作为管理员，您可以访问这些高级管理功              </p>
             </div>
           </RoleGuard>
         </CardContent>
@@ -287,7 +287,7 @@ function DemoBusinessComponents() {
   );
 }
 
-// 主演示组?function EnhancedRbacDemo() {
+// 主演示组function EnhancedRbacDemo() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -302,13 +302,13 @@ function DemoBusinessComponents() {
           </p>
         </div>
 
-        {/* 功能特性卡?*/}
+        {/* 功能特性卡*/}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Key className="w-5 h-5" />
-                细粒度权?              </CardTitle>
+                细粒度权              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
@@ -326,7 +326,7 @@ function DemoBusinessComponents() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                支持角色间的继承关系，简化权限管?              </p>
+                支持角色间的继承关系，简化权限管              </p>
             </CardContent>
           </Card>
 
@@ -334,11 +334,11 @@ function DemoBusinessComponents() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Clock className="w-5 h-5" />
-                动态授?              </CardTitle>
+                动态授              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                支持临时权限分配和条件访问控?              </p>
+                支持临时权限分配和条件访问控              </p>
             </CardContent>
           </Card>
 

@@ -2,7 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!email || !password) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涢偖绠卞拰瀵嗙爜' },
+        { success: false, error: '璇彁渚涢偖绠卞拰瀵嗙爜' },
         { status: 400 }
       );
     }
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     if (error) {
       console.error('鐧诲綍澶辫触:', error);
       return NextResponse.json(
-        { success: false, error: '閭鎴栧瘑鐮侀敊? },
+        { success: false, error: '鎴栧瘑鐮侀敊 },
         { status: 401 }
       );
     }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 妫€鏌ユ槸鍚︿负浼佷笟鐢ㄦ埛
+    // 妫€鏌ユ槸鍚︿负佷笟鐢ㄦ埛
     const { data: enterpriseProfile, error: profileError } = await supabase
       .from('enterprise_users')
       .select('*')
@@ -49,17 +49,17 @@ export async function POST(request: Request) {
       .single();
 
     if (profileError || !enterpriseProfile) {
-      // 涓嶆槸浼佷笟鐢ㄦ埛锛岃繑鍥為敊?      return NextResponse.json(
-        { success: false, error: '璇ヨ处鎴蜂笉鏄紒涓氳处? },
+      // 涓嶆槸佷笟鐢ㄦ埛锛岃繑鍥為敊      return NextResponse.json(
+        { success: false, error: '璇ヨ处鎴蜂笉鏄紒涓氳处 },
         { status: 403 }
       );
     }
 
-    // 妫€鏌ヤ紒涓氳处鎴风姸?    if (enterpriseProfile.status !== 'approved') {
+    // 妫€鏌ヤ紒涓氳处鎴风姸    if (enterpriseProfile.status !== 'approved') {
       return NextResponse.json(
         {
           success: false,
-          error: '浼佷笟璐︽埛鏈€氳繃瀹℃牳',
+          error: '佷笟璐︽埛鏈€氳繃瀹℃牳',
           status: enterpriseProfile.status,
         },
         { status: 403 }
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
       });
     }
 
-    // 璁板綍鐧诲綍鏃ュ織
+    // 璁板綍鐧诲綍ュ織
     (await supabase.from('audit_logs').insert({
       user_id: data.user.id,
       action: 'enterprise_login',
@@ -114,15 +114,15 @@ export async function POST(request: Request) {
           contact_person: enterpriseProfile.contact_person,
         },
         session: {
-          access_token: session?.access_token,
-          expires_at: session?.expires_at,
+          access_token: session.access_token,
+          expires_at: session.expires_at,
         },
       },
     });
   } catch (error: any) {
-    console.error('浼佷笟鐧诲綍閿欒:', error);
+    console.error('佷笟鐧诲綍閿欒:', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? },
+      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
       { status: 500 }
     );
   }

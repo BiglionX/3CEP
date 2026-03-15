@@ -12,18 +12,18 @@ export async function POST(request: Request) {
     // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
-    if (!authHeader?.startsWith('Bearer ')) {
+    if (!authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '鏈巿鏉冭?,
+          message: '鏈巿鏉冭,
           data: null,
         },
         { status: 401 }
       );
     }
 
-    // 鑾峰彇璇锋眰?
+    // 鑾峰彇璇眰
     const body = await request.json();
     const { target_id, target_type } = body;
 
@@ -50,10 +50,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇浠嶫WT涓В?
+    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇嶫WT涓В
     const userId = 'user_123';
 
-    // 妫€鏌ユ槸鍚﹀凡缁忔敹?
+    // 妫€鏌ユ槸鍚﹀凡缁忔敹
     const { data: existingFavorite, error: checkError } = await supabase
       .from('user_favorites')
       .select('id, is_favorite')
@@ -65,8 +65,8 @@ export async function POST(request: Request) {
     let isFavorite = false;
 
     if (checkError && checkError.code !== 'PGRST116') {
-      // PGRST116琛ㄧず鏈壘鍒拌?
-      console.error('妫€鏌ユ敹钘忕姸鎬佸け?', checkError);
+      // PGRST116琛ㄧず鏈壘鍒拌
+      console.error('妫€鏌ユ敹钘忕姸鎬佸け', checkError);
       return NextResponse.json(
         {
           code: 50001,
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
         .eq('id', existingFavorite.id);
 
       if (updateError) {
-        console.error('鏇存柊鏀惰棌鐘舵€佸け?', updateError);
+        console.error('鏇存柊鏀惰棌鐘舵€佸け', updateError);
         return NextResponse.json(
           {
             code: 50001,
@@ -136,7 +136,7 @@ export async function POST(request: Request) {
       message: 'ok',
       data: {
         is_favorite: isFavorite,
-        action: isFavorite ? '鏀惰棌鎴愬姛' : '鍙栨秷鏀惰棌鎴愬姛',
+        action: isFavorite  '鏀惰棌鎴愬姛' : '鍙栨秷鏀惰棌鎴愬姛',
       },
       timestamp: new Date().toISOString(),
     }) as any;
@@ -145,7 +145,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         code: 50001,
-        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         data: null,
       },
       { status: 500 }
@@ -159,11 +159,11 @@ export async function GET(request: Request) {
     // 鑾峰彇璁よ瘉淇℃伅
     const authHeader = request.headers.get('authorization');
 
-    if (!authHeader?.startsWith('Bearer ')) {
+    if (!authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         {
           code: 40101,
-          message: '鏈巿鏉冭?,
+          message: '鏈巿鏉冭,
           data: null,
         },
         { status: 401 }
@@ -175,7 +175,7 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('page_size') || '20');
 
-    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇浠嶫WT涓В?
+    // 妯℃嫙鐢ㄦ埛ID - 瀹為檯搴旇嶫WT涓В
     const userId = 'user_123';
 
     // 鏋勫缓鏌ヨ
@@ -195,7 +195,7 @@ export async function GET(request: Request) {
       .eq('is_favorite', true)
       .order('created_at', { ascending: false });
 
-    // 鎸夌被鍨嬬瓫?
+    // 鎸夌被鍨嬬瓫
     if (targetType !== 'all') {
       query = query.eq('target_type', targetType);
     }
@@ -282,7 +282,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         code: 50001,
-        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         data: null,
       },
       { status: 500 }
@@ -300,7 +300,7 @@ async function updateFavoriteStats(
     const targetTable = getTargetTable(targetType);
     const statField = 'favorite_count';
 
-    // 鑾峰彇褰撳墠缁熻?
+    // 鑾峰彇褰撳墠缁熻
     const { data: targetData, error: targetError } = await supabase
       .from(targetTable)
       .select(statField)
@@ -310,7 +310,7 @@ async function updateFavoriteStats(
     if (!targetError && targetData) {
       const currentCount = targetData[statField] || 0;
       const newCount = isAdding
-        ? currentCount + 1
+         currentCount + 1
         : Math.max(0, currentCount - 1);
 
       await supabase

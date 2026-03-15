@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 婕旂ず宸ヤ綔娴両D鐧藉悕?const DEMO_WORKFLOWS = [
+// 婕旂ず宸ヤ綔娴両D鐧藉悕const DEMO_WORKFLOWS = [
   'demo-workflow-1',
   'demo-workflow-2',
   'sample-workflow-1',
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
       if (!DEMO_WORKFLOWS.includes(workflowId)) {
         return NextResponse.json(
           {
-            error: '宸ヤ綔娴佷笉瀛樺湪鎴栨棤鏉冭?,
+            error: '宸ヤ綔娴佷笉瀛樺湪鎴栨棤鏉冭,
             code: 'WORKFLOW_NOT_FOUND',
           },
           { status: 404 }
@@ -49,10 +49,10 @@ export async function GET(request: Request) {
       count: workflows.length,
     });
   } catch (error) {
-    console.error('鑾峰彇宸ヤ綔娴佺姸鎬侀敊?', error);
+    console.error('鑾峰彇宸ヤ綔娴佺姸鎬侀敊', error);
     return NextResponse.json(
       {
-        error: '鑾峰彇宸ヤ綔娴佺姸鎬佸け?,
+        error: '鑾峰彇宸ヤ綔娴佺姸鎬佸け,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -61,11 +61,11 @@ export async function GET(request: Request) {
 }
 
 async function getDemoWorkflowInfo(workflowId: string) {
-  // 妯℃嫙宸ヤ綔娴佷俊鎭紙瀹為檯椤圭洰涓簲璇ヤ粠n8n API鑾峰彇?  const workflowTemplates: Record<string, any> = {
+  // 妯℃嫙宸ヤ綔娴佷俊鎭紙瀹為檯椤圭洰涓簲璇ヤ粠n8n API鑾峰彇  const workflowTemplates: Record<string, any> = {
     'demo-workflow-1': {
       id: 'demo-workflow-1',
-      name: '瀹㈡埛鏀寔鑷姩鍖栨紨?,
-      description: '灞曠ず濡備綍鑷姩鍖栧鐞嗗鎴锋敮鎸佽姹傜殑瀹屾暣娴佺▼',
+      name: '瀹㈡埛鏀寔鑷姩鍖栨紨,
+      description: '灞曠ず濡備綍鑷姩鍖栧鐞嗗鎴敮鎸佽姹傜殑瀹屾暣娴佺▼',
       category: 'customer-service',
       nodes: 8,
       status: 'active',
@@ -116,8 +116,8 @@ async function getDemoWorkflowInfo(workflowId: string) {
     },
     'sample-workflow-1': {
       id: 'sample-workflow-1',
-      name: '鍏ヨ亴娴佺▼鑷姩?,
-      description: '鏂板憳宸ュ叆鑱岀殑瀹屾暣鑷姩鍖栧鐞嗘祦?,
+      name: '鍏ヨ亴娴佺▼鑷姩,
+      description: '鏂板憳宸ュ叆鑱岀殑瀹屾暣鑷姩鍖栧鐞嗘祦,
       category: 'hr-automation',
       nodes: 6,
       status: 'active',
@@ -131,13 +131,13 @@ async function getDemoWorkflowInfo(workflowId: string) {
         input_example: {
           employee_name: '寮犱笁',
           department: '鎶€鏈儴',
-          position: '杞欢宸ョ▼?,
+          position: '杞欢宸ョ▼,
           start_date: '2026-03-01',
         },
         output_example: {
           onboarding_tasks: 15,
           setup_completed: 12,
-          pending_items: ['闂ㄧ鍗″埗?, '閭閰嶇疆', '鍩硅瀹夋帓'],
+          pending_items: ['闂ㄧ鍗″埗, '閰嶇疆', '鍩硅瀹夋帓'],
         },
       },
     },
@@ -146,7 +146,7 @@ async function getDemoWorkflowInfo(workflowId: string) {
   return (
     workflowTemplates[workflowId] || {
       id: workflowId,
-      name: `婕旂ず宸ヤ綔?${workflowId}`,
+      name: `婕旂ず宸ヤ綔${workflowId}`,
       description: '婕旂ず鐢ㄥ伐浣滄祦妯℃澘',
       category: 'demo',
       nodes: 5,
@@ -163,7 +163,7 @@ async function getRecentExecutions(workflowId: string) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 妯℃嫙鎵ц鏁版嵁锛堝疄闄呴」鐩腑搴旇浠巒8n鑾峰彇鐪熷疄鎵ц璁板綍?    const mockExecutions = [
+    // 妯℃嫙鎵ц鏁版嵁锛堝疄闄呴」鐩腑搴旇巒8n鑾峰彇鐪熷疄鎵ц璁板綍    const mockExecutions = [
       {
         id: `exec_${Date.now()}_1`,
         workflow_id: workflowId,
@@ -217,14 +217,14 @@ export async function POST(request: Request) {
     if (!DEMO_WORKFLOWS.includes(workflowId)) {
       return NextResponse.json(
         {
-          error: '宸ヤ綔娴佷笉瀛樺湪鎴栨棤鏉冭?,
+          error: '宸ヤ綔娴佷笉瀛樺湪鎴栨棤鏉冭,
           code: 'WORKFLOW_NOT_FOUND',
         },
         { status: 404 }
       );
     }
 
-    // 妯℃嫙宸ヤ綔娴佹墽?    const executionResult = await simulateWorkflowExecution(
+    // 妯℃嫙宸ヤ綔娴佹墽    const executionResult = await simulateWorkflowExecution(
       workflowId,
       inputData
     );
@@ -234,14 +234,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: '宸ヤ綔娴佹紨绀烘墽琛屽畬?,
+      message: '宸ヤ綔娴佹紨绀烘墽琛屽畬,
       data: executionResult,
     });
   } catch (error) {
-    console.error('宸ヤ綔娴佹紨绀烘墽琛岄敊?', error);
+    console.error('宸ヤ綔娴佹紨绀烘墽琛岄敊', error);
     return NextResponse.json(
       {
-        error: '宸ヤ綔娴佹紨绀烘墽琛屽け?,
+        error: '宸ヤ綔娴佹紨绀烘墽琛屽け,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -262,9 +262,9 @@ async function simulateWorkflowExecution(workflowId: string, inputData: any) {
     result: {
       processed_nodes: Math.floor(Math.random() * 10) + 5,
       success_rate: '95%',
-      output_summary: '婕旂ず宸ヤ綔娴佹墽琛屾垚鍔熷畬?,
+      output_summary: '婕旂ず宸ヤ綔娴佹墽琛屾垚鍔熷畬,
       sample_output: {
-        data: '杩欐槸妯℃嫙鐨勮緭鍑烘暟?,
+        data: '杩欐槸妯℃嫙鐨勮緭鍑烘暟,
         timestamp: new Date().toISOString(),
         workflow: workflowId,
       },
@@ -296,7 +296,7 @@ async function trackWorkflowDemo(workflowId: string) {
       created_at: new Date().toISOString(),
     })) as any;
   } catch (error) {
-    console.error('璁板綍宸ヤ綔娴佹紨绀轰簨浠跺け?', error);
+    console.error('璁板綍宸ヤ綔娴佹紨绀轰簨跺け', error);
   }
 }
 

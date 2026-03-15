@@ -1,7 +1,6 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,17 +9,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
 import {
+  ArrowLeft,
   BarChart3,
-  TrendingUp,
   Calendar,
   DollarSign,
-  ArrowLeft,
   Download,
   Filter,
+  TrendingUp,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface AnalyticsData {
   monthlyRevenue: MonthlyData[];
@@ -177,7 +176,8 @@ export default function AnalyticsPage() {
   };
 
   const handleExport = () => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出分析数据')};
+    // TODO: 移除调试日志 - console.log('导出分析数据')
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -212,13 +212,14 @@ export default function AnalyticsPage() {
         </header>
 
         <div className="px-4 sm:px-6 lg:px-8 py-8">
-          {/* 时间筛?*/}
+          {/* 时间筛选 */}
           <div className="mb-8">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Filter className="h-5 w-5" />
-                  数据筛?                </CardTitle>
+                  数据筛选
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-3">
@@ -226,7 +227,7 @@ export default function AnalyticsPage() {
                     range => (
                       <Button
                         key={range}
-                        variant={timeRange === range ? 'default' : 'outline'}
+                        variant={timeRange === range  'default' : 'outline'}
                         onClick={() => setTimeRange(range)}
                         size="sm"
                       >
@@ -247,7 +248,7 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">总收?/CardTitle>
+                <CardTitle className="text-sm font-medium">总收入</CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -259,7 +260,8 @@ export default function AnalyticsPage() {
                       0
                     ) / 10000
                   ).toFixed(1)}
-                  �?                </div>
+                  万元
+                </div>
                 <p className="text-xs text-muted-foreground">累计交易总额</p>
               </CardContent>
             </Card>
@@ -283,7 +285,8 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  平均增长?                </CardTitle>
+                  平均增长率
+                </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -302,7 +305,7 @@ export default function AnalyticsPage() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">合作夥伴</CardTitle>
+                <CardTitle className="text-sm font-medium">合作伙伴</CardTitle>
                 <Calendar className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -320,7 +323,7 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>收入趋势分析</CardTitle>
-                <CardDescription>过去3个月的收入变化趋?/CardDescription>
+                <CardDescription>过去3个月的收入变化趋势</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-end justify-between space-x-2">
@@ -336,9 +339,11 @@ export default function AnalyticsPage() {
                         }}
                       ></div>
                       <div className="text-xs text-gray-500 mt-2">
-                        {month.month.split('-')[1]}�?                      </div>
+                        {month.month.split('-')[1]}月
+                      </div>
                       <div className="text-xs font-medium">
-                        ¥{(month.revenue / 10000).toFixed(0)}�?                      </div>
+                        ¥{(month.revenue / 10000).toFixed(0)}万元
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -349,7 +354,7 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>订单趋势分析</CardTitle>
-                <CardDescription>近期每日订单量变?/CardDescription>
+                <CardDescription>近期每日订单量变化</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-end justify-between space-x-1">
@@ -401,7 +406,7 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>合作伙伴排名</CardTitle>
-                <CardDescription>按交易额排序的主要合作伙?/CardDescription>
+                <CardDescription>按交易额排序的主要合作伙伴</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -423,9 +428,11 @@ export default function AnalyticsPage() {
                       </div>
                       <div className="text-right">
                         <div className="font-medium">
-                          ¥{(partner.totalValue / 10000).toFixed(1)}�?                        </div>
+                          ¥{(partner.totalValue / 10000).toFixed(1)}万元
+                        </div>
                         <div className="text-sm text-gray-500">
-                          {partner.totalOrders}�?                        </div>
+                          {partner.totalOrders}单
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -437,7 +444,7 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>产品表现分析</CardTitle>
-                <CardDescription>热销产品排行?/CardDescription>
+                <CardDescription>热销产品排行榜</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -459,7 +466,8 @@ export default function AnalyticsPage() {
                       </div>
                       <div className="text-right">
                         <div className="font-medium">
-                          {product.salesVolume}�?                        </div>
+                          {product.salesVolume}台
+                        </div>
                         <div className="text-sm text-gray-500">
                           热度:{product.popularity}%
                         </div>
@@ -475,4 +483,3 @@ export default function AnalyticsPage() {
     </div>
   );
 }
-

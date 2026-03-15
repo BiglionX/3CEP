@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '璇锋彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿?,
+          error: '璇彁渚涙湁鏁堢殑閲囪喘闇€姹傛弿,'
         },
         { status: 400 }
       );
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鍒涘缓鍘熷璇锋眰瀵硅薄
+    // 鍒涘缓鍘熷璇眰瀵硅薄
     const rawRequest: RawProcurementRequest = {
       id: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       companyId,
@@ -52,27 +52,28 @@ export async function POST(request: Request) {
         rawRequest,
         parsedRequest,
       },
-      message: '閲囪喘闇€姹傝В鏋愭垚?,
+      message: '閲囪喘闇€姹傝В鏋愭垚,'
     });
   } catch (error) {
-    console.error('閲囪喘闇€姹傝В鏋愰敊?', error);
+    console.error('閲囪喘闇€姹傝В鏋愰敊', error);
 
     return NextResponse.json(
       {
         success: false,
-        error: '閲囪喘闇€姹傝В鏋愬け?,
-        details: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '閲囪喘闇€姹傝В鏋愬け,'
+        details: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
   }
 }
 
-// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€?export async function GET() {
+// GET鏂规硶鐢ㄤ簬鍋ュ悍妫€export async function GET() {
   return NextResponse.json({
     success: true,
-    message: 'B2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾?,
+    message: 'B2B閲囪喘闇€姹傝В鏋愭湇鍔¤繍琛屾,'
     timestamp: new Date().toISOString(),
   });
 }
+
 

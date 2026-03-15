@@ -1,6 +1,6 @@
 ﻿/**
- * 搴撳瓨棰勭暀API璺敱
- * 澶勭悊搴撳瓨棰勭暀鍜岄噴鏀捐? */
+ * 搴撳棰勭暀API璺敱
+ * 澶勭悊搴撳棰勭暀鍜岄噴鏀捐 */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -17,15 +17,15 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涙湁鏁堢殑棰勭暀鍟嗗搧鍒楄〃' },
+        { success: false, error: '璇彁渚涙湁鏁堢殑棰勭暀鍟嗗搧鍒楄〃' },
         { status: 400 }
       );
     }
 
-    // 楠岃瘉姣忎釜鍟嗗搧?    for (const item of items) {
+    // 楠岃瘉姣忎釜鍟嗗搧    for (const item of items) {
       if (!item.partId || !item.warehouseId || !item.quantity) {
         return NextResponse.json(
-          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬? },
+          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬 },
           { status: 400 }
         );
       }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const reservationService = new InventoryReservationService();
 
     if (action === 'reserve') {
-      // 鎵归噺棰勭暀搴撳瓨
+      // 鎵归噺棰勭暀搴撳
       const result = await reservationService.reserveMultipleItems(
         items.map(item => ({
           partId: item.partId,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             success: false,
-            error: '搴撳瓨棰勭暀澶辫触',
+            error: '搴撳棰勭暀澶辫触',
             failedItems: result.failedItems,
           },
           { status: 400 }
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
 
       if (reservationIds.length === 0) {
         return NextResponse.json(
-          { success: false, error: '璇锋彁渚涙湁鏁堢殑棰勭暀ID鍒楄〃' },
+          { success: false, error: '璇彁渚涙湁鏁堢殑棰勭暀ID鍒楄〃' },
           { status: 400 }
         );
       }
@@ -88,16 +88,16 @@ export async function POST(request: Request) {
       });
     } else {
       return NextResponse.json(
-        { success: false, error: '鏃犳晥鐨勬搷浣滅被? },
+        { success: false, error: '犳晥鐨勬搷浣滅被 },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('搴撳瓨棰勭暀API閿欒:', error);
+    console.error('搴撳棰勭暀API閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '搴撳瓨棰勭暀澶勭悊澶辫触',
+        error: '搴撳棰勭暀澶勭悊澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }
@@ -116,12 +116,12 @@ export async function GET(request: Request) {
 
     if (!partId || !warehouseId) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涢厤浠禝D鍜屼粨搴揑D' },
+        { success: false, error: '璇彁渚涢厤禝D鍜屼粨搴揑D' },
         { status: 400 }
       );
     }
 
-    // 鏌ヨ搴撳瓨棰勭暀鎯呭喌
+    // 鏌ヨ搴撳棰勭暀鎯呭喌
     const { data, error } = await supabase
       .from('inventory_reservations')
       .select('*')
@@ -134,23 +134,23 @@ export async function GET(request: Request) {
       throw new Error(error.message);
     }
 
-    // 璁＄畻鎬婚鐣欐暟?    const totalReserved =
-      data?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    // 璁＄畻鎬婚鐣欐暟    const totalReserved =
+      data.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
     return NextResponse.json({
       success: true,
       data: {
         reservations: data || [],
         totalReserved,
-        reservationCount: (data as any)?.(data as any)?.length || 0,
+        reservationCount: (data as any).(data as any).length || 0,
       },
     });
   } catch (error) {
-    console.error('鏌ヨ搴撳瓨棰勭暀閿欒:', error);
+    console.error('鏌ヨ搴撳棰勭暀閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏌ヨ搴撳瓨棰勭暀澶辫触',
+        error: '鏌ヨ搴撳棰勭暀澶辫触',
         details: (error as Error).message,
       },
       { status: 500 }

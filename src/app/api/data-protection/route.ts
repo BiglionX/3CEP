@@ -16,7 +16,7 @@ const sampleSensitiveData = {
       phone: '13800138000',
       id_card: '110101199001011234',
       bank_card: '6222021234567890123',
-      address: '鍖椾含甯傛湞闃冲尯鏌愭煇琛楅亾123锟?,
+      address: '鍖椾含甯傛湞闃冲尯鏌愭煇琛楅亾123,
     },
     {
       id: 'user_002',
@@ -25,7 +25,7 @@ const sampleSensitiveData = {
       phone: '13900139000',
       id_card: '110101199002022345',
       bank_card: '6222022345678901234',
-      address: '涓婃捣甯傛郸涓滄柊鍖烘煇鏌愯矾456锟?,
+      address: '涓婃捣甯傛郸涓滄柊鍖烘煇鏌愯矾456,
     },
   ],
   transactions: [
@@ -44,7 +44,7 @@ const sampleSensitiveData = {
 function getCurrentUser(): UserInfo | null {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token')?.value;
+    const token = cookieStore.get('auth-token').value;
 
     if (!token) return null;
 
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const protection = DataProtectionController.getInstance();
@@ -137,14 +137,14 @@ export async function GET(request: Request) {
         });
 
       default:
-        return NextResponse.json({ error: '鏃犳晥鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '犳晥鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error) {
     console.error('鏁版嵁淇濇姢GET鎿嶄綔澶辫触:', error);
     return NextResponse.json(
       {
         error: '鎿嶄綔澶辫触',
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -155,7 +155,7 @@ export async function POST(request: Request) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const protection = DataProtectionController.getInstance();
@@ -163,7 +163,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { action, ...params } = body;
 
-    // 鏉冮檺妫€?- 闇€瑕佹暟鎹繚鎶ょ鐞嗘潈?    const permissionResult = permissionManager.hasPermission(
+    // 鏉冮檺妫€- 闇€瑕佹暟鎹繚鎶ょ鐞嗘潈    const permissionResult = permissionManager.hasPermission(
       currentUser,
       'data_protection_manage'
     );
@@ -171,7 +171,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: '鏉冮檺涓嶈冻',
-          reason: permissionResult.reason || '闇€瑕佹暟鎹繚鎶ょ鐞嗘潈?,
+          reason: permissionResult.reason || '闇€瑕佹暟鎹繚鎶ょ鐞嗘潈,
         },
         { status: 403 }
       );
@@ -189,7 +189,7 @@ export async function POST(request: Request) {
         } = params;
         if (!field || !type) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? field, type' },
+            { error: '缂哄皯蹇呰鐨勫弬 field, type' },
             { status: 400 }
           );
         }
@@ -199,7 +199,7 @@ export async function POST(request: Request) {
           type,
           maskChar,
           preserveLength,
-          customPattern: customPattern ? new RegExp(customPattern) : undefined,
+          customPattern: customPattern  new RegExp(customPattern) : undefined,
           customReplacement,
         });
 
@@ -213,7 +213,7 @@ export async function POST(request: Request) {
         const { field: removeField } = params;
         if (!removeField) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? field' },
+            { error: '缂哄皯蹇呰鐨勫弬 field' },
             { status: 400 }
           );
         }
@@ -221,7 +221,7 @@ export async function POST(request: Request) {
         const removed = protection.removeMaskingRule(removeField);
         return NextResponse.json({
           success: removed,
-          message: removed ? '鑴辨晱瑙勫垯绉婚櫎鎴愬姛' : '鑴辨晱瑙勫垯涓嶅瓨?,
+          message: removed  '鑴辨晱瑙勫垯绉婚櫎鎴愬姛' : '鑴辨晱瑙勫垯涓嶅,
           timestamp: new Date().toISOString(),
         });
 
@@ -229,7 +229,7 @@ export async function POST(request: Request) {
         const { data, fields } = params;
         if (!data) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? data' },
+            { error: '缂哄皯蹇呰鐨勫弬 data' },
             { status: 400 }
           );
         }
@@ -246,7 +246,7 @@ export async function POST(request: Request) {
         const { plaintext } = params;
         if (!plaintext) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? plaintext' },
+            { error: '缂哄皯蹇呰鐨勫弬 plaintext' },
             { status: 400 }
           );
         }
@@ -263,7 +263,7 @@ export async function POST(request: Request) {
         const { encrypted, authTag, iv } = params;
         if (!encrypted || !authTag || !iv) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬? encrypted, authTag, iv' },
+            { error: '缂哄皯蹇呰鐨勫弬 encrypted, authTag, iv' },
             { status: 400 }
           );
         }
@@ -282,7 +282,7 @@ export async function POST(request: Request) {
               success: false,
               error: '鏁版嵁瑙ｅ瘑澶辫触',
               message:
-                error instanceof Error ? error.message : '瑙ｅ瘑杩囩▼涓彂鐢熼敊?,
+                error instanceof Error  error.message : '瑙ｅ瘑杩囩▼涓彂鐢熼敊,
               timestamp: new Date().toISOString(),
             },
             { status: 400 }
@@ -293,19 +293,19 @@ export async function POST(request: Request) {
         protection.clearAuditLogs();
         return NextResponse.json({
           success: true,
-          message: '瀹¤鏃ュ織娓呯┖鎴愬姛',
+          message: '瀹¤ュ織娓呯┖鎴愬姛',
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: '鏃犳晥鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '犳晥鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error) {
     console.error('鏁版嵁淇濇姢POST鎿嶄綔澶辫触:', error);
     return NextResponse.json(
       {
         error: '鎿嶄綔澶辫触',
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );

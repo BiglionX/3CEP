@@ -12,7 +12,7 @@ export type UserBehaviorType =
   | 'form_submit' // 琛ㄥ崟鎻愪氦
   | 'navigation' // 瀵艰埅璺宠浆
   | 'scroll_depth' // 婊氬姩娣卞害
-  | 'session_start' // 浼氳瘽寮€?  | 'session_end' // 浼氳瘽缁撴潫
+  | 'session_start' // 氳瘽寮€  | 'session_end' // 氳瘽缁撴潫
   | 'error_event' // 閿欒浜嬩欢
   | 'export_data' // 鏁版嵁瀵煎嚭
   | 'bulk_operation'; // 鎵归噺鎿嶄綔
@@ -21,33 +21,33 @@ export type UserBehaviorType =
 export interface UserBehaviorData {
   user_id: string;
   behavior_type: UserBehaviorType;
-  page_url?: string;
-  feature_name?: string;
-  action_detail?: string;
-  duration_ms?: number;
-  scroll_percentage?: number;
+  page_url: string;
+  feature_name: string;
+  action_detail: string;
+  duration_ms: number;
+  scroll_percentage: number;
   timestamp: string;
-  ip_address?: string;
-  user_agent?: string;
-  session_id?: string;
-  referrer?: string;
-  device_info?: {
-    browser?: string;
-    os?: string;
-    device?: string;
-    screen_size?: string;
+  ip_address: string;
+  user_agent: string;
+  session_id: string;
+  referrer: string;
+  device_info: {
+    browser: string;
+    os: string;
+    device: string;
+    screen_size: string;
   };
 }
 
 // 琛屼负缁熻鏌ヨ鍙傛暟
 interface BehaviorQueryParams {
-  user_id?: string;
-  behavior_type?: UserBehaviorType;
-  start_date?: string;
-  end_date?: string;
-  page_url?: string;
-  limit?: number;
-  offset?: number;
+  user_id: string;
+  behavior_type: UserBehaviorType;
+  start_date: string;
+  end_date: string;
+  page_url: string;
+  limit: number;
+  offset: number;
 }
 
 // 璁板綍鐢ㄦ埛琛屼负
@@ -63,12 +63,12 @@ export async function POST(request: Request) {
     // 楠岃瘉蹇呭～瀛楁
     if (!behaviorData.user_id || !behaviorData.behavior_type) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呰鐨勮涓烘暟鎹瓧? },
+        { error: '缂哄皯蹇呰鐨勮涓烘暟鎹瓧 },
         { status: 400 }
       );
     }
 
-    // 娣诲姞鏃堕棿鎴筹紙濡傛灉鏈彁渚涳級
+    // 娣诲姞堕棿鎴筹紙濡傛灉鏈彁渚涳級
     if (!behaviorData.timestamp) {
       behaviorData.timestamp = new Date().toISOString();
     }
@@ -98,8 +98,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -114,15 +114,15 @@ export async function GET(request: Request) {
   );
 
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥 }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ヨ闂涓烘暟? },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲ヨ闂涓烘暟 },
         { status: 403 }
       );
     }
@@ -166,7 +166,7 @@ export async function GET(request: Request) {
       query = query.lte('timestamp', queryParams.end_date);
     }
 
-    // 鎺掑簭鍜屽垎?    const offset = queryParams.offset || 0;
+    // 鎺掑簭鍜屽垎    const offset = queryParams.offset || 0;
     const limit = queryParams.limit || 50;
     query = query
       .order('timestamp', { ascending: false })
@@ -198,8 +198,8 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );
@@ -214,20 +214,20 @@ export async function DELETE(request: Request) {
   );
 
   try {
-    // 楠岃瘉绠＄悊鍛樻潈?    const currentUser = await AuthService.getCurrentUser();
+    // 楠岃瘉绠＄悊鍛樻潈    const currentUser = await AuthService.getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥? }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈櫥 }, { status: 401 });
     }
 
     const userRole = await AuthService.getUserRole(currentUser.id);
     if (userRole !== 'admin') {
       return NextResponse.json(
-        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲浠ュ垹闄よ涓烘暟? },
+        { error: '鍙湁瓒呯骇绠＄悊鍛樺彲ュ垹闄よ涓烘暟 },
         { status: 403 }
       );
     }
 
-    // 鑾峰彇杩囨湡澶╂暟鍙傛暟锛堥粯?0澶╋級
+    // 鑾峰彇杩囨湡澶╂暟鍙傛暟锛堥粯0澶╋級
     const { searchParams } = new URL(request.url);
     const daysOld = parseInt(searchParams.get('days_old') || '90');
 
@@ -252,14 +252,14 @@ export async function DELETE(request: Request) {
     return NextResponse.json({
       success: true,
       message: `鎴愬姛鍒犻櫎 ${daysOld} 澶╁墠鐨勮涓烘暟鎹甡,
-      deleted_count: 0, // delete鎿嶄綔涓嶈繑鍥炲叿浣撳垹闄ゆ暟?    });
+      deleted_count: 0, // delete鎿嶄綔涓嶈繑鍥炲叿浣撳垹闄ゆ暟    });
   } catch (error) {
     console.error('鍒犻櫎琛屼负鏁版嵁API閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
-        message: error instanceof Error ? error.message : '鏈煡閿欒',
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
+        message: error instanceof Error  error.message : '鏈煡閿欒',
       },
       { status: 500 }
     );

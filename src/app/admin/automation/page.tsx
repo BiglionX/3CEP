@@ -21,20 +21,20 @@ export default function AutomationPage() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    // 从环境变量获?n8n URL
+    // 从环境变量获n8n URL
     const urlFromEnv = process.env.NEXT_PUBLIC_N8N_URL;
     if (urlFromEnv) {
       setN8nUrl(urlFromEnv);
     }
 
-    // 检?URL 可访问?
+    // 检URL 可访问
     checkUrlAccessibility(urlFromEnv || 'https://n8n.yourdomain.com');
   }, []);
 
   const checkUrlAccessibility = async (url: string) => {
     try {
       setIsLoading(true);
-      // 简单的可达性检?
+      // 简单的可达性检
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
 
@@ -60,7 +60,7 @@ export default function AutomationPage() {
 
   const handleIframeError = () => {
     setIsLoading(false);
-    setError('iframe 加载失败，请检?n8n 服务配置');
+    setError('iframe 加载失败，请检n8n 服务配置');
   };
 
   const copyToClipboard = async (text: string, field: string) => {
@@ -82,12 +82,12 @@ export default function AutomationPage() {
               自动化工作流？
             </h1>
             <p className="text-muted-foreground mt-1">
-              通过 n8n 平台管理和执行自动化工作?
+              通过 n8n 平台管理和执行自动化工作
             </p>
           </div>
           <Badge variant="secondary" className="flex items-center gap-1">
             <Info className="w-3 h-3" />
-            需要登录?
+            需要登录
           </Badge>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function AutomationPage() {
             <span>🔑 n8n 登录指引</span>
           </CardTitle>
           <CardDescription>
-            首次使用需要登录?n8n 平台才能访问工作流编辑器器
+            首次使用需要登录n8n 平台才能访问工作流编辑器器
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -144,7 +144,7 @@ export default function AutomationPage() {
                 <label className="text-sm font-medium">密码</label>
                 <div className="flex items-center gap-2">
                   <input
-                    type={showCredentials ? 'text' : 'password'}
+                    type={showCredentials  'text' : 'password'}
                     value="N8n_105!^-^"
                     readOnly
                     className="flex-1 px-3 py-2 border rounded-md bg-muted text-muted-foreground font-mono text-sm"
@@ -170,7 +170,7 @@ export default function AutomationPage() {
                     onClick={() => setShowCredentials(!showCredentials)}
                     className="flex items-center gap-1"
                   >
-                    {showCredentials ? (
+                    {showCredentials  (
                       <EyeOff className="w-3 h-3" />
                     ) : (
                       <Eye className="w-3 h-3" />
@@ -258,7 +258,7 @@ export default function AutomationPage() {
           <div className="absolute inset-0 bg-background/80 flex items-center justify-center pointer-events-none opacity-0 transition-opacity">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p className="text-sm text-muted-foreground">页面加载?..</p>
+              <p className="text-sm text-muted-foreground">页面加载中..</p>
             </div>
           </div>
         </div>
@@ -272,12 +272,12 @@ export default function AutomationPage() {
           </div>
           <div className="flex items-center space-x-4">
             <span
-              className={`flex items-center ${isLoading ? 'text-yellow-600' : error ? 'text-red-600' : 'text-green-600'}`}
+              className={`flex items-center ${isLoading  'text-yellow-600' : error  'text-red-600' : 'text-green-600'}`}
             >
               <span
-                className={`w-2 h-2 rounded-full mr-2 ${isLoading ? 'bg-yellow-500 animate-pulse' : error ? 'bg-red-500' : 'bg-green-500'}`}
+                className={`w-2 h-2 rounded-full mr-2 ${isLoading  'bg-yellow-500 animate-pulse' : error  'bg-red-500' : 'bg-green-500'}`}
               ></span>
-              {isLoading ? '连接中' : error ? '连接失败' : '已连接'}
+              {isLoading  '连接中' : error  '连接失败' : '已连接'}
             </span>
           </div>
         </div>

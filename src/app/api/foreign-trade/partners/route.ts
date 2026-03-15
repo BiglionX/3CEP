@@ -1,8 +1,8 @@
-﻿// 鍚堜綔浼欎即绠＄悊API璺敱澶勭悊?import { NextResponse } from 'next/server';
+﻿// 鍚堜綔欎即绠＄悊API璺敱澶勭悊import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍚堜綔浼欎即鏁版嵁绫诲瀷瀹氫箟
+// 鍚堜綔欎即鏁版嵁绫诲瀷瀹氫箟
 interface Partner {
   id: string;
   name: string;
@@ -11,34 +11,34 @@ interface Partner {
   contact_person: string;
   email: string;
   phone: string;
-  website?: string;
-  address?: string;
+  website: string;
+  address: string;
   products: string[];
   rating: number;
   cooperation_years: number;
   status: 'active' | 'inactive' | 'pending';
-  annual_volume?: number;
-  payment_terms?: string;
-  credit_limit?: number;
-  outstanding_balance?: number;
-  contract_expiry?: string;
-  notes?: string;
+  annual_volume: number;
+  payment_terms: string;
+  credit_limit: number;
+  outstanding_balance: number;
+  contract_expiry: string;
+  notes: string;
   created_by: string;
   created_at: string;
   updated_at: string;
 }
 
-// 璇锋眰鍙傛暟绫诲瀷
+// 璇眰鍙傛暟绫诲瀷
 interface PartnerQueryParams {
-  page?: number;
-  limit?: number;
-  type?: string;
-  status?: string;
-  country?: string;
-  search?: string;
+  page: number;
+  limit: number;
+  type: string;
+  status: string;
+  country: string;
+  search: string;
 }
 
-// GET /api/foreign-trade/partners - 鑾峰彇鍚堜綔浼欎即鍒楄〃
+// GET /api/foreign-trade/partners - 鑾峰彇鍚堜綔欎即鍒楄〃
 export async function GET(request: Request) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,7 +65,7 @@ export async function GET(request: Request) {
         params.page! * params.limit! - 1
       );
 
-    // 娣诲姞绛涢€夋潯?    if (params.type) {
+    // 娣诲姞绛涢€夋潯    if (params.type) {
       query = query.eq('type', params.type);
     }
 
@@ -95,12 +95,12 @@ export async function GET(request: Request) {
     // 璁＄畻缁熻鏁版嵁
     const stats = {
       total: count || 0,
-      active: data?.filter(p => p.status === 'active').length || 0,
-      countries: Array.from(new Set(data?.map(p => p.country) || [])).length,
-      averageRating: (data as any)?.(data as any)?.length
-        ? (
+      active: data.filter(p => p.status === 'active').length || 0,
+      countries: Array.from(new Set(data.map(p => p.country) || [])).length,
+      averageRating: (data as any).(data as any).length
+         (
             data.reduce((sum, p) => sum + p.rating, 0) /
-            (data as any)?.data.length
+            (data as any).data.length
           ).toFixed(1)
         : '0.0',
     };
@@ -117,11 +117,11 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('鑾峰彇鍚堜綔浼欎即鍒楄〃閿欒:', error);
+    console.error('鑾峰彇鍚堜綔欎即鍒楄〃閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鑾峰彇鍚堜綔浼欎即鍒楄〃澶辫触',
+        error: '鑾峰彇鍚堜綔欎即鍒楄〃澶辫触',
         message: (error as Error).message,
       },
       { status: 500 }
@@ -129,7 +129,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/foreign-trade/partners - 鍒涘缓鏂板悎浣滀紮?export async function POST(request: Request) {
+// POST /api/foreign-trade/partners - 鍒涘缓鏂板悎浣滀紮export async function POST(request: Request) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -164,13 +164,13 @@ export async function GET(request: Request) {
       );
     }
 
-    // 楠岃瘉閭鏍煎紡
+    // 楠岃瘉鏍煎紡
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         {
           success: false,
-          error: '閭鏍煎紡涓嶆?,
+          error: '鏍煎紡涓嶆,
         },
         { status: 400 }
       );
@@ -182,12 +182,12 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥? },
+        { success: false, error: '鐢ㄦ埛鏈櫥 },
         { status: 401 }
       );
     }
 
-    // 妫€鏌ュ悎浣滀紮浼存槸鍚﹀凡瀛樺湪
+    // 妫€鏌ュ悎浣滀紮存槸鍚﹀凡瀛樺湪
     const { data: existingPartner } = await supabase
       .from('foreign_trade_partners')
       .select('id')
@@ -199,14 +199,14 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '鍚堜綔浼欎即宸插瓨?,
-          message: '璇ュ悕绉扮殑鍚堜綔浼欎即宸插瓨?,
+          error: '鍚堜綔欎即宸插,
+          message: '璇ュ悕绉扮殑鍚堜綔欎即宸插,
         },
         { status: 409 }
       );
     }
 
-    // 鎻掑叆鍚堜綔浼欎即鏁版嵁
+    // 鎻掑叆鍚堜綔欎即鏁版嵁
     const { data, error } = await supabase
       .from('foreign_trade_partners')
       .insert({
@@ -235,7 +235,7 @@ export async function GET(request: Request) {
       throw new Error(error.message);
     }
 
-    // 璁板綍鎿嶄綔鏃ュ織
+    // 璁板綍鎿嶄綔ュ織
     (await supabase.from('audit_logs').insert({
       user_id: user.id,
       action: 'CREATE_PARTNER',
@@ -251,14 +251,14 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       data,
-      message: '鍚堜綔浼欎即鍒涘缓鎴愬姛',
+      message: '鍚堜綔欎即鍒涘缓鎴愬姛',
     });
   } catch (error) {
-    console.error('鍒涘缓鍚堜綔浼欎即閿欒:', error);
+    console.error('鍒涘缓鍚堜綔欎即閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鍒涘缓鍚堜綔浼欎即澶辫触',
+        error: '鍒涘缓鍚堜綔欎即澶辫触',
         message: (error as Error).message,
       },
       { status: 500 }
@@ -266,7 +266,7 @@ export async function GET(request: Request) {
   }
 }
 
-// 鎵归噺瀵煎叆鍚堜綔浼欎即
+// 鎵归噺瀵煎叆鍚堜綔欎即
 export async function PUT(request: Request) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -282,7 +282,7 @@ export async function PUT(request: Request) {
         {
           success: false,
           error: '鏁版嵁鏍煎紡閿欒',
-          message: '璇锋彁渚涘悎浣滀紮浼存暟?,
+          message: '璇彁渚涘悎浣滀紮存暟,
         },
         { status: 400 }
       );
@@ -294,12 +294,12 @@ export async function PUT(request: Request) {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥? },
+        { success: false, error: '鐢ㄦ埛鏈櫥 },
         { status: 401 }
       );
     }
 
-    // 楠岃瘉骞跺鐞嗘瘡涓悎浣滀紮?    const validPartners = partners.filter(partner => {
+    // 楠岃瘉骞跺鐞嗘瘡涓悎浣滀紮    const validPartners = partners.filter(partner => {
       return (
         partner.name &&
         partner.type &&
@@ -314,7 +314,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '娌℃湁鏈夋晥鐨勫悎浣滀紮浼存暟?,
+          error: '娌℃湁鏈夋晥鐨勫悎浣滀紮存暟,
         },
         { status: 400 }
       );
@@ -350,21 +350,21 @@ export async function PUT(request: Request) {
       throw new Error(error.message);
     }
 
-    // 璁板綍鎿嶄綔鏃ュ織
+    // 璁板綍鎿嶄綔ュ織
     (await supabase.from('audit_logs').insert({
       user_id: user.id,
       action: 'BATCH_IMPORT_PARTNERS',
       table_name: 'foreign_trade_partners',
-      details: { count: (data as any)?.(data as any)?.length || 0 } as any,
+      details: { count: (data as any).(data as any).length || 0 } as any,
     })) as any;
 
     return NextResponse.json({
       success: true,
       data,
-      message: `鎴愬姛瀵煎叆 ${(data as any)?.(data as any)?.length} 涓悎浣滀紮浼碻,
+      message: `鎴愬姛瀵煎叆 ${(data as any).(data as any).length} 涓悎浣滀紮碻,
     });
   } catch (error) {
-    console.error('鎵归噺瀵煎叆鍚堜綔浼欎即閿欒:', error);
+    console.error('鎵归噺瀵煎叆鍚堜綔欎即閿欒:', error);
     return NextResponse.json(
       {
         success: false,

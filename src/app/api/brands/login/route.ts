@@ -1,7 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     // 楠岃瘉杈撳叆鍙傛暟
     if (!email && !apiKey) {
       return NextResponse.json(
-        { error: '璇锋彁渚涢偖绠卞瘑鐮佹垨API Key' },
+        { error: '璇彁渚涢偖绠卞瘑鐮佹垨API Key' },
         { status: 400 }
       );
     }
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     let brand;
 
     if (email && password) {
-      // 閭瀵嗙爜鐧诲綍
+      // 瀵嗙爜鐧诲綍
       const { data, error } = await supabase
         .from('brands')
         .select('*')
@@ -47,10 +47,10 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error || !data) {
-        return NextResponse.json({ error: '閭鎴栧瘑鐮侀敊? }, { status: 401 });
+        return NextResponse.json({ error: '鎴栧瘑鐮侀敊 }, { status: 401 });
       }
 
-      // 杩欓噷搴旇楠岃瘉瀵嗙爜锛岀畝鍖栧?      // 瀹為檯椤圭洰涓簲璇ヤ娇鐢╞crypt绛夊姞瀵嗗簱
+      // 杩欓噷搴旇楠岃瘉瀵嗙爜锛岀畝鍖栧      // 瀹為檯椤圭洰涓簲璇ヤ娇鐢╞crypt绛夊姞瀵嗗簱
       brand = data;
     } else if (apiKey) {
       // API Key鐧诲綍
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error || !data) {
-        return NextResponse.json({ error: '鏃犳晥鐨凙PI Key' }, { status: 401 });
+        return NextResponse.json({ error: '犳晥鐨凙PI Key' }, { status: 401 });
       }
 
       brand = data;
@@ -81,23 +81,23 @@ export async function POST(request: NextRequest) {
       message: '鐧诲綍鎴愬姛',
     });
   } catch (error) {
-    console.error('鍝佺墝鍟嗙櫥褰曢敊?', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    console.error('鍝佺墝鍟嗙櫥褰曢敊', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
-// 楠岃瘉Token涓棿?export async function authenticateBrand(request: NextRequest) {
+// 楠岃瘉Token涓棿export async function authenticateBrand(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return { error: '缂哄皯璁よ瘉浠ょ墝', status: 401 };
+      return { error: '缂哄皯璁よ瘉ょ墝', status: 401 };
     }
 
     const token = authHeader.substring(7);
     const decoded = verifySimpleToken(token);
 
     if (!decoded) {
-      return { error: '鏃犳晥鐨勮璇佷护?, status: 401 };
+      return { error: '犳晥鐨勮璇佷护, status: 401 };
     }
 
     return { brandId: decoded.brandId };

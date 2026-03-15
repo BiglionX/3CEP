@@ -89,7 +89,7 @@ export default function DataCenterPage() {
       setLoading(true);
 
       // 获取统计数据
-      const statsResponse = await fetch('/api/data-center?action=health');
+      const statsResponse = await fetch('/api/data-centeraction=health');
       if (statsResponse.ok) {
         const statsData = await statsResponse.json();
         setStats({
@@ -102,7 +102,7 @@ export default function DataCenterPage() {
         });
       }
 
-      // 获取数据源列?      setDataSources([
+      // 获取数据源列表      setDataSources([
         {
           id: '1',
           name: '设备管理系统',
@@ -113,7 +113,7 @@ export default function DataCenterPage() {
         },
         {
           id: '2',
-          name: '供应链系?,
+          name: '供应链系,
           type: 'MySQL',
           status: 'connected',
           lastUpdate: '2026-02-28 14:25:00',
@@ -142,7 +142,7 @@ export default function DataCenterPage() {
         {
           id: '1',
           severity: 'warning',
-          message: '维修记录系统同步延迟超过阈?,
+          message: '维修记录系统同步延迟超过阈,
           timestamp: '2026-02-28 14:20:00',
           source: '数据同步服务',
         },
@@ -155,7 +155,7 @@ export default function DataCenterPage() {
         },
       ]);
     } catch (error) {
-      console.error('加载仪表板数据失?', error);
+      console.error('加载仪表板数据失', error);
     } finally {
       setLoading(false);
     }
@@ -188,16 +188,16 @@ export default function DataCenterPage() {
   };
 
   const menuItems = [
-    { name: '仪表?, icon: BarChart3, href: '/data-center' },
-    { name: '数据源管?, icon: Database, href: '/data-center/sources' },
+    { name: '仪表, icon: BarChart3, href: '/data-center' },
+    { name: '数据源管理, icon: Database, href: '/data-center/sources' },
     { name: '查询分析', icon: Search, href: '/data-center/query' },
-    { name: '元数据管?, icon: FileText, href: '/data-center/metadata' },
+    { name: '元数据管, icon: FileText, href: '/data-center/metadata' },
     { name: '监控告警', icon: Monitor, href: '/data-center/monitoring' },
     { name: '安全管理', icon: Shield, href: '/data-center/security' },
     { name: '系统设置', icon: Settings, href: '/data-center/settings' },
   ];
 
-  // 管理员专属快捷入?  const adminQuickLinks = [
+  // 管理员专属快捷入  const adminQuickLinks = [
     {
       name: '管理后台',
       icon: Settings,
@@ -228,9 +228,9 @@ export default function DataCenterPage() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* 侧边?- 移动端优?*/}
+      {/* 侧边- 移动端优*/}
       <div
-        className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out sm:w-72 lg:translate-x-0 lg:static lg:inset-0`}
+        className={`${sidebarOpen  'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out sm:w-72 lg:translate-x-0 lg:static lg:inset-0`}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b">
           <div className="flex items-center space-x-2">
@@ -264,9 +264,9 @@ export default function DataCenterPage() {
         </nav>
       </div>
 
-      {/* 主内容区?- 移动端优?*/}
+      {/* 主内容区- 移动端优*/}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* 顶部导航?- 响应式优?*/}
+        {/* 顶部导航- 响应式优*/}
         <header className="bg-white shadow-sm border-b sticky top-0 z-40">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center min-w-0 flex-1">
@@ -279,11 +279,11 @@ export default function DataCenterPage() {
                 <Menu className="h-5 w-5" />
               </Button>
               <h1 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">
-                数据管理中心仪表?              </h1>
+                数据管理中心仪表              </h1>
             </div>
 
             <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* 管理员快速入?*/}
+              {/* 管理员快速入*/}
               {hasPermission('dashboard_read') && (
                 <Button
                   variant="ghost"
@@ -303,9 +303,9 @@ export default function DataCenterPage() {
           </div>
         </header>
 
-        {/* 内容区域 - 移动端优?*/}
+        {/* 内容区域 - 移动端优*/}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-          {/* 统计卡片 - 响应式网?*/}
+          {/* 统计卡片 - 响应式网*/}
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <Card className="shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -316,7 +316,7 @@ export default function DataCenterPage() {
                 <div className="text-2xl font-bold">
                   {stats.totalDevices.toLocaleString()}
                 </div>
-                <p className="text-xs text-muted-foreground">较昨日增?12%</p>
+                <p className="text-xs text-muted-foreground">较昨日增12%</p>
               </CardContent>
             </Card>
 
@@ -335,7 +335,7 @@ export default function DataCenterPage() {
 
             <Card className="shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">数据?/CardTitle>
+                <CardTitle className="text-sm font-medium">数据源/CardTitle>
                 <Globe className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -347,7 +347,7 @@ export default function DataCenterPage() {
             <Card className="shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  系统可用?                </CardTitle>
+                  系统可用                </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -355,21 +355,21 @@ export default function DataCenterPage() {
                   {stats.uptime}
                 </div>
                 <p className="text-xs text-muted-foreground truncate">
-                  最后同?{stats.lastSync}
+                  最后同{stats.lastSync}
                 </p>
               </CardContent>
             </Card>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {/* 数据源状?- 移动端优?*/}
+            {/* 数据源状- 移动端优*/}
             <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle className="flex items-center text-base sm:text-lg">
                   <Database className="mr-2 h-5 w-5" />
-                  数据源状?                </CardTitle>
+                  数据源状                </CardTitle>
                 <CardDescription className="text-sm">
-                  当前连接的数据源及其状?                </CardDescription>
+                  当前连接的数据源及其状                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 sm:space-y-4">
@@ -393,9 +393,9 @@ export default function DataCenterPage() {
                       </div>
                       <div className="text-right sm:text-left min-w-0">
                         <div className="text-sm font-medium">
-                          {source.records.toLocaleString()} 条记?                        </div>
+                          {source.records.toLocaleString()} 条记                        </div>
                         <div className="text-xs text-gray-500 truncate">
-                          更新?{source.lastUpdate}
+                          更新{source.lastUpdate}
                         </div>
                       </div>
                     </div>
@@ -426,9 +426,9 @@ export default function DataCenterPage() {
                         <div className="flex-1">
                           <Badge className={getSeverityColor(alert.severity)}>
                             {alert.severity === 'critical'
-                              ? '严重'
+                               '严重'
                               : alert.severity === 'warning'
-                                ? '警告'
+                                 '警告'
                                 : '信息'}
                           </Badge>
                           <p className="mt-2 text-sm leading-relaxed">
@@ -449,7 +449,7 @@ export default function DataCenterPage() {
             </Card>
           </div>
 
-          {/* 快捷操作 - 移动端优?*/}
+          {/* 快捷操作 - 移动端优*/}
           <Card className="mt-4 sm:mt-6 shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center text-base sm:text-lg">
@@ -493,14 +493,14 @@ export default function DataCenterPage() {
             </CardContent>
           </Card>
 
-          {/* 管理员快捷入?- 仅对有权限的用户显示 */}
+          {/* 管理员快捷入- 仅对有权限的用户显示 */}
           {hasPermission('dashboard_read') && (
             <Card className="mt-4 sm:mt-6 shadow-sm border-blue-200">
               <CardHeader>
                 <CardTitle className="flex items-center text-base sm:text-lg text-blue-700">
                   <Shield className="mr-2 h-5 w-5" />
-                  管理员专?                </CardTitle>
-                <CardDescription>管理后台快速访问入?/CardDescription>
+                  管理员专                </CardTitle>
+                <CardDescription>管理后台快速访问入/CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">

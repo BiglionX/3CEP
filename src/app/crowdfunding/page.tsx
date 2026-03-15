@@ -27,7 +27,7 @@ interface Project {
   category: string;
   image: string;
   progress: number;
-  featured?: boolean;
+  featured: boolean;
 }
 
 export default function CrowdfundingPage() {
@@ -41,9 +41,9 @@ export default function CrowdfundingPage() {
       setProjects([
         {
           id: '1',
-          title: '智能家居维修机器?,
+          title: '智能家居维修机器,
           description:
-            '一款能够自动诊断和修复常见家电故障的智能机器人，让维修变得更简单高效?,
+            '一款能够自动诊断和修复常见家电故障的智能机器人，让维修变得更简单高效,
           goalAmount: 500000,
           currentAmount: 325000,
           backers: 1247,
@@ -58,7 +58,7 @@ export default function CrowdfundingPage() {
           id: '2',
           title: '环保手机维修材料',
           description:
-            '研发可生物降解的手机维修材料，减少电子垃圾对环境的影响?,
+            '研发可生物降解的手机维修材料，减少电子垃圾对环境的影响,
           goalAmount: 200000,
           currentAmount: 180000,
           backers: 892,
@@ -73,7 +73,7 @@ export default function CrowdfundingPage() {
           id: '3',
           title: '便携式手机维修工具包',
           description:
-            '专为手机维修师设计的一站式便携工具包，集成了所有必需的精密工具?,
+            '专为手机维修师设计的一站式便携工具包，集成了所有必需的精密工具,
           goalAmount: 150000,
           currentAmount: 98000,
           backers: 2156,
@@ -87,7 +87,7 @@ export default function CrowdfundingPage() {
           id: '4',
           title: 'AI手机故障诊断系统',
           description:
-            '基于人工智能的手机故障快速诊断系统，提高维修准确率和效率?,
+            '基于人工智能的手机故障快速诊断系统，提高维修准确率和效率,
           goalAmount: 300000,
           currentAmount: 75000,
           backers: 432,
@@ -148,7 +148,7 @@ export default function CrowdfundingPage() {
             创新众筹平台
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            发现和支持改变手机维修行业的创新项目，共同推动行业发?          </p>
+            发现和支持改变手机维修行业的创新项目，共同推动行业发          </p>
         </div>
 
         {/* 统计数据 */}
@@ -157,7 +157,7 @@ export default function CrowdfundingPage() {
             <CardContent className="p-6 text-center">
               <Users className="w-8 h-8 text-blue-600 mx-auto mb-3" />
               <p className="text-3xl font-bold text-gray-900">2,847</p>
-              <p className="text-gray-600">支持?/p>
+              <p className="text-gray-600">支持/p>
             </CardContent>
           </Card>
 
@@ -181,7 +181,7 @@ export default function CrowdfundingPage() {
             <CardContent className="p-6 text-center">
               <Clock className="w-8 h-8 text-purple-600 mx-auto mb-3" />
               <p className="text-3xl font-bold text-gray-900">98%</p>
-              <p className="text-gray-600">成功?/p>
+              <p className="text-gray-600">成功/p>
             </CardContent>
           </Card>
         </div>
@@ -189,7 +189,7 @@ export default function CrowdfundingPage() {
         {/* 项目分类导航 */}
         <div className="flex flex-wrap gap-2 mb-8">
           {[
-            { id: 'featured', name: '精选推?, icon: Star },
+            { id: 'featured', name: '精选推, icon: Star },
             { id: 'all', name: '全部项目', icon: Users },
             { id: 'popular', name: '热门项目', icon: TrendingUp },
             { id: 'ending', name: '即将结束', icon: Clock },
@@ -198,7 +198,7 @@ export default function CrowdfundingPage() {
             return (
               <Button
                 key={tab.id}
-                variant={activeTab === tab.id ? 'default' : 'outline'}
+                variant={activeTab === tab.id  'default' : 'outline'}
                 onClick={() => setActiveTab(tab.id)}
                 className="flex items-center"
               >
@@ -223,7 +223,7 @@ export default function CrowdfundingPage() {
 
                 {project.featured && (
                   <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    精?                  </div>
+                    精                  </div>
                 )}
 
                 <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full p-2">
@@ -238,7 +238,7 @@ export default function CrowdfundingPage() {
                       {project.category}
                     </span>
                     <span className="text-sm text-gray-500">
-                      {project.daysLeft}天剩?                    </span>
+                      {project.daysLeft}天剩                    </span>
                   </div>
 
                   <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
@@ -250,7 +250,7 @@ export default function CrowdfundingPage() {
                   </p>
                 </div>
 
-                {/* 进度?*/}
+                {/* 进度*/}
                 <div className="mb-4">
                   <div className="flex justify-between text-sm mb-2">
                     <span className="font-medium">
@@ -272,7 +272,7 @@ export default function CrowdfundingPage() {
                 <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
                   <div className="flex items-center">
                     <Users className="w-4 h-4 mr-1" />
-                    {project.backers} 支持?                  </div>
+                    {project.backers} 支持                  </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-4 h-4 mr-1 text-green-500" />
                     {Math.round(project.progress)}% 达成
@@ -296,7 +296,7 @@ export default function CrowdfundingPage() {
             <Star className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">暂无项目</h3>
             <p className="text-gray-600">
-              当前分类下还没有项目，敬请期待更多创新项?            </p>
+              当前分类下还没有项目，敬请期待更多创新项            </p>
           </div>
         )}
       </div>

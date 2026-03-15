@@ -6,9 +6,7 @@ import {
   QrCode,
   Camera,
   Image,
-  Upload,
   Flashlight,
-  RefreshCw,
   AlertCircle,
   CheckCircle,
   X,
@@ -21,9 +19,9 @@ export default function MobileScanPage() {
   const [torchEnabled, setTorchEnabled] = useState(false);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // 请求摄像头权?  const requestCameraPermission = async () => {
+  // 请求摄像头权限
+  const requestCameraPermission = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' },
@@ -41,7 +39,8 @@ export default function MobileScanPage() {
     }
   };
 
-  // 开始扫?  const startScan = async () => {
+  // 开始扫描
+  const startScan = async () => {
     setIsScanning(true);
     setScanResult(null);
     await requestCameraPermission();
@@ -52,15 +51,16 @@ export default function MobileScanPage() {
     setIsScanning(false);
     setCameraActive(false);
 
-    if (videoRef?.srcObject) {
+    if (videoRef.current.srcObject) {
       const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
       tracks.forEach(track => track.stop());
       videoRef.current.srcObject = null;
     }
   };
 
-  // 切换闪光?  const toggleTorch = () => {
-    if (videoRef?.srcObject) {
+  // 切换闪光灯
+  const toggleTorch = () => {
+    if (videoRef.current.srcObject) {
       const track = (
         videoRef.current.srcObject as MediaStream
       ).getVideoTracks()[0];
@@ -73,11 +73,12 @@ export default function MobileScanPage() {
 
   // 处理图片上传
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = e => {
-        // 模拟二维码识?        setTimeout(() => {
+      reader.onload = () => {
+        // 模拟二维码识别
+        setTimeout(() => {
           setScanResult('DEV202402001'); // 模拟扫描结果
         }, 1000);
       };
@@ -99,7 +100,7 @@ export default function MobileScanPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* 顶部导航?*/}
+      {/* 顶部导航栏 */}
       <div className="bg-gray-800 px-4 py-3 flex items-center justify-between">
         <button
           onClick={() => window.history.back()}
@@ -113,7 +114,7 @@ export default function MobileScanPage() {
 
       {/* 扫描区域 */}
       <div className="flex flex-col items-center justify-center p-4">
-        {!isScanning ? (
+        {!isScanning  (
           /* 准备扫描界面 */
           <div className="w-full max-w-md text-center">
             <div className="w-64 h-64 mx-auto mb-8 relative">
@@ -123,7 +124,7 @@ export default function MobileScanPage() {
             </div>
 
             <h2 className="text-2xl font-bold mb-4">准备扫描</h2>
-            <p className="text-gray-400 mb-8">将二维码放入框内，即可自动扫?/p>
+            <p className="text-gray-400 mb-8">将二维码放入框内，即可自动扫描</p>
 
             <div className="space-y-4">
               <Button
@@ -131,7 +132,8 @@ export default function MobileScanPage() {
                 className="w-full bg-blue-600 hover:bg-blue-700 py-4 text-lg"
               >
                 <Camera className="w-5 h-5 mr-2" />
-                开始扫?              </Button>
+                开始扫描
+              </Button>
 
               <div className="relative">
                 <input
@@ -155,7 +157,7 @@ export default function MobileScanPage() {
             </div>
           </div>
         ) : (
-          /* 扫描进行中界?*/
+          /* 扫描进行中界面 */
           <div className="w-full max-w-md">
             <div className="relative bg-black rounded-2xl overflow-hidden mb-6">
               {/* 视频预览 */}
@@ -169,7 +171,7 @@ export default function MobileScanPage() {
               {/* 扫描框叠加层 */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-64 h-64 border-4 border-green-500 rounded-xl relative">
-                  {/* 扫描线动?*/}
+                  {/* 扫描线动画 */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-green-500 animate-pulse"></div>
 
                   {/* 角标 */}
@@ -185,7 +187,7 @@ export default function MobileScanPage() {
                 <button
                   onClick={toggleTorch}
                   className={`p-3 rounded-full bg-black/50 backdrop-blur-sm ${
-                    torchEnabled ? 'text-yellow-400' : 'text-gray-400'
+                    torchEnabled  'text-yellow-400' : 'text-gray-400'
                   }`}
                 >
                   <Flashlight className="w-6 h-6" />
@@ -243,12 +245,14 @@ export default function MobileScanPage() {
               </div>
               <h3 className="text-xl font-bold mb-2">需要摄像头权限</h3>
               <p className="text-gray-300 mb-6">
-                请在浏览器设置中允许访问摄像头才能使用扫码功?              </p>
+                请在浏览器设置中允许访问摄像头才能使用扫码功能
+              </p>
               <Button
                 onClick={() => setPermissionDenied(false)}
                 className="w-full bg-blue-600 hover:bg-blue-700"
               >
-                知道?              </Button>
+                知道了
+              </Button>
             </div>
           </div>
         )}
@@ -256,10 +260,9 @@ export default function MobileScanPage() {
 
       {/* 底部提示 */}
       <div className="px-4 py-6 text-center text-gray-500 text-sm">
-        <p>支持二维码和条形码扫?/p>
+        <p>支持二维码和条形码扫描</p>
         <p className="mt-1">确保光线充足以提高识别率</p>
       </div>
     </div>
   );
 }
-

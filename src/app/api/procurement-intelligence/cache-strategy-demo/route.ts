@@ -1,6 +1,6 @@
 ﻿/**
- * 鍒嗗眰缂撳瓨绛栫暐婕旂ずAPI
- * 灞曠ず涓嶅悓缂撳瓨绛栫暐鐨勪娇鐢ㄦ柟娉曞拰鏁堟灉
+ * 鍒嗗眰缂撳绛栫暐婕旂ずAPI
+ * 灞曠ず涓嶅悓缂撳绛栫暐鐨勪娇鐢ㄦ柟娉曞拰鏁堟灉
  */
 
 import { NextResponse } from 'next/server';
@@ -29,17 +29,17 @@ export async function GET(request: Request) {
         return NextResponse.json(
           {
             success: false,
-            error: '鏈煡鐨勬搷浣滅被?,
+            error: '鏈煡鐨勬搷浣滅被,
           },
           { status: 400 }
         );
     }
   } catch (error) {
-    console.error('鍒嗗眰缂撳瓨婕旂ずAPI閿欒:', error);
+    console.error('鍒嗗眰缂撳婕旂ずAPI閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: '鍐呴儴鏈嶅姟鍣ㄩ敊,
       },
       { status: 500 }
     );
@@ -47,10 +47,10 @@ export async function GET(request: Request) {
 }
 
 /**
- * 婕旂ず涓嶅悓缂撳瓨绛栫暐
+ * 婕旂ず涓嶅悓缂撳绛栫暐
  */
 async function demonstrateCacheStrategies() {
-  console.log('馃殌 寮€濮嬪垎灞傜紦瀛樼瓥鐣ユ紨?);
+  console.log('馃殌 寮€濮嬪垎灞傜紦瀛樼瓥鐣ユ紨);
 
   const demoResults = {
     timestamp: new Date().toISOString(),
@@ -61,7 +61,7 @@ async function demonstrateCacheStrategies() {
   const hotDataDemo = await demoHotDataStrategy();
   demoResults.strategies.push({
     name: '鐑偣鏁版嵁绛栫暐 (HOT_DATA)',
-    description: '閫傜敤浜庨珮棰戣闂殑鐑偣鏁版嵁?灞傜紦瀛樻灦?,
+    description: '傜敤浜庨珮棰戣闂殑鐑偣鏁版嵁灞傜紦瀛樻灦,
     ...hotDataDemo,
   });
 
@@ -69,7 +69,7 @@ async function demonstrateCacheStrategies() {
   const configDemo = await demoConfigurationStrategy();
   demoResults.strategies.push({
     name: '閰嶇疆鏁版嵁绛栫暐 (CONFIGURATION)',
-    description: '閫傜敤浜庣浉瀵归潤鎬佺殑閰嶇疆鏁版嵁?灞傜紦瀛樻灦?,
+    description: '傜敤浜庣浉瀵归潤鎬佺殑閰嶇疆鏁版嵁灞傜紦瀛樻灦,
     ...configDemo,
   });
 
@@ -77,11 +77,11 @@ async function demonstrateCacheStrategies() {
   const computeDemo = await demoComputationStrategy();
   demoResults.strategies.push({
     name: '璁＄畻缁撴灉绛栫暐 (COMPUTATION)',
-    description: '閫傜敤浜嶤PU瀵嗛泦鍨嬭绠楃粨鏋滐紝2灞傜紦瀛樻灦?,
+    description: '傜敤浜嶤PU瀵嗛泦鍨嬭绠楃粨鏋滐紝2灞傜紦瀛樻灦,
     ...computeDemo,
   });
 
-  console.log('锟?鍒嗗眰缂撳瓨绛栫暐婕旂ず瀹屾垚');
+  console.log('鍒嗗眰缂撳绛栫暐婕旂ず瀹屾垚');
 
   return NextResponse.json({
     success: true,
@@ -123,7 +123,7 @@ async function demoHotDataStrategy() {
     }
   }
 
-  // 鑾峰彇鏈€缁堢粺?  const finalStats = layeredCache.getStats();
+  // 鑾峰彇鏈€缁堢粺  const finalStats = layeredCache.getStats();
 
   return {
     testData,
@@ -174,7 +174,7 @@ async function demoConfigurationStrategy() {
 async function demoComputationStrategy() {
   const testKey = `compute-demo-${Date.now()}`;
 
-  // 妯℃嫙澶嶆潅鐨勮绠楄繃?  const heavyComputation = () => {
+  // 妯℃嫙澶嶆潅鐨勮绠楄繃  const heavyComputation = () => {
     let result = 0;
     for (let i = 0; i < 1000000; i++) {
       result += Math.sqrt(i);
@@ -186,13 +186,13 @@ async function demoComputationStrategy() {
     };
   };
 
-  // 绗竴娆¤绠楀苟缂撳瓨
+  // 绗竴娆¤绠楀苟缂撳
   const startTime1 = Date.now();
   const computedData = heavyComputation();
   await layeredCache.set(testKey, computedData, 'COMPUTATION');
   const firstComputeTime = Date.now() - startTime1;
 
-  // 绗簩娆′粠缂撳瓨鑾峰彇
+  // 绗簩娆′粠缂撳鑾峰彇
   const startTime2 = Date.now();
   const cachedResult = await layeredCache.get(testKey, 'COMPUTATION');
   const cacheRetrieveTime = Date.now() - startTime2;
@@ -212,7 +212,7 @@ async function demoComputationStrategy() {
 }
 
 /**
- * 鑾峰彇缂撳瓨缁熻淇℃伅
+ * 鑾峰彇缂撳缁熻淇℃伅
  */
 async function getCacheStatistics() {
   const stats = layeredCache.getStats();
@@ -242,7 +242,7 @@ async function getCacheStatistics() {
 }
 
 /**
- * 杩愯缂撳瓨娴嬭瘯
+ * 杩愯缂撳娴嬭瘯
  */
 async function runCacheTest() {
   const testResults = {
@@ -261,7 +261,7 @@ async function runCacheTest() {
     testResults.tests.push({
       name: '鍩虹璇诲啓鍔熻兘',
       passed: JSON.stringify(result) === JSON.stringify(testData),
-      details: '缂撳瓨璇诲啓鍔熻兘姝ｅ父',
+      details: '缂撳璇诲啓鍔熻兘姝ｅ父',
     });
   } catch (error) {
     testResults.tests.push({
@@ -286,7 +286,7 @@ async function runCacheTest() {
     testResults.tests.push({
       name: '鎬ц兘鍩哄噯娴嬭瘯',
       passed: avgTime < 50,
-      details: `骞冲潎鍝嶅簲鏃堕棿: ${avgTime.toFixed(2)}ms (${avgTime < 50 ? '杈炬爣' : '鏈揪?})`,
+      details: `骞冲潎鍝嶅簲堕棿: ${avgTime.toFixed(2)}ms (${avgTime < 50  '杈炬爣' : '鏈揪})`,
     });
   } catch (error) {
     testResults.tests.push({
@@ -314,7 +314,7 @@ async function runCacheTest() {
 }
 
 /**
- * 娓呯┖鎵€鏈夌紦? */
+ * 娓呯┖鎵€鏈夌紦 */
 async function clearAllCache() {
   await layeredCache.clearAll();
 
@@ -329,7 +329,7 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       success: false,
-      error: 'POST鏂规硶涓嶆敮?,
+      error: 'POST鏂规硶涓嶆敮,
     },
     { status: 405 }
   );

@@ -5,21 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
   Home,
-  FileText,
   Users,
   Wrench,
-  Smartphone,
-  BarChart3,
   Settings,
-  HelpCircle,
   BookOpen,
-  MessageSquare,
   ArrowRight,
   Map,
-  ChevronRight,
   Building,
 } from 'lucide-react';
-import { SeoHead, SEO_PRESETS } from '@/components/SeoHead';
+import { SeoHead } from '@/components/SeoHead';
 
 interface SitemapSection {
   title: string;
@@ -28,7 +22,7 @@ interface SitemapSection {
     name: string;
     href: string;
     description: string;
-    badge?: string;
+    badge: string;
   }[];
 }
 
@@ -39,14 +33,14 @@ export default function SitemapPage() {
       icon: <Users className="w-5 h-5" />,
       items: [
         {
-          name: '个人仪表?,
+          name: '个人仪表板',
           href: '/profile/dashboard',
-          description: '查看个人信息和统计数?,
+          description: '查看个人信息和统计数据',
         },
         {
           name: '账户设置',
           href: '/profile/settings',
-          description: '管理账户信息和偏好设?,
+          description: '管理账户信息和偏好设置',
         },
         {
           name: '安全设置',
@@ -56,7 +50,7 @@ export default function SitemapPage() {
         {
           name: '设备管理',
           href: '/device',
-          description: '管理您的所有电子设?,
+          description: '管理您的所有电子设备',
         },
       ],
     },
@@ -67,12 +61,12 @@ export default function SitemapPage() {
         {
           name: '维修店铺',
           href: '/repair-shop',
-          description: '查找附近的维修服务店?,
+          description: '查找附近的维修服务店铺',
         },
         {
           name: '配件商城',
           href: '/parts-market',
-          description: '购买手机维修配件和工?,
+          description: '购买手机维修配件和工具',
         },
         {
           name: '众筹平台',
@@ -93,22 +87,22 @@ export default function SitemapPage() {
         {
           name: '帮助中心',
           href: '/help',
-          description: '查看使用指南和常见问?,
+          description: '查看使用指南和常见问题',
         },
         {
           name: '意见反馈',
           href: '/feedback',
-          description: '提交建议和问题反?,
+          description: '提交建议和问题反馈',
         },
         {
           name: '联系我们',
           href: '/contact',
-          description: '获取客服支持和联系方?,
+          description: '获取客服支持和联系方式',
         },
         {
           name: '关于我们',
           href: '/about',
-          description: '了解公司信息和发展历?,
+          description: '了解公司信息和发展历程',
         },
       ],
     },
@@ -119,7 +113,7 @@ export default function SitemapPage() {
         {
           name: '首页概览',
           href: '/',
-          description: '平台主页面，了解核心功能和服?,
+          description: '平台主页面，了解核心功能和服务',
         },
         {
           name: '设备扫描',
@@ -135,7 +129,7 @@ export default function SitemapPage() {
         {
           name: '维修师傅后台',
           href: '/repair-shop/dashboard',
-          description: '维修技师工作台和订单管?,
+          description: '维修技师工作台和订单管理',
         },
       ],
     },
@@ -150,7 +144,7 @@ export default function SitemapPage() {
           badge: 'NEW',
         },
         {
-          name: '产品服务?,
+          name: '产品服务中心',
           href: '/enterprise/after-sales',
           description: '企业售后服务综合管理平台',
           badge: 'NEW',
@@ -164,7 +158,7 @@ export default function SitemapPage() {
         {
           name: '有奖问答',
           href: '/enterprise/after-sales#quiz',
-          description: '互动问答和用户参与激?,
+          description: '互动问答和用户参与激励',
           badge: 'NEW',
         },
         {
@@ -176,7 +170,7 @@ export default function SitemapPage() {
         {
           name: '企业资料',
           href: '/enterprise/after-sales#documents',
-          description: '企业资质文件和文档管?,
+          description: '企业资质文件和文档管理',
           badge: 'NEW',
         },
       ],
@@ -188,17 +182,17 @@ export default function SitemapPage() {
         {
           name: '商家管理',
           href: '/admin/shops/pending',
-          description: '商家入驻审核和管理平?,
+          description: '商家入驻审核和管理平台',
         },
         {
-          name: '运营仪表?,
+          name: '运营仪表板',
           href: '/dashboard',
-          description: '业务数据统计和分析面?,
+          description: '业务数据统计和分析面板',
         },
         {
           name: '用户管理',
           href: '/admin/users',
-          description: '用户账户和权限管?,
+          description: '用户账户和权限管理',
         },
       ],
     },
@@ -209,33 +203,33 @@ export default function SitemapPage() {
         {
           name: '文档中心',
           href: '/documents',
-          description: '完整的使用手册和技术文?,
+          description: '完整的使用手册和技术文档',
         },
         {
           name: '维修教程',
           href: '/tutorials',
-          description: '设备维修指导和操作指?,
+          description: '设备维修指导和操作指南',
         },
         {
           name: 'FAQ问答',
           href: '/diagnosis',
-          description: '常见问题解答和技术支?,
+          description: '常见问题解答和技术支持',
         },
       ],
     },
     {
-      title: '演示与测?,
+      title: '演示与测试',
       icon: <Wrench className="w-5 h-5" />,
       items: [
         {
           name: '产品演示',
           href: '/demo/help-system',
-          description: '交互式产品功能演?,
+          description: '交互式产品功能演示',
         },
         {
           name: '测试页面',
           href: '/test/test-page',
-          description: '系统功能测试和验?,
+          description: '系统功能测试和验证',
         },
       ],
     },
@@ -252,7 +246,7 @@ export default function SitemapPage() {
     <div className="min-h-screen bg-gray-50">
       <SeoHead
         title="网站地图 - FixCycle 智能循环经济平台"
-        description="完整的网站导航地图，快速找到所需功能和服?
+        description="完整的网站导航地图，快速找到所需功能和服务"
         canonical="/sitemap"
       />
 
@@ -266,7 +260,8 @@ export default function SitemapPage() {
           <p className="text-gray-600 max-w-3xl">
             欢迎访问 FixCycle
             智能循环经济平台的完整网站地图。这里为您展示了所有可用的功能模块和服务页面，
-            帮助您快速找到所需的内容和工具?          </p>
+            帮助您快速找到所需的内容和工具。
+          </p>
         </div>
       </div>
 
@@ -352,7 +347,8 @@ export default function SitemapPage() {
             <Link href="/help" className="text-blue-600 hover:underline mx-1">
               帮助中心
             </Link>
-            �?            <Link
+            或
+            <Link
               href="/contact"
               className="text-blue-600 hover:underline mx-1"
             >
@@ -367,4 +363,3 @@ export default function SitemapPage() {
     </div>
   );
 }
-

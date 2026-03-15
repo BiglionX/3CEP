@@ -50,7 +50,7 @@ export default function DataPipelinePage() {
     source: 'web',
   });
 
-  // 模拟数据管道状态更?  useEffect(() => {
+  // 模拟数据管道状态更  useEffect(() => {
     const interval = setInterval(() => {
       setStatus(prev => ({
         ...prev,
@@ -83,7 +83,7 @@ export default function DataPipelinePage() {
 
       if (response.ok) {
         setFormData(prev => ({ ...prev, value: '' }));
-        alert('数据收集成功?);
+        alert('数据收集成功);
       }
     } catch (error) {
       console.error('收集失败:', error);
@@ -116,7 +116,7 @@ export default function DataPipelinePage() {
       });
 
       if (response.ok) {
-        alert('批量数据收集成功?);
+        alert('批量数据收集成功);
       }
     } catch (error) {
       console.error('批量收集失败:', error);
@@ -132,7 +132,7 @@ export default function DataPipelinePage() {
       });
 
       if (response.ok) {
-        alert('缓冲区已刷新?);
+        alert('缓冲区已刷新);
       }
     } catch (error) {
       console.error('刷新失败:', error);
@@ -146,7 +146,7 @@ export default function DataPipelinePage() {
       const startTime = new Date(endTime.getTime() - 7 * 24 * 60 * 60 * 1000); // 7天前
 
       const response = await fetch(
-        `/api/data-pipeline?action=aggregated&metrics=user_activity,page_views,user_sessions&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}`
+        `/api/data-pipelineaction=aggregated&metrics=user_activity,page_views,user_sessions&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}`
       );
 
       const data = await response.json();
@@ -163,9 +163,9 @@ export default function DataPipelinePage() {
   const exportData = async (format: 'json' | 'csv') => {
     try {
       const endTime = new Date();
-      const startTime = new Date(endTime.getTime() - 24 * 60 * 60 * 1000); // 24小时?
+      const startTime = new Date(endTime.getTime() - 24 * 60 * 60 * 1000); // 24小时
       const response = await fetch(
-        `/api/data-pipeline?action=export&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}&format=${format}`
+        `/api/data-pipelineaction=export&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}&format=${format}`
       );
 
       if (response.ok) {
@@ -194,14 +194,14 @@ export default function DataPipelinePage() {
           <p className="text-gray-600">实时数据采集、处理和分析平台</p>
         </div>
 
-        {/* 状态卡?*/}
+        {/* 状态卡*/}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">
-                    缓冲区大?                  </p>
+                    缓冲区大                  </p>
                   <p className="text-2xl font-bold text-blue-600">
                     {status.bufferSize}
                   </p>
@@ -215,13 +215,13 @@ export default function DataPipelinePage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">运行状?/p>
-                  <Badge variant={status.isRunning ? 'default' : 'destructive'}>
-                    {status.isRunning ? '运行? : '已停?}
+                  <p className="text-sm font-medium text-gray-600">运行状态/p>
+                  <Badge variant={status.isRunning  'default' : 'destructive'}>
+                    {status.isRunning  '运行 : '已停}
                   </Badge>
                 </div>
                 <div
-                  className={`w-3 h-3 rounded-full ${status.isRunning ? 'bg-green-500' : 'bg-red-500'}`}
+                  className={`w-3 h-3 rounded-full ${status.isRunning  'bg-green-500' : 'bg-red-500'}`}
                 />
               </div>
             </CardContent>
@@ -248,7 +248,7 @@ export default function DataPipelinePage() {
                   <p className="text-sm font-medium text-gray-600">上次刷新</p>
                   <p className="text-sm text-gray-500">
                     {status.lastFlush
-                      ? new Date(status.lastFlush).toLocaleTimeString()
+                       new Date(status.lastFlush).toLocaleTimeString()
                       : '从未'}
                   </p>
                 </div>
@@ -280,11 +280,11 @@ export default function DataPipelinePage() {
                         metricName: e.target.value,
                       }))
                     }
-                    placeholder="�? user_activity"
+                    placeholder=" user_activity"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="value">数?/Label>
+                  <Label htmlFor="value">数/Label>
                   <Input
                     id="value"
                     type="number"
@@ -292,7 +292,7 @@ export default function DataPipelinePage() {
                     onChange={e =>
                       setFormData(prev => ({ ...prev, value: e.target.value }))
                     }
-                    placeholder="输入数?
+                    placeholder="输入数
                   />
                 </div>
               </div>
@@ -314,14 +314,14 @@ export default function DataPipelinePage() {
               </div>
 
               <div>
-                <Label htmlFor="source">数据?/Label>
+                <Label htmlFor="source">数据源/Label>
                 <Input
                   id="source"
                   value={formData.source}
                   onChange={e =>
                     setFormData(prev => ({ ...prev, source: e.target.value }))
                   }
-                  placeholder="�? web, mobile, api"
+                  placeholder=" web, mobile, api"
                 />
               </div>
 
@@ -363,11 +363,11 @@ export default function DataPipelinePage() {
               </Button>
 
               <div className="pt-4 border-t">
-                <h3 className="font-medium mb-2">快速操作示?/h3>
+                <h3 className="font-medium mb-2">快速操作示/h3>
                 <div className="space-y-2 text-sm text-gray-600">
-                  <p>�?用户活跃? metricName=user_activity, value=42</p>
-                  <p>�?页面浏览? metricName=page_views, value=156</p>
-                  <p>�?API请求? metricName=api_requests, value=89</p>
+                  <p>用户活跃 metricName=user_activity, value=42</p>
+                  <p>页面浏览 metricName=page_views, value=156</p>
+                  <p>API请求 metricName=api_requests, value=89</p>
                 </div>
               </div>
             </CardContent>
@@ -379,7 +379,7 @@ export default function DataPipelinePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
-              聚合数据分析 (最?�?
+              聚合数据分析 (最
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -390,21 +390,21 @@ export default function DataPipelinePage() {
                 disabled={loading}
                 variant="outline"
               >
-                {loading ? '加载?..' : '加载数据'}
+                {loading  '加载中..' : '加载数据'}
               </Button>
             </div>
 
-            {metrics.length > 0 ? (
+            {metrics.length > 0  (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
                       <th className="text-left py-2 px-4">时间</th>
                       <th className="text-left py-2 px-4">指标名称</th>
-                      <th className="text-left py-2 px-4">平均?/th>
-                      <th className="text-left py-2 px-4">最大?/th>
-                      <th className="text-left py-2 px-4">最小?/th>
-                      <th className="text-left py-2 px-4">样本?/th>
+                      <th className="text-left py-2 px-4">平均值/th>
+                      <th className="text-left py-2 px-4">最大值/th>
+                      <th className="text-left py-2 px-4">最小值/th>
+                      <th className="text-left py-2 px-4">样本数/th>
                     </tr>
                   </thead>
                   <tbody>

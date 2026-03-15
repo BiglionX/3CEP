@@ -31,7 +31,7 @@ export async function GET(
       data: { session },
     } = await supabase.auth.getSession();
 
-    if (!session??.id) {
+    if (!session.id) {
       return NextResponse.json(
         { error: "未授权访问，请先登录" },
         { status: 401 }
@@ -91,7 +91,7 @@ export async function PUT(
       data: { session },
     } = await supabase.auth.getSession();
 
-    if (!session??.id) {
+    if (!session.id) {
       return NextResponse.json(
         { error: "未授权访问，请先登录" },
         { status: 401 }
@@ -168,7 +168,7 @@ export async function DELETE(
       data: { session },
     } = await supabase.auth.getSession();
 
-    if (!session??.id) {
+    if (!session.id) {
       return NextResponse.json(
         { error: "未授权访问，请先登录" },
         { status: 401 }

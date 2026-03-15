@@ -59,7 +59,7 @@ interface SystemStats {
   pendingOrders: number;
   revenue: number;
 
-  // 系统状?
+  // 系统状
   uptime: number;
   responseTime: number;
   errorRate: number;
@@ -101,9 +101,9 @@ interface SystemAlert {
   category: 'system' | 'security' | 'performance' | 'business';
   status: 'active' | 'acknowledged' | 'resolved';
   created_at: string;
-  acknowledged_by?: string;
-  resolved_at?: string;
-  metrics?: Record<string, any>;
+  acknowledged_by: string;
+  resolved_at: string;
+  metrics: Record<string, any>;
 }
 
 export default function SystemDashboard() {
@@ -134,7 +134,7 @@ export default function SystemDashboard() {
   const [userGrowthData, setUserGrowthData] = useState<any[]>([]);
   const [deviceStatusData, setDeviceStatusData] = useState<any[]>([]);
 
-  // 监控相关状?
+  // 监控相关状
   const [monitoringMetrics, setMonitoringMetrics] = useState<
     MonitoringMetric[]
   >([]);
@@ -144,7 +144,7 @@ export default function SystemDashboard() {
     severity: '' as 'low' | 'medium' | 'high' | 'critical' | '',
   });
 
-  // 权限检?
+  // 权限检
   const { hasPermission } = useRbacPermission();
   const canView = hasPermission('sysdash.view');
   const canManage = hasPermission('sysdash.manage');
@@ -171,7 +171,7 @@ export default function SystemDashboard() {
       });
 
       const response = await fetch(
-        `/api/admin/system/monitoring/alerts?${params}`
+        `/api/admin/system/monitoring/alerts${params}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -195,7 +195,7 @@ export default function SystemDashboard() {
       });
 
       if (response.ok) {
-        alert(`告警?{action === 'acknowledge' ? '确认' : '解决'}`);
+        alert(`告警{action === 'acknowledge'  '确认' : '解决'}`);
         fetchSystemAlerts(); // 刷新告警列表
       }
     } catch (error) {
@@ -230,7 +230,7 @@ export default function SystemDashboard() {
 
       setStats(mockStats);
 
-      // 模拟服务状态数?
+      // 模拟服务状态数
       const mockServices: ServiceStatus[] = [
         {
           name: '用户服务',
@@ -272,7 +272,7 @@ export default function SystemDashboard() {
 
       setServiceStatus(mockServices);
 
-      // 模拟最近活?
+      // 模拟最近活
       const mockActivities: RecentActivity[] = [
         {
           id: 'act_001',
@@ -286,7 +286,7 @@ export default function SystemDashboard() {
           id: 'act_002',
           type: 'device_registered',
           title: '设备注册',
-          description: '新设?iPhone 14 Pro 已注?,
+          description: '新设iPhone 14 Pro 已注,
           timestamp: '2024-01-20T16:25:00Z',
           severity: 'low',
         },
@@ -294,7 +294,7 @@ export default function SystemDashboard() {
           id: 'act_003',
           type: 'order_created',
           title: '订单创建',
-          description: '订单 #ORD-20240120-001 已创?,
+          description: '订单 #ORD-20240120-001 已创,
           timestamp: '2024-01-20T16:20:00Z',
           severity: 'medium',
         },
@@ -302,7 +302,7 @@ export default function SystemDashboard() {
           id: 'act_004',
           type: 'system_alert',
           title: '系统警告',
-          description: '通知服务响应时间超过阈?,
+          description: '通知服务响应时间超过阈,
           timestamp: '2024-01-20T16:15:00Z',
           severity: 'high',
         },
@@ -312,17 +312,17 @@ export default function SystemDashboard() {
 
       // 模拟用户增长数据
       const mockGrowthData = [
-        { month: '1�?, users: 1200 },
-        { month: '2�?, users: 1247 },
-        { month: '3�?, users: 1320 },
-        { month: '4�?, users: 1450 },
-        { month: '5�?, users: 1580 },
-        { month: '6�?, users: 1720 },
+        { month: '1, users: 1200 },
+        { month: '2, users: 1247 },
+        { month: '3, users: 1320 },
+        { month: '4, users: 1450 },
+        { month: '5, users: 1580 },
+        { month: '6, users: 1720 },
       ];
 
       setUserGrowthData(mockGrowthData);
 
-      // 模拟设备状态数?
+      // 模拟设备状态数
       const mockDeviceData = [
         { name: '在线', value: stats.onlineDevices, color: '#10B981' },
         {
@@ -331,7 +331,7 @@ export default function SystemDashboard() {
             stats.totalDevices - stats.onlineDevices - stats.maintenanceDevices,
           color: '#6B7280',
         },
-        { name: '维修?, value: stats.maintenanceDevices, color: '#F59E0B' },
+        { name: '维修, value: stats.maintenanceDevices, color: '#F59E0B' },
       ];
 
       setDeviceStatusData(mockDeviceData);
@@ -355,7 +355,7 @@ export default function SystemDashboard() {
   const handleViewDetails = (section: string) => {
     // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看详细信息:', section)};
 
-  // 状态标签渲?
+  // 状态标签渲
   const renderStatusTag = (status: string) => {
     const statusConfig = {
       healthy: {
@@ -387,7 +387,7 @@ export default function SystemDashboard() {
     );
   };
 
-  // 渲染监控指标状?
+  // 渲染监控指标状
   const renderMetricStatus = (metric: MonitoringMetric) => {
     const statusConfig = {
       normal: {
@@ -424,17 +424,17 @@ export default function SystemDashboard() {
     const severityConfig = {
       low: {
         variant: 'default' as const,
-        text: '�?,
+        text: ',
         color: 'bg-blue-100 text-blue-800',
       },
       medium: {
         variant: 'secondary' as const,
-        text: '�?,
+        text: ',
         color: 'bg-yellow-100 text-yellow-800',
       },
       high: {
         variant: 'destructive' as const,
-        text: '�?,
+        text: ',
         color: 'bg-orange-100 text-orange-800',
       },
       critical: {
@@ -456,7 +456,7 @@ export default function SystemDashboard() {
     );
   };
 
-  // 渲染告警状?
+  // 渲染告警状
   const renderAlertStatus = (status: string) => {
     const statusConfig = {
       active: {
@@ -466,12 +466,12 @@ export default function SystemDashboard() {
       },
       acknowledged: {
         variant: 'secondary' as const,
-        text: '已确?,
+        text: '已确,
         color: 'bg-blue-100 text-blue-800',
       },
       resolved: {
         variant: 'default' as const,
-        text: '已解?,
+        text: '已解,
         color: 'bg-green-100 text-green-800',
       },
     };
@@ -493,17 +493,17 @@ export default function SystemDashboard() {
     const severityConfig = {
       low: {
         variant: 'default' as const,
-        text: '�?,
+        text: ',
         color: 'bg-green-100 text-green-800',
       },
       medium: {
         variant: 'secondary' as const,
-        text: '�?,
+        text: ',
         color: 'bg-yellow-100 text-yellow-800',
       },
       high: {
         variant: 'destructive' as const,
-        text: '�?,
+        text: ',
         color: 'bg-red-100 text-red-800',
       },
     };
@@ -520,7 +520,7 @@ export default function SystemDashboard() {
     );
   };
 
-  // 初始化数?
+  // 初始化数
   useEffect(() => {
     fetchSystemStats();
     fetchMonitoringMetrics();
@@ -537,7 +537,7 @@ export default function SystemDashboard() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <Server className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">您没有权限查看系统概?/p>
+          <p className="text-gray-500">您没有权限查看系统概/p>
         </div>
       </div>
     );
@@ -545,7 +545,7 @@ export default function SystemDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按*/}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">系统概览</h1>
@@ -577,7 +577,7 @@ export default function SystemDashboard() {
               {stats.totalUsers.toLocaleString()}
             </div>
             <p className="text-xs text-green-600 mt-1">
-              �?{stats.newUsersToday} 今日新增
+              {stats.newUsersToday} 今日新增
             </p>
           </CardContent>
         </Card>
@@ -594,7 +594,7 @@ export default function SystemDashboard() {
               {stats.onlineDevices.toLocaleString()}
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              总计 {stats.totalDevices.toLocaleString()} �?
+              总计 {stats.totalDevices.toLocaleString()} 
             </p>
           </CardContent>
         </Card>
@@ -617,7 +617,7 @@ export default function SystemDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              系统可用?
+              系统可用
             </CardTitle>
             <Activity className="w-5 h-5 text-orange-500" />
           </CardHeader>
@@ -630,13 +630,13 @@ export default function SystemDashboard() {
         </Card>
       </div>
 
-      {/* 图表和统计数?*/}
+      {/* 图表和统计数*/}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 用户增长趋势?*/}
+        {/* 用户增长趋势*/}
         <Card>
           <CardHeader>
             <CardTitle>用户增长趋势</CardTitle>
-            <CardDescription>�?个月用户增长情况</CardDescription>
+            <CardDescription>个月用户增长情况</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -654,8 +654,8 @@ export default function SystemDashboard() {
         {/* 设备状态分布图 */}
         <Card>
           <CardHeader>
-            <CardTitle>设备状态分?/CardTitle>
-            <CardDescription>当前设备运行状?/CardDescription>
+            <CardTitle>设备状态分/CardTitle>
+            <CardDescription>当前设备运行状态/CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -683,11 +683,11 @@ export default function SystemDashboard() {
         </Card>
       </div>
 
-      {/* 服务状态监?*/}
+      {/* 服务状态监*/}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>服务状态监?/span>
+            <span>服务状态监/span>
             <Button
               variant="outline"
               size="sm"
@@ -711,7 +711,7 @@ export default function SystemDashboard() {
                   <div className="mt-2 text-sm text-gray-600">
                     <div>响应时间: {service.responseTime}ms</div>
                     <div>
-                      最后检?{' '}
+                      最后检{' '}
                       {new Date(service.lastChecked).toLocaleTimeString()}
                     </div>
                   </div>
@@ -722,11 +722,11 @@ export default function SystemDashboard() {
         </CardContent>
       </Card>
 
-      {/* 最近活?*/}
+      {/* 最近活*/}
       <Card>
         <CardHeader>
-          <CardTitle>最近活?/CardTitle>
-          <CardDescription>系统最近的重要事件和操?/CardDescription>
+          <CardTitle>最近活/CardTitle>
+          <CardDescription>系统最近的重要事件和操/CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -769,28 +769,28 @@ export default function SystemDashboard() {
         </CardContent>
       </Card>
 
-      {/* 系统健康度概?*/}
+      {/* 系统健康度概*/}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
               <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-              系统健康?
+              系统健康
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-600">94.2%</div>
             <div className="mt-2 space-y-2">
               <div className="flex justify-between text-sm">
-                <span>服务正常?/span>
+                <span>服务正常/span>
                 <span>85.7%</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span>性能达标?/span>
+                <span>性能达标/span>
                 <span>92.3%</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span>安全合规?/span>
+                <span>安全合规/span>
                 <span>100%</span>
               </div>
             </div>
@@ -805,14 +805,14 @@ export default function SystemDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-600">187�?/div>
+            <div className="text-3xl font-bold text-blue-600">187/div>
             <div className="mt-2 text-sm text-gray-600">
-              自上次重启以来持续运行时?
+              自上次重启以来持续运行时
             </div>
             <div className="mt-3 space-y-1">
               <div className="flex justify-between text-xs">
-                <span>平均无故障时?/span>
-                <span>45�?/span>
+                <span>平均无故障时/span>
+                <span>45/span>
               </div>
               <div className="flex justify-between text-xs">
                 <span>平均修复时间</span>
@@ -837,11 +837,11 @@ export default function SystemDashboard() {
               </div>
               <div>
                 <div className="text-2xl font-bold text-orange-600">99.9%</div>
-                <div className="text-sm text-gray-600">数据完整?/div>
+                <div className="text-sm text-gray-600">数据完整/div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-green-600">12</div>
-                <div className="text-sm text-gray-600">活跃数据库连?/div>
+                <div className="text-sm text-gray-600">活跃数据库连/div>
               </div>
             </div>
           </CardContent>
@@ -875,7 +875,7 @@ export default function SystemDashboard() {
                   {renderMetricStatus(metric)}
                 </div>
                 <div className="mt-2 text-xs text-gray-500">
-                  阈? {metric.threshold}
+                  阈 {metric.threshold}
                   {metric.unit}
                 </div>
                 <div className="mt-1 text-xs text-gray-400">
@@ -902,10 +902,10 @@ export default function SystemDashboard() {
               }
               className="px-3 py-1 border border-gray-300 rounded text-sm"
             >
-              <option value="all">所有状?/option>
+              <option value="all">所有状/option>
               <option value="active">活跃</option>
-              <option value="acknowledged">已确?/option>
-              <option value="resolved">已解?/option>
+              <option value="acknowledged">已确/option>
+              <option value="resolved">已解/option>
             </select>
             <select
               value={alertFilter.severity}
@@ -917,10 +917,10 @@ export default function SystemDashboard() {
               }
               className="px-3 py-1 border border-gray-300 rounded text-sm"
             >
-              <option value="">所有严重程?/option>
-              <option value="low">�?/option>
-              <option value="medium">�?/option>
-              <option value="high">�?/option>
+              <option value="">所有严重程/option>
+              <option value="low">/option>
+              <option value="medium">/option>
+              <option value="high">/option>
               <option value="critical">严重</option>
             </select>
             <Button variant="outline" size="sm" onClick={fetchSystemAlerts}>
@@ -932,7 +932,7 @@ export default function SystemDashboard() {
 
         <Card>
           <CardContent className="p-0">
-            {systemAlerts.length === 0 ? (
+            {systemAlerts.length === 0  (
               <div className="p-8 text-center text-gray-500">暂无告警信息</div>
             ) : (
               <div className="divide-y divide-gray-200">

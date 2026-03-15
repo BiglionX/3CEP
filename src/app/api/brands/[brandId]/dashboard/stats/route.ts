@@ -56,7 +56,7 @@ export async function GET(
         'product_id',
         (
           await supabase.from('products').select('id').eq('brand_id', brandId)
-        )?.map(p => p.id) || []
+        ).map(p => p.id) || []
       );
 
     // 获取诊断记录总数
@@ -67,7 +67,7 @@ export async function GET(
         'product_id',
         (
           await supabase.from('products').select('id').eq('brand_id', brandId)
-        )?.map(p => p.id) || []
+        ).map(p => p.id) || []
       );
 
     // 获取Token余额
@@ -102,7 +102,7 @@ export async function GET(
       totalProducts: totalProducts || 0,
       totalScans: totalScans || 0,
       totalDiagnoses: totalDiagnoses || 0,
-      tokenBalance: tokenBalanceData?.balance || 0,
+      tokenBalance: tokenBalanceData.balance || 0,
       recentScans: recentScans || 0,
       recentDiagnoses: recentDiagnoses || 0,
     };

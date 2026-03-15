@@ -1,12 +1,12 @@
 ﻿/**
  * 订单管理页面
- * FixCycle 6.0 智能体市场平? */
+ * FixCycle 6.0 智能体市场平台
+ */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  ArrowLeft,
   Package,
   Clock,
   CheckCircle,
@@ -50,13 +50,13 @@ interface OrderItem {
 
 export default function OrdersPage() {
   const router = useRouter();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, _setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [showOrderDetail, setShowOrderDetail] = useState(false);
+  const [isLoading, _setIsLoading] = useState(true);
+  const [searchTerm, _setSearchTerm] = useState('');
+  const [statusFilter, _setStatusFilter] = useState('all');
+  const [selectedOrder, _setSelectedOrder] = useState<Order | null>(null);
+  const [showOrderDetail, _setShowOrderDetail] = useState(false);
 
   // 模拟订单数据
   const mockOrders: Order[] = [
@@ -72,7 +72,7 @@ export default function OrdersPage() {
           agent: {
             id: 'agent-1',
             name: '销售助手智能体',
-            description: '专业的销售对话助?,
+            description: '专业的销售对话助手',
             price: 99.99,
             token_cost_per_use: 0.5,
             developer: {
@@ -86,7 +86,7 @@ export default function OrdersPage() {
           id: 'item-2',
           agent: {
             id: 'agent-2',
-            name: '采购智能?,
+            name: '采购智能助手',
             description: '智能采购决策助手',
             price: 149.99,
             token_cost_per_use: 0.8,
@@ -100,7 +100,7 @@ export default function OrdersPage() {
       ],
       created_at: '2026-03-01T10:30:00Z',
       updated_at: '2026-03-01T11:15:00Z',
-      payment_method: '支付?,
+      payment_method: '支付宝',
       payment_status: 'paid',
     },
     {
@@ -114,7 +114,7 @@ export default function OrdersPage() {
           id: 'item-3',
           agent: {
             id: 'agent-3',
-            name: '客服支持机器?,
+            name: '客服支持机器人',
             description: '24/7智能客服支持',
             price: 79.99,
             token_cost_per_use: 0.3,
@@ -142,7 +142,7 @@ export default function OrdersPage() {
           id: 'item-4',
           agent: {
             id: 'agent-4',
-            name: '营销推广智能?,
+            name: '营销推广智能体',
             description: '精准营销投放助手',
             price: 199.99,
             token_cost_per_use: 1.0,
@@ -156,7 +156,7 @@ export default function OrdersPage() {
       ],
       created_at: '2026-03-01T16:45:00Z',
       updated_at: '2026-03-01T16:45:00Z',
-      payment_method: '银行?,
+      payment_method: '银行转账',
       payment_status: 'unpaid',
     },
   ];
@@ -164,17 +164,17 @@ export default function OrdersPage() {
   useEffect(() => {
     // 模拟API调用
     setTimeout(() => {
-      setOrders(mockOrders);
+      _setOrders(mockOrders);
       setFilteredOrders(mockOrders);
-      setIsLoading(false);
+      _setIsLoading(false);
     }, 500);
   }, []);
 
   useEffect(() => {
-    filterOrders();
+    _filterOrders();
   }, [orders, searchTerm, statusFilter]);
 
-  const filterOrders = () => {
+  const _filterOrders = () => {
     let filtered = [...orders];
 
     // 搜索过滤
@@ -188,7 +188,8 @@ export default function OrdersPage() {
       );
     }
 
-    // 状态过?    if (statusFilter !== 'all') {
+    // 状态过滤
+    if (statusFilter !== 'all') {
       filtered = filtered.filter(order => order.status === statusFilter);
     }
 
@@ -203,42 +204,42 @@ export default function OrdersPage() {
       pending: {
         icon: <Clock className="w-4 h-4" />,
         color: 'bg-yellow-100 text-yellow-800',
-        text: '待处?,
+        text: '待处理',
       },
       processing: {
         icon: <Package className="w-4 h-4" />,
         color: 'bg-blue-100 text-blue-800',
-        text: '处理?,
+        text: '处理中',
       },
       completed: {
         icon: <CheckCircle className="w-4 h-4" />,
         color: 'bg-green-100 text-green-800',
-        text: '已完?,
+        text: '已完成',
       },
       cancelled: {
         icon: <XCircle className="w-4 h-4" />,
         color: 'bg-red-100 text-red-800',
-        text: '已取?,
+        text: '已取消',
       },
       refunded: {
         icon: <CreditCard className="w-4 h-4" />,
         color: 'bg-purple-100 text-purple-800',
-        text: '已退?,
+        text: '已退款',
       },
     };
     return configs[status] || configs.pending;
   };
 
-  const viewOrderDetail = (order: Order) => {
-    setSelectedOrder(order);
-    setShowOrderDetail(true);
+  const _viewOrderDetail = (order: Order) => {
+    _setSelectedOrder(order);
+    _setShowOrderDetail(true);
   };
 
-  const formatDate = (dateString: string) => {
+  const _formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('zh-CN');
   };
 
-  const formatPrice = (price: number) => {
+  const _formatPrice = (price: number) => {
     return `¥${price.toFixed(2)}`;
   };
 
@@ -247,7 +248,7 @@ export default function OrdersPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载订单数据?..</p>
+          <p className="mt-4 text-gray-600">加载订单数据中...</p>
         </div>
       </div>
     );
@@ -262,7 +263,7 @@ export default function OrdersPage() {
             onClick={() => router.push('/marketplace')}
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
+            <Package className="w-5 h-5 mr-2" />
             返回市场
           </button>
         </div>
@@ -274,17 +275,17 @@ export default function OrdersPage() {
           <h1 className="text-3xl font-bold text-gray-900">我的订单</h1>
         </div>
 
-        {/* 搜索和过?*/}
+        {/* 搜索和过滤 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="搜索订单号或智能体名?.."
+                placeholder="搜索订单号或智能体名称..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                onChange={e => _setSearchTerm(e.target.value)}
               />
             </div>
 
@@ -293,14 +294,14 @@ export default function OrdersPage() {
               <select
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={statusFilter}
-                onChange={e => setStatusFilter(e.target.value)}
+                onChange={e => _setStatusFilter(e.target.value)}
               >
-                <option value="all">全部状?/option>
-                <option value="pending">待处?/option>
-                <option value="processing">处理?/option>
-                <option value="completed">已完?/option>
-                <option value="cancelled">已取?/option>
-                <option value="refunded">已退?/option>
+                <option value="all">全部状态</option>
+                <option value="pending">待处理</option>
+                <option value="processing">处理中</option>
+                <option value="completed">已完成</option>
+                <option value="cancelled">已取消</option>
+                <option value="refunded">已退款</option>
               </select>
             </div>
 
@@ -318,22 +319,22 @@ export default function OrdersPage() {
           {[
             { label: '总订单数', value: orders.length, color: 'bg-blue-500' },
             {
-              label: '待处?,
+              label: '待处理',
               value: orders.filter(o => o.status === 'pending').length,
               color: 'bg-yellow-500',
             },
             {
-              label: '处理?,
+              label: '处理中',
               value: orders.filter(o => o.status === 'processing').length,
               color: 'bg-blue-500',
             },
             {
-              label: '已完?,
+              label: '已完成',
               value: orders.filter(o => o.status === 'completed').length,
               color: 'bg-green-500',
             },
             {
-              label: '总金?,
+              label: '总金额',
               value: `¥${orders.reduce((sum, order) => sum + order.total_amount, 0).toFixed(2)}`,
               color: 'bg-purple-500',
             },
@@ -383,20 +384,20 @@ export default function OrdersPage() {
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             order.payment_status === 'paid'
-                              ? 'bg-green-100 text-green-800'
+                               'bg-green-100 text-green-800'
                               : 'bg-red-100 text-red-800'
                           }`}
                         >
                           {order.payment_status === 'paid'
-                            ? '已付?
-                            : '未付?}
+                             '已付款'
+                            : '未付款'}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-2" />
-                          <span>创建时间: {formatDate(order.created_at)}</span>
+                          <span>创建时间: {_formatDate(order.created_at)}</span>
                         </div>
                         <div className="flex items-center">
                           <CreditCard className="w-4 h-4 mr-2" />
@@ -404,7 +405,7 @@ export default function OrdersPage() {
                         </div>
                         <div className="flex items-center">
                           <Package className="w-4 h-4 mr-2" />
-                          <span>{order.items.length} 个商?/span>
+                          <span>{order.items.length} 个商品</span>
                         </div>
                       </div>
 
@@ -426,11 +427,11 @@ export default function OrdersPage() {
                       </div>
                     </div>
 
-                    {/* 价格和操?*/}
+                    {/* 价格和操作 */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       <div className="text-right">
                         <div className="text-xl font-bold text-gray-900">
-                          {formatPrice(order.total_amount)}
+                          {_formatPrice(order.total_amount)}
                         </div>
                         <div className="text-sm text-gray-500">
                           {order.token_cost} Token
@@ -438,7 +439,7 @@ export default function OrdersPage() {
                       </div>
 
                       <button
-                        onClick={() => viewOrderDetail(order)}
+                        onClick={() => _viewOrderDetail(order)}
                         className="flex items-center space-x-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                       >
                         <Eye className="w-4 h-4" />
@@ -475,10 +476,10 @@ export default function OrdersPage() {
                     <h2 className="text-xl font-semibold text-gray-900">
                       订单详情 - {selectedOrder.order_number}
                     </h2>
-                    <p className="text-gray-600 mt-1">查看订单的详细信?/p>
+                    <p className="text-gray-600 mt-1">查看订单的详细信息</p>
                   </div>
                   <button
-                    onClick={() => setShowOrderDetail(false)}
+                    onClick={() => _setShowOrderDetail(false)}
                     className="text-gray-400 hover:text-gray-600"
                   >
                     <XCircle className="w-6 h-6" />
@@ -496,12 +497,12 @@ export default function OrdersPage() {
                         订单信息
                       </h3>
                       <div className="space-y-1 text-sm text-gray-600">
-                        <div>订单? {selectedOrder.order_number}</div>
+                        <div>订单号: {selectedOrder.order_number}</div>
                         <div>
-                          创建时间: {formatDate(selectedOrder.created_at)}
+                          创建时间: {_formatDate(selectedOrder.created_at)}
                         </div>
                         <div>
-                          更新时间: {formatDate(selectedOrder.updated_at)}
+                          更新时间: {_formatDate(selectedOrder.updated_at)}
                         </div>
                       </div>
                     </div>
@@ -512,10 +513,10 @@ export default function OrdersPage() {
                       <div className="space-y-1 text-sm text-gray-600">
                         <div>支付方式: {selectedOrder.payment_method}</div>
                         <div>
-                          支付状?{' '}
+                          支付状态:{' '}
                           {selectedOrder.payment_status === 'paid'
-                            ? '已付?
-                            : '未付?}
+                             '已付款'
+                            : '未付款'}
                         </div>
                       </div>
                     </div>
@@ -539,18 +540,19 @@ export default function OrdersPage() {
                             {item.agent.description}
                           </p>
                           <div className="text-xs text-gray-500 mt-1">
-                            开发? {item.agent.developer.name}
+                            开发者: {item.agent.developer.name}
                           </div>
                         </div>
                         <div className="text-right">
                           <div className="font-medium text-gray-900">
-                            {formatPrice(item.subtotal)}
+                            {_formatPrice(item.subtotal)}
                           </div>
                           <div className="text-sm text-gray-500">
                             数量: {item.quantity}
                           </div>
                           <div className="text-xs text-gray-500">
-                            {item.agent.token_cost_per_use} Token/�?                          </div>
+                            {item.agent.token_cost_per_use} Token/次
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -565,10 +567,11 @@ export default function OrdersPage() {
                         总计
                       </div>
                       <div className="text-sm text-gray-500">
-                        {selectedOrder.token_cost} Token 消?                      </div>
+                        {selectedOrder.token_cost} Token 消费
+                      </div>
                     </div>
                     <div className="text-2xl font-bold text-blue-600">
-                      {formatPrice(selectedOrder.total_amount)}
+                      {_formatPrice(selectedOrder.total_amount)}
                     </div>
                   </div>
                 </div>
@@ -580,4 +583,3 @@ export default function OrdersPage() {
     </div>
   );
 }
-

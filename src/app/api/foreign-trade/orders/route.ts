@@ -1,4 +1,4 @@
-﻿// 璁㈠崟绠＄悊API璺敱澶勭悊?import { NextResponse } from 'next/server';
+﻿// 璁㈠崟绠＄悊API璺敱澶勭悊import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
 
@@ -22,34 +22,34 @@ interface Order {
     | 'cancelled';
   priority: 'low' | 'medium' | 'high';
   expected_delivery: string;
-  actual_delivery?: string;
+  actual_delivery: string;
   payment_terms: string;
   shipping_method: string;
-  notes?: string;
+  notes: string;
   created_by: string;
   created_at: string;
   updated_at: string;
 }
 
-// 璇锋眰鍙傛暟绫诲瀷
+// 璇眰鍙傛暟绫诲瀷
 interface OrderQueryParams {
-  page?: number;
-  limit?: number;
-  status?: string;
-  type?: string;
-  partner_id?: string;
-  search?: string;
-  start_date?: string;
-  end_date?: string;
+  page: number;
+  limit: number;
+  status: string;
+  type: string;
+  partner_id: string;
+  search: string;
+  start_date: string;
+  end_date: string;
 }
 
 // 鍝嶅簲鏍煎紡
 interface ApiResponse<T> {
   success: boolean;
-  data?: T;
-  message?: string;
-  error?: string;
-  pagination?: {
+  data: T;
+  message: string;
+  error: string;
+  pagination: {
     page: number;
     limit: number;
     total: number;
@@ -94,7 +94,7 @@ export async function GET(request: Request) {
       )
       .range((page - 1) * limit, page * limit - 1);
 
-    // 娣诲姞绛涢€夋潯?    if (params.status) {
+    // 娣诲姞绛涢€夋潯    if (params.status) {
       query = query.eq('status', params.status);
     }
 
@@ -152,7 +152,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/foreign-trade/orders - 鍒涘缓鏂拌?export async function POST(request: Request) {
+// POST /api/foreign-trade/orders - 鍒涘缓鏂拌export async function POST(request: Request) {
   // 浣跨敤鏈嶅姟绔鎴风
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -186,7 +186,7 @@ export async function GET(request: Request) {
           success: false,
           error: '缂哄皯蹇呴渶瀛楁',
           message:
-            '璁㈠崟绫诲瀷銆佸悎浣滀紮浼淬€佸悎鍚岀紪鍙枫€佸晢鍝佽鎯呭拰棰勮浜や粯鏃ユ湡涓哄繀濉」',
+            '璁㈠崟绫诲瀷銆佸悎浣滀紮淬€佸悎鍚岀紪鍙枫€佸晢鍝佽鎯呭拰棰勮浜や粯ユ湡涓哄繀濉」',
         },
         { status: 400 }
       );
@@ -209,7 +209,7 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥? },
+        { success: false, error: '鐢ㄦ埛鏈櫥 },
         { status: 401 }
       );
     }
@@ -241,7 +241,7 @@ export async function GET(request: Request) {
       throw new Error(error.message);
     }
 
-    // 璁板綍鎿嶄綔鏃ュ織
+    // 璁板綍鎿嶄綔ュ織
     (await supabase.from('audit_logs').insert({
       user_id: user.id,
       action: 'CREATE_ORDER',
@@ -274,7 +274,7 @@ export async function GET(request: Request) {
 
 // 鐢熸垚璁㈠崟缂栧彿
 async function generateOrderNumber(type: 'import' | 'export'): Promise<string> {
-  const prefix = type === 'import' ? 'PO' : 'SO';
+  const prefix = type === 'import'  'PO' : 'SO';
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const random = Math.floor(Math.random() * 1000)
     .toString()

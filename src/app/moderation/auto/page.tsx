@@ -1,4 +1,6 @@
-﻿import { useState, useEffect } from 'react';
+﻿'use client';
+
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,7 +27,7 @@ export default function AutoModerationPage() {
   const [contentItems, setContentItems] = useState<ContentItem[]>([
     {
       id: 'content-001',
-      content: '这是一段正常的内容，没有任何违规信息?,
+      content: '这是一段正常的内容，没有任何违规信息',
       type: 'text',
       status: 'approved',
       confidence: 95,
@@ -34,16 +36,16 @@ export default function AutoModerationPage() {
     },
     {
       id: 'content-002',
-      content: '包含一些敏感词汇的内容需要被标记?,
+      content: '包含一些敏感词汇的内容需要被标记',
       type: 'text',
       status: 'flagged',
       confidence: 85,
-      detectedIssues: ['敏感词检?, '潜在违规'],
+      detectedIssues: ['敏感词检测', '潜在违规'],
       processedAt: new Date(Date.now() - 1800000).toISOString(),
     },
     {
       id: 'content-003',
-      content: '完全合规的内容示例?,
+      content: '完全合规的内容示例',
       type: 'text',
       status: 'approved',
       confidence: 98,
@@ -102,7 +104,7 @@ export default function AutoModerationPage() {
     } else if (random < 0.15) {
       status = 'flagged';
       confidence = 70 + Math.random() * 20;
-      issues = ['需要人工复?, '潜在敏感内容'];
+      issues = ['需要人工复核', '潜在敏感内容'];
     }
 
     const newItem: ContentItem = {
@@ -121,9 +123,9 @@ export default function AutoModerationPage() {
     setStats(prev => ({
       ...prev,
       totalProcessed: prev.totalProcessed + 1,
-      approved: status === 'approved' ? prev.approved + 1 : prev.approved,
-      rejected: status === 'rejected' ? prev.rejected + 1 : prev.rejected,
-      flagged: status === 'flagged' ? prev.flagged + 1 : prev.flagged,
+      approved: status === 'approved'  prev.approved + 1 : prev.approved,
+      rejected: status === 'rejected'  prev.rejected + 1 : prev.rejected,
+      flagged: status === 'flagged'  prev.flagged + 1 : prev.flagged,
     }));
   };
 
@@ -158,7 +160,7 @@ export default function AutoModerationPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">通过?/p>
+                  <p className="text-sm font-medium text-gray-600">通过</p>
                   <p className="text-2xl font-bold text-green-600">
                     {stats.approved}
                   </p>
@@ -172,7 +174,7 @@ export default function AutoModerationPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">拒绝?/p>
+                  <p className="text-sm font-medium text-gray-600">拒绝</p>
                   <p className="text-2xl font-bold text-red-600">
                     {stats.rejected}
                   </p>
@@ -186,7 +188,7 @@ export default function AutoModerationPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">标记?/p>
+                  <p className="text-sm font-medium text-gray-600">标记</p>
                   <p className="text-2xl font-bold text-yellow-600">
                     {stats.flagged}
                   </p>
@@ -200,7 +202,7 @@ export default function AutoModerationPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">准确?/p>
+                  <p className="text-sm font-medium text-gray-600">准确率</p>
                   <p className="text-2xl font-bold text-blue-600">
                     {stats.accuracy}%
                   </p>
@@ -229,7 +231,7 @@ export default function AutoModerationPage() {
                   <textarea
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     rows={4}
-                    placeholder="请输入要审核的内?.."
+                    placeholder="请输入要审核的内容..."
                     onKeyDown={e => {
                       if (e.key === 'Enter' && e.ctrlKey) {
                         const target = e.target as HTMLTextAreaElement;
@@ -239,7 +241,8 @@ export default function AutoModerationPage() {
                     }}
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    �?Ctrl+Enter 快速提交审?                  </p>
+                    提示: Ctrl+Enter 快速提交审核
+                  </p>
                 </div>
 
                 <Button
@@ -248,7 +251,7 @@ export default function AutoModerationPage() {
                     const textarea = document.querySelector(
                       'textarea'
                     ) as HTMLTextAreaElement;
-                    if (textarea?.value) {
+                    if (textarea.value) {
                       processContent(textarea.value);
                       textarea.value = '';
                     }
@@ -265,7 +268,7 @@ export default function AutoModerationPage() {
                     size="sm"
                     onClick={() =>
                       processContent(
-                        '这是一段正常的测试内容，用于验证审核系统?
+                        '这是一段正常的测试内容，用于验证审核系统'
                       )
                     }
                   >
@@ -275,7 +278,7 @@ export default function AutoModerationPage() {
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                      processContent('包含违规词汇的测试内容需要被拦截?)
+                      processContent('包含违规词汇的测试内容需要被拦截')
                     }
                   >
                     敏感内容
@@ -288,7 +291,7 @@ export default function AutoModerationPage() {
           {/* 审核结果展示 */}
           <Card>
             <CardHeader>
-              <CardTitle>最新审核结?/CardTitle>
+              <CardTitle>最新审核结果</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -307,7 +310,8 @@ export default function AutoModerationPage() {
                         </Badge>
                       </div>
                       <span className="text-xs text-gray-500">
-                        {item.confidence.toFixed(1)}% 置信?                      </span>
+                        {item.confidence.toFixed(1)}% 置信度
+                      </span>
                     </div>
 
                     <p className="text-gray-800 text-sm mb-2 line-clamp-2">
@@ -351,30 +355,30 @@ export default function AutoModerationPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">文本审核</h3>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>�?敏感词过?/li>
-                  <li>�?语义分析</li>
-                  <li>�?上下文理?/li>
-                  <li>�?多语言支持</li>
+                  <li>• 敏感词过滤</li>
+                  <li>• 语义分析</li>
+                  <li>• 上下文理解</li>
+                  <li>• 多语言支持</li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">图像审核</h3>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>�?内容识别</li>
-                  <li>�?场景分析</li>
-                  <li>�?OCR文字提取</li>
-                  <li>�?NSFW检?/li>
+                  <li>• 内容识别</li>
+                  <li>• 场景分析</li>
+                  <li>• OCR文字提取</li>
+                  <li>• NSFW检测</li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">视频审核</h3>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>�?帧级分析</li>
-                  <li>�?音频识别</li>
-                  <li>�?实时流处?/li>
-                  <li>�?关键时刻标记</li>
+                  <li>• 帧级分析</li>
+                  <li>• 音频识别</li>
+                  <li>• 实时流处理</li>
+                  <li>• 关键时刻标记</li>
                 </ul>
               </div>
             </div>
@@ -384,4 +388,3 @@ export default function AutoModerationPage() {
     </div>
   );
 }
-

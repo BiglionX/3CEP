@@ -1,6 +1,6 @@
 ﻿/**
- * 浼楃FCX鏀粯API
- * 澶勭悊浼楃椤圭洰涓殑FCX鏀粯璇锋眰
+ * 楃FCX鏀粯API
+ * 澶勭悊楃椤圭洰涓殑FCX鏀粯璇眰
  */
 
 import { supabase } from '@/lib/supabase';
@@ -13,9 +13,9 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const {
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       error: authError,
     } = await supabase.auth.getUser(token);
     if (authError || !user) {
-      return NextResponse.json({ error: '鏃犳晥鐨勮璇佷护? }, { status: 401 });
+      return NextResponse.json({ error: '犳晥鐨勮璇佷护 }, { status: 401 });
     }
 
     const body = await request.json();
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!pledgeId || fcxAmount === undefined) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呰鍙傛暟: pledgeId 锟?fcxAmount' },
+        { error: '缂哄皯蹇呰鍙傛暟: pledgeId fcxAmount' },
         { status: 400 }
       );
     }
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
     if (!account) {
       return NextResponse.json(
-        { error: '鏈壘鍒癋CX璐︽埛锛岃鍏堝垱寤鸿处? },
+        { error: '鏈壘鍒癋CX璐︽埛锛岃鍏堝垱寤鸿处 },
         { status: 404 }
       );
     }
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
   }
 }
 
-// GET /api/crowdfunding/payments/fcx/balance?userId=xxx
+// GET /api/crowdfunding/payments/fcx/balanceuserId=xxx
 // 鑾峰彇鐢ㄦ埛FCX浣欓
 export async function GET(request: Request) {
   try {

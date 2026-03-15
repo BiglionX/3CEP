@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!userId || !accountType) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呰鍙傛暟: userId 锟?accountType' },
+        { error: '缂哄皯蹇呰鍙傛暟: userId accountType' },
         { status: 400 }
       );
     }
@@ -58,7 +58,7 @@ export async function GET(request: Request) {
     const account = await accountService.getAccountByUserId(userId);
 
     if (!account) {
-      return NextResponse.json({ error: '璐︽埛涓嶅瓨? }, { status: 404 });
+      return NextResponse.json({ error: '璐︽埛涓嶅 }, { status: 404 });
     }
 
     return NextResponse.json({

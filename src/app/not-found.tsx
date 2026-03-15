@@ -35,10 +35,10 @@ export default function NotFoundPage() {
             404
           </h1>
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
-            页面未找?{' '}
+            页面未找{' '}
           </h2>
           <p className="text-gray-600 text-lg max-w-md mx-auto">
-            抱歉，您访问的页面不存在或已被移除。请检查URL是否正确，或尝试以下操作?{' '}
+            抱歉，您访问的页面不存在或已被移除。请检查URL是否正确，或尝试以下操作{' '}
           </p>
         </div>
 
@@ -57,7 +57,7 @@ export default function NotFoundPage() {
             onClick={() => window.history.back()}
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            返回上一?{' '}
+            返回上一{' '}
           </Button>
         </div>
 
@@ -92,7 +92,7 @@ export default function NotFoundPage() {
         {/* 联系支持 */}
         <div className="bg-gray-50 rounded-lg p-6">
           <p className="text-gray-600 mb-4">
-            如果您认为这是一个错误，请联系我们的技术支持团?{' '}
+            如果您认为这是一个错误，请联系我们的技术支持团队{' '}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="outline" asChild>
@@ -114,7 +114,7 @@ export default function NotFoundPage() {
         <div className="mt-8 text-sm text-gray-500">
           <p>错误代码: 404_NOT_FOUND</p>
           <p className="mt-1">
-            如果您持续遇到此问题，请保存此页面信息并联系技术支?{' '}
+            如果您持续遇到此问题，请保存此页面信息并联系技术支持{' '}
           </p>
         </div>
       </div>

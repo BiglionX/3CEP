@@ -1,8 +1,7 @@
-﻿import { useState, useEffect } from 'react';
+﻿import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -22,15 +21,15 @@ interface ReviewTask {
   status: 'pending' | 'approved' | 'rejected';
   priority: 'low' | 'medium' | 'high';
   createdAt: string;
-  reviewer?: string;
-  reason?: string;
+  reviewer: string;
+  reason: string;
 }
 
 export default function ManualReviewPage() {
   const [tasks, setTasks] = useState<ReviewTask[]>([
     {
       id: 'task-001',
-      content: '这是一个测试内容，需要人工审核确认是否符合社区规范?,
+      content: '这是一个测试内容，需要人工审核确认是否符合社区规范',
       contentType: 'text',
       status: 'pending',
       priority: 'medium',
@@ -38,7 +37,7 @@ export default function ManualReviewPage() {
     },
     {
       id: 'task-002',
-      content: '另一个待审核的内容示例，包含一些敏感词汇需要仔细检查?,
+      content: '另一个待审核的内容示例，包含一些敏感词汇需要仔细检查',
       contentType: 'text',
       status: 'pending',
       priority: 'high',
@@ -53,7 +52,7 @@ export default function ManualReviewPage() {
     setTasks(prev =>
       prev.map(task =>
         task.id === taskId
-          ? {
+           {
               ...task,
               status: 'approved',
               reviewer: 'admin',
@@ -70,7 +69,7 @@ export default function ManualReviewPage() {
     setTasks(prev =>
       prev.map(task =>
         task.id === taskId
-          ? {
+           {
               ...task,
               status: 'rejected',
               reviewer: 'admin',
@@ -113,7 +112,7 @@ export default function ManualReviewPage() {
             <Eye className="w-10 h-10 text-blue-600" />
             人工审核工具
           </h1>
-          <p className="text-gray-600">专业的人工内容审核和管理工作?/p>
+          <p className="text-gray-600">专业的人工内容审核和管理工作</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -123,7 +122,7 @@ export default function ManualReviewPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="w-5 h-5" />
-                  待审核任?({tasks.filter(t => t.status === 'pending').length}
+                  待审核任务({tasks.filter(t => t.status === 'pending').length}
                   )
                 </CardTitle>
               </CardHeader>
@@ -135,8 +134,8 @@ export default function ManualReviewPage() {
                       <div
                         key={task.id}
                         className={`p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${
-                          selectedTask?.id === task.id
-                            ? 'ring-2 ring-blue-500'
+                          selectedTask.id === task.id
+                             'ring-2 ring-blue-500'
                             : ''
                         }`}
                         onClick={() => setSelectedTask(task)}
@@ -165,7 +164,7 @@ export default function ManualReviewPage() {
 
           {/* 审核详情 */}
           <div className="lg:col-span-2">
-            {selectedTask ? (
+            {selectedTask  (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -220,7 +219,8 @@ export default function ManualReviewPage() {
                       查看历史记录
                     </Button>
                     <Button variant="outline" size="sm">
-                      标记为可?                    </Button>
+                      标记为可疑
+                    </Button>
                     <Button variant="outline" size="sm">
                       请求协助
                     </Button>
@@ -233,7 +233,8 @@ export default function ManualReviewPage() {
                   <div className="text-center">
                     <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                      选择任务开始审?                    </h3>
+                      选择任务开始审核
+                    </h3>
                     <p className="text-gray-500">
                       从左侧列表中选择一个待审核任务
                     </p>
@@ -242,12 +243,13 @@ export default function ManualReviewPage() {
               </Card>
             )}
 
-            {/* 已处理任?*/}
+            {/* 已处理任务 */}
             <Card className="mt-8">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Flag className="w-5 h-5" />
-                  已处理任?                </CardTitle>
+                  已处理任务
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -260,7 +262,7 @@ export default function ManualReviewPage() {
                             任务 #{task.id.split('-')[1]}
                           </span>
                           <Badge className={getStatusColor(task.status)}>
-                            {task.status === 'approved' ? '已批? : '已拒?}
+                            {task.status === 'approved'  '已批准' : '已拒绝'}
                           </Badge>
                         </div>
                         <p className="text-gray-700 text-sm mb-2">
@@ -273,7 +275,8 @@ export default function ManualReviewPage() {
                         )}
                         <div className="flex items-center text-xs text-gray-500 mt-2">
                           <User className="w-3 h-3 mr-1" />
-                          审核? {task.reviewer || '未知'} �?                          <Clock className="w-3 h-3 mx-1" />
+                          审核人: {task.reviewer || '未知'}
+                          <Clock className="w-3 h-3 mx-1" />
                           {new Date(task.createdAt).toLocaleString()}
                         </div>
                       </div>
@@ -287,4 +290,3 @@ export default function ManualReviewPage() {
     </div>
   );
 }
-

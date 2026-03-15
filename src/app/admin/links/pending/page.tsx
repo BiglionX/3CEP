@@ -58,7 +58,7 @@ interface HotLink {
   article_id: string | null
   created_at: string
   updated_at: string
-  reviewer?: {
+  reviewer: {
     id: string
     email: string
   }
@@ -89,7 +89,7 @@ export default function PendingLinksPage() {
   const [expandedRows, setExpandedRows] = useState<string[]>([])
   const router = useRouter()
 
-  // 获取待审核链接列?
+  // 获取待审核链接列
   const fetchLinks = async () => {
     setLoading(true)
     try {
@@ -101,7 +101,7 @@ export default function PendingLinksPage() {
         category: categoryFilter
       })
 
-      const response = await fetch(`/api/admin/links/pending?${params}`)
+      const response = await fetch(`/api/admin/links/pending${params}`)
       const result = await response.json()
 
       if (result.data) {
@@ -124,7 +124,7 @@ export default function PendingLinksPage() {
     fetchLinks()
   }, [pagination.page, searchTerm, categoryFilter])
 
-  // 处理全?
+  // 处理全
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(links.map(link => link.id))
@@ -209,26 +209,26 @@ export default function PendingLinksPage() {
     }
   }
 
-  // 切换行展开状?
+  // 切换行展开状
   const toggleRowExpansion = (id: string) => {
     setExpandedRows(prev => 
       prev.includes(id) 
-        ? prev.filter(rowId => rowId !== id)
+         prev.filter(rowId => rowId !== id)
         : [...prev, id]
     )
   }
 
-  // 格式化日?
+  // 格式化日
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'yyyy-MM-dd HH:mm', { locale: zhCN })
   }
 
-  // 获取状态标签样?
+  // 获取状态标签样
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
-      pending_review: { text: '待审?, className: 'bg-yellow-100 text-yellow-800' },
-      promoted: { text: '已发?, className: 'bg-green-100 text-green-800' },
-      rejected: { text: '已驳?, className: 'bg-red-100 text-red-800' }
+      pending_review: { text: '待审, className: 'bg-yellow-100 text-yellow-800' },
+      promoted: { text: '已发, className: 'bg-green-100 text-green-800' },
+      rejected: { text: '已驳, className: 'bg-red-100 text-red-800' }
     }
     
     const config = statusMap[status] || { text: status, className: 'bg-gray-100 text-gray-800' }
@@ -252,9 +252,9 @@ export default function PendingLinksPage() {
           linkId: link.id,
           title: link.title,
           content: link.description,
-          summary: link?.substring(0, 200) || '',
+          summary: link.substring(0, 200) || '',
           coverImageUrl: link.image_url,
-          tags: link?.tags || [],
+          tags: link.tags || [],
           category: link.category
         })
       })
@@ -262,7 +262,7 @@ export default function PendingLinksPage() {
       const result = await response.json()
       
       if (result.success && result.articleId) {
-        // 跳转到编辑页?
+        // 跳转到编辑页
         router.push(`/admin/articles/edit/${result.articleId}`)
       } else {
         alert(`创建草稿失败: ${result.error || '未知错误'}`)
@@ -303,13 +303,13 @@ export default function PendingLinksPage() {
         </div>
       </div>
 
-      {/* 搜索和筛选区?*/}
+      {/* 搜索和筛选区*/}
       <div className="bg-white rounded-lg border p-4 space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="搜索标题或描?.."
+              placeholder="搜索标题或描.."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -323,12 +323,12 @@ export default function PendingLinksPage() {
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="pl-10 pr-8 py-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">所有分?/option>
+              <option value="">所有分/option>
               <option value="维修教程">维修教程</option>
               <option value="视频教程">视频教程</option>
-              <option value="技术分?>技术分?/option>
+              <option value="技术分>技术分/option>
               <option value="官方指南">官方指南</option>
-              <option value="检测指?>检测指?/option>
+              <option value="检测指>检测指/option>
             </select>
           </div>
         </div>
@@ -336,7 +336,7 @@ export default function PendingLinksPage() {
 
       {/* 数据表格 */}
       <div className="bg-white rounded-lg border">
-        {loading ? (
+        {loading  (
           <div className="flex items-center justify-center h-64">
             <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
           </div>
@@ -356,7 +356,7 @@ export default function PendingLinksPage() {
                   <TableHead>标题</TableHead>
                   <TableHead>来源</TableHead>
                   <TableHead>分类</TableHead>
-                  <TableHead>点赞?/TableHead>
+                  <TableHead>点赞/TableHead>
                   <TableHead>抓取时间</TableHead>
                   <TableHead>AI打标</TableHead>
                   <TableHead className="w-24">操作</TableHead>
@@ -393,7 +393,7 @@ export default function PendingLinksPage() {
                             onClick={() => toggleRowExpansion(link.id)}
                             className="text-blue-600 hover:text-blue-800 text-sm mt-1"
                           >
-                            {expandedRows.includes(link.id) ? '收起详情' : '查看详情'}
+                            {expandedRows.includes(link.id)  '收起详情' : '查看详情'}
                           </button>
                         </div>
                       </div>
@@ -423,7 +423,7 @@ export default function PendingLinksPage() {
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
-                        {link?.tags?.map((tag, index) => (
+                        {link.tags.map((tag, index) => (
                           <span 
                             key={index}
                             className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs"
@@ -431,9 +431,9 @@ export default function PendingLinksPage() {
                             {tag}
                           </span>
                         ))}
-                        {link?.confidence && (
+                        {link.confidence && (
                           <div className="text-xs text-gray-500">
-                            置信? {(link.ai_tags.confidence * 100).toFixed(0)}%
+                            置信 {(link.ai_tags.confidence * 100).toFixed(0)}%
                           </div>
                         )}
                       </div>
@@ -444,7 +444,7 @@ export default function PendingLinksPage() {
                           size="sm"
                           variant="ghost"
                           onClick={() => window.open(link.url, '_blank')}
-                          title="预览原链?
+                          title="预览原链
                         >
                           <ExternalLink className="w-4 h-4" />
                         </Button>
@@ -482,9 +482,9 @@ export default function PendingLinksPage() {
             {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t">
                 <div className="text-sm text-gray-700">
-                  显示?{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
+                  显示{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
                   {Math.min(pagination.page * pagination.pageSize, pagination.total)} 条，
-                  �?{pagination.total} 条记?
+                  {pagination.total} 条记
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -494,7 +494,7 @@ export default function PendingLinksPage() {
                     disabled={pagination.page <= 1}
                   >
                     <ChevronLeft className="w-4 h-4" />
-                    上一?
+                    上一
                   </Button>
                   <Button
                     variant="outline"
@@ -502,7 +502,7 @@ export default function PendingLinksPage() {
                     onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                     disabled={pagination.page >= pagination.totalPages}
                   >
-                    下一?
+                    下一
                     <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -512,20 +512,20 @@ export default function PendingLinksPage() {
         )}
       </div>
 
-      {/* 驳回确认对话?*/}
+      {/* 驳回确认对话*/}
       <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>确认驳回</DialogTitle>
             <DialogDescription>
-              请输入驳回原因，这将通知内容提交者?
+              请输入驳回原因，这将通知内容提交者
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <textarea
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
-              placeholder="请输入驳回原?.."
+              placeholder="请输入驳回原.."
               className="w-full h-24 p-3 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -540,7 +540,7 @@ export default function PendingLinksPage() {
         </DialogContent>
       </Dialog>
 
-      {/* 详情预览对话?*/}
+      {/* 详情预览对话*/}
       <Dialog open={!!previewLink} onOpenChange={() => setPreviewLink(null)}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
           {previewLink && (
@@ -557,10 +557,10 @@ export default function PendingLinksPage() {
                     <div className="space-y-2 text-sm">
                       <div><span className="font-medium">来源:</span> {previewLink.source}</div>
                       <div><span className="font-medium">分类:</span> {previewLink.category}</div>
-                      <div><span className="font-medium">子分?</span> {previewLink.sub_category || '�?}</div>
+                      <div><span className="font-medium">子分</span> {previewLink.sub_category || '}</div>
                       <div><span className="font-medium">抓取时间:</span> {formatDate(previewLink.scraped_at)}</div>
-                      <div><span className="font-medium">点赞?</span> {previewLink.likes}</div>
-                      <div><span className="font-medium">浏览?</span> {previewLink.views}</div>
+                      <div><span className="font-medium">点赞</span> {previewLink.likes}</div>
+                      <div><span className="font-medium">浏览</span> {previewLink.views}</div>
                     </div>
                   </div>
                   
@@ -578,7 +578,7 @@ export default function PendingLinksPage() {
                 <div>
                   <h4 className="font-medium mb-2">AI打标结果</h4>
                   <div className="flex flex-wrap gap-2">
-                    {previewLink?.tags?.map((tag, index) => (
+                    {previewLink.tags.map((tag, index) => (
                       <span 
                         key={index}
                         className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
@@ -587,9 +587,9 @@ export default function PendingLinksPage() {
                       </span>
                     ))}
                   </div>
-                  {previewLink?.confidence && (
+                  {previewLink.confidence && (
                     <div className="mt-2 text-sm text-gray-600">
-                      置信? {(previewLink.ai_tags.confidence * 100).toFixed(2)}%
+                      置信 {(previewLink.ai_tags.confidence * 100).toFixed(2)}%
                     </div>
                   )}
                 </div>
@@ -614,7 +614,7 @@ export default function PendingLinksPage() {
                 </Button>
                 <Button onClick={() => window.open(previewLink.url, '_blank')}>
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  打开原链?
+                  打开原链
                 </Button>
               </DialogFooter>
             </>

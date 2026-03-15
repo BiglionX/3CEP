@@ -90,8 +90,8 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      like_count: article?.like_count || 0,
-      message: action === 'like' ? '点赞成功' : '取消点赞成功',
+      like_count: article.like_count || 0,
+      message: action === 'like'  '点赞成功' : '取消点赞成功',
     });
   } catch (error) {
     console.error('点赞操作异常:', error);
@@ -143,3 +143,4 @@ export async function GET(
     });
   }
 }
+

@@ -23,7 +23,7 @@ interface Report {
   type: 'sales' | 'customer' | 'inventory' | 'financial';
   status: 'completed' | 'processing' | 'scheduled';
   lastGenerated: string;
-  nextSchedule?: string;
+  nextSchedule: string;
 }
 
 interface DashboardMetric {
@@ -42,7 +42,7 @@ export default function DataAnalysisPage() {
   const reports: Report[] = [
     {
       id: 'REP-001',
-      title: '月度销售分析报?,
+      title: '月度销售分析报,
       type: 'sales',
       status: 'completed',
       lastGenerated: '2024-01-20 10:30:00',
@@ -74,21 +74,21 @@ export default function DataAnalysisPage() {
       icon: TrendingUp,
     },
     {
-      title: '活跃客户?,
+      title: '活跃客户,
       value: '15,680',
       change: 8.3,
       trend: 'up',
       icon: PieChart,
     },
     {
-      title: '平均订单价?,
+      title: '平均订单价,
       value: '¥845',
       change: -2.1,
       trend: 'down',
       icon: BarChart3,
     },
     {
-      title: '转化?,
+      title: '转化,
       value: '3.2%',
       change: 0.8,
       trend: 'up',
@@ -136,7 +136,7 @@ export default function DataAnalysisPage() {
             商业智能分析平台
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            AI驱动的数据分析和商业洞察平台，提供数据可视化、预测分析和异常检测功?          </p>
+            AI驱动的数据分析和商业洞察平台，提供数据可视化、预测分析和异常检测功          </p>
         </div>
 
         {/* 导航标签 */}
@@ -148,11 +148,11 @@ export default function DataAnalysisPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
                   activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
+                     'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                {tab === 'dashboard' && '数据仪表?}
+                {tab === 'dashboard' && '数据仪表}
                 {tab === 'reports' && '报告中心'}
                 {tab === 'analytics' && '高级分析'}
                 {tab === 'alerts' && '异常预警'}
@@ -161,7 +161,7 @@ export default function DataAnalysisPage() {
           </nav>
         </div>
 
-        {/* 数据仪表?*/}
+        {/* 数据仪表*/}
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
             {/* 关键指标卡片 */}
@@ -184,7 +184,7 @@ export default function DataAnalysisPage() {
                       <div
                         className={`flex items-center text-sm ${
                           metric.trend === 'up'
-                            ? 'text-green-600'
+                             'text-green-600'
                             : 'text-red-600'
                         }`}
                       >
@@ -193,7 +193,7 @@ export default function DataAnalysisPage() {
                         ) : (
                           <TrendingUp className="w-4 h-4 mr-1 rotate-180" />
                         )}
-                        {metric.change > 0 ? '+' : ''}
+                        {metric.change > 0  '+' : ''}
                         {metric.change}%
                         <span className="text-gray-500 ml-1">本月</span>
                       </div>
@@ -209,13 +209,13 @@ export default function DataAnalysisPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <LineChart className="w-5 h-5 mr-2" />
-                    销售趋势分?                  </CardTitle>
+                    销售趋势分                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
                     <div className="text-center text-gray-500">
                       <LineChart className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p>销售趋势图?/p>
+                      <p>销售趋势图/p>
                     </div>
                   </div>
                 </CardContent>
@@ -239,12 +239,12 @@ export default function DataAnalysisPage() {
               </Card>
             </div>
 
-            {/* 数据过滤?*/}
+            {/* 数据过滤*/}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Filter className="w-5 h-5 mr-2" />
-                  数据筛?                </CardTitle>
+                  数据筛                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -280,7 +280,7 @@ export default function DataAnalysisPage() {
                     </label>
                     <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>全部指标</option>
-                      <option>销售数?/option>
+                      <option>销售数/option>
                       <option>客户数据</option>
                       <option>库存数据</option>
                     </select>
@@ -288,7 +288,7 @@ export default function DataAnalysisPage() {
                   <div className="flex items-end space-x-2">
                     <Button className="flex-1">
                       <Filter className="w-4 h-4 mr-2" />
-                      筛?                    </Button>
+                      筛                    </Button>
                     <Button variant="outline">
                       <RefreshCw className="w-4 h-4" />
                     </Button>
@@ -308,7 +308,7 @@ export default function DataAnalysisPage() {
                   <span>自动报告列表</span>
                   <Button>
                     <Download className="w-4 h-4 mr-2" />
-                    导出所有报?                  </Button>
+                    导出所有报                  </Button>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -318,7 +318,7 @@ export default function DataAnalysisPage() {
                       <tr className="border-b">
                         <th className="text-left py-3 px-4">报告名称</th>
                         <th className="text-left py-3 px-4">类型</th>
-                        <th className="text-left py-3 px-4">状?/th>
+                        <th className="text-left py-3 px-4">状/th>
                         <th className="text-left py-3 px-4">上次生成</th>
                         <th className="text-left py-3 px-4">下次计划</th>
                         <th className="text-left py-3 px-4">操作</th>
@@ -337,7 +337,7 @@ export default function DataAnalysisPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getReportTypeColor(report.type)}`}
                             >
-                              {report.type === 'sales' && '销?}
+                              {report.type === 'sales' && '销}
                               {report.type === 'customer' && '客户'}
                               {report.type === 'inventory' && '库存'}
                               {report.type === 'financial' && '财务'}
@@ -347,9 +347,9 @@ export default function DataAnalysisPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(report.status)}`}
                             >
-                              {report.status === 'completed' && '已完?}
-                              {report.status === 'processing' && '生成?}
-                              {report.status === 'scheduled' && '已计?}
+                              {report.status === 'completed' && '已完}
+                              {report.status === 'processing' && '生成}
+                              {report.status === 'scheduled' && '已计}
                             </span>
                           </td>
                           <td className="py-3 px-4">{report.lastGenerated}</td>
@@ -391,9 +391,9 @@ export default function DataAnalysisPage() {
                   <div className="space-y-4">
                     <div className="p-4 bg-blue-50 rounded-lg">
                       <h3 className="font-semibold text-blue-900 mb-2">
-                        下月销售预?                      </h3>
+                        下月销售预                      </h3>
                       <p className="text-blue-700">
-                        预计下月销售额将达?¥1,380,000，同比增?15.2%
+                        预计下月销售额将达¥1,380,000，同比增15.2%
                       </p>
                     </div>
                     <div className="p-4 bg-green-50 rounded-lg">
@@ -401,7 +401,7 @@ export default function DataAnalysisPage() {
                         热门产品预测
                       </h3>
                       <p className="text-green-700">
-                        根据趋势分析，智能家居产品线预计将增?25%
+                        根据趋势分析，智能家居产品线预计将增25%
                       </p>
                     </div>
                   </div>
@@ -412,7 +412,7 @@ export default function DataAnalysisPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Calendar className="w-5 h-5 mr-2" />
-                    异常检?                  </CardTitle>
+                    异常检                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -424,7 +424,7 @@ export default function DataAnalysisPage() {
                         </h3>
                       </div>
                       <p className="text-yellow-700">
-                        产品 XYZ-2024 的库存低于安全线，建议及时补?                      </p>
+                        产品 XYZ-2024 的库存低于安全线，建议及时补                      </p>
                     </div>
                     <div className="p-4 bg-red-50 rounded-lg">
                       <div className="flex items-center mb-2">
@@ -432,7 +432,7 @@ export default function DataAnalysisPage() {
                         <h3 className="font-semibold text-red-900">异常交易</h3>
                       </div>
                       <p className="text-red-700">
-                        发现 3 笔异常大额交易，需要人工审?                      </p>
+                        发现 3 笔异常大额交易，需要人工审                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -458,13 +458,13 @@ export default function DataAnalysisPage() {
                       <AlertTriangle className="w-5 h-5 text-red-600 mr-3" />
                       <div>
                         <h3 className="font-semibold text-red-900">
-                          服务器负载过?                        </h3>
+                          服务器负载过                        </h3>
                         <p className="text-red-700 text-sm">
-                          CPU 使用率达?95%，建议扩?                        </p>
+                          CPU 使用率达95%，建议扩                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-red-600">2分钟?/div>
+                      <div className="text-sm text-red-600">2分钟/div>
                       <Button variant="outline" size="sm" className="mt-1">
                         处理
                       </Button>
@@ -479,11 +479,11 @@ export default function DataAnalysisPage() {
                           库存不足预警
                         </h3>
                         <p className="text-yellow-700 text-sm">
-                          产品 ABC-123 库存仅剩 15 �?                        </p>
+                          产品 ABC-123 库存仅剩 15                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-yellow-600">15分钟?/div>
+                      <div className="text-sm text-yellow-600">15分钟/div>
                       <Button variant="outline" size="sm" className="mt-1">
                         查看详情
                       </Button>
@@ -498,11 +498,11 @@ export default function DataAnalysisPage() {
                           系统恢复正常
                         </h3>
                         <p className="text-green-700 text-sm">
-                          数据库连接已恢复稳定状?                        </p>
+                          数据库连接已恢复稳定状                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-green-600">1小时?/div>
+                      <div className="text-sm text-green-600">1小时/div>
                       <Button variant="outline" size="sm" className="mt-1">
                         确认
                       </Button>

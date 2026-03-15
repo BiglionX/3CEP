@@ -7,12 +7,10 @@ import {
   Zap,
   Play,
   Pause,
-  Settings,
   Clock,
   CheckCircle,
   AlertTriangle,
   Activity,
-  RefreshCw,
   Plus,
   Edit,
   Trash2,
@@ -24,7 +22,7 @@ interface Workflow {
   description: string;
   status: 'running' | 'paused' | 'error' | 'stopped';
   lastRun: string;
-  nextRun?: string;
+  nextRun: string;
   successRate: number;
   tasksCompleted: number;
 }
@@ -40,12 +38,12 @@ interface AutomationTask {
 
 export default function WorkflowAutomationPage() {
   const [activeTab, setActiveTab] = useState('workflows');
-  const [selectedWorkflow, setSelectedWorkflow] = useState<string | null>(null);
+  const [_selectedWorkflow, _setSelectedWorkflow] = useState<string | null>(null);
 
   const workflows: Workflow[] = [
     {
       id: 'WF-001',
-      name: '订单处理自动?,
+      name: '订单处理自动化',
       description: '自动处理新订单，包括库存检查、支付验证和发货通知',
       status: 'running',
       lastRun: '2024-01-20 14:30:25',
@@ -56,7 +54,7 @@ export default function WorkflowAutomationPage() {
     {
       id: 'WF-002',
       name: '数据同步流程',
-      description: '定时同步各系统间的数据，保持信息一致?,
+      description: '定时同步各系统间的数据，保持信息一致性',
       status: 'running',
       lastRun: '2024-01-20 13:45:12',
       nextRun: '2024-01-20 16:00:00',
@@ -80,12 +78,12 @@ export default function WorkflowAutomationPage() {
       name: '库存数据同步',
       type: 'data_sync',
       status: 'completed',
-      schedule: '每小时执?,
+      schedule: '每小时执行',
       lastExecution: '2024-01-20 14:00:00',
     },
     {
       id: 'TASK-002',
-      name: '订单状态更?,
+      name: '订单状态更新',
       type: 'api_call',
       status: 'running',
       schedule: '实时触发',
@@ -93,7 +91,7 @@ export default function WorkflowAutomationPage() {
     },
     {
       id: 'TASK-003',
-      name: '日报邮件发?,
+      name: '日报邮件发送',
       type: 'email_notification',
       status: 'pending',
       schedule: '每日 9:00',
@@ -148,16 +146,18 @@ export default function WorkflowAutomationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 px:6lg:px-8">
         {/* 页面标题 */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
             <Zap className="w-8 h-8 text-blue-600" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            流程自动化系?          </h1>
+          <h1 className="text-3xl text:4xl font-bold text-gray-900 mb-4">
+            流程自动化系统
+          </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            RPA流程机器人，自动化重复性工作，提升业务效率和准确?          </p>
+            RPA流程机器人，自动化重复性工作，提升业务效率和准确性
+          </p>
         </div>
 
         {/* 导航标签 */}
@@ -169,12 +169,11 @@ export default function WorkflowAutomationPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
                   activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                     ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 text:gray-700hover:border-gray-300'
                 }`}
               >
                 {tab === 'workflows' && '工作流程'}
-                {tab === 'tasks' && '自动化任?}
+                {tab === 'tasks' && '自动化任务'}
                 {tab === 'scheduler' && '任务调度'}
                 {tab === 'monitoring' && '系统监控'}
               </button>
@@ -186,19 +185,19 @@ export default function WorkflowAutomationPage() {
         {activeTab === 'workflows' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">自动化工作流?/h2>
+              <h2 className="text-2xl font-bold">自动化工作流程</h2>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 新建流程
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {workflows.map(workflow => (
                 <Card
                   key={workflow.id}
                   className="hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedWorkflow(workflow.id)}
+                  onClick={() => _setSelectedWorkflow(workflow.id)}
                 >
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -208,10 +207,10 @@ export default function WorkflowAutomationPage() {
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(workflow.status)}`}
                           >
-                            {workflow.status === 'running' && '运行?}
-                            {workflow.status === 'paused' && '已暂?}
+                            {workflow.status === 'running' && '运行中'}
+                            {workflow.status === 'paused' && '已暂停'}
                             {workflow.status === 'error' && '错误'}
-                            {workflow.status === 'stopped' && '已停?}
+                            {workflow.status === 'stopped' && '已停止'}
                           </span>
                         </CardTitle>
                         <p className="text-gray-600 mt-1">
@@ -241,11 +240,11 @@ export default function WorkflowAutomationPage() {
                       <div>
                         <span className="text-gray-500">下次运行:</span>
                         <div className="font-medium">
-                          {workflow.nextRun || '无计?}
+                          {workflow.nextRun || '无计划'}
                         </div>
                       </div>
                       <div>
-                        <span className="text-gray-500">成功?</span>
+                        <span className="text-gray-500">成功率</span>
                         <div className="font-medium text-green-600">
                           {workflow.successRate}%
                         </div>
@@ -264,7 +263,7 @@ export default function WorkflowAutomationPage() {
           </div>
         )}
 
-        {/* 自动化任?*/}
+        {/* 自动化任务 */}
         {activeTab === 'tasks' && (
           <div className="space-y-6">
             <Card>
@@ -284,7 +283,7 @@ export default function WorkflowAutomationPage() {
                       <tr className="border-b">
                         <th className="text-left py-3 px-4">任务名称</th>
                         <th className="text-left py-3 px-4">类型</th>
-                        <th className="text-left py-3 px-4">状?/th>
+                        <th className="text-left py-3 px-4">状态</th>
                         <th className="text-left py-3 px-4">执行计划</th>
                         <th className="text-left py-3 px-4">上次执行</th>
                         <th className="text-left py-3 px-4">操作</th>
@@ -292,7 +291,7 @@ export default function WorkflowAutomationPage() {
                     </thead>
                     <tbody>
                       {automationTasks.map(task => (
-                        <tr key={task.id} className="border-b hover:bg-gray-50">
+                        <tr key={task.id} className="border-b bg-gray-50">
                           <td className="py-3 px-4">
                             <div className="flex items-center">
                               <span className="text-xl mr-2">
@@ -311,9 +310,9 @@ export default function WorkflowAutomationPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTaskStatusColor(task.status)}`}
                             >
-                              {task.status === 'pending' && '待执?}
-                              {task.status === 'running' && '执行?}
-                              {task.status === 'completed' && '已完?}
+                              {task.status === 'pending' && '待执行'}
+                              {task.status === 'running' && '执行中'}
+                              {task.status === 'completed' && '已完成'}
                               {task.status === 'failed' && '失败'}
                             </span>
                           </td>
@@ -362,7 +361,7 @@ export default function WorkflowAutomationPage() {
                         { time: '12:00', task: '数据备份', status: 'active' },
                         {
                           time: '18:00',
-                          task: '周报汇?,
+                          task: '周报汇总',
                           status: 'scheduled',
                         },
                       ].map((schedule, index) => (
@@ -379,11 +378,10 @@ export default function WorkflowAutomationPage() {
                           <span
                             className={`px-2 py-1 rounded-full text-xs ${
                               schedule.status === 'active'
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-blue-100 text-blue-800'
+                                 ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
                             }`}
                           >
-                            {schedule.status === 'active' ? '运行? : '已计?}
+                            {schedule.status === 'active'  ? '运行中' : '已计划'}
                           </span>
                         </div>
                       ))}
@@ -395,18 +393,18 @@ export default function WorkflowAutomationPage() {
                     <div className="space-y-3">
                       {[
                         {
-                          event: '新订单创?,
-                          action: '发送确认邮?,
+                          event: '新订单创建',
+                          action: '发送确认邮件',
                           status: 'enabled',
                         },
                         {
-                          event: '库存低于阈?,
-                          action: '发送补货提?,
+                          event: '库存低于阈值',
+                          action: '发送补货提醒',
                           status: 'enabled',
                         },
                         {
                           event: '用户注册',
-                          action: '发送欢迎消?,
+                          action: '发送欢迎消息',
                           status: 'disabled',
                         },
                       ].map((trigger, index) => (
@@ -423,11 +421,10 @@ export default function WorkflowAutomationPage() {
                           <span
                             className={`px-2 py-1 rounded-full text-xs ${
                               trigger.status === 'enabled'
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-gray-100 text-gray-800'
+                                 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                             }`}
                           >
-                            {trigger.status === 'enabled' ? '启用' : '禁用'}
+                            {trigger.status === 'enabled'  ? '启用' : '禁用'}
                           </span>
                         </div>
                       ))}
@@ -447,29 +444,30 @@ export default function WorkflowAutomationPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Activity className="w-5 h-5 mr-2" />
-                    系统状?                  </CardTitle>
+                    系统状态
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span>CPU使用?/span>
+                      <span>CPU使用率</span>
                       <span className="font-semibold">45%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full"
-                        style={{ width: '45%' }}
+                        style="{ width: '45%' "
                       ></div>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span>内存使用?/span>
+                      <span>内存使用率</span>
                       <span className="font-semibold">68%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-green-600 h-2 rounded-full"
-                        style={{ width: '68%' }}
+                        style="{ width: '68%' "
                       ></div>
                     </div>
                   </div>
@@ -486,11 +484,11 @@ export default function WorkflowAutomationPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span>今日任务?/span>
+                      <span>今日任务数</span>
                       <span className="font-semibold">1,247</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>成功?/span>
+                      <span>成功率</span>
                       <span className="font-semibold text-green-600">
                         98.5%
                       </span>
@@ -514,11 +512,11 @@ export default function WorkflowAutomationPage() {
                   <div className="space-y-3">
                     <div className="flex items-center p-2 bg-yellow-50 rounded">
                       <AlertTriangle className="w-4 h-4 text-yellow-600 mr-2" />
-                      <span className="text-sm">3个任务执行超?/span>
+                      <span className="text-sm">3个任务执行超时</span>
                     </div>
                     <div className="flex items-center p-2 bg-green-50 rounded">
                       <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
-                      <span className="text-sm">所有系统正常运?/span>
+                      <span className="text-sm">所有系统正常运行</span>
                     </div>
                   </div>
                 </CardContent>
@@ -530,4 +528,3 @@ export default function WorkflowAutomationPage() {
     </div>
   );
 }
-

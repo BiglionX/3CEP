@@ -38,7 +38,7 @@ export async function PUT(
 ) {
   try {
     // 验证用户认证
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
@@ -76,7 +76,7 @@ export async function DELETE(
 ) {
   try {
     // 验证用户认证
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
@@ -128,7 +128,7 @@ export async function POST(
 ) {
   try {
     // 验证用户认证
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get('authorization').replace('Bearer ', '');
     if (!token) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }

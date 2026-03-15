@@ -5,9 +5,9 @@ import {
   UserGrowthProfile,
 } from '@/lib/user-growth-incentive-system';
 
-// 鍏ㄥ眬鎴愰暱婵€鍔辩郴缁熷疄?let growthSystem: UserGrowthIncentiveSystem | null = null;
+// 鍏ㄥ眬鎴愰暱婵€鍔辩郴缁熷疄let growthSystem: UserGrowthIncentiveSystem | null = null;
 
-// 鍒濆鍖栫郴?function getGrowthSystem(): UserGrowthIncentiveSystem {
+// 鍒濆鍖栫郴function getGrowthSystem(): UserGrowthIncentiveSystem {
   if (!growthSystem) {
     const config = GrowthPathPresets.getStandardPath();
     growthSystem = new UserGrowthIncentiveSystem(config);
@@ -15,7 +15,7 @@ import {
   return growthSystem;
 }
 
-// GET /api/growth/profile?userId=user_123
+// GET /api/growth/profileuserId=user_123
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -51,11 +51,11 @@ export async function GET(request: Request) {
         );
     }
   } catch (error) {
-    console.error('鐢ㄦ埛鎴愰暱婵€鍔辩郴缁熼敊?', error);
+    console.error('鐢ㄦ埛鎴愰暱婵€鍔辩郴缁熼敊', error);
     return NextResponse.json(
       {
         success: false,
-        error: '绯荤粺鏆傛椂涓嶅彲?,
+        error: '绯荤粺鏆傛椂涓嶅彲,
       },
       { status: 500 }
     );
@@ -137,14 +137,14 @@ export async function PUT(request: Request) {
         message: '濂栧姳鍏戞崲鎴愬姛',
         data: {
           remainingPoints:
-            growthSystem.getUserGrowthProfile(userId)?.totalPoints,
+            growthSystem.getUserGrowthProfile(userId).totalPoints,
         },
       });
     } else {
       return NextResponse.json(
         {
           success: false,
-          error: '濂栧姳鍏戞崲澶辫触锛岀Н鍒嗕笉瓒虫垨濂栧姳涓嶅彲?,
+          error: '濂栧姳鍏戞崲澶辫触锛岀Н鍒嗕笉瓒虫垨濂栧姳涓嶅彲,
         },
         { status: 400 }
       );
@@ -168,7 +168,7 @@ async function getUserGrowthProfile(
 ) {
   let profile = growthSystem.getUserGrowthProfile(userId);
 
-  // 濡傛灉妗ｆ涓嶅瓨鍦紝鍒濆鍖栦竴?  if (!profile) {
+  // 濡傛灉妗ｆ涓嶅鍦紝鍒濆鍖栦竴  if (!profile) {
     profile = growthSystem.initializeUserGrowthProfile(userId);
   }
 
@@ -195,7 +195,7 @@ async function getAvailableRewards(
     success: true,
     data: {
       rewards,
-      userPoints: growthSystem.getUserGrowthProfile(userId)?.totalPoints || 0,
+      userPoints: growthSystem.getUserGrowthProfile(userId).totalPoints || 0,
     },
   });
 }
@@ -225,7 +225,7 @@ function getNextLevelConfig(
   return null;
 }
 
-// 妯℃嫙涓€浜涘垵濮嬬敤鎴锋暟鎹敤浜庢紨?function initializeDemoData() {
+// 妯℃嫙涓€浜涘垵濮嬬敤鎴暟鎹敤浜庢紨function initializeDemoData() {
   const growthSystem = getGrowthSystem();
 
   // 鍒涘缓鍑犱釜婕旂ず鐢ㄦ埛
@@ -241,11 +241,11 @@ function getNextLevelConfig(
       profile = growthSystem.initializeUserGrowthProfile(user.id);
     }
 
-    // 妯℃嫙鐢ㄦ埛娲诲姩鏉ョ疮绉Н?    for (let i = 0; i < user.points / 10; i++) {
+    // 妯℃嫙鐢ㄦ埛娲诲姩鏉ョ疮绉Н    for (let i = 0; i < user.points / 10; i++) {
       growthSystem.recordUserActivity(user.id, 'login');
     }
   });
 }
 
-// 鍦ㄦā鍧楀姞杞芥椂鍒濆鍖栨紨绀烘暟?initializeDemoData();
+// 鍦ㄦā鍧楀姞杞芥椂鍒濆鍖栨紨绀烘暟initializeDemoData();
 

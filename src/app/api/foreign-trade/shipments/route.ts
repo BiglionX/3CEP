@@ -1,8 +1,8 @@
-﻿// 鐗╂祦绠＄悊API璺敱澶勭悊?import { NextResponse } from 'next/server';
+﻿// 鐗╂祦绠＄悊API璺敱澶勭悊import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
-// 鍙戣揣鍗曟暟鎹被鍨嬪畾?interface Shipment {
+// 鍙戣揣鍗曟暟鎹被鍨嬪畾interface Shipment {
   id: string;
   shipment_number: string;
   order_id: string;
@@ -18,36 +18,36 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
     | 'delivered'
     | 'delayed';
   planned_departure: string;
-  actual_departure?: string;
+  actual_departure: string;
   estimated_arrival: string;
-  actual_arrival?: string;
+  actual_arrival: string;
   weight: number;
   volume: number;
   packages: number;
   tracking_number: string;
-  container_number?: string;
-  vessel_name?: string;
-  flight_number?: string;
-  driver_info?: string;
-  notes?: string;
+  container_number: string;
+  vessel_name: string;
+  flight_number: string;
+  driver_info: string;
+  notes: string;
   created_by: string;
   created_at: string;
   updated_at: string;
 }
 
-// 璇锋眰鍙傛暟绫诲瀷
+// 璇眰鍙傛暟绫诲瀷
 interface ShipmentQueryParams {
-  page?: number;
-  limit?: number;
-  status?: string;
-  transport_mode?: string;
-  carrier?: string;
-  search?: string;
-  start_date?: string;
-  end_date?: string;
+  page: number;
+  limit: number;
+  status: string;
+  transport_mode: string;
+  carrier: string;
+  search: string;
+  start_date: string;
+  end_date: string;
 }
 
-// GET /api/foreign-trade/shipments - 鑾峰彇鍙戣揣鍗曞垪?export async function GET(request: Request) {
+// GET /api/foreign-trade/shipments - 鑾峰彇鍙戣揣鍗曞垪export async function GET(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
@@ -77,7 +77,7 @@ interface ShipmentQueryParams {
       )
       .range((params.page - 1) * params.limit, params.page * params.limit - 1);
 
-    // 娣诲姞绛涢€夋潯?    if (params.status) {
+    // 娣诲姞绛涢€夋潯    if (params.status) {
       query = query.eq('status', params.status);
     }
 
@@ -115,11 +115,11 @@ interface ShipmentQueryParams {
     // 璁＄畻缁熻鏁版嵁
     const stats = {
       total: count || 0,
-      inTransit: data?.filter(s => s.status === 'in_transit').length || 0,
-      pending: data?.filter(s => s.status === 'pending').length || 0,
-      customs: data?.filter(s => s.status === 'customs').length || 0,
+      inTransit: data.filter(s => s.status === 'in_transit').length || 0,
+      pending: data.filter(s => s.status === 'pending').length || 0,
+      customs: data.filter(s => s.status === 'customs').length || 0,
       deliveredToday:
-        data?.filter(
+        data.filter(
           s =>
             s.status === 'delivered' &&
             new Date(s.actual_arrival || '').toDateString() ===
@@ -139,11 +139,11 @@ interface ShipmentQueryParams {
       },
     });
   } catch (error) {
-    console.error('鑾峰彇鍙戣揣鍗曞垪琛ㄩ敊?', error);
+    console.error('鑾峰彇鍙戣揣鍗曞垪琛ㄩ敊', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鑾峰彇鍙戣揣鍗曞垪琛ㄥけ?,
+        error: '鑾峰彇鍙戣揣鍗曞垪琛ㄥけ,
         message: (error as Error).message,
       },
       { status: 500 }
@@ -195,7 +195,7 @@ export async function POST(request: Request) {
           success: false,
           error: '缂哄皯蹇呴渶瀛楁',
           message:
-            '璁㈠崟ID銆佹壙杩愬晢銆佽繍杈撴柟寮忋€佽捣杩愬湴銆佺洰鐨勫湴銆佽鍒掑嚭鍙戞椂闂淬€侀璁″埌杈炬椂闂淬€侀噸閲忋€佷綋绉€佷欢鏁板拰杩借釜鍙蜂负蹇呭～?,
+            '璁㈠崟ID銆佹壙杩愬晢銆佽繍杈撴柟寮忋€佽捣杩愬湴銆佺洰鐨勫湴銆佽鍒掑嚭鍙戞椂闂淬€侀璁″埌杈炬椂闂淬€侀噸閲忋€佷綋绉€佷欢鏁板拰杩借釜鍙蜂负蹇呭～,
         },
         { status: 400 }
       );
@@ -207,12 +207,12 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥? },
+        { success: false, error: '鐢ㄦ埛鏈櫥 },
         { status: 401 }
       );
     }
 
-    // 楠岃瘉璁㈠崟鏄惁瀛樺湪涓旂姸鎬佸悎?    const { data: order } = await supabase
+    // 楠岃瘉璁㈠崟鏄惁瀛樺湪涓旂姸鎬佸悎    const { data: order } = await supabase
       .from('foreign_trade_orders')
       .select('id, status')
       .eq('id', order_id)
@@ -222,7 +222,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: '璁㈠崟涓嶅瓨?,
+          error: '璁㈠崟涓嶅,
         },
         { status: 404 }
       );
@@ -233,7 +233,7 @@ export async function POST(request: Request) {
         {
           success: false,
           error: '璁㈠崟鐘舵€佷笉鍏佽鍙戣揣',
-          message: '鍙湁宸茬‘璁ゆ垨澶勭悊涓殑璁㈠崟鎵嶈兘鍒涘缓鍙戣揣?,
+          message: '鍙湁宸茬‘璁ゆ垨澶勭悊涓殑璁㈠崟鎵嶈兘鍒涘缓鍙戣揣,
         },
         { status: 400 }
       );
@@ -242,7 +242,7 @@ export async function POST(request: Request) {
     // 鐢熸垚鍙戣揣鍗曞彿
     const shipmentNumber = await generateShipmentNumber();
 
-    // 鎻掑叆鍙戣揣鍗曟暟?    const { data, error } = await supabase
+    // 鎻掑叆鍙戣揣鍗曟暟    const { data, error } = await supabase
       .from('foreign_trade_shipments')
       .insert({
         shipment_number: shipmentNumber,
@@ -272,7 +272,7 @@ export async function POST(request: Request) {
       throw new Error(error.message);
     }
 
-    // 鏇存柊璁㈠崟鐘舵€佷负宸插彂?    await supabase
+    // 鏇存柊璁㈠崟鐘舵€佷负宸插彂    await supabase
       .from('foreign_trade_orders')
       .update({
         status: 'shipped',
@@ -280,7 +280,7 @@ export async function POST(request: Request) {
       } as any)
       .eq('id', order_id);
 
-    // 璁板綍鎿嶄綔鏃ュ織
+    // 璁板綍鎿嶄綔ュ織
     (await supabase.from('audit_logs').insert({
       user_id: user.id,
       action: 'CREATE_SHIPMENT',
@@ -295,14 +295,14 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data,
-      message: '鍙戣揣鍗曞垱寤烘垚?,
+      message: '鍙戣揣鍗曞垱寤烘垚,
     });
   } catch (error) {
-    console.error('鍒涘缓鍙戣揣鍗曢敊?', error);
+    console.error('鍒涘缓鍙戣揣鍗曢敊', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鍒涘缓鍙戣揣鍗曞け?,
+        error: '鍒涘缓鍙戣揣鍗曞け,
         message: (error as Error).message,
       },
       { status: 500 }
@@ -310,7 +310,7 @@ export async function POST(request: Request) {
   }
 }
 
-// 鎵归噺鏇存柊鍙戣揣鐘?export async function PUT(request: Request) {
+// 鎵归噺鏇存柊鍙戣揣鐘export async function PUT(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
@@ -323,7 +323,7 @@ export async function POST(request: Request) {
         {
           success: false,
           error: '鏁版嵁鏍煎紡閿欒',
-          message: '璇锋彁渚涘彂璐у崟ID鏁扮粍',
+          message: '璇彁渚涘彂璐у崟ID鏁扮粍',
         },
         { status: 400 }
       );
@@ -335,12 +335,12 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥? },
+        { success: false, error: '鐢ㄦ埛鏈櫥 },
         { status: 401 }
       );
     }
 
-    // 鎵归噺鏇存柊鐘?    const updateData: any = {
+    // 鎵归噺鏇存柊鐘    const updateData: any = {
       status,
       updated_at: new Date().toISOString(),
     };
@@ -359,13 +359,13 @@ export async function POST(request: Request) {
       throw new Error(error.message);
     }
 
-    // 璁板綍鎿嶄綔鏃ュ織
+    // 璁板綍鎿嶄綔ュ織
     (await supabase.from('audit_logs').insert({
       user_id: user.id,
       action: 'BATCH_UPDATE_SHIPMENTS',
       table_name: 'foreign_trade_shipments',
       details: {
-        count: (data as any)?.(data as any)?.length || 0,
+        count: (data as any).(data as any).length || 0,
         status,
       } as any,
     })) as any;
@@ -373,10 +373,10 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data,
-      message: `鎴愬姛鏇存柊 ${(data as any)?.(data as any)?.length} 涓彂璐у崟鐘舵€乣,
+      message: `鎴愬姛鏇存柊 ${(data as any).(data as any).length} 涓彂璐у崟鐘舵€乣,
     });
   } catch (error) {
-    console.error('鎵归噺鏇存柊鍙戣揣鐘舵€侀敊?', error);
+    console.error('鎵归噺鏇存柊鍙戣揣鐘舵€侀敊', error);
     return NextResponse.json(
       {
         success: false,

@@ -1,22 +1,18 @@
 ﻿/**
- * Zustand状态管理演示页? * 展示现代化状态管理的各种功能和优? */
+ * Zustand状态管理演示页面
+ * 展示现代化状态管理的各种功能和优势 */
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-  Database,
   ShoppingCart,
-  Package,
-  TrendingUp,
   Users,
   Settings,
   Bell,
   Plus,
   Minus,
   Trash2,
-  Eye,
-  EyeOff,
   Sun,
   Moon,
   Monitor,
@@ -50,7 +46,6 @@ import {
   useNotifications,
   useProducts,
   useUI,
-  useAuth,
   useCartActions,
   useNotificationActions,
 } from '@/stores/enhanced-zustand';
@@ -87,14 +82,15 @@ export default function ZustandDemoPage() {
   const [newProductName, setNewProductName] = useState('');
   const [newProductPrice, setNewProductPrice] = useState('');
 
-  // 使用各种状态钩?  const user = useUser();
+  // 使用各种状态钩子
+  const user = useUser();
   const cart = useCart();
   const notifications = useNotifications();
   const products = useProducts();
   const ui = useUI();
 
   // 使用动作钩子
-  const { setUser, clearUser } = useAuth();
+  const { setUser, clearUser } = useGlobalStore();
   const { addToCart, removeFromCart, updateCartItemQuantity, clearCart } =
     useCartActions();
   const {
@@ -139,8 +135,8 @@ export default function ZustandDemoPage() {
   const handleLogout = () => {
     clearUser();
     addNotification({
-      title: '退出登?,
-      message: '您已成功退出登?,
+      title: '退出登录',
+      message: '您已成功退出登录',
       type: 'info',
     });
   };
@@ -162,7 +158,8 @@ export default function ZustandDemoPage() {
     });
   };
 
-  // 添加自定义商?  const handleAddCustomProduct = () => {
+  // 添加自定义商品
+  const handleAddCustomProduct = () => {
     if (newProductName && newProductPrice) {
       addToCart({
         productId: `custom_${Date.now()}`,
@@ -175,7 +172,7 @@ export default function ZustandDemoPage() {
       setNewProductPrice('');
 
       addNotification({
-        title: '自定义商品添加成?,
+        title: '自定义商品添加成功',
         message: `${newProductName} 已添加到购物车`,
         type: 'success',
       });
@@ -187,7 +184,8 @@ export default function ZustandDemoPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Zustand状态管理演?          </h1>
+            Zustand状态管理演示
+          </h1>
           <p className="text-gray-600">
             体验现代化的状态管理模式，支持持久化、中间件和DevTools
           </p>
@@ -196,8 +194,8 @@ export default function ZustandDemoPage() {
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">概览</TabsTrigger>
-            <TabsTrigger value="user">用户状?/TabsTrigger>
-            <TabsTrigger value="cart">购物?/TabsTrigger>
+            <TabsTrigger value="user">用户状态</TabsTrigger>
+            <TabsTrigger value="cart">购物车</TabsTrigger>
             <TabsTrigger value="notifications">通知</TabsTrigger>
             <TabsTrigger value="products">产品管理</TabsTrigger>
           </TabsList>
@@ -208,12 +206,13 @@ export default function ZustandDemoPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    用户状?                  </CardTitle>
+                    用户状态
+                  </CardTitle>
                   <Users className="h-4 w-4 text-blue-500" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {user.isAuthenticated ? '已登? : '未登?}
+                    {user.isAuthenticated  '已登录' : '未登录'}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {user.name || '访客'}
@@ -223,7 +222,7 @@ export default function ZustandDemoPage() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">购物?/CardTitle>
+                  <CardTitle className="text-sm font-medium">购物车</CardTitle>
                   <ShoppingCart className="h-4 w-4 text-green-500" />
                 </CardHeader>
                 <CardContent>
@@ -257,7 +256,7 @@ export default function ZustandDemoPage() {
                     {ui.theme}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {ui.sidebarCollapsed ? '侧边栏折? : '侧边栏展开'}
+                    {ui.sidebarCollapsed  '侧边栏折叠' : '侧边栏展开'}
                   </p>
                 </CardContent>
               </Card>
@@ -266,8 +265,8 @@ export default function ZustandDemoPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>快速操?/CardTitle>
-                  <CardDescription>常用状态管理操?/CardDescription>
+                  <CardTitle>快速操作</CardTitle>
+                  <CardDescription>常用状态管理操作</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex gap-2">
@@ -294,13 +293,14 @@ export default function ZustandDemoPage() {
                       variant="secondary"
                       className="flex-1"
                     >
-                      切换侧边?                    </Button>
+                      切换侧边栏
+                    </Button>
                     <Button
                       onClick={() => setLoading(!ui.loading)}
                       variant="secondary"
                       className="flex-1"
                     >
-                      {ui.loading ? '停止加载' : '开始加?}
+                      {ui.loading  '停止加载' : '开始加载'}
                     </Button>
                   </div>
                 </CardContent>
@@ -315,7 +315,7 @@ export default function ZustandDemoPage() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="theme-light">浅色模式</Label>
                     <Button
-                      variant={ui.theme === 'light' ? 'default' : 'outline'}
+                      variant={ui.theme === 'light'  'default' : 'outline'}
                       size="sm"
                       onClick={() => setTheme('light')}
                     >
@@ -327,7 +327,7 @@ export default function ZustandDemoPage() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="theme-dark">深色模式</Label>
                     <Button
-                      variant={ui.theme === 'dark' ? 'default' : 'outline'}
+                      variant={ui.theme === 'dark'  'default' : 'outline'}
                       size="sm"
                       onClick={() => setTheme('dark')}
                     >
@@ -339,7 +339,7 @@ export default function ZustandDemoPage() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="theme-system">跟随系统</Label>
                     <Button
-                      variant={ui.theme === 'system' ? 'default' : 'outline'}
+                      variant={ui.theme === 'system'  'default' : 'outline'}
                       size="sm"
                       onClick={() => setTheme('system')}
                     >
@@ -352,11 +352,11 @@ export default function ZustandDemoPage() {
             </div>
           </TabsContent>
 
-          {/* 用户状态面?*/}
+          {/* 用户状态面板 */}
           <TabsContent value="user" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>用户状态详?/CardTitle>
+                <CardTitle>用户状态详情</CardTitle>
                 <CardDescription>当前用户的认证和权限信息</CardDescription>
               </CardHeader>
               <CardContent>
@@ -367,22 +367,23 @@ export default function ZustandDemoPage() {
             </Card>
           </TabsContent>
 
-          {/* 购物车面?*/}
+          {/* 购物车面板 */}
           <TabsContent value="cart" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 space-y-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle>购物车商?/CardTitle>
-                    <CardDescription>管理购物车中的商?/CardDescription>
+                    <CardTitle>购物车商品</CardTitle>
+                    <CardDescription>管理购物车中的商品</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {cart.items.length === 0 ? (
+                    {cart.items.length === 0  (
                       <div className="text-center py-8 text-gray-500">
-                        购物车为?                      </div>
+                        购物车为空
+                      </div>
                     ) : (
                       <div className="space-y-4">
-                        {cart.items.map(item => (
+                        {cart.items.map((item: any) => (
                           <div
                             key={item.id}
                             className="flex items-center justify-between p-4 border rounded-lg"
@@ -459,7 +460,8 @@ export default function ZustandDemoPage() {
                           variant="outline"
                           className="w-full mt-4"
                         >
-                          清空购物?                        </Button>
+                          清空购物车
+                        </Button>
                       </div>
                     )}
                   </CardContent>
@@ -467,7 +469,7 @@ export default function ZustandDemoPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>添加自定义商?/CardTitle>
+                    <CardTitle>添加自定义商品</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -508,17 +510,17 @@ export default function ZustandDemoPage() {
                     <CardTitle>推荐商品</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {mockProducts.map(product => (
+                    {mockProducts.map((product: any) => (
                       <div key={product.id} className="border rounded-lg p-4">
                         <h3 className="font-medium">{product.name}</h3>
                         <p className="text-sm text-gray-500">
                           ¥{product.price.toFixed(2)}
                         </p>
                         <Badge
-                          variant={product.inStock ? 'default' : 'secondary'}
+                          variant={product.inStock  'default' : 'secondary'}
                           className="mt-2"
                         >
-                          {product.inStock ? '有库? : '缺货'}
+                          {product.inStock  '有库存' : '缺货'}
                         </Badge>
                         <Button
                           onClick={() => handleAddToCart(product)}
@@ -552,7 +554,8 @@ export default function ZustandDemoPage() {
                       size="sm"
                       disabled={notifications.unreadCount === 0}
                     >
-                      全部标记为已?                    </Button>
+                      全部标记为已读
+                    </Button>
                     <Button
                       onClick={() =>
                         useGlobalStore.getState().clearAllNotifications()
@@ -566,16 +569,16 @@ export default function ZustandDemoPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {notifications.notifications.length === 0 ? (
+                {notifications.notifications.length === 0  (
                   <div className="text-center py-8 text-gray-500">暂无通知</div>
                 ) : (
                   <div className="space-y-3">
-                    {notifications.notifications.map(notification => (
+                    {notifications.notifications.map((notification: any) => (
                       <div
                         key={notification.id}
                         className={`p-4 rounded-lg border ${
                           notification.read
-                            ? 'bg-gray-50'
+                             'bg-gray-50'
                             : 'bg-blue-50 border-blue-200'
                         }`}
                       >
@@ -608,7 +611,8 @@ export default function ZustandDemoPage() {
                                   markNotificationAsRead(notification.id)
                                 }
                               >
-                                标记为已?                              </Button>
+                                标记为已读
+                              </Button>
                             )}
                             <Button
                               variant="ghost"
@@ -649,7 +653,7 @@ export default function ZustandDemoPage() {
                     onClick={() =>
                       addNotification({
                         title: '成功通知',
-                        message: '操作执行成功?,
+                        message: '操作执行成功！',
                         type: 'success',
                       })
                     }
@@ -673,7 +677,7 @@ export default function ZustandDemoPage() {
                     onClick={() =>
                       addNotification({
                         title: '错误通知',
-                        message: '发生了一个错误，请检?,
+                        message: '发生了一个错误，请检查',
                         type: 'error',
                       })
                     }
@@ -706,7 +710,7 @@ export default function ZustandDemoPage() {
                       </div>
 
                       <div>
-                        <Label>分类筛?/Label>
+                        <Label>分类筛选</Label>
                         <Select
                           value={products.filters.category || ''}
                           onValueChange={value =>
@@ -735,7 +739,7 @@ export default function ZustandDemoPage() {
                         <Label>显示模式</Label>
                         <Button
                           variant={
-                            products.viewMode === 'grid' ? 'default' : 'outline'
+                            products.viewMode === 'grid'  'default' : 'outline'
                           }
                           size="sm"
                           onClick={() => setViewMode('grid')}
@@ -745,7 +749,7 @@ export default function ZustandDemoPage() {
                         </Button>
                         <Button
                           variant={
-                            products.viewMode === 'list' ? 'default' : 'outline'
+                            products.viewMode === 'list'  'default' : 'outline'
                           }
                           size="sm"
                           onClick={() => setViewMode('list')}
@@ -756,7 +760,8 @@ export default function ZustandDemoPage() {
                       </div>
 
                       <div className="text-sm text-gray-500">
-                        已选中 {products.selectedProducts.length} 个商?                      </div>
+                        已选中 {products.selectedProducts.length} 个商品
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -769,16 +774,16 @@ export default function ZustandDemoPage() {
                     <div
                       className={
                         products.viewMode === 'grid'
-                          ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+                           'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
                           : 'space-y-3'
                       }
                     >
-                      {mockProducts.map(product => (
+                      {mockProducts.map((product: any) => (
                         <div
                           key={product.id}
                           className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                             products.selectedProducts.includes(product.id)
-                              ? 'ring-2 ring-blue-500 bg-blue-50'
+                               'ring-2 ring-blue-500 bg-blue-50'
                               : 'hover:bg-gray-50'
                           }`}
                           onClick={() => toggleProductSelection(product.id)}
@@ -791,7 +796,7 @@ export default function ZustandDemoPage() {
                                     products.selectedProducts.includes(
                                       product.id
                                     )
-                                      ? 'bg-blue-500 border-blue-500'
+                                       'bg-blue-500 border-blue-500'
                                       : 'border-gray-300'
                                   }`}
                                 >
@@ -809,10 +814,10 @@ export default function ZustandDemoPage() {
                                 <h3 className="font-medium">{product.name}</h3>
                                 <Badge
                                   variant={
-                                    product.inStock ? 'default' : 'secondary'
+                                    product.inStock  'default' : 'secondary'
                                   }
                                 >
-                                  {product.inStock ? '有库? : '缺货'}
+                                  {product.inStock  '有库存' : '缺货'}
                                 </Badge>
                               </div>
                               <p className="text-sm text-gray-500 mt-1">
@@ -833,7 +838,7 @@ export default function ZustandDemoPage() {
               <div>
                 <Card>
                   <CardHeader>
-                    <CardTitle>筛选条?/CardTitle>
+                    <CardTitle>筛选条件</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
@@ -846,7 +851,7 @@ export default function ZustandDemoPage() {
                           onChange={e =>
                             updateProductFilters({
                               minPrice: e.target.value
-                                ? parseFloat(e.target.value)
+                                 parseFloat(e.target.value)
                                 : undefined,
                             })
                           }
@@ -859,7 +864,7 @@ export default function ZustandDemoPage() {
                           onChange={e =>
                             updateProductFilters({
                               maxPrice: e.target.value
-                                ? parseFloat(e.target.value)
+                                 parseFloat(e.target.value)
                                 : undefined,
                             })
                           }
@@ -928,4 +933,3 @@ export default function ZustandDemoPage() {
     </div>
   );
 }
-

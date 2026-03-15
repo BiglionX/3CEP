@@ -1,6 +1,6 @@
 ﻿/**
- * 瑙掕壊宸紓?Dashboard API 绔偣
- * 鏍规嵁鐢ㄦ埛瑙掕壊杩斿洖涓嶅悓鐨勪华琛ㄦ澘鏁版嵁鍜屽姛鑳芥ā? */
+ * 瑙掕壊宸紓Dashboard API 绔偣
+ * 鏍规嵁鐢ㄦ埛瑙掕壊杩斿洖涓嶅悓鐨勪华琛ㄦ澘鏁版嵁鍜屽姛鑳芥ā */
 
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
@@ -13,13 +13,13 @@ export async function GET(request: Request) {
   );
 
   try {
-    // 锟?cookies 鑾峰彇浼氳瘽淇℃伅
+    // cookies 鑾峰彇氳瘽淇℃伅
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
 
     // 楠岃瘉鐢ㄦ埛璁よ瘉
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鐢ㄦ埛鏈? }, { status: 401 });
+      return NextResponse.json({ error: '鐢ㄦ埛鏈 }, { status: 401 });
     }
 
     // 鑾峰彇鐢ㄦ埛淇℃伅
@@ -32,14 +32,14 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: '鐢ㄦ埛璁よ瘉澶辫触' }, { status: 401 });
     }
 
-    // 鑾峰彇鐢ㄦ埛瑙掕壊淇℃伅锛堢畝鍖栧疄鐜帮紝瀹為檯搴旇浠庢暟鎹簱鑾峰彇?    const userRoles = await getUserRoles(user.id, supabase);
+    // 鑾峰彇鐢ㄦ埛瑙掕壊淇℃伅锛堢畝鍖栧疄鐜帮紝瀹為檯搴旇庢暟鎹簱鑾峰彇    const userRoles = await getUserRoles(user.id, supabase);
     const userRole = userRoles[0] || 'viewer';
 
     // 鑾峰彇鏌ヨ鍙傛暟
     const { searchParams } = new URL(request.url);
     const tenantId = searchParams.get('tenantId');
 
-    // 鏍规嵁瑙掕壊鏋勫缓宸紓鍖栫殑浠〃鏉挎暟?    const dashboardData = await buildRoleBasedDashboard(
+    // 鏍规嵁瑙掕壊鏋勫缓宸紓鍖栫殑〃鏉挎暟    const dashboardData = await buildRoleBasedDashboard(
       userRole,
       tenantId,
       supabase
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     console.error('Dashboard API 閿欒:', error);
-    return NextResponse.json({ error: '鑾峰彇浠〃鏉挎暟鎹け? }, { status: 500 });
+    return NextResponse.json({ error: '鑾峰彇〃鏉挎暟鎹け }, { status: 500 });
   }
 }
 
@@ -62,14 +62,14 @@ export async function GET(request: Request) {
  */
 async function getUserRoles(userId: string, supabase: any): Promise<string[]> {
   try {
-    // 绠€鍖栧疄鐜帮細浠庣敤鎴峰厓鏁版嵁鑾峰彇瑙掕壊
+    // 绠€鍖栧疄鐜帮細庣敤鎴峰厓鏁版嵁鑾峰彇瑙掕壊
     const { data: userData, error } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', userId)
       .single();
 
-    if (!error && userData?.role) {
+    if (!error && userData.role) {
       return [userData.role];
     }
 
@@ -82,7 +82,7 @@ async function getUserRoles(userId: string, supabase: any): Promise<string[]> {
 }
 
 /**
- * 鏍规嵁鐢ㄦ埛瑙掕壊鏋勫缓宸紓鍖栫殑浠〃鏉挎暟? */
+ * 鏍规嵁鐢ㄦ埛瑙掕壊鏋勫缓宸紓鍖栫殑〃鏉挎暟 */
 async function buildRoleBasedDashboard(
   role: string,
   tenantId: string | null,
@@ -147,12 +147,12 @@ async function buildRoleBasedDashboard(
       dashboard.statistics = getDefaultStatistics();
   }
 
-  // 鑾峰彇鏈€杩戞椿鍔紙鎵€鏈夎鑹查€氱敤?  dashboard.recentActivities = getRecentActivities();
+  // 鑾峰彇鏈€杩戞椿鍔紙鎵€鏈夎鑹查€氱敤  dashboard.recentActivities = getRecentActivities();
 
   return dashboard;
 }
 
-// 绠＄悊鍛樻ā?function getAdminModules() {
+// 绠＄悊鍛樻āfunction getAdminModules() {
   return [
     {
       id: 'system_overview',
@@ -192,7 +192,7 @@ async function buildRoleBasedDashboard(
     },
     {
       id: 'warehouse_management',
-      name: '浠撳偍绠＄悊',
+      name: '撳偍绠＄悊',
       icon: 'Package',
       permission: 'inventory_read',
     },
@@ -229,7 +229,7 @@ async function buildRoleBasedDashboard(
   ];
 }
 
-// 绠＄悊鍛樼粺璁℃暟?function getAdminStatistics() {
+// 绠＄悊鍛樼粺璁℃暟function getAdminStatistics() {
   return {
     totalUsers: 1247,
     activeUsers: 892,
@@ -390,7 +390,7 @@ function getFinanceManagerModules() {
     },
     {
       id: 'refund_management',
-      name: '閫€娆剧?,
+      name: '€娆剧,
       icon: 'Undo2',
       permission: 'payments_refund',
     },
@@ -429,7 +429,7 @@ function getProcurementSpecialistModules() {
     },
     {
       id: 'supplier_management',
-      name: '渚涘簲鍟嗙?,
+      name: '渚涘簲鍟嗙,
       icon: 'Truck',
       permission: 'procurement_create',
     },
@@ -456,25 +456,25 @@ function getWarehouseOperatorModules() {
   return [
     {
       id: 'warehouse_dashboard',
-      name: '浠撳偍鐪嬫澘',
+      name: '撳偍鐪嬫澘',
       icon: 'Package',
       permission: 'dashboard_read',
     },
     {
       id: 'inventory_management',
-      name: '搴撳瓨绠＄悊',
+      name: '搴撳绠＄悊',
       icon: 'Boxes',
       permission: 'inventory_read',
     },
     {
       id: 'stock_operations',
-      name: '鍑哄叆搴撴搷?,
+      name: '鍑哄叆搴撴搷,
       icon: 'Move',
       permission: 'inventory_update',
     },
     {
       id: 'inventory_reports',
-      name: '搴撳瓨鎶ヨ〃',
+      name: '搴撳鎶ヨ〃',
       icon: 'BarChart3',
       permission: 'reports_read',
     },
@@ -495,13 +495,13 @@ function getAgentOperatorModules() {
   return [
     {
       id: 'agent_dashboard',
-      name: '鏅鸿兘浣撶湅?,
+      name: '鏅鸿兘浣撶湅,
       icon: 'Bot',
       permission: 'dashboard_read',
     },
     {
       id: 'workflow_execution',
-      name: '宸ヤ綔娴佹墽?,
+      name: '宸ヤ綔娴佹墽,
       icon: 'Play',
       permission: 'agents_execute',
     },
@@ -550,7 +550,7 @@ function getViewerModules() {
 function getViewerStatistics() {
   return {
     accessibleReports: 15,
-    lastUpdated: '2灏忔椂?,
+    lastUpdated: '2灏忔椂,
     dataFreshness: 'high',
   };
 }
@@ -572,29 +572,29 @@ function getDefaultStatistics() {
   };
 }
 
-// 鑾峰彇鏈€杩戞椿?function getRecentActivities() {
+// 鑾峰彇鏈€杩戞椿function getRecentActivities() {
   return [
     {
       id: '1',
       type: 'system',
       title: '绯荤粺鏇存柊瀹屾垚',
-      description: '鐗堟湰 2.1.0 宸查儴?,
-      time: '2灏忔椂?,
+      description: '鐗堟湰 2.1.0 宸查儴,
+      time: '2灏忔椂,
       icon: 'Rocket',
     },
     {
       id: '2',
       type: 'user',
-      title: '鏂扮敤鎴锋敞?,
+      title: '鏂扮敤鎴敞,
       description: '鐢ㄦ埛 john_doe 瀹屾垚娉ㄥ唽',
-      time: '4灏忔椂?,
+      time: '4灏忔椂,
       icon: 'UserPlus',
     },
     {
       id: '3',
       type: 'content',
-      title: '鍐呭寰呭?,
-      description: '锟?3 绡囨枃绔犵瓑寰呭?,
+      title: '鍐呭寰呭,
+      description: '3 绡囨枃绔犵瓑寰呭,
       time: '1澶╁墠',
       icon: 'FileText',
     },

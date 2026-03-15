@@ -38,7 +38,7 @@ export default function EnterpriseAgentsPage() {
   const [agents, setAgents] = useState<EnterpriseAgent[]>([
     {
       id: '1',
-      name: '智能客服机器?,
+      name: '智能客服机器,
       type: 'customer-service',
       status: 'running',
       version: 'v2.1.0',
@@ -62,7 +62,7 @@ export default function EnterpriseAgentsPage() {
     },
     {
       id: '3',
-      name: '采购智能?,
+      name: '采购智能,
       type: 'procurement',
       status: 'stopped',
       version: 'v1.0.0',
@@ -74,7 +74,7 @@ export default function EnterpriseAgentsPage() {
     },
     {
       id: '4',
-      name: '流程自动化助?,
+      name: '流程自动化助,
       type: 'workflow',
       status: 'error',
       version: 'v1.2.1',
@@ -110,7 +110,7 @@ export default function EnterpriseAgentsPage() {
       case 'procurement':
         return { label: '采购管理', color: 'bg-purple-100 text-purple-800' };
       case 'workflow':
-        return { label: '流程自动?, color: 'bg-orange-100 text-orange-800' };
+        return { label: '流程自动, color: 'bg-orange-100 text-orange-800' };
       default:
         return { label: type, color: 'bg-gray-100 text-gray-800' };
     }
@@ -120,13 +120,13 @@ export default function EnterpriseAgentsPage() {
     switch (status) {
       case 'running':
         return {
-          label: '运行?,
+          label: '运行,
           color: 'bg-green-100 text-green-800',
           icon: CheckCircle,
         };
       case 'stopped':
         return {
-          label: '已停?,
+          label: '已停,
           color: 'bg-gray-100 text-gray-800',
           icon: XCircle,
         };
@@ -138,7 +138,7 @@ export default function EnterpriseAgentsPage() {
         };
       case 'pending':
         return {
-          label: '待启?,
+          label: '待启,
           color: 'bg-yellow-100 text-yellow-800',
           icon: Clock,
         };
@@ -155,9 +155,9 @@ export default function EnterpriseAgentsPage() {
     setAgents(
       agents.map(agent =>
         agent.id === agentId
-          ? {
+           {
               ...agent,
-              status: agent.status === 'running' ? 'stopped' : 'running',
+              status: agent.status === 'running'  'stopped' : 'running',
               lastActive: new Date().toISOString(),
             }
           : agent
@@ -166,7 +166,7 @@ export default function EnterpriseAgentsPage() {
   };
 
   const deleteAgent = (agentId: string) => {
-    if (confirm('确定要删除这个智能体吗？此操作不可撤销?)) {
+    if (confirm('确定要删除这个智能体吗？此操作不可撤销)) {
       setAgents(agents.filter(agent => agent.id !== agentId));
     }
   };
@@ -174,12 +174,12 @@ export default function EnterpriseAgentsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 页面标题和操作按?*/}
+        {/* 页面标题和操作按*/}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">智能体管?/h1>
+            <h1 className="text-2xl font-bold text-gray-900">智能体管/h1>
             <p className="mt-1 text-sm text-gray-600">
-              管理和监控企业部署的所有AI智能?            </p>
+              管理和监控企业部署的所有AI智能            </p>
           </div>
           <div className="mt-4 sm:mt-0 flex space-x-3">
             <Button variant="outline">
@@ -188,11 +188,11 @@ export default function EnterpriseAgentsPage() {
             </Button>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              新建智能?            </Button>
+              新建智能            </Button>
           </div>
         </div>
 
-        {/* 搜索和过?*/}
+        {/* 搜索和过*/}
         <Card className="mb-8">
           <CardContent className="pt-6">
             <div className="flex flex-col sm:flex-row gap-4">
@@ -213,11 +213,11 @@ export default function EnterpriseAgentsPage() {
                   value={filterType}
                   onChange={e => setFilterType(e.target.value)}
                 >
-                  <option value="all">所有类?/option>
+                  <option value="all">所有类/option>
                   <option value="customer-service">客户服务</option>
                   <option value="data-analysis">数据分析</option>
                   <option value="procurement">采购管理</option>
-                  <option value="workflow">流程自动?/option>
+                  <option value="workflow">流程自动/option>
                 </select>
 
                 <select
@@ -225,11 +225,11 @@ export default function EnterpriseAgentsPage() {
                   value={filterStatus}
                   onChange={e => setFilterStatus(e.target.value)}
                 >
-                  <option value="all">所有状?/option>
-                  <option value="running">运行?/option>
-                  <option value="stopped">已停?/option>
+                  <option value="all">所有状/option>
+                  <option value="running">运行/option>
+                  <option value="stopped">已停/option>
                   <option value="error">错误</option>
-                  <option value="pending">待启?/option>
+                  <option value="pending">待启/option>
                 </select>
               </div>
             </div>
@@ -246,7 +246,7 @@ export default function EnterpriseAgentsPage() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">
-                    总智能体?                  </p>
+                    总智能体                  </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {agents.length}
                   </p>
@@ -262,7 +262,7 @@ export default function EnterpriseAgentsPage() {
                   <CheckCircle className="w-6 h-6 text-green-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">运行?/p>
+                  <p className="text-sm font-medium text-gray-600">运行/p>
                   <p className="text-2xl font-bold text-gray-900">
                     {agents.filter(a => a.status === 'running').length}
                   </p>
@@ -306,7 +306,7 @@ export default function EnterpriseAgentsPage() {
           </Card>
         </div>
 
-        {/* 智能体列?*/}
+        {/* 智能体列*/}
         <div className="space-y-6">
           {filteredAgents.map(agent => {
             const typeConfig = getTypeConfig(agent.type);
@@ -340,7 +340,7 @@ export default function EnterpriseAgentsPage() {
                             </span>
                           </div>
                           <p className="text-sm text-gray-600 mb-4">
-                            版本: {agent.version} �?创建时间: {agent.createdAt}
+                            版本: {agent.version} 创建时间: {agent.createdAt}
                           </p>
 
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -351,9 +351,9 @@ export default function EnterpriseAgentsPage() {
                               </p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">成功?/p>
+                              <p className="text-xs text-gray-500">成功/p>
                               <p
-                                className={`font-semibold ${agent.successRate >= 95 ? 'text-green-600' : agent.successRate >= 90 ? 'text-yellow-600' : 'text-red-600'}`}
+                                className={`font-semibold ${agent.successRate >= 95  'text-green-600' : agent.successRate >= 90  'text-yellow-600' : 'text-red-600'}`}
                               >
                                 {agent.successRate}%
                               </p>
@@ -408,7 +408,7 @@ export default function EnterpriseAgentsPage() {
 
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <p className="text-xs text-gray-500">
-                      最后活? {agent.lastActive}
+                      最后活 {agent.lastActive}
                     </p>
                   </div>
                 </CardContent>
@@ -421,13 +421,13 @@ export default function EnterpriseAgentsPage() {
               <CardContent className="text-center py-12">
                 <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  未找到匹配的智能?                </h3>
+                  未找到匹配的智能                </h3>
                 <p className="text-gray-500 mb-4">
                   尝试调整搜索条件或创建新的智能体
                 </p>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  创建智能?                </Button>
+                  创建智能                </Button>
               </CardContent>
             </Card>
           )}

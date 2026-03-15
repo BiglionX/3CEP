@@ -36,7 +36,7 @@ export default function TeamManagementPage() {
     {
       id: 'team-1',
       name: '销售智能体团队',
-      description: '负责客户服务和销售转化的智能体团?,
+      description: '负责客户服务和销售转化的智能体团队',
       memberCount: 5,
       activeOrchestrations: 3,
       createdAt: '2026-02-15',
@@ -44,7 +44,7 @@ export default function TeamManagementPage() {
     },
     {
       id: 'team-2',
-      name: '技术支持团?,
+      name: '技术支持团队',
       description: '提供技术咨询和支持服务的智能体团队',
       memberCount: 3,
       activeOrchestrations: 2,
@@ -54,7 +54,7 @@ export default function TeamManagementPage() {
     {
       id: 'team-3',
       name: '数据分析团队',
-      description: '专门处理数据处理和分析任务的智能体团?,
+      description: '专门处理数据处理和分析任务的智能体团队',
       memberCount: 4,
       activeOrchestrations: 1,
       createdAt: '2026-02-25',
@@ -92,7 +92,7 @@ export default function TeamManagementPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载团队数据?..</p>
+          <p className="mt-4 text-gray-600">加载团队数据中...</p>
         </div>
       </div>
     );
@@ -123,7 +123,7 @@ export default function TeamManagementPage() {
         {/* 搜索和筛选栏 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* 搜索?*/}
+            {/* 搜索框 */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -135,7 +135,7 @@ export default function TeamManagementPage() {
               />
             </div>
 
-            {/* 状态筛?*/}
+            {/* 状态筛选 */}
             <div className="flex items-center space-x-2">
               <Filter className="text-gray-500 w-5 h-5" />
               <select
@@ -143,26 +143,27 @@ export default function TeamManagementPage() {
                 value={filterStatus}
                 onChange={e => setFilterStatus(e.target.value as any)}
               >
-                <option value="all">全部状?/option>
+                <option value="all">全部状态</option>
                 <option value="active">活跃</option>
-                <option value="archived">已归?/option>
+                <option value="archived">已归档</option>
               </select>
             </div>
 
             {/* 结果统计 */}
             <div className="flex items-center justify-end text-sm text-gray-600">
-              �?{filteredTeams.length} 个团?            </div>
+              共 {filteredTeams.length} 个团队
+            </div>
           </div>
         </div>
 
         {/* 团队列表 */}
-        {filteredTeams.length === 0 ? (
+        {filteredTeams.length === 0  (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
             <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">暂无团队</h3>
             <p className="text-gray-600 mb-6">
               {searchTerm || filterStatus !== 'all'
-                ? '没有找到匹配的团?
+                 '没有找到匹配的团队'
                 : '您还没有创建任何团队'}
             </p>
             {!searchTerm && filterStatus === 'all' && (
@@ -170,7 +171,8 @@ export default function TeamManagementPage() {
                 onClick={handleCreateTeam}
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
-                创建第一个团?              </button>
+                创建第一个团队
+              </button>
             )}
           </div>
         ) : (
@@ -191,11 +193,11 @@ export default function TeamManagementPage() {
                         <span
                           className={`px-2 py-1 text-xs rounded-full ${
                             team.status === 'active'
-                              ? 'bg-green-100 text-green-800'
+                               'bg-green-100 text-green-800'
                               : 'bg-gray-100 text-gray-800'
                           }`}
                         >
-                          {team.status === 'active' ? '活跃' : '已归?}
+                          {team.status === 'active'  '活跃' : '已归档'}
                         </span>
                       </div>
                       <p className="text-gray-600 text-sm mb-4 line-clamp-2">
@@ -239,7 +241,7 @@ export default function TeamManagementPage() {
                   <div className="pt-4 border-t border-gray-100 mt-4">
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>
-                        创建?{new Date(team.createdAt).toLocaleDateString()}
+                        创建于 {new Date(team.createdAt).toLocaleDateString()}
                       </span>
                       <button
                         className="text-blue-600 hover:text-blue-800 font-medium"
@@ -248,7 +250,8 @@ export default function TeamManagementPage() {
                           handleViewTeam(team.id);
                         }}
                       >
-                        进入团队 �?                      </button>
+                        进入团队 →
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -259,7 +262,7 @@ export default function TeamManagementPage() {
 
         {/* 快捷操作区域 */}
         <div className="mt-12 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">快速开?/h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">快速开始</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
               onClick={handleCreateTeam}
@@ -270,7 +273,8 @@ export default function TeamManagementPage() {
               </div>
               <h3 className="font-medium text-gray-900 mb-1">创建团队</h3>
               <p className="text-sm text-gray-600 text-center">
-                组织智能体协作完成复杂任?              </p>
+                组织智能体协作完成复杂任务
+              </p>
             </button>
 
             <button
@@ -282,7 +286,8 @@ export default function TeamManagementPage() {
               </div>
               <h3 className="font-medium text-gray-900 mb-1">使用模板</h3>
               <p className="text-sm text-gray-600 text-center">
-                基于预设模板快速创建团?              </p>
+                基于预设模板快速创建团队
+              </p>
             </button>
 
             <button
@@ -303,4 +308,3 @@ export default function TeamManagementPage() {
     </div>
   );
 }
-

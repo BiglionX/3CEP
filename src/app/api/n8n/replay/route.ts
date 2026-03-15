@@ -1,6 +1,6 @@
 ﻿/**
- * n8n 宸ヤ綔娴佸洖?API
- * 鎻愪緵宸ヤ綔娴佸巻鍙叉墽琛屽洖鏀惧姛鑳斤紝甯︽潈闄愰獙璇佸拰瀹¤鏃ュ織
+ * n8n 宸ヤ綔娴佸洖API
+ * 鎻愪緵宸ヤ綔娴佸巻鍙叉墽琛屽洖鏀惧姛鑳斤紝甯︽潈闄愰獙璇佸拰瀹¤ュ織
  */
 
 import { createClient } from '@supabase/supabase-js';
@@ -16,29 +16,29 @@ const N8N_CONFIG = {
 };
 
 export async function POST(request: Request) {
-  // 鍒涘缓 Supabase 瀹㈡埛?  const supabase = createClient(
+  // 鍒涘缓 Supabase 瀹㈡埛  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 锟?cookies 鑾峰彇浼氳瘽淇℃伅
+  // cookies 鑾峰彇氳瘽淇℃伅
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('sb-access-token');
 
   try {
     // 楠岃瘉鐢ㄦ埛璁よ瘉
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 璁剧疆璁よ瘉浠ょ墝
+    // 璁剧疆璁よ瘉ょ墝
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 鑾峰彇鐢ㄦ埛瑙掕壊淇℃伅
@@ -53,12 +53,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '鐢ㄦ埛鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 鏋勯€犵敤鎴蜂笂涓嬫枃鐢ㄤ簬鏉冮檺妫€?    const userContext = {
+    // 鏋勯€犵敤鎴蜂笂涓嬫枃鐢ㄤ簬鏉冮檺妫€    const userContext = {
       id: user.id,
       roles: [adminUser.role],
-      tenant_id: null, // 绠€鍖栧鐞嗭紝瀹為檯搴斾粠 user_tenants 琛ㄨ幏?    };
+      tenant_id: null, // 绠€鍖栧鐞嗭紝瀹為檯搴斾粠 user_tenants 琛ㄨ幏    };
 
-    // 妯℃嫙 Express 璇锋眰瀵硅薄鐢ㄤ簬鏉冮檺涓棿?    const mockReq = {
+    // 妯℃嫙 Express 璇眰瀵硅薄鐢ㄤ簬鏉冮檺涓棿    const mockReq = {
       user: userContext,
       body: await request.json(),
     };
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       }),
     };
 
-    // 妫€?n8n_workflows_replay 鏉冮檺
+    // 妫€n8n_workflows_replay 鏉冮檺
     const permissionCheck = requirePermission('n8n_workflows_replay');
     let permissionGranted = true;
     let permissionError = null;
@@ -92,14 +92,14 @@ export async function POST(request: Request) {
       return NextResponse.json(permissionError, { status: 403 });
     }
 
-    // 瑙ｆ瀽璇锋眰?    const { workflowId, executionId, parameters } = mockReq.body;
+    // 瑙ｆ瀽璇眰    const { workflowId, executionId, parameters } = mockReq.body;
 
     // 楠岃瘉蹇呰鍙傛暟
     if (!workflowId) {
       return NextResponse.json({ error: '缂哄皯宸ヤ綔娴両D鍙傛暟' }, { status: 400 });
     }
 
-    // 璁板綍瀹¤鏃ュ織 - 寮€濮嬪洖?    await audit(
+    // 璁板綍瀹¤ュ織 - 寮€濮嬪洖    await audit(
       'n8n_workflow_replay_start',
       {
         id: user.id,
@@ -139,7 +139,7 @@ export async function POST(request: Request) {
         timestamp: new Date().toISOString(),
       };
 
-      // 璁板綍瀹¤鏃ュ織 - 鍥炴斁鎴愬姛
+      // 璁板綍瀹¤ュ織 - 鍥炴斁鎴愬姛
       await audit(
         'n8n_workflow_replay_success',
         {
@@ -159,7 +159,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(replayResult);
     } catch (n8nError: any) {
-      // 璁板綍瀹¤鏃ュ織 - 鍥炴斁澶辫触
+      // 璁板綍瀹¤ュ織 - 鍥炴斁澶辫触
       await audit(
         'n8n_workflow_replay_failed',
         {
@@ -183,16 +183,16 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         {
-          error: '宸ヤ綔娴佸洖鏀惧け?,
+          error: '宸ヤ綔娴佸洖鏀惧け,
           details: n8nError.message,
         },
         { status: 500 }
       );
     }
   } catch (error: any) {
-    console.error('宸ヤ綔娴佸洖?API 閿欒:', error);
+    console.error('宸ヤ綔娴佸洖API 閿欒:', error);
 
-    // 璁板綍瀹¤鏃ュ織 - 绯荤粺閿欒
+    // 璁板綍瀹¤ュ織 - 绯荤粺閿欒
     await audit(
       'n8n_workflow_replay_error',
       {
@@ -213,11 +213,11 @@ export async function POST(request: Request) {
       }
     );
 
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
-// GET 鏂规硶鐢ㄤ簬鏌ヨ鍥炴斁鐘?export async function GET(request: Request) {
+// GET 鏂规硶鐢ㄤ簬鏌ヨ鍥炴斁鐘export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const replayId = searchParams.get('replayId');
 
@@ -225,7 +225,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: '缂哄皯鍥炴斁ID鍙傛暟' }, { status: 400 });
   }
 
-  // 杩欓噷搴旇鏌ヨ瀹為檯鐨勫洖鏀剧姸?  // 鏆傛椂杩斿洖妯℃嫙鏁版嵁
+  // 杩欓噷搴旇鏌ヨ瀹為檯鐨勫洖鏀剧姸  // 鏆傛椂杩斿洖妯℃嫙鏁版嵁
   return NextResponse.json({
     replayId,
     status: 'completed',

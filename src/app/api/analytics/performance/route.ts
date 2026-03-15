@@ -39,8 +39,8 @@ export async function POST(request: Request) {
     } as any);
 
     if (error) {
-      console.error('淇濆瓨鎬ц兘鏁版嵁澶辫触:', error);
-      return NextResponse.json({ error: '淇濆瓨鎬ц兘鏁版嵁澶辫触' }, { status: 500 });
+      console.error('淇濆鎬ц兘鏁版嵁澶辫触:', error);
+      return NextResponse.json({ error: '淇濆鎬ц兘鏁版嵁澶辫触' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     }) as any;
   } catch (error) {
     console.error('澶勭悊鎬ц兘鏁版嵁閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -64,7 +64,7 @@ export async function GET(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 璁＄畻鏃堕棿鑼冨洿
+    // 璁＄畻堕棿鑼冨洿
     const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
 
     // 鏋勫缓鏌ヨ
@@ -96,7 +96,7 @@ export async function GET(request: Request) {
         stats,
         timeframe: {
           hours,
-          record_count: (data as any)?.(data as any)?.length || 0,
+          record_count: (data as any).(data as any).length || 0,
           from: since,
           to: new Date().toISOString(),
         },
@@ -104,7 +104,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('澶勭悊鎬ц兘鏌ヨ閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -180,7 +180,7 @@ function calculatePerformanceStats(metrics: any[]) {
   stats.coreWebVitals = {
     fcp:
       fcpScores.length > 0
-        ? {
+         {
             good: fcpScores.filter(s => s === 'good').length,
             needsImprovement: fcpScores.filter(s => s === 'needs-improvement')
               .length,
@@ -193,7 +193,7 @@ function calculatePerformanceStats(metrics: any[]) {
         : null,
     lcp:
       lcpScores.length > 0
-        ? {
+         {
             good: lcpScores.filter(s => s === 'good').length,
             needsImprovement: lcpScores.filter(s => s === 'needs-improvement')
               .length,
@@ -206,7 +206,7 @@ function calculatePerformanceStats(metrics: any[]) {
         : null,
     cls:
       clsScores.length > 0
-        ? {
+         {
             good: clsScores.filter(s => s === 'good').length,
             needsImprovement: clsScores.filter(s => s === 'needs-improvement')
               .length,
@@ -219,7 +219,7 @@ function calculatePerformanceStats(metrics: any[]) {
         : null,
     fid:
       fidScores.length > 0
-        ? {
+         {
             good: fidScores.filter(s => s === 'good').length,
             needsImprovement: fidScores.filter(s => s === 'needs-improvement')
               .length,
@@ -263,4 +263,5 @@ function getFIDScore(fid: number | null): string | null {
   if (fid <= 300) return 'needs-improvement';
   return 'poor';
 }
+
 

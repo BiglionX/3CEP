@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// GET /api/enterprise/repair-tips - 鑾峰彇缁翠慨鎶€宸у垪?
+// GET /api/enterprise/repair-tips - 鑾峰彇缁翠慨鎶€宸у垪
 export async function GET(request: Request) {
   try {
     const supabase = createClient(
@@ -11,8 +11,8 @@ export async function GET(request: Request) {
     
     // 鑾峰彇璁よ瘉鐢ㄦ埛
     const authHeader = request.headers.get('authorization')
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ success: false, error: '鏈巿鏉冭? }, { status: 401 })
+    if (!authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ success: false, error: '鏈巿鏉冭 }, { status: 401 })
     }
 
     const token = authHeader.substring(7)
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       .single()
 
     if (enterpriseError || !enterpriseUser) {
-      return NextResponse.json({ success: false, error: '浼佷笟璐︽埛涓嶅瓨? }, { status: 404 })
+      return NextResponse.json({ success: false, error: '佷笟璐︽埛涓嶅 }, { status: 404 })
     }
 
     // 瑙ｆ瀽鏌ヨ鍙傛暟
@@ -68,18 +68,18 @@ export async function GET(request: Request) {
     const { data: repairTips, error } = await query
 
     if (error) {
-      console.error('鑾峰彇缁翠慨鎶€宸у垪琛ㄩ敊?', error)
-      return NextResponse.json({ success: false, error: '鑾峰彇缁翠慨鎶€宸у垪琛ㄥけ? }, { status: 500 })
+      console.error('鑾峰彇缁翠慨鎶€宸у垪琛ㄩ敊', error)
+      return NextResponse.json({ success: false, error: '鑾峰彇缁翠慨鎶€宸у垪琛ㄥけ }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, data: repairTips })
   } catch (error) {
-    console.error('鏈嶅姟鍣ㄩ敊?', error)
-    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 })
+    console.error('鏈嶅姟鍣ㄩ敊', error)
+    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 })
   }
 }
 
-// POST /api/enterprise/repair-tips - 鍒涘缓鏂扮淮淇妧?
+// POST /api/enterprise/repair-tips - 鍒涘缓鏂扮淮淇妧
 export async function POST(request: Request) {
   try {
     const supabase = createClient(
@@ -88,8 +88,8 @@ export async function POST(request: Request) {
     )
     
     const authHeader = request.headers.get('authorization')
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ success: false, error: '鏈巿鏉冭? }, { status: 401 })
+    if (!authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ success: false, error: '鏈巿鏉冭 }, { status: 401 })
     }
 
     const token = authHeader.substring(7)
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
       .single()
 
     if (enterpriseError || !enterpriseUser) {
-      return NextResponse.json({ success: false, error: '浼佷笟璐︽埛涓嶅瓨? }, { status: 404 })
+      return NextResponse.json({ success: false, error: '佷笟璐︽埛涓嶅 }, { status: 404 })
     }
 
     const body = await request.json()
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
     // 楠岃瘉鍐呭绫诲瀷
     const validContentTypes = ['article', 'video', 'image_gallery']
     if (!validContentTypes.includes(content_type)) {
-      return NextResponse.json({ success: false, error: '鏃犳晥鐨勫唴瀹圭被? }, { status: 400 })
+      return NextResponse.json({ success: false, error: '犳晥鐨勫唴瀹圭被 }, { status: 400 })
     }
 
     const { data: repairTip, error } = await supabase
@@ -147,8 +147,8 @@ export async function POST(request: Request) {
         image_urls: image_urls || [],
         device_models: device_models || [],
         fault_types: fault_types || [],
-        difficulty_level: difficulty_level ? parseInt(difficulty_level) : 1,
-        estimated_time: estimated_time ? parseInt(estimated_time) : 0,
+        difficulty_level: difficulty_level  parseInt(difficulty_level) : 1,
+        estimated_time: estimated_time  parseInt(estimated_time) : 0,
         tools_required: tools_required || [],
         parts_required: parts_required || {} as any,
         created_by: user.id,
@@ -158,13 +158,13 @@ export async function POST(request: Request) {
       .single()
 
     if (error) {
-      console.error('鍒涘缓缁翠慨鎶€宸ч敊?', error)
-      return NextResponse.json({ success: false, error: '鍒涘缓缁翠慨鎶€宸уけ? }, { status: 500 })
+      console.error('鍒涘缓缁翠慨鎶€宸ч敊', error)
+      return NextResponse.json({ success: false, error: '鍒涘缓缁翠慨鎶€宸уけ }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, data: repairTip })
   } catch (error) {
-    console.error('鏈嶅姟鍣ㄩ敊?', error)
-    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 })
+    console.error('鏈嶅姟鍣ㄩ敊', error)
+    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 })
   }
 }

@@ -5,8 +5,8 @@ const mockOrders = [
   {
     id: 'po_001',
     order_number: 'PO202402001',
-    supplier_name: '鍗庡己鍖楃數瀛愭湁闄愬叕?,
-    supplier_contact: '寮犵粡?13800138001',
+    supplier_name: '鍗庡己鍖楃數瀛愭湁闄愬叕,
+    supplier_contact: '寮犵粡13800138001',
     total_amount: 15600.0,
     status: 'approved',
     items: [
@@ -33,28 +33,28 @@ const mockOrders = [
     updated_at: '2024-02-26T14:20:00Z',
     expected_delivery: '2024-03-05T00:00:00Z',
     actual_delivery: null,
-    notes: '绱ф€ヨ鍗曪紝璇蜂紭鍏堝?,
+    notes: '绱ф€ヨ鍗曪紝璇蜂紭鍏堝,
   },
   {
     id: 'po_002',
     order_number: 'PO202402002',
-    supplier_name: '娣卞湷鏁扮爜閰嶄欢?,
-    supplier_contact: '鏉庝富?13900139002',
+    supplier_name: '娣卞湷鏁扮爜閰嶄欢,
+    supplier_contact: '鏉庝富13900139002',
     total_amount: 8900.0,
     status: 'processing',
     items: [
       {
         id: 'item_003',
-        product_name: 'Type-C鏁版嵁?,
+        product_name: 'Type-C鏁版嵁,
         sku: 'TC-CBL-001',
         quantity: 100,
         unit_price: 25.0,
         total_price: 2500.0,
-        category: '鏁版嵁?,
+        category: '鏁版嵁,
       },
       {
         id: 'item_004',
-        product_name: '鏃犵嚎鍏呯數?,
+        product_name: '犵嚎鍏呯數,
         sku: 'WC-PAD-001',
         quantity: 50,
         unit_price: 128.0,
@@ -72,7 +72,7 @@ const mockOrders = [
     id: 'po_003',
     order_number: 'PO202402003',
     supplier_name: '骞垮窞鐢靛瓙鍏冧欢鍏徃',
-    supplier_contact: '鐜嬬粡?13700137003',
+    supplier_contact: '鐜嬬粡13700137003',
     total_amount: 23400.0,
     status: 'shipped',
     items: [
@@ -90,13 +90,13 @@ const mockOrders = [
     updated_at: '2024-02-28T10:30:00Z',
     expected_delivery: '2024-03-03T00:00:00Z',
     actual_delivery: '2024-03-02T15:45:00Z',
-    notes: '楂樹环鍊艰姱鐗囪?,
+    notes: '楂樹环鍊艰姱鐗囪,
   },
   {
     id: 'po_004',
     order_number: 'PO202402004',
-    supplier_name: '鍖椾含鏅鸿兘璁惧渚涘簲?,
-    supplier_contact: '闄?13600136004',
+    supplier_name: '鍖椾含鏅鸿兘璁惧渚涘簲,
+    supplier_contact: '闄13600136004',
     total_amount: 5670.0,
     status: 'completed',
     items: [
@@ -107,7 +107,7 @@ const mockOrders = [
         quantity: 3,
         unit_price: 1890.0,
         total_price: 5670.0,
-        category: '妫€娴嬭?,
+        category: '妫€娴嬭,
       },
     ],
     created_at: '2024-01-15T08:45:00Z',
@@ -119,7 +119,7 @@ const mockOrders = [
   {
     id: 'po_005',
     order_number: 'PO202402005',
-    supplier_name: '涓婃捣绮惧瘑浠櫒?,
+    supplier_name: '涓婃捣绮惧瘑櫒,
     supplier_contact: '鍒樺伐 13500135005',
     total_amount: 32000.0,
     status: 'pending',
@@ -163,7 +163,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 鐘舵€佽繃?    if (status && status !== 'all') {
+    // 鐘舵€佽繃    if (status && status !== 'all') {
       filteredOrders = filteredOrders.filter(order => order.status === status);
     }
 
@@ -213,7 +213,7 @@ export async function POST(request: NextRequest) {
       body.order_number ||
       `PO${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(Date.now()).slice(-4)}`;
 
-    // 鍒涘缓鏂拌?    const newOrder = {
+    // 鍒涘缓鏂拌    const newOrder = {
       id: newId,
       order_number: orderNumber,
       ...body,

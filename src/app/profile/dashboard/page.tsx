@@ -64,7 +64,7 @@ interface QuickAccessModule {
   path: string
   description: string
   color: string
-  permission?: string
+  permission: string
 }
 
 export default function ProfileDashboardPage() {
@@ -115,20 +115,20 @@ export default function ProfileDashboardPage() {
       name: 'FCX联盟',
       icon: Star,
       path: '/fcx',
-      description: '联盟权益和奖?,
+      description: '联盟权益和奖励',
       color: 'indigo',
       permission: 'fcx.access'
     }
   ]
 
-  // 管理员专属模?
+  // 管理员专属模块
   const adminModules: QuickAccessModule[] = [
     {
       id: 'admin_dashboard',
       name: '系统管理',
       icon: Settings,
       path: '/admin/dashboard',
-      description: '系统配置和监?,
+      description: '系统配置和监控',
       color: 'red',
       permission: 'admin.access'
     },
@@ -148,19 +148,19 @@ export default function ProfileDashboardPage() {
       id: 'loyalty_points',
       name: '积分商城',
       icon: Star,
-      description: `${user?.points || 0} 积分可用`
+      description: `${user.points || 0} 积分可用`
     },
     {
       id: 'coupon_wallet',
       name: '优惠券包',
       icon: Ticket,
-      description: `${user?.coupons || 0} 张优惠券`
+      description: `${user.coupons || 0} 张优惠券`
     },
     {
       id: 'achievement_center',
       name: '成就中心',
       icon: Award,
-      description: `${user??.length || 0} 个成就`
+      description: `${user.achievements.length || 0} 个成就`
     },
     {
       id: 'preference_settings',
@@ -181,7 +181,7 @@ export default function ProfileDashboardPage() {
         avatar: '',
         joinDate: '2024-01-15',
         location: '北京市朝阳区',
-        role: is_admin ? '管理? : '普通用?,
+        role: is_admin  '管理员' : '普通用户',
         memberLevel: '金牌会员',
         totalOrders: 24,
         totalSpent: 3280,
@@ -203,8 +203,8 @@ export default function ProfileDashboardPage() {
     }, 500)
   }, [is_admin])
 
-  // 权限检?
-  const hasPermission = (permission?: string) => {
+  // 权限检查
+  const hasPermission = (permission: string) => {
     if (!permission) return true
     if (is_admin) return true
     return false
@@ -238,7 +238,7 @@ export default function ProfileDashboardPage() {
       {/* 页面标题和通知区域 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">工作?/h1>
+          <h1 className="text-2xl font-bold text-gray-900">工作台</h1>
           <p className="text-gray-600 mt-1">欢迎回来，{user.name}</p>
         </div>
         <div className="flex items-center space-x-3">
@@ -247,20 +247,20 @@ export default function ProfileDashboardPage() {
             消息通知
           </Button>
           {is_admin && (
-            <Badge variant="destructive">管理员模?/Badge>
+            <Badge variant="destructive">管理员模式</Badge>
           )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左侧：用户概览卡?*/}
+        {/* 左侧：用户概览卡片 */}
         <div className="lg:col-span-1 space-y-6">
           {/* 用户信息卡片 */}
           <Card>
             <CardHeader className="text-center">
               <div className="relative mx-auto mb-4">
                 <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mx-auto">
-                  {user.avatar ? (
+                  {user.avatar  (
                     <img 
                       src={user.avatar} 
                       alt={user.name}
@@ -276,7 +276,7 @@ export default function ProfileDashboardPage() {
               </div>
               <CardTitle className="text-xl">{user.name}</CardTitle>
               <div className="flex flex-wrap gap-2 mt-2">
-                <Badge variant={is_admin ? "destructive" : "secondary"}>
+                <Badge variant={is_admin  "destructive" : "secondary"}>
                   {user.role}
                 </Badge>
                 <Badge variant="outline">
@@ -287,7 +287,7 @@ export default function ProfileDashboardPage() {
                 </Badge>
               </div>
               
-              {/* 等级进度?*/}
+              {/* 等级进度条 */}
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <div className="flex justify-between text-sm text-gray-600 mb-2">
                   <span>等级进度</span>
@@ -299,7 +299,7 @@ export default function ProfileDashboardPage() {
                     style={{ width: '85%' }}
                   ></div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">再消?¥1,200 升级为钻石会?/p>
+                <p className="text-xs text-gray-500 mt-1">再消费¥1,200 升级为钻石会员</p>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -318,11 +318,11 @@ export default function ProfileDashboardPage() {
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Calendar className="w-4 h-4 mr-3" />
-                  <span className="text-sm">注册?{user.joinDate}</span>
+                  <span className="text-sm">注册于{user.joinDate}</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Activity className="w-4 h-4 mr-3" />
-                  <span className="text-sm">最后活?{user.lastActive}</span>
+                  <span className="text-sm">最后活跃{user.lastActive}</span>
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -434,7 +434,7 @@ export default function ProfileDashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">快捷访问</CardTitle>
-              <p className="text-gray-600 text-sm">快速进入您常用的业务功?/p>
+              <p className="text-gray-600 text-sm">快速进入您常用的业务功能</p>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -484,7 +484,7 @@ export default function ProfileDashboardPage() {
                 <Star className="w-5 h-5 mr-2 text-yellow-500" />
                 个性化服务
               </CardTitle>
-              <p className="text-gray-600 text-sm">专属您的增值服?/p>
+              <p className="text-gray-600 text-sm">专属您的增值服务</p>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
@@ -527,28 +527,28 @@ export default function ProfileDashboardPage() {
             </CardContent>
           </Card>
 
-          {/* 最近活?*/}
+          {/* 最近活动 */}
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
                 <Activity className="w-5 h-5 mr-2" />
-                最近活?
+                最近活动
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { action: '完成了iPhone 14维修订单', time: '2小时?, type: 'success' },
-                  { action: '在配件商城购买了屏幕总成', time: '5小时?, type: 'info' },
-                  { action: '更新了个人资?, time: '1天前', type: 'info' },
-                  { action: '绑定了新的手机号?, time: '3天前', type: 'warning' },
+                  { action: '完成了iPhone 14维修订单', time: '2小时前', type: 'success' },
+                  { action: '在配件商城购买了屏幕总成', time: '5小时前', type: 'info' },
+                  { action: '更新了个人资料', time: '1天前', type: 'info' },
+                  { action: '绑定了新的手机号', time: '3天前', type: 'warning' },
                   { action: '注册成为会员', time: '1周前', type: 'primary' }
                 ].map((activity, index) => (
                   <div key={index} className="flex items-start">
                     <div className={`w-2 h-2 rounded-full mt-2 mr-3 ${
-                      activity.type === 'success' ? 'bg-green-500' :
-                      activity.type === 'info' ? 'bg-blue-500' :
-                      activity.type === 'warning' ? 'bg-yellow-500' :
+                      activity.type === 'success'  'bg-green-500' :
+                      activity.type === 'info'  'bg-blue-500' :
+                      activity.type === 'warning'  'bg-yellow-500' :
                       'bg-gray-500'
                     }`}></div>
                     <div className="flex-1">

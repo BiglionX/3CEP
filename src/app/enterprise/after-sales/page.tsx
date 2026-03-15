@@ -187,21 +187,21 @@ export default function AfterSalesServicePage() {
                 onClick={() => setActiveTab(tab)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
                   activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
+                     'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                {tab === 'dashboard' && '仪表?}
+                {tab === 'dashboard' && '仪表}
                 {tab === 'tickets' && '工单管理'}
-                {tab === 'qr-management' && '二维码管?}
-                {tab === 'knowledge-base' && '知识?}
+                {tab === 'qr-management' && '二维码管}
+                {tab === 'knowledge-base' && '知识}
                 {tab === 'content-management' && '内容管理'}
               </button>
             ))}
           </nav>
         </div>
 
-        {/* 仪表板内?*/}
+        {/* 仪表板内*/}
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
             {/* 统计卡片 */}
@@ -215,13 +215,13 @@ export default function AfterSalesServicePage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">24</div>
-                  <p className="text-xs text-muted-foreground">较昨?+12%</p>
+                  <p className="text-xs text-muted-foreground">较昨+12%</p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">处理?/CardTitle>
+                  <CardTitle className="text-sm font-medium">处理/CardTitle>
                   <Clock className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -234,18 +234,18 @@ export default function AfterSalesServicePage() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">已解?/CardTitle>
+                  <CardTitle className="text-sm font-medium">已解/CardTitle>
                   <CheckCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">156</div>
-                  <p className="text-xs text-muted-foreground">解决? 94.2%</p>
+                  <p className="text-xs text-muted-foreground">解决 94.2%</p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">满意?/CardTitle>
+                  <CardTitle className="text-sm font-medium">满意/CardTitle>
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -262,7 +262,7 @@ export default function AfterSalesServicePage() {
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                     <QrCode className="w-6 h-6 text-blue-600" />
                   </div>
-                  <CardTitle>二维码管?/CardTitle>
+                  <CardTitle>二维码管/CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
@@ -271,7 +271,7 @@ export default function AfterSalesServicePage() {
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                      快速设备识?                    </li>
+                      快速设备识                    </li>
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                       服务历史追溯
@@ -285,11 +285,11 @@ export default function AfterSalesServicePage() {
                   <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                     <BookOpen className="w-6 h-6 text-green-600" />
                   </div>
-                  <CardTitle>多语言说明?/CardTitle>
+                  <CardTitle>多语言说明/CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    支持多种语言的电子说明书和操作指?                  </p>
+                    支持多种语言的电子说明书和操作指                  </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -312,7 +312,7 @@ export default function AfterSalesServicePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    智能故障识别和解决方案推?                  </p>
+                    智能故障识别和解决方案推                  </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -350,7 +350,7 @@ export default function AfterSalesServicePage() {
                             customerName: e.target.value,
                           })
                         }
-                        placeholder="请输入客户姓?
+                        placeholder="请输入客户姓
                         required
                       />
                     </div>
@@ -365,7 +365,7 @@ export default function AfterSalesServicePage() {
                             productModel: e.target.value,
                           })
                         }
-                        placeholder="请输入产品型?
+                        placeholder="请输入产品型
                         required
                       />
                     </div>
@@ -424,12 +424,12 @@ export default function AfterSalesServicePage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-3 px-4">工单?/th>
+                        <th className="text-left py-3 px-4">工单/th>
                         <th className="text-left py-3 px-4">客户</th>
                         <th className="text-left py-3 px-4">产品型号</th>
                         <th className="text-left py-3 px-4">问题类型</th>
-                        <th className="text-left py-3 px-4">状?/th>
-                        <th className="text-left py-3 px-4">优先?/th>
+                        <th className="text-left py-3 px-4">状/th>
+                        <th className="text-left py-3 px-4">优先/th>
                         <th className="text-left py-3 px-4">创建时间</th>
                       </tr>
                     </thead>
@@ -447,20 +447,20 @@ export default function AfterSalesServicePage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(ticket.status)}`}
                             >
-                              {ticket.status === 'open' && '待处?}
-                              {ticket.status === 'processing' && '处理?}
-                              {ticket.status === 'resolved' && '已解?}
-                              {ticket.status === 'closed' && '已关?}
+                              {ticket.status === 'open' && '待处}
+                              {ticket.status === 'processing' && '处理}
+                              {ticket.status === 'resolved' && '已解}
+                              {ticket.status === 'closed' && '已关}
                             </span>
                           </td>
                           <td className="py-3 px-4">
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(ticket.priority)}`}
                             >
-                              {ticket.priority === 'low' && '�?}
-                              {ticket.priority === 'medium' && '�?}
-                              {ticket.priority === 'high' && '�?}
-                              {ticket.priority === 'urgent' && '紧?}
+                              {ticket.priority === 'low' && '}
+                              {ticket.priority === 'medium' && '}
+                              {ticket.priority === 'high' && '}
+                              {ticket.priority === 'urgent' && '紧}
                             </span>
                           </td>
                           <td className="py-3 px-4">{ticket.createdAt}</td>
@@ -474,14 +474,14 @@ export default function AfterSalesServicePage() {
           </div>
         )}
 
-        {/* 二维码管?*/}
+        {/* 二维码管*/}
         {activeTab === 'qr-management' && (
           <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <QrCode className="w-5 h-5 mr-2" />
-                  二维码批量生?                </CardTitle>
+                  二维码批量生                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -494,7 +494,7 @@ export default function AfterSalesServicePage() {
                         为每台设备生成唯一二维码，便于快速识别和信息查询
                       </p>
                     </div>
-                    <Button className="w-full">批量生成二维?/Button>
+                    <Button className="w-full">批量生成二维/Button>
                   </div>
 
                   <div className="space-y-4">
@@ -503,7 +503,7 @@ export default function AfterSalesServicePage() {
                         服务记录
                       </h3>
                       <p className="text-green-700 text-sm">
-                        扫码查看设备完整服务历史和维护记?                      </p>
+                        扫码查看设备完整服务历史和维护记                      </p>
                     </div>
                     <Button variant="outline" className="w-full">
                       查看服务记录
@@ -529,14 +529,14 @@ export default function AfterSalesServicePage() {
           </div>
         )}
 
-        {/* 知识?*/}
+        {/* 知识*/}
         {activeTab === 'knowledge-base' && (
           <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <BookOpen className="w-5 h-5 mr-2" />
-                  智能知识?                </CardTitle>
+                  智能知识                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -544,9 +544,9 @@ export default function AfterSalesServicePage() {
                     <h3 className="font-semibold text-lg mb-4">常见问题解答</h3>
                     <div className="space-y-3">
                       {[
-                        '如何重置设备密码?,
+                        '如何重置设备密码,
                         'WiFi连接失败怎么办？',
-                        '电池续航时间短的原因?,
+                        '电池续航时间短的原因,
                         '固件升级步骤说明',
                       ].map((faq, index) => (
                         <div
@@ -566,8 +566,8 @@ export default function AfterSalesServicePage() {
                       {[
                         { lang: '中文', flag: '🇨🇳' },
                         { lang: 'English', flag: '🇺🇸' },
-                        { lang: '日本?, flag: '🇯🇵' },
-                        { lang: '한국�?, flag: '🇰🇷' },
+                        { lang: '日本, flag: '🇯🇵' },
+                        { lang: '한국, flag: '🇰🇷' },
                       ].map((item, index) => (
                         <div
                           key={index}
@@ -598,17 +598,17 @@ function EnterpriseContentManagement() {
 
   const subTabs = [
     { id: 'parts', name: '配件管理', icon: '🔧' },
-    { id: 'manuals', name: '说明?, icon: '📖' },
-    { id: 'repair-tips', name: '维修技?, icon: '🛠�? },
+    { id: 'manuals', name: '说明, icon: '📖' },
+    { id: 'repair-tips', name: '维修技, icon: '🛠 },
     { id: 'software', name: '软件升级', icon: '💾' },
-    { id: 'quiz', name: '有奖问答', icon: '�? },
+    { id: 'quiz', name: '有奖问答', icon: ' },
     { id: 'crowdfunding', name: '新品众筹', icon: '💰' },
     { id: 'documents', name: '企业资料', icon: '📁' },
   ];
 
   return (
     <div className="space-y-6">
-      {/* 子标签导?*/}
+      {/* 子标签导*/}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-6 overflow-x-auto">
           {subTabs.map(tab => (
@@ -617,7 +617,7 @@ function EnterpriseContentManagement() {
               onClick={() => setActiveSubTab(tab.id)}
               className={`py-3 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                 activeSubTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
+                   'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -631,10 +631,10 @@ function EnterpriseContentManagement() {
       {/* 配件管理 */}
       {activeSubTab === 'parts' && <EnterprisePartsManagement />}
 
-      {/* 说明书管?*/}
+      {/* 说明书管*/}
       {activeSubTab === 'manuals' && <EnterpriseManualsManagement />}
 
-      {/* 维修技巧管?*/}
+      {/* 维修技巧管*/}
       {activeSubTab === 'repair-tips' && <EnterpriseRepairTipsManagement />}
 
       {/* 软件升级管理 */}
@@ -662,7 +662,7 @@ function EnterprisePartsManagement() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
-  // 表单状?  const [formData, setFormData] = useState({
+  // 表单状  const [formData, setFormData] = useState({
     name: '',
     category: '',
     brand: '',
@@ -686,7 +686,7 @@ function EnterprisePartsManagement() {
       if (statusFilter !== 'all') params.append('status', statusFilter);
       if (categoryFilter !== 'all') params.append('category', categoryFilter);
 
-      const response = await fetch(`/api/enterprise/parts?${params}`);
+      const response = await fetch(`/api/enterprise/parts${params}`);
       const result = await response.json();
 
       if (result.success) {
@@ -712,11 +712,11 @@ function EnterprisePartsManagement() {
         },
         body: JSON.stringify({
           ...formData,
-          price: formData.price ? parseFloat(formData.price) : null,
+          price: formData.price  parseFloat(formData.price) : null,
           stock_quantity: parseInt(formData.stock_quantity.toString()),
           min_stock: parseInt(formData.min_stock.toString()),
           warranty_period: formData.warranty_period
-            ? parseInt(formData.warranty_period)
+             parseInt(formData.warranty_period)
             : null,
         }),
       });
@@ -724,7 +724,7 @@ function EnterprisePartsManagement() {
       const result = await response.json();
 
       if (result.success) {
-        alert('配件创建成功?);
+        alert('配件创建成功);
         setShowCreateModal(false);
         fetchParts();
         resetForm();
@@ -755,7 +755,7 @@ function EnterprisePartsManagement() {
     });
   };
 
-  // 初始化数?  useEffect(() => {
+  // 初始化数  useEffect(() => {
     fetchParts();
   }, [searchTerm, statusFilter, categoryFilter]);
 
@@ -776,18 +776,18 @@ function EnterprisePartsManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 操作?*/}
+      {/* 操作*/}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">配件管理</h2>
-          <p className="text-gray-600 mt-1">发布和管理企业配件信?/p>
+          <p className="text-gray-600 mt-1">发布和管理企业配件信/p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          发布新配?        </Button>
+          发布新配        </Button>
       </div>
 
-      {/* 搜索和过?*/}
+      {/* 搜索和过*/}
       <Card>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -795,7 +795,7 @@ function EnterprisePartsManagement() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 type="text"
-                placeholder="搜索配件名称或描?.."
+                placeholder="搜索配件名称或描.."
                 className="pl-10"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
@@ -807,11 +807,11 @@ function EnterprisePartsManagement() {
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
             >
-              <option value="all">全部状?/option>
+              <option value="all">全部状态/option>
               <option value="draft">草稿</option>
-              <option value="pending_review">审核?/option>
-              <option value="published">已发?/option>
-              <option value="rejected">已拒?/option>
+              <option value="pending_review">审核/option>
+              <option value="published">已发/option>
+              <option value="rejected">已拒/option>
             </select>
 
             <select
@@ -839,23 +839,23 @@ function EnterprisePartsManagement() {
           <CardTitle>配件列表</CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading  (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-2 text-gray-600">加载?..</p>
+              <p className="mt-2 text-gray-600">加载中..</p>
             </div>
-          ) : error ? (
+          ) : error  (
             <div className="text-center py-12 text-red-600">
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : parts.length === 0 ? (
+          ) : parts.length === 0  (
             <div className="text-center py-12">
               <Wrench className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 暂无配件
               </h3>
-              <p className="text-gray-500">开始发布您的第一个配?/p>
+              <p className="text-gray-500">开始发布您的第一个配/p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -875,7 +875,7 @@ function EnterprisePartsManagement() {
                       库存
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      状?                    </th>
+                      状                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       操作
                     </th>
@@ -898,7 +898,7 @@ function EnterprisePartsManagement() {
                         {part.category}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {part.price ? `${part.price} ${part.currency}` : '面议'}
+                        {part.price  `${part.price} ${part.currency}` : '面议'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         库存: {part.stock_quantity}
@@ -908,11 +908,11 @@ function EnterprisePartsManagement() {
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(part.status)}`}
                         >
                           {part.status === 'published'
-                            ? '已发?
+                             '已发
                             : part.status === 'pending_review'
-                              ? '审核?
+                               '审核
                               : part.status === 'rejected'
-                                ? '已拒?
+                                 '已拒
                                 : '草稿'}
                         </span>
                       </td>
@@ -942,7 +942,7 @@ function EnterprisePartsManagement() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  发布新配?                </h3>
+                  发布新配                </h3>
                 <button
                   onClick={() => {
                     setShowCreateModal(false);
@@ -964,7 +964,7 @@ function EnterprisePartsManagement() {
                       onChange={e =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      placeholder="请输入配件名?
+                      placeholder="请输入配件名
                       required
                     />
                   </div>
@@ -1002,7 +1002,7 @@ function EnterprisePartsManagement() {
                       onChange={e =>
                         setFormData({ ...formData, brand: e.target.value })
                       }
-                      placeholder="请输入品?
+                      placeholder="请输入品
                     />
                   </div>
 
@@ -1014,7 +1014,7 @@ function EnterprisePartsManagement() {
                       onChange={e =>
                         setFormData({ ...formData, model: e.target.value })
                       }
-                      placeholder="请输入型?
+                      placeholder="请输入型
                     />
                   </div>
                 </div>
@@ -1029,7 +1029,7 @@ function EnterprisePartsManagement() {
                       onChange={e =>
                         setFormData({ ...formData, price: e.target.value })
                       }
-                      placeholder="请输入价?
+                      placeholder="请输入价
                     />
                   </div>
 
@@ -1045,7 +1045,7 @@ function EnterprisePartsManagement() {
                           stock_quantity: parseInt(e.target.value) || 0,
                         })
                       }
-                      placeholder="请输入库存数?
+                      placeholder="请输入库存数
                     />
                   </div>
                 </div>
@@ -1058,7 +1058,7 @@ function EnterprisePartsManagement() {
                     onChange={e =>
                       setFormData({ ...formData, description: e.target.value })
                     }
-                    placeholder="请输入配件详细描?
+                    placeholder="请输入配件详细描
                     rows={3}
                   />
                 </div>
@@ -1084,7 +1084,7 @@ function EnterprisePartsManagement() {
   );
 }
 
-// 说明书管理组?function EnterpriseManualsManagement() {
+// 说明书管理组function EnterpriseManualsManagement() {
   const [manuals, setManuals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -1093,7 +1093,7 @@ function EnterprisePartsManagement() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [productModelFilter, setProductModelFilter] = useState('all');
 
-  // 表单状?  const [formData, setFormData] = useState({
+  // 表单状  const [formData, setFormData] = useState({
     product_name: '',
     product_model: '',
     title: { zh: '', en: '' },
@@ -1103,7 +1103,7 @@ function EnterprisePartsManagement() {
     attachment_urls: [] as string[],
   });
 
-  // 获取说明书列?  const fetchManuals = async () => {
+  // 获取说明书列  const fetchManuals = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -1112,7 +1112,7 @@ function EnterprisePartsManagement() {
       if (productModelFilter !== 'all')
         params.append('product_model', productModelFilter);
 
-      const response = await fetch(`/api/enterprise/manuals?${params}`);
+      const response = await fetch(`/api/enterprise/manuals${params}`);
       const result = await response.json();
 
       if (result.success) {
@@ -1121,14 +1121,14 @@ function EnterprisePartsManagement() {
         setError(result.error);
       }
     } catch (err) {
-      setError('获取说明书列表失?);
-      console.error('获取说明书列表错?', err);
+      setError('获取说明书列表失);
+      console.error('获取说明书列表错', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 创建说明?  const createManual = async () => {
+  // 创建说明  const createManual = async () => {
     try {
       const response = await fetch('/api/enterprise/manuals', {
         method: 'POST',
@@ -1150,7 +1150,7 @@ function EnterprisePartsManagement() {
       }
     } catch (err) {
       alert('创建请求失败');
-      console.error('创建说明书失?', err);
+      console.error('创建说明书失', err);
     }
   };
 
@@ -1167,7 +1167,7 @@ function EnterprisePartsManagement() {
     });
   };
 
-  // 初始化数?  useEffect(() => {
+  // 初始化数  useEffect(() => {
     fetchManuals();
   }, [searchTerm, statusFilter, productModelFilter]);
 
@@ -1188,18 +1188,18 @@ function EnterprisePartsManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 操作?*/}
+      {/* 操作*/}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">产品说明书管?/h2>
-          <p className="text-gray-600 mt-1">发布和管理多语言产品说明?/p>
+          <h2 className="text-2xl font-bold text-gray-900">产品说明书管/h2>
+          <p className="text-gray-600 mt-1">发布和管理多语言产品说明/p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          上传说明?        </Button>
+          上传说明        </Button>
       </div>
 
-      {/* 搜索和过?*/}
+      {/* 搜索和过*/}
       <Card>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -1207,7 +1207,7 @@ function EnterprisePartsManagement() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 type="text"
-                placeholder="搜索产品名称或标?.."
+                placeholder="搜索产品名称或标.."
                 className="pl-10"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
@@ -1219,11 +1219,11 @@ function EnterprisePartsManagement() {
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
             >
-              <option value="all">全部状?/option>
+              <option value="all">全部状态/option>
               <option value="draft">草稿</option>
-              <option value="pending_review">审核?/option>
-              <option value="published">已发?/option>
-              <option value="rejected">已拒?/option>
+              <option value="pending_review">审核/option>
+              <option value="published">已发/option>
+              <option value="rejected">已拒/option>
             </select>
 
             <select
@@ -1240,27 +1240,27 @@ function EnterprisePartsManagement() {
         </CardContent>
       </Card>
 
-      {/* 说明书列?*/}
+      {/* 说明书列*/}
       <Card>
         <CardHeader>
-          <CardTitle>说明书列?/CardTitle>
+          <CardTitle>说明书列/CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading  (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-2 text-gray-600">加载?..</p>
+              <p className="mt-2 text-gray-600">加载中..</p>
             </div>
-          ) : error ? (
+          ) : error  (
             <div className="text-center py-12 text-red-600">
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : manuals.length === 0 ? (
+          ) : manuals.length === 0  (
             <div className="text-center py-12">
               <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                暂无说明?              </h3>
+                暂无说明              </h3>
               <p className="text-gray-500">开始上传您的第一份产品说明书</p>
             </div>
           ) : (
@@ -1278,9 +1278,9 @@ function EnterprisePartsManagement() {
                       语言
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      状?                    </th>
+                      状                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      浏览?                    </th>
+                      浏览                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       操作
                     </th>
@@ -1300,11 +1300,11 @@ function EnterprisePartsManagement() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {manual?.zh || manual?.en || '未命?}
+                        {manual.zh || manual.en || '未命}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex space-x-1">
-                          {manual?.map((lang: string) => (
+                          {manual.map((lang: string) => (
                             <span
                               key={lang}
                               className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800"
@@ -1319,11 +1319,11 @@ function EnterprisePartsManagement() {
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(manual.status)}`}
                         >
                           {manual.status === 'published'
-                            ? '已发?
+                             '已发
                             : manual.status === 'pending_review'
-                              ? '审核?
+                               '审核
                               : manual.status === 'rejected'
-                                ? '已拒?
+                                 '已拒
                                 : '草稿'}
                         </span>
                       </td>
@@ -1385,7 +1385,7 @@ function EnterprisePartsManagement() {
                           product_name: e.target.value,
                         })
                       }
-                      placeholder="请输入产品名?
+                      placeholder="请输入产品名
                       required
                     />
                   </div>
@@ -1401,7 +1401,7 @@ function EnterprisePartsManagement() {
                           product_model: e.target.value,
                         })
                       }
-                      placeholder="请输入产品型?
+                      placeholder="请输入产品型
                     />
                   </div>
                 </div>
@@ -1416,7 +1416,7 @@ function EnterprisePartsManagement() {
                         title: { ...formData.title, zh: e.target.value },
                       })
                     }
-                    placeholder="请输入中文标?
+                    placeholder="请输入中文标
                     required
                   />
                 </div>
@@ -1431,7 +1431,7 @@ function EnterprisePartsManagement() {
                         title: { ...formData.title, en: e.target.value },
                       })
                     }
-                    placeholder="请输入英文标?
+                    placeholder="请输入英文标
                   />
                 </div>
 
@@ -1475,7 +1475,7 @@ function EnterprisePartsManagement() {
                         checked={formData.language_codes.includes('zh')}
                         onChange={e => {
                           const codes = e.target.checked
-                            ? [...formData.language_codes, 'zh']
+                             [...formData.language_codes, 'zh']
                             : formData.language_codes.filter(
                                 code => code !== 'zh'
                               );
@@ -1491,7 +1491,7 @@ function EnterprisePartsManagement() {
                         checked={formData.language_codes.includes('en')}
                         onChange={e => {
                           const codes = e.target.checked
-                            ? [...formData.language_codes, 'en']
+                             [...formData.language_codes, 'en']
                             : formData.language_codes.filter(
                                 code => code !== 'en'
                               );
@@ -1507,7 +1507,7 @@ function EnterprisePartsManagement() {
                         checked={formData.language_codes.includes('ja')}
                         onChange={e => {
                           const codes = e.target.checked
-                            ? [...formData.language_codes, 'ja']
+                             [...formData.language_codes, 'ja']
                             : formData.language_codes.filter(
                                 code => code !== 'ja'
                               );
@@ -1523,7 +1523,7 @@ function EnterprisePartsManagement() {
                         checked={formData.language_codes.includes('ko')}
                         onChange={e => {
                           const codes = e.target.checked
-                            ? [...formData.language_codes, 'ko']
+                             [...formData.language_codes, 'ko']
                             : formData.language_codes.filter(
                                 code => code !== 'ko'
                               );
@@ -1546,7 +1546,7 @@ function EnterprisePartsManagement() {
                   >
                     取消
                   </Button>
-                  <Button onClick={createManual}>上传说明?/Button>
+                  <Button onClick={createManual}>上传说明/Button>
                 </div>
               </div>
             </div>
@@ -1557,7 +1557,7 @@ function EnterprisePartsManagement() {
   );
 }
 
-// 维修技巧管理组?function EnterpriseRepairTipsManagement() {
+// 维修技巧管理组function EnterpriseRepairTipsManagement() {
   const [repairTips, setRepairTips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -1567,7 +1567,7 @@ function EnterprisePartsManagement() {
   const [contentTypeFilter, setContentTypeFilter] = useState('all');
   const [difficultyFilter, setDifficultyFilter] = useState('all');
 
-  // 表单状?  const [formData, setFormData] = useState({
+  // 表单状  const [formData, setFormData] = useState({
     title: '',
     description: '',
     content_type: 'article',
@@ -1582,7 +1582,7 @@ function EnterprisePartsManagement() {
     parts_required: {} as Record<string, number>,
   });
 
-  // 获取维修技巧列?  const fetchRepairTips = async () => {
+  // 获取维修技巧列  const fetchRepairTips = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -1593,7 +1593,7 @@ function EnterprisePartsManagement() {
       if (difficultyFilter !== 'all')
         params.append('difficulty', difficultyFilter);
 
-      const response = await fetch(`/api/enterprise/repair-tips?${params}`);
+      const response = await fetch(`/api/enterprise/repair-tips${params}`);
       const result = await response.json();
 
       if (result.success) {
@@ -1602,14 +1602,14 @@ function EnterprisePartsManagement() {
         setError(result.error);
       }
     } catch (err) {
-      setError('获取维修技巧列表失?);
-      console.error('获取维修技巧列表错?', err);
+      setError('获取维修技巧列表失);
+      console.error('获取维修技巧列表错', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 创建维修技?  const createRepairTip = async () => {
+  // 创建维修技  const createRepairTip = async () => {
     try {
       const response = await fetch('/api/enterprise/repair-tips', {
         method: 'POST',
@@ -1631,7 +1631,7 @@ function EnterprisePartsManagement() {
       }
     } catch (err) {
       alert('创建请求失败');
-      console.error('创建维修技巧失?', err);
+      console.error('创建维修技巧失', err);
     }
   };
 
@@ -1653,7 +1653,7 @@ function EnterprisePartsManagement() {
     });
   };
 
-  // 初始化数?  useEffect(() => {
+  // 初始化数  useEffect(() => {
     fetchRepairTips();
   }, [searchTerm, statusFilter, contentTypeFilter, difficultyFilter]);
 
@@ -1679,7 +1679,7 @@ function EnterprisePartsManagement() {
       case 'video':
         return '🎥';
       case 'image_gallery':
-        return '🖼�?;
+        return '🖼;
       default:
         return '📄';
     }
@@ -1692,18 +1692,18 @@ function EnterprisePartsManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 操作?*/}
+      {/* 操作*/}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">维修技巧管?/h2>
-          <p className="text-gray-600 mt-1">发布和管理图?视频维修技?/p>
+          <h2 className="text-2xl font-bold text-gray-900">维修技巧管/h2>
+          <p className="text-gray-600 mt-1">发布和管理图视频维修技/p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          发布技?        </Button>
+          发布技        </Button>
       </div>
 
-      {/* 搜索和过?*/}
+      {/* 搜索和过*/}
       <Card>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -1723,11 +1723,11 @@ function EnterprisePartsManagement() {
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
             >
-              <option value="all">全部状?/option>
+              <option value="all">全部状态/option>
               <option value="draft">草稿</option>
-              <option value="pending_review">审核?/option>
-              <option value="published">已发?/option>
-              <option value="rejected">已拒?/option>
+              <option value="pending_review">审核/option>
+              <option value="published">已发/option>
+              <option value="rejected">已拒/option>
             </select>
 
             <select
@@ -1757,28 +1757,28 @@ function EnterprisePartsManagement() {
         </CardContent>
       </Card>
 
-      {/* 维修技巧列?*/}
+      {/* 维修技巧列*/}
       <Card>
         <CardHeader>
-          <CardTitle>维修技巧列?/CardTitle>
+          <CardTitle>维修技巧列/CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading  (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-2 text-gray-600">加载?..</p>
+              <p className="mt-2 text-gray-600">加载中..</p>
             </div>
-          ) : error ? (
+          ) : error  (
             <div className="text-center py-12 text-red-600">
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : repairTips.length === 0 ? (
+          ) : repairTips.length === 0  (
             <div className="text-center py-12">
               <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                暂无维修技?              </h3>
-              <p className="text-gray-500">开始发布您的第一条维修技?/p>
+                暂无维修技              </h3>
+              <p className="text-gray-500">开始发布您的第一条维修技/p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -1786,7 +1786,7 @@ function EnterprisePartsManagement() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      技巧信?                    </th>
+                      技巧信                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       类型
                     </th>
@@ -1800,7 +1800,7 @@ function EnterprisePartsManagement() {
                       预估时间
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      状?                    </th>
+                      状                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       操作
                     </th>
@@ -1815,7 +1815,7 @@ function EnterprisePartsManagement() {
                             {tip.title}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {tip?.substring(0, 50)}...
+                            {tip.substring(0, 50)}...
                           </div>
                         </div>
                       </td>
@@ -1825,16 +1825,16 @@ function EnterprisePartsManagement() {
                             {getContentTypeIcon(tip.content_type)}
                           </span>
                           {tip.content_type === 'article'
-                            ? '图文'
+                             '图文'
                             : tip.content_type === 'video'
-                              ? '视频'
+                               '视频'
                               : '图集'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex flex-wrap gap-1">
                           {tip
-                            ?.slice(0, 2)
+                            .slice(0, 2)
                             .map((model: string, index: number) => (
                               <span
                                 key={index}
@@ -1843,7 +1843,7 @@ function EnterprisePartsManagement() {
                                 {model}
                               </span>
                             ))}
-                          {tip?.length > 2 && (
+                          {tip.length > 2 && (
                             <span className="text-xs text-gray-500">
                               +{tip.device_models.length - 2}
                             </span>
@@ -1857,19 +1857,19 @@ function EnterprisePartsManagement() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {tip.estimated_time
-                          ? `${tip.estimated_time}分钟`
-                          : '未设?}
+                           `${tip.estimated_time}分钟`
+                          : '未设}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(tip.status)}`}
                         >
                           {tip.status === 'published'
-                            ? '已发?
+                             '已发
                             : tip.status === 'pending_review'
-                              ? '审核?
+                               '审核
                               : tip.status === 'rejected'
-                                ? '已拒?
+                                 '已拒
                                 : '草稿'}
                         </span>
                       </td>
@@ -1902,7 +1902,7 @@ function EnterprisePartsManagement() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  发布新维修技?                </h3>
+                  发布新维修技                </h3>
                 <button
                   onClick={() => {
                     setShowCreateModal(false);
@@ -1917,14 +1917,14 @@ function EnterprisePartsManagement() {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="title">技巧标?*</Label>
+                    <Label htmlFor="title">技巧标*</Label>
                     <Input
                       id="title"
                       value={formData.title}
                       onChange={e =>
                         setFormData({ ...formData, title: e.target.value })
                       }
-                      placeholder="请输入技巧标?
+                      placeholder="请输入技巧标
                       required
                     />
                   </div>
@@ -1951,14 +1951,14 @@ function EnterprisePartsManagement() {
                 </div>
 
                 <div>
-                  <Label htmlFor="description">技巧描?/Label>
+                  <Label htmlFor="description">技巧描/Label>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={e =>
                       setFormData({ ...formData, description: e.target.value })
                     }
-                    placeholder="请输入技巧详细描?
+                    placeholder="请输入技巧详细描
                     rows={3}
                   />
                 </div>
@@ -1975,7 +1975,7 @@ function EnterprisePartsManagement() {
                           content_html: e.target.value,
                         })
                       }
-                      placeholder="请输入HTML格式的图文内?
+                      placeholder="请输入HTML格式的图文内
                       rows={6}
                       required
                     />
@@ -2047,11 +2047,11 @@ function EnterprisePartsManagement() {
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="1">入门 (1�?</option>
-                      <option value="2">初级 (2�?</option>
-                      <option value="3">中级 (3�?</option>
-                      <option value="4">高级 (4�?</option>
-                      <option value="5">专家 (5�?</option>
+                      <option value="1">入门 (1</option>
+                      <option value="2">初级 (2</option>
+                      <option value="3">中级 (3</option>
+                      <option value="4">高级 (4</option>
+                      <option value="5">专家 (5</option>
                     </select>
                   </div>
 
@@ -2067,7 +2067,7 @@ function EnterprisePartsManagement() {
                           estimated_time: parseInt(e.target.value) || 0,
                         })
                       }
-                      placeholder="请输入预估维修时?
+                      placeholder="请输入预估维修时
                     />
                   </div>
                 </div>
@@ -2082,7 +2082,7 @@ function EnterprisePartsManagement() {
                   >
                     取消
                   </Button>
-                  <Button onClick={createRepairTip}>发布技?/Button>
+                  <Button onClick={createRepairTip}>发布技/Button>
                 </div>
               </div>
             </div>
@@ -2104,7 +2104,7 @@ function EnterpriseSoftwareUpdatesManagement() {
   const [updateTypeFilter, setUpdateTypeFilter] = useState('all');
   const [productModelFilter, setProductModelFilter] = useState('all');
 
-  // 表单状?  const [formData, setFormData] = useState({
+  // 表单状  const [formData, setFormData] = useState({
     product_name: '',
     product_model: '',
     software_version: '',
@@ -2122,7 +2122,7 @@ function EnterpriseSoftwareUpdatesManagement() {
     warning_notes: '',
   });
 
-  // 获取软件升级包列?  const fetchSoftwareUpdates = async () => {
+  // 获取软件升级包列  const fetchSoftwareUpdates = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -2134,7 +2134,7 @@ function EnterpriseSoftwareUpdatesManagement() {
         params.append('product_model', productModelFilter);
 
       const response = await fetch(
-        `/api/enterprise/software-updates?${params}`
+        `/api/enterprise/software-updates${params}`
       );
       const result = await response.json();
 
@@ -2144,14 +2144,14 @@ function EnterpriseSoftwareUpdatesManagement() {
         setError(result.error);
       }
     } catch (err) {
-      setError('获取软件升级包列表失?);
-      console.error('获取软件升级包列表错?', err);
+      setError('获取软件升级包列表失);
+      console.error('获取软件升级包列表错', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 创建软件升级?  const createSoftwareUpdate = async () => {
+  // 创建软件升级到  const createSoftwareUpdate = async () => {
     try {
       const response = await fetch('/api/enterprise/software-updates', {
         method: 'POST',
@@ -2173,7 +2173,7 @@ function EnterpriseSoftwareUpdatesManagement() {
       }
     } catch (err) {
       alert('创建请求失败');
-      console.error('创建软件升级包失?', err);
+      console.error('创建软件升级包失', err);
     }
   };
 
@@ -2198,7 +2198,7 @@ function EnterpriseSoftwareUpdatesManagement() {
     });
   };
 
-  // 初始化数?  useEffect(() => {
+  // 初始化数  useEffect(() => {
     fetchSoftwareUpdates();
   }, [searchTerm, statusFilter, updateTypeFilter, productModelFilter]);
 
@@ -2237,18 +2237,18 @@ function EnterpriseSoftwareUpdatesManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 操作?*/}
+      {/* 操作*/}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">软件升级包管?/h2>
+          <h2 className="text-2xl font-bold text-gray-900">软件升级包管/h2>
           <p className="text-gray-600 mt-1">发布和管理各类软件升级包</p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          上传升级?        </Button>
+          上传升级到        </Button>
       </div>
 
-      {/* 搜索和过?*/}
+      {/* 搜索和过*/}
       <Card>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -2256,7 +2256,7 @@ function EnterpriseSoftwareUpdatesManagement() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 type="text"
-                placeholder="搜索产品名称或标?.."
+                placeholder="搜索产品名称或标.."
                 className="pl-10"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
@@ -2268,11 +2268,11 @@ function EnterpriseSoftwareUpdatesManagement() {
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
             >
-              <option value="all">全部状?/option>
+              <option value="all">全部状态/option>
               <option value="draft">草稿</option>
-              <option value="pending_review">审核?/option>
-              <option value="published">已发?/option>
-              <option value="rejected">已拒?/option>
+              <option value="pending_review">审核/option>
+              <option value="published">已发/option>
+              <option value="rejected">已拒/option>
             </select>
 
             <select
@@ -2301,27 +2301,27 @@ function EnterpriseSoftwareUpdatesManagement() {
         </CardContent>
       </Card>
 
-      {/* 软件升级包列?*/}
+      {/* 软件升级包列*/}
       <Card>
         <CardHeader>
-          <CardTitle>软件升级包列?/CardTitle>
+          <CardTitle>软件升级包列/CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading  (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-2 text-gray-600">加载?..</p>
+              <p className="mt-2 text-gray-600">加载中..</p>
             </div>
-          ) : error ? (
+          ) : error  (
             <div className="text-center py-12 text-red-600">
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : softwareUpdates.length === 0 ? (
+          ) : softwareUpdates.length === 0  (
             <div className="text-center py-12">
               <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                暂无软件升级?              </h3>
+                暂无软件升级到              </h3>
               <p className="text-gray-500">开始上传您的第一个软件升级包</p>
             </div>
           ) : (
@@ -2330,7 +2330,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      升级包信?                    </th>
+                      升级包信                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       类型
                     </th>
@@ -2344,9 +2344,9 @@ function EnterpriseSoftwareUpdatesManagement() {
                       发布时间
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      状?                    </th>
+                      状                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      下载?                    </th>
+                      下载                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       操作
                     </th>
@@ -2377,29 +2377,29 @@ function EnterpriseSoftwareUpdatesManagement() {
                           <div>v{update.software_version}</div>
                           {update.previous_version && (
                             <div className="text-gray-500">
-                              �?v{update.previous_version} 升级
+                              v{update.previous_version} 升级
                             </div>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {update.file_size
-                          ? formatFileSize(update.file_size)
+                           formatFileSize(update.file_size)
                           : '未知'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {update.release_date || '未设?}
+                        {update.release_date || '未设}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(update.status)}`}
                         >
                           {update.status === 'published'
-                            ? '已发?
+                             '已发
                             : update.status === 'pending_review'
-                              ? '审核?
+                               '审核
                               : update.status === 'rejected'
-                                ? '已拒?
+                                 '已拒
                                 : '草稿'}
                         </span>
                       </td>
@@ -2461,7 +2461,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                           product_name: e.target.value,
                         })
                       }
-                      placeholder="请输入产品名?
+                      placeholder="请输入产品名
                       required
                     />
                   </div>
@@ -2477,7 +2477,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                           product_model: e.target.value,
                         })
                       }
-                      placeholder="请输入产品型?
+                      placeholder="请输入产品型
                     />
                   </div>
                 </div>
@@ -2494,7 +2494,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                           software_version: e.target.value,
                         })
                       }
-                      placeholder="�? 1.2.3"
+                      placeholder=" 1.2.3"
                       required
                     />
                   </div>
@@ -2510,7 +2510,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                           previous_version: e.target.value,
                         })
                       }
-                      placeholder="�? 1.2.2"
+                      placeholder=" 1.2.2"
                     />
                   </div>
 
@@ -2537,7 +2537,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                 </div>
 
                 <div>
-                  <Label htmlFor="title">升级包标?*</Label>
+                  <Label htmlFor="title">升级包标*</Label>
                   <Input
                     id="title"
                     value={formData.title}
@@ -2550,7 +2550,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                 </div>
 
                 <div>
-                  <Label htmlFor="description">升级包描?/Label>
+                  <Label htmlFor="description">升级包描/Label>
                   <Textarea
                     id="description"
                     value={formData.description}
@@ -2584,7 +2584,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                       onChange={e =>
                         setFormData({ ...formData, file_url: e.target.value })
                       }
-                      placeholder="请输入升级包文件的下载链?
+                      placeholder="请输入升级包文件的下载链
                       required
                     />
                   </div>
@@ -2598,21 +2598,21 @@ function EnterpriseSoftwareUpdatesManagement() {
                       onChange={e =>
                         setFormData({ ...formData, file_size: e.target.value })
                       }
-                      placeholder="请输入文件大?
+                      placeholder="请输入文件大
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="file_hash">文件哈希?/Label>
+                    <Label htmlFor="file_hash">文件哈希/Label>
                     <Input
                       id="file_hash"
                       value={formData.file_hash}
                       onChange={e =>
                         setFormData({ ...formData, file_hash: e.target.value })
                       }
-                      placeholder="请输入文件SHA256哈希?
+                      placeholder="请输入文件SHA256哈希
                     />
                   </div>
 
@@ -2642,7 +2642,7 @@ function EnterpriseSoftwareUpdatesManagement() {
                   >
                     取消
                   </Button>
-                  <Button onClick={createSoftwareUpdate}>上传升级?/Button>
+                  <Button onClick={createSoftwareUpdate}>上传升级到/Button>
                 </div>
               </div>
             </div>
@@ -2658,14 +2658,14 @@ function EnterpriseRewardQuizManagement() {
   const [questions, setQuestions] = useState<any[]>([
     {
       id: '1',
-      title: '产品使用技巧问?,
-      description: '关于产品日常使用的常见问题解?,
-      question: '如何正确清洁设备表面?,
+      title: '产品使用技巧问,
+      description: '关于产品日常使用的常见问题解,
+      question: '如何正确清洁设备表面,
       answer_options: [
         'A. 使用酒精擦拭',
-        'B. 使用专用清洁?,
+        'B. 使用专用清洁,
         'C. 直接用水冲洗',
-        'D. 不需要清?,
+        'D. 不需要清,
       ],
       correct_answer: 'B',
       reward_points: 100,
@@ -2680,11 +2680,11 @@ function EnterpriseRewardQuizManagement() {
     {
       id: '2',
       title: '新品功能了解问答',
-      description: '测试用户对新产品功能的了解程?,
+      description: '测试用户对新产品功能的了解程,
       question: '以下哪项是本产品的核心优势？',
       answer_options: [
-        'A. 高性价?,
-        'B. 创新技?,
+        'A. 高性价,
+        'B. 创新技,
         'C. 完善售后',
         'D. 以上都是',
       ],
@@ -2718,14 +2718,14 @@ function EnterpriseRewardQuizManagement() {
 
   const statusOptions = [
     { value: 'draft', label: '草稿', color: 'bg-gray-100 text-gray-800' },
-    { value: 'active', label: '进行?, color: 'bg-green-100 text-green-800' },
-    { value: 'ended', label: '已结?, color: 'bg-blue-100 text-blue-800' },
-    { value: 'closed', label: '已关?, color: 'bg-red-100 text-red-800' },
+    { value: 'active', label: '进行, color: 'bg-green-100 text-green-800' },
+    { value: 'ended', label: '已结, color: 'bg-blue-100 text-blue-800' },
+    { value: 'closed', label: '已关, color: 'bg-red-100 text-red-800' },
   ];
 
   const getStatusBadge = (status: string) => {
     const option = statusOptions.find(opt => opt.value === status);
-    return option ? (
+    return option  (
       <span
         className={`px-2 py-1 rounded-full text-xs font-medium ${option.color}`}
       >
@@ -2752,11 +2752,11 @@ function EnterpriseRewardQuizManagement() {
   const createQuestion = () => {
     // 验证必填字段
     if (!formData.title || !formData.question || !formData.correct_answer) {
-      alert('请填写所有必填字?);
+      alert('请填写所有必填字);
       return;
     }
 
-    // 创建新问?    const newQuestion = {
+    // 创建新问    const newQuestion = {
       id: (questions.length + 1).toString(),
       ...formData,
       current_participants: 0,
@@ -2767,7 +2767,7 @@ function EnterpriseRewardQuizManagement() {
     setQuestions([...questions, newQuestion]);
     setShowCreateModal(false);
     resetForm();
-    alert('问答创建成功?);
+    alert('问答创建成功);
   };
 
   const viewStatistics = (question: any) => {
@@ -2785,12 +2785,12 @@ function EnterpriseRewardQuizManagement() {
 
   return (
     <div className="space-y-6">
-      {/* 顶部操作?*/}
+      {/* 顶部操作*/}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">有奖问答管理</h2>
           <p className="text-gray-600 mt-1">
-            创建和管理有奖问答活动，提升用户参与?          </p>
+            创建和管理有奖问答活动，提升用户参与          </p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -2807,13 +2807,13 @@ function EnterpriseRewardQuizManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{questions.length}</div>
-            <p className="text-xs text-muted-foreground">所有问答活?/p>
+            <p className="text-xs text-muted-foreground">所有问答活/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">进行?/CardTitle>
+            <CardTitle className="text-sm font-medium">进行/CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -2826,7 +2826,7 @@ function EnterpriseRewardQuizManagement() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">总参与人?/CardTitle>
+            <CardTitle className="text-sm font-medium">总参与人/CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -2868,7 +2868,7 @@ function EnterpriseRewardQuizManagement() {
                   <th className="text-left py-3 px-4 font-medium">问题</th>
                   <th className="text-left py-3 px-4 font-medium">奖励</th>
                   <th className="text-left py-3 px-4 font-medium">参与情况</th>
-                  <th className="text-left py-3 px-4 font-medium">状?/th>
+                  <th className="text-left py-3 px-4 font-medium">状/th>
                   <th className="text-left py-3 px-4 font-medium">时间</th>
                   <th className="text-left py-3 px-4 font-medium">操作</th>
                 </tr>
@@ -2895,7 +2895,7 @@ function EnterpriseRewardQuizManagement() {
                     <td className="py-4 px-4">
                       <div className="text-sm">
                         <div>积分: {question.reward_points}</div>
-                        <div>FC�? {question.reward_fc_amount}</div>
+                        <div>FC {question.reward_fc_amount}</div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
@@ -2921,7 +2921,7 @@ function EnterpriseRewardQuizManagement() {
                       <div className="text-sm">
                         <div>{formatDate(question.start_time)}</div>
                         <div className="text-gray-500">
-                          �?{formatDate(question.end_time)}
+                          {formatDate(question.end_time)}
                         </div>
                       </div>
                     </td>
@@ -2962,7 +2962,7 @@ function EnterpriseRewardQuizManagement() {
                 暂无问答活动
               </h3>
               <p className="text-gray-500 mb-4">
-                创建第一个有奖问答活动来提升用户参与?              </p>
+                创建第一个有奖问答活动来提升用户参与              </p>
               <Button onClick={() => setShowCreateModal(true)}>
                 <Plus className="w-4 h-4 mr-2" />
                 创建问答
@@ -3000,7 +3000,7 @@ function EnterpriseRewardQuizManagement() {
                       onChange={e =>
                         setFormData({ ...formData, title: e.target.value })
                       }
-                      placeholder="请输入活动标?
+                      placeholder="请输入活动标
                       required
                     />
                   </div>
@@ -3030,7 +3030,7 @@ function EnterpriseRewardQuizManagement() {
                     onChange={e =>
                       setFormData({ ...formData, description: e.target.value })
                     }
-                    placeholder="请输入活动描?
+                    placeholder="请输入活动描
                     rows={3}
                   />
                 </div>
@@ -3043,7 +3043,7 @@ function EnterpriseRewardQuizManagement() {
                     onChange={e =>
                       setFormData({ ...formData, question: e.target.value })
                     }
-                    placeholder="请输入问题内?
+                    placeholder="请输入问题内
                     rows={3}
                     required
                   />
@@ -3095,7 +3095,7 @@ function EnterpriseRewardQuizManagement() {
                   </div>
 
                   <div>
-                    <Label htmlFor="reward_fc_amount">奖励FC�?/Label>
+                    <Label htmlFor="reward_fc_amount">奖励FC/Label>
                     <Input
                       id="reward_fc_amount"
                       type="number"
@@ -3106,14 +3106,14 @@ function EnterpriseRewardQuizManagement() {
                           reward_fc_amount: parseInt(e.target.value),
                         })
                       }
-                      placeholder="FC币数?
+                      placeholder="FC币数
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="start_time">开始时?/Label>
+                    <Label htmlFor="start_time">开始时/Label>
                     <Input
                       id="start_time"
                       type="datetime-local"
@@ -3138,7 +3138,7 @@ function EnterpriseRewardQuizManagement() {
                 </div>
 
                 <div>
-                  <Label htmlFor="max_participants">最大参与人?/Label>
+                  <Label htmlFor="max_participants">最大参与人/Label>
                   <Input
                     id="max_participants"
                     type="number"
@@ -3149,7 +3149,7 @@ function EnterpriseRewardQuizManagement() {
                         max_participants: parseInt(e.target.value),
                       })
                     }
-                    placeholder="最多允许参与人?
+                    placeholder="最多允许参与人
                   />
                 </div>
 
@@ -3193,7 +3193,7 @@ function EnterpriseRewardQuizManagement() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Card>
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">参与?/CardTitle>
+                      <CardTitle className="text-sm">参与/CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-blue-600">
@@ -3212,13 +3212,13 @@ function EnterpriseRewardQuizManagement() {
 
                   <Card>
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">浏览?/CardTitle>
+                      <CardTitle className="text-sm">浏览/CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-green-600">
                         {selectedQuestion.view_count}
                       </div>
-                      <div className="text-sm text-gray-500">次浏?/div>
+                      <div className="text-sm text-gray-500">次浏/div>
                     </CardContent>
                   </Card>
 
@@ -3231,7 +3231,7 @@ function EnterpriseRewardQuizManagement() {
                         {selectedQuestion.reward_fc_amount *
                           selectedQuestion.current_participants}
                       </div>
-                      <div className="text-sm text-gray-500">FC�?/div>
+                      <div className="text-sm text-gray-500">FC/div>
                     </CardContent>
                   </Card>
                 </div>
@@ -3243,20 +3243,20 @@ function EnterpriseRewardQuizManagement() {
                   <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <h4 className="font-medium mb-2">问题?/h4>
+                        <h4 className="font-medium mb-2">问题/h4>
                         <p className="text-gray-700">
                           {selectedQuestion.question}
                         </p>
                       </div>
 
                       <div>
-                        <h4 className="font-medium mb-2">答案选项?/h4>
+                        <h4 className="font-medium mb-2">答案选项/h4>
                         <div className="space-y-2">
                           {selectedQuestion.answer_options.map(
                             (option: string, index: number) => (
                               <div
                                 key={index}
-                                className={`p-2 rounded ${selectedQuestion.correct_answer === ['A', 'B', 'C', 'D'][index] ? 'bg-green-100 border border-green-300' : 'bg-gray-50'}`}
+                                className={`p-2 rounded ${selectedQuestion.correct_answer === ['A', 'B', 'C', 'D'][index]  'bg-green-100 border border-green-300' : 'bg-gray-50'}`}
                               >
                                 <span className="font-medium mr-2">
                                   {['A', 'B', 'C', 'D'][index]}.

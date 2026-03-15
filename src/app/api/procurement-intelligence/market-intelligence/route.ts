@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
           .single();
 
         if (error && error.code !== 'PGRST116') {
-          throw new Error(`鏌ヨ鏈€鏂版姤鍛婂け? ${error.message}`);
+          throw new Error(`鏌ヨ鏈€鏂版姤鍛婂け ${error.message}`);
         }
 
         return NextResponse.json({
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         details: (error as Error).message,
       },
       { status: 500 }
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
           .single();
 
         if (latestError && latestError.code !== 'PGRST116') {
-          throw new Error(`鏌ヨ鏈€鏂版姤鍛婂け? ${latestError.message}`);
+          throw new Error(`鏌ヨ鏈€鏂版姤鍛婂け ${latestError.message}`);
         }
 
         return NextResponse.json({
@@ -89,14 +89,14 @@ export async function GET(request: Request) {
         });
 
       case 'price_indices':
-        // 鏌ヨ浠锋牸鎸囨暟鏁版嵁
+        // 鏌ヨ牸鎸囨暟鏁版嵁
         const { data: indicesData, error: indicesError } = await supabase
           .from('international_price_indices')
           .select('*')
           .limit(50);
 
         if (indicesError) {
-          throw new Error(`鏌ヨ浠锋牸鎸囨暟澶辫触: ${indicesError.message}`);
+          throw new Error(`鏌ヨ牸鎸囨暟澶辫触: ${indicesError.message}`);
         }
 
         return NextResponse.json({
@@ -121,7 +121,7 @@ export async function GET(request: Request) {
             demand_level: 'moderate',
             supply_demand_ratio: 1.2,
             market_pressure: 'neutral',
-            key_insights: ['渚涢渶鍩烘湰骞宠　', '浠锋牸璧板娍绋冲畾', '甯傚満鎯呯华涓?],
+            key_insights: ['渚涢渶鍩烘湰骞宠　', '牸璧板娍绋冲畾', '甯傚満鎯呯华涓],
           },
         });
 

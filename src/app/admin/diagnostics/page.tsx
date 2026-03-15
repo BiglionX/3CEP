@@ -60,8 +60,8 @@ interface DiagnosticRecord {
   status: 'pending' | 'completed' | 'failed';
   created_at: string;
   updated_at: string;
-  cost_estimate?: number;
-  repair_time?: number;
+  cost_estimate: number;
+  repair_time: number;
 }
 
 export default function DiagnosticsManagement() {
@@ -422,7 +422,7 @@ export default function DiagnosticsManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {loading ? (
+                {loading  (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -434,7 +434,7 @@ export default function DiagnosticsManagement() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredDiagnostics.length === 0 ? (
+                ) : filteredDiagnostics.length === 0  (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -465,9 +465,9 @@ export default function DiagnosticsManagement() {
                         <Badge
                           variant={
                             record.confidence_score > 90
-                              ? 'default'
+                               'default'
                               : record.confidence_score > 70
-                                ? 'secondary'
+                                 'secondary'
                                 : 'destructive'
                           }
                         >
@@ -522,7 +522,7 @@ export default function DiagnosticsManagement() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              {dialogMode === 'view' ? '诊断详情' : '编辑诊断'}
+              {dialogMode === 'view'  '诊断详情' : '编辑诊断'}
             </DialogTitle>
           </DialogHeader>
           {selectedRecord && (

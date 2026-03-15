@@ -6,7 +6,7 @@ const mockDiagnostics = [
     id: 'diag_001',
     device_id: 'dev_001',
     device_model: 'iPhone 14 Pro',
-    diagnosis_type: '灞忓箷妫€?,
+    diagnosis_type: '灞忓箷妫€,
     confidence_score: 0.95,
     findings: ['灞忓箷浜害寮傚父', '瑙︽懜鍝嶅簲寤惰繜'],
     recommendation: '寤鸿鏇存崲灞忓箷缁勪欢',
@@ -20,7 +20,7 @@ const mockDiagnostics = [
     device_model: 'Samsung Galaxy S23',
     diagnosis_type: '鐢垫睜鍋ュ悍',
     confidence_score: 0.87,
-    findings: ['鐢垫睜瀹归噺涓嬮檷30%', '鍏呯數閫熷害鍙樻參'],
+    findings: ['鐢垫睜瀹归噺涓嬮檷30%', '鍏呯數熷害鍙樻參'],
     recommendation: '寤鸿鏇存崲鐢垫睜',
     status: 'completed',
     created_at: '2026-02-28T09:15:00Z',
@@ -30,10 +30,10 @@ const mockDiagnostics = [
     id: 'diag_003',
     device_id: 'dev_003',
     device_model: 'Huawei P50',
-    diagnosis_type: '鎽勫儚澶存晠?,
+    diagnosis_type: '鎽勫儚澶存晠,
     confidence_score: 0.92,
-    findings: ['鍚庣疆鎽勫儚澶存棤娉曞?, '鐓х墖妯＄硦'],
-    recommendation: '寤鸿缁翠慨鎽勫儚澶存ā?,
+    findings: ['鍚庣疆鎽勫儚澶存棤娉曞, '鐓х墖妯＄硦'],
+    recommendation: '寤鸿缁翠慨鎽勫儚澶存ā,
     status: 'in_progress',
     created_at: '2026-02-28T11:20:00Z',
     completed_at: null,
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
       completed_at: null,
     };
 
-    // 鍦ㄥ疄闄呭簲鐢ㄤ腑杩欓噷搴旇淇濆瓨鍒版暟鎹簱
+    // 鍦ㄥ疄闄呭簲鐢ㄤ腑杩欓噷搴旇淇濆鍒版暟鎹簱
     mockDiagnostics.unshift(newDiagnosis);
 
     return NextResponse.json({

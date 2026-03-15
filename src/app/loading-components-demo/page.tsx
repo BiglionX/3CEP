@@ -10,16 +10,10 @@ import {
   EnhancedPageLoader,
   EnhancedInlineLoader,
   EnhancedButtonLoader,
-  EnhancedLoadingDots,
-  EnhancedLoadingBars,
 } from '@/components/ui/enhanced-loading';
 import {
   Package,
   Wrench,
-  Smartphone,
-  Battery,
-  Monitor,
-  Cpu,
 } from 'lucide-react';
 
 export default function LoadingComponentsDemo() {
@@ -54,39 +48,41 @@ export default function LoadingComponentsDemo() {
         {/* 页面标题 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            加载状态组件演?          </h1>
+            加载状态组件演示
+          </h1>
           <p className="text-gray-600">
-            展示各种增强版加载状态组件的效果和用?          </p>
+            展示各种增强版加载状态组件的效果和用法
+          </p>
         </div>
 
         {/* 主要演示区域 */}
         <Tabs defaultValue="spinners" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="spinners">旋转加载?/TabsTrigger>
-            <TabsTrigger value="skeletons">骨架?/TabsTrigger>
-            <TabsTrigger value="page-loaders">页面加载?/TabsTrigger>
+            <TabsTrigger value="spinners">旋转加载器</TabsTrigger>
+            <TabsTrigger value="skeletons">骨架屏</TabsTrigger>
+            <TabsTrigger value="page-loaders">页面加载器</TabsTrigger>
             <TabsTrigger value="inline">内联加载</TabsTrigger>
             <TabsTrigger value="buttons">按钮加载</TabsTrigger>
           </TabsList>
 
-          {/* 旋转加载器演?*/}
+          {/* 旋转加载器演示 */}
           <TabsContent value="spinners" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>基础旋转加载?/CardTitle>
+                <CardTitle>基础旋转加载器</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <EnhancedLoadingSpinner size="sm" />
-                  <p className="mt-2 text-sm text-gray-600">小尺?/p>
+                  <p className="mt-2 text-sm text-gray-600">小尺寸</p>
                 </div>
                 <div className="text-center">
                   <EnhancedLoadingSpinner size="md" />
-                  <p className="mt-2 text-sm text-gray-600">中尺?/p>
+                  <p className="mt-2 text-sm text-gray-600">中尺寸</p>
                 </div>
                 <div className="text-center">
                   <EnhancedLoadingSpinner size="lg" />
-                  <p className="mt-2 text-sm text-gray-600">大尺?/p>
+                  <p className="mt-2 text-sm text-gray-600">大尺寸</p>
                 </div>
                 <div className="text-center">
                   <EnhancedLoadingSpinner size="xl" />
@@ -148,11 +144,11 @@ export default function LoadingComponentsDemo() {
             </Card>
           </TabsContent>
 
-          {/* 骨架屏演?*/}
+          {/* 骨架屏演示 */}
           <TabsContent value="skeletons" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>文本骨架?/CardTitle>
+                <CardTitle>文本骨架屏</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <EnhancedSkeleton variant="text" width="80%" />
@@ -164,7 +160,7 @@ export default function LoadingComponentsDemo() {
 
             <Card>
               <CardHeader>
-                <CardTitle>卡片骨架?/CardTitle>
+                <CardTitle>卡片骨架屏</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,7 +172,7 @@ export default function LoadingComponentsDemo() {
 
             <Card>
               <CardHeader>
-                <CardTitle>列表骨架?/CardTitle>
+                <CardTitle>列表骨架屏</CardTitle>
               </CardHeader>
               <CardContent>
                 <EnhancedSkeleton variant="list" count={3} />
@@ -185,7 +181,7 @@ export default function LoadingComponentsDemo() {
 
             <Card>
               <CardHeader>
-                <CardTitle>复合骨架?/CardTitle>
+                <CardTitle>复合骨架屏</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-4 p-4 border rounded-lg">
@@ -200,11 +196,11 @@ export default function LoadingComponentsDemo() {
             </Card>
           </TabsContent>
 
-          {/* 页面加载器演?*/}
+          {/* 页面加载器演示 */}
           <TabsContent value="page-loaders" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>不同类型页面加载?/CardTitle>
+                <CardTitle>不同类型页面加载器</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-4">
@@ -214,7 +210,8 @@ export default function LoadingComponentsDemo() {
                       setTimeout(() => setShowPageLoader(false), 2000);
                     }}
                   >
-                    显示标准加载?                  </Button>
+                    显示标准加载器
+                  </Button>
                   <Button onClick={simulateProgressLoading}>
                     显示带进度加载器
                   </Button>
@@ -242,20 +239,20 @@ export default function LoadingComponentsDemo() {
           <TabsContent value="inline" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>内联加载状?/CardTitle>
+                <CardTitle>内联加载状态</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <span>左侧加载指示?/span>
+                  <span>左侧加载指示器</span>
                   <EnhancedInlineLoader position="left" />
                 </div>
 
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <EnhancedInlineLoader
                     position="right"
-                    message="右侧加载指示?
+                    message="右侧加载指示器"
                   />
-                  <span>右侧加载指示?/span>
+                  <span>右侧加载指示器</span>
                 </div>
 
                 <div className="space-y-2">
@@ -271,7 +268,7 @@ export default function LoadingComponentsDemo() {
           <TabsContent value="buttons" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>按钮加载状?/CardTitle>
+                <CardTitle>按钮加载状态</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
@@ -323,12 +320,12 @@ export default function LoadingComponentsDemo() {
           </TabsContent>
         </Tabs>
 
-        {/* 页面加载器展?*/}
+        {/* 页面加载器展示 */}
         {showPageLoader && (
           <EnhancedPageLoader
             variant="full"
-            message="正在加载维修店数?
-            subMessage="请稍候，我们正在为您准备最佳体?
+            message="正在加载维修店数据"
+            subMessage="请稍候，我们正在为您准备最佳体验"
             showProgress={true}
             progress={progress}
           />
@@ -337,4 +334,3 @@ export default function LoadingComponentsDemo() {
     </div>
   );
 }
-

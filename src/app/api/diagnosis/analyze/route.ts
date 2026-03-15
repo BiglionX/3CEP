@@ -11,27 +11,27 @@ import {
 import { validateDiagnosisResult } from '@/services/diagnosis-prompt-template';
 import { NextResponse } from 'next/server';
 
-// 璇锋眰浣撴帴?interface DiagnosisApiRequest {
+// 璇眰浣撴帴interface DiagnosisApiRequest {
   faultDescription: string;
-  deviceId?: string;
-  deviceInfo?: {
-    brand?: string;
-    model?: string;
-    category?: string;
-    purchaseTime?: string;
+  deviceId: string;
+  deviceInfo: {
+    brand: string;
+    model: string;
+    category: string;
+    purchaseTime: string;
   };
-  sessionId?: string;
-  language?: string;
+  sessionId: string;
+  language: string;
 }
 
-// 鍝嶅簲浣撴帴?interface DiagnosisApiResponse {
+// 鍝嶅簲浣撴帴interface DiagnosisApiResponse {
   success: boolean;
-  data?: {
+  data: {
     diagnosisResult: any;
     sessionId: string;
     processingTimeMs: number;
   };
-  error?: string;
+  error: string;
   timestamp: string;
 }
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   const startTime = Date.now();
 
   try {
-    // 1. 瑙ｆ瀽璇锋眰?    const body: DiagnosisApiRequest = await request.json();
+    // 1. 瑙ｆ瀽璇眰    const body: DiagnosisApiRequest = await request.json();
 
     // 2. 鍙傛暟楠岃瘉
     const validationError = validateRequest(body);
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. 鏋勯€犺瘖鏂?    const diagnosisRequest: DiagnosisRequest = {
+    // 3. 鏋勯€犺瘖鏂    const diagnosisRequest: DiagnosisRequest = {
       faultDescription: body.faultDescription,
       deviceId: body.deviceId,
       deviceInfo: body.deviceInfo,
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
       throw new Error('璇婃柇缁撴灉鏍煎紡楠岃瘉澶辫触');
     }
 
-    // 6. 鏋勯€犳垚鍔熷搷?    const response: DiagnosisApiResponse = {
+    // 6. 鏋勯€犳垚鍔熷搷    const response: DiagnosisApiResponse = {
       success: true,
       data: {
         diagnosisResult: diagnosisResult,
@@ -97,13 +97,13 @@ export async function POST(request: Request) {
     // 7. 閿欒鍝嶅簲
     const response: DiagnosisApiResponse = {
       success: false,
-      error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+      error: error instanceof Error  error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       timestamp: new Date().toISOString(),
     };
 
     // 鏍规嵁閿欒绫诲瀷杩斿洖涓嶅悓鐨凥TTP鐘舵€佺爜
     const statusCode =
-      error instanceof Error && error.message.includes('瓒呮椂') ? 408 : 500;
+      error instanceof Error && error.message.includes('瓒呮椂')  408 : 500;
 
     return NextResponse.json(response, { status: statusCode });
   }
@@ -125,7 +125,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 鑾峰彇浼氳瘽淇℃伅
+    // 鑾峰彇氳瘽淇℃伅
     const diagnosisService = new DiagnosisAnalysisService();
     const sessionStats = diagnosisService.getSessionStats(sessionId);
 
@@ -139,11 +139,11 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('鑾峰彇浼氳瘽淇℃伅閿欒:', error);
+    console.error('鑾峰彇氳瘽淇℃伅閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: error instanceof Error  error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -167,21 +167,21 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // 娓呯悊浼氳瘽
+    // 娓呯悊氳瘽
     const diagnosisService = new DiagnosisAnalysisService();
     diagnosisService.clearSession(sessionId);
 
     return NextResponse.json({
       success: true,
-      message: '浼氳瘽宸叉竻?,
+      message: '氳瘽宸叉竻,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('娓呴櫎浼氳瘽閿欒:', error);
+    console.error('娓呴櫎氳瘽閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: error instanceof Error  error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -190,10 +190,10 @@ export async function DELETE(request: Request) {
 }
 
 /**
- * 楠岃瘉璇锋眰鍙傛暟
+ * 楠岃瘉璇眰鍙傛暟
  */
 function validateRequest(body: DiagnosisApiRequest): string | null {
-  // 蹇呴渶瀛楁妫€?  if (!body.faultDescription) {
+  // 蹇呴渶瀛楁妫€  if (!body.faultDescription) {
     return '鏁呴殰鎻忚堪涓嶈兘涓虹┖';
   }
 
@@ -202,7 +202,7 @@ function validateRequest(body: DiagnosisApiRequest): string | null {
   }
 
   if (body.faultDescription.trim().length === 0) {
-    return '鏁呴殰鎻忚堪涓嶈兘涓虹┖瀛楃?;
+    return '鏁呴殰鎻忚堪涓嶈兘涓虹┖瀛楃;
   }
 
   if (body.faultDescription.length > 1000) {
@@ -227,9 +227,9 @@ function validateRequest(body: DiagnosisApiRequest): string | null {
     }
   }
 
-  // 浼氳瘽ID楠岃瘉
+  // 氳瘽ID楠岃瘉
   if (body.sessionId && typeof body.sessionId !== 'string') {
-    return '浼氳瘽ID蹇呴』鏄瓧绗︿覆绫诲瀷';
+    return '氳瘽ID蹇呴』鏄瓧绗︿覆绫诲瀷';
   }
 
   // 璇█楠岃瘉
@@ -241,7 +241,7 @@ function validateRequest(body: DiagnosisApiRequest): string | null {
 }
 
 /**
- * API浣跨敤绀轰緥鍜屾枃? */
+ * API浣跨敤绀轰緥鍜屾枃 */
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 

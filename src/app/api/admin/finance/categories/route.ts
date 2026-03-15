@@ -2,8 +2,8 @@
 
 // 妯℃嫙鍒嗙被鏁版嵁
 const mockIncomeCategories = [
-  { name: '缁翠慨鏈嶅姟?, value: 15600, color: '#10B981' },
-  { name: '閰嶄欢閿€?, value: 8900, color: '#3B82F6' },
+  { name: '缁翠慨鏈嶅姟, value: 15600, color: '#10B981' },
+  { name: '閰嶄欢閿€, value: 8900, color: '#3B82F6' },
   { name: '鏁版嵁鎭㈠', value: 3200, color: '#8B5CF6' },
   { name: '鍏朵粬鏀跺叆', value: 3500, color: '#F59E0B' },
 ];
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const days = parseInt(searchParams.get('days') || '30');
 
-    // 杩欓噷鍙互鏍规嵁澶╂暟璋冩暣鏁版嵁锛岀洰鍓嶈繑鍥炲浐瀹氭暟?    return NextResponse.json({
+    // 杩欓噷鍙互鏍规嵁澶╂暟璋冩暣鏁版嵁锛岀洰鍓嶈繑鍥炲浐瀹氭暟    return NextResponse.json({
       success: true,
       data: {
         income: mockIncomeCategories,

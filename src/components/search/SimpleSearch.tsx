@@ -2,11 +2,15 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Search, X, Loader2 } from 'lucide-react';
+import { AdvancedSearchFilters } from '@/types/search.types';
 
 interface SimpleSearchProps {
   placeholder?: string;
   className?: string;
-  onSearch?: (query: string) => void;
+  entityType?: string;
+  showHistory?: boolean;
+  showSuggestions?: boolean;
+  onSearch?: (query: string, filters: AdvancedSearchFilters) => void;
   onResultSelect?: (result: any) => void;
   autoFocus?: boolean;
   disabled?: boolean;
@@ -15,6 +19,9 @@ interface SimpleSearchProps {
 export function SimpleSearch({
   placeholder = '搜索...',
   className = '',
+  entityType = 'all',
+  showHistory = false,
+  showSuggestions = false,
   onSearch,
   onResultSelect,
   autoFocus = false,
@@ -36,11 +43,15 @@ export function SimpleSearch({
 
     setIsLoading(true);
     try {
-      onSearch?.(trimmedQuery);
+      const filters: AdvancedSearchFilters = {
+        searchTerm: trimmedQuery,
+        entityType,
+      };
+      onSearch?.(trimmedQuery, filters);
     } finally {
       setIsLoading(false);
     }
-  }, [query, isLoading, onSearch]);
+  }, [query, isLoading, onSearch, entityType]);
 
   // 处理键盘事件
   const handleKeyDown = useCallback(

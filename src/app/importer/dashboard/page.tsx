@@ -61,7 +61,7 @@ export default function ImporterDashboard() {
       {
         id: 'PO-2026-003',
         supplier: 'Dell Technologies',
-        product: 'XPS 13 笔记本电?,
+        product: 'XPS 13 笔记本电脑',
         quantity: 200,
         status: 'pending',
         amount: 1200000,
@@ -91,15 +91,15 @@ export default function ImporterDashboard() {
   const getStatusText = (status: ProcurementOrder['status']) => {
     switch (status) {
       case 'delivered':
-        return '已交?;
+        return '已交付';
       case 'shipped':
-        return '已发?;
+        return '已发货';
       case 'confirmed':
-        return '已确?;
+        return '已确认';
       case 'pending':
-        return '待确?;
+        return '待确认';
       case 'cancelled':
-        return '已取?;
+        return '已取消';
       default:
         return status;
     }
@@ -135,8 +135,9 @@ export default function ImporterDashboard() {
             欢迎回来，采购经理！
           </h1>
           <p className="text-gray-600">
-            今天?{new Date().toLocaleDateString('zh-CN')}
-            ，全球采购业务运行正?          </p>
+            今天是 {new Date().toLocaleDateString('zh-CN')}
+            ，全球采购业务运行正常
+          </p>
         </div>
 
         {/* 统计卡片 */}
@@ -145,7 +146,7 @@ export default function ImporterDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">本月采购?/p>
+                  <p className="text-sm text-gray-500">本月采购额</p>
                   <p className="text-2xl font-bold text-gray-900">
                     ¥12,500,000
                   </p>
@@ -165,7 +166,7 @@ export default function ImporterDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">在途订?/p>
+                  <p className="text-sm text-gray-500">在途订单</p>
                   <p className="text-2xl font-bold text-blue-600">12</p>
                 </div>
                 <div className="p-3 bg-blue-100 rounded-lg">
@@ -179,7 +180,7 @@ export default function ImporterDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">合作供应?/p>
+                  <p className="text-sm text-gray-500">合作供应商</p>
                   <p className="text-2xl font-bold text-purple-600">24</p>
                 </div>
                 <div className="p-3 bg-purple-100 rounded-lg">
@@ -193,7 +194,7 @@ export default function ImporterDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">待处理询?/p>
+                  <p className="text-sm text-gray-500">待处理询价</p>
                   <p className="text-2xl font-bold text-yellow-600">8</p>
                 </div>
                 <div className="p-3 bg-yellow-100 rounded-lg">
@@ -219,7 +220,7 @@ export default function ImporterDashboard() {
                     查看全部
                   </Button>
                 </div>
-                <CardDescription>跟踪全球采购订单状?/CardDescription>
+                <CardDescription>跟踪全球采购订单状态</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -265,7 +266,7 @@ export default function ImporterDashboard() {
             </Card>
           </div>
 
-          {/* 快捷操作和提?*/}
+          {/* 快捷操作和提示 */}
           <div className="space-y-6">
             {/* 快捷操作 */}
             <Card>
@@ -290,7 +291,8 @@ export default function ImporterDashboard() {
                   onClick={() => router.push('/importer/suppliers')}
                 >
                   <Users className="h-4 w-4 mr-2" />
-                  供应商管?                </Button>
+                  供应商管理
+                </Button>
                 <Button
                   className="w-full justify-start"
                   variant="outline"
@@ -324,18 +326,22 @@ export default function ImporterDashboard() {
                     <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                     <div>
                       <p className="text-sm font-medium">
-                        PO-2026-002 预计今日到达上海?                      </p>
+                        PO-2026-002 预计今日到达上海港
+                      </p>
                       <p className="text-xs text-gray-500">
-                        请及时安排清关手?                      </p>
+                        请及时安排清关手续
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
                     <div>
                       <p className="text-sm font-medium">
-                        Samsung 供应商询价回复截?                      </p>
+                        Samsung 供应商询价回复截止
+                      </p>
                       <p className="text-xs text-gray-500">
-                        请在今日17:00前确?                      </p>
+                        请在今日17:00前确认
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -345,19 +351,21 @@ export default function ImporterDashboard() {
                         新供应商 Apple 认证审核通过
                       </p>
                       <p className="text-xs text-gray-500">
-                        可正式开展业务合?                      </p>
+                        可正式开展业务合作
+                      </p>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* 市场动?*/}
+            {/* 市场动态 */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5" />
-                  市场动?                </CardTitle>
+                  市场动态
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">

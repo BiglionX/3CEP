@@ -1,7 +1,6 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Search,
   Filter,
@@ -9,7 +8,6 @@ import {
   MoreHorizontal,
   Eye,
   Edit,
-  Trash2,
   Download,
   MapPin,
   Phone,
@@ -59,7 +57,6 @@ interface Customer {
 }
 
 export default function CustomersPage() {
-  const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -87,7 +84,7 @@ export default function CustomersPage() {
             status: 'active',
             annualRevenue: 25000000,
             lastOrderDate: '2026-02-22',
-            paymentTerms: '30天账?,
+            paymentTerms: '30天账期',
             creditLimit: 5000000,
             outstandingBalance: 1200000,
           },
@@ -99,13 +96,13 @@ export default function CustomersPage() {
             email: 'a.mueller@digitalsolutions.de',
             phone: '+49-30-12345678',
             website: 'www.digitalsolutions.de',
-            products: ['笔记本电?, '服务?, '网络设备'],
+            products: ['笔记本电脑', '服务器', '网络设备'],
             rating: 4.7,
             cooperationYears: 3,
             status: 'active',
             annualRevenue: 18500000,
             lastOrderDate: '2026-02-18',
-            paymentTerms: '60天账?,
+            paymentTerms: '60天账期',
             creditLimit: 3000000,
             outstandingBalance: 850000,
           },
@@ -123,7 +120,7 @@ export default function CustomersPage() {
             status: 'active',
             annualRevenue: 32000000,
             lastOrderDate: '2026-02-25',
-            paymentTerms: '预付?,
+            paymentTerms: '预付款',
             creditLimit: 8000000,
             outstandingBalance: 0,
           },
@@ -135,13 +132,13 @@ export default function CustomersPage() {
             email: 'p.vanderberg@eurotech.nl',
             phone: '+31-20-1234567',
             website: 'www.eurotech.nl',
-            products: ['智能家居', 'IoT设备', '传感?],
+            products: ['智能家居', 'IoT设备', '传感器'],
             rating: 4.5,
             cooperationYears: 2,
             status: 'prospect',
             annualRevenue: 12000000,
             lastOrderDate: '2026-01-30',
-            paymentTerms: '待确?,
+            paymentTerms: '待确认',
             creditLimit: 2000000,
             outstandingBalance: 0,
           },
@@ -153,13 +150,13 @@ export default function CustomersPage() {
             email: 'e.wilson@globalconnect.co.uk',
             phone: '+44-20-7123-4567',
             website: 'www.globalconnect.co.uk',
-            products: ['通信设备', '数据中心', '云计?],
+            products: ['通信设备', '数据中心', '云计算'],
             rating: 4.6,
             cooperationYears: 6,
             status: 'inactive',
             annualRevenue: 28000000,
             lastOrderDate: '2025-12-15',
-            paymentTerms: '90天账?,
+            paymentTerms: '90天账期',
             creditLimit: 10000000,
             outstandingBalance: 3500000,
           },
@@ -188,7 +185,8 @@ export default function CustomersPage() {
     return matchesSearch && matchesStatus && matchesCountry;
   });
 
-  // 状态颜色映?  const getStatusColor = (status: string) => {
+  // 状态颜色映射
+  const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       active: 'bg-green-100 text-green-800',
       inactive: 'bg-gray-100 text-gray-800',
@@ -199,8 +197,8 @@ export default function CustomersPage() {
 
   const getStatusText = (status: string) => {
     const textMap: Record<string, string> = {
-      active: '合作?,
-      inactive: '已停?,
+      active: '合作中',
+      inactive: '已停用',
       prospect: '潜在客户',
     };
     return textMap[status] || status;
@@ -210,29 +208,32 @@ export default function CustomersPage() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+        className={`h-4 w-4 ${i < Math.floor(rating)  'text-yellow-400 fill-current' : 'text-gray-300'}`}
       />
     ));
   };
 
   const handleViewCustomer = (customerId: string) => {
     // TODO: 实现查看详情功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看客户详情:', customerId)};
+    console.debug('查看客户详情:', customerId);
+  };
 
   const handleCreateCustomer = () => {
     // TODO: 实现创建客户功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('创建新客?)};
+    console.debug('创建新客户');
+  };
 
   const handleExport = () => {
     // TODO: 实现导出功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出客户数据')};
+    console.debug('导出客户数据');
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载客户数据?..</p>
+          <p className="mt-4 text-gray-600">加载客户数据中...</p>
         </div>
       </div>
     );
@@ -244,7 +245,7 @@ export default function CustomersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">客户管理</h1>
-          <p className="mt-2 text-gray-600">管理海外客户信息和业务关?/p>
+          <p className="mt-2 text-gray-600">管理海外客户信息和业务关系</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={handleExport}>
@@ -268,7 +269,8 @@ export default function CustomersPage() {
           <CardContent>
             <div className="text-2xl font-bold">{customers.length}</div>
             <p className="text-xs text-muted-foreground">
-              活跃客户 {customers.filter(c => c.status === 'active').length} �?            </p>
+              活跃客户 {customers.filter(c => c.status === 'active').length} 个
+            </p>
           </CardContent>
         </Card>
 
@@ -281,7 +283,7 @@ export default function CustomersPage() {
             <div className="text-2xl font-bold">
               {[...new Set(customers.map(c => c.country))].length}
             </div>
-            <p className="text-xs text-muted-foreground">个不同国?地区</p>
+            <p className="text-xs text-muted-foreground">个不同国家/地区</p>
           </CardContent>
         </Card>
 
@@ -297,8 +299,9 @@ export default function CustomersPage() {
                 customers.reduce((sum, c) => sum + c.annualRevenue, 0) /
                 100000000
               ).toFixed(1)}
-              �?            </div>
-            <p className="text-xs text-muted-foreground">累计年度销售收?/p>
+              亿元
+            </div>
+            <p className="text-xs text-muted-foreground">累计年度销售收入</p>
           </CardContent>
         </Card>
 
@@ -314,7 +317,8 @@ export default function CustomersPage() {
                 customers.reduce((sum, c) => sum + c.outstandingBalance, 0) /
                 10000
               ).toFixed(0)}
-              �?            </div>
+              万元
+            </div>
             <p className="text-xs text-muted-foreground">待收款项总额</p>
           </CardContent>
         </Card>
@@ -325,7 +329,8 @@ export default function CustomersPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            筛选条?          </CardTitle>
+            筛选条件
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -333,7 +338,7 @@ export default function CustomersPage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
-                  placeholder="搜索客户名称、联系人或国?.."
+                  placeholder="搜索客户名称、联系人或国家..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -343,13 +348,13 @@ export default function CustomersPage() {
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="客户状? />
+                <SelectValue placeholder="客户状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状?/SelectItem>
-                <SelectItem value="active">合作?/SelectItem>
+                <SelectItem value="all">全部状态</SelectItem>
+                <SelectItem value="active">合作中</SelectItem>
                 <SelectItem value="prospect">潜在客户</SelectItem>
-                <SelectItem value="inactive">已停?/SelectItem>
+                <SelectItem value="inactive">已停用</SelectItem>
               </SelectContent>
             </Select>
 
@@ -375,12 +380,12 @@ export default function CustomersPage() {
         <CardHeader>
           <CardTitle>客户列表</CardTitle>
           <CardDescription>
-            共找?{filteredCustomers.length} 个符合条件的客户
+            共找到 {filteredCustomers.length} 个符合条件的客户
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCustomers.length === 0 ? (
+            {filteredCustomers.length === 0  (
               <div className="col-span-full text-center py-12">
                 <Building className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">
@@ -390,7 +395,7 @@ export default function CustomersPage() {
                   {searchTerm ||
                   statusFilter !== 'all' ||
                   countryFilter !== 'all'
-                    ? '没有找到匹配的客?
+                     '没有找到匹配的客户'
                     : '开始添加第一个客户吧'}
                 </p>
                 {!searchTerm &&
@@ -448,7 +453,7 @@ export default function CustomersPage() {
                       </div>
                     </div>
 
-                    {/* 评分和年?*/}
+                    {/* 评分和年限 */}
                     <div className="flex items-center justify-between pt-2 border-t">
                       <div className="flex items-center gap-1">
                         {getRatingStars(customer.rating)}
@@ -457,7 +462,8 @@ export default function CustomersPage() {
                         </span>
                       </div>
                       <div className="text-sm text-gray-600">
-                        {customer.cooperationYears}年合?                      </div>
+                        {customer.cooperationYears}年合作
+                      </div>
                     </div>
 
                     {/* 产品类别 */}
@@ -486,12 +492,14 @@ export default function CustomersPage() {
                       <div>
                         <span className="text-gray-500">年度收入:</span>
                         <div className="font-medium">
-                          ¥{(customer.annualRevenue / 10000).toFixed(0)}�?                        </div>
+                          ¥{(customer.annualRevenue / 10000).toFixed(0)}万元
+                        </div>
                       </div>
                       <div>
                         <span className="text-gray-500">信用额度:</span>
                         <div className="font-medium">
-                          ¥{(customer.creditLimit / 10000).toFixed(0)}�?                        </div>
+                          ¥{(customer.creditLimit / 10000).toFixed(0)}万元
+                        </div>
                       </div>
                       <div>
                         <span className="text-gray-500">付款条款:</span>
@@ -500,9 +508,10 @@ export default function CustomersPage() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-gray-500">待收?</span>
+                        <span className="text-gray-500">待收款:</span>
                         <div className="font-medium text-orange-600">
-                          ¥{(customer.outstandingBalance / 10000).toFixed(0)}�?                        </div>
+                          ¥{(customer.outstandingBalance / 10000).toFixed(0)}万元
+                        </div>
                       </div>
                     </div>
 
@@ -535,4 +544,3 @@ export default function CustomersPage() {
     </div>
   );
 }
-

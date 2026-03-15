@@ -59,7 +59,7 @@ export async function GET(
     }
 
     // 获取关联配件的实时价格
-    const partIds = article?.map((ap: any) => ap.parts.id) || [];
+    const partIds = article.map((ap: any) => ap.parts.id) || [];
     let partPrices: any[] = [];
 
     if (partIds.length > 0) {
@@ -97,7 +97,7 @@ export async function GET(
     const authHeader = request.headers.get('authorization');
     let isLiked = false;
 
-    if (authHeader?.startsWith('Bearer ')) {
+    if (authHeader.startsWith('Bearer ')) {
       try {
         // 这里应该验证JWT并获取用户ID
         // 简化实现，实际需要完整的认证逻辑
@@ -124,7 +124,7 @@ export async function GET(
       cover_image: article.cover_image_url,
       summary: article.summary,
       author: article.authors
-        ? {
+         {
             id: article.authors.id,
             name: article.authors.name,
             avatar: article.authors.avatar_url,

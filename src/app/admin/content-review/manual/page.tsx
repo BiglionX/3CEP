@@ -53,13 +53,13 @@ import {
 interface ReviewTask {
   id: string;
   content: ContentItem;
-  autoResult?: ModerationResult;
+  autoResult: ModerationResult;
   status: 'pending' | 'reviewing' | 'completed';
-  assignedTo?: string;
-  assignedAt?: number;
-  completedAt?: number;
-  reviewerNotes?: string;
-  finalDecision?: 'approve' | 'reject' | 'modify';
+  assignedTo: string;
+  assignedAt: number;
+  completedAt: number;
+  reviewerNotes: string;
+  finalDecision: 'approve' | 'reject' | 'modify';
 }
 
 interface Reviewer {
@@ -76,7 +76,7 @@ interface Reviewer {
 
 const ContentPreview: React.FC<{
   content: ContentItem;
-  className?: string;
+  className: string;
 }> = ({ content, className = '' }) => {
   return (
     <div className={`bg-gray-50 rounded-lg p-4 ${className}`}>
@@ -247,9 +247,9 @@ const ReviewDecisionPanel: React.FC<{
           <Label className="text-sm font-medium mb-2 block">审核决定</Label>
           <div className="grid grid-cols-3 gap-2">
             <Button
-              variant={decision === 'approve' ? 'default' : 'outline'}
+              variant={decision === 'approve'  'default' : 'outline'}
               className={
-                decision === 'approve' ? 'bg-green-600 hover:bg-green-700' : ''
+                decision === 'approve'  'bg-green-600 hover:bg-green-700' : ''
               }
               onClick={() => setDecision('approve')}
             >
@@ -257,9 +257,9 @@ const ReviewDecisionPanel: React.FC<{
               通过
             </Button>
             <Button
-              variant={decision === 'modify' ? 'default' : 'outline'}
+              variant={decision === 'modify'  'default' : 'outline'}
               className={
-                decision === 'modify' ? 'bg-yellow-600 hover:bg-yellow-700' : ''
+                decision === 'modify'  'bg-yellow-600 hover:bg-yellow-700' : ''
               }
               onClick={() => setDecision('modify')}
             >
@@ -267,9 +267,9 @@ const ReviewDecisionPanel: React.FC<{
               修改
             </Button>
             <Button
-              variant={decision === 'reject' ? 'default' : 'outline'}
+              variant={decision === 'reject'  'default' : 'outline'}
               className={
-                decision === 'reject' ? 'bg-red-600 hover:bg-red-700' : ''
+                decision === 'reject'  'bg-red-600 hover:bg-red-700' : ''
               }
               onClick={() => setDecision('reject')}
             >
@@ -440,7 +440,7 @@ export default function ManualReviewTool() {
     setTasks(prev =>
       prev.map(task =>
         task.id === taskId
-          ? {
+           {
               ...task,
               status: 'completed',
               finalDecision: decision,
@@ -460,7 +460,7 @@ export default function ManualReviewTool() {
   
   const filteredTasks = tasks.filter(task => {
     const matchesSearch =
-      task.content.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.content.content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === 'all' || task.status === statusFilter;
@@ -470,8 +470,8 @@ export default function ManualReviewTool() {
   });
 
   const getTaskPriority = (task: ReviewTask) => {
-    if (task.autoResult?.riskLevel === 'severe') return 'high';
-    if (task.autoResult?.riskLevel === 'high') return 'medium';
+    if (task.autoResult.riskLevel === 'severe') return 'high';
+    if (task.autoResult.riskLevel === 'high') return 'medium';
     return 'low';
   };
 
@@ -663,9 +663,9 @@ export default function ManualReviewTool() {
                             <Badge
                               variant={
                                 priority === 'high'
-                                  ? 'destructive'
+                                   'destructive'
                                   : priority === 'medium'
-                                    ? 'default'
+                                     'default'
                                     : 'secondary'
                               }
                             >
@@ -674,9 +674,9 @@ export default function ManualReviewTool() {
 
                             <Badge variant="outline" className="text-xs">
                               {task.status === 'pending'
-                                ? '待审核'
+                                 '待审核'
                                 : task.status === 'reviewing'
-                                  ? '审核中'
+                                   '审核中'
                                   : '已完成'}
                             </Badge>
 
@@ -730,7 +730,7 @@ export default function ManualReviewTool() {
 
         {/* 详细信息面板 */}
         <div className="lg:col-span-1">
-          {selectedTask ? (
+          {selectedTask  (
             <div className="space-y-6">
               <ContentPreview content={selectedTask.content} />
 

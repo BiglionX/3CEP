@@ -18,7 +18,7 @@ export async function GET() {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 妯℃嫙鍒嗙粍鏁版嵁
@@ -26,7 +26,7 @@ export async function GET() {
       {
         id: 'group_001',
         name: '鍔炲叕璁惧',
-        description: '鐢ㄤ簬鏃ュ父鍔炲叕鐨勮?,
+        description: '鐢ㄤ簬ュ父鍔炲叕鐨勮,
         color: '#3b82f6',
         device_count: 15,
         created_at: '2024-01-01T10:00:00Z',
@@ -35,7 +35,7 @@ export async function GET() {
       {
         id: 'group_002',
         name: '娴嬭瘯璁惧',
-        description: '涓撻棬鐢ㄤ簬娴嬭瘯鐨勮?,
+        description: '涓撻棬鐢ㄤ簬娴嬭瘯鐨勮,
         color: '#10b981',
         device_count: 8,
         created_at: '2024-01-05T09:30:00Z',
@@ -44,7 +44,7 @@ export async function GET() {
       {
         id: 'group_003',
         name: '澶囩敤璁惧',
-        description: '浣滀负澶囩敤鐨勮?,
+        description: '浣滀负澶囩敤鐨勮,
         color: '#f59e0b',
         device_count: 12,
         created_at: '2024-01-10T14:20:00Z',
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     const body = await request.json();

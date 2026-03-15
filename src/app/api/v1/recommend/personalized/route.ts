@@ -22,14 +22,14 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           code: 40001,
-          message: '鍙傛暟鏃犳晥',
+          message: '鍙傛暟犳晥',
           data: null,
         },
         { status: 400 }
       );
     }
 
-    // 鐢熸垚缂撳瓨?    const cacheKey = generateCacheKey(
+    // 鐢熸垚缂撳    const cacheKey = generateCacheKey(
       'recommendations',
       userId,
       deviceId,
@@ -38,9 +38,9 @@ export async function GET(request: Request) {
       pageSize
     );
 
-    // 灏濊瘯浠庣紦瀛樿幏?    const cachedResult = await cacheManager.get(cacheKey);
+    // 灏濊瘯庣紦瀛樿幏    const cachedResult = await cacheManager.get(cacheKey);
     if (cachedResult) {
-      console.log(`馃摝 鎺ㄨ崘缂撳瓨鍛戒腑: ${userId}`);
+      console.log(`馃摝 鎺ㄨ崘缂撳鍛戒腑: ${userId}`);
       return NextResponse.json({
         code: 0,
         message: 'ok',
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
     const offset = (page - 1) * pageSize;
     const paginatedResults = recommendations.slice(offset, offset + pageSize);
 
-    // 鏍煎紡鍖栬繑鍥炴暟?    const result = {
+    // 鏍煎紡鍖栬繑鍥炴暟    const result = {
       list: paginatedResults,
       total: recommendations.length,
       page,
@@ -97,7 +97,7 @@ export async function GET(request: Request) {
       },
     };
 
-    // 缂撳瓨缁撴灉?灏忔椂?    await cacheManager.set(cacheKey, result, 3600);
+    // 缂撳缁撴灉灏忔椂    await cacheManager.set(cacheKey, result, 3600);
 
     return NextResponse.json({
       code: 0,
@@ -111,7 +111,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         code: 50001,
-        message: '鎺ㄨ崘鏈嶅姟鏆傛椂涓嶅彲?,
+        message: '鎺ㄨ崘鏈嶅姟鏆傛椂涓嶅彲,
         data: null,
       },
       { status: 500 }
@@ -122,7 +122,7 @@ export async function GET(request: Request) {
 // 鑾峰彇鐢ㄦ埛琛屼负鏁版嵁
 async function getUserBehavior(userId: string, deviceId: string) {
   try {
-    // 鑾峰彇鐢ㄦ埛鐨勬祻瑙堝巻?    const { data: viewHistory, error: viewError } = await supabase
+    // 鑾峰彇鐢ㄦ埛鐨勬祻瑙堝巻    const { data: viewHistory, error: viewError } = await supabase
       .from('user_interactions')
       .select('target_id, target_type, created_at, is_liked')
       .eq('user_id', userId)
@@ -137,8 +137,8 @@ async function getUserBehavior(userId: string, deviceId: string) {
       .single();
 
     // 璁＄畻鍏磋叮鍒嗘暟
-    const likedItems = viewHistory?.filter(item => item.is_liked) || [];
-    const recentViews = viewHistory?.slice(0, 20) || [];
+    const likedItems = viewHistory.filter(item => item.is_liked) || [];
+    const recentViews = viewHistory.slice(0, 20) || [];
 
     // 鍒嗘瀽鍋忓ソ绫诲埆
     const categoryCounts: Record<string, number> = {};
@@ -164,9 +164,9 @@ async function getUserBehavior(userId: string, deviceId: string) {
       ),
       activityLevel:
         recentViews.length > 10
-          ? 'high'
+           'high'
           : recentViews.length > 5
-            ? 'medium'
+             'medium'
             : 'low',
       preferredCategories,
     };
@@ -185,7 +185,7 @@ async function getUserBehavior(userId: string, deviceId: string) {
   }
 }
 
-// 鍩轰簬鍐呭鐨勬帹?async function getContentBasedRecommendations(behavior: any, deviceId: string) {
+// 鍩轰簬鍐呭鐨勬帹async function getContentBasedRecommendations(behavior: any, deviceId: string) {
   try {
     const recommendations = [];
 
@@ -242,7 +242,7 @@ async function getUserBehavior(userId: string, deviceId: string) {
             cover_image: item.cover_image_url,
             like_count: item.like_count,
             view_count: item.view_count,
-            score: 80, // 璁惧鐩稿叧鎬ц緝?            reason: `涓庢偍?{deviceBrand}璁惧鐩稿叧`,
+            score: 80, // 璁惧鐩稿叧鎬ц緝            reason: `涓庢偍{deviceBrand}璁惧鐩稿叧`,
             created_at: item.created_at,
           }))
         );
@@ -264,7 +264,7 @@ async function getUserBehavior(userId: string, deviceId: string) {
 // 鍗忓悓杩囨护鎺ㄨ崘
 async function getCollaborativeRecommendations(userId: string, behavior: any) {
   try {
-    // 绠€鍖栫殑鍗忓悓杩囨护锛氭壘鐩镐技鐢ㄦ埛鍠滄鐨勫唴?    const similarUsers = await findSimilarUsers(userId, behavior);
+    // 绠€鍖栫殑鍗忓悓杩囨护锛氭壘鐩镐技鐢ㄦ埛鍠滄鐨勫唴    const similarUsers = await findSimilarUsers(userId, behavior);
 
     const recommendations = [];
 
@@ -320,7 +320,7 @@ async function getHybridRecommendations(
   deviceId: string
 ) {
   try {
-    // 鑾峰彇鍚勭绛栫暐鐨勭粨?    const [contentRecs, collabRecs, popularRecs] = await Promise.all([
+    // 鑾峰彇鍚勭绛栫暐鐨勭粨    const [contentRecs, collabRecs, popularRecs] = await Promise.all([
       getContentBasedRecommendations(behavior, deviceId),
       getCollaborativeRecommendations(userId, behavior),
       getPopularContent(),
@@ -329,7 +329,7 @@ async function getHybridRecommendations(
     // 鍔犳潈鍚堝苟缁撴灉
     const scoredRecommendations: Record<string, any> = {};
 
-    // 鍐呭鎺ㄨ崘鏉冮噸?0%
+    // 鍐呭鎺ㄨ崘鏉冮噸0%
     contentRecs.forEach(item => {
       scoredRecommendations[item.id] = {
         ...item,
@@ -337,7 +337,7 @@ async function getHybridRecommendations(
       };
     });
 
-    // 鍗忓悓鎺ㄨ崘鏉冮噸?5%
+    // 鍗忓悓鎺ㄨ崘鏉冮噸5%
     collabRecs.forEach(item => {
       if (scoredRecommendations[item.id]) {
         scoredRecommendations[item.id].hybridScore += (item.score || 0) * 0.35;
@@ -350,7 +350,7 @@ async function getHybridRecommendations(
       }
     });
 
-    // 鐑棬鍐呭鏉冮噸?5%
+    // 鐑棬鍐呭鏉冮噸5%
     popularRecs.forEach(item => {
       if (scoredRecommendations[item.id]) {
         scoredRecommendations[item.id].hybridScore += 70 * 0.25;
@@ -415,19 +415,19 @@ async function findSimilarUsers(userId: string, behavior: any) {
   ];
 }
 
-// 璁＄畻鐩稿叧鎬у垎?function calculateRelevanceScore(item: any, behavior: any, category: string) {
+// 璁＄畻鐩稿叧鎬у垎function calculateRelevanceScore(item: any, behavior: any, category: string) {
   let score = 50; // 鍩虹鍒嗘暟
 
-  // 鍩轰簬鐐硅禐?  score += Math.min(30, item.like_count || 0);
+  // 鍩轰簬鐐硅禐  score += Math.min(30, item.like_count || 0);
 
-  // 鍩轰簬娴忚?  score += Math.min(20, Math.floor((item.view_count || 0) / 100));
+  // 鍩轰簬娴忚  score += Math.min(20, Math.floor((item.view_count || 0) / 100));
 
   // 鍩轰簬鐢ㄦ埛鍏磋叮鍖归厤
   if (behavior.preferredCategories.includes(category)) {
     score += 20;
   }
 
-  // 鍩轰簬鏃舵晥?  const daysOld =
+  // 鍩轰簬舵晥  const daysOld =
     (Date.now() - new Date(item.created_at).getTime()) / (1000 * 60 * 60 * 24);
   if (daysOld < 7) score += 15;
   else if (daysOld < 30) score += 10;
@@ -435,10 +435,10 @@ async function findSimilarUsers(userId: string, behavior: any) {
   return Math.min(100, score);
 }
 
-// 浠庣洰鏍囪幏鍙栫被?function getCategoryFromTarget(targetType: string, targetId: string) {
+// 庣洰鏍囪幏鍙栫被function getCategoryFromTarget(targetType: string, targetId: string) {
   // 绠€鍖栫殑绫诲埆鏄犲皠
   const categoryMap: Record<string, string> = {
-    article: '鎶€鏈枃?,
+    article: '鎶€鏈枃,
     part: '閰嶄欢鎺ㄨ崘',
     shop: '缁翠慨搴楅摵',
     hot_link: '鐑偣璧勮',

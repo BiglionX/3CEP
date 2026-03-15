@@ -34,7 +34,7 @@ interface Orchestration {
   description: string;
   status: 'draft' | 'active' | 'paused' | 'archived';
   triggerType: 'manual' | 'scheduled' | 'event';
-  lastExecutedAt?: string;
+  lastExecutedAt: string;
   executionCount: number;
   successRate: number;
 }
@@ -201,7 +201,7 @@ export default function TeamDetailPage() {
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(team.status)}`}
               >
-                {team.status === 'active' ? '活跃' : '已归档'}
+                {team.status === 'active'  '活跃' : '已归档'}
               </span>
               <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
                 <MoreHorizontal className="w-5 h-5" />
@@ -225,7 +225,7 @@ export default function TeamDetailPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
+                       'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
@@ -313,7 +313,7 @@ export default function TeamDetailPage() {
                       </dt>
                       <dd className="text-2xl font-semibold text-gray-900">
                         {orchestrations.length > 0
-                          ? (
+                           (
                               orchestrations.reduce(
                                 (sum, o) => sum + o.successRate,
                                 0
@@ -406,7 +406,7 @@ export default function TeamDetailPage() {
               </button>
             </div>
 
-            {orchestrations.length === 0 ? (
+            {orchestrations.length === 0  (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                 <Play className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -469,7 +469,7 @@ export default function TeamDetailPage() {
                         <div className="text-center">
                           <div className="text-sm text-gray-600">
                             {orchestration.lastExecutedAt
-                              ? new Date(
+                               new Date(
                                   orchestration.lastExecutedAt
                                 ).toLocaleDateString()
                               : '从未执行'}

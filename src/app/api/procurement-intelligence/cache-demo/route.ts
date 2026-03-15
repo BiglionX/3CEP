@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: '缂撳瓨婕旂ずAPI姝ｅ父宸ヤ綔',
+      message: '缂撳婕旂ずAPI姝ｅ父宸ヤ綔',
       timestamp: new Date().toISOString(),
       cacheStatus: '婕旂ず妯″紡',
     });
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: '缂撳瓨娓呴櫎婕旂ず',
+      message: '缂撳娓呴櫎婕旂ず',
       receivedData: body,
       timestamp: new Date().toISOString(),
     });

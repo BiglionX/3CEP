@@ -1,6 +1,6 @@
 ﻿/**
  * FCX閰嶄欢鍏戞崲API璺敱
- * 鎻愪緵閰嶄欢鍏戞崲鐨勬牳蹇冨姛鑳芥帴? */
+ * 鎻愪緵閰嶄欢鍏戞崲鐨勬牳蹇冨姛鑳芥帴 */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -17,29 +17,29 @@ export async function POST(request: Request) {
     // 鍙傛暟楠岃瘉
     if (!userId) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涚敤鎴稩D' },
+        { success: false, error: '璇彁渚涚敤鎴稩D' },
         { status: 400 }
       );
     }
 
     if (!repairShopId) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涚淮淇簵ID' },
+        { success: false, error: '璇彁渚涚淮淇簵ID' },
         { status: 400 }
       );
     }
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涙湁鏁堢殑鍏戞崲鍟嗗搧鍒楄〃' },
+        { success: false, error: '璇彁渚涙湁鏁堢殑鍏戞崲鍟嗗搧鍒楄〃' },
         { status: 400 }
       );
     }
 
-    // 楠岃瘉姣忎釜鍟嗗搧?    for (const item of items) {
+    // 楠岃瘉姣忎釜鍟嗗搧    for (const item of items) {
       if (!item.productId || !item.quantity || !item.fcxPrice) {
         return NextResponse.json(
-          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬? },
+          { success: false, error: '鍟嗗搧淇℃伅涓嶅畬 },
           { status: 400 }
         );
       }
@@ -110,15 +110,15 @@ export async function GET(request: Request) {
     const repairShopId = searchParams.get('repairShopId');
     const status = searchParams.get('status');
     const limit = searchParams.get('limit')
-      ? parseInt(searchParams.get('limit')!)
+       parseInt(searchParams.get('limit')!)
       : 20;
     const offset = searchParams.get('offset')
-      ? parseInt(searchParams.get('offset')!)
+       parseInt(searchParams.get('offset')!)
       : 0;
 
     if (!userId && !repairShopId) {
       return NextResponse.json(
-        { success: false, error: '璇锋彁渚涚敤鎴稩D鎴栫淮淇簵ID' },
+        { success: false, error: '璇彁渚涚敤鎴稩D鎴栫淮淇簵ID' },
         { status: 400 }
       );
     }

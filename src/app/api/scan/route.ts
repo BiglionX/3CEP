@@ -12,21 +12,21 @@ export async function GET(request: NextRequest) {
 
     // 楠岃瘉浜у搧ID鏍煎紡
     if (!productId.startsWith('prod_')) {
-      return NextResponse.json({ error: '鏃犳晥鐨勪骇鍝両D鏍煎紡' }, { status: 400 });
+      return NextResponse.json({ error: '犳晥鐨勪骇鍝両D鏍煎紡' }, { status: 400 });
     }
 
     // 杩斿洖鎵爜椤甸潰URL
-    const redirectUrl = `/scan?id=${productId}`;
+    const redirectUrl = `/scanid=${productId}`;
 
     return NextResponse.json({
       success: true,
       redirectUrl,
       productId,
-      message: '閲嶅畾鍚戝埌鎵爜钀藉湴?,
+      message: '閲嶅畾鍚戝埌鎵爜钀藉湴,
     });
   } catch (error) {
-    console.error('鎵爜閲嶅畾鍚戦敊?', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    console.error('鎵爜閲嶅畾鍚戦敊', error);
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 

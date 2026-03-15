@@ -1,6 +1,6 @@
 ﻿/**
  * 忘记密码页面
- * 企业服务门户的密码重置功?
+ * 企业服务门户的密码重置功
  */
 
 'use client'
@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
       // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('发送密码重置邮件到:', data.email)setSubmitStatus('success')
     } catch (error) {
       console.error('密码重置失败:', error)
-      setErrorMessage('发送密码重置邮件失败，请稍后重?)
+      setErrorMessage('发送密码重置邮件失败，请稍后重)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -76,19 +76,19 @@ export default function ForgotPasswordPage() {
             <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-            <CardTitle className="text-2xl">邮件已发?/CardTitle>
+            <CardTitle className="text-2xl">邮件已发/CardTitle>
             <CardDescription>
               密码重置链接已发送到您的邮箱
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-center text-gray-600 mb-6">
-              请检查您的邮?{errors?.message || ''} 并点击邮件中的链接重置密码?
+              请检查您的邮{errors.message || ''} 并点击邮件中的链接重置密码
             </p>
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                邮件可能需要几分钟时间到达，请检查垃圾邮件文件夹?
+                邮件可能需要几分钟时间到达，请检查垃圾邮件文件夹
               </AlertDescription>
             </Alert>
           </CardContent>
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
           </div>
           <CardTitle className="text-2xl">忘记密码</CardTitle>
           <CardDescription>
-            输入您的邮箱地址，我们将发送密码重置链?
+            输入您的邮箱地址，我们将发送密码重置链
           </CardDescription>
         </CardHeader>
         
@@ -144,7 +144,7 @@ export default function ForgotPasswordPage() {
             </div>
             
             <p className="text-sm text-gray-500">
-              我们将向您的邮箱发送密码重置链接，请确保输入正确的邮箱地址?
+              我们将向您的邮箱发送密码重置链接，请确保输入正确的邮箱地址
             </p>
           </CardContent>
           
@@ -154,7 +154,7 @@ export default function ForgotPasswordPage() {
               className="w-full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? (
+              {isSubmitting  (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   发送中...
@@ -162,7 +162,7 @@ export default function ForgotPasswordPage() {
               ) : (
                 <>
                   <Mail className="mr-2 h-4 w-4" />
-                  发送重置链?
+                  发送重置链
                 </>
               )}
             </Button>

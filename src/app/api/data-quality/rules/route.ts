@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'groups':
-        // 鑾峰彇瑙勫垯缁勪俊?        const groups = qualityRuleConfigManager['ruleGroups'];
+        // 鑾峰彇瑙勫垯缁勪俊        const groups = qualityRuleConfigManager['ruleGroups'];
         return NextResponse.json({
           groups: Object.fromEntries(groups),
           count: groups.size,
@@ -65,13 +65,13 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(report);
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瑙勫垯閰嶇疆API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
         const { templateName, ruleParameters } = params;
         if (!templateName || !ruleParameters) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鍙傛暟: templateName 锟?ruleParameters' },
+            { error: '缂哄皯蹇呰鍙傛暟: templateName ruleParameters' },
             { status: 400 }
           );
         }
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
 
         if (!newRule) {
           return NextResponse.json(
-            { error: '鍒涘缓瑙勫垯澶辫触锛屾ā鏉夸笉瀛樺湪鎴栧弬鏁伴敊? },
+            { error: '鍒涘缓瑙勫垯澶辫触锛屾ā鏉夸笉瀛樺湪鎴栧弬鏁伴敊 },
             { status: 400 }
           );
         }
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
         const { template, tableColumnPairs } = params;
         if (!template || !tableColumnPairs) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鍙傛暟: template 锟?tableColumnPairs' },
+            { error: '缂哄皯蹇呰鍙傛暟: template tableColumnPairs' },
             { status: 400 }
           );
         }
@@ -131,16 +131,16 @@ export async function POST(request: NextRequest) {
         );
 
         return NextResponse.json({
-          message: `鎵归噺鍒涘缓?${createdRules.length} 涓鍒檂,
+          message: `鎵归噺鍒涘缓${createdRules.length} 涓鍒檂,
           rules: createdRules,
           timestamp: new Date().toISOString(),
         });
 
       case 'execute-group':
-        // 鎵ц瑙勫垯?        const { groupName } = params;
+        // 鎵ц瑙勫垯        const { groupName } = params;
         if (!groupName) {
           return NextResponse.json(
-            { error: '缂哄皯瑙勫垯缁勫悕? },
+            { error: '缂哄皯瑙勫垯缁勫悕 },
             { status: 400 }
           );
         }
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
           await qualityRuleConfigManager.executeRuleGroup(groupName);
 
         return NextResponse.json({
-          message: `瑙勫垯?${groupName} 鎵ц瀹屾垚`,
+          message: `瑙勫垯${groupName} 鎵ц瀹屾垚`,
           groupName,
           results: groupResults,
           summary: {
@@ -162,10 +162,10 @@ export async function POST(request: NextRequest) {
         });
 
       case 'toggle-group':
-        // 鍚敤/绂佺敤瑙勫垯?        const { group, enabled } = params;
+        // 鍚敤/绂佺敤瑙勫垯        const { group, enabled } = params;
         if (!group || enabled === undefined) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鍙傛暟: group 锟?enabled' },
+            { error: '缂哄皯蹇呰鍙傛暟: group enabled' },
             { status: 400 }
           );
         }
@@ -177,8 +177,8 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
           message: toggleResult
-            ? `瑙勫垯?${group} ${enabled ? '鍚敤' : '绂佺敤'}鎴愬姛`
-            : `瑙勫垯?${group} 鎿嶄綔澶辫触`,
+             `瑙勫垯${group} ${enabled  '鍚敤' : '绂佺敤'}鎴愬姛`
+            : `瑙勫垯${group} 鎿嶄綔澶辫触`,
           groupName: group,
           enabled: enabled,
           success: toggleResult,
@@ -242,13 +242,13 @@ export async function POST(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瑙勫垯閰嶇疆API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

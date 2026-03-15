@@ -41,11 +41,11 @@ export default function BookingSuccessPage() {
         </div>
 
         {/* 标题 */}
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">预定成功?/h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">预定成功/h1>
 
         {/* 描述 */}
         <p className="text-gray-600 mb-8">
-          您的预定已成功提交。我们将尽快为您处理订单并安排发货?        </p>
+          您的预定已成功提交。我们将尽快为您处理订单并安排发货        </p>
 
         {/* 订单信息 */}
         {pledgeId && (
@@ -53,12 +53,12 @@ export default function BookingSuccessPage() {
             <h3 className="font-medium text-gray-900 mb-2">订单信息</h3>
             <div className="text-sm text-gray-600">
               <div className="flex justify-between py-1">
-                <span>订单?</span>
+                <span>订单</span>
                 <span className="font-mono">{pledgeId.substring(0, 8)}</span>
               </div>
               <div className="flex justify-between py-1">
-                <span>状?</span>
-                <span className="text-green-600">待支?/span>
+                <span>状</span>
+                <span className="text-green-600">待支/span>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function BookingSuccessPage() {
 
         {/* 自动跳转提示 */}
         <p className="mt-6 text-sm text-gray-500">
-          {countdown > 0 ? `${countdown} 秒后自动返回项目列表` : '正在跳转...'}
+          {countdown > 0  `${countdown} 秒后自动返回项目列表` : '正在跳转...'}
         </p>
       </div>
     </div>

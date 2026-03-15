@@ -1,1 +1,1 @@
-fix: fix code issues and add ESLint config
+fix approvals page.tsx

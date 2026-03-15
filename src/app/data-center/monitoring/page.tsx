@@ -46,7 +46,7 @@ interface AlertRule {
   threshold: number;
   severity: 'critical' | 'warning' | 'info';
   enabled: boolean;
-  lastTriggered?: string;
+  lastTriggered: string;
   triggerCount: number;
 }
 
@@ -57,7 +57,7 @@ interface ActiveAlert {
   severity: 'critical' | 'warning' | 'info';
   message: string;
   triggeredAt: string;
-  resolvedAt?: string;
+  resolvedAt: string;
   status: 'active' | 'resolved' | 'acknowledged';
   source: string;
 }
@@ -89,9 +89,9 @@ export default function MonitoringPage() {
       {
         id: '1',
         ruleId: 'cpu_high',
-        ruleName: 'CPU使用率过?,
+        ruleName: 'CPU使用率过,
         severity: 'critical',
-        message: 'CPU使用率达?5%，超过阈?0%',
+        message: 'CPU使用率达5%，超过阈0%',
         triggeredAt: '2026-02-28 14:35:00',
         status: 'active',
         source: '系统监控',
@@ -101,7 +101,7 @@ export default function MonitoringPage() {
         ruleId: 'memory_low',
         ruleName: '内存不足警告',
         severity: 'warning',
-        message: '可用内存降至512MB，低于阈?GB',
+        message: '可用内存降至512MB，低于阈GB',
         triggeredAt: '2026-02-28 14:20:00',
         status: 'acknowledged',
         source: '系统监控',
@@ -111,7 +111,7 @@ export default function MonitoringPage() {
         ruleId: 'disk_space',
         ruleName: '磁盘空间预警',
         severity: 'info',
-        message: '磁盘使用率已?5%',
+        message: '磁盘使用率已5%',
         triggeredAt: '2026-02-28 13:45:00',
         resolvedAt: '2026-02-28 14:00:00',
         status: 'resolved',
@@ -122,7 +122,7 @@ export default function MonitoringPage() {
     const mockRules: AlertRule[] = [
       {
         id: 'cpu_high',
-        name: 'CPU使用率监?,
+        name: 'CPU使用率监,
         metric: 'cpu_usage',
         condition: '>',
         threshold: 90,
@@ -157,21 +157,21 @@ export default function MonitoringPage() {
 
     const mockMetrics: SystemMetric[] = [
       {
-        name: 'CPU使用?,
+        name: 'CPU使用,
         value: 78.5,
         unit: '%',
         trend: 'up',
         status: 'warning',
       },
       {
-        name: '内存使用?,
+        name: '内存使用,
         value: 65.2,
         unit: '%',
         trend: 'stable',
         status: 'normal',
       },
       {
-        name: '磁盘使用?,
+        name: '磁盘使用,
         value: 82.1,
         unit: '%',
         trend: 'up',
@@ -187,7 +187,7 @@ export default function MonitoringPage() {
       {
         name: '数据库连接数',
         value: 45,
-        unit: '�?,
+        unit: ',
         trend: 'stable',
         status: 'normal',
       },
@@ -289,21 +289,21 @@ export default function MonitoringPage() {
                   <div className="flex items-center mt-2">
                     <Badge
                       variant={
-                        metric.status === 'normal' ? 'default' : 'destructive'
+                        metric.status === 'normal'  'default' : 'destructive'
                       }
                       className="text-xs"
                     >
                       {metric.status === 'normal'
-                        ? '正常'
+                         '正常'
                         : metric.status === 'warning'
-                          ? '警告'
+                           '警告'
                           : '严重'}
                     </Badge>
                     <span className="text-xs text-gray-500 ml-2">
                       {metric.trend === 'up'
-                        ? '上升'
+                         '上升'
                         : metric.trend === 'down'
-                          ? '下降'
+                           '下降'
                           : '稳定'}
                     </span>
                   </div>
@@ -356,7 +356,7 @@ export default function MonitoringPage() {
                   <div className="text-2xl font-bold text-green-600">
                     {alerts.filter(a => a.status === 'resolved').length}
                   </div>
-                  <div className="text-sm text-green-700">已解?/div>
+                  <div className="text-sm text-green-700">已解/div>
                 </div>
               </div>
             </CardContent>
@@ -372,7 +372,7 @@ export default function MonitoringPage() {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <Input
-                      placeholder="搜索告警名称或消?.."
+                      placeholder="搜索告警名称或消.."
                       value={searchTerm}
                       onChange={e => setSearchTerm(e.target.value)}
                       className="pl-10"
@@ -395,13 +395,13 @@ export default function MonitoringPage() {
                 </Select>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-[120px]">
-                    <SelectValue placeholder="状? />
+                    <SelectValue placeholder="状 />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">全部</SelectItem>
                     <SelectItem value="active">活跃</SelectItem>
-                    <SelectItem value="acknowledged">已确?/SelectItem>
-                    <SelectItem value="resolved">已解?/SelectItem>
+                    <SelectItem value="acknowledged">已确/SelectItem>
+                    <SelectItem value="resolved">已解/SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -422,23 +422,23 @@ export default function MonitoringPage() {
                         </h3>
                         <Badge className={getSeverityColor(alert.severity)}>
                           {alert.severity === 'critical'
-                            ? '严重'
+                             '严重'
                             : alert.severity === 'warning'
-                              ? '警告'
+                               '警告'
                               : '信息'}
                         </Badge>
                         <Badge
                           variant={
                             alert.status === 'active'
-                              ? 'destructive'
+                               'destructive'
                               : 'secondary'
                           }
                         >
                           {alert.status === 'active'
-                            ? '活跃'
+                             '活跃'
                             : alert.status === 'acknowledged'
-                              ? '已确?
-                              : '已解?}
+                               '已确
+                              : '已解}
                         </Badge>
                       </div>
                       <p className="text-gray-600 mb-3">{alert.message}</p>
@@ -469,8 +469,8 @@ export default function MonitoringPage() {
                 <CardContent className="py-12 text-center">
                   <Bell className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    暂无匹配的告?                  </h3>
-                  <p className="text-gray-500">调整筛选条件或等待新告警产?/p>
+                    暂无匹配的告                  </h3>
+                  <p className="text-gray-500">调整筛选条件或等待新告警产/p>
                 </CardContent>
               </Card>
             )}
@@ -494,20 +494,20 @@ export default function MonitoringPage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-lg font-medium">{rule.name}</h3>
-                        <Badge variant={rule.enabled ? 'default' : 'secondary'}>
-                          {rule.enabled ? '启用' : '禁用'}
+                        <Badge variant={rule.enabled  'default' : 'secondary'}>
+                          {rule.enabled  '启用' : '禁用'}
                         </Badge>
                         <Badge className={getSeverityColor(rule.severity)}>
                           {rule.severity === 'critical'
-                            ? '严重'
+                             '严重'
                             : rule.severity === 'warning'
-                              ? '警告'
+                               '警告'
                               : '信息'}
                         </Badge>
                       </div>
                       <p className="text-gray-600 mb-3">
-                        �?{rule.metric} {rule.condition} {rule.threshold}{' '}
-                        时触发告?                      </p>
+                        {rule.metric} {rule.condition} {rule.threshold}{' '}
+                        时触发告                      </p>
                       <div className="flex items-center text-sm text-gray-500 space-x-4">
                         <span>触发次数: {rule.triggerCount}</span>
                         {rule.lastTriggered && (

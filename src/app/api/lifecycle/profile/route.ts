@@ -5,13 +5,13 @@ import { NextRequest, NextResponse } from 'next/server';
 const profileService = new DeviceProfileService();
 const lifecycleService = new DeviceLifecycleService();
 
-// API瀵嗛挜楠岃瘉涓棿?function validateApiKey(request: NextRequest): boolean {
+// API瀵嗛挜楠岃瘉涓棿function validateApiKey(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
   const apiKey = process.env.LIFECYCLE_API_KEY;
 
   // 寮€鍙戠幆澧冧笅濡傛灉娌℃湁閰嶇疆API瀵嗛挜锛屽垯鍏佽璁块棶
   if (!apiKey) {
-    console.warn('鈿狅笍  LIFECYCLE_API_KEY 鏈厤缃紝璇峰湪鐢熶骇鐜涓?);
+    console.warn('鈿狅笍  LIFECYCLE_API_KEY 鏈厤缃紝璇峰湪鐢熶骇鐜涓);
     return true;
   }
 
@@ -23,14 +23,14 @@ const lifecycleService = new DeviceLifecycleService();
   return token === apiKey;
 }
 
-// GET /api/lifecycle/profile?qrcodeId=xxx - 鏌ヨ璁惧妗ｆ鍜岀敓鍛藉懆鏈熶簨?export async function GET(request: NextRequest) {
+// GET /api/lifecycle/profileqrcodeId=xxx - 鏌ヨ璁惧妗ｆ鍜岀敓鍛藉懆鏈熶簨export async function GET(request: NextRequest) {
   try {
     // API瀵嗛挜楠岃瘉
     if (!validateApiKey(request)) {
       return NextResponse.json(
         {
           success: false,
-          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
+          error: '鏈巿鏉冭闂紝璇彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -57,14 +57,14 @@ const lifecycleService = new DeviceLifecycleService();
       return NextResponse.json(
         {
           success: false,
-          error: '鏈壘鍒拌澶囨。?,
+          error: '鏈壘鍒拌澶囨。,
         },
         { status: 404 }
       );
     }
 
-    // 鑾峰彇鐢熷懡鍛ㄦ湡浜嬩欢鍒楄〃锛堟寜鏃堕棿鍊掑簭?    const events = await lifecycleService.getDeviceLifecycleHistory(qrcodeId, {
-      limit: 100, // 鑾峰彇鏈€?00鏉¤?      orderBy: 'timestamp',
+    // 鑾峰彇鐢熷懡鍛ㄦ湡浜嬩欢鍒楄〃锛堟寜堕棿鍊掑簭    const events = await lifecycleService.getDeviceLifecycleHistory(qrcodeId, {
+      limit: 100, // 鑾峰彇鏈€00鏉¤      orderBy: 'timestamp',
       sortOrder: 'desc',
     });
 
@@ -117,21 +117,21 @@ const lifecycleService = new DeviceLifecycleService();
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: error instanceof Error  error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );
   }
 }
 
-// POST /api/lifecycle/profile - 鍒涘缓鎴栨洿鏂拌澶囨。?export async function POST(request: NextRequest) {
+// POST /api/lifecycle/profile - 鍒涘缓鎴栨洿鏂拌澶囨。export async function POST(request: NextRequest) {
   try {
     // API瀵嗛挜楠岃瘉
     if (!validateApiKey(request)) {
       return NextResponse.json(
         {
           success: false,
-          error: '鏈巿鏉冭闂紝璇锋彁渚涙湁鏁堢殑API瀵嗛挜',
+          error: '鏈巿鏉冭闂紝璇彁渚涙湁鏁堢殑API瀵嗛挜',
         },
         { status: 401 }
       );
@@ -165,7 +165,7 @@ const lifecycleService = new DeviceLifecycleService();
           brandName: body.brandName,
           serialNumber: body.serialNumber,
           manufacturingDate: body.manufacturingDate
-            ? new Date(body.manufacturingDate)
+             new Date(body.manufacturingDate)
             : undefined,
           warrantyPeriod: body.warrantyPeriod,
           currentStatus: body.currentStatus,
@@ -185,14 +185,14 @@ const lifecycleService = new DeviceLifecycleService();
         },
       });
     } else {
-      // 鍒涘缓鏂版。?      const newProfile = await profileService.createDeviceProfile({
+      // 鍒涘缓鏂版。      const newProfile = await profileService.createDeviceProfile({
         qrcodeId: body.qrcodeId,
         productModel: body.productModel,
         productCategory: body.productCategory,
         brandName: body.brandName,
         serialNumber: body.serialNumber,
         manufacturingDate: body.manufacturingDate
-          ? new Date(body.manufacturingDate)
+           new Date(body.manufacturingDate)
           : undefined,
         warrantyPeriod: body.warrantyPeriod,
         currentStatus: body.currentStatus,
@@ -214,7 +214,7 @@ const lifecycleService = new DeviceLifecycleService();
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: error instanceof Error  error.message : '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
       },
       { status: 500 }
     );

@@ -21,7 +21,7 @@ interface BatchQRCodeRecord {
   generated_count: number;
   status: 'pending' | 'processing' | 'completed' | 'failed';
   created_at: string;
-  completed_at?: string;
+  completed_at: string;
   config: {
     format: string;
     size: number;
@@ -34,7 +34,7 @@ interface ProductTemplate {
   productCategory: string;
   brandId: string;
   productName: string;
-  specifications?: Record<string, any>;
+  specifications: Record<string, any>;
 }
 
 export default function BatchQRCodeManagementPage() {
@@ -81,7 +81,7 @@ export default function BatchQRCodeManagementPage() {
     }
   };
 
-  // 创建新批?
+  // 创建新批
   const createBatch = async () => {
     try {
       const response = await fetch('/api/qrcode/batch', {
@@ -187,7 +187,7 @@ export default function BatchQRCodeManagementPage() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', '批量二维码模?csv');
+    link.setAttribute('download', '批量二维码模csv');
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -210,7 +210,7 @@ export default function BatchQRCodeManagementPage() {
     });
   };
 
-  // 获取状态标?
+  // 获取状态标
   const getStatusBadge = (status: string) => {
     const statusMap = {
       pending: { text: '待处理', color: 'bg-yellow-100 text-yellow-800' },
@@ -230,7 +230,7 @@ export default function BatchQRCodeManagementPage() {
     );
   };
 
-  // 获取进度?
+  // 获取进度
   const getProgressBar = (batch: BatchQRCodeRecord) => {
     const progress = Math.round((batch.generated_count / batch.quantity) * 100);
     return (
@@ -252,7 +252,7 @@ export default function BatchQRCodeManagementPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载?..</p>
+          <p className="mt-4 text-gray-600">加载中..</p>
         </div>
       </div>
     );
@@ -390,7 +390,7 @@ export default function BatchQRCodeManagementPage() {
 
         {/* 批次列表 */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {batches.length === 0 ? (
+          {batches.length === 0  (
             <div className="p-12 text-center">
               <div className="text-gray-400 text-6xl mb-4">📱</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -429,7 +429,7 @@ export default function BatchQRCodeManagementPage() {
                       数量/进度
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      状?
+                      状
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       时间
@@ -479,7 +479,7 @@ export default function BatchQRCodeManagementPage() {
                         </div>
                         {batch.completed_at && (
                           <div className="text-xs text-gray-400">
-                            完成?
+                            完成
                             {new Date(batch.completed_at).toLocaleDateString()}
                           </div>
                         )}
@@ -493,7 +493,7 @@ export default function BatchQRCodeManagementPage() {
                         </button>
                         {batch.status === 'pending' && (
                           <button className="text-yellow-600 hover:text-yellow-900">
-                            开始处?
+                            开始处
                           </button>
                         )}
                       </td>
@@ -544,8 +544,8 @@ export default function BatchQRCodeManagementPage() {
                         重要说明
                       </h3>
                       <p className="text-sm text-blue-700 mt-1">
-                        每个批次将锁定唯一的产品型号，确保该批次内所有二维码都指向同一产品型号?
-                        系统会自动生成连续的序列号以区分每个二维码?
+                        每个批次将锁定唯一的产品型号，确保该批次内所有二维码都指向同一产品型号
+                        系统会自动生成连续的序列号以区分每个二维码
                       </p>
                     </div>
                   </div>
@@ -566,7 +566,7 @@ export default function BatchQRCodeManagementPage() {
                         })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="�? IPH15P-A2842"
+                      placeholder=" IPH15P-A2842"
                     />
                   </div>
 
@@ -584,7 +584,7 @@ export default function BatchQRCodeManagementPage() {
                         })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="�? smartphone"
+                      placeholder=" smartphone"
                     />
                   </div>
 
@@ -599,7 +599,7 @@ export default function BatchQRCodeManagementPage() {
                         setFormData({ ...formData, brandId: e.target.value })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="�? brand_apple_001"
+                      placeholder=" brand_apple_001"
                     />
                   </div>
 
@@ -617,7 +617,7 @@ export default function BatchQRCodeManagementPage() {
                         })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="�? iPhone 15 Pro"
+                      placeholder=" iPhone 15 Pro"
                     />
                   </div>
 
@@ -704,7 +704,7 @@ export default function BatchQRCodeManagementPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      生产开始日?
+                      生产开始日
                     </label>
                     <input
                       type="date"
@@ -822,7 +822,7 @@ export default function BatchQRCodeManagementPage() {
                       产品名称, 数量
                     </div>
                     <div>
-                      <strong>可选字?</strong> 格式, 尺寸, 纠错等级
+                      <strong>可选字</strong> 格式, 尺寸, 纠错等级
                     </div>
                     <div>
                       <strong>示例:</strong> IPH15P-A2842, smartphone,

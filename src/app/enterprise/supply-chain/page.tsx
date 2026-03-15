@@ -69,7 +69,7 @@ export default function SupplyChainOptimizationPage() {
   const inventoryItems: InventoryItem[] = [
     {
       id: 'INV-001',
-      productName: '智能传感?XYZ-2024',
+      productName: '智能传感XYZ-2024',
       sku: 'XYZ-2024-001',
       currentStock: 150,
       minStock: 100,
@@ -89,7 +89,7 @@ export default function SupplyChainOptimizationPage() {
     },
     {
       id: 'INV-003',
-      productName: '包装?DEF-456',
+      productName: '包装DEF-456',
       sku: 'DEF-456-003',
       currentStock: 0,
       minStock: 100,
@@ -134,9 +134,9 @@ export default function SupplyChainOptimizationPage() {
             <Package className="w-8 h-8 text-blue-600" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            供应链智能优化系?          </h1>
+            供应链智能优化系          </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            AI驱动的供应链管理和优化系统，实现需求预测、库存优化和供应商协?          </p>
+            AI驱动的供应链管理和优化系统，实现需求预测、库存优化和供应商协          </p>
         </div>
 
         {/* 导航标签 */}
@@ -149,14 +149,14 @@ export default function SupplyChainOptimizationPage() {
                   onClick={() => setActiveTab(tab)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab
-                      ? 'border-blue-500 text-blue-600'
+                       'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   {tab === 'dashboard' && '供应链仪表板'}
-                  {tab === 'suppliers' && '供应商管?}
+                  {tab === 'suppliers' && '供应商管}
                   {tab === 'inventory' && '库存优化'}
-                  {tab === 'demand-forecast' && '需求预?}
+                  {tab === 'demand-forecast' && '需求预}
                 </button>
               )
             )}
@@ -171,7 +171,7 @@ export default function SupplyChainOptimizationPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    供应链可见?                  </CardTitle>
+                    供应链可见                  </CardTitle>
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -183,19 +183,19 @@ export default function SupplyChainOptimizationPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    库存周转?                  </CardTitle>
+                    库存周转                  </CardTitle>
                   <RefreshCw className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">8.1</div>
-                  <p className="text-xs text-muted-foreground">�?�?/p>
+                  <p className="text-xs text-muted-foreground">/p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    准时交付?                  </CardTitle>
+                    准时交付                  </CardTitle>
                   <CheckCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -223,7 +223,7 @@ export default function SupplyChainOptimizationPage() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Users className="w-5 h-5 mr-2" />
-                  供应商绩效监?                </CardTitle>
+                  供应商绩效监                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -241,7 +241,7 @@ export default function SupplyChainOptimizationPage() {
                       </div>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">可靠?/span>
+                          <span className="text-gray-600">可靠/span>
                           <span className="font-medium">
                             {supplier.reliability}%
                           </span>
@@ -249,15 +249,15 @@ export default function SupplyChainOptimizationPage() {
                         <div className="flex justify-between">
                           <span className="text-gray-600">交付周期</span>
                           <span className="font-medium">
-                            {supplier.deliveryTime}�?                          </span>
+                            {supplier.deliveryTime}                          </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-1.5">
                           <div
                             className={`h-1.5 rounded-full ${
                               supplier.reliability > 95
-                                ? 'bg-green-500'
+                                 'bg-green-500'
                                 : supplier.reliability > 90
-                                  ? 'bg-yellow-500'
+                                   'bg-yellow-500'
                                   : 'bg-red-500'
                             }`}
                             style={{ width: `${supplier.reliability}%` }}
@@ -272,17 +272,17 @@ export default function SupplyChainOptimizationPage() {
           </div>
         )}
 
-        {/* 供应商管?*/}
+        {/* 供应商管*/}
         {activeTab === 'suppliers' && (
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>供应商协作平?/CardTitle>
+                <CardTitle>供应商协作平/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-semibold mb-4">供应商列?/h3>
+                    <h3 className="font-semibold mb-4">供应商列/h3>
                     <div className="space-y-3">
                       {suppliers.map(supplier => (
                         <div
@@ -299,7 +299,7 @@ export default function SupplyChainOptimizationPage() {
                             <div className="text-sm font-medium">
                               {supplier.reliability}%
                             </div>
-                            <div className="text-xs text-gray-500">可靠?/div>
+                            <div className="text-xs text-gray-500">可靠/div>
                           </div>
                         </div>
                       ))}
@@ -311,9 +311,9 @@ export default function SupplyChainOptimizationPage() {
                     <div className="space-y-4">
                       <div className="p-4 bg-blue-50 rounded-lg">
                         <h4 className="font-medium text-blue-900 mb-2">
-                          实时沟?                        </h4>
+                          实时沟                        </h4>
                         <p className="text-blue-700 text-sm">
-                          与供应商建立实时沟通渠道，快速解决问?                        </p>
+                          与供应商建立实时沟通渠道，快速解决问                        </p>
                       </div>
                       <div className="p-4 bg-green-50 rounded-lg">
                         <h4 className="font-medium text-green-900 mb-2">
@@ -328,7 +328,7 @@ export default function SupplyChainOptimizationPage() {
                           风险管理
                         </h4>
                         <p className="text-purple-700 text-sm">
-                          识别潜在供应风险，制定应急预?                        </p>
+                          识别潜在供应风险，制定应急预                        </p>
                       </div>
                     </div>
                   </div>
@@ -359,10 +359,10 @@ export default function SupplyChainOptimizationPage() {
                         <th className="text-left py-3 px-4">产品名称</th>
                         <th className="text-left py-3 px-4">SKU</th>
                         <th className="text-left py-3 px-4">当前库存</th>
-                        <th className="text-left py-3 px-4">最低库?/th>
-                        <th className="text-left py-3 px-4">最高库?/th>
-                        <th className="text-left py-3 px-4">供应?/th>
-                        <th className="text-left py-3 px-4">状?/th>
+                        <th className="text-left py-3 px-4">最低库/th>
+                        <th className="text-left py-3 px-4">最高库/th>
+                        <th className="text-left py-3 px-4">供应/th>
+                        <th className="text-left py-3 px-4">状/th>
                       </tr>
                     </thead>
                     <tbody>
@@ -407,9 +407,9 @@ export default function SupplyChainOptimizationPage() {
                     <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
                     <div>
                       <h3 className="font-medium text-yellow-900">
-                        紧急补货提?                      </h3>
+                        紧急补货提                      </h3>
                       <p className="text-yellow-700 text-sm mt-1">
-                        产品 "包装?DEF-456" 已缺货，建议立即下单 200 �?                      </p>
+                        产品 "包装DEF-456" 已缺货，建议立即下单 200                       </p>
                     </div>
                   </div>
 
@@ -418,8 +418,8 @@ export default function SupplyChainOptimizationPage() {
                     <div>
                       <h3 className="font-medium text-blue-900">优化建议</h3>
                       <p className="text-blue-700 text-sm mt-1">
-                        建议?"精密轴承 ABC-123" 的安全库存提高至 80
-                        件，以应对季节性需求增?                      </p>
+                        建议"精密轴承 ABC-123" 的安全库存提高至 80
+                        件，以应对季节性需求增                      </p>
                     </div>
                   </div>
                 </div>
@@ -428,33 +428,33 @@ export default function SupplyChainOptimizationPage() {
           </div>
         )}
 
-        {/* 需求预?*/}
+        {/* 需求预*/}
         {activeTab === 'demand-forecast' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>月度需求预?/CardTitle>
+                  <CardTitle>月度需求预/CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
                     <div className="text-center text-gray-500">
                       <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p>需求预测图?/p>
+                      <p>需求预测图/p>
                     </div>
                   </div>
                   <div className="mt-4 space-y-2">
                     <div className="flex justify-between">
-                      <span>一月预?/span>
-                      <span className="font-medium">1,250 �?/span>
+                      <span>一月预/span>
+                      <span className="font-medium">1,250 /span>
                     </div>
                     <div className="flex justify-between">
                       <span>二月预测</span>
-                      <span className="font-medium">1,420 �?/span>
+                      <span className="font-medium">1,420 /span>
                     </div>
                     <div className="flex justify-between">
                       <span>三月预测</span>
-                      <span className="font-medium">1,180 �?/span>
+                      <span className="font-medium">1,180 /span>
                     </div>
                   </div>
                 </CardContent>
@@ -468,13 +468,13 @@ export default function SupplyChainOptimizationPage() {
                   <div className="space-y-4">
                     <div className="p-3 bg-green-50 rounded-lg">
                       <div className="flex justify-between items-center">
-                        <span className="font-medium">季节性因?/span>
+                        <span className="font-medium">季节性因/span>
                         <span className="text-green-700 font-semibold">
                           +15%
                         </span>
                       </div>
                       <p className="text-sm text-green-600 mt-1">
-                        春节前需求增长预?                      </p>
+                        春节前需求增长预                      </p>
                     </div>
 
                     <div className="p-3 bg-blue-50 rounded-lg">
@@ -483,7 +483,7 @@ export default function SupplyChainOptimizationPage() {
                         <span className="text-blue-700 font-semibold">+8%</span>
                       </div>
                       <p className="text-sm text-blue-600 mt-1">
-                        智能产品市场需求上?                      </p>
+                        智能产品市场需求上                      </p>
                     </div>
 
                     <div className="p-3 bg-purple-50 rounded-lg">
@@ -494,7 +494,7 @@ export default function SupplyChainOptimizationPage() {
                         </span>
                       </div>
                       <p className="text-sm text-purple-600 mt-1">
-                        新品发布会带动销?                      </p>
+                        新品发布会带动销                      </p>
                     </div>
                   </div>
                 </CardContent>

@@ -1,29 +1,29 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛?const supabase = createClient(
+// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 鏅鸿兘浣撴敞鍐屼俊鎭帴?interface AgentRegistration {
-  id?: string;
+// 鏅鸿兘浣撴敞鍐屼俊鎭帴interface AgentRegistration {
+  id: string;
   name: string;
   domain: string;
   type: 'n8n' | 'service';
   endpoint: string;
   version: string;
-  description?: string;
+  description: string;
   metadata: {
     latency_sensitive: boolean;
     security_level: 'low' | 'medium' | 'high';
     traffic_level: 'low' | 'medium' | 'high';
     status_complexity: 'low' | 'medium' | 'high';
   };
-  health_check_endpoint?: string;
+  health_check_endpoint: string;
   supported_operations: string[];
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 /**
@@ -37,23 +37,23 @@ export async function GET(request: NextRequest) {
       data: { session },
     } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    // 妫€鏌ユ潈?    const userRoles = session?.user_metadata?.roles || [];
+    // 妫€鏌ユ潈    const userRoles = session.user_metadata.roles || [];
     if (!userRoles.includes('admin') && !userRoles.includes('agent_operator')) {
       return NextResponse.json({ error: '鏉冮檺涓嶈冻' }, { status: 403 });
     }
 
-    // 鏌ヨ鏅鸿兘浣撴敞鍐屼俊?    const { data: agents, error } = await supabase
+    // 鏌ヨ鏅鸿兘浣撴敞鍐屼俊    const { data: agents, error } = await supabase
       .from('agent_registry')
       .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('鏌ヨ鏅鸿兘浣撴敞鍐屼俊鎭け?', error);
+      console.error('鏌ヨ鏅鸿兘浣撴敞鍐屼俊鎭け', error);
       return NextResponse.json(
-        { error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ? },
+        { error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ },'
         { status: 500 }
       );
     }
@@ -61,13 +61,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: agents,
-      count: agents?.length || 0,
+      count: agents.length || 0,
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
     console.error('鏅鸿兘浣撴敞鍐孉PI閿欒:', error);
     return NextResponse.json(
-      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊 },'
       { status: 500 }
     );
   }
@@ -84,13 +84,13 @@ export async function POST(request: NextRequest) {
       data: { session },
     } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
-    const userRoles = session?.user_metadata?.roles || [];
+    const userRoles = session.user_metadata.roles || [];
     if (!userRoles.includes('admin')) {
       return NextResponse.json(
-        { error: '鍙湁绠＄悊鍛樺彲浠ユ敞鍐屾櫤鑳戒綋' },
+        { error: '鍙湁绠＄悊鍛樺彲ユ敞鍐屾櫤鑳戒綋' },
         { status: 403 }
       );
     }
@@ -104,10 +104,10 @@ export async function POST(request: NextRequest) {
       version: body.version,
       description: body.description,
       metadata: {
-        latency_sensitive: body?.latency_sensitive || false,
-        security_level: body?.security_level || 'medium',
-        traffic_level: body?.traffic_level || 'medium',
-        status_complexity: body?.status_complexity || 'medium',
+        latency_sensitive: body.latency_sensitive || false,
+        security_level: body.security_level || 'medium',
+        traffic_level: body.traffic_level || 'medium',
+        status_complexity: body.status_complexity || 'medium',
       },
       health_check_endpoint: body.health_check_endpoint,
       supported_operations: body.supported_operations || [],
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 妫€鏌ユ櫤鑳戒綋鍚嶇О鏄惁宸插瓨?    const { data: existingAgent } = await supabase
+    // 妫€鏌ユ櫤鑳戒綋鍚嶇О鏄惁宸插    const { data: existingAgent } = await supabase
       .from('agent_registry')
       .select('id')
       .eq('name', registrationData.name)
@@ -143,11 +143,11 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('鎻掑叆鏅鸿兘浣撴敞鍐屼俊鎭け?', error);
-      return NextResponse.json({ error: '娉ㄥ唽鏅鸿兘浣撳け? }, { status: 500 });
+      console.error('鎻掑叆鏅鸿兘浣撴敞鍐屼俊鎭け', error);
+      return NextResponse.json({ error: '娉ㄥ唽鏅鸿兘浣撳け }, { status: 500 });
     }
 
-    // 璁板綍瀹¤鏃ュ織
+    // 璁板綍瀹¤ュ織
     (await supabase.from('audit_logs').insert({
       user_id: session.user.id,
       action: 'agent_registered',
@@ -168,16 +168,17 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         data: newAgent,
-        message: '鏅鸿兘浣撴敞鍐屾垚?,
+        message: '鏅鸿兘浣撴敞鍐屾垚,'
       },
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('鏅鸿兘浣撴敞鍐岄敊?', error);
+    console.error('鏅鸿兘浣撴敞鍐岄敊', error);
     return NextResponse.json(
-      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊? },
+      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊 },'
       { status: 500 }
     );
   }
 }
+
 

@@ -59,7 +59,7 @@ export async function POST(
         success: false,
         error: {
           code: 'SKILL_006',
-          message: error instanceof Error ? error.message : '技能执行失败',
+          message: error instanceof Error  error.message : '技能执行失败',
         },
         metadata: {
           executionTimeMs: Date.now() - startTime,

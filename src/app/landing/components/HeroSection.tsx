@@ -6,8 +6,8 @@ interface HeroSectionProps {
   title: string;
   subtitle: string;
   ctaText: string;
-  backgroundImage?: string;
-  onCtaClick?: () => void;
+  backgroundImage: string;
+  onCtaClick: () => void;
 }
 
 export function HeroSection({
@@ -51,8 +51,8 @@ export function HeroSection({
                 <span
                   key={index}
                   className={
-                    word.includes('n8n') || word.includes('智能?)
-                      ? 'text-blue-600'
+                    word.includes('n8n') || word.includes('智能')
+                       'text-blue-600'
                       : ''
                   }
                 >
@@ -152,7 +152,7 @@ export function HeroSection({
                   <div className="text-2xl font-bold text-purple-600">
                     99.9%
                   </div>
-                  <div className="text-sm text-gray-600">系统可用?/div>
+                  <div className="text-sm text-gray-600">系统可用性</div>
                 </div>
               </div>
             </div>
@@ -186,4 +186,3 @@ export function HeroSection({
     </section>
   );
 }
-

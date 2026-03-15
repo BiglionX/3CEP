@@ -12,7 +12,7 @@ export default function FaultDiagnosisSkillPage() {
             href="/skill-store"
             className="text-indigo-600 hover:text-indigo-700 font-medium"
           >
-            �?返回商店首页
+            ← 返回商店首页
           </Link>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function FaultDiagnosisSkillPage() {
               v1.0.0
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
-              �?4.8/5.0
+              ⭐ 4.8/5.0
             </span>
             <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium">
               ⬇️ 856 下载
@@ -55,43 +55,48 @@ export default function FaultDiagnosisSkillPage() {
             {/* Overview */}
             <section className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📋 技能简?              </h2>
+                📋 技能简介
+              </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
                 <code className="bg-gray-100 px-2 py-1 rounded text-sm">
                   procyc-fault-diagnosis
                 </code>{' '}
-                是一个基于大模型?3C 设备故障诊断技能， 内置 14+
-                常见故障案例库，支持手机、平板、笔记本等多种设备类型的智能诊断?              </p>
+                是一个基于大模型的 3C 设备故障诊断技能，内置 14+
+                常见故障案例库，支持手机、平板、笔记本等多种设备类型的智能诊断。
+              </p>
 
               <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-                核心特?              </h3>
+                核心特性
+              </h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>知识库驱?/strong> - 无需实时调用大模型，降低成本
+                    <strong>知识库驱动</strong> - 无需实时调用大模型，降低成本
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>多设备支?/strong> - 手机/平板/笔记?台式?                  </span>
+                    <strong>多设备支持</strong> - 手机/平板/笔记本/台式机
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
                     <strong>智能症状匹配</strong> - 关键词提取和模糊匹配
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>配件建议</strong> - 提供维修配件和难度评?                  </span>
+                    <strong>配件建议</strong> - 提供维修配件和难度评估
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">�?/span>
+                  <span className="text-green-500 mt-1">✓</span>
                   <span className="text-gray-700">
-                    <strong>极速响?/strong> - 亚毫秒级性能 (&lt;1ms)
+                    <strong>极速响应</strong> - 亚毫秒级性能 (&lt;1ms)
                   </span>
                 </li>
               </ul>
@@ -145,9 +150,7 @@ const result = await faultDiagnosis.execute({
   deviceType: 'phone',
   brand: 'apple',
   symptoms: '无法开机，屏幕不亮'
-});
-
-// TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(result.data?.diagnoses)`}
+});`}
                     </pre>
                   </div>
                 </div>
@@ -168,7 +171,8 @@ const result = await faultDiagnosis.execute({
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        参数?                      </th>
+                        参数名
+                      </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                         类型
                       </th>
@@ -188,7 +192,7 @@ const result = await faultDiagnosis.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         设备类型 (phone/tablet/laptop/desktop)
                       </td>
@@ -200,7 +204,7 @@ const result = await faultDiagnosis.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         设备品牌
                       </td>
@@ -212,7 +216,7 @@ const result = await faultDiagnosis.execute({
                       <td className="px-4 py-3 text-sm text-gray-500">
                         string
                       </td>
-                      <td className="px-4 py-3 text-sm text-red-600">�?/td>
+                      <td className="px-4 py-3 text-sm text-red-600">是</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         故障症状描述
                       </td>
@@ -228,7 +232,8 @@ const result = await faultDiagnosis.execute({
             {/* Quick Actions */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                快速操?              </h3>
+                快速操作
+              </h3>
               <div className="space-y-3">
                 <a
                   href="https://github.com/procyc-skills/procyc-fault-diagnosis"
@@ -261,18 +266,18 @@ const result = await faultDiagnosis.execute({
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">功能测试</span>
-                  <span className="font-medium text-gray-900">7 �?/span>
+                  <span className="font-medium text-gray-900">7 个</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">测试通过?/span>
-                  <span className="font-medium text-green-600">100% �?/span>
+                  <span className="text-gray-600">测试通过率</span>
+                  <span className="font-medium text-green-600">100%</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">故障案例</span>
                   <span className="font-medium text-blue-600">14+</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">最后更?/span>
+                  <span className="text-gray-600">最后更新</span>
                   <span className="font-medium text-gray-900">2026-03-03</span>
                 </div>
               </div>
@@ -283,4 +288,3 @@ const result = await faultDiagnosis.execute({
     </div>
   );
 }
-

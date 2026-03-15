@@ -20,7 +20,7 @@ interface InboundForecast {
   warehouseName: string;
   supplierName: string;
   expectedArrival: string;
-  actualArrival?: string;
+  actualArrival: string;
   status: InboundForecastStatus;
   itemCount: number;
   totalForecastedQuantity: number;
@@ -40,11 +40,11 @@ export default function InboundForecastPage() {
   >("all");
   const [warehouseFilter, setWarehouseFilter] = useState<string>("all");
 
-  // 获取唯一的仓库列表用于筛?
+  // 获取唯一的仓库列表用于筛
   const warehouses = Array.from(new Set(forecasts.map((f) => f.warehouseName)))
     .filter((name) => name)
     .map((name) => ({
-      id: forecasts.find((f) => f.warehouseName === name)?.warehouseId || "",
+      id: forecasts.find((f) => f.warehouseName === name).warehouseId || "",
       name: name,
     }));
 
@@ -60,10 +60,10 @@ export default function InboundForecastPage() {
         const result = await response.json();
         setForecasts(result.data || []);
       } else {
-        console.error("加载预报单列表失?", await response.text());
+        console.error("加载预报单列表失", await response.text());
       }
     } catch (error) {
-      console.error("加载预报单列表失?", error);
+      console.error("加载预报单列表失", error);
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,7 @@ export default function InboundForecastPage() {
         alert(`删除失败: ${error.error}`);
       }
     } catch (error) {
-      console.error("删除预报单失?", error);
+      console.error("删除预报单失", error);
       alert("删除失败，请稍后重试");
     }
   };
@@ -135,7 +135,7 @@ export default function InboundForecastPage() {
       <div className="container mx-auto py-6">
         <div className="mb-6">
           <Button variant="outline" onClick={() => setShowCreateForm(false)}>
-            �?返回列表
+            返回列表
           </Button>
         </div>
         <CreateInboundForecastForm
@@ -148,12 +148,12 @@ export default function InboundForecastPage() {
 
   return (
     <div className="container mx-auto py-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按*/}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">入库预报管理</h1>
         <Button onClick={() => setShowCreateForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          创建预报?
+          创建预报
         </Button>
       </div>
 
@@ -161,18 +161,18 @@ export default function InboundForecastPage() {
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* 搜索?*/}
+            {/* 搜索*/}
             <div className="relative md:col-span-2">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="搜索预报单号、供应商或仓?.."
+                placeholder="搜索预报单号、供应商或仓.."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
 
-            {/* 状态筛?*/}
+            {/* 状态筛*/}
             <select
               value={statusFilter}
               onChange={(e) =>
@@ -180,7 +180,7 @@ export default function InboundForecastPage() {
               }
               className="border rounded-md px-3 py-2"
             >
-              <option value="all">全部状?/option>
+              <option value="all">全部状态/option>
               {Object.entries(INBOUND_FORECAST_STATUS_DISPLAY).map(
                 ([key, value]) => (
                   <option key={key} value={key}>
@@ -190,7 +190,7 @@ export default function InboundForecastPage() {
               )}
             </select>
 
-            {/* 仓库筛?*/}
+            {/* 仓库筛*/}
             <select
               value={warehouseFilter}
               onChange={(e) => setWarehouseFilter(e.target.value)}
@@ -211,13 +211,13 @@ export default function InboundForecastPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-gray-500">总预报单?/div>
+            <div className="text-sm text-gray-500">总预报单/div>
             <div className="text-2xl font-bold">{forecasts.length}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-gray-500">预报?/div>
+            <div className="text-sm text-gray-500">预报/div>
             <div className="text-2xl font-bold text-blue-600">
               {
                 forecasts.filter(
@@ -241,7 +241,7 @@ export default function InboundForecastPage() {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-gray-500">已收?/div>
+            <div className="text-sm text-gray-500">已收/div>
             <div className="text-2xl font-bold text-green-600">
               {
                 forecasts.filter(
@@ -253,22 +253,22 @@ export default function InboundForecastPage() {
         </Card>
       </div>
 
-      {/* 预报单列?*/}
+      {/* 预报单列*/}
       <Card>
         <CardHeader>
-          <CardTitle>预报单列?/CardTitle>
+          <CardTitle>预报单列/CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading  (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-2 text-gray-500">加载?..</p>
+              <p className="mt-2 text-gray-500">加载中..</p>
             </div>
-          ) : filteredForecasts.length === 0 ? (
+          ) : filteredForecasts.length === 0  (
             <div className="text-center py-12 text-gray-500">
               <div className="text-4xl mb-4">📋</div>
-              <p className="text-lg mb-2">暂无预报单数?/p>
-              <p>点击"创建预报?按钮开始创建新的入库预?/p>
+              <p className="text-lg mb-2">暂无预报单数/p>
+              <p>点击"创建预报按钮开始创建新的入库预/p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -279,15 +279,15 @@ export default function InboundForecastPage() {
                       预报单号
                     </th>
                     <th className="text-left py-3 px-4 font-medium">仓库</th>
-                    <th className="text-left py-3 px-4 font-medium">供应?/th>
-                    <th className="text-left py-3 px-4 font-medium">商品?/th>
+                    <th className="text-left py-3 px-4 font-medium">供应/th>
+                    <th className="text-left py-3 px-4 font-medium">商品/th>
                     <th className="text-left py-3 px-4 font-medium">
                       预报数量
                     </th>
                     <th className="text-left py-3 px-4 font-medium">
                       预计到货
                     </th>
-                    <th className="text-left py-3 px-4 font-medium">状?/th>
+                    <th className="text-left py-3 px-4 font-medium">状/th>
                     <th className="text-left py-3 px-4 font-medium">
                       创建时间
                     </th>

@@ -5,8 +5,8 @@ interface TestimonialProps {
   author: string;
   position: string;
   company: string;
-  avatar?: string;
-  rating?: number;
+  avatar: string;
+  rating: number;
 }
 
 export function Testimonial({
@@ -36,9 +36,9 @@ export function Testimonial({
       {/* 引用内容 */}
       <blockquote className="text-gray-700 mb-6 italic">"{quote}"</blockquote>
 
-      {/* 作者信?*/}
+      {/* 作者信息 */}
       <div className="flex items-center">
-        {avatar ? (
+        {avatar  (
           <img
             src={avatar}
             alt={author}
@@ -63,14 +63,14 @@ export function Testimonial({
 }
 
 interface TestimonialsSectionProps {
-  title?: string;
-  subtitle?: string;
+  title: string;
+  subtitle: string;
   testimonials: TestimonialProps[];
 }
 
 export function TestimonialsSection({
   title = '客户见证',
-  subtitle = '听听我们的客户怎么?,
+  subtitle = '听听我们的客户怎么说',
   testimonials,
 }: TestimonialsSectionProps) {
   return (
@@ -98,13 +98,13 @@ export function TestimonialsSection({
             </div>
             <div>
               <div className="text-4xl font-bold text-green-600 mb-2">98%</div>
-              <div className="text-gray-600">客户满意?/div>
+              <div className="text-gray-600">客户满意度</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-purple-600 mb-2">
                 24/7
               </div>
-              <div className="text-gray-600">技术支?/div>
+              <div className="text-gray-600">技术支持</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-orange-600 mb-2">50%</div>
@@ -116,4 +116,3 @@ export function TestimonialsSection({
     </section>
   );
 }
-

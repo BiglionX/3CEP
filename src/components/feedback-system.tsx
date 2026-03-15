@@ -1,6 +1,7 @@
 ﻿/**
  * 操作反馈系统
- * 提供统一的用户操作反馈机制，包括Toast通知、确认对话框和加载状? */
+ * 提供统一的用户操作反馈机制，包括Toast通知、确认对话框和加载状态
+ */
 
 'use client';
 
@@ -74,7 +75,8 @@ export interface LoadingOptions {
   onCancel?: () => void;
 }
 
-// 反馈上下文类?interface FeedbackContextType {
+// 反馈上下文类型
+interface FeedbackContextType {
   // Toast通知
   showToast: (
     message: string,
@@ -88,23 +90,29 @@ export interface LoadingOptions {
     }
   ) => void;
 
-  // 确认对话?  showConfirm: (options: ConfirmOptions) => Promise<boolean>;
+  // 确认对话框
+  showConfirm: (options: ConfirmOptions) => Promise<boolean>;
 
-  // 加载状?  showLoading: (options?: LoadingOptions) => void;
+  // 加载状态
+  showLoading: (options?: LoadingOptions) => void;
   hideLoading: () => void;
 
-  // 清除所有反?  clearAll: () => void;
+  // 清除所有反馈
+  clearAll: () => void;
 
-  // 当前状?  toasts: Feedback[];
+  // 当前状态
+  toasts: Feedback[];
   isLoading: boolean;
   loadingMessage?: string;
 }
 
-// 创建反馈上下?const FeedbackContext = createContext<FeedbackContextType | undefined>(
+// 创建反馈上下文
+const FeedbackContext = createContext<FeedbackContextType | undefined>(
   undefined
 );
 
-// 反馈提供商组?export function FeedbackProvider({ children }: { children: React.ReactNode }) {
+// 反馈提供商组件
+export function FeedbackProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const [toasts, setToasts] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState<string>();
@@ -127,7 +135,7 @@ export interface LoadingOptions {
         closable?: boolean;
         action?: { label: string; onClick: () => void };
       } = {}
-    ) => {
+    ): string => {
       const {
         type = FeedbackType.INFO,
         title,
@@ -137,8 +145,10 @@ export interface LoadingOptions {
         action,
       } = options;
 
+      const id = Math.random().toString(36).substr(2, 9);
+
       const newToast: Feedback = {
-        id: Math.random().toString(36).substr(2, 9),
+        id,
         type,
         message,
         title,
@@ -157,11 +167,14 @@ export interface LoadingOptions {
           setToasts(prev => prev.filter(toast => toast.id !== newToast.id));
         }, duration);
       }
+
+      return id;
     },
     []
   );
 
-  // 显示确认对话?  const showConfirm = useCallback(
+  // 显示确认对话框
+  const showConfirm = useCallback(
     (options: ConfirmOptions): Promise<boolean> => {
       return new Promise(resolve => {
         setActiveConfirm(options);
@@ -171,7 +184,8 @@ export interface LoadingOptions {
     []
   );
 
-  // 处理确认对话框确?  const handleConfirm = useCallback(() => {
+  // 处理确认对话框确认
+  const handleConfirm = useCallback(() => {
     if (resolveConfirm) {
       resolveConfirm(true);
       setResolveConfirm(null);
@@ -182,7 +196,8 @@ export interface LoadingOptions {
     }
   }, [resolveConfirm, activeConfirm]);
 
-  // 处理确认对话框取?  const handleCancel = useCallback(() => {
+  // 处理确认对话框取消
+  const handleCancel = useCallback(() => {
     if (resolveConfirm) {
       resolveConfirm(false);
       setResolveConfirm(null);
@@ -193,8 +208,9 @@ export interface LoadingOptions {
     }
   }, [resolveConfirm, activeConfirm]);
 
-  // 显示加载状?  const showLoading = useCallback((options: LoadingOptions = {}) => {
-    const { message = '处理?..', cancellable = false, onCancel } = options;
+  // 显示加载状态
+  const showLoading = useCallback((options: LoadingOptions = {}) => {
+    const { message = '处理中...', cancellable = false, onCancel } = options;
     setIsLoading(true);
     setLoadingMessage(message);
 
@@ -203,12 +219,14 @@ export interface LoadingOptions {
     }
   }, []);
 
-  // 隐藏加载状?  const hideLoading = useCallback(() => {
+  // 隐藏加载状态
+  const hideLoading = useCallback(() => {
     setIsLoading(false);
     setLoadingMessage(undefined);
   }, []);
 
-  // 清除所有反?  const clearAll = useCallback(() => {
+  // 清除所有反馈
+  const clearAll = useCallback(() => {
     setToasts([]);
     setIsLoading(false);
     setLoadingMessage(undefined);
@@ -219,7 +237,8 @@ export interface LoadingOptions {
     }
   }, [resolveConfirm]);
 
-  // 反馈上下文?  const contextValue: FeedbackContextType = {
+  // 反馈上下文值
+  const contextValue: FeedbackContextType = {
     showToast,
     showConfirm,
     showLoading,
@@ -295,7 +314,8 @@ function ToastContainer({
   );
 }
 
-// 单个Toast项组?function ToastItem({
+// 单个Toast项组件
+function ToastItem({
   toast,
   onRemove,
 }: {
@@ -367,7 +387,8 @@ function ToastContainer({
   );
 }
 
-// 确认对话框组?function ConfirmDialog({
+// 确认对话框组件
+function ConfirmDialog({
   options,
   onConfirm,
   onCancel,
@@ -435,7 +456,8 @@ function LoadingOverlay({ message }: { message?: string }) {
   );
 }
 
-// 获取位置样式?function getPositionClasses(position: FeedbackPosition): string {
+// 获取位置样式类
+function getPositionClasses(position: FeedbackPosition): string {
   const baseClasses = 'fixed z-40 space-y-2 p-4 pointer-events-none';
 
   switch (position) {
@@ -456,7 +478,8 @@ function LoadingOverlay({ message }: { message?: string }) {
   }
 }
 
-// 预设的便捷方?export const useToast = () => {
+// 预设的便捷方法
+export const useToast = () => {
   const { showToast } = useFeedback();
 
   return {
@@ -508,7 +531,8 @@ export const useConfirm = () => {
   };
 };
 
-// 预设的加载状态方?export const useLoading = () => {
+// 预设的加载状态方法
+export const useLoading = () => {
   const { showLoading, hideLoading } = useFeedback();
 
   return {
@@ -519,7 +543,31 @@ export const useConfirm = () => {
 
 // 高阶组件导出
 export const withFeedback = (Component: React.ComponentType) => Component;
-export const withBatchFeedback = (Component: React.ComponentType) => Component;
+
+// 批量操作反馈函数
+export const withBatchFeedback = async <T,>(
+  items: T[],
+  operation: (item: T) => Promise<any>,
+  options: {
+    itemName?: string;
+    successMessage?: string;
+    errorMessage?: string;
+  } = {}
+): Promise<{ item: T; success: boolean }[]> => {
+  const { itemName = '项目', successMessage = '成功', errorMessage = '失败' } = options;
+  const results: { item: T; success: boolean }[] = [];
+
+  for (const item of items) {
+    try {
+      await operation(item);
+      results.push({ item, success: true });
+    } catch (error) {
+      results.push({ item, success: false });
+    }
+  }
+
+  return results;
+};
 
 // 便捷方法导出
 export const useSuccess = () => {

@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
         });
 
       case 'anomalies':
-        // 鑾峰彇寮傚父妫€娴嬬粨?        if (!metric) {
+        // 鑾峰彇寮傚父妫€娴嬬粨        if (!metric) {
           return NextResponse.json({ error: '缂哄皯鎸囨爣鍙傛暟' }, { status: 400 });
         }
 
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
         const trendForForecast = trendAnalysisEngine.analyzeTrend(metric);
         if (!trendForForecast || !trendForForecast.forecast) {
           return NextResponse.json(
-            { error: '鏃犳硶鐢熸垚棰勬祴鏁版嵁' },
+            { error: '犳硶鐢熸垚棰勬祴鏁版嵁' },
             { status: 400 }
           );
         }
@@ -105,13 +105,13 @@ export async function GET(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瓒嬪娍鍒嗘瀽API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -126,10 +126,10 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'add-data-point':
-        // 娣诲姞瓒嬪娍鏁版嵁?        const { metric, value, timestamp, metadata } = params;
+        // 娣诲姞瓒嬪娍鏁版嵁        const { metric, value, timestamp, metadata } = params;
         if (!metric || value === undefined) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鍙傛暟: metric 锟?value' },
+            { error: '缂哄皯蹇呰鍙傛暟: metric value' },
             { status: 400 }
           );
         }
@@ -137,14 +137,14 @@ export async function POST(request: NextRequest) {
         trendAnalysisEngine.addDataPoint(metric, value, timestamp, metadata);
 
         return NextResponse.json({
-          message: '鏁版嵁鐐规坊鍔犳垚?,
+          message: '鏁版嵁鐐规坊鍔犳垚,
           metric: metric,
           value: value,
           timestamp: timestamp || new Date().toISOString(),
         });
 
       case 'bulk-add-data':
-        // 鎵归噺娣诲姞鏁版嵁?        const { dataPoints } = params;
+        // 鎵归噺娣诲姞鏁版嵁        const { dataPoints } = params;
         if (!dataPoints || !Array.isArray(dataPoints)) {
           return NextResponse.json(
             { error: '缂哄皯鏈夋晥鐨勬暟鎹偣鏁扮粍' },
@@ -166,7 +166,7 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json({
-          message: `鎵归噺娣诲姞?${addedCount} 涓暟鎹偣`,
+          message: `鎵归噺娣诲姞${addedCount} 涓暟鎹偣`,
           totalCount: dataPoints.length,
           addedCount: addedCount,
           timestamp: new Date().toISOString(),
@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
         const { metrics } = params;
         if (!metrics || !Array.isArray(metrics)) {
           return NextResponse.json(
-            { error: '缂哄皯鏈夋晥鐨勬寚鏍囨暟? },
+            { error: '缂哄皯鏈夋晥鐨勬寚鏍囨暟 },
             { status: 400 }
           );
         }
@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
           trendAnalysisEngine.analyzeMultipleMetrics(metrics);
 
         return NextResponse.json({
-          message: `鍒嗘瀽?${metrics.length} 涓寚鏍嘸,
+          message: `鍒嗘瀽${metrics.length} 涓寚鏍嘸,
           metrics: metrics,
           results: {
             trends: analysisResults.trends.filter(t => t !== null).length,
@@ -204,13 +204,13 @@ export async function POST(request: NextRequest) {
         trendAnalysisEngine.cleanupOldData(cleanupDays);
 
         return NextResponse.json({
-          message: `宸叉竻?${cleanupDays} 澶╁墠鐨勮繃鏈熸暟鎹甡,
+          message: `宸叉竻${cleanupDays} 澶╁墠鐨勮繃鏈熸暟鎹甡,
           maxAgeDays: cleanupDays,
           timestamp: new Date().toISOString(),
         });
 
       case 'update-config':
-        // 鏇存柊閰嶇疆锛堥渶瑕佷慨鏀箃rendAnalysisEngine浠ユ敮鎸侀厤缃洿鏂帮級
+        // 鏇存柊閰嶇疆锛堥渶瑕佷慨鏀箃rendAnalysisEngineユ敮鎸侀厤缃洿鏂帮級
         return NextResponse.json({
           message: '閰嶇疆鏇存柊鍔熻兘鏆傛湭瀹炵幇',
           timestamp: new Date().toISOString(),
@@ -240,13 +240,13 @@ export async function POST(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被? }, { status: 400 });
+        return NextResponse.json({ error: '鏈煡鐨勬搷浣滅被 }, { status: 400 });
     }
   } catch (error: any) {
     console.error('瓒嬪娍鍒嗘瀽API閿欒:', error);
     return NextResponse.json(
       {
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

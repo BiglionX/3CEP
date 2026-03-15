@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         transactionType as FcxTransactionType
       )
     ) {
-      return NextResponse.json({ error: '鏃犳晥鐨勪氦鏄撶被? }, { status: 400 });
+      return NextResponse.json({ error: '犳晥鐨勪氦鏄撶被 }, { status: 400 });
     }
 
     const dto: FcxTransferDTO = {

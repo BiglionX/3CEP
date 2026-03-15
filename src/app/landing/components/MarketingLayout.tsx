@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface MarketingLayoutProps {
   children: React.ReactNode;
-  role?: string;
+  role: string;
 }
 
-export function MarketingLayout({ children, role }: MarketingLayoutProps) {
+export function MarketingLayout({ children }: MarketingLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -30,10 +30,10 @@ export function MarketingLayout({ children, role }: MarketingLayoutProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* 导航?*/}
+      {/* 导航栏 */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white/95 backdrop-blur-sm shadow-md' : 'bg-transparent'
+          scrolled  'bg-white/95 backdrop-blur-sm shadow-md' : 'bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,17 +73,17 @@ export function MarketingLayout({ children, role }: MarketingLayoutProps) {
               </Link>
             </div>
 
-            {/* 移动端菜单按?*/}
+            {/* 移动端菜单按钮 */}
             <button
               className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMenuOpen  <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
-        {/* 移动端菜?*/}
+        {/* 移动端菜单 */}
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t">
             <div className="px-4 py-2 space-y-1">
@@ -133,23 +133,27 @@ export function MarketingLayout({ children, role }: MarketingLayoutProps) {
                 <span className="text-xl font-bold">FixCycle</span>
               </div>
               <p className="text-gray-400 mb-4 max-w-md">
-                一站式企业自动化平台，帮助企业提升效率、降低成本，实现数字化转型?              </p>
+                一站式企业自动化平台，帮助企业提升效率、降低成本，实现数字化转型。
+              </p>
               <div className="flex space-x-4">
                 <a
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  微信公众?                </a>
+                  微信公众号
+                </a>
                 <a
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  抖音?                </a>
+                  抖音账号
+                </a>
                 <a
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  视频?                </a>
+                  视频号
+                </a>
               </div>
             </div>
 
@@ -158,7 +162,8 @@ export function MarketingLayout({ children, role }: MarketingLayoutProps) {
               <ul className="space-y-2 text-gray-400">
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
-                    n8n工作?                  </a>
+                    n8n工作流
+                  </a>
                 </li>
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
@@ -188,7 +193,8 @@ export function MarketingLayout({ children, role }: MarketingLayoutProps) {
                 </li>
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
-                    开发者中?                  </a>
+                    开发者中心
+                  </a>
                 </li>
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
@@ -197,18 +203,18 @@ export function MarketingLayout({ children, role }: MarketingLayoutProps) {
                 </li>
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
-                    状态页?                  </a>
+                    状态页面
+                  </a>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2026 FixCycle. 保留所有权利?/p>
+            <p>&copy; 2026 FixCycle. 保留所有权利</p>
           </div>
         </div>
       </footer>
     </div>
   );
 }
-

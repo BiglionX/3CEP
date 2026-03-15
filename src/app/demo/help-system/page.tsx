@@ -22,7 +22,7 @@ export default function HelpDemoPage() {
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">帮助系统演示</h1>
 
-      {/* 页面级帮助导?*/}
+      {/* 页面级帮助导航*/}
       <PageHelpNavigation
         pageTitle="用户管理"
         sections={[
@@ -44,12 +44,12 @@ export default function HelpDemoPage() {
         ]}
       />
 
-      {/* 上下文帮助示?*/}
+      {/* 上下文帮助示例*/}
       <div className="mb-8">
         <ContextualHelp section="user-management" feature="用户列表" />
       </div>
 
-      {/* 不同变体?HelpLink 示例 */}
+      {/* 不同变体HelpLink 示例 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader>
@@ -61,13 +61,13 @@ export default function HelpDemoPage() {
               <HelpLink href="/docs/guides/user-management-guide.md">
                 用户管理帮助
               </HelpLink>
-              �?            </p>
+                          </p>
             <p>
               你也可以为特定功能添加帮助：
               <HelpLink href="/docs/role-guides/admin.md" topic="权限分配">
                 权限分配说明
               </HelpLink>
-              �?            </p>
+                          </p>
           </CardContent>
         </Card>
 
@@ -81,13 +81,13 @@ export default function HelpDemoPage() {
                 href="/docs/guides/quick-start-guide.md"
                 variant="button"
               >
-                快速开始指?              </HelpLink>
+                快速开始指              </HelpLink>
               <HelpLink
                 href="/docs/technical-docs/architecture-design.md"
                 variant="button"
                 external
               >
-                技术架构文?              </HelpLink>
+                技术架构文              </HelpLink>
             </div>
           </CardContent>
         </Card>
@@ -104,7 +104,7 @@ export default function HelpDemoPage() {
             <HelpLink
               href="/docs/deployment/deployment-checklist.md"
               variant="icon"
-              aria-label="部署检查清单帮?
+              aria-label="部署检查清单帮
             />
             <HelpLink
               href="/docs/guides/backup-strategy-guide.md"
@@ -137,7 +137,7 @@ export default function HelpDemoPage() {
                 href="/docs/role-guides/admin.md#用户管理"
                 variant="inline"
               >
-                管理员权限说?              </HelpLink>
+                管理员权限说              </HelpLink>
             </div>
           </CardContent>
         </Card>
@@ -182,7 +182,7 @@ export default function HelpDemoPage() {
                 variant="button"
                 className="w-full"
               >
-                数据分析师操作手?              </HelpLink>
+                数据分析师操作手              </HelpLink>
               <HelpLink
                 href="/docs/guides/data-center-user-guide.md"
                 variant="inline"
@@ -194,7 +194,7 @@ export default function HelpDemoPage() {
         </Card>
       </div>
 
-      {/* 快速帮助按?*/}
+      {/* 快速帮助按钮*/}
       <QuickHelpButton />
     </div>
   );

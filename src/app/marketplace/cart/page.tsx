@@ -1,5 +1,7 @@
 ﻿/**
- * 购物车页? * FixCycle 6.0 智能体市场平? */
+ * 购物车页面
+ * FixCycle 6.0 智能体市场平台
+ */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -39,13 +41,14 @@ export default function CartPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [promoCode, setPromoCode] = useState('');
 
-  // 模拟购物车数?  const mockCartItems: CartItem[] = [
+  // 模拟购物车数据
+  const mockCartItems: CartItem[] = [
     {
       id: 'item-1',
       agent: {
         id: 'agent-1',
         name: '销售助手智能体',
-        description: '专业的销售对话助手，能够自动跟进客户、生成报价单和合?,
+        description: '专业的销售对话助手，能够自动跟进客户、生成报价单和合同',
         price: 99.99,
         token_cost_per_use: 0.5,
         developer: {
@@ -59,7 +62,7 @@ export default function CartPage() {
       id: 'item-2',
       agent: {
         id: 'agent-2',
-        name: '采购智能?,
+        name: '采购智能助手',
         description: '智能采购决策助手，支持供应商比价、风险评估和合同管理',
         price: 149.99,
         token_cost_per_use: 0.8,
@@ -73,7 +76,8 @@ export default function CartPage() {
   ];
 
   useEffect(() => {
-    // 模拟从localStorage或API获取购物车数?    setTimeout(() => {
+    // 模拟从localStorage或API获取购物车数据
+    setTimeout(() => {
       setCartItems(mockCartItems);
       setIsLoading(false);
     }, 500);
@@ -85,7 +89,7 @@ export default function CartPage() {
     setCartItems(prevItems =>
       prevItems.map(item =>
         item.id === itemId
-          ? {
+           {
               ...item,
               quantity: newQuantity,
               subtotal: item.agent.price * newQuantity,
@@ -101,7 +105,7 @@ export default function CartPage() {
 
   const applyPromoCode = () => {
     // 实现优惠码逻辑
-    alert(`应用优惠? ${promoCode}`);
+    alert(`应用优惠码: ${promoCode}`);
   };
 
   const getTotalAmount = () => {
@@ -149,10 +153,10 @@ export default function CartPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center space-x-3 mb-8">
           <ShoppingCart className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-900">购物?/h1>
+          <h1 className="text-3xl font-bold text-gray-900">购物车</h1>
         </div>
 
-        {cartItems.length === 0 ? (
+        {cartItems.length === 0  (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
             <div className="text-gray-400 mb-4">
               <ShoppingCart className="w-16 h-16 mx-auto" />
@@ -160,7 +164,7 @@ export default function CartPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
               购物车是空的
             </h2>
-            <p className="text-gray-600 mb-6">您还没有添加任何智能体到购物?/p>
+            <p className="text-gray-600 mb-6">您还没有添加任何智能体到购物车</p>
             <button
               onClick={() => router.push('/marketplace')}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
@@ -170,12 +174,12 @@ export default function CartPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* 购物车项目列?*/}
+            {/* 购物车项目列表 */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-lg font-semibold text-gray-900">
-                    购物?({cartItems.length} 个项?
+                    购物车 ({cartItems.length} 个项目)
                   </h2>
                 </div>
 
@@ -192,14 +196,15 @@ export default function CartPage() {
                             {item.agent.description}
                           </p>
                           <div className="flex items-center text-sm text-gray-500">
-                            <span>开发? {item.agent.developer.name}</span>
-                            <span className="mx-2">�?/span>
+                            <span>开发者: {item.agent.developer.name}</span>
+                            <span className="mx-2">•</span>
                             <span>
-                              {item.agent.token_cost_per_use} Token/�?                            </span>
+                              {item.agent.token_cost_per_use} Token/次
+                            </span>
                           </div>
                         </div>
 
-                        {/* 价格和数量控?*/}
+                        {/* 价格和数量控制 */}
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                           <div className="text-right">
                             <div className="text-lg font-semibold text-gray-900">
@@ -283,16 +288,17 @@ export default function CartPage() {
                 </div>
               </div>
 
-              {/* 优惠?*/}
+              {/* 优惠码 */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 className="text-md font-semibold text-gray-900 mb-4 flex items-center">
                   <Gift className="w-5 h-5 mr-2" />
-                  优惠?                </h3>
+                  优惠码
+                </h3>
 
                 <div className="flex space-x-2">
                   <input
                     type="text"
-                    placeholder="输入优惠?
+                    placeholder="输入优惠码"
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     value={promoCode}
                     onChange={e => setPromoCode(e.target.value)}
@@ -334,7 +340,7 @@ export default function CartPage() {
                 className="w-full py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg flex items-center justify-center space-x-2"
               >
                 <CreditCard className="w-6 h-6" />
-                <span>去结?/span>
+                <span>去结账</span>
               </button>
 
               {/* 注意事项 */}
@@ -344,8 +350,8 @@ export default function CartPage() {
                   <div className="text-sm text-blue-800">
                     <p className="font-medium mb-1">购买须知</p>
                     <ul className="list-disc list-inside space-y-1 text-blue-700">
-                      <li>购买后可随时使用和管?/li>
-                      <li>支持7天无理由退?/li>
+                      <li>购买后可随时使用和管理</li>
+                      <li>支持7天无理由退款</li>
                       <li>Token按实际使用量扣除</li>
                     </ul>
                   </div>
@@ -358,4 +364,3 @@ export default function CartPage() {
     </div>
   );
 }
-

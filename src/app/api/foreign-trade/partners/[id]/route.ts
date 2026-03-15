@@ -55,11 +55,11 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     // 计算业务统计数据
     const orderStats = {
-      totalOrders: data?.length || 0,
+      totalOrders: data.length || 0,
       totalAmount:
-        data?.reduce((sum: number, order: any) => sum + order.amount, 0) || 0,
+        data.reduce((sum: number, order: any) => sum + order.amount, 0) || 0,
       activeOrders:
-        data?.filter((order: any) =>
+        data.filter((order: any) =>
           ['pending', 'confirmed', 'processing', 'shipped'].includes(
             order.status
           )
@@ -67,9 +67,9 @@ export async function GET(request: Request, { params }: RouteParams) {
     };
 
     const contractStats = {
-      totalContracts: data?.length || 0,
+      totalContracts: data.length || 0,
       activeContracts:
-        data?.filter((contract: any) => contract.status === 'active').length ||
+        data.filter((contract: any) => contract.status === 'active').length ||
         0,
     };
 

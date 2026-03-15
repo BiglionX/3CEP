@@ -1,15 +1,15 @@
 ﻿/**
- * 鏅鸿兘浣撳競?API 璺敱
- * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩? */
+ * 鏅鸿兘浣撳競API 璺敱
+ * FixCycle 6.0 鏅鸿兘浣撳競鍦哄钩 */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
 
-// 妯℃嫙鏁版嵁 - 瀹為檯寮€鍙戜腑杩炴帴鐪熷疄鏁版嵁?const mockMarketplaceAgents = [
+// 妯℃嫙鏁版嵁 - 瀹為檯寮€鍙戜腑杩炴帴鐪熷疄鏁版嵁const mockMarketplaceAgents = [
   {
     id: '1',
     name: '閿€鍞姪鎵嬫櫤鑳戒綋',
-    description: '涓撲笟鐨勯攢鍞璇濆姪鎵嬶紝鑳藉鑷姩璺熻繘瀹㈡埛銆佺敓鎴愭姤浠峰崟鍜屽悎?,
+    description: '涓撲笟鐨勯攢鍞璇濆姪鎵嬶紝鑳藉鑷姩璺熻繘瀹㈡埛銆佺敓鎴愭姤峰崟鍜屽悎,
     category: 'sales',
     version: '2.1.0',
     price: 99.99,
@@ -22,7 +22,7 @@ import { createClient } from '@supabase/supabase-js';
       avatar: '',
       verified: true,
     },
-    tags: ['閿€?, 'CRM', '鑷姩?],
+    tags: ['閿€, 'CRM', '鑷姩],
     featured: true,
     status: 'published',
     created_at: '2026-01-15T10:30:00Z',
@@ -30,8 +30,8 @@ import { createClient } from '@supabase/supabase-js';
   },
   {
     id: '2',
-    name: '閲囪喘鏅鸿兘?,
-    description: '鏅鸿兘閲囪喘鍐崇瓥鍔╂墜锛屾敮鎸佷緵搴斿晢姣斾环銆侀闄╄瘎浼板拰鍚堝悓绠＄悊',
+    name: '閲囪喘鏅鸿兘,
+    description: '鏅鸿兘閲囪喘鍐崇瓥鍔╂墜锛屾敮鎸佷緵搴斿晢姣斾环銆侀闄╄瘎板拰鍚堝悓绠＄悊',
     category: 'procurement',
     version: '1.5.2',
     price: 149.99,
@@ -44,7 +44,7 @@ import { createClient } from '@supabase/supabase-js';
       avatar: '',
       verified: true,
     },
-    tags: ['閲囪喘', '渚涘簲?, '鎴愭湰浼樺寲'],
+    tags: ['閲囪喘', '渚涘簲, '鎴愭湰樺寲'],
     featured: true,
     status: 'published',
     created_at: '2026-01-20T09:15:00Z',
@@ -52,7 +52,7 @@ import { createClient } from '@supabase/supabase-js';
   },
   {
     id: '3',
-    name: '瀹㈡湇鏀寔鏈哄櫒?,
+    name: '瀹㈡湇鏀寔鏈哄櫒,
     description: '24/7鏅鸿兘瀹㈡湇鏀寔锛屾敮鎸佸璇█銆佹儏缁瘑鍒拰闂鍗囩骇',
     category: 'support',
     version: '3.0.1',
@@ -106,7 +106,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 绮鹃€夎繃?    if (featuredOnly) {
+    // 绮鹃€夎繃    if (featuredOnly) {
       filteredAgents = filteredAgents.filter(agent => agent.featured);
     }
 
@@ -155,11 +155,11 @@ export async function GET(request: Request) {
       },
     });
   } catch (error: any) {
-    console.error('鑾峰彇甯傚満鏅鸿兘浣撳け?', error);
+    console.error('鑾峰彇甯傚満鏅鸿兘浣撳け', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ?,
+        error: '鑾峰彇鏅鸿兘浣撳垪琛ㄥけ,
         message: error.message,
       },
       { status: 500 }
@@ -175,7 +175,7 @@ export async function POST(request: Request) {
 
     if (!sessionCookie) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈? },
+        { success: false, error: '鐢ㄦ埛鏈 },
         { status: 401 }
       );
     }
@@ -197,7 +197,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 瑙ｆ瀽璇锋眰?    const body = await request.json();
+    // 瑙ｆ瀽璇眰    const body = await request.json();
 
     // 楠岃瘉蹇呰瀛楁
     if (!body.name || !body.description || !body.category) {
@@ -210,7 +210,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 鍒涘缓鏂扮殑甯傚満鏅鸿兘浣擄紙妯℃嫙?    const newAgent = {
+    // 鍒涘缓鏂扮殑甯傚満鏅鸿兘浣擄紙妯℃嫙    const newAgent = {
       id: `agent-${Date.now()}`,
       name: body.name.trim(),
       description: body.description.trim(),
@@ -222,17 +222,17 @@ export async function POST(request: Request) {
       download_count: 0,
       developer_id: user.id,
       developer: {
-        name: body.developer_name || '鍖垮悕寮€鍙?,
+        name: body.developer_name || '鍖垮悕寮€鍙,
         avatar: '',
         verified: false,
       },
       tags: body.tags || [],
       featured: false,
-      status: 'pending', // 寰呭鏍哥姸?      created_at: new Date().toISOString(),
+      status: 'pending', // 寰呭鏍哥姸      created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
 
-    // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細淇濆瓨鍒版暟鎹簱
+    // 鍦ㄥ疄闄呭疄鐜颁腑锛岃繖閲屼細淇濆鍒版暟鎹簱
     // await supabase.from('agent_marketplace').insert(newAgent);
 
     return NextResponse.json(
@@ -244,11 +244,11 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('鍒涘缓甯傚満鏅鸿兘浣撳け?', error);
+    console.error('鍒涘缓甯傚満鏅鸿兘浣撳け', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+        error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
         message: error.message,
       },
       { status: 500 }

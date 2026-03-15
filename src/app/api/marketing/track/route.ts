@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '浜嬩欢绫诲瀷涓哄繀濉」' }, { status: 400 });
     }
 
-    // 鍒涘缓Supabase瀹㈡埛?    const supabase = createClient(
+    // 鍒涘缓Supabase瀹㈡埛    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     // 鑾峰彇瀹㈡埛绔疘P鍦板潃
     const forwardedFor = request.headers.get('x-forwarded-for');
     const realIp = request.headers.get('x-real-ip');
-    const ip = forwardedFor?.split(',')[0]?.trim() || realIp || null;
+    const ip = forwardedFor.split(',')[0].trim() || realIp || null;
 
     // 鎻掑叆浜嬩欢鏁版嵁
     const { error } = await supabase.from('marketing_events').insert({
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     }) as any;
   } catch (error) {
     console.error('澶勭悊浜嬩欢璁板綍閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -70,7 +70,7 @@ export async function GET(request: Request) {
     const endDate = searchParams.get('endDate') || '';
     const groupBy = searchParams.get('groupBy') || 'day';
 
-    // 鍒涘缓Supabase瀹㈡埛?    const supabase = createClient(
+    // 鍒涘缓Supabase瀹㈡埛    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
@@ -97,7 +97,7 @@ export async function GET(request: Request) {
 
     const { data, error } = await query
       .order('created_at', { ascending: false })
-      .limit(1000); // 闄愬埗杩斿洖鏁版嵁?
+      .limit(1000); // 闄愬埗杩斿洖鏁版嵁
     if (error) {
       console.error('鏌ヨ浜嬩欢鏁版嵁澶辫触:', error);
       return NextResponse.json({ error: '鏌ヨ澶辫触' }, { status: 500 });
@@ -111,12 +111,12 @@ export async function GET(request: Request) {
       data: {
         events: data,
         stats,
-        total: (data as any)?.(data as any)?.length || 0,
+        total: (data as any).(data as any).length || 0,
       },
     });
   } catch (error) {
     console.error('澶勭悊浜嬩欢鏌ヨ閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 });
+    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
 }
 
@@ -144,7 +144,7 @@ function calculateEventStats(events: any[], groupBy: string) {
       stats.sources[event.source] = (stats.sources[event.source] || 0) + 1;
     }
 
-    // 鎸夋棩鏈熺粺?    if (event.created_at) {
+    // 鎸夋棩鏈熺粺    if (event.created_at) {
       const date = new Date(event.created_at).toISOString().split('T')[0];
       stats.dailyCounts[date] = (stats.dailyCounts[date] || 0) + 1;
     }

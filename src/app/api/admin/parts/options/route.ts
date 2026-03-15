@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type'); // 'devices' 锟?'faults'
+    const type = searchParams.get('type'); // 'devices' 'faults'
     const search = searchParams.get('search') || '';
 
     if (type === 'devices') {
@@ -50,14 +50,14 @@ export async function GET(request: Request) {
       });
     } else {
       return NextResponse.json(
-        { success: false, error: '鏃犳晥鐨勮姹傜被? },
+        { success: false, error: '犳晥鐨勮姹傜被 },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('鑾峰彇閫夐」鏁版嵁澶辫触:', error);
+    console.error('鑾峰彇夐」鏁版嵁澶辫触:', error);
     return NextResponse.json(
-      { success: false, error: '鑾峰彇閫夐」鏁版嵁澶辫触' },
+      { success: false, error: '鑾峰彇夐」鏁版嵁澶辫触' },
       { status: 500 }
     );
   }

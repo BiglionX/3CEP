@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { quotationRequestId } = body;
-    const userId = 'test-user-id'; // 涓存椂娴嬭瘯?
+    const userId = 'test-user-id'; // 涓存椂娴嬭瘯
     const report = await comparisonReportService.generateComparisonReport(
       quotationRequestId,
       userId
@@ -34,7 +34,7 @@ export async function GET(request: Request) {
 
     if (!quotationRequestId) {
       return NextResponse.json(
-        { success: false, error: '缂哄皯璇环璇锋眰ID鍙傛暟' },
+        { success: false, error: '缂哄皯璇环璇眰ID鍙傛暟' },
         { status: 400 }
       );
     }

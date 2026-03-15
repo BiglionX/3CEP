@@ -7,7 +7,7 @@ export async function GET() {
     const documents = [
       {
         id: '1',
-        title: 'iPhone 15 Pro 浣跨敤璇存槑?,
+        title: 'iPhone 15 Pro 浣跨敤璇存槑,
         content: '娆㈣繋浣跨敤 iPhone 15 Pro...',
         language: 'zh-CN',
         category: '鎵嬫満',

@@ -12,31 +12,31 @@ const metricsStore: Record<string, number> = {
   valuation_method_fused_total: 0,
 };
 
-// 瀛樺偍鐩存柟鍥炬暟?const histogramBuckets = [0.1, 0.25, 0.5, 1, 2, 5];
+// 瀛樺偍鐩存柟鍥炬暟const histogramBuckets = [0.1, 0.25, 0.5, 1, 2, 5];
 const durationHistogram: Record<string, number[]> = {
   '/api/valuation/estimate': Array(histogramBuckets.length + 1).fill(0),
 };
 
-// Prometheus鏍煎紡鍖栧嚱?function formatMetrics(): string {
+// Prometheus鏍煎紡鍖栧嚱function formatMetrics(): string {
   let result = '';
 
-  // 璁℃暟鍣ㄦ寚?  Object.entries(metricsStore).forEach(([name, value]) => {
+  // 璁℃暟鍣ㄦ寚  Object.entries(metricsStore).forEach(([name, value]) => {
     result += `# TYPE ${name} counter\n`;
     result += `${name} ${value}\n\n`;
   });
 
-  // 鐩存柟鍥炬寚?  Object.entries(durationHistogram).forEach(([endpoint, buckets]) => {
+  // 鐩存柟鍥炬寚  Object.entries(durationHistogram).forEach(([endpoint, buckets]) => {
     result += `# TYPE http_request_duration_seconds histogram\n`;
     buckets.forEach((count, index) => {
       const le =
-        index === buckets.length - 1 ? '+Inf' : histogramBuckets[index];
+        index === buckets.length - 1  '+Inf' : histogramBuckets[index];
       result += `http_request_duration_seconds_bucket{le="${le}",endpoint="${endpoint}"} ${count}\n`;
     });
     // 娣诲姞_sum鍜宊count
     const sum = buckets.reduce(
       (acc, count, index) =>
         acc +
-        count * (index === buckets.length - 1 ? 5 : histogramBuckets[index]),
+        count * (index === buckets.length - 1  5 : histogramBuckets[index]),
       0
     );
     const count = buckets.reduce((acc, val) => acc + val, 0);
@@ -56,7 +56,7 @@ const durationHistogram: Record<string, number[]> = {
 
 /**
  * GET /api/monitoring/metrics
- * 杩斿洖Prometheus鏍煎紡鐨勭洃鎺ф寚? */
+ * 杩斿洖Prometheus鏍煎紡鐨勭洃鎺ф寚 */
 export async function GET(request: NextRequest) {
   try {
     const metrics = formatMetrics();
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// 瀵煎嚭鎸囨爣鏇存柊鍑芥暟渚涘叾浠栨ā鍧椾娇?export function incrementMetric(metricName: string) {
+// 瀵煎嚭鎸囨爣鏇存柊鍑芥暟渚涘叾栨ā鍧椾娇export function incrementMetric(metricName: string) {
   if (metricsStore.hasOwnProperty(metricName)) {
     metricsStore[metricName]++;
   }
@@ -119,7 +119,7 @@ export function recordValuationMetrics(
     incrementMetric(methodMetric);
   }
 
-  // 璁板綍鍝嶅簲鏃堕棿
+  // 璁板綍鍝嶅簲堕棿
   recordDuration('/api/valuation/estimate', durationMs / 1000);
 }
 

@@ -31,16 +31,16 @@ interface Review {
   reviewed_at: string | null;
   created_at: string;
   updated_at: string;
-  document?: {
+  document: {
     title: string;
     language: string;
     category: string;
     content: string;
   };
-  reviewer?: {
+  reviewer: {
     email: string;
     user_metadata: {
-      name?: string;
+      name: string;
     };
   };
 }
@@ -100,12 +100,12 @@ export default function AdminReviewPage() {
         setReviewers(data);
       }
     } catch (error) {
-      console.error('加载审核员失?', error);
+      console.error('加载审核员失', error);
     }
   };
 
   const handleApprove = async (reviewId: string) => {
-    const confirmed = window.confirm('确定要批准这份文档吗?);
+    const confirmed = window.confirm('确定要批准这份文档吗);
     if (!confirmed) return;
 
     try {
@@ -123,7 +123,7 @@ export default function AdminReviewPage() {
   };
 
   const handleReject = async (reviewId: string) => {
-    const reason = prompt('请输入拒绝原?');
+    const reason = prompt('请输入拒绝原');
     if (!reason) return;
 
     try {
@@ -175,11 +175,11 @@ export default function AdminReviewPage() {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'approved':
-        return '已批?;
+        return '已批;
       case 'rejected':
-        return '已拒?;
+        return '已拒;
       default:
-        return '待审?;
+        return '待审;
     }
   };
 
@@ -200,7 +200,7 @@ export default function AdminReviewPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">加载?..</p>
+            <p className="mt-4 text-gray-600">加载中..</p>
           </div>
         </div>
       </div>
@@ -237,7 +237,7 @@ export default function AdminReviewPage() {
                   <Clock className="h-6 w-6 text-yellow-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">待审?/p>
+                  <p className="text-sm font-medium text-gray-600">待审/p>
                   <p className="text-2xl font-semibold text-gray-900">{stats.pending}</p>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function AdminReviewPage() {
                   <CheckCircle className="h-6 w-6 text-green-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">已批?/p>
+                  <p className="text-sm font-medium text-gray-600">已批/p>
                   <p className="text-2xl font-semibold text-gray-900">{stats.approved}</p>
                 </div>
               </div>
@@ -261,7 +261,7 @@ export default function AdminReviewPage() {
                   <XCircle className="h-6 w-6 text-red-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">已拒?/p>
+                  <p className="text-sm font-medium text-gray-600">已拒/p>
                   <p className="text-2xl font-semibold text-gray-900">{stats.rejected}</p>
                 </div>
               </div>
@@ -281,17 +281,17 @@ export default function AdminReviewPage() {
           </div>
         )}
 
-        {/* 待审核文档列?*/}
+        {/* 待审核文档列*/}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">待审核文?/h2>
+            <h2 className="text-lg font-medium text-gray-900">待审核文/h2>
           </div>
 
-          {reviews.length === 0 ? (
+          {reviews.length === 0  (
             <div className="text-center py-12">
               <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无待审核文?/h3>
-              <p className="text-gray-500">所有文档都已处理完?/p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无待审核文/h3>
+              <p className="text-gray-500">所有文档都已处理完/p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
@@ -301,7 +301,7 @@ export default function AdminReviewPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-3">
                         <h3 className="text-lg font-medium text-gray-900 truncate">
-                          {review?.title}
+                          {review.title}
                         </h3>
                         <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(review.status)}`}>
                           {getStatusText(review.status)}
@@ -311,11 +311,11 @@ export default function AdminReviewPage() {
                       <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
                         <div className="flex items-center">
                           <BookOpen className="h-4 w-4 mr-1" />
-                          {review?.category}
+                          {review.category}
                         </div>
                         <div className="flex items-center">
                           <User className="h-4 w-4 mr-1" />
-                          {review?.language}
+                          {review.language}
                         </div>
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 mr-1" />
@@ -382,24 +382,24 @@ export default function AdminReviewPage() {
               <div className="space-y-4">
                 <div>
                   <h4 className="font-medium text-gray-900">标题</h4>
-                  <p className="text-gray-600">{selectedReview?.title}</p>
+                  <p className="text-gray-600">{selectedReview.title}</p>
                 </div>
                 
                 <div>
                   <h4 className="font-medium text-gray-900">分类</h4>
-                  <p className="text-gray-600">{selectedReview?.category}</p>
+                  <p className="text-gray-600">{selectedReview.category}</p>
                 </div>
                 
                 <div>
                   <h4 className="font-medium text-gray-900">语言</h4>
-                  <p className="text-gray-600">{selectedReview?.language}</p>
+                  <p className="text-gray-600">{selectedReview.language}</p>
                 </div>
                 
                 <div>
                   <h4 className="font-medium text-gray-900">内容预览</h4>
                   <div className="bg-gray-50 p-4 rounded mt-2 max-h-40 overflow-y-auto">
                     <p className="text-gray-600 text-sm whitespace-pre-wrap">
-                      {selectedReview?.content.substring(0, 500)}...
+                      {selectedReview.content.substring(0, 500)}...
                     </p>
                   </div>
                 </div>
@@ -414,7 +414,7 @@ export default function AdminReviewPage() {
                 setShowAssignModal(true);
                 setSelectedReview(selectedReview);
               }}>
-                分配审核?
+                分配审核
               </Button>
             </div>
           </div>
@@ -426,23 +426,23 @@ export default function AdminReviewPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="p-6 border-b">
-              <h3 className="text-xl font-semibold">分配审核?/h3>
+              <h3 className="text-xl font-semibold">分配审核/h3>
             </div>
             
             <div className="p-6">
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  选择审核?
+                  选择审核
                 </label>
                 <select
                   value={selectedReviewer}
                   onChange={(e) => setSelectedReviewer(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">请选择审核?/option>
+                  <option value="">请选择审核/option>
                   {reviewers.map((reviewer) => (
                     <option key={reviewer.id} value={reviewer.user_id}>
-                      {reviewer?.user_metadata?.name || reviewer?.email}
+                      {reviewer.user_metadata.name || reviewer.email}
                     </option>
                   ))}
                 </select>
@@ -463,7 +463,7 @@ export default function AdminReviewPage() {
                 onClick={handleAssignReviewer}
                 disabled={!selectedReviewer || assigning}
               >
-                {assigning ? '分配?..' : '确认分配'}
+                {assigning  '分配..' : '确认分配'}
               </Button>
             </div>
           </div>

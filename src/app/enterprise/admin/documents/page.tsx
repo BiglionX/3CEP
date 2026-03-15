@@ -35,8 +35,8 @@ interface Document {
   version: string;
   uploaded_by: string;
   uploaded_at: string;
-  reviewed_at?: string;
-  reviewer?: string;
+  reviewed_at: string;
+  reviewer: string;
 }
 
 export default function DocumentsManagementPage() {
@@ -56,7 +56,7 @@ export default function DocumentsManagementPage() {
         category: 'business_license',
         status: 'approved',
         version: 'v1.0',
-        uploaded_by: '张经?,
+        uploaded_by: '张经,
         uploaded_at: '2024-01-15T10:30:00Z',
         reviewed_at: '2024-01-16T14:20:00Z',
         reviewer: '李审核员',
@@ -71,7 +71,7 @@ export default function DocumentsManagementPage() {
         category: 'qualification',
         status: 'pending',
         version: 'v1.0',
-        uploaded_by: '王主?,
+        uploaded_by: '王主,
         uploaded_at: '2024-01-20T09:15:00Z',
       },
       {
@@ -84,10 +84,10 @@ export default function DocumentsManagementPage() {
         category: 'report',
         status: 'rejected',
         version: 'v1.0',
-        uploaded_by: '财务?,
+        uploaded_by: '财务,
         uploaded_at: '2024-01-10T16:45:00Z',
         reviewed_at: '2024-01-12T11:30:00Z',
-        reviewer: '陈会?,
+        reviewer: '陈会,
       },
     ];
 
@@ -103,22 +103,22 @@ export default function DocumentsManagementPage() {
       { text: string; color: string; icon: any }
     > = {
       pending: {
-        text: '待审?,
+        text: '待审,
         color: 'bg-yellow-100 text-yellow-800',
         icon: Clock,
       },
       approved: {
-        text: '已批?,
+        text: '已批,
         color: 'bg-green-100 text-green-800',
         icon: CheckCircle,
       },
       rejected: {
-        text: '已拒?,
+        text: '已拒,
         color: 'bg-red-100 text-red-800',
         icon: AlertCircle,
       },
       archived: {
-        text: '已归?,
+        text: '已归,
         color: 'bg-gray-100 text-gray-800',
         icon: Folder,
       },
@@ -190,11 +190,11 @@ export default function DocumentsManagementPage() {
 
   return (
     <div className="p-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按*/}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">企业资料管理</h1>
-          <p className="text-gray-600 mt-1">上传和管理企业相关资质文?/p>
+          <p className="text-gray-600 mt-1">上传和管理企业相关资质文/p>
         </div>
         <Button className="bg-indigo-600 hover:bg-indigo-700">
           <Upload className="w-4 h-4 mr-2" />
@@ -211,13 +211,13 @@ export default function DocumentsManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{documents.length}</div>
-            <p className="text-xs text-muted-foreground">所有文?/p>
+            <p className="text-xs text-muted-foreground">所有文/p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待审?/CardTitle>
+            <CardTitle className="text-sm font-medium">待审/CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -230,7 +230,7 @@ export default function DocumentsManagementPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">已批?/CardTitle>
+            <CardTitle className="text-sm font-medium">已批/CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -252,7 +252,7 @@ export default function DocumentsManagementPage() {
                 documents.reduce((sum, d) => sum + d.file_size, 0)
               )}
             </div>
-            <p className="text-xs text-muted-foreground">总文件大?/p>
+            <p className="text-xs text-muted-foreground">总文件大/p>
           </CardContent>
         </Card>
       </div>
@@ -270,8 +270,8 @@ export default function DocumentsManagementPage() {
                   <th className="text-left py-3 px-4 font-medium">文件信息</th>
                   <th className="text-left py-3 px-4 font-medium">类别</th>
                   <th className="text-left py-3 px-4 font-medium">大小</th>
-                  <th className="text-left py-3 px-4 font-medium">状?/th>
-                  <th className="text-left py-3 px-4 font-medium">上传?/th>
+                  <th className="text-left py-3 px-4 font-medium">状/th>
+                  <th className="text-left py-3 px-4 font-medium">上传/th>
                   <th className="text-left py-3 px-4 font-medium">上传时间</th>
                   <th className="text-left py-3 px-4 font-medium">操作</th>
                 </tr>
@@ -317,7 +317,7 @@ export default function DocumentsManagementPage() {
                         </div>
                         {document.reviewer && (
                           <div className="text-gray-500 text-xs mt-1">
-                            审核? {document.reviewer}
+                            审核 {document.reviewer}
                           </div>
                         )}
                       </div>

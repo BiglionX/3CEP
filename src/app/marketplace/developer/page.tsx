@@ -1,5 +1,6 @@
 ﻿/**
- * 开发者收益管理页? * FixCycle 6.0 智能体市场平?- 收益分配系统
+ * 开发者收益管理页面
+ * FixCycle 6.0 智能体市场平台 - 收益分配系统
  */
 'use client';
 
@@ -12,12 +13,10 @@ import {
   Users,
   Calendar,
   Download,
-  Filter,
   Search,
   DollarSign,
   PieChart,
   ArrowUpRight,
-  ArrowDownRight,
 } from 'lucide-react';
 
 interface DeveloperStats {
@@ -51,7 +50,7 @@ interface SalesStat {
 
 export default function DeveloperPage() {
   const router = useRouter();
-  const [stats, setStats] = useState<DeveloperStats>({
+  const [stats, _setStats] = useState<DeveloperStats>({
     total_earnings: 2847.5,
     monthly_earnings: 632.8,
     today_earnings: 45.2,
@@ -64,7 +63,7 @@ export default function DeveloperPage() {
   const [salesStats, setSalesStats] = useState<SalesStat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [periodFilter, setPeriodFilter] = useState('month');
+  const [_periodFilter, _setPeriodFilter] = useState('month');
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
 
@@ -86,7 +85,7 @@ export default function DeveloperPage() {
       id: 'earn-2',
       agent: {
         id: 'agent-2',
-        name: '采购智能?,
+        name: '采购智能助手',
         category: 'procurement',
       },
       amount: 8.2,
@@ -98,7 +97,7 @@ export default function DeveloperPage() {
       id: 'earn-3',
       agent: {
         id: 'agent-3',
-        name: '客服支持机器?,
+        name: '客服支持机器人',
         category: 'support',
       },
       amount: 15.8,
@@ -120,7 +119,8 @@ export default function DeveloperPage() {
     },
   ];
 
-  // 模拟销售统计数?  const mockSalesStats: SalesStat[] = [
+  // 模拟销售统计数据
+  const mockSalesStats: SalesStat[] = [
     { period: '2026-02', earnings: 632.8, sales_count: 127, agent_count: 8 },
     { period: '2026-01', earnings: 587.4, sales_count: 112, agent_count: 7 },
     { period: '2025-12', earnings: 498.2, sales_count: 98, agent_count: 6 },
@@ -146,9 +146,9 @@ export default function DeveloperPage() {
 
   const getStatusConfig = (status: string) => {
     const configs: Record<string, { color: string; text: string }> = {
-      settled: { color: 'bg-green-100 text-green-800', text: '已结? },
-      pending: { color: 'bg-yellow-100 text-yellow-800', text: '待结? },
-      processing: { color: 'bg-blue-100 text-blue-800', text: '处理? },
+      settled: { color: 'bg-green-100 text-green-800', text: '已结算' },
+      pending: { color: 'bg-yellow-100 text-yellow-800', text: '待结算' },
+      processing: { color: 'bg-blue-100 text-blue-800', text: '处理中' },
     };
     return configs[status] || configs.pending;
   };
@@ -169,12 +169,12 @@ export default function DeveloperPage() {
     }
 
     if (amount > stats.total_earnings) {
-      alert('提现金额不能超过总收?);
+      alert('提现金额不能超过总收益');
       return;
     }
 
     // 模拟提现处理
-    alert(`成功申请提现 ${formatCurrency(amount)}，预?-3个工作日到账`);
+    alert(`成功申请提现 ${formatCurrency(amount)}，预计3个工作日到账`);
     setShowWithdrawModal(false);
     setWithdrawAmount('');
   };
@@ -209,7 +209,7 @@ export default function DeveloperPage() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-3">
             <TrendingUp className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">开发者收益中?/h1>
+            <h1 className="text-3xl font-bold text-gray-900">开发者收益中心</h1>
           </div>
           <button
             onClick={() => setShowWithdrawModal(true)}
@@ -225,7 +225,7 @@ export default function DeveloperPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">总收?/p>
+                <p className="text-sm text-gray-600">总收益</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {formatCurrency(stats.total_earnings)}
                 </p>
@@ -250,7 +250,8 @@ export default function DeveloperPage() {
             </div>
             <div className="mt-2 text-sm text-gray-500">
               <ArrowUpRight className="w-4 h-4 inline mr-1" />
-              +8.2% 较上?            </div>
+              +8.2% 较上月
+            </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -271,7 +272,7 @@ export default function DeveloperPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">总销?/p>
+                <p className="text-sm text-gray-600">总销量</p>
                 <p className="text-2xl font-bold text-indigo-600">
                   {stats.total_sales}
                 </p>
@@ -299,7 +300,7 @@ export default function DeveloperPage() {
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                       <input
                         type="text"
-                        placeholder="搜索智能?.."
+                        placeholder="搜索智能体..."
                         className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
@@ -331,7 +332,7 @@ export default function DeveloperPage() {
                               {earning.agent.category} 类别
                             </p>
                             <p className="text-xs text-gray-500 mt-1">
-                              {earning.usage_count} 次使?•{' '}
+                              {earning.usage_count} 次使用 •{' '}
                               {formatDate(earning.date)}
                             </p>
                           </div>
@@ -369,11 +370,12 @@ export default function DeveloperPage() {
 
           {/* 右侧 - 销售统计和提现 */}
           <div className="space-y-6">
-            {/* 销售趋势图?*/}
+            {/* 销售趋势图表 */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="font-medium text-gray-900 mb-4 flex items-center">
                 <BarChart3 className="w-5 h-5 mr-2" />
-                销售趋?              </h3>
+                销售趋势
+              </h3>
 
               <div className="space-y-4">
                 {salesStats.slice(0, 6).map((stat, index) => (
@@ -386,7 +388,8 @@ export default function DeveloperPage() {
                         {stat.period}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {stat.sales_count} 笔销?                      </div>
+                        {stat.sales_count} 笔销售
+                      </div>
                     </div>
                     <div className="text-right">
                       <div className="font-semibold text-gray-900">
@@ -405,7 +408,8 @@ export default function DeveloperPage() {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="font-medium text-gray-900 mb-4 flex items-center">
                 <Download className="w-5 h-5 mr-2" />
-                最近提?              </h3>
+                最近提现
+              </h3>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
@@ -436,19 +440,19 @@ export default function DeveloperPage() {
 
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">最受欢迎类?/span>
+                  <span className="text-gray-600">最受欢迎类别</span>
                   <span className="font-medium">销售类</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">平均单价</span>
-                  <span className="font-medium">¥2.28/�?/span>
+                  <span className="font-medium">¥2.28/次</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">转化?/span>
+                  <span className="text-gray-600">转化率</span>
                   <span className="font-medium">87.5%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">复购?/span>
+                  <span className="text-gray-600">复购率</span>
                   <span className="font-medium">64.2%</span>
                 </div>
               </div>
@@ -466,13 +470,13 @@ export default function DeveloperPage() {
 
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">可提现余?/span>
+                  <span className="text-gray-600">可提现余额</span>
                   <span className="text-2xl font-bold text-green-600">
                     {formatCurrency(stats.total_earnings)}
                   </span>
                 </div>
                 <div className="text-sm text-gray-500">
-                  提现手续? 2% (最低?)
+                  提现手续费 2% (最低¥1)
                 </div>
               </div>
 
@@ -553,4 +557,3 @@ export default function DeveloperPage() {
     </div>
   );
 }
-

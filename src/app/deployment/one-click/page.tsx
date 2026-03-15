@@ -72,7 +72,7 @@ export default function OneClickDeploymentPage() {
 
     setDeploying(true);
     setDeploymentProgress(0);
-    setCurrentStep('开始部?..');
+    setCurrentStep('开始部署..');
 
     try {
       // 这里应该传入实际的团队ID
@@ -92,8 +92,8 @@ export default function OneClickDeploymentPage() {
             clearInterval(progressInterval);
             setTimeout(() => {
               setDeploying(false);
-              alert('部署完成?);
-              router.push('/team'); // 跳转到团队页?            }, 1000);
+              alert('部署完成);
+              router.push('/team'); // 跳转到团队页面            }, 1000);
             return 100;
           }
           return newProgress;
@@ -102,11 +102,11 @@ export default function OneClickDeploymentPage() {
 
       // 模拟步骤更新
       const steps = [
-        '初始化环境配?..',
-        '部署智能体组?..',
+        '初始化环境配置..',
+        '部署智能体组件..',
         '配置编排流程...',
         '设置权限管理...',
-        '执行最终验?..',
+        '执行最终验证..',
       ];
 
       let stepIndex = 0;
@@ -157,7 +157,7 @@ export default function OneClickDeploymentPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载部署模板?..</p>
+          <p className="mt-4 text-gray-600">加载部署模板..</p>
         </div>
       </div>
     );
@@ -179,8 +179,8 @@ export default function OneClickDeploymentPage() {
             <div className="flex items-center">
               <Rocket className="w-8 h-8 text-blue-600 mr-3" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">一键部?/h1>
-                <p className="text-gray-600">快速部署完整的智能体解决方?/p>
+                <h1 className="text-2xl font-bold text-gray-900">一键部署/h1>
+                <p className="text-gray-600">快速部署完整的智能体解决方案/p>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function OneClickDeploymentPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {!showConfigForm ? (
+        {!showConfigForm  (
           <>
             {/* 模板选择界面 */}
             <div className="mb-8">
@@ -196,13 +196,13 @@ export default function OneClickDeploymentPage() {
                 选择部署模板
               </h2>
 
-              {templates.length === 0 ? (
+              {templates.length === 0  (
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                   <AlertCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
                     暂无可用模板
                   </h3>
-                  <p className="text-gray-600">请稍后再试或联系管理?/p>
+                  <p className="text-gray-600">请稍后再试或联系管理员/p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -245,7 +245,7 @@ export default function OneClickDeploymentPage() {
                           <div className="flex items-center">
                             <Zap className="w-4 h-4 text-gray-400 mr-2" />
                             <span className="text-gray-600">
-                              {template.orchestrations.length}个编?                            </span>
+                              {template.orchestrations.length}个编                            </span>
                           </div>
                           <div className="flex items-center">
                             <Clock className="w-4 h-4 text-gray-400 mr-2" />
@@ -259,9 +259,9 @@ export default function OneClickDeploymentPage() {
                               className={`px-2 py-1 rounded-full text-xs ${getComplexityColor(template.complexity)}`}
                             >
                               {template.complexity === 'low'
-                                ? '简?
+                                 '简
                                 : template.complexity === 'medium'
-                                  ? '中等'
+                                   '中等'
                                   : '复杂'}
                             </span>
                           </div>
@@ -296,7 +296,7 @@ export default function OneClickDeploymentPage() {
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
                   <span>
-                    一键部署包含智能体、编排流程和权限设置的完整解决方?                  </span>
+                    一键部署包含智能体、编排流程和权限设置的完整解决方                  </span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
@@ -319,15 +319,15 @@ export default function OneClickDeploymentPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900">
-                    部署 {selectedTemplate?.name}
+                    部署 {selectedTemplate.name}
                   </h2>
                   <p className="text-gray-600">
-                    预计耗时 {selectedTemplate?.estimatedSetupTime} 分钟
+                    预计耗时 {selectedTemplate.estimatedSetupTime} 分钟
                   </p>
                 </div>
               </div>
 
-              {deploying ? (
+              {deploying  (
                 /* 部署进度显示 */
                 <div className="text-center py-8">
                   <div className="mb-6">
@@ -346,7 +346,7 @@ export default function OneClickDeploymentPage() {
                   </div>
 
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    正在部署?..
+                    正在部署..
                   </h3>
                   <p className="text-gray-600 mb-6">{currentStep}</p>
 
@@ -385,13 +385,13 @@ export default function OneClickDeploymentPage() {
                         onChange={e =>
                           setConfig({ ...config, teamName: e.target.value })
                         }
-                        placeholder="请输入团队名?
+                        placeholder="请输入团队名
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        管理员邮?*
+                        管理员邮*
                       </label>
                       <input
                         type="email"
@@ -416,30 +416,30 @@ export default function OneClickDeploymentPage() {
                         onChange={e =>
                           setConfig({ ...config, description: e.target.value })
                         }
-                        placeholder="简要描述团队的主要职能和目?
+                        placeholder="简要描述团队的主要职能和目
                       />
                     </div>
 
                     {/* 模板包含内容预览 */}
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h4 className="font-medium text-gray-900 mb-3">
-                        将部署以下内?
+                        将部署以下内
                       </h4>
                       <div className="space-y-2 text-sm text-gray-600">
                         <div className="flex items-center">
                           <Users className="w-4 h-4 mr-2" />
                           <span>
-                            {selectedTemplate?.agents.length} 个智能体
+                            {selectedTemplate.agents.length} 个智能体
                           </span>
                         </div>
                         <div className="flex items-center">
                           <Zap className="w-4 h-4 mr-2" />
                           <span>
-                            {selectedTemplate?.orchestrations.length} 个编排流?                          </span>
+                            {selectedTemplate.orchestrations.length} 个编排流程                          </span>
                         </div>
                         <div className="flex items-center">
                           <Settings className="w-4 h-4 mr-2" />
-                          <span>完整的权限管理体?/span>
+                          <span>完整的权限管理体系/span>
                         </div>
                       </div>
                     </div>
@@ -458,7 +458,7 @@ export default function OneClickDeploymentPage() {
                       className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                     >
                       <Play className="w-5 h-5 mr-2" />
-                      开始部?                    </button>
+                      开始部署                    </button>
                   </div>
                 </form>
               )}

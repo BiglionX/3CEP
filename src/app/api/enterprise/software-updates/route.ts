@@ -1,7 +1,7 @@
 ﻿import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// GET /api/enterprise/software-updates - 鑾峰彇杞欢鍗囩骇鍖呭垪?
+// GET /api/enterprise/software-updates - 鑾峰彇杞欢鍗囩骇鍖呭垪
 export async function GET(request: Request) {
   try {
     const supabase = createClient(
@@ -11,8 +11,8 @@ export async function GET(request: Request) {
     
     // 鑾峰彇璁よ瘉鐢ㄦ埛
     const authHeader = request.headers.get('authorization')
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ success: false, error: '鏈巿鏉冭? }, { status: 401 })
+    if (!authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ success: false, error: '鏈巿鏉冭 }, { status: 401 })
     }
 
     const token = authHeader.substring(7)
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       .single()
 
     if (enterpriseError || !enterpriseUser) {
-      return NextResponse.json({ success: false, error: '浼佷笟璐︽埛涓嶅瓨? }, { status: 404 })
+      return NextResponse.json({ success: false, error: '佷笟璐︽埛涓嶅 }, { status: 404 })
     }
 
     // 瑙ｆ瀽鏌ヨ鍙傛暟
@@ -68,18 +68,18 @@ export async function GET(request: Request) {
     const { data: softwareUpdates, error } = await query
 
     if (error) {
-      console.error('鑾峰彇杞欢鍗囩骇鍖呭垪琛ㄩ敊?', error)
-      return NextResponse.json({ success: false, error: '鑾峰彇杞欢鍗囩骇鍖呭垪琛ㄥけ? }, { status: 500 })
+      console.error('鑾峰彇杞欢鍗囩骇鍖呭垪琛ㄩ敊', error)
+      return NextResponse.json({ success: false, error: '鑾峰彇杞欢鍗囩骇鍖呭垪琛ㄥけ }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, data: softwareUpdates })
   } catch (error) {
-    console.error('鏈嶅姟鍣ㄩ敊?', error)
-    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 })
+    console.error('鏈嶅姟鍣ㄩ敊', error)
+    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 })
   }
 }
 
-// POST /api/enterprise/software-updates - 鍒涘缓鏂拌蒋浠跺崌绾у寘
+// POST /api/enterprise/software-updates - 鍒涘缓鏂拌蒋跺崌绾у寘
 export async function POST(request: Request) {
   try {
     const supabase = createClient(
@@ -88,8 +88,8 @@ export async function POST(request: Request) {
     )
     
     const authHeader = request.headers.get('authorization')
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ success: false, error: '鏈巿鏉冭? }, { status: 401 })
+    if (!authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ success: false, error: '鏈巿鏉冭 }, { status: 401 })
     }
 
     const token = authHeader.substring(7)
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
       .single()
 
     if (enterpriseError || !enterpriseUser) {
-      return NextResponse.json({ success: false, error: '浼佷笟璐︽埛涓嶅瓨? }, { status: 404 })
+      return NextResponse.json({ success: false, error: '佷笟璐︽埛涓嶅 }, { status: 404 })
     }
 
     const body = await request.json()
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
     // 楠岃瘉鏇存柊绫诲瀷
     const validUpdateTypes = ['firmware', 'driver', 'app', 'system']
     if (!validUpdateTypes.includes(update_type)) {
-      return NextResponse.json({ success: false, error: '鏃犳晥鐨勬洿鏂扮被? }, { status: 400 })
+      return NextResponse.json({ success: false, error: '犳晥鐨勬洿鏂扮被 }, { status: 400 })
     }
 
     const { data: softwareUpdate, error } = await supabase
@@ -151,9 +151,9 @@ export async function POST(request: Request) {
         description: description || '',
         changelog: changelog || '',
         file_url,
-        file_size: file_size ? parseInt(file_size) : null,
+        file_size: file_size  parseInt(file_size) : null,
         file_hash: file_hash || '',
-        release_date: release_date ? new Date(release_date).toISOString().split('T')[0] : null,
+        release_date: release_date  new Date(release_date).toISOString().split('T')[0] : null,
         compatibility_info: compatibility_info || {} as any,
         installation_guide: installation_guide || '',
         warning_notes: warning_notes || '',
@@ -164,13 +164,13 @@ export async function POST(request: Request) {
       .single()
 
     if (error) {
-      console.error('鍒涘缓杞欢鍗囩骇鍖呴敊?', error)
-      return NextResponse.json({ success: false, error: '鍒涘缓杞欢鍗囩骇鍖呭け? }, { status: 500 })
+      console.error('鍒涘缓杞欢鍗囩骇鍖呴敊', error)
+      return NextResponse.json({ success: false, error: '鍒涘缓杞欢鍗囩骇鍖呭け }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, data: softwareUpdate })
   } catch (error) {
-    console.error('鏈嶅姟鍣ㄩ敊?', error)
-    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊? }, { status: 500 })
+    console.error('鏈嶅姟鍣ㄩ敊', error)
+    return NextResponse.json({ success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 })
   }
 }

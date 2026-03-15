@@ -46,7 +46,7 @@ export async function GET(request: Request) {
       query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`);
     }
 
-    // 娣诲姞鍒嗙被绛?    // 鏆傛椂绉婚櫎鍒嗙被绛涢€夛紝鍥犱负缂哄皯鍏宠仈?    // if (category) {
+    // 娣诲姞鍒嗙被绛    // 鏆傛椂绉婚櫎鍒嗙被绛涢€夛紝鍥犱负缂哄皯鍏宠仈    // if (category) {
     //   query = query.eq('article_categories.slug', category)
     // }
 
@@ -76,9 +76,10 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('鑾峰彇鏂囩珷鍒楄〃寮傚父:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?, details: (error as Error).message },
+      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },'
       { status: 500 }
     );
   }
 }
+
 

@@ -1,6 +1,6 @@
 ﻿/**
  * 缁翠慨搴楀姞鐩烝PI
- * 澶勭悊搴楅摵鍔犲叆FCX鑱旂洘鐨勮川鎶兼祦? */
+ * 澶勭悊搴楅摵鍔犲叆FCX鑱旂洘鐨勮川鎶兼祦 */
 
 import { NextResponse } from 'next/server';
 import { AllianceService } from '@/fcx-system';
@@ -56,8 +56,8 @@ export async function POST(request: Request) {
     if (!isQualified) {
       return NextResponse.json(
         {
-          error: '搴楅摵涓嶇鍚堣仈鐩熷姞鍏ユ潯?,
-          details: '璇风‘淇濆簵閾轰俊鎭畬鏁淬€佺姸鎬佹甯镐笖宸查€氳繃璁よ瘉',
+          error: '搴楅摵涓嶇鍚堣仈鐩熷姞鍏ユ潯,
+          details: '璇风‘淇濆簵轰俊鎭畬鏁淬€佺姸鎬佹甯镐笖宸查€氳繃璁よ瘉',
         },
         { status: 400 }
       );
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('缁翠慨搴楀姞鐩熼敊?', error);
+    console.error('缁翠慨搴楀姞鐩熼敊', error);
     return NextResponse.json(
       {
         error: '鍔犵洘澶勭悊澶辫触',

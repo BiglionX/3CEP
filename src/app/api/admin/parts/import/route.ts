@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     if (!file) {
       return NextResponse.json(
-        { success: false, error: '璇烽€夋嫨瑕佷笂浼犵殑Excel鏂囦欢' },
+        { success: false, error: '璇烽€夋嫨瑕佷笂犵殑Excel鏂囦欢' },
         { status: 400 }
       );
     }
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 澶勭悊鏁版嵁骞舵壒閲忔彃?    const results = {
+    // 澶勭悊鏁版嵁骞舵壒閲忔彃    const results = {
       success: 0,
       failed: 0,
       errors: [] as string[],
@@ -92,11 +92,11 @@ export async function POST(request: Request) {
         const partData = {
           name: String(row.name || '').trim(),
           category: String(row.category || '').trim(),
-          brand: row.brand ? String(row.brand).trim() : null,
-          model: row.model ? String(row.model).trim() : null,
-          part_number: row.part_number ? String(row.part_number).trim() : null,
-          unit: row.unit ? String(row.unit).trim() : '锟?,
-          description: row.description ? String(row.description).trim() : null,
+          brand: row.brand  String(row.brand).trim() : null,
+          model: row.model  String(row.model).trim() : null,
+          part_number: row.part_number  String(row.part_number).trim() : null,
+          unit: row.unit  String(row.unit).trim() : ',
+          description: row.description  String(row.description).trim() : null,
           stock_quantity: parseInt(row.stock_quantity) || 0,
           min_stock: parseInt(row.min_stock) || 0,
           max_stock: parseInt(row.max_stock) || 1000,
@@ -116,13 +116,13 @@ export async function POST(request: Request) {
         results.insertedIds.push(partId);
         results.success++;
 
-        // 澶勭悊璁惧鍏宠仈锛堝鏋滄彁渚涗簡璁惧淇℃伅?        if (row.compatible_devices) {
+        // 澶勭悊璁惧鍏宠仈锛堝鏋滄彁渚涗簡璁惧淇℃伅        if (row.compatible_devices) {
           const deviceNames = String(row.compatible_devices)
             .split(',')
             .map((d: string) => d.trim());
           const deviceIds =
             devices
-              ?.filter(d =>
+              .filter(d =>
                 deviceNames.some(
                   (name: string) =>
                     d.brand.includes(name) || d.model.includes(name)
@@ -141,13 +141,13 @@ export async function POST(request: Request) {
           }
         }
 
-        // 澶勭悊鏁呴殰鍏宠仈锛堝鏋滄彁渚涗簡鏁呴殰淇℃伅?        if (row.related_faults) {
+        // 澶勭悊鏁呴殰鍏宠仈锛堝鏋滄彁渚涗簡鏁呴殰淇℃伅        if (row.related_faults) {
           const faultNames = String(row.related_faults)
             .split(',')
             .map((f: string) => f.trim());
           const faultIds =
             faults
-              ?.filter(f =>
+              .filter(f =>
                 faultNames.some(
                   (name: string) =>
                     f.name.includes(name) || f.category.includes(name)
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
         }
       } catch (error) {
         results.failed++;
-        results.errors.push(`锟?{i + 1}锟? ${(error as Error).message}`);
+        results.errors.push(`{i + 1} ${(error as Error).message}`);
       }
     }
 
@@ -180,7 +180,7 @@ export async function POST(request: Request) {
         errors: results.errors,
         insertedIds: results.insertedIds,
       },
-      message: `鎵归噺瀵煎叆瀹屾垚锛氭垚?{results.success}鏉★紝澶辫触${results.failed}鏉,
+      message: `鎵归噺瀵煎叆瀹屾垚锛氭垚{results.success}鏉★紝澶辫触${results.failed}鏉,
     });
   } catch (error) {
     console.error('鎵归噺瀵煎叆澶辫触:', error);
@@ -202,7 +202,7 @@ export async function GET() {
         brand: 'Apple',
         model: 'iPhone 15 Pro',
         part_number: 'IPH15PRO-SCR-001',
-        unit: '锟?,
+        unit: ',
         description: '閰嶄欢璇︾粏鎻忚堪',
         stock_quantity: 100,
         min_stock: 10,
@@ -212,7 +212,7 @@ export async function GET() {
       },
     ];
 
-    // 鍒涘缓宸ヤ綔?    const worksheet = XLSX.utils.json_to_sheet(templateData);
+    // 鍒涘缓宸ヤ綔    const worksheet = XLSX.utils.json_to_sheet(templateData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, '閰嶄欢鏁版嵁');
 

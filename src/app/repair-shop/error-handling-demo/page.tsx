@@ -1,6 +1,7 @@
 ﻿/**
  * 错误处理系统演示页面
- * 展示各种错误处理机制和用户界? */
+ * 展示各种错误处理机制和用户界面
+ */
 
 'use client';
 
@@ -36,7 +37,8 @@ import {
   withErrorHandling,
 } from '@/components/error-handling';
 
-// 演示组件 - 会故意抛出错?function ErrorDemoComponent({ errorType }: { errorType: string }) {
+// 演示组件 - 会故意抛出错误
+function ErrorDemoComponent({ errorType }: { errorType: string }) {
   const { handleError } = useErrorHandler();
 
   const triggerError = () => {
@@ -163,10 +165,12 @@ function ErrorTypeCard({
   );
 }
 
-// 主演示组?function ErrorHandlingDemo() {
+// 主演示组件
+function ErrorHandlingDemo() {
   const [showBoundaryError, setShowBoundaryError] = useState(false);
 
-  // 故意触发边界错误的组?  const BoundaryErrorTrigger = () => {
+  // 故意触发边界错误的组件
+  const BoundaryErrorTrigger = () => {
     // @ts-ignore
     if (showBoundaryError) {
       throw new Error(
@@ -193,7 +197,7 @@ function ErrorTypeCard({
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           错误处理系统演示
         </h1>
-        <p className="text-gray-600">展示增强版错误边界和用户友好的错误提?/p>
+        <p className="text-gray-600">展示增强版错误边界和用户友好的错误提示</p>
       </div>
 
       {/* 错误类型概览 */}
@@ -221,14 +225,14 @@ function ErrorTypeCard({
         />
         <ErrorTypeCard
           type={ErrorType.SERVER}
-          title="服务器错?
+          title="服务器错误"
           description="处理500错误、服务不可用等服务器问题"
           icon={Server}
           severity={ErrorSeverity.CRITICAL}
         />
         <ErrorTypeCard
           type={ErrorType.CLIENT}
-          title="客户端错?
+          title="客户端错误"
           description="处理前端渲染、JavaScript错误等客户端问题"
           icon={Bug}
           severity={ErrorSeverity.MEDIUM}
@@ -236,13 +240,13 @@ function ErrorTypeCard({
         <ErrorTypeCard
           type={ErrorType.UNKNOWN}
           title="未知错误"
-          description="处理无法分类的其他类型错?
+          description="处理无法分类的其他类型错误"
           icon={AlertTriangle}
           severity={ErrorSeverity.MEDIUM}
         />
       </div>
 
-      {/* 错误触发演示?*/}
+      {/* 错误触发演示 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader>
@@ -251,7 +255,8 @@ function ErrorTypeCard({
               错误触发演示
             </CardTitle>
             <CardDescription>
-              点击按钮触发不同类型的应用程序错?            </CardDescription>
+              点击按钮触发不同类型的应用程序错误
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <ErrorDemoComponent errorType="network" />
@@ -278,14 +283,14 @@ function ErrorTypeCard({
         </Card>
       </div>
 
-      {/* 错误统计和监?*/}
+      {/* 错误统计和监控 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
             错误监控面板
           </CardTitle>
-          <CardDescription>实时显示应用程序错误统计和监控信?/CardDescription>
+          <CardDescription>实时显示应用程序错误统计和监控信息</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -299,7 +304,7 @@ function ErrorTypeCard({
             </div>
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
               <div className="text-2xl font-bold text-yellow-600">12</div>
-              <div className="text-sm text-gray-600">中等优先?/div>
+              <div className="text-sm text-gray-600">中等优先级</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">8</div>
@@ -308,7 +313,7 @@ function ErrorTypeCard({
           </div>
 
           <div className="mt-6 pt-6 border-t">
-            <h4 className="font-medium mb-3">系统健康状?/h4>
+            <h4 className="font-medium mb-3">系统健康状态</h4>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-green-500" />
@@ -320,7 +325,7 @@ function ErrorTypeCard({
               </div>
               <div className="flex items-center gap-2">
                 <XCircle className="w-5 h-5 text-red-500" />
-                <span className="text-sm">最?4小时?个未处理错误</span>
+                <span className="text-sm">最近4小时3个未处理错误</span>
               </div>
             </div>
           </div>
@@ -339,4 +344,3 @@ export default function ErrorHandlingDemoPage() {
     </ErrorProvider>
   );
 }
-

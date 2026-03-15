@@ -29,19 +29,19 @@ export async function GET(request: Request) {
       );
     }
 
-    // 鍒嗙被绛?    if (category) {
+    // 鍒嗙被绛    if (category) {
       query = query.eq('category', category);
     }
 
-    // 鍝佺墝绛?    if (brand) {
+    // 鍝佺墝绛    if (brand) {
       query = query.eq('brand', brand);
     }
 
-    // 鐘舵€佺瓫?    if (status && status !== 'all') {
+    // 鐘舵€佺瓫    if (status && status !== 'all') {
       query = query.eq('status', status);
     }
 
-    // 鍒嗛〉鍜屾帓?    const { data, error, count } = await query
+    // 鍒嗛〉鍜屾帓    const { data, error, count } = await query
       .range(offset, offset + limit - 1)
       .order('created_at', { ascending: false });
 
@@ -92,12 +92,12 @@ export async function POST(request: Request) {
     // 楠岃瘉蹇呭～瀛楁
     if (!name || !category) {
       return NextResponse.json(
-        { success: false, error: '閰嶄欢鍚嶇О鍜屽垎绫讳负蹇呭～? },
+        { success: false, error: '閰嶄欢鍚嶇О鍜屽垎绫讳负蹇呭～ },
         { status: 400 }
       );
     }
 
-    // 寮€濮嬩簨?    const { data: partData, error: partError } = await supabase
+    // 寮€濮嬩簨    const { data: partData, error: partError } = await supabase
       .from('parts')
       .insert({
         name,
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
         brand,
         model,
         part_number,
-        unit: unit || '锟?,
+        unit: unit || ',
         description,
         image_url,
         stock_quantity: stock_quantity || 0,
@@ -218,8 +218,8 @@ export async function PUT(request: Request) {
 
     if (partError) throw partError;
 
-    // 濡傛灉鏈夎澶囧叧鑱旀洿?    if (body.compatible_devices) {
-      // 鍏堝垹闄ょ幇鏈夊叧?      await supabase.from('part_devices').delete().eq('part_id', id);
+    // 濡傛灉鏈夎澶囧叧鑱旀洿    if (body.compatible_devices) {
+      // 鍏堝垹闄ょ幇鏈夊叧      await supabase.from('part_devices').delete().eq('part_id', id);
 
       // 鎻掑叆鏂扮殑鍏宠仈
       if (body.compatible_devices.length > 0) {
@@ -239,8 +239,8 @@ export async function PUT(request: Request) {
       }
     }
 
-    // 濡傛灉鏈夋晠闅滃叧鑱旀洿?    if (body.related_faults) {
-      // 鍏堝垹闄ょ幇鏈夊叧?      await supabase.from('part_faults').delete().eq('part_id', id);
+    // 濡傛灉鏈夋晠闅滃叧鑱旀洿    if (body.related_faults) {
+      // 鍏堝垹闄ょ幇鏈夊叧      await supabase.from('part_faults').delete().eq('part_id', id);
 
       // 鎻掑叆鏂扮殑鍏宠仈
       if (body.related_faults.length > 0) {

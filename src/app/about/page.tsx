@@ -11,8 +11,6 @@ import {
   Heart,
   TrendingUp,
   Shield,
-  Zap,
-  Cpu,
   Building,
 } from 'lucide-react';
 

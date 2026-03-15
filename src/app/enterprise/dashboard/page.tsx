@@ -1,5 +1,5 @@
 ﻿/**
- * 企业服务仪表板页? * 企业用户的综合管理界? */
+ * 企业服务仪表板页 * 企业用户的综合管理界 */
 
 'use client';
 
@@ -48,7 +48,7 @@ interface ServiceStat {
   status: 'active' | 'warning' | 'critical';
 }
 
-// 最近活动类?interface RecentActivity {
+// 最近活动类interface RecentActivity {
   id: string;
   type: 'order' | 'agent' | 'payment' | 'notification';
   title: string;
@@ -79,7 +79,7 @@ export default function EnterpriseDashboardPage() {
     // 模拟数据加载
     const mockServiceStats: ServiceStat[] = [
       {
-        name: '智能体服?,
+        name: '智能体服,
         icon: Bot,
         usage: 85,
         limit: 100,
@@ -108,25 +108,25 @@ export default function EnterpriseDashboardPage() {
       {
         id: '1',
         type: 'order',
-        title: '新采购订?,
-        description: 'PO-2024-001 已提交审?,
-        time: '2分钟?,
+        title: '新采购订,
+        description: 'PO-2024-001 已提交审,
+        time: '2分钟,
         status: 'pending',
       },
       {
         id: '2',
         type: 'agent',
-        title: '智能体执行完?,
-        description: '客服机器人对话完成，满意?5%',
-        time: '15分钟?,
+        title: '智能体执行完,
+        description: '客服机器人对话完成，满意5%',
+        time: '15分钟,
         status: 'success',
       },
       {
         id: '3',
         type: 'payment',
         title: '付款确认',
-        description: '采购订单PO-2024-001付款已确?,
-        time: '1小时?,
+        description: '采购订单PO-2024-001付款已确,
+        time: '1小时,
         status: 'success',
       },
     ];
@@ -143,7 +143,7 @@ export default function EnterpriseDashboardPage() {
       {
         id: '2',
         title: '额度即将用完',
-        message: '智能体服务使用额度剩?5%，请及时充?,
+        message: '智能体服务使用额度剩5%，请及时充,
         time: '昨天 16:45',
         unread: true,
         type: 'warning',
@@ -158,7 +158,7 @@ export default function EnterpriseDashboardPage() {
     }, 800);
   }, []);
 
-  // 状态颜色映?  const statusColors = {
+  // 状态颜色映  const statusColors = {
     active: 'bg-green-100 text-green-800',
     warning: 'bg-yellow-100 text-yellow-800',
     critical: 'bg-red-100 text-red-800',
@@ -166,7 +166,7 @@ export default function EnterpriseDashboardPage() {
 
   if (loading) {
     return (
-      <EnterpriseLayout title="企业仪表?>
+      <EnterpriseLayout title="企业仪表>
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
@@ -175,14 +175,14 @@ export default function EnterpriseDashboardPage() {
   }
 
   return (
-    <EnterpriseLayout title="企业仪表?>
+    <EnterpriseLayout title="企业仪表>
       {/* 欢迎横幅 */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-lg p-6 mb-8 text-white">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold mb-2">欢迎回来?/h1>
+            <h1 className="text-2xl font-bold mb-2">欢迎回来/h1>
             <p className="opacity-90">
-              这里是您的企业服务中心，为您提供全方位的AI智能化服?            </p>
+              这里是您的企业服务中心，为您提供全方位的AI智能化服            </p>
           </div>
           <div className="mt-4 md:mt-0">
             <Button
@@ -220,7 +220,7 @@ export default function EnterpriseDashboardPage() {
                     {stat.status === 'critical' && '危险'}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    使用?{stat.percentage}%
+                    使用{stat.percentage}%
                   </span>
                 </div>
               </CardContent>
@@ -230,13 +230,13 @@ export default function EnterpriseDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 最近活?*/}
+        {/* 最近活*/}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Activity className="h-5 w-5 mr-2" />
-                最近活?              </CardTitle>
+                最近活              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -268,13 +268,13 @@ export default function EnterpriseDashboardPage() {
                         <Badge
                           variant={
                             activity.status === 'success'
-                              ? 'default'
+                               'default'
                               : 'secondary'
                           }
                           className="ml-2"
                         >
                           {activity.status === 'success' && '成功'}
-                          {activity.status === 'pending' && '处理?}
+                          {activity.status === 'pending' && '处理}
                           {activity.status === 'failed' && '失败'}
                         </Badge>
                       </div>
@@ -291,7 +291,7 @@ export default function EnterpriseDashboardPage() {
           </Card>
         </div>
 
-        {/* 通知和快捷操?*/}
+        {/* 通知和快捷操*/}
         <div className="space-y-6">
           {/* 通知 */}
           <Card>
@@ -313,7 +313,7 @@ export default function EnterpriseDashboardPage() {
                     key={notification.id}
                     className={`p-3 rounded-lg ${
                       notification.unread
-                        ? 'bg-blue-50 border border-blue-200'
+                         'bg-blue-50 border border-blue-200'
                         : 'bg-gray-50'
                     }`}
                   >
@@ -330,9 +330,9 @@ export default function EnterpriseDashboardPage() {
                       <Badge
                         variant={
                           notification.type === 'info'
-                            ? 'secondary'
+                             'secondary'
                             : notification.type === 'warning'
-                              ? 'destructive'
+                               'destructive'
                               : 'default'
                         }
                         className="text-xs"
@@ -357,7 +357,7 @@ export default function EnterpriseDashboardPage() {
             <CardContent className="space-y-3">
               <Button className="w-full" variant="outline">
                 <Bot className="w-4 h-4 mr-2" />
-                创建智能?              </Button>
+                创建智能              </Button>
               <Button className="w-full" variant="outline">
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 新建采购订单

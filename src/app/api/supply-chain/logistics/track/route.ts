@@ -1,7 +1,7 @@
 ﻿/**
  * 鐗╂祦杩借釜API璺敱
- * 鎻愪緵缁熶竴鐨勮繍鍗曡建杩规煡璇㈡帴? *
- * GET /api/supply-chain/logistics/track?trackingNumber=xxx&carrier=xxx
+ * 鎻愪緵缁熶竴鐨勮繍鍗曡建杩规煡璇㈡帴 *
+ * GET /api/supply-chain/logistics/tracktrackingNumber=xxx&carrier=xxx
  * POST /api/supply-chain/logistics/track - 鎵归噺鏌ヨ
  */
 
@@ -16,19 +16,19 @@ import { NextResponse } from 'next/server';
 
 // 鐗╂祦杩借釜鏈嶅姟閰嶇疆
 const logisticsConfig: LogisticsTrackingConfig = {
-  defaultTimeout: 10000, // 10绉掕秴?  maxRetryAttempts: 3,
+  defaultTimeout: 10000, // 10绉掕秴  maxRetryAttempts: 3,
   autoDetectEnabled: true,
   cacheEnabled: true,
-  cacheTTL: 300, // 5鍒嗛挓缂撳瓨
+  cacheTTL: 300, // 5鍒嗛挓缂撳
   carriers: [
-    // 17track閰嶇疆锛堜綔涓轰富瑕佽仛鍚堟湇鍔″晢?    {
+    // 17track閰嶇疆锛堜綔涓轰富瑕佽仛鍚堟湇鍔″晢    {
       carrier: LogisticsCarrier.OTHER,
       apiKey: process.env.TRACK17_API_KEY || 'your_17track_api_key',
       isEnabled: true,
       timeout: 10000,
       retryAttempts: 3,
     },
-    // 椤轰赴閫熻繍瀹樻柟API閰嶇疆
+    // 椤轰赴熻繍瀹樻柟API閰嶇疆
     {
       carrier: LogisticsCarrier.SF_EXPRESS,
       apiKey: process.env.SF_EXPRESS_API_KEY || 'your_sf_express_api_key',
@@ -38,7 +38,7 @@ const logisticsConfig: LogisticsTrackingConfig = {
       timeout: 8000,
       retryAttempts: 2,
     },
-    // 蹇€掗笩閰嶇疆锛堜綔涓哄閫夛級
+    // 蹇€掗笩閰嶇疆锛堜綔涓哄夛級
     {
       carrier: LogisticsCarrier.OTHER,
       apiKey: process.env.KDNIAO_API_KEY || 'your_kdniao_api_key',
@@ -50,7 +50,7 @@ const logisticsConfig: LogisticsTrackingConfig = {
   ],
 };
 
-// 鍒濆鍖栫墿娴佽拷韪湇?const logisticsService = new LogisticsTrackingService(logisticsConfig);
+// 鍒濆鍖栫墿娴佽拷韪湇const logisticsService = new LogisticsTrackingService(logisticsConfig);
 
 export async function GET(request: Request) {
   try {
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
           success: false,
           error: {
             code: 'MISSING_PARAMETER',
-            message: '缂哄皯蹇呰鐨勫弬? trackingNumber',
+            message: '缂哄皯蹇呰鐨勫弬 trackingNumber',
           },
           timestamp: new Date().toISOString(),
         },
@@ -74,7 +74,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 杞崲鐗╂祦鍟嗗弬?    let carrier: LogisticsCarrier | undefined;
+    // 杞崲鐗╂祦鍟嗗弬    let carrier: LogisticsCarrier | undefined;
     if (carrierParam) {
       const carrierEnum = Object.values(LogisticsCarrier).find(
         c => c.toLowerCase() === carrierParam.toLowerCase()
@@ -87,7 +87,7 @@ export async function GET(request: Request) {
             success: false,
             error: {
               code: 'INVALID_CARRIER',
-              message: `鏃犳晥鐨勭墿娴佸晢浠ｇ爜: ${carrierParam}`,
+              message: `犳晥鐨勭墿娴佸晢ｇ爜: ${carrierParam}`,
             },
             timestamp: new Date().toISOString(),
           },
@@ -113,7 +113,7 @@ export async function GET(request: Request) {
         timestamp: result.timestamp.toISOString(),
       },
       {
-        status: result.success ? 200 : 400,
+        status: result.success  200 : 400,
       }
     );
   } catch (error) {
@@ -124,7 +124,7 @@ export async function GET(request: Request) {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
-          message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+          message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
           details: (error as Error).message,
         },
         timestamp: new Date().toISOString(),
@@ -138,13 +138,13 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // 楠岃瘉璇锋眰?    if (!body.trackingNumbers || !Array.isArray(body.trackingNumbers)) {
+    // 楠岃瘉璇眰    if (!body.trackingNumbers || !Array.isArray(body.trackingNumbers)) {
       return NextResponse.json(
         {
           success: false,
           error: {
             code: 'INVALID_REQUEST',
-            message: '璇锋眰浣撳繀椤诲寘鍚玹rackingNumbers鏁扮粍',
+            message: '璇眰浣撳繀椤诲寘鍚玹rackingNumbers鏁扮粍',
           },
           timestamp: new Date().toISOString(),
         },
@@ -152,7 +152,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 杞崲鐗╂祦鍟嗗弬?    let carrier: LogisticsCarrier | undefined;
+    // 杞崲鐗╂祦鍟嗗弬    let carrier: LogisticsCarrier | undefined;
     if (body.carrier) {
       const carrierEnum = Object.values(LogisticsCarrier).find(
         c => c.toLowerCase() === body.carrier.toLowerCase()
@@ -163,7 +163,7 @@ export async function POST(request: Request) {
             success: false,
             error: {
               code: 'INVALID_CARRIER',
-              message: `鏃犳晥鐨勭墿娴佸晢浠ｇ爜: ${body.carrier}`,
+              message: `犳晥鐨勭墿娴佸晢ｇ爜: ${body.carrier}`,
             },
             timestamp: new Date().toISOString(),
           },
@@ -200,7 +200,7 @@ export async function POST(request: Request) {
           failedCount: totalCount - successCount,
           successRate:
             totalCount > 0
-              ? ((successCount / totalCount) * 100).toFixed(2) + '%'
+               ((successCount / totalCount) * 100).toFixed(2) + '%'
               : '0%',
         },
         timestamp: new Date().toISOString(),
@@ -215,7 +215,7 @@ export async function POST(request: Request) {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
-          message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊?,
+          message: '鏈嶅姟鍣ㄥ唴閮ㄩ敊,
           details: (error as Error).message,
         },
         timestamp: new Date().toISOString(),
@@ -225,7 +225,7 @@ export async function POST(request: Request) {
   }
 }
 
-// 鑾峰彇鏈嶅姟鐘舵€佷俊?export async function HEAD(request: Request) {
+// 鑾峰彇鏈嶅姟鐘舵€佷俊export async function HEAD(request: Request) {
   try {
     const status = logisticsService.getServiceStatus();
 
@@ -250,7 +250,7 @@ export async function POST(request: Request) {
         success: false,
         error: {
           code: 'STATUS_CHECK_FAILED',
-          message: '鏈嶅姟鐘舵€佹鏌ュけ?,
+          message: '鏈嶅姟鐘舵€佹鏌ュけ,
         },
       },
       { status: 500 }

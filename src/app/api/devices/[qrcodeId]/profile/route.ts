@@ -70,7 +70,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error  error.message : '服务器内部错误',
       },
       { status: 500 }
     );
@@ -124,11 +124,11 @@ export async function POST(
           brandName: body.brandName || mockProfile.brandName,
           serialNumber: body.serialNumber || mockProfile.serialNumber,
           manufacturingDate: body.manufacturingDate
-            ? new Date(body.manufacturingDate)
+             new Date(body.manufacturingDate)
             : mockProfile.manufacturingDate,
           warrantyPeriod:
             body.warrantyPeriod !== undefined
-              ? body.warrantyPeriod
+               body.warrantyPeriod
               : mockProfile.warrantyPeriod,
           currentStatus: body.currentStatus || mockProfile.currentStatus,
           currentLocation: body.currentLocation || mockProfile.currentLocation,
@@ -144,7 +144,7 @@ export async function POST(
           brandName: body.brandName,
           serialNumber: body.serialNumber,
           manufacturingDate: body.manufacturingDate
-            ? new Date(body.manufacturingDate)
+             new Date(body.manufacturingDate)
             : undefined,
           warrantyPeriod: body.warrantyPeriod,
           currentStatus: body.currentStatus,
@@ -172,10 +172,10 @@ export async function POST(
           brandName: body.brandName || '测试品牌',
           serialNumber: body.serialNumber || 'TEST-SN-001',
           manufacturingDate: body.manufacturingDate
-            ? new Date(body.manufacturingDate)
+             new Date(body.manufacturingDate)
             : new Date('2024-01-01'),
           warrantyPeriod:
-            body.warrantyPeriod !== undefined ? body.warrantyPeriod : 24,
+            body.warrantyPeriod !== undefined  body.warrantyPeriod : 24,
           currentStatus: body.currentStatus || 'in_use',
           currentLocation: body.currentLocation || '测试位置',
           ownerInfo: body.ownerInfo || {
@@ -195,7 +195,7 @@ export async function POST(
           brandName: body.brandName,
           serialNumber: body.serialNumber,
           manufacturingDate: body.manufacturingDate
-            ? new Date(body.manufacturingDate)
+             new Date(body.manufacturingDate)
             : undefined,
           warrantyPeriod: body.warrantyPeriod,
           currentStatus: body.currentStatus,
@@ -214,7 +214,7 @@ export async function POST(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error  error.message : '服务器内部错误',
       },
       { status: 500 }
     );
@@ -260,7 +260,7 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : '服务器内部错误',
+        error: error instanceof Error  error.message : '服务器内部错误',
       },
       { status: 500 }
     );

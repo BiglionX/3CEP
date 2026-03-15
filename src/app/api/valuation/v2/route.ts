@@ -7,41 +7,41 @@ import { DeviceProfile } from '@/lib/constants/lifecycle';
 import { DeviceCondition } from '@/lib/valuation/valuation-engine.service';
 
 /**
- * 浼板€糀PI v2 - 鏅鸿兘铻嶅悎鐗堟湰
- * 鏍规嵁缃俊搴﹀姩鎬侀€夋嫨鏈€浼樹及鍊肩瓥? */
+ * 板€糀PI v2 - 鏅鸿兘铻嶅悎鐗堟湰
+ * 鏍规嵁缃俊搴﹀姩鎬侀€夋嫨鏈€樹及鍊肩瓥 */
 
 interface ValuationRequest {
-  deviceQrcodeId?: string;
-  deviceProfile?: Partial<DeviceProfile>;
-  condition?: DeviceCondition;
-  marketPrice?: number;
-  includeDetails?: boolean;
-  includeAlternatives?: boolean;
+  deviceQrcodeId: string;
+  deviceProfile: Partial<DeviceProfile>;
+  condition: DeviceCondition;
+  marketPrice: number;
+  includeDetails: boolean;
+  includeAlternatives: boolean;
 }
 
 interface ValuationResponse {
   success: boolean;
-  data?: {
+  data: {
     finalValue: number;
     method: ValuationMethod;
     confidenceLevel: string;
     confidenceScore: number;
-    deviceInfo?: {
+    deviceInfo: {
       id: string;
       productModel: string;
       brandName: string;
       productCategory: string;
     };
-    breakdown?: any;
-    alternatives?: {
-      ml?: number;
-      market?: number;
-      rule?: number;
+    breakdown: any;
+    alternatives: {
+      ml: number;
+      market: number;
+      rule: number;
     };
-    rationale?: string;
-    metadata?: Record<string, any>;
+    rationale: string;
+    metadata: Record<string, any>;
   };
-  error?: string;
+  error: string;
   timestamp: string;
 }
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: '蹇呴』鎻愪緵 deviceQrcodeId 锟?deviceProfile',
+          error: '蹇呴』鎻愪緵 deviceQrcodeId deviceProfile',
           timestamp: new Date().toISOString(),
         },
         { status: 400 }
@@ -113,17 +113,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 娣诲姞鏇夸唬浼板€硷紙濡傛灉璇锋眰?    if (body.includeAlternatives) {
+    // 娣诲姞鏇夸唬板€硷紙濡傛灉璇眰    if (body.includeAlternatives) {
       response.data!.alternatives = decision.alternativeValues;
     }
 
     return NextResponse.json(response);
   } catch (error: any) {
-    console.error('浼板€糀PI v2閿欒:', error);
+    console.error('板€糀PI v2閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -196,17 +196,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 娣诲姞鏇夸唬浼板€硷紙濡傛灉璇锋眰?    if (includeAlternatives) {
+    // 娣诲姞鏇夸唬板€硷紙濡傛灉璇眰    if (includeAlternatives) {
       response.data!.alternatives = decision.alternativeValues;
     }
 
     return NextResponse.json(response);
   } catch (error: any) {
-    console.error('浼板€糀PI v2 GET閿欒:', error);
+    console.error('板€糀PI v2 GET閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊?,
+        error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -220,14 +220,14 @@ export async function GET(request: NextRequest) {
  * 鑾峰彇璁惧妗ｆ
  */
 async function getDeviceProfile(
-  deviceQrcodeId?: string,
-  partialProfile?: Partial<DeviceProfile>
+  deviceQrcodeId: string,
+  partialProfile: Partial<DeviceProfile>
 ): Promise<DeviceProfile | null> {
-  // 濡傛灉鎻愪緵浜嗗畬鏁寸殑璁惧妗ｆ锛岀洿鎺ヤ娇?  if (partialProfile && partialProfile.id) {
+  // 濡傛灉鎻愪緵浜嗗畬鏁寸殑璁惧妗ｆ锛岀洿鎺ヤ娇  if (partialProfile && partialProfile.id) {
     return partialProfile as DeviceProfile;
   }
 
-  // 鍚﹀垯閫氳繃浜岀淮鐮両D鏌ヨ鏁版嵁?  if (deviceQrcodeId) {
+  // 鍚﹀垯氳繃浜岀淮鐮両D鏌ヨ鏁版嵁  if (deviceQrcodeId) {
     try {
       // 杩欓噷搴旇璋冪敤瀹為檯鐨勬暟鎹簱鏌ヨ鏈嶅姟
       // 鏆傛椂杩斿洖妯℃嫙鏁版嵁
@@ -249,7 +249,7 @@ async function getDetailedBreakdown(
   condition: DeviceCondition | undefined,
   decision: any
 ) {
-  // 杩欓噷鍙互璋冪敤鍏蜂綋鐨勪及鍊煎紩鎿庤幏鍙栬缁嗗垎?  // 鏆傛椂杩斿洖鍩烘湰缁撴瀯
+  // 杩欓噷鍙互璋冪敤鍏蜂綋鐨勪及鍊煎紩鎿庤幏鍙栬缁嗗垎  // 鏆傛椂杩斿洖鍩烘湰缁撴瀯
   return {
     originalPrice: 5000,
     depreciation: 1200,
@@ -257,8 +257,8 @@ async function getDetailedBreakdown(
     conditionAdjustment: 0.92,
     strategyDetails: {
       method: decision.method,
-      confidenceFactors: decision?.confidenceFactors || {},
-      weightDistribution: decision?.weights || {},
+      confidenceFactors: decision.confidenceFactors || {},
+      weightDistribution: decision.weights || {},
     },
   };
 }

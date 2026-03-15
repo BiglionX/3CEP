@@ -32,7 +32,7 @@ export default function FeedbackPage() {
       id: '1',
       user: '张三',
       message:
-        '希望能在维修记录中添加图片上传功能，这样可以更好地记录维修过程?,
+        '希望能在维修记录中添加图片上传功能，这样可以更好地记录维修过程。',
       timestamp: '2024-01-20 14:30',
       likes: 24,
       replies: 3,
@@ -41,7 +41,7 @@ export default function FeedbackPage() {
     {
       id: '2',
       user: '李四',
-      message: '设备管理页面加载速度有点慢，特别是在设备数量较多的时候?,
+      message: '设备管理页面加载速度有点慢，特别是在设备数量较多的时候。',
       timestamp: '2024-01-19 16:45',
       likes: 18,
       replies: 5,
@@ -50,7 +50,7 @@ export default function FeedbackPage() {
     {
       id: '3',
       user: '王五',
-      message: '配件商城的商品分类不够详细，希望能增加更多的筛选选项?,
+      message: '配件商城的商品分类不够详细，希望能增加更多的筛选选项。',
       timestamp: '2024-01-18 11:20',
       likes: 32,
       replies: 2,
@@ -109,7 +109,7 @@ export default function FeedbackPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 px:6lg:px-8">
         {/* 页面标题 */}
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-4 flex items-center justify-center">
@@ -148,8 +148,7 @@ export default function FeedbackPage() {
                     }
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       newFeedback.category === option.value
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                         ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 bg-gray-200'
                     }`}
                   >
                     {option.label}
@@ -235,11 +234,11 @@ export default function FeedbackPage() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <button className="flex items-center space-x-1 text-gray-500 hover:text-blue-600 transition-colors">
+                      <button className="flex items-center space-x-1 text-gray-500 text:blue-600 transition-colors">
                         <ThumbsUp className="w-4 h-4" />
                         <span className="text-sm">{feedback.likes}</span>
                       </button>
-                      <button className="flex items-center space-x-1 text-gray-500 hover:text-green-600 transition-colors">
+                      <button className="flex items-center space-x-1 text-gray-500 text:green-600 transition-colors">
                         <Reply className="w-4 h-4" />
                         <span className="text-sm">{feedback.replies} 回复</span>
                       </button>
@@ -286,7 +285,8 @@ export default function FeedbackPage() {
                   support@fixcycle.com
                 </p>
                 <Button variant="outline" size="sm">
-                  发送邮?                </Button>
+                  发送邮件
+                </Button>
               </div>
 
               <div className="text-center">
@@ -294,7 +294,7 @@ export default function FeedbackPage() {
                   <Clock className="w-6 h-6 text-purple-600" />
                 </div>
                 <h3 className="font-medium text-gray-900 mb-2">服务时间</h3>
-                <p className="text-sm text-gray-600 mb-3">工作?9:00-18:00</p>
+                <p className="text-sm text-gray-600 mb-3">工作日 9:00-18:00</p>
                 <Button variant="outline" size="sm">
                   查看详情
                 </Button>

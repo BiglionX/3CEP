@@ -19,14 +19,14 @@ export async function GET() {
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭? }, { status: 401 });
+      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
     }
 
     // 妯℃嫙鐩戞帶鎸囨爣鏁版嵁
     const metrics: MonitoringMetric[] = [
       {
         id: 'cpu_usage',
-        name: 'CPU浣跨敤?,
+        name: 'CPU浣跨敤,
         value: 68.5,
         unit: '%',
         threshold: 80,
@@ -36,7 +36,7 @@ export async function GET() {
       },
       {
         id: 'memory_usage',
-        name: '鍐呭瓨浣跨敤?,
+        name: '鍐呭浣跨敤,
         value: 45.2,
         unit: '%',
         threshold: 85,
@@ -46,7 +46,7 @@ export async function GET() {
       },
       {
         id: 'disk_usage',
-        name: '纾佺洏浣跨敤?,
+        name: '纾佺洏浣跨敤,
         value: 72.8,
         unit: '%',
         threshold: 90,
@@ -68,7 +68,7 @@ export async function GET() {
         id: 'database_connections',
         name: '鏁版嵁搴撹繛鎺ユ暟',
         value: 156,
-        unit: '锟?,
+        unit: ',
         threshold: 200,
         status: 'normal',
         trend: 'stable',
@@ -76,9 +76,9 @@ export async function GET() {
       },
       {
         id: 'active_users',
-        name: '娲昏穬鐢ㄦ埛?,
+        name: '娲昏穬鐢ㄦ埛,
         value: 892,
-        unit: '锟?,
+        unit: ',
         threshold: 1000,
         status: 'normal',
         trend: 'up',
@@ -86,7 +86,7 @@ export async function GET() {
       },
       {
         id: 'api_response_time',
-        name: 'API鍝嶅簲鏃堕棿',
+        name: 'API鍝嶅簲堕棿',
         value: 120,
         unit: 'ms',
         threshold: 500,
@@ -96,7 +96,7 @@ export async function GET() {
       },
       {
         id: 'error_rate',
-        name: '閿欒?,
+        name: '閿欒,
         value: 0.2,
         unit: '%',
         threshold: 1.0,

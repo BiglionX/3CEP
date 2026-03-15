@@ -64,7 +64,7 @@ export async function GET(request: Request) {
         return NextResponse.json(
           {
             success: false,
-            error: '鏈煡鐨勬搷浣滅被?,
+            error: '鏈煡鐨勬搷浣滅被,
             availableActions: ['stats', 'test', 'purge', 'warmup', 'config'],
           },
           { status: 400 }
@@ -75,8 +75,8 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: '鍐呴儴鏈嶅姟鍣ㄩ敊?,
-        message: error instanceof Error ? error.message : 'Unknown error',
+        error: '鍐呴儴鏈嶅姟鍣ㄩ敊,
+        message: error instanceof Error  error.message : 'Unknown error',
       },
       { status: 500 }
     );
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
     const accelerator = getCDNAccelerator();
     const body = await request.json();
 
-    // 妯℃嫙CDN璇锋眰澶勭悊
+    // 妯℃嫙CDN璇眰澶勭悊
     const cdnRequest = {
       url: body.url || '/',
       method: body.method || 'GET',
@@ -109,12 +109,12 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('CDN璇锋眰澶勭悊閿欒:', error);
+    console.error('CDN璇眰澶勭悊閿欒:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '璇锋眰澶勭悊澶辫触',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        error: '璇眰澶勭悊澶辫触',
+        message: error instanceof Error  error.message : 'Unknown error',
       },
       { status: 500 }
     );
@@ -213,8 +213,8 @@ async function purgeCache(
     return NextResponse.json(
       {
         success: false,
-        error: '缂撳瓨娓呴櫎澶辫触',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        error: '缂撳娓呴櫎澶辫触',
+        message: error instanceof Error  error.message : 'Unknown error',
       },
       { status: 500 }
     );
@@ -251,8 +251,8 @@ async function warmupCache(
     return NextResponse.json(
       {
         success: false,
-        error: '缂撳瓨棰勭儹澶辫触',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        error: '缂撳棰勭儹澶辫触',
+        message: error instanceof Error  error.message : 'Unknown error',
       },
       { status: 500 }
     );
