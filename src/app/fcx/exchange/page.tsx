@@ -222,7 +222,7 @@ const FcxExchangePage = () => {
             quantity: item.quantity,
             fcxPrice: item.fcx_price,
           })),
-          shippingAddress: shippingAddress.nameshippingAddress:undefined,
+          shippingAddress,
         }),
       });
 
@@ -422,7 +422,7 @@ const FcxExchangePage = () => {
               </div>
 
               {/* 配件列表 */}
-              {loading  (
+              {loading ? (
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
                   <p className="mt-4 text-gray-500">加载中...</p>
@@ -436,7 +436,7 @@ const FcxExchangePage = () => {
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start space-x-4">
-                          {part.image_url  (
+                          {part.image_url ? (
                             <img
                               src={part.image_url}
                               alt={part.name}
@@ -512,7 +512,7 @@ const FcxExchangePage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {cart.length === 0  (
+              {cart.length === 0 ? (
                 <div className="text-center py-8">
                   <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500">购物车是空的</p>
