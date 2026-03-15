@@ -434,7 +434,7 @@ export default function DiagnosticsManagement() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredDiagnostics.length === 0  (
+                ) : filteredDiagnostics.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}

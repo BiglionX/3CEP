@@ -205,7 +205,7 @@ export default function PerformanceMonitorPage() {
           <h2 className="text-lg font-medium text-gray-900">优化建议</h2>
         </div>
         <div className="p-6">
-          {performanceData.dbReport.recommendations.length > 0  (
+          {performanceData.dbReport.recommendations\.length > 0  \(
             <ul className="space-y-3">
               {performanceData.dbReport.recommendations.map(
                 (recommendation: string, index: number) => (

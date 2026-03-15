@@ -212,7 +212,7 @@ export default function WorkflowsPage() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={loadWorkflows}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             重新加载
           </button>
@@ -233,7 +233,7 @@ export default function WorkflowsPage() {
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-4 h-4" />
               <span>新建工作流</span>
@@ -275,7 +275,7 @@ export default function WorkflowsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 工作流列表 */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          {filteredWorkflows.length === 0  (
+          {filteredWorkflows.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
                 <div className="w-12 h-12 mx-auto flex items-center justify-center bg-gray-100 rounded-lg">
@@ -437,7 +437,7 @@ export default function WorkflowsPage() {
                   // 这里应该实现创建工作流的逻辑
                   setShowCreateModal(false);
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
               >
                 创建工作流
               </button>

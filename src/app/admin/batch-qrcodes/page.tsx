@@ -390,7 +390,7 @@ export default function BatchQRCodeManagementPage() {
 
         {/* 批次列表 */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {batches.length === 0  (
+          {batches.length === 0 ? (
             <div className="p-12 text-center">
               <div className="text-gray-400 text-6xl mb-4">📱</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -747,7 +747,7 @@ export default function BatchQRCodeManagementPage() {
                     !formData.brandId ||
                     !formData.productName
                   }
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
                   创建批次
                 </button>
@@ -806,7 +806,7 @@ export default function BatchQRCodeManagementPage() {
                   />
                   <label
                     htmlFor="csv-upload"
-                    className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
+                    className="inline-block bg-blue-600 hover:bg-blue-700 transition-colors"
                   >
                     选择文件
                   </label>

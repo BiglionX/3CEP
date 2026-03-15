@@ -483,7 +483,7 @@ export default function ContractsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredContracts.length === 0  (
+                {filteredContracts.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-12">
                       <FileText className="mx-auto h-12 w-12 text-gray-400" />

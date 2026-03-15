@@ -817,7 +817,7 @@ export default function DeviceManager() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredDevices.length === 0  (
+                ) : filteredDevices.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}

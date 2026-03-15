@@ -245,7 +245,7 @@ export default function TutorialsManagementPage() {
           <CardTitle>教程列表 ({filteredTutorials.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          {filteredTutorials.length === 0  (
+          {filteredTutorials.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
                 <svg

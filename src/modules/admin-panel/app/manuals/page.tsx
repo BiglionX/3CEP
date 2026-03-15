@@ -583,7 +583,7 @@ export default function ManualsManagementPage() {
               <button
                 onClick={activeTab === 'create' ? createManual : updateManual}
                 disabled={!formData.productId || !formData.title[currentLanguage] || !formData.content[currentLanguage]}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
               >
                 {activeTab === 'create' ? '创建说明? : '更新说明?}
               </button>

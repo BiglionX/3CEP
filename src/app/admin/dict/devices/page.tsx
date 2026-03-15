@@ -338,7 +338,7 @@ export default function DevicesDictPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredDevices.length === 0  (
+            {filteredDevices.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-gray-500">
                   {searchTerm  '没有找到匹配的设备' : '暂无设备数据'}

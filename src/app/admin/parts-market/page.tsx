@@ -480,7 +480,7 @@ export default function PartsMarketManagement() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredParts.length === 0  (
+                ) : filteredParts.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}

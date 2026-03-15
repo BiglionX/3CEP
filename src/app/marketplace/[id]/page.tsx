@@ -217,7 +217,7 @@ export default function AgentDetailPage() {
           </p>
           <button
             onClick={() => router.back()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             返回上一页
           </button>
@@ -557,7 +557,7 @@ export default function AgentDetailPage() {
                 <div className="space-y-3 pt-4">
                   <button
                     onClick={buyNow}
-                    className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
                   >
                     <ShoppingCart className="w-5 h-5" />
                     <span>立即获取</span>

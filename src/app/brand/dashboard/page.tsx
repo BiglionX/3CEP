@@ -254,7 +254,7 @@ export default function BrandDashboard() {
                 </div>
               </div>
               <div className="divide-y divide-gray-200">
-                {products.length > 0  (
+                {products\.length > 0  \(
                   products.map((product) => (
                     <div key={product.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center justify-between">

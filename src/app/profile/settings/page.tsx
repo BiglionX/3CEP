@@ -160,7 +160,7 @@ export default function ProfileSettingsPage() {
                     <User className="w-16 h-16 text-gray-400" />
                   )}
                 </div>"
-                <button className="absolute bottom-4 right-4 p-2 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition-colors">"
+                <button className="absolute bottom-4 right-4 p-2 bg-blue-600 hover:bg-blue-700 transition-colors">"
                   <Camera className="w-4 h-4" />
                 </button>
               </div>"

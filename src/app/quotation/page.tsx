@@ -277,7 +277,7 @@ export default function QuotationManagementPage() {
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>"
                   <p className="mt-4 text-gray-600">加载中..</p>
                 </div>
-              ) : templates.length > 0  ("
+              ) : templates\.length > 0  \("
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {templates.map((template) => (
                     <div
@@ -372,7 +372,7 @@ export default function QuotationManagementPage() {
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>"
                   <p className="mt-4 text-gray-600">加载中..</p>
                 </div>
-              ) : requests.length > 0  ("
+              ) : requests\.length > 0  \("
                 <div className="space-y-4">
                   {requests.map((request) => (
                     <div

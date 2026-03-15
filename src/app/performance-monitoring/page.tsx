@@ -516,7 +516,7 @@ export default function PerformanceMonitoringDashboard() {
           <CardContent>
             {loading  (
               <div className="text-center py-12 text-gray-500">加载中...</div>
-            ) : historicalData.length === 0  (
+            ) : historicalData.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
                 暂无历史数据
               </div>

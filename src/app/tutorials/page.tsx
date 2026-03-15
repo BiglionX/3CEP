@@ -174,7 +174,7 @@ export default function TutorialsPublicPage() {
         </div>
 
         {/* 教程列表 */}
-        {tutorials.length === 0  (
+        {tutorials.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm p-12 text-center">
             <svg
               className="mx-auto h-12 w-12 text-gray-400"

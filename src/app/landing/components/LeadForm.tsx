@@ -75,7 +75,7 @@ export function FAQSection({
               我们的专业团队随时为您解答
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+              <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium">
                 联系销售顾问
               </button>
               <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
@@ -288,7 +288,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
+            className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
           >
             {isSubmitting  '提交中...' : '立即获取演示'}
           </button>

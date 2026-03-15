@@ -444,7 +444,7 @@ export default function UserCenterNavigationTest() {
                           <div className="mt-3 flex space-x-2">
                             <Link
                               href={test.path}
-                              className="flex-1 text-center py-2 px-3 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
+                              className="flex-1 text-center py-2 px-3 bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center"
                             >
                               <ExternalLink className="w-3 h-3 mr-1" />
                               访问

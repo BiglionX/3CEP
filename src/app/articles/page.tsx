@@ -204,7 +204,7 @@ export default function ArticlesPage() {
         </div>
 
         {/* 文章列表 */}
-        {articles.length === 0  (
+        {articles.length === 0 ? (
           <div
             style={{'
               backgroundColor: 'white',

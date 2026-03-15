@@ -323,7 +323,7 @@ export default function FAQPage() {
                 setSearchTerm('');
                 setSelectedCategory('all');
               }}
-              className="text-blue-600 text:blue-700 font-medium"
+              className="text-blue-600 hover:text-blue-700 font-medium"
             >
               查看所有问题
             </button>

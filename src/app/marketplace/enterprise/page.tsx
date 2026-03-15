@@ -262,7 +262,7 @@ export default function EnterprisePage() {
           <p className="text-gray-600 mb-6">您的企业尚未订阅智能体服务</p>
           <button
             onClick={() => router.push('/marketplace')}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
           >
             浏览订阅套餐
           </button>
@@ -492,7 +492,7 @@ export default function EnterprisePage() {
                       </h3>
                       <button
                         onClick={() => _setShowTeamModal(true)}
-                        className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
                       >
                         <Plus className="w-4 h-4" />
                         <span>新建团队</span>
@@ -563,7 +563,7 @@ export default function EnterprisePage() {
                         </div>
                         <button
                           onClick={() => _setShowMemberModal(true)}
-                          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
                         >
                           <Plus className="w-4 h-4" />
                           <span>添加成员</span>

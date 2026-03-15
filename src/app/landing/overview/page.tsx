@@ -232,7 +232,7 @@ export default function OverviewPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={() => handleCtaClick('free_trial')}
-                  className="px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
                 >
                   立即免费试用
                 </button>

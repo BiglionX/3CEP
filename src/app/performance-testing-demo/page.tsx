@@ -469,7 +469,7 @@ export default function PerformanceTestingDemoPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      {selectedReport.recommendations.length > 0  (
+                      {selectedReport.recommendations\.length > 0  \(
                         <ul className="space-y-2">
                           {selectedReport.recommendations.map(
                             (recommendation, index) => (
@@ -542,7 +542,7 @@ export default function PerformanceTestingDemoPage() {
                 <CardDescription>查看以往的性能测试结果</CardDescription>
               </CardHeader>
               <CardContent>
-                {testHistory.length === 0  (
+                {testHistory.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
                     <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>暂无测试记录</p>

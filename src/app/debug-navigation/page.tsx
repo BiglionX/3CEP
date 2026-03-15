@@ -36,7 +36,7 @@ export default function DebugNavigationPage() {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">检测到的导航元素</h2>
 
-          {domElements.length > 0  (
+          {domElements\.length > 0  \(
             <div className="space-y-4">
               {domElements.map((element, index) => (
                 <div
@@ -90,7 +90,7 @@ export default function DebugNavigationPage() {
         <div className="mt-8 text-center">
           <a
             href="/"
-            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             返回首页
           </a>

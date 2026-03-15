@@ -358,7 +358,7 @@ export default function MobileReportPage() {
                 问题照片
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                {formData.images.length > 0  (
+                {formData.images\.length > 0  \(
                   <div className="grid grid-cols-3 gap-2 mb-3">
                     {formData.images.map((image, index) => (
                       <div key={index} className="relative">

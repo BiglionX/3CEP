@@ -377,7 +377,7 @@ export default function ZustandDemoPage() {
                     <CardDescription>管理购物车中的商品</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {cart.items.length === 0  (
+                    {cart.items.length === 0 ? (
                       <div className="text-center py-8 text-gray-500">
                         购物车为空
                       </div>
@@ -569,7 +569,7 @@ export default function ZustandDemoPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {notifications.notifications.length === 0  (
+                {notifications.notifications.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">暂无通知</div>
                 ) : (
                   <div className="space-y-3">

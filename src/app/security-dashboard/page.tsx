@@ -152,7 +152,7 @@ export default function SecurityMonitoringDashboard() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={loadDashboardData}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             重新加载
           </button>
@@ -219,7 +219,7 @@ export default function SecurityMonitoringDashboard() {
               <button
                 onClick={loadDashboardData}
                 disabled={isLoading}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
                 <RefreshCw
                   className={`w-4 h-4 ${isLoading  'animate-spin' : ''}`}
@@ -434,7 +434,7 @@ export default function SecurityMonitoringDashboard() {
               </div>
 
               <div className="p-6">
-                {recentAlerts.length === 0  (
+                {recentAlerts.length === 0 ? (
                   <div className="text-center py-12">
                     <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
                     <p className="text-gray-500">暂无安全告警</p>
@@ -498,7 +498,7 @@ export default function SecurityMonitoringDashboard() {
               </div>
 
               <div className="p-6">
-                {recommendations.length === 0  (
+                {recommendations.length === 0 ? (
                   <div className="text-center py-8">
                     <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">当前无需特别关注</p>
@@ -529,7 +529,7 @@ export default function SecurityMonitoringDashboard() {
               </div>
 
               <div className="p-6">
-                {threatMetrics.topThreatSources.length === 0  (
+                {threatMetrics.topThreatSources.length === 0 ? (
                   <div className="text-center py-8">
                     <Globe className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">暂无威胁数据</p>

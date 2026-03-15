@@ -539,7 +539,7 @@ export default function ScanLandingPage() {
                         </div>
                       </div>
 
-                      {getCurrentLanguageManuals().length > 0  (
+                      {getCurrentLanguageManuals()\.length > 0  \(
                         <div className="mb-4">
                           <div className="flex flex-wrap gap-2">
                             {getCurrentLanguageManuals().map(manual => (
@@ -797,7 +797,7 @@ export default function ScanLandingPage() {
                         </div>
                       </div>
                       <div className="p-6">
-                        {lifecycleEvents.length === 0  (
+                        {lifecycleEvents.length === 0 ? (
                           <div className="text-center py-12">
                             <div className="text-gray-400 mb-4">
                               <svg

@@ -333,7 +333,7 @@ export default function UserBehaviorTrackingDemoPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {trackedEvents.length === 0  (
+                {trackedEvents.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
                     <MousePointer className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>暂无事件记录</p>

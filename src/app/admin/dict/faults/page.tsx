@@ -371,7 +371,7 @@ export default function FaultsDictPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredFaults.length === 0  (
+            {filteredFaults.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-gray-500">
                   {searchTerm  '没有找到匹配的故 : '暂无故障数据'}

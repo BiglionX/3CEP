@@ -849,7 +849,7 @@ function EnterprisePartsManagement() {
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : parts.length === 0  (
+          ) : parts.length === 0 ? (
             <div className="text-center py-12">
               <Wrench className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -1256,7 +1256,7 @@ function EnterprisePartsManagement() {
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : manuals.length === 0  (
+          ) : manuals.length === 0 ? (
             <div className="text-center py-12">
               <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -1773,7 +1773,7 @@ function EnterprisePartsManagement() {
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : repairTips.length === 0  (
+          ) : repairTips.length === 0 ? (
             <div className="text-center py-12">
               <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -2317,7 +2317,7 @@ function EnterpriseSoftwareUpdatesManagement() {
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
             </div>
-          ) : softwareUpdates.length === 0  (
+          ) : softwareUpdates.length === 0 ? (
             <div className="text-center py-12">
               <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">

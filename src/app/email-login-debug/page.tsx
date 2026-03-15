@@ -254,7 +254,7 @@ export default function EmailLoginJumpDebug() {
             </div>
 
             <div className="bg-black rounded-lg p-4 h-96 overflow-y-auto font-mono text-sm">
-              {debugLogs.length === 0  (
+              {debugLogs.length === 0 ? (
                 <p className="text-gray-500">暂无日志记录...</p>
               ) : (
                 debugLogs.map((log, index) => (

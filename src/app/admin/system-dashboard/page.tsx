@@ -932,7 +932,7 @@ export default function SystemDashboard() {
 
         <Card>
           <CardContent className="p-0">
-            {systemAlerts.length === 0  (
+            {systemAlerts.length === 0 ? (
               <div className="p-8 text-center text-gray-500">暂无告警信息</div>
             ) : (
               <div className="divide-y divide-gray-200">

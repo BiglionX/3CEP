@@ -360,7 +360,7 @@ export default function WorkOrdersPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {filteredOrders.length === 0  (
+              {filteredOrders.length === 0 ? (
                 <div className="text-center py-12">
                   <FileText className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">

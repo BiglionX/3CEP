@@ -147,7 +147,7 @@ export default function CheckoutPage() {
           <p className="text-gray-600 mb-6">请先添加商品到购物车</p>
           <button
             onClick={() => router.push('/marketplace')}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
           >
             返回市场
           </button>
@@ -300,7 +300,7 @@ export default function CheckoutPage() {
                   <button
                     onClick={() => setCurrentStep(2)}
                     disabled={!isFormValid()}
-                    className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                    className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                   >
                     <span>下一步</span>
                     <ArrowRight className="w-5 h-5" />
@@ -389,7 +389,7 @@ export default function CheckoutPage() {
                   </button>
                   <button
                     onClick={() => setCurrentStep(3)}
-                    className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
                   >
                     <span>下一步</span>
                     <ArrowRight className="w-5 h-5" />

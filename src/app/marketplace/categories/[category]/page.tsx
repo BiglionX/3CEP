@@ -458,7 +458,7 @@ export default function CategoryPage() {
                     </div>
                     <div className="flex space-x-2">
                       <button
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors text-sm font-medium"
                         onClick={e => {
                           e.stopPropagation();
                           // 实现获取逻辑

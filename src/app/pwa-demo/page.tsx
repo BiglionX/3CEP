@@ -489,7 +489,7 @@ export default function PWADemoPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    {notifications.length === 0  ("
+                    {notifications.length === 0 ? ("
                       <div className="text-center py-12 text-gray-500">"
                         <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
                         <p>暂无通知</p>

@@ -287,7 +287,7 @@ export default function AdminReviewPage() {
             <h2 className="text-lg font-medium text-gray-900">待审核文/h2>
           </div>
 
-          {reviews.length === 0  (
+          {reviews.length === 0 ? (
             <div className="text-center py-12">
               <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">暂无待审核文/h3>

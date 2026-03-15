@@ -247,7 +247,7 @@ export default function WorkOrderListWithPagination({
                   重新加载
                 </Button>
               </div>
-            ) : workOrders.length === 0  (
+            ) : workOrders.length === 0 ? (
               <div className="text-center py-12">
                 <FileText className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">

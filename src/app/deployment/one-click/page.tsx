@@ -196,7 +196,7 @@ export default function OneClickDeploymentPage() {
                 选择部署模板
               </h2>
 
-              {templates.length === 0  (
+              {templates.length === 0 ? (
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                   <AlertCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -268,7 +268,7 @@ export default function OneClickDeploymentPage() {
                         </div>
 
                         <button
-                          className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                          className="w-full py-2 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
                           onClick={e => {
                             e.stopPropagation();
                             handleSelectTemplate(template);
@@ -455,7 +455,7 @@ export default function OneClickDeploymentPage() {
                     </button>
                     <button
                       type="submit"
-                      className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                      className="flex items-center px-6 py-2 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
                     >
                       <Play className="w-5 h-5 mr-2" />
                       开始部署                    </button>

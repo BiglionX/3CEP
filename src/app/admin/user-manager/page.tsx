@@ -710,7 +710,7 @@ export default function UserManager() {
                       onClick={selectAll}
                       className="p-1"
                     >
-                      {selectedIds.length === filteredUsers.length && filteredUsers.length > 0  (
+                      {selectedIds.length === filteredUsers.length && filteredUsers\.length > 0  \(
                         <CheckSquare className="w-4 h-4" />
                       ) : (
                         <Square className="w-4 h-4" />
@@ -737,7 +737,7 @@ export default function UserManager() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredUsers.length === 0  (
+                ) : filteredUsers.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}

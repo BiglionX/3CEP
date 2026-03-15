@@ -214,7 +214,7 @@ export default function AgentsPage() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={loadAgents}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             重新加载
           </button>
@@ -235,7 +235,7 @@ export default function AgentsPage() {
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-4 h-4" />
               <span>新建智能/span>
@@ -276,7 +276,7 @@ export default function AgentsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 智能体列*/}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          {filteredAgents.length === 0  (
+          {filteredAgents.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
                 <div className="w-12 h-12 mx-auto flex items-center justify-center bg-gray-100 rounded-lg">
@@ -375,7 +375,7 @@ export default function AgentsPage() {
                       
                       <button
                         onClick={() => executeAgent(agent.id)}
-                        className="flex items-center space-x-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                        className="flex items-center space-x-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 transition-colors text-sm"
                         disabled={agent.status !== 'active'}
                       >
                         <Play className="w-4 h-4" />
@@ -439,7 +439,7 @@ export default function AgentsPage() {
                     <button
                       onClick={() => executeAgent(selectedAgent.id, false)}
                       disabled={isExecuting || !playgroundInput.trim()}
-                      className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <Play className="w-4 h-4" />
                       <span>{isExecuting  '执行..' : '执行'}</span>
@@ -540,7 +540,7 @@ export default function AgentsPage() {
                   // 这里应该实现创建智能体的逻辑
                   setShowCreateModal(false);
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
               >
                 创建智能
               </button>

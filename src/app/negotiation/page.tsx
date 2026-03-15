@@ -296,14 +296,14 @@ export default function NegotiationPage() {
                 </h2>
                 <button
                   onClick={startNewNegotiation}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
                 >
                   <Play className="h-4 w-4" />
                   新建会话
                 </button>
               </div>
 
-              {sessions.length === 0  (
+              {sessions.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   暂无议价会话
                 </div>
@@ -441,7 +441,7 @@ export default function NegotiationPage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                       议价历史
                     </h3>
-                    {history.length === 0  (
+                    {history.length === 0 ? (
                       <div className="text-center py-8 text-gray-500">
                         暂无议价记录
                       </div>
@@ -529,7 +529,7 @@ export default function NegotiationPage() {
                             <button
                               onClick={executeRound}
                               disabled={!supplierQuote || isLoading}
-                              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-300"
+                              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors disabled:bg-gray-300"
                             >
                               执行议价
                             </button>

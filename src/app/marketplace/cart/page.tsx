@@ -156,7 +156,7 @@ export default function CartPage() {
           <h1 className="text-3xl font-bold text-gray-900">购物车</h1>
         </div>
 
-        {cartItems.length === 0  (
+        {cartItems.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
             <div className="text-gray-400 mb-4">
               <ShoppingCart className="w-16 h-16 mx-auto" />
@@ -167,7 +167,7 @@ export default function CartPage() {
             <p className="text-gray-600 mb-6">您还没有添加任何智能体到购物车</p>
             <button
               onClick={() => router.push('/marketplace')}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
             >
               浏览市场
             </button>
@@ -337,7 +337,7 @@ export default function CartPage() {
               {/* 结账按钮 */}
               <button
                 onClick={proceedToCheckout}
-                className="w-full py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg flex items-center justify-center space-x-2"
+                className="w-full py-4 bg-blue-600 hover:bg-blue-700 transition-colors font-semibold text-lg flex items-center justify-center space-x-2"
               >
                 <CreditCard className="w-6 h-6" />
                 <span>去结账</span>

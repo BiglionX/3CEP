@@ -67,7 +67,7 @@ export function MarketingLayout({ children }: MarketingLayoutProps) {
 
               <Link
                 href="#cta"
-                className="ml-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="ml-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
               >
                 免费试用
               </Link>
@@ -107,7 +107,7 @@ export function MarketingLayout({ children }: MarketingLayoutProps) {
                 </Link>
                 <Link
                   href="#cta"
-                  className="block px-3 py-2 mt-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-center"
+                  className="block px-3 py-2 mt-2 bg-blue-600 hover:bg-blue-700 text-center"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   免费试用

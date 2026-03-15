@@ -372,7 +372,7 @@ export default function SuppliersPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSuppliers.length === 0  (
+            {filteredSuppliers.length === 0 ? (
               <div className="col-span-full text-center py-12">
                 <Building className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">

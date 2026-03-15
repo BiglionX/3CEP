@@ -97,7 +97,7 @@ export default function CacheFix() {
               操作日志
             </h2>
             <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm h-48 overflow-y-auto">
-              {messages.length === 0  (
+              {messages.length === 0 ? (
                 <p className="text-gray-500">等待开始清..</p>
               ) : (
                 messages.map((msg, index) => (

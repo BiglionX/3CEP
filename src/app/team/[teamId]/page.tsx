@@ -171,7 +171,7 @@ export default function TeamDetailPage() {
           <p className="text-gray-600 mb-6">找不到指定的团队</p>
           <button
             onClick={handleBack}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             返回团队列表
           </button>
@@ -337,7 +337,7 @@ export default function TeamDetailPage() {
                   </h2>
                   <button
                     onClick={handleCreateOrchestration}
-                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                    className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors text-sm"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     新建编排
@@ -399,14 +399,14 @@ export default function TeamDetailPage() {
               </h2>
               <button
                 onClick={handleCreateOrchestration}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 新建编排
               </button>
             </div>
 
-            {orchestrations.length === 0  (
+            {orchestrations.length === 0 ? (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                 <Play className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -415,7 +415,7 @@ export default function TeamDetailPage() {
                 <p className="text-gray-600 mb-6">您还没有创建任何智能体编排</p>
                 <button
                   onClick={handleCreateOrchestration}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium"
                 >
                   创建第一个编排
                 </button>

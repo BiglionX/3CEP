@@ -467,7 +467,7 @@ export default function BehaviorTrackingDashboard() {
             <CardDescription>最近发生的用户行为事件</CardDescription>
           </CardHeader>
           <CardContent>
-            {events.length === 0  (
+            {events.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
                 <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>暂无行为事件数据</p>

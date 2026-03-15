@@ -264,7 +264,7 @@ export default function InboundForecastPage() {
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
               <p className="mt-2 text-gray-500">加载中..</p>
             </div>
-          ) : filteredForecasts.length === 0  (
+          ) : filteredForecasts.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <div className="text-4xl mb-4">📋</div>
               <p className="text-lg mb-2">暂无预报单数/p>

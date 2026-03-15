@@ -330,7 +330,7 @@ export default function TokenPurchasePage() {
               </h2>
             </div>
 
-            {transactions.length === 0  (
+            {transactions.length === 0 ? (
               <div className="text-center py-12">
                 <Coins className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">暂无交易记录</h3>

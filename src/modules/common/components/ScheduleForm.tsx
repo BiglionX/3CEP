@@ -160,7 +160,7 @@ export default function ScheduleForm({
         <button
           onClick={handleSubmit}
           disabled={!selectedSlot || isSubmitting || !!error}
-          className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           data-testid="confirm-appointment"
         >
           {isSubmitting ? (

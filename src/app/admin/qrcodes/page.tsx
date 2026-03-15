@@ -187,7 +187,7 @@ export default function QRCodeManagementPage() {
 
         {/* 二维码列*/}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {qrcodes.length === 0  (
+          {qrcodes.length === 0 ? (
             <div className="p-12 text-center">
               <div className="text-gray-400 text-6xl mb-4">📱</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -464,7 +464,7 @@ export default function QRCodeManagementPage() {
                     !formData.brandId ||
                     !formData.productName
                   }
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
                   生成二维
                 </button>

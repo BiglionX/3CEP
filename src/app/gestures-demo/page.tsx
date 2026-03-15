@@ -189,7 +189,7 @@ export default function GesturesDemoPage() {
                         手势历史 (最近10个)
                       </div>
                       <div className="space-y-2 max-h-40 overflow-y-auto">
-                        {gestureHistory.length === 0  (
+                        {gestureHistory.length === 0 ? (
                           <p className="text-gray-500 text-sm">暂无手势记录</p>
                         ) : (
                           gestureHistory.map((event, index) => (

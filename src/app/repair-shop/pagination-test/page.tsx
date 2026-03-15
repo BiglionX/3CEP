@@ -253,7 +253,7 @@ export default function PaginationTestPage() {
                     重试
                   </Button>
                 </div>
-              ) : workOrders.length === 0  (
+              ) : workOrders.length === 0 ? (
                 <div className="text-center py-8">
                   <Database className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">

@@ -210,7 +210,7 @@ export default function UltimateTest() {
             </div>
 
             <div className="bg-black rounded-lg p-4 h-96 overflow-y-auto font-mono text-sm">
-              {results.length === 0  (
+              {results.length === 0 ? (
                 <p className="text-gray-500">等待测试开始...</p>
               ) : (
                 results.map((result, index) => (

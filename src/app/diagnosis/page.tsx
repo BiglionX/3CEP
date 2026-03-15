@@ -316,7 +316,7 @@ export default function AIDiagnosisChat() {
 
       {/* 消息区域 */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0  (
+        {messages.length === 0 ? (
           <div className="text-center py-12">
             <Bot className="h-16 w-16 mx-auto text-gray-300 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">

@@ -459,7 +459,7 @@ export default function ScanLandingPage() {
                     </div>
                   </div>
                   
-                  {getCurrentLanguageManuals().length > 0  (
+                  {getCurrentLanguageManuals()\.length > 0  \(
                     <div className="mb-4">
                       <div className="flex flex-wrap gap-2">
                         {getCurrentLanguageManuals().map(manual => (
@@ -559,7 +559,7 @@ export default function ScanLandingPage() {
                     <p className="text-gray-600">正在查找附近的维修店...</p>
                   </div>
                 </div>
-              ) : nearbyShops.length > 0  (
+              ) : nearbyShops\.length > 0  \(
                 <div className="space-y-4">
                   {nearbyShops.map((shop) => (
                     <div key={shop.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">

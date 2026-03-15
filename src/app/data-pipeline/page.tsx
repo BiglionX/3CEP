@@ -394,7 +394,7 @@ export default function DataPipelinePage() {
               </Button>
             </div>
 
-            {metrics.length > 0  (
+            {metrics\.length > 0  \(
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>

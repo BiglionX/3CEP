@@ -573,7 +573,7 @@ export default function MobileGesturesDemoPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {gestureLog.length === 0  (
+                {gestureLog.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
                     <MousePointer className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>暂无手势记录</p>
