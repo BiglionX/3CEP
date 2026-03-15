@@ -14,20 +14,13 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
   User,
-  Calendar,
   TrendingUp,
   Award,
   Target,
   Zap,
-  Star,
-  Gift,
-  Clock,
   CheckCircle,
   ArrowRight,
   Play,
-  Heart,
-  Users,
-  Globe,
   Wrench,
   Smartphone,
   BarChart3,
@@ -82,7 +75,8 @@ export function PersonalizedWelcome({
   userId,
   onDismiss,
 }: PersonalizedWelcomeProps) {
-  const { user } = useAuth();
+  const auth = useAuth();
+  const user = auth.user;
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showAchievements, setShowAchievements] = useState(false);
@@ -97,7 +91,7 @@ export function PersonalizedWelcome({
 
       const mockProfile: UserProfile = {
         id: userId,
-        name: user?.name || user?.email?.split('@')[0] || '用户',
+        name: user?.user_metadata?.name || user?.email?.split('@')[0] || '用户',
         email: user?.email || '',
         avatar: user?.user_metadata?.avatar_url,
         joinDate: '2024-01-15',

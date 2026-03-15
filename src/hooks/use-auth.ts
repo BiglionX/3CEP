@@ -8,7 +8,16 @@ interface AuthState {
   error: string | null;
 }
 
-export function useAuth() {
+export function useAuth(): {
+  user: User | null;
+  isLoading: boolean;
+  error: string | null;
+  signIn: (email: string, password: string) => Promise<{ success: boolean; user?: User; error?: string }>;
+  signUp: (email: string, password: string) => Promise<{ success: boolean; user?: User; error?: string }>;
+  signOut: () => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  updateUser: (userData: any) => Promise<{ success: boolean; user?: User; error?: string }>;
+} {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     isLoading: true,
