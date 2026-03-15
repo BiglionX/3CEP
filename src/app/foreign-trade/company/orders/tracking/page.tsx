@@ -1,7 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   Search,
   MapPin,
@@ -12,9 +11,6 @@ import {
   AlertCircle,
   Info,
   Calendar,
-  User,
-  Phone,
-  Mail,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -71,7 +67,6 @@ interface TimelineEvent {
 }
 
 export default function OrderTrackingPage() {
-  const router = useRouter();
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackingInfo, setTrackingInfo] = useState<TrackingInfo | null>(null);
   const [loading, setLoading] = useState(false);
@@ -79,7 +74,7 @@ export default function OrderTrackingPage() {
   const [statusFilter, setStatusFilter] = useState('all');
 
   // 模拟跟踪数据
-  const mockTrackingData: Record<string, TrackingInfo> = {
+  const mockTrackingData: Record<string, any> = {
     TN20260226001: {
       trackingNumber: 'TN20260226001',
       orderId: 'PO-2026-001',
@@ -110,7 +105,7 @@ export default function OrderTrackingPage() {
           timestamp: '2026-02-25 15:30',
           status: '货物揽收',
           location: '首尔, 韩国',
-          description: 'DHL已揽收货?,
+          description: 'DHL已揽收货物',
           isCompleted: true,
         },
         {
@@ -124,7 +119,7 @@ export default function OrderTrackingPage() {
         {
           id: '4',
           timestamp: '2026-02-26 14:30',
-          status: '在?,
+          status: '在途',
           location: '东京转运中心',
           description: '货物正在转运中心处理',
           isCompleted: true,
@@ -134,7 +129,7 @@ export default function OrderTrackingPage() {
           timestamp: '预计 2026-03-15',
           status: '预计送达',
           location: '上海, 中国',
-          description: '预计3�?5日送达目的?,
+          description: '预计3月15日送达目的地',
           isCompleted: false,
         },
       ],
@@ -145,9 +140,9 @@ export default function OrderTrackingPage() {
       status: 'shipped',
       carrier: 'FedEx International',
       origin: '深圳, 中国',
-      destination: '洛杉? 美国',
+      destination: '洛杉矶, 美国',
       estimatedDelivery: '2026-03-25',
-      currentLocation: '已发?,
+      currentLocation: '已发货',
       lastUpdate: '2026-02-26 10:15',
       orderInfo: {
         partner: 'TechGlobal Ltd. (美国)',
@@ -161,7 +156,7 @@ export default function OrderTrackingPage() {
           timestamp: '2026-02-23 11:00',
           status: '订单确认',
           location: '深圳, 中国',
-          description: '出口订单已确?,
+          description: '出口订单已确认',
           isCompleted: true,
         },
         {
@@ -169,13 +164,13 @@ export default function OrderTrackingPage() {
           timestamp: '2026-02-24 14:20',
           status: '货物揽收',
           location: '深圳, 中国',
-          description: 'FedEx已揽收货?,
+          description: 'FedEx已揽收货物',
           isCompleted: true,
         },
         {
           id: '3',
           timestamp: '2026-02-26 10:15',
-          status: '已发?,
+          status: '已发货',
           location: '深圳, 中国',
           description: '货物已从深圳发出',
           isCompleted: true,
@@ -184,8 +179,8 @@ export default function OrderTrackingPage() {
           id: '4',
           timestamp: '预计 2026-03-25',
           status: '预计送达',
-          location: '洛杉? 美国',
-          description: '预计3�?5日送达',
+          location: '洛杉矶, 美国',
+          description: '预计3月25日送达',
           isCompleted: false,
         },
       ],
@@ -198,32 +193,32 @@ export default function OrderTrackingPage() {
       { text: string; color: string; icon: React.ReactNode }
     > = {
       pending: {
-        text: '待处?,
+        text: '待处理',
         color: 'bg-gray-100 text-gray-800',
         icon: <Clock className="h-4 w-4" />,
       },
       confirmed: {
-        text: '已确?,
+        text: '已确认',
         color: 'bg-blue-100 text-blue-800',
         icon: <CheckCircle className="h-4 w-4" />,
       },
       processing: {
-        text: '处理?,
+        text: '处理中',
         color: 'bg-purple-100 text-purple-800',
         icon: <Package className="h-4 w-4" />,
       },
       shipped: {
-        text: '已发?,
+        text: '已发货',
         color: 'bg-indigo-100 text-indigo-800',
         icon: <Truck className="h-4 w-4" />,
       },
       in_transit: {
-        text: '运输?,
+        text: '运输中',
         color: 'bg-blue-100 text-blue-800',
         icon: <Truck className="h-4 w-4" />,
       },
       customs: {
-        text: '清关?,
+        text: '清关中',
         color: 'bg-yellow-100 text-yellow-800',
         icon: <Package className="h-4 w-4" />,
       },
@@ -292,16 +287,16 @@ export default function OrderTrackingPage() {
             <Search className="h-5 w-5" />
             查询跟踪信息
           </CardTitle>
-          <CardDescription>输入运单号或订单号进行查?/CardDescription>
+          <CardDescription>输入运单号或订单号进行查询</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <Input
-                placeholder="请输入跟踪号?(例如: TN20260226001)"
+                placeholder="请输入跟踪号码(例如: TN20260226001)"
                 value={trackingNumber}
                 onChange={e => setTrackingNumber(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 className="text-lg py-6"
               />
             </div>
@@ -314,7 +309,7 @@ export default function OrderTrackingPage() {
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  查询?..
+                  查询中...
                 </>
               ) : (
                 <>
@@ -325,9 +320,9 @@ export default function OrderTrackingPage() {
             </Button>
           </div>
 
-          {/* 示例跟踪?*/}
+          {/* 示例跟踪号码 */}
           <div className="mt-4 text-sm text-gray-600">
-            <p className="mb-2">示例跟踪?</p>
+            <p className="mb-2">示例跟踪号码:</p>
             <div className="flex flex-wrap gap-2">
               {Object.keys(mockTrackingData).map(key => (
                 <Button
@@ -371,7 +366,7 @@ export default function OrderTrackingPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 ? md :grid-cols-2 ? lg :grid-cols-4 gap-6">
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
                         跟踪号码
@@ -382,14 +377,16 @@ export default function OrderTrackingPage() {
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
-                        订单?                      </h3>
+                        订单号
+                      </h3>
                       <p className="text-lg text-gray-900">
                         {trackingInfo.orderId}
                       </p>
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
-                        承运?                      </h3>
+                        承运商
+                      </h3>
                       <p className="text-lg text-gray-900">
                         {trackingInfo.carrier}
                       </p>
@@ -404,11 +401,11 @@ export default function OrderTrackingPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 pt-6 border-t">
+                  <div className="grid grid-cols-1 ? md :grid-cols-3 gap-6 mt-6 pt-6 border-t">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-5 w-5 text-gray-400" />
                       <div>
-                        <p className="text-sm text-gray-500">起运?/p>
+                        <p className="text-sm text-gray-500">起运地</p>
                         <p className="font-medium">{trackingInfo.origin}</p>
                       </div>
                     </div>
@@ -424,7 +421,7 @@ export default function OrderTrackingPage() {
                     <div className="flex items-center gap-2">
                       <MapPin className="h-5 w-5 text-gray-400" />
                       <div>
-                        <p className="text-sm text-gray-500">目的?/p>
+                        <p className="text-sm text-gray-500">目的地</p>
                         <p className="font-medium">
                           {trackingInfo.destination}
                         </p>
@@ -440,7 +437,7 @@ export default function OrderTrackingPage() {
                   <CardTitle>商品详情</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 ? md :grid-cols-3 gap-6">
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
                         合作伙伴
@@ -462,19 +459,21 @@ export default function OrderTrackingPage() {
                         数量/金额
                       </h3>
                       <p className="text-gray-900">
-                        {trackingInfo.orderInfo.quantity} �?/ ¥
-                        {(trackingInfo.orderInfo.amount / 10000).toFixed(1)}�?                      </p>
+                        {trackingInfo.orderInfo.quantity} 台 / ¥
+                        {(trackingInfo.orderInfo.amount / 10000).toFixed(1)}{' '}
+                        万元
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* 时间?*/}
+              {/* 时间线 */}
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle>物流时间?/CardTitle>
+                      <CardTitle>物流时间线</CardTitle>
                       <CardDescription>
                         订单处理和运输的详细记录
                       </CardDescription>
@@ -488,8 +487,8 @@ export default function OrderTrackingPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">全部</SelectItem>
-                        <SelectItem value="completed">已完?/SelectItem>
-                        <SelectItem value="pending">待完?/SelectItem>
+                        <SelectItem value="completed">已完成</SelectItem>
+                        <SelectItem value="pending">待完成</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -577,9 +576,11 @@ export default function OrderTrackingPage() {
                 <div className="text-center">
                   <Search className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-lg font-medium text-gray-900">
-                    未找到跟踪信?                  </h3>
+                    未找到跟踪信息
+                  </h3>
                   <p className="mt-1 text-gray-500">
-                    请检查跟踪号码是否正确，或联系客服获取帮?                  </p>
+                    请检查跟踪号码是否正确，或联系客服获取帮助
+                  </p>
                   <div className="mt-6">
                     <Button onClick={() => setTrackingNumber('')}>
                       重新查询
@@ -602,21 +603,24 @@ export default function OrderTrackingPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 ? md :grid-cols-3 gap-6">
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">🔍 如何查询</h3>
                 <p className="text-sm text-gray-600">
-                  在上方输入框中输入运单号或订单号，点击查询按钮即可获取详细的物流跟踪信息?                </p>
+                  在上方输入框中输入运单号或订单号，点击查询按钮即可获取详细的物流跟踪信息。
+                </p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">📋 跟踪内容</h3>
                 <p className="text-sm text-gray-600">
-                  系统将显示订单状态、当前位置、预计送达时间以及完整的物流时间线?                </p>
+                  系统将显示订单状态、当前位置、预计送达时间以及完整的物流时间线。
+                </p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">📱 实时更新</h3>
                 <p className="text-sm text-gray-600">
-                  物流信息会实时更新，您可以随时查询最新的运输状态和位置信息?                </p>
+                  物流信息会实时更新，您可以随时查询最新的运输状态和位置信息。
+                </p>
               </div>
             </div>
           </CardContent>
@@ -625,4 +629,3 @@ export default function OrderTrackingPage() {
     </div>
   );
 }
-
