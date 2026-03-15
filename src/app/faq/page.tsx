@@ -177,7 +177,7 @@ export default function FAQPage() {
   });
 
   const getCategoryName = (categoryId: string) => {
-    return categories.find(cat => cat.id === categoryId).name || categoryId;
+    return categories.find(cat => cat.id === categoryId)?.name || categoryId;
   };
 
   return (
@@ -216,7 +216,7 @@ export default function FAQPage() {
               onClick={() => setSelectedCategory(category.id)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === category.id
-                   ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 bg-gray-200'
+                   ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
               }`}
             >
               <span className="flex items-center">
@@ -242,7 +242,7 @@ export default function FAQPage() {
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="text-blue-600 text:blue-700"
+              className="text-blue-600 hover:text-blue-700"
             >
               清除搜索
             </button>
@@ -255,11 +255,11 @@ export default function FAQPage() {
         {filteredFAQs.map(faq => (
           <Card
             key={faq.id}
-            className="overflow-hidden shadow:md transition-shadow"
+            className="overflow-hidden shadow-md transition-shadow"
           >
             <button
               onClick={() => toggleItem(faq.id)}
-              className="w-full text-left outline:nonefocus:ring-2 ring:blue-500 rounded-lg"
+              className="w-full text-left outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
             >
               <div className="p-6">
                 <div className="flex items-start justify-between">
@@ -284,7 +284,7 @@ export default function FAQPage() {
                     </h3>
                   </div>
                   <div className="ml-4 flex-shrink-0 pt-1">
-                    {expandedItems.has(faq.id)  (
+                    {expandedItems.has(faq.id) ? (
                       <ChevronUp className="w-5 h-5 text-gray-500" />
                     ) : (
                       <ChevronDown className="w-5 h-5 text-gray-500" />
