@@ -1,7 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   Search,
   MapPin,
@@ -12,9 +11,6 @@ import {
   AlertCircle,
   Info,
   Calendar,
-  User,
-  Phone,
-  Mail,
   Navigation,
   Anchor,
   Plane,
@@ -73,11 +69,10 @@ interface TimelineEvent {
   location: string;
   description: string;
   isCompleted: boolean;
-  coordinates?: { lat: number; lng: number };
+  coordinates: { lat: number; lng: number };
 }
 
 export default function LogisticsTrackingPage() {
-  const router = useRouter();
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackingInfo, setTrackingInfo] = useState<TrackingInfo | null>(null);
   const [loading, setLoading] = useState(false);
@@ -85,7 +80,7 @@ export default function LogisticsTrackingPage() {
   const [statusFilter, setStatusFilter] = useState('all');
 
   // 模拟跟踪数据
-  const mockTrackingData: Record<string, TrackingInfo> = {
+  const mockTrackingData: Record<string, any> = {
     DHL123456789CN: {
       trackingNumber: 'DHL123456789CN',
       shipmentNumber: 'SHP20260226001',
@@ -110,7 +105,7 @@ export default function LogisticsTrackingPage() {
           timestamp: '2026-02-25 08:00',
           status: '订单确认',
           location: '首尔, 韩国',
-          description: '发货订单已确?,
+          description: '发货订单已确认',
           isCompleted: true,
         },
         {
@@ -118,7 +113,7 @@ export default function LogisticsTrackingPage() {
           timestamp: '2026-02-25 08:15',
           status: '货物揽收',
           location: '首尔中央仓库',
-          description: 'DHL已揽收货?,
+          description: 'DHL已揽收货物',
           isCompleted: true,
         },
         {
@@ -140,16 +135,16 @@ export default function LogisticsTrackingPage() {
         {
           id: '5',
           timestamp: '2026-02-26 14:30',
-          status: '清关?,
+          status: '清关中',
           location: '上海海关',
           description: '货物正在海关清关处理',
           isCompleted: true,
         },
         {
           id: '6',
-          timestamp: '预计 2026-02-26 18:00',
+          timestamp: '预计 2026-02-26 ? 18 :00',
           status: '预计送达',
-          location: '上海配送中?,
+          location: '上海配送中心',
           description: '预计今日18:00前送达',
           isCompleted: false,
         },
@@ -163,9 +158,9 @@ export default function LogisticsTrackingPage() {
       carrier: 'FedEx International',
       transportMode: 'sea',
       origin: '深圳, 中国',
-      destination: '洛杉? 美国',
+      destination: '洛杉矶, 美国',
       estimatedDelivery: '2026-03-20 09:00',
-      currentLocation: '太平洋海?,
+      currentLocation: '太平洋海域',
       lastUpdate: '2026-02-26 10:15',
       shipmentInfo: {
         weight: 8500,
@@ -180,22 +175,22 @@ export default function LogisticsTrackingPage() {
           timestamp: '2026-02-24 14:00',
           status: '订单确认',
           location: '深圳, 中国',
-          description: '出口订单已确?,
+          description: '出口订单已确认',
           isCompleted: true,
         },
         {
           id: '2',
           timestamp: '2026-02-24 16:30',
           status: '货物入库',
-          location: '深圳盐田?,
-          description: '货物已入库等待装?,
+          location: '深圳盐田港',
+          description: '货物已入库等待装船',
           isCompleted: true,
         },
         {
           id: '3',
           timestamp: '2026-02-25 09:00',
           status: '装船完成',
-          location: '深圳盐田?,
+          location: '深圳盐田港',
           description: '货物已装载至MSC Europa轮船',
           isCompleted: true,
         },
@@ -203,15 +198,15 @@ export default function LogisticsTrackingPage() {
           id: '4',
           timestamp: '2026-02-25 18:00',
           status: '离港',
-          location: '深圳盐田?,
-          description: '轮船已离港前往洛杉?,
+          location: '深圳盐田港',
+          description: '轮船已离港前往洛杉矶',
           isCompleted: true,
         },
         {
           id: '5',
           timestamp: '2026-02-26 10:15',
-          status: '航行?,
-          location: '太平洋海?,
+          status: '航行中',
+          location: '太平洋海域',
           description: '货物正在海上运输途中',
           isCompleted: true,
         },
@@ -220,7 +215,7 @@ export default function LogisticsTrackingPage() {
           timestamp: '预计 2026-03-20',
           status: '预计抵达',
           location: '洛杉矶港',
-          description: '预计3�?0日抵达洛杉矶?,
+          description: '预计3月20日抵达洛杉矶港',
           isCompleted: false,
         },
       ],
@@ -233,22 +228,22 @@ export default function LogisticsTrackingPage() {
       { text: string; color: string; icon: React.ReactNode }
     > = {
       pending: {
-        text: '待处?,
+        text: '待处理',
         color: 'bg-gray-100 text-gray-800',
         icon: <Clock className="h-4 w-4" />,
       },
       confirmed: {
-        text: '已确?,
+        text: '已确认',
         color: 'bg-blue-100 text-blue-800',
         icon: <CheckCircle className="h-4 w-4" />,
       },
       in_transit: {
-        text: '运输?,
+        text: '运输中',
         color: 'bg-purple-100 text-purple-800',
         icon: <Truck className="h-4 w-4" />,
       },
       customs: {
-        text: '清关?,
+        text: '清关中',
         color: 'bg-yellow-100 text-yellow-800',
         icon: <Package className="h-4 w-4" />,
       },
@@ -283,7 +278,7 @@ export default function LogisticsTrackingPage() {
   };
 
   const getTransportText = (mode: string) => {
-    const textMap: Record<string, string> = {
+    const textMap: Record<string, any> = {
       sea: '海运',
       air: '空运',
       land: '陆运',
@@ -335,16 +330,16 @@ export default function LogisticsTrackingPage() {
             <Search className="h-5 w-5" />
             查询物流信息
           </CardTitle>
-          <CardDescription>输入追踪号码查询货物实时位置和状?/CardDescription>
+          <CardDescription>输入追踪号码查询货物实时位置和状态</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <Input
-                placeholder="请输入追踪号?(例如: DHL123456789CN)"
+                placeholder="请输入追踪号码 (例如: DHL123456789CN)"
                 value={trackingNumber}
                 onChange={e => setTrackingNumber(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 className="text-lg py-6"
               />
             </div>
@@ -357,7 +352,7 @@ export default function LogisticsTrackingPage() {
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  查询?..
+                  查询中...
                 </>
               ) : (
                 <>
@@ -368,9 +363,9 @@ export default function LogisticsTrackingPage() {
             </Button>
           </div>
 
-          {/* 示例追踪?*/}
+          {/* 示例追踪号码 */}
           <div className="mt-4 text-sm text-gray-600">
-            <p className="mb-2">示例追踪?</p>
+            <p className="mb-2">示例追踪号码</p>
             <div className="flex flex-wrap gap-2">
               {Object.keys(mockTrackingData).map(key => (
                 <Button
@@ -417,7 +412,7 @@ export default function LogisticsTrackingPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 ? md :grid-cols-2 ? lg :grid-cols-4 gap-6">
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
                         追踪号码
@@ -436,7 +431,8 @@ export default function LogisticsTrackingPage() {
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
-                        承运?                      </h3>
+                        承运商
+                      </h3>
                       <p className="text-lg text-gray-900">
                         {trackingInfo.carrier}
                       </p>
@@ -451,11 +447,11 @@ export default function LogisticsTrackingPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 pt-6 border-t">
+                  <div className="grid grid-cols-1 ? md :grid-cols-3 gap-6 mt-6 pt-6 border-t">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-5 w-5 text-red-500" />
                       <div>
-                        <p className="text-sm text-gray-500">起运?/p>
+                        <p className="text-sm text-gray-500">起运地</p>
                         <p className="font-medium">{trackingInfo.origin}</p>
                       </div>
                     </div>
@@ -471,7 +467,7 @@ export default function LogisticsTrackingPage() {
                     <div className="flex items-center gap-2">
                       <MapPin className="h-5 w-5 text-green-500" />
                       <div>
-                        <p className="text-sm text-gray-500">目的?/p>
+                        <p className="text-sm text-gray-500">目的地</p>
                         <p className="font-medium">
                           {trackingInfo.destination}
                         </p>
@@ -487,7 +483,7 @@ export default function LogisticsTrackingPage() {
                   <CardTitle>货物详情</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 ? md :grid-cols-4 gap-6">
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
                         重量
@@ -509,7 +505,8 @@ export default function LogisticsTrackingPage() {
                         件数
                       </h3>
                       <p className="text-lg text-gray-900">
-                        {trackingInfo.shipmentInfo.packages} �?                      </p>
+                        {trackingInfo.shipmentInfo.packages} 件
+                      </p>
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-1">
@@ -524,7 +521,7 @@ export default function LogisticsTrackingPage() {
                   {(trackingInfo.shipmentInfo.containerNumber ||
                     trackingInfo.shipmentInfo.vesselName ||
                     trackingInfo.shipmentInfo.flightNumber) && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 pt-6 border-t">
+                    <div className="grid grid-cols-1 ? md :grid-cols-3 gap-6 mt-6 pt-6 border-t">
                       {trackingInfo.shipmentInfo.containerNumber && (
                         <div>
                           <h3 className="text-sm font-medium text-gray-500 mb-1">
@@ -548,7 +545,8 @@ export default function LogisticsTrackingPage() {
                       {trackingInfo.shipmentInfo.flightNumber && (
                         <div>
                           <h3 className="text-sm font-medium text-gray-500 mb-1">
-                            航班?                          </h3>
+                            航班号
+                          </h3>
                           <p className="text-gray-900 font-mono">
                             {trackingInfo.shipmentInfo.flightNumber}
                           </p>
@@ -559,14 +557,15 @@ export default function LogisticsTrackingPage() {
                 </CardContent>
               </Card>
 
-              {/* 物流时间?*/}
+              {/* 物流时间线 */}
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle>物流时间?/CardTitle>
+                      <CardTitle>物流时间线</CardTitle>
                       <CardDescription>
-                        货物运输的详细记录和状态更?                      </CardDescription>
+                        货物运输的详细记录和状态更新
+                      </CardDescription>
                     </div>
                     <Select
                       value={statusFilter}
@@ -577,8 +576,8 @@ export default function LogisticsTrackingPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">全部</SelectItem>
-                        <SelectItem value="completed">已完?/SelectItem>
-                        <SelectItem value="pending">待完?/SelectItem>
+                        <SelectItem value="completed">已完成</SelectItem>
+                        <SelectItem value="pending">待完成</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -666,9 +665,11 @@ export default function LogisticsTrackingPage() {
                 <div className="text-center">
                   <Search className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-lg font-medium text-gray-900">
-                    未找到物流信?                  </h3>
+                    未找到物流信息
+                  </h3>
                   <p className="mt-1 text-gray-500">
-                    请检查追踪号码是否正确，或联系客服获取帮?                  </p>
+                    请检查追踪号码是否正确，或联系客服获取帮助
+                  </p>
                   <div className="mt-6">
                     <Button onClick={() => setTrackingNumber('')}>
                       重新查询
@@ -691,21 +692,24 @@ export default function LogisticsTrackingPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 ? md :grid-cols-3 gap-6">
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">🔍 如何查询</h3>
                 <p className="text-sm text-gray-600">
-                  在上方输入框中输入承运商提供的追踪号码，点击查询按钮即可获取详细的物流跟踪信息?                </p>
+                  在上方输入框中输入承运商提供的追踪号码，点击查询按钮即可获取详细的物流跟踪信息。
+                </p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">📋 跟踪内容</h3>
                 <p className="text-sm text-gray-600">
-                  系统将显示货物当前位置、运输状态、预计送达时间以及完整的物流时间线?                </p>
+                  系统将显示货物当前位置、运输状态、预计送达时间以及完整的物流时间线。
+                </p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">📱 实时更新</h3>
                 <p className="text-sm text-gray-600">
-                  物流信息会根据承运商系统实时更新，建议定期查询最新状态?                </p>
+                  物流信息会根据承运商系统实时更新，建议定期查询最新状态。
+                </p>
               </div>
             </div>
           </CardContent>
@@ -714,4 +718,3 @@ export default function LogisticsTrackingPage() {
     </div>
   );
 }
-
