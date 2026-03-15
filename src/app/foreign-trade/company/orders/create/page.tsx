@@ -1,12 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Save, Plus, X, AlertCircle, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -14,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -21,7 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { AlertCircle, ArrowLeft, Info, Plus, Save, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface OrderItem {
   id: string;
@@ -46,7 +46,8 @@ export default function CreateOrderPage() {
     },
   ]);
 
-  // 表单状?  const [formData, setFormData] = useState({
+  // 表单状态
+  const [formData, setFormData] = useState({
     type: 'import' as 'import' | 'export',
     partner: '',
     contractNumber: '',
@@ -57,7 +58,8 @@ export default function CreateOrderPage() {
     notes: '',
   });
 
-  // 错误状?  const [errors, setErrors] = useState<Record<string, string>>({});
+  // 错误状态
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // 合作伙伴选项
   const partners =
@@ -77,7 +79,8 @@ export default function CreateOrderPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // 清除对应字段的错?    if (errors[field]) {
+    // 清除对应字段的错误
+    if (errors[field]) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors[field];
@@ -137,7 +140,7 @@ export default function CreateOrderPage() {
     }
 
     if (!formData.contractNumber.trim()) {
-      newErrors.contractNumber = '请输入合同编?;
+      newErrors.contractNumber = '请输入合同编号';
     }
 
     if (!formData.expectedDelivery) {
@@ -168,13 +171,14 @@ export default function CreateOrderPage() {
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       // 这里应该调用实际的API
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('创建订单:', {
+      console.debug('创建订单:', {
         ...formData,
         items: orderItems.filter(item => item.productName.trim()),
         totalAmount: calculateTotal(),
       });
 
-      // 成功后跳?      router.push('/foreign-trade/company/orders');
+      // 成功后跳转
+      router.push('/foreign-trade/company/orders');
     } catch (error) {
       console.error('创建订单失败:', error);
       setErrors({ submit: '创建订单失败，请稍后重试' });
@@ -196,7 +200,7 @@ export default function CreateOrderPage() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {formData.type === 'import' ? '创建采购订单' : '创建销售订?}
+            {formData.type === 'import' ? '创建采购订单' : '创建销售订单'}
           </h1>
           <p className="text-gray-600 mt-1">填写订单详细信息并添加商品项</p>
         </div>
@@ -209,7 +213,7 @@ export default function CreateOrderPage() {
           <Card>
             <CardHeader>
               <CardTitle>订单基本信息</CardTitle>
-              <CardDescription>请填写订单的基本信息和条?/CardDescription>
+              <CardDescription>请填写订单的基本信息和条件</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -224,7 +228,7 @@ export default function CreateOrderPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="import">进口采购订单</SelectItem>
-                      <SelectItem value="export">出口销售订?/SelectItem>
+                      <SelectItem value="export">出口销售订单</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -262,7 +266,7 @@ export default function CreateOrderPage() {
                     onChange={e =>
                       handleInputChange('contractNumber', e.target.value)
                     }
-                    placeholder="请输入合同编?
+                    placeholder="请输入合同编号"
                   />
                   {errors.contractNumber && (
                     <p className="text-sm text-red-600 flex items-center gap-1">
@@ -303,10 +307,10 @@ export default function CreateOrderPage() {
                       <SelectValue placeholder="选择付款条款" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="30days">30天账?/SelectItem>
-                      <SelectItem value="60days">60天账?/SelectItem>
-                      <SelectItem value="90days">90天账?/SelectItem>
-                      <SelectItem value="prepaid">预付?/SelectItem>
+                      <SelectItem value="30days">30天账期</SelectItem>
+                      <SelectItem value="60days">60天账期</SelectItem>
+                      <SelectItem value="90days">90天账期</SelectItem>
+                      <SelectItem value="prepaid">预付款</SelectItem>
                       <SelectItem value="cod">货到付款</SelectItem>
                     </SelectContent>
                   </Select>
@@ -327,13 +331,13 @@ export default function CreateOrderPage() {
                       <SelectItem value="sea">海运</SelectItem>
                       <SelectItem value="air">空运</SelectItem>
                       <SelectItem value="rail">铁路运输</SelectItem>
-                      <SelectItem value="express">快?/SelectItem>
+                      <SelectItem value="express">快递</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="priority">优先?/Label>
+                  <Label htmlFor="priority">优先级</Label>
                   <Select
                     value={formData.priority}
                     onValueChange={(value: 'low' | 'medium' | 'high') =>
@@ -358,19 +362,19 @@ export default function CreateOrderPage() {
                   id="notes"
                   value={formData.notes}
                   onChange={e => handleInputChange('notes', e.target.value)}
-                  placeholder="请输入订单的特殊要求或其他说?.."
+                  placeholder="请输入订单的特殊要求或其他说明..."
                   rows={3}
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* 商品?*/}
+          {/* 商品明细 */}
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>商品?/CardTitle>
+                  <CardTitle>商品明细</CardTitle>
                   <CardDescription>添加订单中的商品信息</CardDescription>
                 </div>
                 <Button onClick={addItem} variant="outline" size="sm">
@@ -410,7 +414,7 @@ export default function CreateOrderPage() {
                           onChange={e =>
                             updateItem(item.id, 'productName', e.target.value)
                           }
-                          placeholder="请输入商品名?
+                          placeholder="请输入商品名称"
                         />
                       </div>
 
@@ -481,7 +485,7 @@ export default function CreateOrderPage() {
           </Card>
         </div>
 
-        {/* 侧边?- 订单摘要 */}
+        {/* 侧边栏 - 订单摘要 */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -494,14 +498,15 @@ export default function CreateOrderPage() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">商品种类:</span>
-                  <span className="font-medium">{orderItems.length} �?/span>
+                  <span className="font-medium">{orderItems.length} 种</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span className="text-gray-600">商品总数:</span>
                   <span className="font-medium">
                     {orderItems.reduce((sum, item) => sum + item.quantity, 0)}{' '}
-                    �?                  </span>
+                    件
+                  </span>
                 </div>
 
                 <div className="border-t pt-3">
@@ -516,7 +521,7 @@ export default function CreateOrderPage() {
 
               <div className="pt-4 border-t">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm font-medium">优先?</span>
+                  <span className="text-sm font-medium">优先级</span>
                   <Badge
                     variant={
                       formData.priority === 'high'
@@ -527,20 +532,21 @@ export default function CreateOrderPage() {
                     }
                   >
                     {formData.priority === 'high'
-                      ? '�?
+                      ? '高'
                       : formData.priority === 'medium'
-                        ? '�?
-                        : '�?}
-                    优先?                  </Badge>
+                        ? '中'
+                        : '低'}
+                    优先级
+                  </Badge>
                 </div>
 
                 <div className="text-sm text-gray-600 space-y-1">
                   <p>
-                    �?订单类型:{' '}
-                    {formData.type === 'import' ? '进口采购' : '出口销?}
+                    • 订单类型:{' '}
+                    {formData.type === 'import' ? '进口采购' : '出口销售'}
                   </p>
-                  <p>�?运输方式: {formData.shippingMethod || '未指?}</p>
-                  <p>�?付款条款: {formData.paymentTerms || '未指?}</p>
+                  <p>• 运输方式: {formData.shippingMethod || '未指定'}</p>
+                  <p>• 付款条款: {formData.paymentTerms || '未指定'}</p>
                 </div>
               </div>
             </CardContent>
@@ -560,7 +566,7 @@ export default function CreateOrderPage() {
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    创建?..
+                    创建中...
                   </>
                 ) : (
                   <>
@@ -591,4 +597,3 @@ export default function CreateOrderPage() {
     </div>
   );
 }
-
