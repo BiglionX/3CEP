@@ -56,12 +56,12 @@ interface FcxEquityCenterProps {
 type TabType = 'market' | 'my-equities' | 'history';
 
 const EQUITY_ICONS: Record<string, string> = {
-  'priority-order': '�?,
+  'priority-order': '🚀',
   'discount-coupon': '🎫',
   'free-service': '🔧',
   'vip-support': '👑',
   'express-delivery': '🚚',
-  'extended-warranty': '🛡�?
+  'extended-warranty': '🛡️'
 };
 
 export function FcxEquityCenter({ 

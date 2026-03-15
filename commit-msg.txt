@@ -1,1 +1,1 @@
-fix approvals page.tsx
+fix stripe key

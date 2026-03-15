@@ -125,7 +125,7 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                       : '已拒?}
                 </Badge>
                 <span>{document.language}</span>
-                <span>�?/span>
+                <span>|</span>
                 <span>{document.category}</span>
               </div>
             </div>
@@ -153,11 +153,11 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                 </div>
                 <div className="flex items-center">
                   <Eye className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span>浏览: {document.views} �?/span>
+                  <span>浏览: {document.views} 次</span>
                 </div>
                 <div className="flex items-center">
                   <ThumbsUp className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span>点赞: {document.likes} �?/span>
+                  <span>点赞: {document.likes} 次</span>
                 </div>
               </div>
             </div>
@@ -211,7 +211,8 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                 </Button>
               </div>
               <div className="mt-2 text-center text-sm text-muted-foreground">
-                �?{currentPage} / {totalPages} �?              </div>
+                第 {currentPage} / {totalPages} 页
+              </div>
             </div>
 
             {/* 显示控制 */}
@@ -277,7 +278,8 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                           setCurrentPage(searchResults[newIndex]);
                         }}
                       >
-                        �?                      </Button>
+                        +
+                      </Button>
                       <Button
                         size="sm"
                         variant="outline"
@@ -326,7 +328,8 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
             {/* 页面导航?*/}
             <div className="border-t p-4 flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                �?{totalPages} 页，当前?{currentPage} �?              </div>
+                共 {totalPages} 页，当前第 {currentPage} 页
+              </div>
               <div className="flex items-center space-x-2">
                 <Button
                   variant="outline"

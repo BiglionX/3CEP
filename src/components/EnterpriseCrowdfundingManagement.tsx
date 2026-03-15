@@ -78,7 +78,7 @@ export default function EnterpriseCrowdfundingManagement() {
         {
           id: 'r1',
           title: '早鸟优惠',
-          description: '限量100份，享受8折优?,
+          description: '限量100份，享受8折优惠',
           minimum_amount: 299,
           quantity_limit: 100,
           delivery_estimate: '2024-05-15',
@@ -86,8 +86,8 @@ export default function EnterpriseCrowdfundingManagement() {
         },
         {
           id: 'r2',
-          title: '标准?,
-          description: '包含基础功能和一年免费服?,
+          title: '标准版',
+          description: '包含基础功能和一年免费服务',
           minimum_amount: 399,
           quantity_limit: 500,
           delivery_estimate: '2024-06-01',
@@ -99,7 +99,7 @@ export default function EnterpriseCrowdfundingManagement() {
     {
       id: '2',
       title: '便携式无线充电器Pro',
-      description: '超薄设计，支持多种设备快速充?,
+      description: '超薄设计，支持多种设备快速充电',
       product_model: 'Wireless-Charger-Pro',
       target_amount: 200000,
       current_amount: 180000,
@@ -115,7 +115,7 @@ export default function EnterpriseCrowdfundingManagement() {
         {
           id: 'r3',
           title: '首发特惠',
-          description: '�?00名支持者专享价?,
+          description: '前100名支持者专享价？',
           minimum_amount: 129,
           quantity_limit: 200,
           delivery_estimate: '2024-04-15',
@@ -159,12 +159,12 @@ export default function EnterpriseCrowdfundingManagement() {
 
   const statusOptions = [
     { value: 'draft', label: '草稿', color: 'bg-gray-100 text-gray-800' },
-    { value: 'active', label: '进行?, color: 'bg-green-100 text-green-800' },
+    { value: 'active', label: '进行中', color: 'bg-green-100 text-green-800' },
     { value: 'successful', label: '成功', color: 'bg-blue-100 text-blue-800' },
     { value: 'failed', label: '失败', color: 'bg-red-100 text-red-800' },
     {
       value: 'closed',
-      label: '已关?,
+      label: '已关闭',
       color: 'bg-purple-100 text-purple-800',
     },
   ];
@@ -209,11 +209,12 @@ export default function EnterpriseCrowdfundingManagement() {
   const createProject = () => {
     // 验证必填字段
     if (!formData.title || !formData.description || !formData.target_amount) {
-      alert('请填写所有必填字?);
+      alert('请填写所有必填字段');
       return;
     }
 
-    // 创建新项?    const newProject: CrowdfundingProject = {
+    // 创建新项目
+    const newProject: CrowdfundingProject = {
       id: (projects.length + 1).toString(),
       ...formData,
       target_amount: parseFloat(formData.target_amount),
@@ -232,7 +233,7 @@ export default function EnterpriseCrowdfundingManagement() {
     setProjects([...projects, newProject]);
     setShowCreateModal(false);
     resetForm();
-    alert('众筹项目创建成功?);
+    alert('众筹项目创建成功！');
   };
 
   const viewProjectDetails = (project: CrowdfundingProject) => {
@@ -306,13 +307,13 @@ export default function EnterpriseCrowdfundingManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{projects.length}</div>
-            <p className="text-xs text-muted-foreground">所有众筹项?/p>
+            <p className="text-xs text-muted-foreground">所有众筹项目</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">筹集?/CardTitle>
+            <CardTitle className="text-sm font-medium">筹集金额</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -334,20 +335,20 @@ export default function EnterpriseCrowdfundingManagement() {
                 projects.reduce((sum, p) => sum + p.current_amount, 0)
               )}
             </div>
-            <p className="text-xs text-muted-foreground">总筹集金?/p>
+            <p className="text-xs text-muted-foreground">总筹集金额</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">支持?/CardTitle>
+            <CardTitle className="text-sm font-medium">支持者数</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {projects.reduce((sum, p) => sum + p.supporters_count, 0)}
             </div>
-            <p className="text-xs text-muted-foreground">总支持人?/p>
+            <p className="text-xs text-muted-foreground">总支持人数</p>
           </CardContent>
         </Card>
       </div>
@@ -421,7 +422,8 @@ export default function EnterpriseCrowdfundingManagement() {
                       <div className="text-sm">
                         <div>{formatDate(project.end_date)}</div>
                         <div className="text-gray-500">
-                          剩余 {calculateDaysLeft(project.end_date)} �?                        </div>
+                          剩余 {calculateDaysLeft(project.end_date)} 天
+                        </div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
@@ -500,7 +502,7 @@ export default function EnterpriseCrowdfundingManagement() {
                       onChange={e =>
                         setFormData({ ...formData, title: e.target.value })
                       }
-                      placeholder="请输入项目标?
+                      placeholder="请输入项目标题"
                       required
                     />
                   </div>
@@ -516,7 +518,7 @@ export default function EnterpriseCrowdfundingManagement() {
                           product_model: e.target.value,
                         })
                       }
-                      placeholder="请输入产品型?
+                      placeholder="请输入产品型号"
                       required
                     />
                   </div>
@@ -566,12 +568,12 @@ export default function EnterpriseCrowdfundingManagement() {
                           min_contribution: e.target.value,
                         })
                       }
-                      placeholder="最低支持金?
+                      placeholder="最低支持金额"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="max_contribution">最高支持金?/Label>
+                    <Label htmlFor="max_contribution">最高支持金额</Label>
                     <Input
                       id="max_contribution"
                       type="number"
@@ -646,7 +648,7 @@ export default function EnterpriseCrowdfundingManagement() {
                               />
                             </div>
                             <div>
-                              <Label>最低支持金?/Label>
+                              <Label>最低支持金额</Label>
                               <Input
                                 type="number"
                                 value={reward.minimum_amount}
@@ -689,7 +691,7 @@ export default function EnterpriseCrowdfundingManagement() {
                                     parseInt(e.target.value) || 0
                                   )
                                 }
-                                placeholder="0表示无限?
+                                placeholder="0表示无限量"
                               />
                             </div>
                           </div>
@@ -793,9 +795,11 @@ export default function EnterpriseCrowdfundingManagement() {
                       </div>
                       <div>
                         <Label className="text-sm text-gray-500">
-                          支持者数?                        </Label>
+                          支持者数量
+                        </Label>
                         <p className="font-medium">
-                          {selectedProject.supporters_count} �?                        </p>
+                          {selectedProject.supporters_count} 人
+                        </p>
                       </div>
                       <div>
                         <Label className="text-sm text-gray-500">

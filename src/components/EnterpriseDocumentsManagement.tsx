@@ -386,7 +386,8 @@ export default function EnterpriseDocumentsManagement() {
             </Select>
             <div className="flex items-center justify-end">
               <span className="text-sm text-gray-500">
-                �?{filteredDocuments.length} 个文?              </span>
+                共 {filteredDocuments.length} 个文件
+              </span>
             </div>
           </div>
         </CardContent>
@@ -597,7 +598,7 @@ export default function EnterpriseDocumentsManagement() {
                           version: e.target.value,
                         })
                       }
-                      placeholder="�? 1.0"
+                      placeholder="版本号，例如：1.0"
                     />
                   </div>
 

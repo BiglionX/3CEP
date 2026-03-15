@@ -234,7 +234,8 @@ export function FcxLevelDisplay({
         <div className="text-center">
           {renderLevelBadge(levelInfo.currentLevel, 'lg')}
           <div className="mt-2 text-2xl font-bold text-gray-800">
-            {levelInfo.currentScore}�?          </div>
+            {levelInfo.currentScore}分
+          </div>
           <div className="text-sm text-gray-500 mt-1">综合评分</div>
         </div>
 
@@ -251,8 +252,8 @@ export function FcxLevelDisplay({
             ></div>
           </div>
           <div className="flex justify-between text-xs text-gray-500">
-            <span>{levelInfo.currentScore}�?/span>
-            <span>{levelInfo.nextLevelScore}�?/span>
+            <span>{levelInfo.currentScore}分</span>
+            <span>{levelInfo.nextLevelScore}分</span>
           </div>
         </div>
 
@@ -340,12 +341,12 @@ export function FcxLevelDisplay({
 
         {/* 等级说明 */}
         <div className="text-xs text-gray-500 space-y-1">
-          <div>📊 评分规则?/div>
-          <div>�?评分占比?0%</div>
-          <div>�?完成率占比：25%</div>
-          <div>�?订单数量占比?0%</div>
-          <div>�?服务质量占比?5%</div>
-          <div>�?FCX2余额占比?0%</div>
+          <div>📊 评分规则：</div>
+          <div>维修评分占比：30%</div>
+          <div>工单完成率占比：25%</div>
+          <div>维修订单数量占比：30%</div>
+          <div>客户满意度占比：15%</div>
+          <div>FCX2余额占比：20%</div>
         </div>
       </CardContent>
     </Card>
