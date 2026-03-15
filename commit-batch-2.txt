@@ -1,0 +1,5 @@
+feat(admin): enhance API config and RBAC permission controls
+
+- Optimize ApiConfigManager configuration interface
+- Refactor PermissionControls permission logic
+- Update RoleAwareLayout/Topbar/Sidebar components

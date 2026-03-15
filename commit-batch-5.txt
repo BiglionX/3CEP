@@ -1,0 +1,8 @@
+feat(core): update core application components
+
+- Enhanced repair shop dashboard
+- Update B2B procurement SmartProcurementAgent
+- Improve API interceptor components
+- Refactor enhanced error boundary and security service
+- Update forms, GitHub stats, and layout components
+- Enhance tutorial viewer and welcome components

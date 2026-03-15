@@ -1,0 +1,9 @@
+feat(app): update application pages and utilities
+
+- Refactor diagnosis, enterprise, parts-market pages
+- Update repair-shop, ultimate-diagnosis pages
+- Enhance user center navigation and device/orders pages
+- Update valuation and other app pages
+- Enhance auth controls and unified login
+- Update ML prediction dashboard and search results
+- Refactor common components and notifications

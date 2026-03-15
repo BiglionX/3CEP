@@ -1,0 +1,6 @@
+feat(device): improve device management components
+
+- Enhance DeviceProfileCard functionality
+- Refactor LifecycleTimeline component
+- Update DeviceArchiveTab and EventCard
+- Optimize data center user menu

@@ -1,0 +1,6 @@
+refactor(admin): optimize core layout components
+
+- Improve AdminLayout structure
+- Enhance AdvancedUserSearch functionality  
+- Update AgentsDashboard performance
+- Refactor BreadcrumbNav and DynamicMenu

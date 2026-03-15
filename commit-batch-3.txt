@@ -1,0 +1,5 @@
+feat(admin): improve monitoring and analytics panels
+
+- Enhance BehaviorAnalyticsPanel behavior analysis
+- Refactor MonitoringDashboard monitoring dashboard
+- Improve OperationHistory operation records
