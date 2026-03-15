@@ -47,7 +47,7 @@ interface AgentInfo {
   status: AgentStatus;
 }
 
-export default function AgentsDashboard() {
+export default function AgentsDashboard(): JSX.Element {
   const [agents, setAgents] = useState<AgentInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
