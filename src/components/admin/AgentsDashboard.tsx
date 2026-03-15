@@ -59,7 +59,7 @@ export default function AgentsDashboard(): JSX.Element {
 
   useEffect(() => {
     loadAgents();
-    // �?0秒刷新一?    const interval = setInterval(loadAgents, 30000);
+    // �每30秒刷新一次    const interval = setInterval(loadAgents, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -67,19 +67,19 @@ export default function AgentsDashboard(): JSX.Element {
     try {
       setLoading(true);
 
-      // 并行获取注册信息和状态信?      const [registryResponse, statusResponse] = await Promise.all([
+      // 并行获取注册信息和状态信息      const [registryResponse, statusResponse] = await Promise.all([
         fetch('/api/agents/registry'),
         fetch('/api/agents/status'),
       ]);
 
       if (!registryResponse.ok || !statusResponse.ok) {
-        throw new Error('获取智能体信息失?);
+        throw new Error('获取智能体信息失败);
       }
 
       const registryData = await registryResponse.json();
       const statusData = await statusResponse.json();
 
-      // 合并注册信息和状态信?      const mergedAgents: AgentInfo[] = registryData.data.map(
+      // 合并注册信息和状态信息      const mergedAgents: AgentInfo[] = registryData.data.map(
         (reg: AgentRegistration) => {
           const status = statusData.data.find(
             (s: AgentStatus) => s.name === reg.name
@@ -93,7 +93,7 @@ export default function AgentsDashboard(): JSX.Element {
 
       setAgents(mergedAgents);
     } catch (error) {
-      console.error('加载智能体信息失?', error);
+      console.error('加载智能体信息失败', error);
     } finally {
       setLoading(false);
     }
@@ -130,17 +130,17 @@ export default function AgentsDashboard(): JSX.Element {
   };
 
   const getTypeDisplay = (type: string) => {
-    return type === 'n8n' ? 'n8n工作? : '服务';
+    return type === 'n8n' ? 'n8n工作流 : '服务';
   };
 
   const getSecurityLevelDisplay = (level: string) => {
     switch (level) {
       case 'high':
-        return '高风?;
+        return '高风险;
       case 'medium':
-        return '中风?;
+        return '中风险;
       case 'low':
-        return '低风?;
+        return '低风险;
       default:
         return '未知';
     }
@@ -169,7 +169,7 @@ export default function AgentsDashboard(): JSX.Element {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-        <span className="ml-2">加载?..</span>
+        <span className="ml-2">加载中...</span>
       </div>
     );
   }
@@ -281,7 +281,7 @@ export default function AgentsDashboard(): JSX.Element {
             onChange={e => setFilters({ ...filters, status: e.target.value })}
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">全部状?/option>
+            <option value="">全部状态/option>
             {Array.from(new Set(agents.map(a => a.status.status))).map(
               status => (
                 <option key={status} value={status}>
@@ -302,7 +302,7 @@ export default function AgentsDashboard(): JSX.Element {
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold">智能体列?/h2>
           <p className="text-gray-600 text-sm mt-1">
-            �?{filteredAgents.length} 个智能体
+            �共 {filteredAgents.length} 个智能体
           </p>
         </div>
         <div className="overflow-x-auto">
