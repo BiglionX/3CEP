@@ -1,11 +1,11 @@
-﻿/**
+/**
  * 角色感知的侧边栏菜单组件
  * 根据用户角色动态显示菜单项
  */
 
 'use client';
 
-import { usePermission, UserRole } from '@/hooks/use-permission';
+import { usePermission } from '@/modules/common/permissions/hooks/use-permission';
 import { cn } from '@/lib/utils';
 import {
   BarChart3,
@@ -32,13 +32,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-// 菜单项接?
+// 菜单项接口
 interface MenuItem {
   id: string;
   name: string;
   href: string;
   icon: React.ReactNode;
-  roles: UserRole[];
+  roles: string[];
   children?: MenuItem[];
   badge?: string;
   separator?: boolean;
@@ -50,13 +50,13 @@ export function RoleAwareSidebar() {
     {}
   );
   const pathname = usePathname();
-  const { hasRole, hasAnyRole, userInfo } = usePermission();
+  const { hasAnyPermission, user } = usePermission();
 
   // 菜单配置
   const menuItems: MenuItem[] = [
     {
       id: 'dashboard',
-      name: '仪表?,
+      name: '仪表盘',
       href: '/admin/dashboard',
       icon: <Home className="w-5 h-5" />,
       roles: [
@@ -136,7 +136,7 @@ export function RoleAwareSidebar() {
       children: [
         {
           id: 'shop-pending',
-          name: '待审核店?,
+          name: '待审核店铺',
           href: '/admin/shops/pending',
           icon: <Shield className="w-4 h-4" />,
           roles: ['admin', 'manager', 'shop_manager'],
@@ -144,7 +144,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'shop-list',
-          name: '已审核店?,
+          name: '已审核店铺',
           href: '/admin/shops/list',
           icon: <Store className="w-4 h-4" />,
           roles: ['admin', 'manager', 'shop_manager'],
@@ -174,7 +174,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'refunds',
-          name: '退款处?,
+          name: '退款处理',
           href: '/admin/finance/refunds',
           icon: <Eye className="w-4 h-4" />,
           roles: ['admin', 'manager', 'finance_manager'],
@@ -204,7 +204,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'procurement-suppliers',
-          name: '供应商管?,
+          name: '供应商管理',
           href: '/admin/procurement/suppliers',
           icon: <Package className="w-4 h-4" />,
           roles: ['admin', 'manager', 'procurement_specialist'],
@@ -236,14 +236,14 @@ export function RoleAwareSidebar() {
     },
     {
       id: 'agents',
-      name: '智能体管?,
+      name: '智能体管理',
       icon: <Zap className="w-5 h-5" />,
       href: '',
       roles: ['admin', 'manager', 'agent_operator'],
       children: [
         {
           id: 'agent-execution',
-          name: '执行工作?,
+          name: '执行工作流',
           href: '/admin/agents/execute',
           icon: <Zap className="w-4 h-4" />,
           roles: ['admin', 'manager', 'agent_operator'],
@@ -257,7 +257,7 @@ export function RoleAwareSidebar() {
         },
         {
           id: 'workflows',
-          name: '工作流管?,
+          name: '工作流管理',
           href: '/admin/agents/workflows',
           icon: <Workflow className="w-4 h-4" />,
           roles: ['admin', 'manager'],
@@ -281,7 +281,7 @@ export function RoleAwareSidebar() {
     },
   ];
 
-  // 切换子菜单展开状?
+  // 切换子菜单展开状态
   const toggleExpand = (itemId: string) => {
     setExpandedItems(prev => ({
       ...prev,
@@ -289,15 +289,16 @@ export function RoleAwareSidebar() {
     }));
   };
 
-  // 获取当前用户可访问的菜单?
+  // 获取当前用户可访问的菜单项
   const getAccessibleMenuItems = () => {
     return menuItems.filter(item => {
       if (item.separator) return true;
-      return hasAnyRole(item.roles);
+      // 简化处理：检查用户是否有所需的任何权限
+      return hasAnyPermission(item.roles.map(r => `role:${r}`));
     });
   };
 
-  // 渲染菜单?
+  // 渲染菜单项
   const renderMenuItem = (item: MenuItem, isChild = false) => {
     if (item.separator) {
       return (
@@ -339,7 +340,9 @@ export function RoleAwareSidebar() {
 
           {isExpanded && (
             <div className="ml-4">
-              {item?.map(child => renderMenuItem(child, true))}
+              {item.children?.map((child: MenuItem) =>
+                renderMenuItem(child, true)
+              )}
             </div>
           )}
         </div>
@@ -372,7 +375,7 @@ export function RoleAwareSidebar() {
 
   return (
     <>
-      {/* 移动端遮?*/}
+      {/* 移动端遮罩 */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
@@ -380,7 +383,7 @@ export function RoleAwareSidebar() {
         />
       )}
 
-      {/* 侧边?*/}
+      {/* 侧边栏 */}
       <div
         className={cn(
           'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
@@ -396,9 +399,7 @@ export function RoleAwareSidebar() {
               </div>
               <div className="ml-3">
                 <h1 className="text-lg font-bold text-gray-900">管理系统</h1>
-                {userInfo && (
-                  <p className="text-xs text-gray-500">{userInfo.email}</p>
-                )}
+                {user && <p className="text-xs text-gray-500">{user.email}</p>}
               </div>
             </div>
             <button
@@ -422,15 +423,16 @@ export function RoleAwareSidebar() {
               <div className="flex items-center">
                 <div className="bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
                   <span className="text-sm font-medium text-gray-700">
-                    {userInfo??.charAt(0).toUpperCase() || 'U'}
+                    {user?.email?.charAt(0).toUpperCase() || 'U'}
                   </span>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900">
-                    {userInfo?.email || '未登?}
+                    {user?.email || '未登录'}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {userInfo??.map(role => role).join(', ') || '访客'}
+                    {user?.roles?.map((role: string) => role).join(', ') ||
+                      '访客'}
                   </p>
                 </div>
               </div>
@@ -439,7 +441,7 @@ export function RoleAwareSidebar() {
         </div>
       </div>
 
-      {/* 移动端触发按?*/}
+      {/* 移动端触发按钮 */}
       {!sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}

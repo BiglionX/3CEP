@@ -1,6 +1,7 @@
-﻿/**
+/**
  * 角色感知的管理布局组件
- * 整合侧边栏、顶部栏和主要内容区? */
+ * 整合侧边栏、顶部栏和主要内容区域
+ */
 
 'use client';
 
@@ -18,7 +19,8 @@ export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
   const { isAuthenticated, isLoading } = useUnifiedAuth();
   const router = useRouter();
 
-  // 认证检?  useEffect(() => {
+  // 认证检查
+  useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push('/login?redirect=/admin/dashboard');
     }
@@ -40,7 +42,7 @@ export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">访问受限</h1>
-          <p className="text-gray-600 mb-6">请先登录管理员账?/p>
+          <p className="text-gray-600 mb-6">请先登录管理员账户</p>
           <button
             onClick={() => router.push('/login?redirect=/admin/dashboard')}
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
@@ -54,12 +56,12 @@ export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 角色感知侧边?*/}
+      {/* 角色感知侧边栏 */}
       <RoleAwareSidebar />
 
-      {/* 主内容区?*/}
+      {/* 主内容区域 */}
       <div className="lg:pl-64">
-        {/* 角色感知顶部?*/}
+        {/* 角色感知顶部栏 */}
         <RoleAwareTopbar />
 
         {/* 页面内容 */}

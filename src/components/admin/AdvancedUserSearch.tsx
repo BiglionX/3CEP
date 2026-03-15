@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -102,8 +102,8 @@ export function AdvancedUserSearch({
     setSelectedRole(filters.role || '');
     setSelectedStatus(filters.status || '');
     setDateRange({
-      start: filters?.start || '',
-      end: filters?.end || '',
+      start: filters?.dateRange?.start || '',
+      end: filters?.dateRange?.end || '',
     });
     setLastActive(filters.lastActive || '');
     setRegistrationSource(filters.registrationSource || '');
@@ -140,7 +140,8 @@ export function AdvancedUserSearch({
     onSearch(filters);
   };
 
-  // 重置所有筛选条?  const resetFilters = () => {
+  // 重置所有筛选条件
+  const resetFilters = () => {
     setSearchTerm('');
     setSelectedRole('');
     setSelectedStatus('');
@@ -150,7 +151,8 @@ export function AdvancedUserSearch({
     setFilterName('');
   };
 
-  // 检查是否有活动筛选条?  const hasActiveFilters = () => {
+  // 检查是否有活动筛选条件
+  const hasActiveFilters = () => {
     return (
       searchTerm ||
       selectedRole ||
@@ -168,7 +170,8 @@ export function AdvancedUserSearch({
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center">
             <Search className="w-5 h-5 mr-2" />
-            高级搜索和筛?          </div>
+            高级搜索和筛选{' '}
+          </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
@@ -186,7 +189,7 @@ export function AdvancedUserSearch({
           {/* 基础搜索 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="search-term">搜索关键?/Label>
+              <Label htmlFor="search-term">搜索关键词</Label>
               <Input
                 id="search-term"
                 placeholder="邮箱、用户名、用户ID..."
@@ -203,12 +206,12 @@ export function AdvancedUserSearch({
                   <SelectValue placeholder="选择角色" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">所有角?/SelectItem>
-                  <SelectItem value="admin">超级管理?/SelectItem>
-                  <SelectItem value="content_reviewer">内容审核?/SelectItem>
-                  <SelectItem value="shop_reviewer">店铺审核?/SelectItem>
+                  <SelectItem value="">所有角色</SelectItem>
+                  <SelectItem value="admin">超级管理员</SelectItem>
+                  <SelectItem value="content_reviewer">内容审核员</SelectItem>
+                  <SelectItem value="shop_reviewer">店铺审核员</SelectItem>
                   <SelectItem value="finance">财务人员</SelectItem>
-                  <SelectItem value="viewer">查看?/SelectItem>
+                  <SelectItem value="viewer">查看者</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -217,16 +220,16 @@ export function AdvancedUserSearch({
           {/* 状态和来源 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="status-select">用户状?/Label>
+              <Label htmlFor="status-select">用户状态</Label>
               <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                 <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="选择状? />
+                  <SelectValue placeholder="选择状态" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">所有状?/SelectItem>
+                  <SelectItem value="">所有状态</SelectItem>
                   <SelectItem value="active">正常</SelectItem>
-                  <SelectItem value="banned">已封?/SelectItem>
-                  <SelectItem value="suspended">已暂?/SelectItem>
+                  <SelectItem value="banned">已封禁</SelectItem>
+                  <SelectItem value="suspended">已暂停</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -241,7 +244,7 @@ export function AdvancedUserSearch({
                   <SelectValue placeholder="选择来源" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">所有来?/SelectItem>
+                  <SelectItem value="">所有来源</SelectItem>
                   <SelectItem value="email">邮箱注册</SelectItem>
                   <SelectItem value="google">Google登录</SelectItem>
                   <SelectItem value="github">GitHub登录</SelectItem>
@@ -251,7 +254,7 @@ export function AdvancedUserSearch({
             </div>
           </div>
 
-          {/* 时间范围筛?*/}
+          {/* 时间范围筛选 */}
           <div>
             <Label>注册时间范围</Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
@@ -260,7 +263,7 @@ export function AdvancedUserSearch({
                   <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     type="date"
-                    placeholder="开始日?
+                    placeholder="开始日期"
                     value={dateRange.start}
                     onChange={e =>
                       setDateRange(prev => ({ ...prev, start: e.target.value }))
@@ -286,19 +289,19 @@ export function AdvancedUserSearch({
             </div>
           </div>
 
-          {/* 最后活跃时?*/}
+          {/* 最后活跃时间 */}
           <div>
-            <Label htmlFor="last-active">最后活跃时?/Label>
+            <Label htmlFor="last-active">最后活跃时间</Label>
             <Select value={lastActive} onValueChange={setLastActive}>
               <SelectTrigger className="mt-1">
                 <SelectValue placeholder="选择活跃时间范围" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">任何时?/SelectItem>
+                <SelectItem value="">任何时间</SelectItem>
                 <SelectItem value="24h">过去24小时</SelectItem>
-                <SelectItem value="7d">过去7�?/SelectItem>
-                <SelectItem value="30d">过去30�?/SelectItem>
-                <SelectItem value="90d">过去90�?/SelectItem>
+                <SelectItem value="7d">过去7天</SelectItem>
+                <SelectItem value="30d">过去30天</SelectItem>
+                <SelectItem value="90d">过去90天</SelectItem>
                 <SelectItem value="inactive_30d">30天未活跃</SelectItem>
                 <SelectItem value="inactive_90d">90天未活跃</SelectItem>
               </SelectContent>
@@ -314,7 +317,8 @@ export function AdvancedUserSearch({
 
             <Button variant="outline" onClick={resetFilters}>
               <X className="w-4 h-4 mr-2" />
-              重置筛?            </Button>
+              重置筛选器
+            </Button>
 
             {hasActiveFilters() && (
               <div className="flex-1 flex items-center justify-end">
@@ -331,7 +335,8 @@ export function AdvancedUserSearch({
                     disabled={!filterName.trim()}
                   >
                     <Save className="w-4 h-4 mr-1" />
-                    保存筛?                  </Button>
+                    保存筛选器
+                  </Button>
                 </div>
               </div>
             )}
@@ -365,7 +370,7 @@ export function AdvancedUserSearch({
                         )}
                         {filter.filters.status && (
                           <Badge variant="secondary" className="text-xs">
-                            状? {filter.filters.status}
+                            状态: {filter.filters.status}
                           </Badge>
                         )}
                       </div>
@@ -392,19 +397,21 @@ export function AdvancedUserSearch({
             </div>
           )}
 
-          {/* 当前筛选状态显?*/}
+          {/* 当前筛选状态显示 */}
           {hasActiveFilters() && (
             <div className="pt-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium text-gray-900">
-                  当前筛选条?                </h4>
+                  当前筛选条件
+                </h4>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={resetFilters}
                   className="text-xs"
                 >
-                  清除所?                </Button>
+                  清除所有
+                </Button>
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
                 {searchTerm && (

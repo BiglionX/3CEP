@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +11,6 @@ import {
   Clock,
   Zap,
   Calendar,
-  Filter,
   Download,
   Eye,
   MousePointerClick,
@@ -81,8 +80,10 @@ export function BehaviorAnalyticsPanel({
       const date = new Date(today);
       date.setDate(date.getDate() - i);
 
-      // 模拟访问量波?      const baseVisits = 50;
-      const randomFactor = Math.random() * 30 - 15; // -15�?15的随机波?      const weekendFactor = [0, 6].includes(date.getDay()) ? 0.7 : 1; // 周末访问量较?
+      // 模拟访问量波动
+      const baseVisits = 50;
+      const randomFactor = Math.random() * 30 - 15; // -15到+15的随机波动
+      const weekendFactor = [0, 6].includes(date.getDay()) ? 0.7 : 1; // 周末访问量较低
       data.push({
         date: date.toISOString().split('T')[0],
         visits: Math.max(
@@ -95,7 +96,8 @@ export function BehaviorAnalyticsPanel({
     return data;
   };
 
-  // 生成模拟热力图数?  const generateMockHeatmap = (): number[][] => {
+  // 生成模拟热力图数据
+  const generateMockHeatmap = (): number[][] => {
     const heatmap: number[][] = [];
 
     for (let day = 0; day < 7; day++) {
@@ -166,11 +168,11 @@ export function BehaviorAnalyticsPanel({
             segmentName: '高参与度用户',
             userCount: 15,
             percentage: 18.3,
-            characteristics: ['日均访问>2�?, '功能采用?70%', '粘性高'],
+            characteristics: ['日均访问>2次', '功能采用率>70%', '粘性高'],
           },
           {
             segmentId: 'medium_engagement',
-            segmentName: '中等参与度用?,
+            segmentName: '中等参与度用户',
             userCount: 45,
             percentage: 54.9,
             characteristics: ['定期使用', '核心功能熟悉', '有待提升'],
@@ -180,7 +182,7 @@ export function BehaviorAnalyticsPanel({
             segmentName: '低参与度用户',
             userCount: 22,
             percentage: 26.8,
-            characteristics: ['使用较少', '需要引?, '潜在流失风险'],
+            characteristics: ['使用较少', '需要引导', '潜在流失风险'],
           },
         ],
       };
@@ -229,7 +231,7 @@ export function BehaviorAnalyticsPanel({
     <div className={className}>
       {/* 控制面板 */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">行为分析仪表?/h2>
+        <h2 className="text-2xl font-bold text-gray-900">行为分析仪表板</h2>
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
@@ -239,9 +241,9 @@ export function BehaviorAnalyticsPanel({
               onChange={e => setTimeRange(e.target.value as any)}
               className="border border-gray-300 rounded-md px-3 py-1 text-sm"
             >
-              <option value="7d">最?�?/option>
-              <option value="30d">最?0�?/option>
-              <option value="90d">最?0�?/option>
+              <option value="7d">最近7天</option>
+              <option value="30d">最近30天</option>
+              <option value="90d">最近90天</option>
             </select>
           </div>
 
@@ -263,7 +265,7 @@ export function BehaviorAnalyticsPanel({
             <div className="text-2xl font-bold">
               {analyticsData.visitFrequency.daily.toFixed(1)}
             </div>
-            <p className="text-xs text-muted-foreground">�?�?/p>
+            <p className="text-xs text-muted-foreground">次/天</p>
           </CardContent>
         </Card>
 
@@ -277,7 +279,8 @@ export function BehaviorAnalyticsPanel({
               {analyticsData.featureUsage.topFeatures[0]?.name || 'N/A'}
             </div>
             <p className="text-xs text-muted-foreground">
-              使用 {analyticsData.featureUsage.topFeatures[0]?.usage || 0} �?            </p>
+              使用 {analyticsData.featureUsage.topFeatures[0]?.usage || 0} 次
+            </p>
           </CardContent>
         </Card>
 
@@ -304,7 +307,7 @@ export function BehaviorAnalyticsPanel({
             <div className="text-2xl font-bold">
               {analyticsData.userSegments.length}
             </div>
-            <p className="text-xs text-muted-foreground">个用户群?/p>
+            <p className="text-xs text-muted-foreground">个用户群组</p>
           </CardContent>
         </Card>
       </div>
@@ -371,12 +374,13 @@ export function BehaviorAnalyticsPanel({
           </CardContent>
         </Card>
 
-        {/* 活跃时段热力?*/}
+        {/* 活跃时段热力图 */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center">
               <Clock className="w-5 h-5 mr-2" />
-              活跃时段热力?            </CardTitle>
+              活跃时段热力图
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -393,7 +397,7 @@ export function BehaviorAnalyticsPanel({
                   ))}
                 </div>
 
-                {/* 热力?*/}
+                {/* 热力图 */}
                 <div className="space-y-1">
                   {['周日', '周一', '周二', '周三', '周四', '周五', '周六'].map(
                     (day, dayIndex) => (
@@ -454,7 +458,7 @@ export function BehaviorAnalyticsPanel({
                   {segment.userCount}
                 </div>
                 <div className="text-sm text-gray-600">
-                  <div className="font-medium mb-1">特征?/div>
+                  <div className="font-medium mb-1">特征描述</div>
                   <ul className="space-y-1">
                     {segment.characteristics.map((char, idx) => (
                       <li key={idx} className="flex items-center">

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 
@@ -59,7 +59,8 @@ export default function AgentsDashboard(): JSX.Element {
 
   useEffect(() => {
     loadAgents();
-    // �每30秒刷新一次    const interval = setInterval(loadAgents, 30000);
+    // 每30秒刷新一次
+    const interval = setInterval(loadAgents, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -67,19 +68,21 @@ export default function AgentsDashboard(): JSX.Element {
     try {
       setLoading(true);
 
-      // 并行获取注册信息和状态信息      const [registryResponse, statusResponse] = await Promise.all([
+      // 并行获取注册信息和状态信息
+      const [registryResponse, statusResponse] = await Promise.all([
         fetch('/api/agents/registry'),
         fetch('/api/agents/status'),
       ]);
 
       if (!registryResponse.ok || !statusResponse.ok) {
-        throw new Error('获取智能体信息失败);
+        throw new Error('获取智能体信息失败');
       }
 
       const registryData = await registryResponse.json();
       const statusData = await statusResponse.json();
 
-      // 合并注册信息和状态信息      const mergedAgents: AgentInfo[] = registryData.data.map(
+      // 合并注册信息和状态信息
+      const mergedAgents: AgentInfo[] = registryData.data.map(
         (reg: AgentRegistration) => {
           const status = statusData.data.find(
             (s: AgentStatus) => s.name === reg.name
@@ -130,17 +133,17 @@ export default function AgentsDashboard(): JSX.Element {
   };
 
   const getTypeDisplay = (type: string) => {
-    return type === 'n8n' ? 'n8n工作流 : '服务';
+    return type === 'n8n' ? 'n8n工作流' : '服务';
   };
 
   const getSecurityLevelDisplay = (level: string) => {
     switch (level) {
       case 'high':
-        return '高风险;
+        return '高风险';
       case 'medium':
-        return '中风险;
+        return '中风险';
       case 'low':
-        return '低风险;
+        return '低风险';
       default:
         return '未知';
     }
@@ -179,7 +182,7 @@ export default function AgentsDashboard(): JSX.Element {
       {/* 头部 */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">智能体管?/h1>
+          <h1 className="text-3xl font-bold">智能体管理</h1>
           <p className="text-gray-600 mt-2">监控和管理平台中的所有智能体服务</p>
         </div>
         <button
@@ -206,19 +209,19 @@ export default function AgentsDashboard(): JSX.Element {
       {/* 统计卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500">总计智能?/h3>
+          <h3 className="text-sm font-medium text-gray-500">总计智能体</h3>
           <p className="text-2xl font-bold mt-1">{agents.length}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500">在线智能?/h3>
+          <h3 className="text-sm font-medium text-gray-500">在线智能体</h3>
           <p className="text-2xl font-bold text-green-600 mt-1">
             {agents.filter(a => a.status.status === 'online').length}
           </p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500">平均成功?/h3>
+          <h3 className="text-sm font-medium text-gray-500">平均成功率</h3>
           <p className="text-2xl font-bold mt-1">
             {agents.length > 0
               ? `${Math.round((agents.reduce((sum, a) => sum + a.status.metrics.success_rate, 0) / agents.length) * 100)}%`
@@ -234,9 +237,9 @@ export default function AgentsDashboard(): JSX.Element {
         </div>
       </div>
 
-      {/* 过滤?*/}
+      {/* 过滤器 */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">过滤?/h2>
+        <h2 className="text-lg font-semibold mb-4">过滤器</h2>
         <div className="flex flex-wrap gap-4">
           <input
             type="text"
@@ -281,7 +284,7 @@ export default function AgentsDashboard(): JSX.Element {
             onChange={e => setFilters({ ...filters, status: e.target.value })}
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">全部状态/option>
+            <option value="">全部状态</option>
             {Array.from(new Set(agents.map(a => a.status.status))).map(
               status => (
                 <option key={status} value={status}>
@@ -297,12 +300,12 @@ export default function AgentsDashboard(): JSX.Element {
         </div>
       </div>
 
-      {/* 智能体列?*/}
+      {/* 智能体列表 */}
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold">智能体列?/h2>
+          <h2 className="text-lg font-semibold">智能体列表</h2>
           <p className="text-gray-600 text-sm mt-1">
-            �共 {filteredAgents.length} 个智能体
+            共 {filteredAgents.length} 个智能体
           </p>
         </div>
         <div className="overflow-x-auto">
@@ -319,17 +322,20 @@ export default function AgentsDashboard(): JSX.Element {
                   类型
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  状?                </th>
+                  状态
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   安全等级
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  成功?                </th>
+                  成功率
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   响应时间
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  请求?                </th>
+                  请求量
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   操作
                 </th>

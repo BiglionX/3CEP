@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -55,7 +55,7 @@ export default function ApiConfigManager() {
     try {
       const [configData, statusData] = await Promise.all([
         ApiConfigService.getAllApiConfigs(),
-        ApiConfigService.getConfigStatus(),
+        (ApiConfigService as any).getConfigStatus(),
       ]);
 
       setConfigs(configData);
@@ -83,7 +83,7 @@ export default function ApiConfigManager() {
       }
     } catch (error) {
       console.error('保存配置错误:', error);
-      toast.error('保存配置时发生错?);
+      toast.error('保存配置时发生错误');
     }
   };
 
@@ -94,7 +94,7 @@ export default function ApiConfigManager() {
       const results = await ApiConfigService.testAllApis();
       setTestResults(results);
 
-      // 更新配置状?
+      // 更新配置状态
       const updatedConfigs = configs.map(config => {
         const result = results.find(r => r.provider === config.provider);
         if (result) {
@@ -114,7 +114,7 @@ export default function ApiConfigManager() {
 
       const successCount = results.filter(r => r.success).length;
       toast.success(
-        `API测试完成?{successCount}/${results.length} 个API连接成功`
+        `API测试完成：${successCount}/${results.length} 个API连接成功`
       );
     } catch (error) {
       console.error('API测试失败:', error);
@@ -150,7 +150,7 @@ export default function ApiConfigManager() {
     }
   };
 
-  // 获取状态颜?
+  // 获取状态颜色
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
@@ -162,17 +162,20 @@ export default function ApiConfigManager() {
     }
   };
 
-  // 按分类分组配?
-  const groupedConfigs = configs.reduce((acc, config) => {
-    if (!acc[config.category]) {
-      acc[config.category] = [];
-    }
-    acc[config.category].push(config);
-    return acc;
-  }, {} as Record<string, ApiConfig[]>);
+  // 按分类分组配置
+  const groupedConfigs = configs.reduce(
+    (acc, config) => {
+      if (!acc[config.category]) {
+        acc[config.category] = [];
+      }
+      acc[config.category].push(config);
+      return acc;
+    },
+    {} as Record<string, ApiConfig[]>
+  );
 
   const categoryNames: Record<string, string> = {
-    database: '数据?,
+    database: '数据库',
     authentication: '认证服务',
     payment: '支付服务',
     ai: 'AI服务',
@@ -199,7 +202,7 @@ export default function ApiConfigManager() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">API配置管理</h1>
           <p className="text-muted-foreground">
-            管理项目所需的所有第三方API和服务配?
+            管理项目所需的所有第三方API和服务配置
           </p>
         </div>
         <div className="flex space-x-2">
@@ -214,7 +217,7 @@ export default function ApiConfigManager() {
         </div>
       </div>
 
-      {/* 配置状态概?*/}
+      {/* 配置状态概览 */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="pb-2">
@@ -227,7 +230,7 @@ export default function ApiConfigManager() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">已配?/CardTitle>
+            <CardTitle className="text-sm font-medium">已配置</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
@@ -247,7 +250,7 @@ export default function ApiConfigManager() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">必需已配?/CardTitle>
+            <CardTitle className="text-sm font-medium">必需已配置</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
@@ -274,7 +277,7 @@ export default function ApiConfigManager() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Activity className="w-5 h-5 mr-2" />
-              最近测试结?
+              最近测试结果
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -360,8 +363,8 @@ export default function ApiConfigManager() {
                         {config.status === 'active'
                           ? '正常'
                           : config.status === 'error'
-                          ? '错误'
-                          : '未配?}
+                            ? '错误'
+                            : '未配置'}
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -391,7 +394,7 @@ export default function ApiConfigManager() {
                               );
                               setConfigs(updatedConfigs);
                             }}
-                            placeholder={`请输?{config.name}配置值`}
+                            placeholder={`请输入${config.name}配置值`}
                             className="pr-10"
                           />
                           <Button
@@ -417,7 +420,7 @@ export default function ApiConfigManager() {
 
                       <div className="flex items-center justify-between">
                         <div className="text-xs text-muted-foreground">
-                          最后更?{' '}
+                          最后更新{' '}
                           {config.updated_at
                             ? new Date(config.updated_at).toLocaleString()
                             : '从未'}

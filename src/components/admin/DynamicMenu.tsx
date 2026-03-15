@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   ChevronDown,
-  ChevronRight,
   Home,
   Users,
   FileText,
@@ -40,7 +39,6 @@ interface DynamicMenuProps {
 export function DynamicMenu({
   className,
   collapsed = false,
-  onCollapseChange,
 }: DynamicMenuProps) {
   const [userRole, setUserRole] = useState<UserRole>('viewer');
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
@@ -66,7 +64,7 @@ export function DynamicMenu({
   const menuItems: MenuItem[] = [
     {
       id: 'dashboard',
-      name: '仪表?,
+      name: '仪表板',
       href: '/admin/dashboard',
       icon: <Home className="w-5 h-5" />,
       roles: [
@@ -124,14 +122,14 @@ export function DynamicMenu({
       children: [
         {
           id: 'shop-pending',
-          name: '待审核店?,
+          name: '待审核店铺',
           href: '/admin/shops/pending',
           icon: <Shield className="w-4 h-4" />,
           roles: ['admin', 'shop_reviewer'],
         },
         {
           id: 'shop-list',
-          name: '已审核店?,
+          name: '已审核店铺',
           href: '/admin/shops',
           icon: <Store className="w-4 h-4" />,
           roles: ['admin', 'shop_reviewer'],

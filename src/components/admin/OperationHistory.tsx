@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +11,6 @@ import {
   Clock,
   User,
   Settings,
-  Trash2,
   Ban,
   UserCheck,
   MoreHorizontal,
@@ -51,11 +50,13 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
   const loadOperationHistory = async () => {
     try {
       setLoading(true);
-      // 从localStorage加载操作历史（实际项目中应该从API获取?      const savedOperations = localStorage.getItem('userOperationHistory');
+      // 从localStorage加载操作历史（实际项目中应该从API获取）
+      const savedOperations = localStorage.getItem('userOperationHistory');
       if (savedOperations) {
         setOperations(JSON.parse(savedOperations));
       } else {
-        // 模拟一些历史数?        const mockOperations: OperationRecord[] = [
+        // 模拟一些历史数据
+        const mockOperations: OperationRecord[] = [
           {
             id: '1',
             operation: 'batch_ban',
@@ -63,7 +64,8 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
             affectedUsers: 3,
             reason: '违反社区规定',
             operator: 'admin@example.com',
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2小时?            details: '批量封禁违规用户',
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2小时前
+            details: '批量封禁违规用户',
           },
           {
             id: '2',
@@ -71,7 +73,8 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
             status: 'success',
             affectedUsers: 1,
             operator: 'admin@example.com',
-            timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5小时?            details: '更新用户角色为内容审核员',
+            timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5小时前
+            details: '更新用户角色为内容审核员',
           },
           {
             id: '3',
@@ -95,7 +98,7 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
             timestamp: new Date(
               Date.now() - 2 * 24 * 60 * 60 * 1000
             ).toISOString(), // 2天前
-            details: '批量激活用户失?,
+            details: '批量激活用户失败',
           },
         ];
         setOperations(mockOperations);
@@ -112,7 +115,7 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
   };
 
   // 添加新的操作记录
-  const addOperationRecord = (
+  const _addOperationRecord = (
     record: Omit<OperationRecord, 'id' | 'timestamp'>
   ) => {
     const newRecord: OperationRecord = {
@@ -121,7 +124,8 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
       timestamp: new Date().toISOString(),
     };
 
-    const updatedOperations = [newRecord, ...operations].slice(0, 50); // 限制最?0条记?    setOperations(updatedOperations);
+    const updatedOperations = [newRecord, ...operations].slice(0, 50); // 限制最多50条记录
+    setOperations(updatedOperations);
     localStorage.setItem(
       'userOperationHistory',
       JSON.stringify(updatedOperations)
@@ -133,7 +137,7 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
     const names: Record<string, string> = {
       batch_ban: '批量封禁',
       batch_unban: '批量解封',
-      batch_activate: '批量激?,
+      batch_activate: '批量激活',
       batch_deactivate: '批量停用',
       user_update: '用户更新',
       user_create: '用户创建',
@@ -154,7 +158,8 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
     return icons[operation] || <MoreHorizontal className="w-4 h-4" />;
   };
 
-  // 获取状态样?  const getStatusStyle = (status: OperationRecord['status']) => {
+  // 获取状态样式
+  const getStatusStyle = (status: OperationRecord['status']) => {
     switch (status) {
       case 'success':
         return 'bg-green-100 text-green-800';
@@ -167,7 +172,8 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
     }
   };
 
-  // 获取状态图?  const getStatusIcon = (status: OperationRecord['status']) => {
+  // 获取状态图标
+  const getStatusIcon = (status: OperationRecord['status']) => {
     switch (status) {
       case 'success':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -180,7 +186,8 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
     }
   };
 
-  // 格式化时间显?  const formatTime = (timestamp: string) => {
+  // 格式化时间显示
+  const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
@@ -267,14 +274,14 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
                               ? '成功'
                               : operation.status === 'failed'
                                 ? '失败'
-                                : '处理?}
+                                : '处理中'}
                           </span>
                         </div>
                       </Badge>
                     </div>
 
                     <div className="mt-1 text-sm text-gray-600">
-                      <span>影响 {operation.affectedUsers} 个用?/span>
+                      <span>影响 {operation.affectedUsers} 个用户</span>
                       {operation.reason && (
                         <span className="ml-2">原因: {operation.reason}</span>
                       )}
@@ -288,7 +295,7 @@ export function OperationHistory({ className = '' }: OperationHistoryProps) {
 
                     <div className="mt-2 flex items-center text-xs text-gray-400">
                       <span>{operation.operator}</span>
-                      <span className="mx-2">�?/span>
+                      <span className="mx-2">·</span>
                       <span>{formatTime(operation.timestamp)}</span>
                     </div>
                   </div>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -54,7 +54,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const navigationItems: NavigationItem[] = [
     {
-      name: '仪表?,
+      name: '仪表板',
       href: '/admin/dashboard',
       roles: [
         'admin',
@@ -140,12 +140,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       ),
       children: [
         {
-          name: '待审核店?,
+          name: '待审核店铺',
           href: '/admin/shops/pending',
           roles: ['admin', 'shop_reviewer'],
         },
         {
-          name: '已审核店?,
+          name: '已审核店铺',
           href: '/admin/shops',
           roles: ['admin', 'shop_reviewer'],
         },
@@ -365,7 +365,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                   />
                 </svg>
-                退出登?              </button>
+                退出登?{' '}
+              </button>
             </div>
           </div>
         </header>
