@@ -1,26 +1,7 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import {
-  Package,
-  Search,
-  Filter,
-  Plus,
-  MoreHorizontal,
-  Eye,
-  Edit,
-  Trash2,
-  Download,
-  ChevronDown,
-  Calendar,
-  MapPin,
-  User,
-  DollarSign,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -28,6 +9,39 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Calendar,
+  DollarSign,
+  Download,
+  Edit,
+  Eye,
+  Filter,
+  MapPin,
+  MoreHorizontal,
+  Package,
+  Plus,
+  Search,
+  Trash2,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 // 简化的操作菜单组件
 const ActionMenu = ({
   orderId,
@@ -95,21 +109,6 @@ const ActionMenu = ({
     </div>
   );
 };
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 interface Order {
   id: string;
@@ -245,7 +244,8 @@ export default function OrdersPage() {
     return matchesSearch && matchesStatus && matchesType && matchesPriority;
   });
 
-  // 状态颜色映?  const getStatusColor = (status: string) => {
+  // 状态颜色映射
+  const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       pending: 'bg-yellow-100 text-yellow-800',
       confirmed: 'bg-blue-100 text-blue-800',
@@ -259,12 +259,12 @@ export default function OrdersPage() {
 
   const getStatusText = (status: string) => {
     const textMap: Record<string, string> = {
-      pending: '待确?,
-      confirmed: '已确?,
-      processing: '处理?,
-      shipped: '已发?,
-      delivered: '已交?,
-      cancelled: '已取?,
+      pending: '待确认',
+      confirmed: '已确认',
+      processing: '处理中',
+      shipped: '已发货',
+      delivered: '已交付',
+      cancelled: '已取消',
     };
     return textMap[status] || status;
   };
@@ -280,9 +280,9 @@ export default function OrdersPage() {
 
   const getPriorityText = (priority: string) => {
     const textMap: Record<string, string> = {
-      low: '�?,
-      medium: '�?,
-      high: '�?,
+      low: '低',
+      medium: '中',
+      high: '高',
     };
     return textMap[priority] || priority;
   };
@@ -301,14 +301,15 @@ export default function OrdersPage() {
 
   const handleExport = () => {
     // TODO: 实现导出功能
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出订单数据')};
+    console.debug('导出订单数据');
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载订单数据?..</p>
+          <p className="mt-4 text-gray-600">加载订单数据中...</p>
         </div>
       </div>
     );
@@ -351,7 +352,7 @@ export default function OrdersPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">待处?/CardTitle>
+            <CardTitle className="text-sm font-medium">待处理</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -364,7 +365,7 @@ export default function OrdersPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">进行?/CardTitle>
+            <CardTitle className="text-sm font-medium">进行中</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -390,7 +391,8 @@ export default function OrdersPage() {
               {(
                 orders.reduce((sum, order) => sum + order.amount, 0) / 10000
               ).toFixed(1)}
-              �?            </div>
+              万元
+            </div>
             <p className="text-xs text-muted-foreground">累计交易金额</p>
           </CardContent>
         </Card>
@@ -401,7 +403,8 @@ export default function OrdersPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            筛选条?          </CardTitle>
+            筛选条件
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -419,16 +422,16 @@ export default function OrdersPage() {
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="订单状? />
+                <SelectValue placeholder="订单状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部状?/SelectItem>
-                <SelectItem value="pending">待确?/SelectItem>
-                <SelectItem value="confirmed">已确?/SelectItem>
-                <SelectItem value="processing">处理?/SelectItem>
-                <SelectItem value="shipped">已发?/SelectItem>
-                <SelectItem value="delivered">已交?/SelectItem>
-                <SelectItem value="cancelled">已取?/SelectItem>
+                <SelectItem value="all">全部状态</SelectItem>
+                <SelectItem value="pending">待确认</SelectItem>
+                <SelectItem value="confirmed">已确认</SelectItem>
+                <SelectItem value="processing">处理中</SelectItem>
+                <SelectItem value="shipped">已发货</SelectItem>
+                <SelectItem value="delivered">已交付</SelectItem>
+                <SelectItem value="cancelled">已取消</SelectItem>
               </SelectContent>
             </Select>
 
@@ -445,10 +448,10 @@ export default function OrdersPage() {
 
             <Select value={priorityFilter} onValueChange={setPriorityFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="优先? />
+                <SelectValue placeholder="优先级" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">全部优先?/SelectItem>
+                <SelectItem value="all">全部优先级</SelectItem>
                 <SelectItem value="high">高优先级</SelectItem>
                 <SelectItem value="medium">中优先级</SelectItem>
                 <SelectItem value="low">低优先级</SelectItem>
@@ -463,7 +466,7 @@ export default function OrdersPage() {
         <CardHeader>
           <CardTitle>订单列表</CardTitle>
           <CardDescription>
-            共找?{filteredOrders.length} 个符合条件的订单
+            共找到 {filteredOrders.length} 个符合条件的订单
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -475,7 +478,7 @@ export default function OrdersPage() {
                   <TableHead>合作伙伴</TableHead>
                   <TableHead>产品信息</TableHead>
                   <TableHead>数量/金额</TableHead>
-                  <TableHead>状?/TableHead>
+                  <TableHead>状态</TableHead>
                   <TableHead>创建时间</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
@@ -493,7 +496,7 @@ export default function OrdersPage() {
                         statusFilter !== 'all' ||
                         typeFilter !== 'all' ||
                         priorityFilter !== 'all'
-                          ? '没有找到匹配的订?
+                          ? '没有找到匹配的订单'
                           : '开始创建第一个订单吧'}
                       </p>
                       {!searchTerm &&
@@ -503,7 +506,8 @@ export default function OrdersPage() {
                           <div className="mt-6">
                             <Button onClick={handleCreateOrder}>
                               <Plus className="h-4 w-4 mr-2" />
-                              创建新订?                            </Button>
+                              创建新订单
+                            </Button>
                           </div>
                         )}
                     </TableCell>
@@ -544,9 +548,10 @@ export default function OrdersPage() {
 
                       <TableCell>
                         <div className="flex flex-col">
-                          <div className="font-medium">{order.quantity} �?/div>
+                          <div className="font-medium">{order.quantity} 台</div>
                           <div className="text-sm text-gray-500">
-                            ¥{(order.amount / 10000).toFixed(1)}�?                          </div>
+                            ¥{(order.amount / 10000).toFixed(1)}万元
+                          </div>
                         </div>
                       </TableCell>
 
@@ -559,7 +564,8 @@ export default function OrdersPage() {
                             variant="outline"
                             className={getPriorityColor(order.priority)}
                           >
-                            {getPriorityText(order.priority)}优先?                          </Badge>
+                            {getPriorityText(order.priority)}优先级
+                          </Badge>
                         </div>
                       </TableCell>
 
@@ -573,8 +579,8 @@ export default function OrdersPage() {
                         <ActionMenu
                           orderId={order.id}
                           onView={handleViewOrder}
-                          onEdit={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('编辑订单', order.id)}
-                          onDelete={() => // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除订单', order.id)}
+                          onEdit={() => console.debug('编辑订单', order.id)}
+                          onDelete={() => console.debug('删除订单', order.id)}
                         />
                       </TableCell>
                     </TableRow>
@@ -588,4 +594,3 @@ export default function OrdersPage() {
     </div>
   );
 }
-
