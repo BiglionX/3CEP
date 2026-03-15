@@ -70,7 +70,8 @@ export default function AuditTrailViewer() {
     }
   };
 
-  // 处理筛选条件变?  const handleFilterChange = (key: string, value: string) => {
+  // 处理筛选条件变化
+  const handleFilterChange = (key: string, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   };
@@ -140,7 +141,7 @@ export default function AuditTrailViewer() {
       tutorial: '教程管理',
       article: '文章管理',
       config: '系统配置',
-      valuation: '估值管?,
+      valuation: '估值管理',
       device: '设备管理',
       part: '配件管理',
     };
@@ -152,29 +153,29 @@ export default function AuditTrailViewer() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按?*/}
+      {/* 页面标题和操作按钮 */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">操作审计日志</h1>
           <p className="text-muted-foreground">
-            查看和管理系统中的所有操作记?          </p>
+            查看和管理系统中的所有操作记录          </p>
         </div>
         <Button onClick={exportLogs} variant="outline" disabled={exporting}>
           <Download className="w-4 h-4 mr-2" />
-          {exporting ? '导出?..' : '导出日志'}
+          {exporting ? '导出中...' : '导出日志'}
         </Button>
       </div>
 
-      {/* 筛选卡?*/}
+      {/* 筛选卡片 */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <Filter className="w-5 h-5 mr-2" />
-            筛选条?          </CardTitle>
+            筛选条件          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* 资源类型筛?*/}
+            {/* 资源类型筛选 */}
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center">
                 <Database className="w-4 h-4 mr-1" />
@@ -194,14 +195,14 @@ export default function AuditTrailViewer() {
                   <SelectItem value="tutorial">教程管理</SelectItem>
                   <SelectItem value="article">文章管理</SelectItem>
                   <SelectItem value="config">系统配置</SelectItem>
-                  <SelectItem value="valuation">估值管?/SelectItem>
+                  <SelectItem value="valuation">估值管理</SelectItem>
                   <SelectItem value="device">设备管理</SelectItem>
                   <SelectItem value="part">配件管理</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {/* 操作类型筛?*/}
+            {/* 操作类型筛选 */}
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center">
                 <Activity className="w-4 h-4 mr-1" />
@@ -227,11 +228,11 @@ export default function AuditTrailViewer() {
               </Select>
             </div>
 
-            {/* 开始日?*/}
+            {/* 开始日期 */}
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center">
                 <Calendar className="w-4 h-4 mr-1" />
-                开始日?              </label>
+                开始日期              </label>
               <Input
                 type="date"
                 value={filters.date_from}
@@ -279,7 +280,7 @@ export default function AuditTrailViewer() {
                     <TableCell colSpan={6} className="text-center py-8">
                       <div className="flex items-center justify-center">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mr-2"></div>
-                        加载?..
+                        加载中...
                       </div>
                     </TableCell>
                   </TableRow>
@@ -335,7 +336,7 @@ export default function AuditTrailViewer() {
           {/* 分页控制 */}
           <div className="flex items-center justify-between mt-6">
             <div className="text-sm text-muted-foreground">
-              �?{totalLogs} 条记?            </div>
+              共 {totalLogs} 条记录            </div>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
@@ -343,14 +344,14 @@ export default function AuditTrailViewer() {
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1 || loading}
               >
-                上一?              </Button>
+                上一页              </Button>
 
               <div className="flex items-center space-x-1">
-                <span className="text-sm text-muted-foreground">�?/span>
+                <span className="text-sm text-muted-foreground">第</span>
                 <span className="text-sm font-medium">{currentPage}</span>
-                <span className="text-sm text-muted-foreground">页，�?/span>
+                <span className="text-sm text-muted-foreground">页，共</span>
                 <span className="text-sm font-medium">{totalPages}</span>
-                <span className="text-sm text-muted-foreground">�?/span>
+                <span className="text-sm text-muted-foreground">页</span>
               </div>
 
               <Button
@@ -359,7 +360,7 @@ export default function AuditTrailViewer() {
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages || loading}
               >
-                下一?              </Button>
+                下一页              </Button>
             </div>
           </div>
         </CardContent>
