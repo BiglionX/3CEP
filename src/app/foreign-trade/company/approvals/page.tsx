@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,17 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
 import {
-  CheckCircle,
-  XCircle,
-  Clock,
   AlertCircle,
   ArrowLeft,
-  Search,
+  CheckCircle,
   Filter,
+  Search,
+  XCircle,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface ApprovalItem {
   id: string;
@@ -32,7 +31,7 @@ interface ApprovalItem {
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'approved' | 'rejected' | 'in_review';
   submittedAt: string;
-  deadline?: string;
+  deadline: string;
   amount?: number;
 }
 
@@ -51,9 +50,9 @@ export default function ApprovalsPage() {
       type: 'order',
       title: '大额采购订单审批',
       description:
-        '向Samsung Electronics采购Galaxy S24 Ultra手机500台，总金?50万元',
-      requester: '采购?张经?,
-      department: '采购?,
+        '向Samsung Electronics采购Galaxy S24 Ultra手机500台，总金额350万元',
+      requester: '采购部-张经理',
+      department: '采购部',
       priority: 'high',
       status: 'pending',
       submittedAt: '2026-02-25T10:30:00',
@@ -63,26 +62,28 @@ export default function ApprovalsPage() {
     {
       id: 'AP-2026-002',
       type: 'contract',
-      title: '出口销售合同审?,
+      title: '出口销售合同审批',
       description:
-        '与TechGlobal Ltd.签署华为Mate 60 Pro出口合同?000台，总金?50万元',
+        '与TechGlobal Ltd.签署华为Mate 60 Pro出口合同，1000台，总金额850万元',
       requester: '销售部-李总监',
       department: '销售部',
       priority: 'high',
       status: 'in_review',
       submittedAt: '2026-02-24T14:15:00',
+      deadline: '2026-02-26T17:00:00',
       amount: 8500000,
     },
     {
       id: 'AP-2026-003',
       type: 'payment',
-      title: '预付款申请审?,
-      description: '向Sony Corporation支付PlayStation 5预付?0万元',
-      requester: '财务?王会?,
-      department: '财务?,
+      title: '预付款申请审批',
+      description: '向Sony Corporation支付PlayStation 5预付款30万元',
+      requester: '财务部-王会计',
+      department: '财务部',
       priority: 'medium',
       status: 'approved',
       submittedAt: '2026-02-23T09:45:00',
+      deadline: '2026-02-25T17:00:00',
       amount: 300000,
     },
     {
@@ -90,22 +91,24 @@ export default function ApprovalsPage() {
       type: 'document',
       title: '报关单据审核',
       description: 'iPhone 15 Pro Max出口报关单据审核',
-      requester: '物流?陈主?,
-      department: '物流?,
+      requester: '物流部-陈主管',
+      department: '物流部',
       priority: 'medium',
       status: 'pending',
       submittedAt: '2026-02-25T16:20:00',
+      deadline: '2026-02-27T17:00:00',
     },
     {
       id: 'AP-2026-005',
       type: 'order',
-      title: '紧急采购审?,
+      title: '紧急采购审批',
       description: '紧急采购充电器配件10000个，用于售后维修',
-      requester: '售后?刘经?,
-      department: '售后?,
+      requester: '售后部-刘经理',
+      department: '售后部',
       priority: 'high',
       status: 'rejected',
       submittedAt: '2026-02-22T11:30:00',
+      deadline: '2026-02-24T17:00:00',
       amount: 150000,
     },
   ];
@@ -145,13 +148,13 @@ export default function ApprovalsPage() {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'pending':
-        return '待审?;
+        return '待审批';
       case 'approved':
-        return '已批?;
+        return '已批准';
       case 'rejected':
-        return '已拒?;
+        return '已拒绝';
       case 'in_review':
-        return '审批?;
+        return '审批中';
       default:
         return status;
     }
@@ -186,16 +189,16 @@ export default function ApprovalsPage() {
     return matchesSearch && matchesStatus && matchesPriority;
   });
 
-  const handleApprove = (approvalId: string) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('批准申请:', approvalId)// TODO: 实现批准逻辑
+  const handleApprove = (_approvalId: string) => {
+    // TODO: 实现批准逻辑
   };
 
-  const handleReject = (approvalId: string) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('拒绝申请:', approvalId)// TODO: 实现拒绝逻辑
+  const handleReject = (_approvalId: string) => {
+    // TODO: 实现拒绝逻辑
   };
 
-  const handleViewDetails = (approvalId: string) => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('查看详情:', approvalId)// TODO: 实现查看详情逻辑
+  const handleViewDetails = (_approvalId: string) => {
+    // TODO: 实现查看详情逻辑
   };
 
   return (
@@ -222,20 +225,22 @@ export default function ApprovalsPage() {
               </div>
               <div className="flex items-center space-x-3">
                 <Badge variant="secondary">
-                  待处? {approvals.filter(a => a.status === 'pending').length}
-                  �?                </Badge>
+                  待处理 {approvals.filter(a => a.status === 'pending').length}
+                  项
+                </Badge>
               </div>
             </div>
           </div>
         </header>
 
         <div className="px-4 sm:px-6 lg:px-8 py-8">
-          {/* 筛选区?*/}
+          {/* 筛选区域 */}
           <Card className="mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Filter className="h-5 w-5" />
-                筛选条?              </CardTitle>
+                筛选条件
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -243,7 +248,7 @@ export default function ApprovalsPage() {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <input
                     type="text"
-                    placeholder="搜索审批编号、标题或申请?.."
+                    placeholder="搜索审批编号、标题或申请人..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -255,11 +260,11 @@ export default function ApprovalsPage() {
                   onChange={e => setStatusFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="all">全部状?/option>
-                  <option value="pending">待审?/option>
-                  <option value="in_review">审批?/option>
-                  <option value="approved">已批?/option>
-                  <option value="rejected">已拒?/option>
+                  <option value="all">全部状态</option>
+                  <option value="pending">待审批</option>
+                  <option value="in_review">审批中</option>
+                  <option value="approved">已批准</option>
+                  <option value="rejected">已拒绝</option>
                 </select>
 
                 <select
@@ -267,7 +272,7 @@ export default function ApprovalsPage() {
                   onChange={e => setPriorityFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="all">全部优先?/option>
+                  <option value="all">全部优先级</option>
                   <option value="high">高优先级</option>
                   <option value="medium">中优先级</option>
                   <option value="low">低优先级</option>
@@ -281,7 +286,8 @@ export default function ApprovalsPage() {
                     setPriorityFilter('all');
                   }}
                 >
-                  重置筛?                </Button>
+                  重置筛选
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -293,7 +299,7 @@ export default function ApprovalsPage() {
                 <div className="text-3xl font-bold text-yellow-600">
                   {approvals.filter(a => a.status === 'pending').length}
                 </div>
-                <div className="text-sm text-gray-600">待审?/div>
+                <div className="text-sm text-gray-600">待审批</div>
               </CardContent>
             </Card>
 
@@ -302,7 +308,7 @@ export default function ApprovalsPage() {
                 <div className="text-3xl font-bold text-blue-600">
                   {approvals.filter(a => a.status === 'in_review').length}
                 </div>
-                <div className="text-sm text-gray-600">审批?/div>
+                <div className="text-sm text-gray-600">审批中</div>
               </CardContent>
             </Card>
 
@@ -311,7 +317,7 @@ export default function ApprovalsPage() {
                 <div className="text-3xl font-bold text-green-600">
                   {approvals.filter(a => a.status === 'approved').length}
                 </div>
-                <div className="text-sm text-gray-600">已批?/div>
+                <div className="text-sm text-gray-600">已批准</div>
               </CardContent>
             </Card>
 
@@ -320,7 +326,7 @@ export default function ApprovalsPage() {
                 <div className="text-3xl font-bold text-red-600">
                   {approvals.filter(a => a.status === 'rejected').length}
                 </div>
-                <div className="text-sm text-gray-600">已拒?/div>
+                <div className="text-sm text-gray-600">已拒绝</div>
               </CardContent>
             </Card>
           </div>
@@ -330,7 +336,7 @@ export default function ApprovalsPage() {
             <CardHeader>
               <CardTitle>审批事项列表</CardTitle>
               <CardDescription>
-                共找?{filteredApprovals.length} 个符合条件的审批事项
+                共找到 {filteredApprovals.length} 个符合条件的审批事项
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -345,7 +351,7 @@ export default function ApprovalsPage() {
                       {searchTerm ||
                       statusFilter !== 'all' ||
                       priorityFilter !== 'all'
-                        ? '没有找到匹配的审批事?
+                        ? '没有找到匹配的审批事项'
                         : '当前没有需要处理的审批'}
                     </p>
                   </div>
@@ -386,7 +392,7 @@ export default function ApprovalsPage() {
                           </p>
 
                           <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                            <span>申请? {approval.requester}</span>
+                            <span>申请人: {approval.requester}</span>
                             <span>部门: {approval.department}</span>
                             <span>
                               提交时间:{' '}
@@ -452,4 +458,3 @@ export default function ApprovalsPage() {
     </div>
   );
 }
-
