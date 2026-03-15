@@ -135,13 +135,13 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                         <p className="font-mono break-words">
                           {this.state.error.message}
                         </p>
-                        {this.state?.componentStack && (
+                        {this.state.errorInfo?.componentStack && (
                           <details className="mt-2">
                             <summary className="cursor-pointer text-blue-600 hover:text-blue-800">
                               组件堆栈信息
                             </summary>
                             <pre className="mt-2 p-3 bg-white rounded text-xs overflow-auto max-h-32">
-                              {this.state.errorInfo.componentStack}
+                              {this.state.errorInfo?.componentStack}
                             </pre>
                           </details>
                         )}
