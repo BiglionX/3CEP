@@ -307,8 +307,8 @@ const FcxExchangePage = () => {
   const filteredParts = parts.filter(part => {
     const matchesSearch =
       part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part.model.toLowerCase().includes(searchTerm.toLowerCase());
+      (part.brand || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (part.model || '').toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory =
       categoryFilter === 'all' || part.category === categoryFilter;

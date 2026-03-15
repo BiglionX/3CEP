@@ -190,7 +190,7 @@ export default function TradingPage() {
   };
 
   const handleViewOrder = (orderId: string) => {
-    router.push(`/exporter/trading/{orderId}`);
+    router.push(`/exporter/trading/${orderId}`);
   };
 
   return (

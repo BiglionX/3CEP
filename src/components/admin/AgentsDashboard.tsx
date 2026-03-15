@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
-// 智能体注册信息接?interface AgentRegistration {
+// 智能体注册信息接口
+interface AgentRegistration {
   id: string;
   name: string;
   domain: string;
@@ -22,7 +23,8 @@ import { useState, useEffect } from 'react';
   updated_at: string;
 }
 
-// 智能体状态接?interface AgentStatus {
+// 智能体状态接口
+interface AgentStatus {
   name: string;
   status: 'online' | 'offline' | 'degraded';
   last_heartbeat: string;
@@ -39,7 +41,8 @@ import { useState, useEffect } from 'react';
   };
 }
 
-// 综合智能体信?interface AgentInfo {
+// 综合智能体信息接口
+interface AgentInfo {
   registration: AgentRegistration;
   status: AgentStatus;
 }
