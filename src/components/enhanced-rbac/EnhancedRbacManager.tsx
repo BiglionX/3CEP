@@ -304,9 +304,9 @@ export function EnhancedRbacProvider({
   const [currentUser, setCurrentUser] = useState<UserPermissionContext | null>(
     initialUser
   );
-  const [permissions, setPermissions] =
+  const [permissions, _setPermissions] =
     useState<Record<string, Permission>>(DEFAULT_PERMISSIONS);
-  const [roles, setRoles] = useState<Record<string, Role>>(DEFAULT_ROLES);
+  const [roles, _setRoles] = useState<Record<string, Role>>(DEFAULT_ROLES);
   const [dynamicAssignments, setDynamicAssignments] = useState<
     DynamicPermissionAssignment[]
   >([]);
@@ -314,7 +314,7 @@ export function EnhancedRbacProvider({
     []
   );
   const [auditLogs, setAuditLogs] = useState<PermissionAuditLog[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, _setIsLoading] = useState(false);
 
   // 初始化用户权限上下文
   useEffect(() => {
@@ -425,23 +425,23 @@ export function EnhancedRbacProvider({
   );
 
   const assignRole = useCallback(
-    async (userId: string, roleId: string): Promise<void> => {
+    async (_userId: string, _roleId: string): Promise<void> => {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 200));
 
       // 这里应该调用实际的API
-      // TODO: 移除调试日志 - console.log(`为用户 ${userId} 分配角色 ${roleId}`)
+      // TODO: 移除调试日志 - console.log(`为用户 ${_userId} 分配角色 ${_roleId}`)
     },
     []
   );
 
   const revokeRole = useCallback(
-    async (userId: string, roleId: string): Promise<void> => {
+    async (_userId: string, _roleId: string): Promise<void> => {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 200));
 
       // 这里应该调用实际的API
-      // TODO: 移除调试日志 - console.log(`为用户 ${userId} 撤销角色 ${roleId}`)
+      // TODO: 移除调试日志 - console.log(`为用户 ${_userId} 撤销角色 ${_roleId}`)
     },
     []
   );
@@ -721,7 +721,6 @@ export function PermissionGuard({
   children,
 }: PermissionGuardProps) {
   const {
-    hasPermission,
     hasAnyPermission,
     hasAllPermissions,
     canAccessResource,
