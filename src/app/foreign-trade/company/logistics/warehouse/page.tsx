@@ -546,7 +546,7 @@ export default function WarehousePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredWarehouses.length === 0  (
+              {filteredWarehouses.length === 0 ? (
                 <div className="col-span-full text-center py-12">
                   <Warehouse className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">
@@ -696,7 +696,7 @@ export default function WarehousePage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredInventory.length === 0  (
+                  {filteredInventory.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-12">
                         <Box className="mx-auto h-12 w-12 text-gray-400" />
@@ -772,7 +772,7 @@ export default function WarehousePage() {
                                   item.quantity < item.minStock ? 'bg-red-500' : item.quantity > item.maxStock ? 'bg-blue-500' : 'bg-green-500'
                                 }`}
                                 style={{
-                                  width: `, {Math.min(100, (item.quantity / item.maxStock) * 100)}%`,
+                                  width: `${Math.min(100, (item.quantity / item.maxStock) * 100)}%`,
                                 }}
                               ></div>
                             </div>

@@ -42,7 +42,7 @@ interface SalesOrder {
   priority: 'low' | 'medium' | 'high';
   createdAt: string;
   expectedDelivery: string;
-  actualDelivery: string;
+  actualDelivery?: string;
   paymentStatus: 'unpaid' | 'partial' | 'paid';
   shippingMethod: string;
 }
@@ -322,7 +322,7 @@ export default function TradingPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {filteredOrders.length === 0  (
+              {filteredOrders.length === 0 ? (
                 <div className="text-center py-12">
                   <ShoppingCart className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">
@@ -380,7 +380,7 @@ export default function TradingPage() {
                             className={getPaymentColor(order.paymentStatus)}
                           >
                             {order.paymentStatus === 'paid'
-                               '已收款'
+                               ? '已收款'
                               : order.paymentStatus === 'partial'
                                  ? '部分收款' : '未收款'}
                           </Badge>

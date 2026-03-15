@@ -98,7 +98,7 @@ export default function FCXAlliancePage() {
   const getNextLevel = (currentLevel: string) => {
     const levels = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
     const currentIndex = levels.indexOf(currentLevel);
-    return currentIndex < levels.length - 1  levels[currentIndex + 1] : null;
+    return currentIndex < levels.length - 1 ? levels[currentIndex + 1] : null;
   };
 
   const getProgressToNextLevel = (points: number, currentLevel: string) => {

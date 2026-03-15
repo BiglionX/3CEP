@@ -97,11 +97,11 @@ export default function FinalVerificationTest() {
             <div className="bg-blue-50 p-6 rounded-lg">
               <h2 className="text-xl font-semibold mb-4 text-blue-800">当前状态</h2>
               <div className="space-y-3">
-                <div className={`p-3 rounded {loading  ? 'bg-yellow-100' : 'bg-green-100'}`}>
-                  <span className="font-medium">加载状态</span> {loading  ? '加载中...' : '完成'}
+                <div className={`p-3 rounded ${loading ? 'bg-yellow-100' : 'bg-green-100'}`}>
+                  <span className="font-medium">加载状态</span> {loading ? '加载中...' : '完成'}
                 </div>
-                <div className={`p-3 rounded ${isAuthenticated  ? 'bg-green-100' : 'bg-red-100'}`}>
-                  <span className="font-medium">认证状态</span> {isAuthenticated  ? '已认证' : '未认证'}
+                <div className={`p-3 rounded ${isAuthenticated ? 'bg-green-100' : 'bg-red-100'}`}>
+                  <span className="font-medium">认证状态</span> {isAuthenticated ? '已认证' : '未认证'}
                 </div>
                 <div className="p-3 rounded bg-gray-100">
                   <span className="font-medium">用户邮箱:</span> {userInfo?.email || '未知'}
@@ -118,7 +118,7 @@ export default function FinalVerificationTest() {
                 <button
                   onClick={testAuthentication}
                   disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700disabled:bg-gray-400 text-white py-3 px-4 rounded-lg font-medium transition-colors"
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-3 px-4 rounded-lg font-medium transition-colors"
                 >
                   测试认证同步
                 </button>
@@ -143,30 +143,30 @@ export default function FinalVerificationTest() {
               <h2 className="text-xl font-semibold text-gray-800">测试日志</h2>
               <button
                 onClick={() => setTestResults([])}
-                className="bg-red-500 bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
               >
                 清除日志
               </button>
             </div>
 
             <div className="bg-black rounded-lg p-4 h-80 overflow-y-auto font-mono text-sm">
-              {testResults.length === 0  (
+              {testResults.length === 0 ? (
                 <p className="text-gray-500">等待测试开始...</p>
               ) : (
                 testResults.map((result: {timestamp: string; message: string; type: string}, index: number) => (
                   <div
                     key={index}
                     className={`mb-2 p-2 rounded ${
-                      result.type === 'error'  'bg-red-900/30 border border-red-700' :
-                      result.type === 'success'  'bg-green-900/30 border border-green-700' :
+                      result.type === 'error' ? 'bg-red-900/30 border border-red-700' :
+                      result.type === 'success' ? 'bg-green-900/30 border border-green-700' :
                       result.type === 'data' ? 'bg-blue-900/30 border border-blue-700' : 'bg-gray-800'
                     }`}
                   >
                     <span className="text-gray-400">[{result.timestamp}]</span>{' '}
                     <span className={
-                      result.type === 'error'  'text-red-400' :
-                      result.type === 'success'  'text-green-400' :
-                      result.type === 'data'  ? 'text-blue-400' : 'text-yellow-400'
+                      result.type === 'error' ? 'text-red-400' :
+                      result.type === 'success' ? 'text-green-400' :
+                      result.type === 'data' ? 'text-blue-400' : 'text-yellow-400'
                     }>
                       [{result.type.toUpperCase()}]
                     </span>{' '}
