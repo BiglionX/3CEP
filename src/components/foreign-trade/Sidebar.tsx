@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -45,14 +45,14 @@ export function ForeignTradeSidebar({
   const menuItems: MenuItem[] = [
     {
       id: 'dashboard',
-      title: '仪表?,
+      title: '仪表盘',
       href: '/foreign-trade/company',
       icon: Home,
       activePaths: ['/foreign-trade/company'],
     },
     {
       id: 'orders',
-      title: activeRole === 'importer' ? '采购订单' : '销售订?,
+      title: activeRole === 'importer' ? '采购订单' : '销售订单',
       href: '',
       icon: activeRole === 'importer' ? ShoppingCart : Building,
       activePaths: [],
@@ -66,7 +66,7 @@ export function ForeignTradeSidebar({
         },
         {
           id: 'order-create',
-          title: activeRole === 'importer' ? '创建采购? : '创建销售单',
+          title: activeRole === 'importer' ? '创建采购单' : '创建销售单',
           href: '/foreign-trade/company/orders/create',
           icon: FileText,
           activePaths: ['/foreign-trade/company/orders/create'],
@@ -89,7 +89,7 @@ export function ForeignTradeSidebar({
       children: [
         {
           id: 'suppliers',
-          title: '供应商管?,
+          title: '供应商管理',
           href: '/foreign-trade/company/partners/suppliers',
           icon: Users,
           activePaths: ['/foreign-trade/company/partners/suppliers'],
@@ -196,7 +196,7 @@ export function ForeignTradeSidebar({
 
             {isExpanded && (
               <div className="bg-gray-50">
-                {item?.map(child => renderMenuItem(child, level + 1))}
+                {item.children?.map(child => renderMenuItem(child, level + 1))}
               </div>
             )}
           </>
@@ -221,7 +221,7 @@ export function ForeignTradeSidebar({
 
   return (
     <>
-      {/* 移动端菜单按?*/}
+      {/* 移动端菜单按钮 */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
           variant="outline"
@@ -233,7 +233,7 @@ export function ForeignTradeSidebar({
         </Button>
       </div>
 
-      {/* 侧边?*/}
+      {/* 侧边栏 */}
       <div
         className={`
         fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
@@ -241,7 +241,7 @@ export function ForeignTradeSidebar({
       `}
       >
         <div className="flex flex-col h-full">
-          {/* Logo 和角色切?*/}
+          {/* Logo 和角色切换 */}
           <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
@@ -252,7 +252,7 @@ export function ForeignTradeSidebar({
               </div>
             </div>
 
-            {/* 角色切换?*/}
+            {/* 角色切换 */}
             <div className="space-y-2">
               <div className="text-xs text-gray-500 uppercase tracking-wide">
                 业务模式
@@ -264,14 +264,14 @@ export function ForeignTradeSidebar({
                   onClick={() => onRoleChange('importer')}
                   className="text-xs"
                 >
-                  进口?                </Button>
+                  进口商                </Button>
                 <Button
                   variant={activeRole === 'exporter' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => onRoleChange('exporter')}
                   className="text-xs"
                 >
-                  出口?                </Button>
+                  出口商                </Button>
               </div>
             </div>
           </div>
