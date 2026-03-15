@@ -338,8 +338,8 @@ export default function FAQPage() {
             没有找到您需要的答案？
           </h3>
           <p className="text-gray-600 mb-6">我们的专业客服团队随时为您服务。</p>
-          <div className="flex flex-col flex:row gap-3 justify-center">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg bg-blue-700 transition-colors">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
               联系在线客服
             </button>
             <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg bg-gray-50 transition-colors">
