@@ -80,8 +80,8 @@ export default function ForeignTradeCompanyPage() {
   const loadTradeData = () => {
     // 模拟加载贸易数据
     const mockOrders: TradeOrder[] =
-      activeRole === 'importer'
-         [
+      activeRole === 'importer' ? [
+
             {
               id: 'PO-2026-001',
               type: 'import',
@@ -219,7 +219,7 @@ export default function ForeignTradeCompanyPage() {
   };
 
   const getTypeColor = (type: 'import' | 'export') => {
-    return type === 'import'  'text-blue-600' : 'text-green-600';
+    return type === 'import' ? 'text-blue-600' : 'text-green-600';
   };
 
   return (
@@ -237,7 +237,7 @@ export default function ForeignTradeCompanyPage() {
               <div className="flex items-center">
                 <h1 className="text-xl font-bold text-gray-900">
                   {activeRole === 'importer'
-                     '进口商业务中心'
+                     ? '进口商业务中心'
                     : '出口商业务中心'}
                 </h1>
               </div>
@@ -256,20 +256,19 @@ export default function ForeignTradeCompanyPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {activeRole === 'importer'
-                     '进口商业务模式'
+                  {activeRole === 'importer' ? '进口商业务模式'
                     : '出口商业务模式'}
                 </h2>
                 <p className="text-gray-600 mt-1">
                   {activeRole === 'importer'
-                     '管理全球采购订单和供应商关系'
+                     ? '管理全球采购订单和供应商关系'
                     : '管理国际销售订单和客户关系'}
                 </p>
               </div>
               <Badge
-                variant={activeRole === 'importer'  'default' : 'secondary'}
+                variant={activeRole === 'importer' ? 'default' : 'secondary'}
               >
-                {activeRole === 'importer'  '进口商视角' : '出口商视角'}
+                {activeRole === 'importer' ? '进口商视角' : '出口商视角'}
               </Badge>
             </div>
           </div>
@@ -303,11 +302,11 @@ export default function ForeignTradeCompanyPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-500">
-                      {activeRole === 'importer'  '采购订单' : '销售订单'}
+                      {activeRole === 'importer' ? '采购订单' : '销售订单'}
                     </p>
                     <p className="text-2xl font-bold text-blue-600">
                       {activeRole === 'importer'
-                         stats.importOrders
+                         ? stats.importOrders
                         : stats.exportOrders}
                     </p>
                   </div>
@@ -376,7 +375,7 @@ export default function ForeignTradeCompanyPage() {
                     <CardTitle className="flex items-center gap-2">
                       <Package className="h-5 w-5" />
                       {activeRole === 'importer'
-                         '采购订单跟踪'
+                         ? '采购订单跟踪'
                         : '销售订单管理'}
                     </CardTitle>
                     <Button
@@ -384,14 +383,12 @@ export default function ForeignTradeCompanyPage() {
                         router.push('/foreign-trade/company/orders/create')
                       }
                     >
-                      {activeRole === 'importer'
-                         '创建采购订单'
-                        : '创建销售订单'}
+                      {activeRole === 'importer' ? '创建采购订单' : '创建销售订单'}
                     </Button>
                   </div>
                   <CardDescription>
                     {activeRole === 'importer'
-                       '跟踪全球采购订单状态和供应商交付情况'
+                       ? '跟踪全球采购订单状态和供应商交付情况'
                       : '管理国际销售订单和客户交付进度'}
                   </CardDescription>
                 </CardHeader>
@@ -435,7 +432,7 @@ export default function ForeignTradeCompanyPage() {
                                 className={getTypeColor(order.type)}
                               >
                                 {getTypeIcon(order.type)}
-                                {order.type === 'import'  '进口' : '出口'}
+                                {order.type === 'import' ? '进口' : '出口'}
                               </Badge>
                             </div>
                             <p className="text-sm text-gray-600">
@@ -518,12 +515,10 @@ export default function ForeignTradeCompanyPage() {
                           </h3>
                           <Badge
                             variant={
-                              partner.status === 'active'
-                                 'default'
-                                : 'secondary'
+                              partner.status === 'active' ? 'default' : 'secondary'
                             }
                           >
-                            {partner.status === 'active'  '活跃' : '待审核'}
+                            {partner.status === 'active' ? '活跃' : '待审核'}
                           </Badge>
                         </div>
                         <p className="text-sm text-gray-600 mb-1">
