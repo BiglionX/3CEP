@@ -221,7 +221,7 @@ const DEFAULT_PERMISSIONS: Record<string, Permission> = {
   users_create: {
     id: 'users_create',
     name: '用户创建',
-    description: '创建新用户账?,
+    description: '创建新用户账户',
     category: 'user_management',
     resource: 'users',
     action: 'create',
@@ -232,7 +232,7 @@ const DEFAULT_PERMISSIONS: Record<string, Permission> = {
   users_update: {
     id: 'users_update',
     name: '用户编辑',
-    description: '编辑用户信息和权?,
+    description: '编辑用户信息和权限',
     category: 'user_management',
     resource: 'users',
     action: 'update',
@@ -257,8 +257,8 @@ const DEFAULT_PERMISSIONS: Record<string, Permission> = {
 const DEFAULT_ROLES: Record<string, Role> = {
   admin: {
     id: 'admin',
-    name: '超级管理?,
-    description: '系统最高权限角色，拥有所有功能访问权?,
+    name: '超级管理员',
+    description: '系统最高权限角色，拥有所有功能访问权限',
     level: 100,
     isSystem: true,
     permissions: Object.keys(DEFAULT_PERMISSIONS),
@@ -267,7 +267,7 @@ const DEFAULT_ROLES: Record<string, Role> = {
   },
   manager: {
     id: 'manager',
-    name: '管理?,
+    name: '管理员',
     description: '业务管理员，可管理用户、内容和基础配置',
     level: 80,
     isSystem: true,
@@ -282,8 +282,8 @@ const DEFAULT_ROLES: Record<string, Role> = {
   },
   viewer: {
     id: 'viewer',
-    name: '只读查看?,
-    description: '仅能查看基础数据和报?,
+    name: '只读查看',
+    description: '仅能查看基础数据和报表',
     level: 30,
     isSystem: true,
     permissions: ['dashboard_read'],
@@ -345,7 +345,8 @@ export function EnhancedRbacProvider({
         }
       });
 
-      // 添加动态权限（未过期且激活的?      const now = new Date();
+      // 添加动态权限（未过期且激活的）
+      const now = new Date();
       dynamicAssignments
         .filter(
           assign =>
@@ -360,11 +361,13 @@ export function EnhancedRbacProvider({
     [roles, dynamicAssignments]
   );
 
-  // 基础权限检?  const hasPermission = useCallback(
+  // 基础权限检查
+  const hasPermission = useCallback(
     (permissionId: string): boolean => {
       if (!currentUser) return false;
 
-      // 超级管理员拥有所有权?      if (currentUser.roles.includes('admin')) return true;
+      // 超级管理员拥有所有权限
+      if (currentUser.roles.includes('admin')) return true;
 
       const effectivePermissions = getEffectivePermissions(currentUser);
       return effectivePermissions.includes(permissionId);
@@ -372,7 +375,8 @@ export function EnhancedRbacProvider({
     [currentUser, getEffectivePermissions]
   );
 
-  // 批量权限检?  const hasAnyPermission = useCallback(
+  // 批量权限检查
+  const hasAnyPermission = useCallback(
     (permissionIds: string[]): boolean => {
       return permissionIds.some(hasPermission);
     },
@@ -386,7 +390,8 @@ export function EnhancedRbacProvider({
     [hasPermission]
   );
 
-  // 资源级权限检?  const canAccessResource = useCallback(
+  // 资源级权限检查
+  const canAccessResource = useCallback(
     (resource: ResourceType, action: PermissionAction): boolean => {
       const permissionId = `${resource}_${action}`;
       return hasPermission(permissionId);
@@ -423,7 +428,8 @@ export function EnhancedRbacProvider({
       await new Promise(resolve => setTimeout(resolve, 200));
 
       // 这里应该调用实际的API
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`为用?${userId} 分配角色 ${roleId}`)},
+      // TODO: 移除调试日志 - console.log(`为用户 ${userId} 分配角色 ${roleId}`)
+    },
     []
   );
 
@@ -433,11 +439,13 @@ export function EnhancedRbacProvider({
       await new Promise(resolve => setTimeout(resolve, 200));
 
       // 这里应该调用实际的API
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`为用?${userId} 撤销角色 ${roleId}`)},
+      // TODO: 移除调试日志 - console.log(`为用户 ${userId} 撤销角色 ${roleId}`)
+    },
     []
   );
 
-  // 动态权限管?  const grantDynamicPermission = useCallback(
+  // 动态权限管理
+  const grantDynamicPermission = useCallback(
     async (
       assignment: Omit<
         DynamicPermissionAssignment,
@@ -460,7 +468,7 @@ export function EnhancedRbacProvider({
         action: 'GRANT',
         permissionId: assignment.permissionId,
         success: true,
-        details: `动态授予权?${assignment.permissionId}`,
+        details: `动态授予权限 ${assignment.permissionId}`,
       });
 
       return id;
@@ -483,7 +491,7 @@ export function EnhancedRbacProvider({
           action: 'REVOKE',
           permissionId: assignment.permissionId,
           success: true,
-          details: `撤销动态权?${assignment.permissionId}`,
+          details: `撤销动态权限 ${assignment.permissionId}`,
         });
       }
     },
@@ -592,11 +600,12 @@ export function EnhancedRbacProvider({
       if (!permission) {
         return {
           allowed: false,
-          reason: '权限不存?,
+          reason: '权限不存在',
         };
       }
 
-      // 检查条件约束（这里可以根据具体业务逻辑扩展?      const checkResult = await evaluateConditions(permission, conditions);
+      // 检查条件约束（这里可以根据具体业务逻辑扩展）
+      const checkResult = await evaluateConditions(permission, conditions);
 
       return {
         allowed: checkResult.allowed,
@@ -634,12 +643,13 @@ export function EnhancedRbacProvider({
     // 这里可以实现复杂的条件逻辑
     // 例如：时间限制、IP白名单、部门限制等
 
-    // 简单示例：检查是否在工作时间?    if (conditions.workingHoursOnly) {
+    // 简单示例：检查是否在工作时间
+    if (conditions.workingHoursOnly) {
       const hour = new Date().getHours();
       if (hour < 9 || hour > 18) {
         return {
           allowed: false,
-          reason: '非工作时间限?,
+          reason: '非工作时间限制',
         };
       }
     }
