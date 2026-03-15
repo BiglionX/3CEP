@@ -7,13 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   TrendingUp,
   Plus,
   Edit,
@@ -21,10 +14,8 @@ import {
   Eye,
   Target,
   Users,
-  Calendar,
   DollarSign,
   Clock,
-  BarChart3,
   X,
 } from 'lucide-react';
 
@@ -130,7 +121,6 @@ export default function EnterpriseCrowdfundingManagement() {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedProject, setSelectedProject] =
     useState<CrowdfundingProject | null>(null);
-  const [activeTab, setActiveTab] = useState('overview');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -366,8 +356,8 @@ export default function EnterpriseCrowdfundingManagement() {
                   <th className="text-left py-3 px-4 font-medium">项目名称</th>
                   <th className="text-left py-3 px-4 font-medium">产品型号</th>
                   <th className="text-left py-3 px-4 font-medium">筹资进度</th>
-                  <th className="text-left py-3 px-4 font-medium">支持?/th>
-                  <th className="text-left py-3 px-4 font-medium">状?/th>
+                  <th className="text-left py-3 px-4 font-medium">支持者</th>
+                  <th className="text-left py-3 px-4 font-medium">状态</th>
                   <th className="text-left py-3 px-4 font-medium">截止时间</th>
                   <th className="text-left py-3 px-4 font-medium">操作</th>
                 </tr>
@@ -412,7 +402,7 @@ export default function EnterpriseCrowdfundingManagement() {
                         <div className="font-medium">
                           {project.supporters_count}
                         </div>
-                        <div className="text-gray-500">人支?/div>
+                        <div className="text-gray-500">人支持</div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
@@ -557,7 +547,7 @@ export default function EnterpriseCrowdfundingManagement() {
                   </div>
 
                   <div>
-                    <Label htmlFor="min_contribution">最低支持金?/Label>
+                    <Label htmlFor="min_contribution">最低支持金额</Label>
                     <Input
                       id="min_contribution"
                       type="number"
@@ -584,14 +574,14 @@ export default function EnterpriseCrowdfundingManagement() {
                           max_contribution: e.target.value,
                         })
                       }
-                      placeholder="最高支持金?可?"
+                      placeholder="最高支持金额（可选）"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <Label htmlFor="start_date">开始时?/Label>
+                    <Label htmlFor="start_date">开始时间</Label>
                     <Input
                       id="start_date"
                       type="date"
@@ -675,7 +665,7 @@ export default function EnterpriseCrowdfundingManagement() {
                                     e.target.value
                                   )
                                 }
-                                placeholder="详细描述此回报内?
+                                placeholder="详细描述此回报内容"
                                 rows={2}
                               />
                             </div>
@@ -803,7 +793,8 @@ export default function EnterpriseCrowdfundingManagement() {
                       </div>
                       <div>
                         <Label className="text-sm text-gray-500">
-                          项目状?                        </Label>
+                          项目状态
+                        </Label>
                         <p>{getStatusBadge(selectedProject.status)}</p>
                       </div>
                     </div>
@@ -827,13 +818,13 @@ export default function EnterpriseCrowdfundingManagement() {
                               </p>
                               <div className="flex space-x-4 mt-2 text-sm">
                                 <span>
-                                  最低支?{' '}
+                                  最低支持: {' '}
                                   {formatCurrency(reward.minimum_amount)}
                                 </span>
                                 <span>
-                                  限额: {reward.quantity_limit || '无限?}
+                                  限额: {reward.quantity_limit || '无限量'}
                                 </span>
-                                <span>已认? {reward.claimed_count}</span>
+                                <span>已认领: {reward.claimed_count}</span>
                               </div>
                             </div>
                             <div className="text-right">
