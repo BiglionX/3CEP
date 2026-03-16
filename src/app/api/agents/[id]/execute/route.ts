@@ -17,21 +17,31 @@ export async function POST(
   );
 
   try {
-    // 验证用户认证
+    // 验证用户认证 - 支持 Cookie 和 Authorization header 两种方式
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
+    let token = sessionCookie?.value;
 
-    if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+    // 如果没有 Cookie，尝试从 Authorization header 获取
+    if (!token) {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+      }
+    }
+
+    if (!token) {
+      return NextResponse.json({ error: '用户未认证', details: '请先登录后再执行智能体' }, { status: 401 });
     }
 
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser(sessionCookie.value);
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      console.error('认证失败详情:', authError?.message);
+      return NextResponse.json({ error: '用户认证失败', details: authError?.message }, { status: 401 });
     }
 
     const agentId = params.id;
@@ -58,20 +68,20 @@ export async function POST(
       .insert({
         agent_id: agentId,
         status: 'running',
-        input_data: body.input_data || {} as any,
+        input_data: body.input_data || {},
         parameters: body.parameters || {},
         started_at: new Date().toISOString(),
         triggered_by: user.id
-      }) as any
+      })
       .select()
       .single();
 
     if (executionError) {
       console.error('创建智能体执行记录失败:', executionError);
-      return NextResponse.json(
-        { error: '创建执行记录失败' }, 
-        { status: 500 }
-      );
+return NextResponse.json(
+      { error: '创建执行记录失败' },
+      { status: 500 }
+    );
     }
 
     // 模拟智能体执行（实际项目中这里会调用 LLM 或其他 AI 服务）
@@ -79,7 +89,7 @@ export async function POST(
       try {
         // 模拟执行结果
         const executionResult = {
-          status: Math.random() > 0.1  'completed' : 'failed',
+          status: Math.random() > 0.1 ? 'completed' : 'failed',
           output_data: {
             result: 'success',
             response: generateMockResponse(agent.name, body.input_data),
@@ -113,7 +123,7 @@ export async function POST(
   } catch (error: any) {
     console.error('执行智能体错误:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' }, 
+      { error: '服务器内部错误' },
       { status: 500 }
     );
   }
@@ -130,21 +140,31 @@ export async function PATCH(
   );
 
   try {
-    // 验证用户认证
+    // 验证用户认证 - 支持 Cookie 和 Authorization header 两种方式
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('sb-access-token');
+    let token = sessionCookie?.value;
 
-    if (!sessionCookie) {
-      return NextResponse.json({ error: '用户未认证' }, { status: 401 });
+    // 如果没有 Cookie，尝试从 Authorization header 获取
+    if (!token) {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+      }
+    }
+
+    if (!token) {
+      return NextResponse.json({ error: '用户未认证', details: '请先登录后再执行智能体' }, { status: 401 });
     }
 
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser(sessionCookie.value);
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '用户认证失败' }, { status: 401 });
+      console.error('认证失败详情:', authError?.message);
+      return NextResponse.json({ error: '用户认证失败', details: authError?.message }, { status: 401 });
     }
 
     const agentId = params.id;
@@ -167,19 +187,19 @@ export async function PATCH(
       .insert({
         agent_id: agentId,
         status: 'running',
-        input_data: body.input_data || {} as any,
+        input_data: body.input_data || {},
         parameters: { ...body.parameters, debug_mode: true },
         is_debug: true,
         started_at: new Date().toISOString(),
         triggered_by: user.id
-      }) as any
+      })
       .select()
       .single();
 
     if (debugError) {
       console.error('创建调试执行记录失败:', debugError);
       return NextResponse.json(
-        { error: '创建调试记录失败' }, 
+        { error: '创建调试记录失败' },
         { status: 500 }
       );
     }
@@ -232,7 +252,7 @@ export async function PATCH(
   } catch (error: any) {
     console.error('调试智能体错误:', error);
     return NextResponse.json(
-      { error: '服务器内部错误' }, 
+      { error: '服务器内部错误' },
       { status: 500 }
     );
   }
@@ -246,11 +266,11 @@ function generateMockResponse(agentName: string, inputData: any) {
     `感谢您的咨询。关于${inputData.topic || '这个话题'}，我的建议是...`,
     `我理解您想要了解${inputData.subject || '相关信息'}。根据我的知识库...`
   ];
-  
+
   const mockData = [
     { type: 'text', content: responses[Math.floor(Math.random() * responses.length)] },
     { type: 'data', content: { items: 3, processed: true, timestamp: new Date().toISOString() } }
   ];
-  
+
   return mockData;
 }

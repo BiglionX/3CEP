@@ -1,32 +1,28 @@
 ﻿/**
  * 权限管理面板组件
- * 提供可视化的权限配置和管理界?
+ * 提供可视化的权限配置和管理界面
  */
 
 'use client'
 
-import { useState, useEffect } from 'react'
-import { 
-  Shield, 
-  Users, 
-  Key,
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  EyeOff,
-  Search,
-  Filter,
-  RefreshCw,
-  Download,
-  Upload,
-  AlertTriangle,
-  CheckCircle,
-  XCircle
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -43,26 +39,22 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  AlertTriangle,
+  CheckCircle,
+  Download,
+  Eye,
+  Plus,
+  RefreshCw,
+  Search,
+  Shield,
+  Upload,
+  XCircle
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { 
-  useEnhancedRbac,
   Permission,
-  Role,
-  UserPermissionContext,
-  ResourceType
+  ResourceType,
+  useEnhancedRbac
 } from './EnhancedRbacManager'
 
 interface PermissionManagementPanelProps {
@@ -90,24 +82,24 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
   const [dynamicAssignments, setDynamicAssignments] = useState<any[]>([])
   const [auditLogs, setAuditLogs] = useState<any[]>([])
 
-  // 获取所有资源类?
+  // 获取所有资源类型
   const resourceTypes = [...new Set(Object.values(permissions).map(p => p.resource))]
 
-  // 获取所有权限类?
+  // 获取所有权限类型
   const categories = [...new Set(Object.values(permissions).map(p => p.category))]
 
   // 过滤权限
   const filteredPermissions = Object.values(permissions).filter(permission => {
     const matchesSearch = permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          permission.description.toLowerCase().includes(searchTerm.toLowerCase())
-    
+
     const matchesCategory = selectedCategory === 'all' || permission.category === selectedCategory
     const matchesResource = selectedResource === 'all' || permission.resource === selectedResource
-    
+
     return matchesSearch && matchesCategory && matchesResource
   })
 
-  // 加载动态权限分?
+  // 加载动态权限分配
   useEffect(() => {
     const loadDynamicAssignments = async () => {
       if (currentUser?.userId) {
@@ -118,12 +110,12 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
     loadDynamicAssignments()
   }, [currentUser, getDynamicPermissions])
 
-  // 获取用户的有效权?
+  // 获取用户的有效权限
   const getUserEffectivePermissions = () => {
     if (!currentUser) return []
-    
+
     const effectivePermissions: string[] = []
-    
+
     // 添加角色权限
     currentUser.roles.forEach(roleId => {
       const role = roles[roleId]
@@ -131,17 +123,17 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
         effectivePermissions.push(...role.permissions)
       }
     })
-    
+
     // 添加直接权限
     effectivePermissions.push(...currentUser.directPermissions)
-    
-    // 添加动态权?
+
+    // 添加动态权限
     const activeDynamic = dynamicAssignments
       .filter(assign => assign.isActive && (!assign.expiresAt || new Date(assign.expiresAt) > new Date()))
       .map(assign => assign.permissionId)
-    
+
     effectivePermissions.push(...activeDynamic)
-    
+
     return [...new Set(effectivePermissions)]
   }
 
@@ -150,7 +142,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
   // 处理权限授予
   const handleGrantPermission = async (permissionId: string) => {
     if (!currentUser?.userId) return
-    
+
     try {
       await grantDynamicPermission({
         userId: currentUser.userId,
@@ -158,7 +150,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
         grantedBy: 'current_user', // 实际应该使用当前登录用户的ID
         conditions: {}
       })
-      
+
       await logPermissionAction({
         userId: currentUser.userId,
         action: 'GRANT',
@@ -180,7 +172,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
     }
   }
 
-  // 获取权限状?
+  // 获取权限状态
   const getPermissionStatus = (permissionId: string) => {
     if (userPermissions.includes(permissionId)) {
       const isDynamic = dynamicAssignments.some(
@@ -191,15 +183,15 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
     return 'none'
   }
 
-  // 获取状态标?
+  // 获取状态标签
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'role':
         return <Badge variant="default">角色权限</Badge>
       case 'dynamic':
-        return <Badge variant="secondary">动态权?/Badge>
+        return <Badge variant="secondary">动态权限</Badge>
       default:
-        return <Badge variant="outline">无权?/Badge>
+        return <Badge variant="outline">无权限</Badge>
     }
   }
 
@@ -224,7 +216,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
             管理用户权限、角色分配和访问控制策略
           </p>
         </div>
-        
+
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
@@ -247,7 +239,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
             <div className="text-2xl font-bold">{Object.keys(permissions).length}</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">角色数量</CardTitle>
@@ -256,7 +248,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
             <div className="text-2xl font-bold">{Object.keys(roles).length}</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">我的权限</CardTitle>
@@ -265,10 +257,10 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
             <div className="text-2xl font-bold text-blue-600">{userPermissions.length}</div>
           </CardContent>
         </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">动态权?/CardTitle>
+
+<Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium">动态权限</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
@@ -289,20 +281,20 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
-                  placeholder="搜索权限名称或描?.."
+                  placeholder="搜索权限名称或描述..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
             </div>
-            
+
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="选择类别" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有类?/SelectItem>
+                <SelectItem value="all">所有类型</SelectItem>
                 {categories.map(category => (
                   <SelectItem key={category} value={category}>
                     {category}
@@ -310,13 +302,13 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
                 ))}
               </SelectContent>
             </Select>
-            
+
             <Select value={selectedResource} onValueChange={setSelectedResource}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="选择资源" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有资?/SelectItem>
+                <SelectItem value="all">所有资源</SelectItem>
                 {resourceTypes.map(resource => (
                   <SelectItem key={resource} value={resource}>
                     {resource}
@@ -333,7 +325,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
         <CardHeader>
           <CardTitle>权限列表</CardTitle>
           <CardDescription>
-            共找?{filteredPermissions.length} 个权?
+            共找到{filteredPermissions.length} 个权限
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -345,8 +337,8 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
                   <TableHead>资源</TableHead>
                   <TableHead>操作</TableHead>
                   <TableHead>类别</TableHead>
-                  <TableHead>敏感?/TableHead>
-                  <TableHead>状?/TableHead>
+                  <TableHead>敏感</TableHead>
+                  <TableHead>状态</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
@@ -379,7 +371,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
                         ) : (
                           <div className="flex items-center text-green-500">
                             <CheckCircle className="w-4 h-4 mr-1" />
-                            普?
+                            普通
                           </div>
                         )}
                       </TableCell>
@@ -414,7 +406,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
                               撤销
                             </Button>
                           ) : null}
-                          
+
                           <Button
                             size="sm"
                             variant="ghost"
@@ -436,7 +428,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
         </CardContent>
       </Card>
 
-      {/* 权限详情对话?*/}
+      {/* 权限详情对话框*/}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -445,7 +437,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
               {selectedPermission?.description}
             </DialogDescription>
           </DialogHeader>
-          
+
           {selectedPermission && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -474,24 +466,24 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
                   </div>
                 </div>
               </div>
-              
+
               <div>
-                <label className="text-sm font-medium">敏感?/label>
+                <label className="text-sm font-medium">敏感</label>
                 <div className="mt-1">
                   {selectedPermission.isSensitive ? (
                     <div className="flex items-center text-red-500">
                       <AlertTriangle className="w-4 h-4 mr-2" />
-                      敏感权限 - 需要额外审?
+                      敏感权限 - 需要额外审批
                     </div>
                   ) : (
                     <div className="flex items-center text-green-500">
                       <CheckCircle className="w-4 h-4 mr-2" />
-                      普通权?
+                      普通权限
                     </div>
                   )}
                 </div>
               </div>
-              
+
               {selectedPermission.dependentPermissions && (
                 <div>
                   <label className="text-sm font-medium">依赖权限</label>
@@ -506,7 +498,7 @@ export function PermissionManagementPanel({ className = '' }: PermissionManageme
               )}
             </div>
           )}
-          
+
           <DialogFooter>
             <Button onClick={() => setDialogOpen(false)}>关闭</Button>
           </DialogFooter>

@@ -3,7 +3,25 @@
  * 实现敏感数据的脱敏处理和加密存储
  */
 
-import * as crypto from 'crypto';
+// TODO: 动态导入 crypto 实现
+// 当前使用静态导入，需要改为动态导入以支持 SSR
+// 完整实现需要：
+// 1. 使用 dynamic import('crypto') 在运行时加载
+// 2. 或在服务端组件中使用 API 路由处理加密逻辑
+// 3. 或使用第三方库如 crypto-js（支持浏览器和 Node.js）
+let cryptoModule: typeof import('crypto') | null = null;
+
+const loadCryptoModule = async () => {
+  if (!cryptoModule) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      cryptoModule = require('crypto');
+    } catch {
+      console.warn('Node.js crypto 模块不可用');
+    }
+  }
+  return cryptoModule;
+};
 
 export interface DataMaskingRule {
   field: string;
@@ -49,13 +67,15 @@ export class DataProtectionController {
   }> = [];
 
   private constructor() {
-    // 初始化加密配?    this.encryptionConfig = {
+    // 初始化加密配置
+    this.encryptionConfig = {
       algorithm: 'aes-256-gcm',
       key: this.generateOrLoadKey(),
       ivLength: 12,
     };
 
-    // 初始化默认脱敏规?    this.initializeDefaultMaskingRules();
+    // 初始化默认脱敏规则
+    this.initializeDefaultMaskingRules();
   }
 
   static getInstance(): DataProtectionController {
@@ -66,9 +86,12 @@ export class DataProtectionController {
   }
 
   /**
-   * 生成或加载加密密?   */
+   * 生成或加载加密密钥
+   */
   private generateOrLoadKey(): string {
-    // 在生产环境中，应该从安全的密钥管理系统加?    // 这里使用环境变量或生成固定密?    const envKey = process.env.DATA_ENCRYPTION_KEY;
+    // 在生产环境中，应该从安全的密钥管理系统加载
+    // 这里使用环境变量或生成固定密钥
+    const envKey = process.env.DATA_ENCRYPTION_KEY;
     if (envKey && envKey.length >= 32) {
       return envKey.substring(0, 32);
     }
@@ -78,7 +101,8 @@ export class DataProtectionController {
   }
 
   /**
-   * 初始化默认脱敏规?   */
+   * 初始化默认脱敏规则
+   */
   private initializeDefaultMaskingRules(): void {
     const defaultRules: DataMaskingRule[] = [
       {
@@ -125,7 +149,8 @@ export class DataProtectionController {
   }
 
   /**
-   * 添加自定义脱敏规?   */
+   * 添加自定义脱敏规则
+   */
   addMaskingRule(rule: DataMaskingRule): void {
     this.maskingRules.set(rule.field, rule);
     this.logAudit(
@@ -188,7 +213,8 @@ export class DataProtectionController {
   }
 
   /**
-   * 应用具体的脱敏规?   */
+   * 应用具体的脱敏规则
+   */
   private applyMasking(value: any, rule: DataMaskingRule): string {
     if (typeof value !== 'string') {
       return String(value);
@@ -244,9 +270,11 @@ export class DataProtectionController {
   }
 
   /**
-   * 手机号脱?   */
+   * 手机号脱敏
+   */
   private maskPhone(phone: string, maskChar: string): string {
-    // 保留?位和?�?    const cleanPhone = phone.replace(/\D/g, '');
+    // 保留前3位和后4位
+    const cleanPhone = phone.replace(/\D/g, '');
     if (cleanPhone.length < 7) return phone;
 
     return (
@@ -257,11 +285,13 @@ export class DataProtectionController {
   }
 
   /**
-   * 身份证脱?   */
+   * 身份证脱敏
+   */
   private maskIdCard(idCard: string, maskChar: string): string {
     if (idCard.length < 8) return maskChar.repeat(idCard.length);
 
-    // 保留?位和?�?    return (
+    // 保留前6位和后4位
+    return (
       idCard.substring(0, 6) +
       maskChar.repeat(idCard.length - 10) +
       idCard.substring(idCard.length - 4)
@@ -269,12 +299,14 @@ export class DataProtectionController {
   }
 
   /**
-   * 银行卡脱?   */
+   * 银行卡脱敏
+   */
   private maskBankCard(card: string, maskChar: string): string {
     const cleanCard = card.replace(/\s/g, '');
     if (cleanCard.length < 8) return maskChar.repeat(cleanCard.length);
 
-    // 保留?位和?�?    return (
+    // 保留前6位和后4位
+    return (
       cleanCard.substring(0, 6) +
       maskChar.repeat(cleanCard.length - 10) +
       cleanCard.substring(cleanCard.length - 4)
@@ -291,7 +323,8 @@ export class DataProtectionController {
       );
     }
 
-    // 保留?个字?    return address.substring(0, 3) + maskChar.repeat(address.length - 3);
+    // 保留前3个字
+    return address.substring(0, 3) + maskChar.repeat(address.length - 3);
   }
 
   /**
@@ -301,11 +334,13 @@ export class DataProtectionController {
     if (name.length <= 1) return name;
     if (name.length === 2) return name.charAt(0) + maskChar;
 
-    // 保留姓氏，名字部分脱?    return name.charAt(0) + maskChar.repeat(name.length - 1);
+    // 保留姓氏，名字部分脱敏
+    return name.charAt(0) + maskChar.repeat(name.length - 1);
   }
 
   /**
-   * 自定义脱?   */
+   * 自定义脱敏
+   */
   private maskCustom(
     value: string,
     pattern?: RegExp,
@@ -317,19 +352,27 @@ export class DataProtectionController {
 
   /**
    * 数据加密
+   * TODO: 改为异步方法，使用动态加载的 crypto 模块
    */
-  encryptData(data: string): {
+  async encryptData(data: string): Promise<{
     encrypted: string;
     authTag: string;
     iv: string;
-  } {
+  }> {
+    // 动态加载 crypto 模块
+    const crypto = await loadCryptoModule();
+    if (!crypto) {
+      throw new Error('加密模块不可用，请确保在 Node.js 环境中运行');
+    }
+
     try {
       const iv = crypto.randomBytes(this.encryptionConfig.ivLength);
-      const cipher = crypto.createCipheriv(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const cipher: any = crypto.createCipheriv(
         this.encryptionConfig.algorithm,
         this.encryptionConfig.key,
         iv
-      ) as crypto.CipherGCM;
+      );
 
       let encrypted = cipher.update(data, 'utf8', 'hex');
       encrypted += cipher.final('hex');
@@ -361,14 +404,22 @@ export class DataProtectionController {
 
   /**
    * 数据解密
+   * TODO: 改为异步方法，使用动态加载的 crypto 模块
    */
-  decryptData(encrypted: string, authTag: string, iv: string): string {
+  async decryptData(encrypted: string, authTag: string, iv: string): Promise<string> {
+    // 动态加载 crypto 模块
+    const crypto = await loadCryptoModule();
+    if (!crypto) {
+      throw new Error('解密模块不可用，请确保在 Node.js 环境中运行');
+    }
+
     try {
-      const decipher = crypto.createDecipheriv(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const decipher: any = crypto.createDecipheriv(
         this.encryptionConfig.algorithm,
         this.encryptionConfig.key,
         Buffer.from(iv, 'hex')
-      ) as crypto.DecipherGCM;
+      );
 
       decipher.setAuthTag(Buffer.from(authTag, 'hex'));
 
@@ -457,13 +508,16 @@ export class DataProtectionController {
 
     this.auditLogs.push(logEntry);
 
-    // 保持日志缓冲区大?    if (this.auditLogs.length > 1000) {
+    // 保持日志缓冲区大小
+    if (this.auditLogs.length > 1000) {
       this.auditLogs.shift();
     }
 
     // 在开发环境中输出到控制台
     if (process.env.NODE_ENV === 'development') {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('Data Protection Audit:', logEntry)}
+      // TODO: 移除调试日志
+      console.info('Data Protection Audit:', logEntry)
+    }
   }
 
   /**

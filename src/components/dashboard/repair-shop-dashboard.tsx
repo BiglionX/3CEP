@@ -100,7 +100,7 @@ export default function RepairShopDashboard() {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '未知错误');
-      console.error('获取仪表板数据失?', err);
+      console.error('获取仪表板数据失败', err);
     } finally {
       setLoading(false);
     }
@@ -129,7 +129,7 @@ export default function RepairShopDashboard() {
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">加载仪表板数?..</p>
+          <p className="text-gray-600">加载仪表板数据...</p>
         </div>
       </div>
     );
@@ -186,14 +186,14 @@ export default function RepairShopDashboard() {
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              总收?            </CardTitle>
+              总收入            </CardTitle>
             <DollarSign className="h-5 w-5 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-900">
               {formatCurrency(kpiOverview.totalRevenue)}
             </div>
-            <p className="text-xs text-green-600 mt-1">较上月增?12.5%</p>
+            <p className="text-xs text-green-600 mt-1">较上月增长 12.5%</p>
           </CardContent>
         </Card>
 
@@ -215,7 +215,7 @@ export default function RepairShopDashboard() {
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              客户满意?            </CardTitle>
+              客户满意度            </CardTitle>
             <Star className="h-5 w-5 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -223,14 +223,14 @@ export default function RepairShopDashboard() {
               {satisfaction.averageScore}/5.0
             </div>
             <p className="text-xs text-yellow-600 mt-1">
-              {satisfaction.totalReviews} 条评?            </p>
+              {satisfaction.totalReviews} 条评价            </p>
           </CardContent>
         </Card>
 
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
-              订单完成?            </CardTitle>
+              订单完成率            </CardTitle>
             <CheckCircle className="h-5 w-5 text-purple-500" />
           </CardHeader>
           <CardContent>
@@ -247,7 +247,7 @@ export default function RepairShopDashboard() {
 
       {/* 图表区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* 收入趋势?*/}
+        {/* 收入趋势分析 */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -295,7 +295,7 @@ export default function RepairShopDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Activity className="h-5 w-5 mr-2 text-blue-500" />
-                订单完成率趋?              </CardTitle>
+                订单完成率趋势              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-80">
@@ -329,7 +329,7 @@ export default function RepairShopDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Users className="h-5 w-5 mr-2 text-yellow-500" />
-                客户满意度分?              </CardTitle>
+                客户满意度分布              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-80">
@@ -363,7 +363,7 @@ export default function RepairShopDashboard() {
                   平均评分: {satisfaction.averageScore}/5.0
                 </p>
                 <p className="text-sm text-gray-600">
-                  基于 {satisfaction.totalReviews} 条客户评?                </p>
+                  基于 {satisfaction.totalReviews} 条客户评价                </p>
               </div>
             </CardContent>
           </Card>
@@ -414,7 +414,7 @@ export default function RepairShopDashboard() {
         </motion.div>
       </div>
 
-      {/* 最近活?*/}
+      {/* 最近活动 */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

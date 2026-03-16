@@ -8,7 +8,6 @@ import {
   PermissionManager,
   UserInfo,
 } from '@/modules/common/permissions/core/permission-manager';
-import { DataProtectionController } from '@/modules/common/permissions/core/data-protection-controller';
 
 export interface InterceptorConfig {
   enabled: boolean;
@@ -46,7 +45,6 @@ export class ApiInterceptor {
   private static instance: ApiInterceptor;
   private config: InterceptorConfig;
   private permissionManager: PermissionManager;
-  private dataProtection: DataProtectionController;
   private rateLimits: Map<string, RateLimitInfo> = new Map();
   private securityEvents: SecurityEvent[] = [];
   private readonly RATE_LIMIT_WINDOW = 60000; // 1分钟
@@ -55,13 +53,13 @@ export class ApiInterceptor {
 
   private constructor() {
     this.permissionManager = PermissionManager.getInstance();
-    this.dataProtection = DataProtectionController.getInstance();
 
     this.config = {
       enabled: true,
       authRequired: true,
       rateLimiting: true,
-      ipWhitelist: ['127.0.0.1', '::1'], // 本地地址白名?      blockedPaths: ['/api/admin/sensitive', '/api/system/config'],
+      ipWhitelist: ['127.0.0.1', '::1'], // 本地地址白名单
+      blockedPaths: ['/api/admin/sensitive', '/api/system/config'],
       allowedPaths: ['/api/auth/login', '/api/health', '/api/public'],
       logLevel: 'detailed',
     };
@@ -92,16 +90,18 @@ export class ApiInterceptor {
       'basic'
     );
 
-    // IP白名单检?    if (this.isIpWhitelisted(ip)) {
+    // IP白名单检查
+    if (this.isIpWhitelisted(ip)) {
       this.log(`Allowing whitelisted IP: ${ip}`, 'basic');
       return null;
     }
 
-    // 路径检?    if (this.isPathBlocked(path)) {
+    // 路径检查
+    if (this.isPathBlocked(path)) {
       this.log(`Blocking request to blocked path: ${path}`, 'basic');
       this.recordSecurityEvent('BLOCKED_PATH', ip, userAgent, path);
       return NextResponse.json(
-        { error: '访问被拒?, message: '此路径不允许访问' },
+        { error: '访问被拒绝', message: '此路径不允许访问' },
         { status: 403 }
       );
     }
@@ -112,16 +112,18 @@ export class ApiInterceptor {
       return null;
     }
 
-    // 速率限制检?    if (this.config.rateLimiting && this.isRateLimited(ip)) {
+    // 速率限制检查
+    if (this.config.rateLimiting && this.isRateLimited(ip)) {
       this.log(`Rate limiting IP: ${ip}`, 'basic');
       this.recordSecurityEvent('RATE_LIMIT', ip, userAgent, path);
       return NextResponse.json(
-        { error: '请求过于频繁', message: '请稍后再? },
+        { error: '请求过于频繁', message: '请稍后再试' },
         { status: 429 }
       );
     }
 
-    // 认证检?    if (this.config.authRequired) {
+    // 认证检查
+    if (this.config.authRequired) {
       const authResult = await this.checkAuthentication(request);
       if (!authResult.authenticated) {
         this.log(`Authentication failed for IP: ${ip}`, 'basic');
@@ -164,7 +166,7 @@ export class ApiInterceptor {
           return NextResponse.json(
             {
               error: '权限不足',
-              message: permissionResult.reason || '无权访问此资?,
+              message: permissionResult.reason || '无权访问此资源',
             },
             { status: 403 }
           );
@@ -172,14 +174,16 @@ export class ApiInterceptor {
       }
     }
 
-    // 请求合法，记录成功事?    this.recordSecurityEvent('SUCCESS', ip, userAgent, path);
+    // 请求合法，记录成功事件
+    this.recordSecurityEvent('SUCCESS', ip, userAgent, path);
     this.log(`Request allowed: ${request.method} ${path}`, 'basic');
 
     return null; // 允许继续处理
   }
 
   /**
-   * 检查用户认证状?   */
+   * 检查用户认证状态
+   */
   private async checkAuthentication(request: NextRequest): Promise<{
     authenticated: boolean;
     user?: UserInfo;
@@ -189,7 +193,8 @@ export class ApiInterceptor {
       const authHeader = request.headers.get('authorization');
       const cookieToken = request.cookies.get('auth-token')?.value;
 
-      // 优先检查Authorization�?      if (authHeader) {
+      // 优先检查Authorization头
+      if (authHeader) {
         const token = authHeader.replace('Bearer ', '');
         const user = await this.validateToken(token);
         if (user) {
@@ -223,7 +228,7 @@ export class ApiInterceptor {
    */
   private async validateToken(token: string): Promise<UserInfo | null> {
     try {
-      // 简化实?- 实际应该使用jwt.verify
+      // 简化实现 - 实际应该使用jwt.verify
       // 这里模拟token解析
       if (token.startsWith('valid_token_')) {
         const userId = token.replace('valid_token_', '');
@@ -253,7 +258,8 @@ export class ApiInterceptor {
   }
 
   /**
-   * 检查用户授?   */
+   * 检查用户授权
+   */
   private async checkAuthorization(
     request: NextRequest,
     user: UserInfo
@@ -282,7 +288,7 @@ export class ApiInterceptor {
       this.log(`Authorization error: ${error}`, 'detailed');
       return {
         authorized: false,
-        reason: '授权检查出现错?,
+        reason: '授权检查出现错误',
       };
     }
   }
@@ -291,7 +297,8 @@ export class ApiInterceptor {
    * 根据路径和方法生成权限字符串
    */
   private getPathPermission(path: string, method: string): string | null {
-    // API路由映射到权?    const permissionMap: Record<string, Record<string, string>> = {
+    // API路由映射到权限
+    const permissionMap: Record<string, Record<string, string>> = {
       '/api/users': {
         get: 'users_read',
         post: 'users_create',
@@ -314,7 +321,8 @@ export class ApiInterceptor {
       },
     };
 
-    // 查找匹配的路?    for (const [basePath, methods] of Object.entries(permissionMap)) {
+    // 查找匹配的路由
+    for (const [basePath, methods] of Object.entries(permissionMap)) {
       if (path.startsWith(basePath)) {
         return methods[method] || null;
       }
@@ -327,7 +335,8 @@ export class ApiInterceptor {
    * 获取客户端IP地址
    */
   private getClientIP(request: NextRequest): string {
-    // 检查各种可能的IP�?    const forwardedFor = request.headers.get('x-forwarded-for');
+    // 检查各种可能的IP头
+    const forwardedFor = request.headers.get('x-forwarded-for');
     const realIP = request.headers.get('x-real-ip');
     const cfConnectingIP = request.headers.get('cf-connecting-ip');
 
@@ -348,7 +357,8 @@ export class ApiInterceptor {
   }
 
   /**
-   * 检查IP是否在白名单?   */
+   * 检查IP是否在白名单中
+   */
   private isIpWhitelisted(ip: string): boolean {
     return this.config.ipWhitelist.includes(ip);
   }
@@ -363,7 +373,8 @@ export class ApiInterceptor {
   }
 
   /**
-   * 检查路径是否允许（无需认证?   */
+   * 检查路径是否允许（无需认证）
+   */
   private isPathAllowed(path: string): boolean {
     return this.config.allowedPaths.some(allowedPath =>
       path.startsWith(allowedPath)
@@ -387,18 +398,21 @@ export class ApiInterceptor {
       return false;
     }
 
-    // 检查是否仍在阻止期?    if (rateInfo.blockedUntil && now < rateInfo.blockedUntil) {
+    // 检查是否仍在阻止期间
+    if (rateInfo.blockedUntil && now < rateInfo.blockedUntil) {
       return true;
     }
 
-    // 重置窗口已过?    if (now >= rateInfo.resetTime) {
+    // 重置窗口已过期
+    if (now >= rateInfo.resetTime) {
       rateInfo.count = 1;
       rateInfo.resetTime = now + this.RATE_LIMIT_WINDOW;
       rateInfo.blockedUntil = undefined;
       return false;
     }
 
-    // 增加请求?    rateInfo.count++;
+    // 增加请求计数
+    rateInfo.count++;
 
     // 超过限制
     if (rateInfo.count > this.MAX_REQUESTS_PER_WINDOW) {
@@ -433,11 +447,13 @@ export class ApiInterceptor {
 
     this.securityEvents.push(event);
 
-    // 保持事件缓冲区大?    if (this.securityEvents.length > 1000) {
+    // 保持事件缓冲区大小
+    if (this.securityEvents.length > 1000) {
       this.securityEvents.shift();
     }
 
-    // 记录到日?    if (this.config.logLevel === 'detailed') {
+    // 记录到日志
+    if (this.config.logLevel === 'detailed') {
       this.log(`Security Event: ${JSON.stringify(event)}`, 'detailed');
     }
   }
@@ -451,9 +467,12 @@ export class ApiInterceptor {
     if (this.config.logLevel === 'basic' && level === 'detailed') return;
 
     const timestamp = new Date().toISOString();
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`[API Interceptor ${timestamp}] ${message}`)// 在开发环境中也可以写入文件或发送到日志服务
+    // TODO: 移除调试日志
+    console.info(`[API Interceptor ${timestamp}] ${message}`)
+    // 在开发环境中也可以写入文件或发送到日志服务
     if (process.env.NODE_ENV === 'development') {
-      // 可以在这里添加更详细的日志处?    }
+      // 可以在这里添加更详细的日志处理
+    }
   }
 
   /**

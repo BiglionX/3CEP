@@ -208,7 +208,8 @@ export function SecurityManagementPanel({
     }
   };
 
-  // 生成新密?  const handleGenerateKey = async () => {
+  // 生成新密钥
+  const handleGenerateKey = async () => {
     try {
       const key = await generateKey(selectedAlgorithm);
       alert(`新密钥已生成: ${key.substring(0, 16)}...`);
@@ -221,7 +222,8 @@ export function SecurityManagementPanel({
   const handleKeyRotation = async () => {
     setKeyRotationStatus('rotating');
     try {
-      // 这里应该调用实际的密钥轮换服?      await new Promise(resolve => setTimeout(resolve, 3000)); // 模拟轮换过程
+      // 这里应该调用实际的密钥轮换服务
+      await new Promise(resolve => setTimeout(resolve, 3000)); // 模拟轮换过程
       setKeyRotationStatus('success');
       setTimeout(() => setKeyRotationStatus('idle'), 3000);
     } catch (error) {
@@ -238,7 +240,8 @@ export function SecurityManagementPanel({
   // 保存脱敏规则
   const handleSaveRule = () => {
     // 这里应该保存到后端或本地存储
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('保存脱敏规则:', newRule)setDialogOpen(false);
+    // TODO: 移除调试日志
+    setDialogOpen(false);
     setNewRule({
       pattern: /.*/,
       mask: '***',
@@ -268,7 +271,7 @@ export function SecurityManagementPanel({
             {keyRotationStatus === 'rotating' ? (
               <>
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                轮换?..
+                轮换中...
               </>
             ) : keyRotationStatus === 'success' ? (
               <>
@@ -290,11 +293,11 @@ export function SecurityManagementPanel({
         </div>
       </div>
 
-      {/* 安全状态卡?*/}
+      {/* 安全状态卡 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">安全状?/CardTitle>
+            <CardTitle className="text-sm font-medium">安全状态</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
@@ -306,7 +309,7 @@ export function SecurityManagementPanel({
               <span
                 className={`font-medium ${isSecure ? 'text-green-600' : 'text-red-600'}`}
               >
-                {isSecure ? '安全' : '不安?}
+                {isSecure ? '安全' : '不安全'}
               </span>
             </div>
           </CardContent>
@@ -354,7 +357,7 @@ export function SecurityManagementPanel({
             <Lock className="w-5 h-5" />
             加密解密测试
           </CardTitle>
-          <CardDescription>测试数据加密和解密功?/CardDescription>
+          <CardDescription>测试数据加密和解密功能</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -437,7 +440,7 @@ export function SecurityManagementPanel({
                       <div className="font-mono text-sm p-2 bg-white rounded">
                         {encryptionResult.decrypted}
                         {!encryptionResult.match && (
-                          <span className="text-red-500 ml-2">(不匹?</span>
+                          <span className="text-red-500 ml-2">(不匹配</span>
                         )}
                       </div>
                     </div>
@@ -461,7 +464,7 @@ export function SecurityManagementPanel({
             <Key className="w-5 h-5" />
             哈希测试
           </CardTitle>
-          <CardDescription>测试数据哈希和验证功?/CardDescription>
+          <CardDescription>测试数据哈希和验证功能</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -557,7 +560,7 @@ export function SecurityManagementPanel({
       <Card>
         <CardHeader>
           <CardTitle>脱敏规则管理</CardTitle>
-          <CardDescription>配置和管理数据脱敏规?/CardDescription>
+          <CardDescription>配置和管理数据脱敏规则</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -567,7 +570,7 @@ export function SecurityManagementPanel({
                   <TableHead>字段</TableHead>
                   <TableHead>描述</TableHead>
                   <TableHead>适用角色</TableHead>
-                  <TableHead>状?/TableHead>
+                  <TableHead>状态</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
@@ -575,7 +578,7 @@ export function SecurityManagementPanel({
                 {Object.entries(rules).map(([key, rule]) => (
                   <TableRow key={key}>
                     <TableCell className="font-medium">{key}</TableCell>
-                    <TableCell>{rule.description || '无描?}</TableCell>
+                    <TableCell>{rule.description || '无描述'}</TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {rule.appliesToRoles.map(role => (
@@ -610,7 +613,7 @@ export function SecurityManagementPanel({
         </CardContent>
       </Card>
 
-      {/* 添加规则对话?*/}
+      {/* 添加规则对话框 */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -620,12 +623,12 @@ export function SecurityManagementPanel({
 
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">字段?/label>
+              <label className="text-sm font-medium">字段</label>
               <Input placeholder="例如: users.phone" />
             </div>
 
             <div>
-              <label className="text-sm font-medium">正则表达?/label>
+              <label className="text-sm font-medium">正则表达</label>
               <Input
                 value={newRule.pattern.toString()}
                 onChange={e =>
@@ -654,9 +657,9 @@ export function SecurityManagementPanel({
                   <SelectValue placeholder="选择适用角色" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="viewer">查看?/SelectItem>
+                  <SelectItem value="viewer">查看</SelectItem>
                   <SelectItem value="external_partner">外部合作伙伴</SelectItem>
-                  <SelectItem value="shop_manager">店铺管理?/SelectItem>
+                  <SelectItem value="shop_manager">店铺管理</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -668,7 +671,7 @@ export function SecurityManagementPanel({
                 onChange={e =>
                   setNewRule({ ...newRule, description: e.target.value })
                 }
-                placeholder="规则的用途说?
+                placeholder="规则的用途说明"
                 rows={2}
               />
             </div>

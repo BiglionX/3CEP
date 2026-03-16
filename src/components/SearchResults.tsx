@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { Search, AlertCircle, Lightbulb } from 'lucide-react';
+import { Search, AlertCircle as _AlertCircle, Lightbulb } from 'lucide-react';
 
 interface SearchResult {
   id: string;

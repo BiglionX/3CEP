@@ -47,6 +47,16 @@ const nextConfig = {
       },
     };
 
+    // 为 SSR 环境添加 Node.js 模块的处理
+    // crypto 模块将在运行时动态导入
+    if (!isServer) {
+      // 为客户端添加 polyfall
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        crypto: false,
+      };
+    }
+
     return config;
   },
 

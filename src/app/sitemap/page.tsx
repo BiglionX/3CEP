@@ -12,6 +12,9 @@ import {
   ArrowRight,
   Map,
   Building,
+  Store,
+  Puzzle,
+  Sparkles,
 } from 'lucide-react';
 import { SeoHead } from '@/components/SeoHead';
 
@@ -28,6 +31,41 @@ interface SitemapSection {
 
 export default function SitemapPage() {
   const sitemapSections: SitemapSection[] = [
+    {
+      title: '智能体商店',
+      icon: <Sparkles className="w-5 h-5" />,
+      items: [
+        {
+          name: '智能体商店',
+          href: '/agents',
+          description: '浏览和获取AI智能体，提升工作效率',
+          badge: '热门',
+        },
+        {
+          name: '智能体定制',
+          href: '/enterprise/agents/customize',
+          description: '定制专属的企业智能体解决方案',
+          badge: 'NEW',
+        },
+        {
+          name: '智能体管理',
+          href: '/admin/agents',
+          description: '管理员智能体管理后台',
+        },
+      ],
+    },
+    {
+      title: 'Skill商店',
+      icon: <Puzzle className="w-5 h-5" />,
+      items: [
+        {
+          name: 'Skill商店',
+          href: '/skill-store/skills',
+          description: '探索和安装各种Skill扩展功能',
+          badge: 'NEW',
+        },
+      ],
+    },
     {
       title: '用户中心',
       icon: <Users className="w-5 h-5" />,
@@ -236,8 +274,8 @@ export default function SitemapPage() {
   ];
 
   const quickStats = [
-    { label: '总页面数', value: '40+' },
-    { label: '功能模块', value: '15' },
+    { label: '总页面数', value: '50+' },
+    { label: '功能模块', value: '18' },
     { label: '文档数量', value: '50+' },
     { label: '用户角色', value: '8' },
   ];

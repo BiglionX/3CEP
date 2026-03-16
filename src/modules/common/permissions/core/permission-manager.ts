@@ -6,8 +6,8 @@
 import {
   PermissionConfig,
   PermissionConfigManager,
-  RoleDefinition,
   PermissionDefinition,
+  RoleDefinition,
 } from '../config/permission-config';
 
 export interface UserInfo {
@@ -53,7 +53,8 @@ export class PermissionManager {
   }
 
   /**
-   * 检查用户是否具有指定权?   */
+   * 检查用户是否具有指定权限
+   */
   hasPermission(
     user: UserInfo,
     permission: string | string[],
@@ -69,14 +70,16 @@ export class PermissionManager {
 
     const permissions = Array.isArray(permission) ? permission : [permission];
 
-    // 超级管理员拥有所有权?    if (user.roles.includes('admin')) {
+    // 超级管理员拥有所有权限
+    if (user.roles.includes('admin')) {
       return { hasPermission: true };
     }
 
     const config = this.configManager.getConfig();
     const userPermissions = this.getUserPermissions(user, config);
 
-    // 检查每个权?    const missingPermissions: string[] = [];
+    // 检查每个权限
+    const missingPermissions: string[] = [];
 
     for (const perm of permissions) {
       if (!this.checkSinglePermission(userPermissions, perm, resource)) {
@@ -99,7 +102,8 @@ export class PermissionManager {
   }
 
   /**
-   * 检查用户是否具有任意一个指定权?   */
+   * 检查用户是否具有任意一个指定权限
+   */
   hasAnyPermission(
     user: UserInfo,
     permissions: string[]
@@ -113,12 +117,13 @@ export class PermissionManager {
 
     return {
       hasPermission: false,
-      reason: `不具有任何指定权? ${permissions.join(', ')}`,
+      reason: `不具有任何指定权限: ${permissions.join(', ')}`,
     };
   }
 
   /**
-   * 检查用户是否具有所有指定权?   */
+   * 检查用户是否具有所有指定权限
+   */
   hasAllPermissions(
     user: UserInfo,
     permissions: string[]
@@ -144,19 +149,22 @@ export class PermissionManager {
   }
 
   /**
-   * 获取用户的所有权?   */
+   * 获取用户的所有权限
+   */
   getUserPermissions(user: UserInfo, config?: PermissionConfig): Set<string> {
     const permissions = new Set<string>();
     const currentConfig = config || this.configManager.getConfig();
 
-    // 超级管理?    if (user.roles.includes('admin')) {
-      // 添加所有权?      Object.keys(currentConfig.permissions).forEach(perm => {
+    // 超级管理员
+    if (user.roles.includes('admin')) {
+      // 添加所有权限
+      Object.keys(currentConfig.permissions).forEach(perm => {
         permissions.add(perm);
       });
       return permissions;
     }
 
-    // 普通用?- 收集所有角色的权限
+    // 普通用户 - 收集所有角色的权限
     user.roles.forEach(roleId => {
       const role = currentConfig.roles[roleId];
       if (role) {
@@ -169,7 +177,8 @@ export class PermissionManager {
   }
 
   /**
-   * 收集角色及其继承角色的所有权?   */
+   * 收集角色及其继承角色的所有权限
+   */
   private collectRolePermissions(
     role: RoleDefinition,
     config: PermissionConfig,
@@ -182,15 +191,18 @@ export class PermissionManager {
     }
     visitedRoles.add(role.name);
 
-    // 添加当前角色的权?    role.permissions.forEach((perm: string) => {
+    // 添加当前角色的权限
+    role.permissions.forEach((perm: string) => {
       if (perm === '*') {
-        // 添加所有权?        Object.keys(config.permissions).forEach(p => permissions.add(p));
+        // 添加所有权限
+        Object.keys(config.permissions).forEach(p => permissions.add(p));
       } else {
         permissions.add(perm);
       }
     });
 
-    // 处理继承的角?    if (role.inherits) {
+    // 处理继承的角色
+    if (role.inherits) {
       role.inherits.forEach((inheritedRoleId: string) => {
         const inheritedRole = config.roles[inheritedRoleId];
         if (inheritedRole) {
@@ -206,28 +218,31 @@ export class PermissionManager {
   }
 
   /**
-   * 检查单个权?   */
+   * 检查单个权限
+   */
   private checkSinglePermission(
     userPermissions: Set<string>,
     permission: string,
     resource?: string
   ): boolean {
-    // 直接权限检?    if (userPermissions.has(permission)) {
+    // 直接权限检查
+    if (userPermissions.has(permission)) {
       return true;
     }
 
-    // 通配符权限检?    if (userPermissions.has('*')) {
+    // 通配符权限检查
+    if (userPermissions.has('*')) {
       return true;
     }
 
-    // 资源级别的通配符检?(例如: resource_*)
+    // 资源级别的通配符检查(例如: resource_*)
     if (resource) {
       const resourceWildcard = `${resource}_*`;
       if (userPermissions.has(resourceWildcard)) {
         return true;
       }
 
-      // 分类通配符检?(例如: category_*)
+      // 分类通配符检查(例如: category_*)
       const config = this.configManager.getConfig();
       const permDef = config.permissions[permission];
       if (permDef) {
@@ -242,7 +257,8 @@ export class PermissionManager {
   }
 
   /**
-   * 检查资源访问权?   */
+   * 检查资源访问权限
+   */
   canAccessResource(
     user: UserInfo,
     resource: string,
@@ -260,7 +276,8 @@ export class PermissionManager {
     const userPermissions = this.getUserPermissions(user, config);
     const accessibleResources = new Set<string>();
 
-    // 超级管理员可以访问所有资?    if (user.roles.includes('admin')) {
+    // 超级管理员可以访问所有资源
+    if (user.roles.includes('admin')) {
       return Object.values(config.permissions)
         .filter(
           (perm: PermissionDefinition) =>
@@ -269,7 +286,8 @@ export class PermissionManager {
         .map((perm: PermissionDefinition) => perm.resource);
     }
 
-    // 普通用?- 根据权限推断可访问资?    userPermissions.forEach(permKey => {
+    // 普通用户 - 根据权限推断可访问资源
+    userPermissions.forEach(permKey => {
       const permission = config.permissions[permKey];
       if (permission && (!category || permission.category === category)) {
         accessibleResources.add(permission.resource);
@@ -293,11 +311,13 @@ export class PermissionManager {
       return { hasPermission: true };
     }
 
-    // 超级管理员可以访问所有租户数?    if (user.roles.includes('admin')) {
+    // 超级管理员可以访问所有租户数据
+    if (user.roles.includes('admin')) {
       return { hasPermission: true };
     }
 
-    // 如果资源没有租户信息，允许访问（公共数据?    if (!resourceTenantId) {
+    // 如果资源没有租户信息，允许访问（公共数据）
+    if (!resourceTenantId) {
       return { hasPermission: true };
     }
 
@@ -313,7 +333,7 @@ export class PermissionManager {
     if (user.tenantId !== resourceTenantId) {
       return {
         hasPermission: false,
-        reason: '无权访问其他租户的数?,
+        reason: '无权访问其他租户的数据',
       };
     }
 
@@ -343,18 +363,20 @@ export class PermissionManager {
 
     this.accessLogs.push(logEntry);
 
-    // 保持日志缓冲区大?    if (this.accessLogs.length > this.logBufferSize) {
+    // 保持日志缓冲区大小
+    if (this.accessLogs.length > this.logBufferSize) {
       this.accessLogs.shift();
     }
 
-    // 异步写入持久化存?    this.persistAccessLog(logEntry);
+    // 异步写入持久化存储
+    this.persistAccessLog(logEntry);
   }
 
   /**
    * 获取访问日志
    */
   getAccessLogs(userId?: string, limit: number = 100): AccessLogEntry[] {
-    let logs = [...this.accessLogs].reverse(); // 最新的在前?
+    let logs = [...this.accessLogs].reverse(); // 最新的在前面
     if (userId) {
       logs = logs.filter(log => log.userId === userId);
     }
@@ -370,7 +392,8 @@ export class PermissionManager {
   }
 
   /**
-   * 获取客户端IP（需要在服务端环境中实现?   */
+   * 获取客户端IP（需要在服务端环境中实现）
+   */
   private getClientIP(): string | undefined {
     // 在实际应用中，这里应该从请求头中获取真实IP
     // 例如: request.headers['x-forwarded-for'] || request.connection.remoteAddress
@@ -378,7 +401,8 @@ export class PermissionManager {
   }
 
   /**
-   * 获取用户代理（需要在服务端环境中实现?   */
+   * 获取用户代理（需要在服务端环境中实现）
+   */
   private getUserAgent(): string | undefined {
     // 在实际应用中，这里应该从请求头中获取User-Agent
     // 例如: request.headers['user-agent']
@@ -386,14 +410,17 @@ export class PermissionManager {
   }
 
   /**
-   * 持久化访问日志（异步?   */
+   * 持久化访问日志（异步）
+   */
   private async persistAccessLog(logEntry: AccessLogEntry): Promise<void> {
     try {
       // 这里应该实现实际的日志存储逻辑
       // 例如写入数据库、文件或发送到日志服务
 
-      // 示例：写入控制台（生产环境应该替换为实际存储?      if (process.env.NODE_ENV === 'development') {
-        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('Access Log:', {
+      // 示例：写入控制台（生产环境应该替换为实际存储）
+      if (process.env.NODE_ENV === 'development') {
+        // TODO: 移除调试日志
+        console.info('Access Log:', {
           user: logEntry.userId,
           permission: logEntry.permission,
           resource: logEntry.resource,
@@ -402,7 +429,8 @@ export class PermissionManager {
         });
       }
 
-      // 实际实现可能如下?      /*
+      // 实际实现可能如下：
+      /*
       await db.insert({
         table: 'access_logs',
         data: {

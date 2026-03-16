@@ -1,12 +1,14 @@
 /**
  * 增强版RBAC权限系统入口文件
- * 导出所有相关的组件、Hook和类型定? */
+ * 导出所有相关的组件、Hook和类型定义
+ */
 
-// 核心管理?export {
+// 核心管理组件
+export {
   EnhancedRbacProvider,
-  useEnhancedRbac,
   PermissionGuard,
   RoleGuard,
+  useEnhancedRbac,
 } from './EnhancedRbacManager';
 
 // UI组件
@@ -15,12 +17,12 @@ export { RoleManagementPanel } from './RoleManagementPanel';
 
 // 类型定义
 export type {
+  DynamicPermissionAssignment,
   Permission,
+  PermissionAction,
+  PermissionAuditLog,
+  PermissionCheckResult,
+  ResourceType,
   Role,
   UserPermissionContext,
-  PermissionAction,
-  ResourceType,
-  PermissionCheckResult,
-  DynamicPermissionAssignment,
-  PermissionAuditLog,
 } from './EnhancedRbacManager';

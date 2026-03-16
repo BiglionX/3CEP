@@ -1,24 +1,20 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { NavbarAuthControls } from '@/components/auth/AuthControls';
+import {
+  BookOpen,
+  ChevronDown,
+  FileText,
+  Globe,
+  Home,
+  Menu,
+  MessageSquare,
+  Wrench,
+  X,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Menu,
-  X,
-  ChevronDown,
-  Home,
-  FileText,
-  BookOpen,
-  MessageSquare,
-  Globe,
-  Phone,
-  Users,
-  Wrench,
-  Smartphone,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { NavbarAuthControls } from '@/components/auth/AuthControls';
+import { useEffect, useState } from 'react';
 
 interface NavItem {
   name: string;
@@ -96,11 +92,11 @@ export function UnifiedNavbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">FC</span>
+            <div className="w-20 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">3CEP</span>
             </div>
             <span className="text-xl font-bold text-gray-900 hidden sm:block">
-              FixCycle
+              PROCYC
             </span>
           </Link>
 
@@ -153,7 +149,7 @@ export function UnifiedNavbar() {
             <NavbarAuthControls />
           </div>
 
-          {/* 移动端菜单按?*/}
+          {/* 移动端菜单按钮*/}
           <button
             className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -162,7 +158,7 @@ export function UnifiedNavbar() {
           </button>
         </div>
 
-        {/* 移动端菜?*/}
+        {/* 移动端菜单*/}
         {isMenuOpen && (
           <div className="lg:hidden bg-white border-t mt-2">
             <div className="px-4 py-3 space-y-1 max-h-96 overflow-y-auto">

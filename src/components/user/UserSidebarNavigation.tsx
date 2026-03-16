@@ -1,33 +1,32 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import {
-  User,
-  Settings,
-  Shield,
-  Bell,
-  CreditCard,
-  LogOut,
-  Menu,
-  X,
-  Home,
-  Wrench,
-  ShoppingCart,
-  Users,
-  BarChart3,
-  MessageSquare,
-  Search,
-  Star,
-  Clock,
-  Bookmark,
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
-import { Badge } from '@/components/ui/badge';
-import { useRouter } from 'next/navigation';
+import {
+  BarChart3,
+  Bell,
+  Bookmark,
+  Clock,
+  CreditCard,
+  Home,
+  LogOut,
+  Menu,
+  MessageSquare,
+  Search,
+  Settings,
+  Shield,
+  ShoppingCart,
+  Star,
+  User,
+  Users,
+  Wrench,
+  X,
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface ModuleConfig {
   id: string;
@@ -53,7 +52,7 @@ export default function UserSidebarNavigation({
   const [searchTerm, setSearchTerm] = useState('');
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, is_admin, roles, logout } = useUnifiedAuth();
+  const { user, is_admin, logout } = useUnifiedAuth();
 
   // 模块注册配置
   const moduleRegistry: ModuleConfig[] = [
@@ -171,26 +170,30 @@ export default function UserSidebarNavigation({
     return icons[iconName] || User;
   };
 
-  // 权限检?  const hasPermission = (permissions: string[]) => {
+  // 权限检查
+  const hasPermission = (permissions: string[]) => {
     if (permissions.length === 0) return true;
     // 简化权限检查，实际应该集成RBAC系统
     if (is_admin) return true;
     return false;
   };
 
-  // 根据用户角色过滤可访问模?  const getAccessibleModules = () => {
+  // 根据用户角色过滤可访问模块
+  const getAccessibleModules = () => {
     return moduleRegistry
-      .filter(module => hasPermission(module.permissions))
-      .sort((a, b) => a.priority - b.priority);
+      .filter((module: ModuleConfig) => hasPermission(module.permissions))
+      .sort((a: ModuleConfig, b: ModuleConfig) => a.priority - b.priority);
   };
 
   // 搜索过滤
-  const filteredModules = getAccessibleModules().filter(module =>
-    module.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredModules = getAccessibleModules().filter(
+    (module: ModuleConfig) =>
+      module.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // 按分类组织模?  const groupedModules = filteredModules.reduce(
-    (acc, module) => {
+  // 按分类组织模块
+  const groupedModules = filteredModules.reduce(
+    (acc: Record<string, ModuleConfig[]>, module: ModuleConfig) => {
       if (!acc[module.category]) {
         acc[module.category] = [];
       }
@@ -220,7 +223,7 @@ export default function UserSidebarNavigation({
 
   return (
     <>
-      {/* 移动端触发按?*/}
+      {/* 移动端触发按钮 */}
       <Button
         variant="ghost"
         size="sm"
@@ -230,7 +233,7 @@ export default function UserSidebarNavigation({
         <Menu className="w-5 h-5" />
       </Button>
 
-      {/* 侧边?*/}
+      {/* 侧边栏 */}
       <aside
         className={`${className} ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:static inset-y-0 left-0 z-40 w-80 bg-white shadow-xl md:shadow-none transition-transform duration-300 ease-in-out`}
       >
@@ -260,7 +263,7 @@ export default function UserSidebarNavigation({
                 </p>
                 <div className="flex items-center space-x-2">
                   <span className="text-xs text-gray-500">
-                    {is_admin ? '管理? : '普通用?}
+                    {is_admin ? '管理员' : '普通用户'}
                   </span>
                   {is_admin && (
                     <Badge
@@ -355,7 +358,8 @@ export default function UserSidebarNavigation({
                 className="w-full flex items-center px-4 py-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
               >
                 <LogOut className="w-5 h-5 mr-3" />
-                退出登?              </button>
+                退出登?{' '}
+              </button>
             </div>
           </div>
         </div>

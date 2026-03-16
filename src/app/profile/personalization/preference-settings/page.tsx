@@ -1,497 +1,366 @@
-﻿'use client';
+﻿"use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import {
-  Sliders,
+  Settings,
   Bell,
-  Palette,
-  Globe,
   Shield,
-  Eye,
-  Volume2,
-  Mail,
-  Smartphone,
+  User,
   Monitor,
-  Moon,
-  Sun,
   Save,
   RotateCcw,
-  User,
-  Heart,
-  MapPin,
-  Calendar,
 } from 'lucide-react';
+
+interface PreferenceSetting {
+  id: string;
+  type: 'toggle' | 'select' | 'input' | 'slider';
+  label: string;
+  description: string;
+  value: boolean | string | number;
+  options?: { value: string; label: string }[];
+  min?: number;
+  max?: number;
+  step?: number;
+}
 
 interface PreferenceCategory {
   id: string;
-  title: string;
+  name: string;
   icon: React.ReactNode;
   settings: PreferenceSetting[];
 }
 
-interface PreferenceSetting {
-  id: string;
-  type: 'toggle' | 'select' | 'slider' | 'input';
-  label: string;
-  description: string;
-  value: any;
-  options: { value: string; label: string }[];
-  min: number;
-  max: number;
-  step: number;
-}
-
 export default function PreferenceSettingsPage() {
-  const [preferences, setPreferences] = useState<Record<string, any>>({});
-  const [originalPreferences, setOriginalPreferences] = useState<
-    Record<string, any>
-  >({});
-  const [loading, setLoading] = useState(true);
+  const [preferences, setPreferences] = useState<Record<string, boolean | string | number>>({
+    // 通知设置
+    email_notifications: true,
+    sms_notifications: true,
+    push_notifications: true,
+    order_updates: true,
+    marketing_messages: false,
+    // 隐私设置
+    profile_visible: true,
+    activity_visible: false,
+    location_tracking: false,
+    data_sharing: true,
+    // 显示设置
+    theme: 'system',
+    language: 'zh-CN',
+    font_size: 'medium',
+    compact_mode: false,
+    // 账户设置
+    two_factor_auth: true,
+    login_alerts: true,
+    session_timeout: '30',
+  });
+
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    // 模拟获取用户偏好设置
-    setTimeout(() => {
-      const initialPreferences = {
-        // 通知设置
-        notifications_enabled: true,
-        email_notifications: true,
-        sms_notifications: false,
-        push_notifications: true,
-        notification_sound: true,
-        notification_vibrate: true,
-
-        // 显示设置
-        theme: 'light',
-        language: 'zh-CN',
-        font_size: 14,
-        auto_dark_mode: false,
-        reduced_motion: false,
-
-        // 隐私设置
-        profile_visibility: 'friends',
-        location_sharing: true,
-        activity_sharing: true,
-        data_collection: true,
-
-        // 个性化设置
-        recommended_content: true,
-        personalized_ads: false,
-        interest_categories: ['technology', 'repair'],
-        preferred_stores: [],
-
-        // 高级设置
-        auto_save_drafts: true,
-        sync_across_devices: true,
-        backup_frequency: 'daily',
-        data_retention: 365,
-      };
-
-      setPreferences(initialPreferences);
-      setOriginalPreferences({ ...initialPreferences });
-      setLoading(false);
-    }, 500);
-  }, []);
+  const [hasChanges, setHasChanges] = useState(false);
 
   const preferenceCategories: PreferenceCategory[] = [
     {
       id: 'notifications',
-      title: '通知设置',
+      name: '通知设置',
       icon: <Bell className="w-5 h-5" />,
       settings: [
         {
-          id: 'notifications_enabled',
-          type: 'toggle',
-          label: '启用通知',
-          description: '接收系统通知和提醒',
-        },
-{
           id: 'email_notifications',
           type: 'toggle',
           label: '邮件通知',
-          description: '通过邮箱接收重要通知',
+          description: '通过邮件接收重要通知',
+          value: preferences.email_notifications,
         },
-{
+        {
           id: 'sms_notifications',
           type: 'toggle',
           label: '短信通知',
-          description: '紧急情况下发送短信提醒',
+          description: '通过短信接收重要通知',
+          value: preferences.sms_notifications,
         },
-{
+        {
           id: 'push_notifications',
           type: 'toggle',
           label: '推送通知',
-          description: '在移动设备上显示推送消息',
+          description: '接收应用推送通知',
+          value: preferences.push_notifications,
         },
-{
-          id: 'notification_sound',
+        {
+          id: 'order_updates',
           type: 'toggle',
-          label: '通知声音',
-          description: '播放通知提示音',
+          label: '订单更新',
+          description: '接收订单状态变更通知',
+          value: preferences.order_updates,
         },
-{
-          id: 'notification_vibrate',
+        {
+          id: 'marketing_messages',
           type: 'toggle',
-          label: '震动提醒',
-          description: '收到通知时设备震动',
+          label: '营销信息',
+          description: '接收促销和营销信息',
+          value: preferences.marketing_messages,
         },
       ],
     },
-{
+    {
+      id: 'privacy',
+      name: '隐私设置',
+      icon: <Shield className="w-5 h-5" />,
+      settings: [
+        {
+          id: 'profile_visible',
+          type: 'toggle',
+          label: '公开个人资料',
+          description: '允许其他用户查看您的个人资料',
+          value: preferences.profile_visible,
+        },
+        {
+          id: 'activity_visible',
+          type: 'toggle',
+          label: '显示最近活动',
+          description: '在个人资料中显示最近活动',
+          value: preferences.activity_visible,
+        },
+        {
+          id: 'location_tracking',
+          type: 'toggle',
+          label: '位置追踪',
+          description: '允许应用获取您的位置信息',
+          value: preferences.location_tracking,
+        },
+        {
+          id: 'data_sharing',
+          type: 'toggle',
+          label: '数据共享',
+          description: '与合作伙伴共享数据以提供更好的服务',
+          value: preferences.data_sharing,
+        },
+      ],
+    },
+    {
       id: 'display',
-      title: '显示设置',
+      name: '显示设置',
       icon: <Monitor className="w-5 h-5" />,
       settings: [
         {
           id: 'theme',
           type: 'select',
-          label: '主题模式',
-          description: '选择界面主题风格',
+          label: '主题',
+          description: '选择应用的主题模式',
+          value: preferences.theme,
           options: [
-            { value: 'light', label: '浅色模式' },
-{ value: 'dark', label: '深色模式' },
-{ value: 'auto', label: '自动切换' },
+            { value: 'light', label: '浅色' },
+            { value: 'dark', label: '深色' },
+            { value: 'system', label: '跟随系统' },
           ],
         },
-{
+        {
           id: 'language',
           type: 'select',
           label: '语言',
-          description: '选择界面显示语言',
+          description: '选择显示语言',
+          value: preferences.language,
           options: [
             { value: 'zh-CN', label: '简体中文' },
-{ value: 'en-US', label: 'English' },
-{ value: 'ja-JP', label: '日本語' },
+            { value: 'zh-TW', label: '繁體中文' },
+            { value: 'en', label: 'English' },
           ],
         },
-{
-          id: 'font_size',
-          type: 'input',
-          label: '字体大小',
-          description: '调整界面文字大小 (12-20px)',
-          value: '14',
-        },
-{
-          id: 'auto_dark_mode',
-          type: 'toggle',
-          label: '自动深色模式',
-          description: '根据时间自动切换深色模式',
-        },
-{
-          id: 'reduced_motion',
-          type: 'toggle',
-          label: '减少动画',
-          description: '为减少晕动症而简化动画效果',
-        },
-      ],
-    },
-{
-      id: 'privacy',
-      title: '隐私设置',
-      icon: <Shield className="w-5 h-5" />,
-      settings: [
         {
-          id: 'profile_visibility',
+          id: 'font_size',
           type: 'select',
-          label: '资料可见性',
-          description: '控制谁可以看到您的个人资料',
+          label: '字体大小',
+          description: '调整应用字体大小',
+          value: preferences.font_size,
           options: [
-            { value: 'public', label: '公开' },
-{ value: 'friends', label: '好友可见' },
-{ value: 'private', label: '仅自己可见' },
+            { value: 'small', label: '小' },
+            { value: 'medium', label: '中' },
+            { value: 'large', label: '大' },
           ],
         },
-{
-          id: 'location_sharing',
+        {
+          id: 'compact_mode',
           type: 'toggle',
-          label: '位置共享',
-          description: '允许应用访问您的位置信息',
-        },
-{
-          id: 'activity_sharing',
-          type: 'toggle',
-          label: '活动分享',
-          description: '与其他用户分享您的活动',
-        },
-{
-          id: 'data_collection',
-          type: 'toggle',
-          label: '数据分析',
-          description: '允许收集使用数据以改进服务',
+          label: '紧凑模式',
+          description: '使用更紧凑的界面布局',
+          value: preferences.compact_mode,
         },
       ],
     },
-{
-      id: 'personalization',
-      title: '个性化设置',
+    {
+      id: 'account',
+      name: '账户安全',
       icon: <User className="w-5 h-5" />,
       settings: [
         {
-          id: 'recommended_content',
+          id: 'two_factor_auth',
           type: 'toggle',
-          label: '推荐内容',
-          description: '根据您的兴趣推荐相关内容',
+          label: '两步验证',
+          description: '启用两步验证以增强账户安全',
+          value: preferences.two_factor_auth,
         },
-{
-          id: 'personalized_ads',
-          type: 'toggle',
-          label: '个性化广告',
-          description: '显示基于兴趣的广告',
-        },
-{
-          id: 'interest_categories',
-          type: 'select',
-          label: '兴趣类别',
-          description: '选择您感兴趣的内容类别',
-          options: [
-            { value: 'technology', label: '科技数码' },
-{ value: 'repair', label: '维修技术' },
-{ value: 'life', label: '生活技巧' },
-{ value: 'news', label: '行业资讯' },
-{ value: 'tutorial', label: '教程指南' },
-          ],
-        },
-      ],
-    },
-{
-      id: 'advanced',
-      title: '高级设置',
-      icon: <Sliders className="w-5 h-5" />,
-      settings: [
         {
-          id: 'auto_save_drafts',
+          id: 'login_alerts',
           type: 'toggle',
-          label: '自动保存草稿',
-          description: '自动保存未完成的内容',
+          label: '登录提醒',
+          description: '新设备登录时接收通知',
+          value: preferences.login_alerts,
         },
-{
-          id: 'sync_across_devices',
-          type: 'toggle',
-          label: '跨设备同步',
-          description: '在所有设备间同步数据',
-        },
-{
-          id: 'backup_frequency',
+        {
+          id: 'session_timeout',
           type: 'select',
-          label: '备份频率',
-          description: '自动备份数据的频率',
+          label: '会话超时',
+          description: '自动退出登录的时间',
+          value: preferences.session_timeout,
           options: [
-            { value: 'hourly', label: '每小时' },
-{ value: 'daily', label: '每天' },
-{ value: 'weekly', label: '每周' },
+            { value: '15', label: '15分钟' },
+            { value: '30', label: '30分钟' },
+            { value: '60', label: '1小时' },
+            { value: '120', label: '2小时' },
           ],
-        },
-{
-          id: 'data_retention',
-          type: 'input',
-          label: '数据保留期',
-          description: '数据保存的天数 (30-1095天)',
-          value: '365',
         },
       ],
     },
   ];
 
   const handleToggleChange = (settingId: string, checked: boolean) => {
-    setPreferences(prev => ({
-      ...prev,
-      [settingId]: checked,
-    }));
+    setPreferences((prev) => ({ ...prev, [settingId]: checked }));
+    setHasChanges(true);
   };
 
   const handleSelectChange = (settingId: string, value: string) => {
-    setPreferences(prev => ({
-      ...prev,
-      [settingId]: value,
-    }));
-  };
-
-  const handleSliderChange = (settingId: string, value: number[]) => {
-    setPreferences(prev => ({
-      ...prev,
-      [settingId]: value[0],
-    }));
+    setPreferences((prev) => ({ ...prev, [settingId]: value }));
+    setHasChanges(true);
   };
 
   const handleInputChange = (settingId: string, value: string) => {
-    setPreferences(prev => ({
-      ...prev,
-      [settingId]: value,
-    }));
+    setPreferences((prev) => ({ ...prev, [settingId]: value }));
+    setHasChanges(true);
   };
 
   const handleSave = async () => {
     setSaving(true);
-    // 模拟保存过程
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setOriginalPreferences({ ...preferences });
+    // 模拟保存
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setSaving(false);
-    alert('设置已保存');
+    setHasChanges(false);
   };
 
   const handleReset = () => {
-    setPreferences({ ...originalPreferences });
-    alert('已恢复到上次保存的设置');
+    setPreferences({
+      email_notifications: true,
+      sms_notifications: true,
+      push_notifications: true,
+      order_updates: true,
+      marketing_messages: false,
+      profile_visible: true,
+      activity_visible: false,
+      location_tracking: false,
+      data_sharing: true,
+      theme: 'system',
+      language: 'zh-CN',
+      font_size: 'medium',
+      compact_mode: false,
+      two_factor_auth: true,
+      login_alerts: true,
+      session_timeout: '30',
+    });
+    setHasChanges(false);
   };
 
-  const hasChanges =
-    JSON.stringify(preferences) !== JSON.stringify(originalPreferences);
-
   const renderSetting = (setting: PreferenceSetting) => {
+    const value = preferences[setting.id];
+
     switch (setting.type) {
       case 'toggle':
         return (
           <div className="flex items-center justify-between">
-            <div>"
-              <Label className="text-base font-medium">{setting.label}</Label>
-              {setting.description && ("
-                <p className="text-sm text-gray-600 mt-1">
-                  {setting.description}
-                </p>
-              )}
+            <div className="flex-1 mr-4">
+              <Label className="font-medium">{setting.label}</Label>
+              <p className="text-sm text-gray-500">{setting.description}</p>
             </div>
             <Switch
-              checked={preferences[setting.id]  false}
-              onCheckedChange={checked =>
-                handleToggleChange(setting.id, checked)
-              }
+              checked={value as boolean}
+              onCheckedChange={(checked) => handleToggleChange(setting.id, checked)}
             />
           </div>
         );
-
       case 'select':
         return (
-          <div className="space-y-2">"
-            <Label className="text-base font-medium">{setting.label}</Label>
-            {setting.description && ("
-              <p className="text-sm text-gray-600">{setting.description}</p>
-            )}
-            <Select
-              value={preferences[setting.id]  ''}
-              onValueChange={value => handleSelectChange(setting.id, value)}
+          <div>
+            <Label className="font-medium">{setting.label}</Label>
+            <p className="text-sm text-gray-500 mb-2">{setting.description}</p>
+            <select
+              value={value as string}
+              onChange={(e) => handleSelectChange(setting.id, e.target.value)}
+              className="w-full px-3 py-2 border rounded-md"
             >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {setting.options.map(option => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {setting.options?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         );
-
       case 'input':
         return (
-          <div className="space-y-2">"
-            <Label className="text-base font-medium">{setting.label}</Label>
-            {setting.description && ("
-              <p className="text-sm text-gray-600">{setting.description}</p>
-            )}
-            <Input"
-              type="text"
-              value={preferences[setting.id]  setting.value  ''}
-              onChange={e => handleInputChange(setting.id, e.target.value)}
+          <div>
+            <Label className="font-medium">{setting.label}</Label>
+            <p className="text-sm text-gray-500 mb-2">{setting.description}</p>
+            <Input
+              value={value as string}
+              onChange={(e) => handleInputChange(setting.id, e.target.value)}
             />
           </div>
         );
-
       default:
         return null;
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">"
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  return ("
-    <div className="space-y-6">
-      {/* 页面标题和操作按钮 */}"
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>"
-          <h1 className="text-2xl font-bold text-gray-900">偏好设置</h1>"
-          <p className="text-gray-600 mt-1">自定义您的使用体验</p>
-        </div>
-"
-        <div className="flex items-center space-x-3">
-          <Button"
-            variant="outline"
-            onClick={handleReset}
-            disabled={!hasChanges}
-          >"
-            <RotateCcw className="w-4 h-4 mr-2" />
-            恢复默认
-          </Button>
-          <Button onClick={handleSave} disabled={!hasChanges || saving}>"
-            <Save className="w-4 h-4 mr-2" />
-            {saving  '保存中...' : '保存设置'}
-          </Button>
-        </div>
+  return (
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex items-center gap-3 mb-8">
+        <Settings className="w-8 h-8 text-gray-700" />
+        <h1 className="text-3xl font-bold">偏好设置</h1>
       </div>
 
-      {/* 设置分类网格 */}"
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {preferenceCategories.map(category => (
+      <div className="space-y-6">
+        {preferenceCategories.map((category) => (
           <Card key={category.id}>
-            <CardHeader>"
-              <CardTitle className="flex items-center">"
-                <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                  {category.icon}
-                </div>
-                {category.title}
-              </CardTitle>
-            </CardHeader>"
-            <CardContent className="space-y-6">
-              {category.settings.map(setting => (
-                <div
-                  key={setting.id}"
-                  className="pb-4 border-b border-gray-100 last:border-b-0 last:pb-0"
-                >
-                  {renderSetting(setting)}
-                </div>
-              ))}
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 mb-4">
+                {category.icon}
+                <h2 className="text-xl font-bold">{category.name}</h2>
+              </div>
+              <div className="space-y-4">
+                {category.settings.map((setting) => (
+                  <div key={setting.id} className="py-3 border-b last:border-0">
+                    {renderSetting(setting)}
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* 底部操作栏 */}
-      {hasChanges && ("
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">"
-          <div className="max-w-7xl mx-auto flex items-center justify-end space-x-3">"
-            <Button variant="outline" onClick={handleReset}>"
-              <RotateCcw className="w-4 h-4 mr-2" />
-              恢复
-            </Button>
-            <Button onClick={handleSave} disabled={saving}>"
-              <Save className="w-4 h-4 mr-2" />
-              {saving  '保存中...' : '保存更改'}
-            </Button>
-          </div>
+      {hasChanges && (
+        <div className="fixed bottom-6 right-6 flex gap-3">
+          <Button variant="outline" onClick={handleReset}>
+            <RotateCcw className="w-4 h-4 mr-2" />
+            恢复默认
+          </Button>
+          <Button onClick={handleSave} disabled={saving}>
+            <Save className="w-4 h-4 mr-2" />
+            {saving ? '保存中...' : '保存更改'}
+          </Button>
         </div>
       )}
     </div>
   );
 }
-
-'"

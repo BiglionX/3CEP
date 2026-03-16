@@ -71,10 +71,9 @@ export default function SkillsPage() {
     { code: 'INTEG', name: '集成类', icon: '🔗' },
   ];
 
-  const filteredSkills =
-    selectedCategory && selectedCategory !== 'ALL'
-       skills.filter(skill => skill.category === selectedCategory)
-      : skills;
+  const filteredSkills = selectedCategory && selectedCategory !== 'ALL'
+    ? skills.filter(skill => skill.category === selectedCategory)
+    : skills;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -103,11 +102,10 @@ export default function SkillsPage() {
           {categories.map(cat => (
             <Link
               key={cat.code}
-              href={`/skill-store/skills${cat.code === 'ALL'  '' : `category=${cat.code}`}`}
+              href={`/skill-store/skills${cat.code === 'ALL' ? '' : `?category=${cat.code}`}`}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                (!selectedCategory && cat.code === 'ALL') ||
-                selectedCategory === cat.code
-                   'bg-indigo-600 text-white'
+                (!selectedCategory && cat.code === 'ALL') || selectedCategory === cat.code
+                  ? 'bg-indigo-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >

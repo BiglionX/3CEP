@@ -1,11 +1,12 @@
 /**
- * 权限加载? * 实现权限配置的动态加载、缓存和热更新机? */
+ * 权限加载器
+ * 实现权限配置的动态加载、缓存和热更新机制
+ */
 
 import {
+  DEFAULT_PERMISSION_CONFIG,
   PermissionConfig,
   PermissionConfigManager,
-  DEFAULT_PERMISSION_CONFIG,
-  ValidationResult,
 } from '../config/permission-config';
 
 export interface LoadOptions {
@@ -63,7 +64,8 @@ export class PermissionLoader {
     const cacheTTL = options.cacheTTL ?? this.DEFAULT_CACHE_TTL;
 
     try {
-      // 检查缓?      if (!options.forceRefresh) {
+      // 检查缓存
+      if (!options.forceRefresh) {
         const cached = this.getCachedConfig(cacheTTL);
         if (cached) {
           return {
@@ -92,7 +94,8 @@ export class PermissionLoader {
 
       this.isLoading = true;
 
-      // 尝试从远程加?      const remoteResult = await this.loadFromRemote(options);
+      // 尝试从远程加载
+      const remoteResult = await this.loadFromRemote(options);
       if (remoteResult.success && remoteResult.config) {
         this.cacheConfig(remoteResult.config);
         this.isLoading = false;
@@ -102,7 +105,8 @@ export class PermissionLoader {
         };
       }
 
-      // 降级到默认配?      this.cacheConfig(DEFAULT_PERMISSION_CONFIG);
+      // 降级到默认配置
+      this.cacheConfig(DEFAULT_PERMISSION_CONFIG);
       this.isLoading = false;
 
       return {
@@ -153,28 +157,32 @@ export class PermissionLoader {
           );
         }
 
-        // 更新配置管理?        this.configManager.updateConfig(config);
+        // 更新配置管理器
+        this.configManager.updateConfig(config);
 
         return {
           success: true,
           config,
           source: 'remote',
-          loadTime: 0, // 将在调用处设置实际时?        };
+          loadTime: 0, // 将在调用处设置实际时间
+        };
       } catch (error) {
         console.warn(`权限配置加载尝试 ${attempt}/${maxAttempts} 失败:`, error);
 
         if (attempt < maxAttempts) {
-          await this.delay(retryDelay * attempt); // 指数退?        } else {
+          await this.delay(retryDelay * attempt); // 指数退避
+        } else {
           throw error;
         }
       }
     }
 
-    throw new Error('所有重试尝试都失败?);
+    throw new Error('所有重试尝试都失败');
   }
 
   /**
-   * 获取缓存的配?   */
+   * 获取缓存的配置
+   */
   private getCachedConfig(cacheTTL: number): PermissionConfig | null {
     const cached = this.cache.get(this.CACHE_KEY);
     if (!cached) return null;
@@ -219,7 +227,7 @@ export class PermissionLoader {
    */
   private async fetchPermissionConfig(): Promise<Response> {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超?
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
     try {
       const response = await fetch('/api/permissions/config', {
         method: 'GET',
@@ -237,7 +245,7 @@ export class PermissionLoader {
   }
 
   /**
-   * 标准化配置数?   */
+   * 标准化配置数据   */
   private normalizeConfig(data: any): PermissionConfig {
     return {
       version: data.version || '1.0.0',
@@ -308,7 +316,8 @@ export class PermissionLoader {
   subscribe(callback: (config: PermissionConfig) => void): () => void {
     this.subscribers.push(callback);
 
-    // 立即发送当前配?    const currentConfig = this.configManager.getConfig();
+    // 立即发送当前配置
+    const currentConfig = this.configManager.getConfig();
     callback(currentConfig);
 
     // 返回取消订阅函数
@@ -334,7 +343,7 @@ export class PermissionLoader {
   }
 
   /**
-   * 获取加载器状?   */
+   * 获取加载器状态   */
   getStatus(): {
     isLoaded: boolean;
     isLoading: boolean;

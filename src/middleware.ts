@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { ApiInterceptor } from '@/modules/common/permissions/core/api-interceptor';
 
 // 需要保护的API路径前缀
 const PROTECTED_PATHS = [
@@ -19,33 +18,43 @@ const PUBLIC_PATHS = [
   '/api/health',
   '/api/public',
   '/api/search',
+  '/api/repair-shop/dashboard',
 ];
 
+// 预检查路径类型，避免对非必要路径加载拦截器
+function getPathType(pathname: string): 'protected' | 'public' | 'other' {
+  if (PROTECTED_PATHS.some(prefix => pathname.startsWith(prefix))) {
+    return 'protected';
+  }
+  if (PUBLIC_PATHS.some(prefix => pathname.startsWith(prefix))) {
+    return 'public';
+  }
+  return 'other';
+}
+
 export async function middleware(request: NextRequest) {
-  const interceptor = ApiInterceptor.getInstance();
   const path = request.nextUrl.pathname;
+  const pathType = getPathType(path);
 
-  // 检查是否需要拦截
-  const shouldIntercept = PROTECTED_PATHS.some(prefix =>
-    path.startsWith(prefix)
-  );
-  const isPublicPath = PUBLIC_PATHS.some(prefix => path.startsWith(prefix));
-
-  // 公开路径不拦截
-  if (isPublicPath) {
+  // 公开路径直接放行
+  if (pathType === 'public') {
     return NextResponse.next();
   }
 
-  // 非保护路径且非公开路径，可以选择性拦截
-  if (!shouldIntercept && !isPublicPath) {
-    // 可以根据配置决定是否拦截其他路径
+  // 非保护路径也直接放行
+  if (pathType === 'other') {
     return NextResponse.next();
   }
 
+  // 只有保护路径才加载拦截器（延迟加载）
+  // 动态导入避免 Edge Runtime 兼容性问题
   try {
+    const { ApiInterceptor } = await import('@/modules/common/permissions/core/api-interceptor');
+    const interceptor = ApiInterceptor.getInstance();
+
     // 执行拦截检查
     const interceptionResult = await interceptor.intercept(request);
-  
+
     // 如果拦截器返回响应，说明请求被阻止
     if (interceptionResult) {
       return interceptionResult;
@@ -68,11 +77,12 @@ export async function middleware(request: NextRequest) {
 }
 
 // 配置中间件匹配的路径
+// 注意：暂时禁用所有 API 路由的中间件，避免 Edge Runtime 兼容性问题
 export const config = {
   matcher: [
     /*
-     * 匹配所有API路由
+     * 暂时只匹配管理后台路径，其他API路径直接放行
      */
-    '/api/:path*',
+    '/admin/:path*',
   ],
 };

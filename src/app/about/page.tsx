@@ -1,17 +1,17 @@
 ﻿'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Users,
-  Target,
-  Lightbulb,
   Award,
+  Building,
   Globe,
   Heart,
-  TrendingUp,
+  Lightbulb,
   Shield,
-  Building,
+  Target,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
 
 export default function AboutPage() {
@@ -88,42 +88,42 @@ export default function AboutPage() {
 
   const teamMembers = [
     {
-      name: '张明',
+      name: '李东番',
       position: '创始人兼CEO',
       experience: '15年互联网产品经验',
       avatar: '',
       specialties: ['战略规划', '团队管理'],
     },
     {
-      name: '李晓',
+      name: '张岩',
       position: '技术总监',
       experience: '12年前端开发经验',
       avatar: '',
       specialties: ['系统架构', '技术创新'],
     },
     {
-      name: '王美',
+      name: '周万沈',
       position: '运营总监',
       experience: '10年运营管理经验',
       avatar: '',
       specialties: ['客户服务', '流程优化'],
     },
     {
-      name: '陈志',
+      name: '陈琰培',
       position: '市场总监',
-      experience: '8年市场营销经验',
+      experience: '15年市场营销经验',
       avatar: '',
       specialties: ['品牌建设', '市场拓展'],
     },
     {
-      name: '刘思雨',
+      name: '陈大大',
       position: '首席设计师',
-      experience: '7年UI/UX设计经验',
+      experience: '12年UI/UX设计经验',
       avatar: '',
       specialties: ['用户体验', '界面设计'],
     },
     {
-      name: '赵子',
+      name: '张常昊',
       position: '数据分析',
       experience: '5年数据分析经验',
       avatar: '',
@@ -450,7 +450,7 @@ export default function AboutPage() {
           <Button
             size="lg"
             variant="outline"
-            className="border-white text-white hover:bg-white hover:text-blue-600"
+            className="border-white text-green-600 hover:bg-white hover:text-blue-600"
           >
             了解更多
           </Button>

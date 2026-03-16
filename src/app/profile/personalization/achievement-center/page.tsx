@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -29,18 +29,18 @@ interface Achievement {
   points: number;
   category: 'basic' | 'intermediate' | 'advanced' | 'special';
   status: 'completed' | 'in_progress' | 'locked';
-  progress: number; // 0-100
+  progress: number;
   requirement: string;
-  completedDate: string;
-  unlockCondition: string;
+  completedDate?: string;
+  unlockCondition?: string;
 }
 
 export default function AchievementCenterPage() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
-  const [totalPoints, setTotalPoints] = useState(2450);
-  const [level, setLevel] = useState(12);
+  const [totalPoints] = useState(2450);
+  const [level] = useState(12);
 
   useEffect(() => {
     // 模拟获取成就数据
@@ -270,21 +270,6 @@ export default function AchievementCenterPage() {
     },
   ];
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'basic':
-        return 'blue';
-      case 'intermediate':
-        return 'green';
-      case 'advanced':
-        return 'purple';
-      case 'special':
-        return 'gold';
-      default:
-        return 'gray';
-    }
-  };
-
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'basic':
@@ -444,9 +429,9 @@ export default function AchievementCenterPage() {
               key={achievement.id}
               className={`
                 overflow-hidden relative
-                ${isCompleted  'border-green-200 bg-green-50' : ''}
-                ${isInProgress  'border-blue-200 bg-blue-50' : ''}
-                ${achievement.status === 'locked'  'opacity-80' : ''}
+                ${isCompleted ? 'border-green-200 bg-green-50' : ''}
+                ${isInProgress ? 'border-blue-200 bg-blue-50' : ''}
+                ${achievement.status === 'locked' ? 'opacity-80' : ''}
               `}
             >
               {/* 状态装饰 */}
@@ -470,9 +455,9 @@ export default function AchievementCenterPage() {
                     p-3 rounded-full
                     ${
                       isCompleted
-                         'bg-green-100'
+                        ? 'bg-green-100'
                         : isInProgress
-                           'bg-blue-100'
+                          ? 'bg-blue-100'
                           : 'bg-gray-100'
                     }
                   `}
@@ -481,9 +466,9 @@ export default function AchievementCenterPage() {
                       className={`
                       ${
                         isCompleted
-                           'text-green-600'
+                          ? 'text-green-600'
                           : isInProgress
-                             'text-blue-600'
+                            ? 'text-blue-600'
                             : 'text-gray-400'
                       }
                     `}
@@ -498,9 +483,9 @@ export default function AchievementCenterPage() {
                       text-lg font-bold mb-1
                       ${
                         isCompleted
-                           'text-green-800'
+                          ? 'text-green-800'
                           : isInProgress
-                             'text-blue-800'
+                            ? 'text-blue-800'
                             : 'text-gray-800'
                       }
                     `}
@@ -525,11 +510,11 @@ export default function AchievementCenterPage() {
                   <Badge
                     variant={
                       achievement.category === 'special'
-                         'default'
+                        ? 'default'
                         : achievement.category === 'advanced'
-                           'destructive'
+                          ? 'destructive'
                           : achievement.category === 'intermediate'
-                             'secondary'
+                            ? 'secondary'
                             : 'outline'
                     }
                     className="capitalize"
@@ -586,10 +571,10 @@ export default function AchievementCenterPage() {
                 {!isCompleted && (
                   <Button
                     className="w-full mt-4"
-                    variant={isInProgress  'default' : 'outline'}
+                    variant={isInProgress ? 'default' : 'outline'}
                     disabled={achievement.status === 'locked'}
                   >
-                    {achievement.status === 'locked'  '未解锁' : '查看详情'}
+                    {achievement.status === 'locked' ? '未解锁' : '查看详情'}
                   </Button>
                 )}
               </CardContent>

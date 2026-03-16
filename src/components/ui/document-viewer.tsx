@@ -63,7 +63,8 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
     const results: number[] = [];
     paragraphs.forEach((paragraph, index) => {
       if (paragraph.toLowerCase().includes(searchTerm.toLowerCase())) {
-        results.push(Math.floor(index / 3) + 1); // 转换为页?      }
+        results.push(Math.floor(index / 3) + 1); // 转换为页码
+      }
     });
 
     setSearchResults(Array.from(new Set(results))); // 去重
@@ -98,7 +99,8 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
     setRotation(0);
   };
 
-  // 获取当前页内?  const getCurrentPageContent = () => {
+  // 获取当前页内容
+  const getCurrentPageContent = () => {
     const startIndex = (currentPage - 1) * 3;
     return paragraphs.slice(startIndex, startIndex + 3);
   };
@@ -119,10 +121,10 @@ export function DocumentViewer({ document, onClose }: DocumentViewerProps) {
                   }
                 >
                   {document.status === 'published'
-                    ? '已发?
+                    ? '已发布'
                     : document.status === 'pending'
-                      ? '待审?
-                      : '已拒?}
+                      ? '待审核'
+                      : '已拒绝'}
                 </Badge>
                 <span>{document.language}</span>
                 <span>|</span>

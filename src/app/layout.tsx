@@ -1,5 +1,6 @@
 import { AnalyticsWrapper } from '@/components/AnalyticsWrapper';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import ConfigWarning from '@/components/ConfigWarning';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -21,6 +22,9 @@ export const metadata: Metadata = {
     description: 'AI技术，专注3C售后市场的智能体自动化服务平台',
   },
   manifest: '/manifest.json',
+};
+
+export const viewport = {
   themeColor: '#2563eb',
 };
 
@@ -34,6 +38,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background font-sans antialiased">
         <UnifiedLayout>{children}</UnifiedLayout>
         <AnalyticsWrapper />
+        <ConfigWarning />
       </body>
     </html>
   );

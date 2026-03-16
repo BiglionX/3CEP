@@ -1,9 +1,8 @@
 /**
- * GitHub API 服务? *
- * 用于获取技能仓库的元数据（星标、下载量、更新时间等? *
+ * GitHub API 服务
+ * 用于获取技能仓库的元数据（星标、下载量、更新时间等）
  * @module lib/github/api
  */
-
 export interface GitHubRepoData {
   /** 仓库名称 */
   name: string;
@@ -15,9 +14,9 @@ export interface GitHubRepoData {
   stargazers_count: number;
   /** Fork 数量 */
   forks_count: number;
-  /** 订阅数（ watchers�?*/
+  /** 订阅数（watchers） */
   subscribers_count: number;
-  /** 最后更新时?*/
+  /** 最后更新时间 */
   updated_at: string;
   /** 创建时间 */
   created_at: string;
@@ -31,7 +30,7 @@ export interface GitHubRepoData {
   default_branch: string;
   /** 是否私有 */
   private: boolean;
-  /** 许可证信?*/
+  /** 许可证信息 */
   license?: {
     key: string;
     name: string;
@@ -68,7 +67,7 @@ let rateLimit: RateLimitInfo | null = null;
 function checkRateLimit(): void {
   if (rateLimit && rateLimit.remaining < 10) {
     console.warn(
-      `⚠️  GitHub API 速率限制警告：剩?${rateLimit.remaining}/${rateLimit.limit}`
+      `⚠️  GitHub API 速率限制警告：剩余 ${rateLimit.remaining}/${rateLimit.limit}`
     );
   }
 }
@@ -96,7 +95,7 @@ function handleGitHubError(status: number, data: any): never {
   };
 
   if (status === 403) {
-    error.message = `GitHub API 速率限制已用尽。请等待?${new Date((rateLimit?.reset || 0) * 1000).toLocaleString()} 后重试，或配置认?Token。`;
+    error.message = `GitHub API 速率限制已用尽。请等待 ${new Date((rateLimit?.reset || 0) * 1000).toLocaleString()} 后重试，或配置认证 Token。`;
   } else if (status === 404) {
     error.message = `仓库未找到。请确认仓库名称正确且公开可访问。`;
   }
@@ -105,13 +104,15 @@ function handleGitHubError(status: number, data: any): never {
 }
 
 /**
- * �?GitHub 获取仓库数据
+ * 从 GitHub 获取仓库数据
  *
- * @param repo - 仓库名称（不包含 owner�? * @returns 仓库元数? *
+ * @param repo - 仓库名称（不包含 owner）
+ * @returns 仓库元数据
  * @example
  * ```typescript
  * const data = await fetchRepoData('procyc-find-shop');
- * // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`Stars: ${data.stargazers_count}`)* ```
+ * console.log(`Stars: ${data.stargazers_count}`);
+ * ```
  */
 export async function fetchRepoData(repo: string): Promise<GitHubRepoData> {
   const url = `${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${repo}`;
@@ -121,7 +122,7 @@ export async function fetchRepoData(repo: string): Promise<GitHubRepoData> {
     'User-Agent': 'ProCyc-Skill-Store/2.0',
   };
 
-  // 如果配置?GitHub Token，则使用认证请求
+  // 如果配置了 GitHub Token，则使用认证请求
   const githubToken = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
   if (githubToken) {
     headers['Authorization'] = `token ${githubToken}`;
@@ -159,19 +160,20 @@ export async function fetchRepoData(repo: string): Promise<GitHubRepoData> {
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error(`获取 GitHub 数据失败?{String(error)}`);
+    throw new Error(`获取 GitHub 数据失败: ${String(error)}`);
   }
 }
 
 /**
- * 批量获取多个仓库的数? *
+ * 批量获取多个仓库的数据
  * @param repos - 仓库名称列表
  * @returns 仓库元数据映射表
  *
  * @example
  * ```typescript
  * const allData = await fetchMultipleRepoData(['procyc-find-shop', 'procyc-fault-diagnosis']);
- * // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(allData['procyc-find-shop'].stargazers_count)* ```
+ * console.log(`Stars: ${allData['procyc-find-shop'].stargazers_count}`);
+ * ```
  */
 export async function fetchMultipleRepoData(
   repos: string[]
@@ -179,7 +181,8 @@ export async function fetchMultipleRepoData(
   const results: Record<string, GitHubRepoData> = {};
   const errors: Array<{ repo: string; error: string }> = [];
 
-  // 并发获取所有仓库数?  const promises = repos.map(async repo => {
+  // 并发获取所有仓库数据
+  const promises = repos.map(async repo => {
     try {
       const data = await fetchRepoData(repo);
       results[repo] = data;
@@ -193,7 +196,8 @@ export async function fetchMultipleRepoData(
 
   await Promise.all(promises);
 
-  // 报告错误（但不抛出异常，保证部分成功?  if (errors.length > 0) {
+  // 报告错误（但不抛出异常，保证部分成功）
+  if (errors.length > 0) {
     console.warn('部分仓库数据获取失败:', errors);
   }
 
@@ -201,7 +205,8 @@ export async function fetchMultipleRepoData(
 }
 
 /**
- * 获取当前速率限制状? */
+ * 获取当前速率限制状态
+ */
 export function getRateLimitInfo(): RateLimitInfo | null {
   return rateLimit;
 }
@@ -211,13 +216,14 @@ export function getRateLimitInfo(): RateLimitInfo | null {
  */
 export function formatNumber(num: number): string {
   if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'k';
+    return `${(num / 1000).toFixed(1)}k`;
   }
   return num.toString();
 }
 
 /**
- * 格式化日期（相对时间? */
+ * 格式化日期（相对时间格式）
+ */
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();

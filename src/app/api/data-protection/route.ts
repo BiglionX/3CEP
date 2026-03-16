@@ -251,7 +251,7 @@ export async function POST(request: Request) {
           );
         }
 
-        const encryptedResult = protection.encryptData(plaintext);
+        const encryptedResult = await protection.encryptData(plaintext);
         return NextResponse.json({
           success: true,
           data: encryptedResult,
@@ -269,7 +269,7 @@ export async function POST(request: Request) {
         }
 
         try {
-          const decrypted = protection.decryptData(encrypted, authTag, iv);
+          const decrypted = await protection.decryptData(encrypted, authTag, iv);
           return NextResponse.json({
             success: true,
             data: { decrypted },

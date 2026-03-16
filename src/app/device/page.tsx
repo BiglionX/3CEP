@@ -1,22 +1,19 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  AlertCircle,
+  Battery,
   Home,
-  Plus,
-  Search,
-  Filter,
-  Smartphone,
   Laptop,
+  Plus,
+  Settings,
+  Smartphone,
   Tablet,
   Watch,
-  Battery,
-  Camera,
-  Settings,
-  AlertCircle,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface Device {
   id: string;
@@ -52,6 +49,7 @@ export default function DeviceManagementPage() {
           warrantyEnd: '2025-01-15',
           status: 'normal',
           lastMaintenance: '2023-12-01',
+          imageUrl: '',
         },
         {
           id: '2',
@@ -64,6 +62,7 @@ export default function DeviceManagementPage() {
           warrantyEnd: '2026-03-20',
           status: 'repairing',
           lastMaintenance: '2023-11-15',
+          imageUrl: '',
         },
         {
           id: '3',
@@ -76,6 +75,7 @@ export default function DeviceManagementPage() {
           warrantyEnd: '2024-08-10',
           status: 'repaired',
           lastMaintenance: '2023-10-25',
+          imageUrl: '',
         },
       ]);
       setLoading(false);
@@ -115,11 +115,11 @@ export default function DeviceManagementPage() {
       case 'normal':
         return '正常使用';
       case 'repairing':
-        return '维修;
+        return '维修';
       case 'repaired':
-        return '已维;
+        return '已维修';
       default:
-        return '未知状;
+        return '未知状态';
     }
   };
 
@@ -134,11 +134,11 @@ export default function DeviceManagementPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 页面标题和操作按*/}
+        {/* 页面标题和操作按钮*/}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">设备管理</h1>
-            <p className="text-gray-600">管理和维护您的所有电子设/p>
+            <p className="text-gray-600">管理和维护您的所有电子产品</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <Button
@@ -195,7 +195,7 @@ export default function DeviceManagementPage() {
                   <p className="text-2xl font-bold text-gray-900">
                     {devices.filter(d => d.status === 'repairing').length}
                   </p>
-                  <p className="text-sm text-gray-600">维修/p>
+                  <p className="text-sm text-gray-600">维修</p>
                 </div>
               </div>
             </CardContent>
@@ -262,7 +262,7 @@ export default function DeviceManagementPage() {
                             </p>
                           </div>
                           <div>
-                            <span className="font-medium">序列</span>
+                            <span className="font-medium">序列号:</span>
                             <p className="font-mono">{device.serialNumber}</p>
                           </div>
                           <div>
@@ -291,7 +291,7 @@ export default function DeviceManagementPage() {
                             ).toLocaleDateString()}
                           </span>
                           {new Date(device.warrantyEnd) < new Date() && (
-                            <span className="text-red-500">⚠️ 保修已过/span>
+                            <span className="text-red-500">⚠️ 保修已过</span>
                           )}
                         </div>
                       </div>
@@ -316,7 +316,7 @@ export default function DeviceManagementPage() {
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   暂无设备
                 </h3>
-                <p className="text-gray-600 mb-6">添加您的第一台设备开始管/p>
+                <p className="text-gray-600 mb-6">添加您的第一台设备开始管理</p>
                 <Button onClick={() => setShowAddModal(true)}>
                   <Plus className="w-4 h-4 mr-2" />
                   添加设备
@@ -329,4 +329,3 @@ export default function DeviceManagementPage() {
     </div>
   );
 }
-

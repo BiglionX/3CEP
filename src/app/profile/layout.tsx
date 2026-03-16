@@ -24,7 +24,7 @@ export default function ProfileLayout({ children }: ProfileLayoutProps) {
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="md:hidden mr-4 p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               >
-                {sidebarOpen  (
+                {sidebarOpen ? (
                   <X className="h-6 w-6" />
                 ) : (
                   <Menu className="h-6 w-6" />

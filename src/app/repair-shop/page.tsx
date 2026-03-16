@@ -128,18 +128,18 @@ export default function RepairShopPage() {
                     <div className="text-sm text-gray-500">{shop.distance}</div>
                   )}
                   <div className="flex gap-2">
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                    <a href={`tel:${shop.phone}`} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                       <Phone className="w-4 h-4 mr-1" />
                       致电
-                    </button>
-                    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                    </a>
+                    <a href="/contact" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
                       <MessageSquare className="w-4 h-4 mr-1" />
                       咨询
-                    </button>
-                    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                    </a>
+                    <a href="/repair-shop/appointment" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
                       <Calendar className="w-4 h-4 mr-1" />
                       预约
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>

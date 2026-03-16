@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  ShoppingCart, 
-  Users, 
+import {
+  ShoppingCart,
+  Users,
   Package,
   TrendingUp,
   Shield,
@@ -19,7 +19,6 @@ import {
   CheckCircle,
   ArrowRight,
   Search,
-  Filter,
   Star
 } from "lucide-react";
 
@@ -68,23 +67,23 @@ export default function B2BProcurementPage() {
       rating: 4.8,
       products: "电子元器件、芯片、传感器",
       location: "深圳",
-      responseTime: "2小时
+      responseTime: "2小时"
     },
     {
       id: 2,
-      name: "长三角精密制造集,
+      name: "长三角精密制造集团",
       rating: 4.9,
-      products: "机械零件、模具、加工服,
+      products: "机械零件、模具、加工服务",
       location: "上海",
-      responseTime: "4小时
+      responseTime: "4小时"
     },
     {
       id: 3,
       name: "珠三角新材料有限公司",
       rating: 4.7,
-      products: "新型材料、复合材料、涂,
+      products: "新型材料、复合材料、涂料",
       location: "广州",
-      responseTime: "6小时
+      responseTime: "6小时"
     }
   ];
 
@@ -101,12 +100,12 @@ export default function B2BProcurementPage() {
                 采购需求提交成功！
               </h2>
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                我们的AI采购智能体正在为您匹配最优供应商，预5分钟内提-5个精选报价方案
+                我们的AI采购智能体正在为您匹配最优供应商，预计5分钟内提供3-5个精选报价方案
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button onClick={() => setSubmitted(false)}>
                   <ArrowRight className="w-4 h-4 mr-2" />
-                  继续提交需
+                  继续提交需求
                 </Button>
                 <Link href="/enterprise/procurement/dashboard">
                   <Button variant="outline">
@@ -143,29 +142,29 @@ export default function B2BProcurementPage() {
             onClick={() => setActiveTab('submit')}
             className={`px-6 py-3 rounded-lg font-medium transition-colors ${
               activeTab === 'submit'
-                 'bg-blue-600 text-white shadow-lg'
+                ? 'bg-blue-600 text-white shadow-lg'
                 : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
             }`}
           >
             <ShoppingCart className="w-4 h-4 inline mr-2" />
-            提交采购需
+            提交采购需求
           </button>
           <button
             onClick={() => setActiveTab('suppliers')}
             className={`px-6 py-3 rounded-lg font-medium transition-colors ${
               activeTab === 'suppliers'
-                 'bg-blue-600 text-white shadow-lg'
+                ? 'bg-blue-600 text-white shadow-lg'
                 : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
             }`}
           >
             <Users className="w-4 h-4 inline mr-2" />
-            优质供应
+            优质供应商
           </button>
           <button
             onClick={() => setActiveTab('features')}
             className={`px-6 py-3 rounded-lg font-medium transition-colors ${
               activeTab === 'features'
-                 'bg-blue-600 text-white shadow-lg'
+                ? 'bg-blue-600 text-white shadow-lg'
                 : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
             }`}
           >
@@ -190,28 +189,28 @@ export default function B2BProcurementPage() {
                     <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-gray-900">AI智能匹配</h3>
-                      <p className="text-sm text-gray-600">基于需求自动匹配最优供应商，节0%筛选时/p>
+                      <p className="text-sm text-gray-600">基于需求自动匹配最优供应商，节省90%筛选时间</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-gray-900">自动询价比价</h3>
-                      <p className="text-sm text-gray-600">批量向多家供应商询价，智能分析报价差/p>
+                      <p className="text-sm text-gray-600">批量向多家供应商询价，智能分析报价差异</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-gray-900">风险智能评估</h3>
-                      <p className="text-sm text-gray-600">全方位评估供应商资质和交付风/p>
+                      <p className="text-sm text-gray-600">全方位评估供应商资质和交付风险</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-gray-900">全程透明追踪</h3>
-                      <p className="text-sm text-gray-600">实时跟踪采购进度和订单状/p>
+                      <p className="text-sm text-gray-600">实时跟踪采购进度和订单状态</p>
                     </div>
                   </div>
                 </CardContent>
@@ -238,7 +237,7 @@ export default function B2BProcurementPage() {
                     <span className="font-semibold">10,000+</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">AI匹配准确/span>
+                    <span className="text-gray-600">AI匹配准确率</span>
                     <span className="font-semibold text-purple-600">95%</span>
                   </div>
                 </CardContent>
@@ -249,7 +248,7 @@ export default function B2BProcurementPage() {
             <div className="lg:col-span-2">
               <Card className="shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-xl">提交采购需/CardTitle>
+                  <CardTitle className="text-xl">提交采购需求</CardTitle>
                   <p className="text-gray-600">
                     详细描述您的采购需求，AI智能体会为您匹配最优供应商
                   </p>
@@ -274,7 +273,7 @@ export default function B2BProcurementPage() {
                           id="quantity"
                           value={request.quantity}
                           onChange={(e) => setRequest({...request, quantity: e.target.value})}
-                          placeholder="如：1000件00KG
+                          placeholder="如：1000件或5000KG"
                           required
                         />
                       </div>
@@ -319,25 +318,25 @@ export default function B2BProcurementPage() {
                         id="specialRequirements"
                         value={request.specialRequirements}
                         onChange={(e) => setRequest({...request, specialRequirements: e.target.value})}
-                        placeholder="包装要求、认证标准、售后服务等特殊需
+                        placeholder="包装要求、认证标准、售后服务等特殊需求"
                         rows={3}
                       />
                     </div>
 
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full py-6 text-lg"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting  (
+                      {isSubmitting ? (
                         <>
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          AI正在分析需..
+                          AI正在分析需求...
                         </>
                       ) : (
                         <>
                           <Zap className="w-5 h-5 mr-2" />
-                          智能匹配供应
+                          智能匹配供应商
                         </>
                       )}
                     </Button>
@@ -351,7 +350,7 @@ export default function B2BProcurementPage() {
         {activeTab === 'suppliers' && (
           <div>
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">优质供应商推/h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">优质供应商推荐</h2>
               <p className="text-lg text-gray-600">经过AI智能筛选的高质量供应商合作伙伴</p>
             </div>
             
@@ -370,21 +369,21 @@ export default function B2BProcurementPage() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <p className="text-gray-600">
-                        <span className="font-medium">主营产品/span>
+                        <span className="font-medium">主营产品</span>
                         {supplier.products}
                       </p>
                       <p className="text-gray-600">
-                        <span className="font-medium">所在地/span>
+                        <span className="font-medium">所在地</span>
                         {supplier.location}
                       </p>
                       <p className="text-gray-600">
-                        <span className="font-medium">响应时间/span>
+                        <span className="font-medium">响应时间</span>
                         {supplier.responseTime}
                       </p>
                     </div>
                     <Button className="w-full">
                       <Users className="w-4 h-4 mr-2" />
-                      联系供应
+                      联系供应商
                     </Button>
                   </CardContent>
                 </Card>
@@ -394,7 +393,7 @@ export default function B2BProcurementPage() {
             <div className="text-center mt-12">
               <Button size="lg">
                 <Search className="w-5 h-5 mr-2" />
-                查看全部供应
+                查看全部供应商
               </Button>
             </div>
           </div>
@@ -403,7 +402,7 @@ export default function B2BProcurementPage() {
         {activeTab === 'features' && (
           <div>
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">核心功能特/h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">核心功能特色</h2>
               <p className="text-lg text-gray-600">全方位的智能采购解决方案</p>
             </div>
             
@@ -411,28 +410,28 @@ export default function B2BProcurementPage() {
               {[
                 {
                   icon: Search,
-                  title: '智能需求解,
-                  description: '自然语言处理技术，自动理解复杂的采购需
+                  title: '智能需求解析',
+                  description: '自然语言处理技术，自动理解复杂的采购需求'
                 },
                 {
                   icon: Users,
-                  title: '供应商智能匹,
+                  title: '供应商智能匹配',
                   description: '基于多维度算法，精准匹配最优供应商'
                 },
                 {
                   icon: Package,
                   title: '自动询价比价',
-                  description: '批量询价，智能分析价格差异和性价
+                  description: '批量询价，智能分析价格差异和性价比'
                 },
                 {
                   icon: Shield,
                   title: '风险评估',
-                  description: '全方位供应商资质和交付风险智能评
+                  description: '全方位供应商资质和交付风险智能评估'
                 },
                 {
                   icon: BarChart3,
                   title: '数据分析',
-                  description: '采购数据可视化，洞察采购趋势和优化空
+                  description: '采购数据可视化，洞察采购趋势和优化空间'
                 },
                 {
                   icon: Globe,

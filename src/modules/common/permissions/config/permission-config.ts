@@ -102,14 +102,14 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
   lastUpdated: new Date().toISOString(),
   roles: {
     admin: {
-      name: '超级管理?,
-      description: '系统最高权限角色，拥有所有功能访问权?,
+      name: '超级管理员',
+      description: '系统最高权限角色，拥有所有功能访问权限',
       level: 100,
       isSystem: true,
       permissions: ['*'],
     },
     manager: {
-      name: '管理?,
+      name: '管理员',
       description: '业务管理员，可管理用户、内容和基础配置',
       level: 80,
       isSystem: true,
@@ -133,7 +133,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
       ],
     },
     content_manager: {
-      name: '内容管理?,
+      name: '内容管理员',
       description: '负责内容审核、发布和管理',
       level: 70,
       isSystem: true,
@@ -147,8 +147,8 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
       ],
     },
     shop_manager: {
-      name: '店铺管理?,
-      description: '负责维修店铺管理和审?,
+      name: '店铺管理员',
+      description: '负责店铺管理和审核',
       level: 70,
       isSystem: true,
       permissions: [
@@ -161,7 +161,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
       ],
     },
     finance_manager: {
-      name: '财务管理?,
+      name: '财务管理员',
       description: '负责财务管理、支付审核和报表查看',
       level: 75,
       isSystem: true,
@@ -187,7 +187,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
       ],
     },
     warehouse_operator: {
-      name: '仓库操作?,
+      name: '仓库操作员',
       description: '负责库存管理和出入库操作',
       level: 50,
       isSystem: true,
@@ -200,7 +200,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     },
     agent_operator: {
       name: '智能体操作员',
-      description: '负责智能体工作流执行和监?,
+      description: '负责智能体工作流执行和监控',
       level: 55,
       isSystem: true,
       permissions: [
@@ -213,23 +213,24 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
       ],
     },
     viewer: {
-      name: '只读查看?,
-      description: '仅能查看基础数据和报?,
+      name: '查看者',
+      description: '仅能查看基础数据和报表',
       level: 30,
       isSystem: true,
       permissions: ['dashboard_read', 'reports_read'],
     },
     external_partner: {
       name: '外部合作伙伴',
-      description: '第三方合作伙伴，有限的数据访问权?,
+      description: '第三方合作伙伴，有限的数据访问权限',
       level: 20,
       isSystem: false,
       permissions: ['dashboard_read'],
     },
   },
   permissions: {
-    // 仪表板权?    dashboard_read: {
-      name: '仪表板查?,
+    // 仪表板权限
+    dashboard_read: {
+      name: '仪表板查看',
       description: '查看系统仪表板和统计数据',
       category: 'dashboard',
       resource: 'dashboard',
@@ -239,14 +240,14 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     // 用户管理权限
     users_read: {
       name: '用户查看',
-      description: '查看用户列表和基本信?,
+      description: '查看用户列表和基本信息',
       category: 'user_management',
       resource: 'users',
       action: 'read',
     },
     users_create: {
       name: '用户创建',
-      description: '创建新用户账?,
+      description: '创建新用户账户',
       category: 'user_management',
       resource: 'users',
       action: 'create',
@@ -254,7 +255,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     },
     users_update: {
       name: '用户编辑',
-      description: '编辑用户信息和权?,
+      description: '编辑用户信息和权限',
       category: 'user_management',
       resource: 'users',
       action: 'update',
@@ -272,7 +273,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     // 内容管理权限
     content_read: {
       name: '内容查看',
-      description: '查看内容列表和详?,
+      description: '查看内容列表和详情',
       category: 'content_management',
       resource: 'content',
       action: 'read',
@@ -301,7 +302,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     },
     content_approve: {
       name: '内容审批',
-      description: '审批待审核内?,
+      description: '审批待审核内容',
       category: 'content_management',
       resource: 'content',
       action: 'approve',
@@ -342,14 +343,14 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     // 财务权限
     payments_read: {
       name: '支付查看',
-      description: '查看支付记录和财务数?,
+      description: '查看支付记录和财务数据',
       category: 'finance',
       resource: 'payments',
       action: 'read',
     },
     payments_refund: {
-      name: '支付退?,
-      description: '处理退款申?,
+      name: '支付退款',
+      description: '处理退款申请',
       category: 'finance',
       resource: 'payments',
       action: 'refund',
@@ -393,7 +394,7 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     // 采购权限
     procurement_read: {
       name: '采购查看',
-      description: '查看采购订单和流?,
+      description: '查看采购订单和流程',
       category: 'procurement',
       resource: 'procurement',
       action: 'read',
@@ -431,29 +432,30 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
       isSensitive: true,
     },
 
-    // 智能体权?    agents_execute: {
-      name: '智能体执?,
+    // 智能体权限
+    agents_execute: {
+      name: '智能体执行',
       description: '执行智能体工作流',
       category: 'agents',
       resource: 'agents',
       action: 'execute',
     },
     agents_monitor: {
-      name: '智能体监?,
-      description: '监控智能体运行状?,
+      name: '智能体监控',
+      description: '监控智能体运行状态',
       category: 'agents',
       resource: 'agents',
       action: 'monitor',
     },
     agents_invoke: {
-      name: '智能体调?,
-      description: '直接调用智能体执行特定任?,
+      name: '智能体调用',
+      description: '直接调用智能体执行特定任务',
       category: 'agents',
       resource: 'agents',
       action: 'invoke',
     },
     agents_debug: {
-      name: '智能体调?,
+      name: '智能体调试',
       description: '调试智能体执行过程和参数',
       category: 'agents',
       resource: 'agents',
@@ -559,11 +561,13 @@ export const DEFAULT_PERMISSION_CONFIG: PermissionConfig = {
     enabled: true,
     ttl: 300000, // 5分钟
     maxItems: 1000,
-    updateInterval: 30000, // 30�?  },
+    updateInterval: 30000, // 30秒
+  },
 };
 
 /**
- * 权限配置管理? */
+ * 权限配置管理器
+ */
 export class PermissionConfigManager {
   private static instance: PermissionConfigManager;
   private config: PermissionConfig = DEFAULT_PERMISSION_CONFIG;
@@ -595,11 +599,13 @@ export class PermissionConfigManager {
       lastUpdated: new Date().toISOString(),
     };
 
-    // 通知所有订阅?    this.notifySubscribers();
+    // 通知所有订阅者
+    this.notifySubscribers();
   }
 
   /**
-   * 重置为默认配?   */
+   * 重置为默认配置
+   */
   resetToDefault(): void {
     this.config = { ...DEFAULT_PERMISSION_CONFIG };
     this.config.lastUpdated = new Date().toISOString();
@@ -612,7 +618,8 @@ export class PermissionConfigManager {
   subscribe(callback: (config: PermissionConfig) => void): () => void {
     this.subscribers.push(callback);
 
-    // 立即发送当前配?    callback(this.getConfig());
+    // 立即发送当前配置
+    callback(this.getConfig());
 
     // 返回取消订阅函数
     return () => {

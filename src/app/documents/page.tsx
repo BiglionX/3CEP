@@ -1,19 +1,19 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { DocumentViewer } from '@/components/ui/document-viewer';
+import { Input } from '@/components/ui/input';
 import {
-  Search,
-  Filter,
-  Plus,
   BookOpen,
-  Eye,
-  ThumbsUp,
   Calendar,
+  Eye,
+  Filter,
   Languages,
+  Plus,
+  Search,
+  ThumbsUp,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface Document {
   id: string;
@@ -48,7 +48,7 @@ export default function DocumentsPage() {
     const mockDocuments: Document[] = [
       {
         id: '1',
-        title: 'iPhone 15 Pro 使用说明,
+        title: 'iPhone 15 Pro 使用说明',
         content:
           '欢迎使用 iPhone 15 Pro。本手册将帮助您了解如何使用这款强大的智能手机。\n\n开箱即用\n当您首次开机时，请按照屏幕上的指示进行设置。您可以选择恢复备份或设置为新设备。\n\n基本操作\n主屏幕：轻点应用图标即可打开应用\n控制中心：从屏幕右上角向下滑动\n通知中心：从屏幕左上角向下滑动\n多任务处理：向上滑动并暂停以查看最近使用的应用\n\n相机功能\niPhone 15 Pro 配备了先进的三摄系统：\n主摄像头8MP，支持传感器位移式光学图像防抖功能\n超广角摄像头2MP\n长焦摄像头：12MP，支倍光学变焦\n\n电池续航\n视频播放：最长可9小时\n流媒体视频播放：最长可0小时\n音频播放：最长可5小时',
         language: 'zh-CN',
@@ -58,7 +58,7 @@ export default function DocumentsPage() {
         created_at: '2024-01-15T10:00:00Z',
         updated_at: '2024-01-15T10:00:00Z',
         status: 'published',
-        author: { name: 'Apple官方' },
+        author: { name: 'Apple官方', avatar: '' },
       },
       {
         id: '2',
@@ -72,21 +72,21 @@ export default function DocumentsPage() {
         created_at: '2024-01-14T14:30:00Z',
         updated_at: '2024-01-14T14:30:00Z',
         status: 'published',
-        author: { name: 'Samsung Official' },
+        author: { name: 'Samsung Official', avatar: '' },
       },
       {
         id: '3',
-        title: 'MacBook Pro 16イン取扱説明,
+        title: 'MacBook Pro 16 取扱説明',
         content:
           'MacBook Pro 16インチへようこそ。このガイドは新しいラップトップの使い方を説明します。\n\n初期設定\n初回起動時は画面の指示に従ってください。バックアップからの復元または新規設定を選択できます。\n\n基本操作\nホーム画面：アプリアイコンをタップしてアプリを開く\nコントロールセンター：画面右上の角から下にスワイプ\n通知センター：画面左上の角から下にスワイプ\n最近使ったアプリ：Dockの最近使ったアプリセクションを確認\n\nカメラ機能\nMacBook Proには以下のカメラが搭載されています：\nメインカメラ080p FaceTime HDカメラ\nオーディオ：6スピーカサウンドシステム\n\nバッテリー寿命\nビデオ再生：最1時間\nストリーミング：最7時間\n音楽再生：最0時間',
         language: 'ja-JP',
-        category: '笔记本电,
+        category: '笔记本电脑',
         views: 432,
         likes: 34,
         created_at: '2024-01-13T09:15:00Z',
         updated_at: '2024-01-13T09:15:00Z',
         status: 'published',
-        author: { name: 'Apple公式' },
+        author: { name: 'Apple公式', avatar: '' },
       },
     ];
 
@@ -118,15 +118,15 @@ export default function DocumentsPage() {
     setFilteredDocuments(filtered);
   }, [documents, searchTerm, selectedCategory, selectedLanguage]);
 
-  const categories = ['all', '手机', '笔记本电, '平板电脑', '耳机', '其他'];
+  const categories = ['all', '手机', '笔记本电脑', '平板电脑', '耳机', '其他'];
   const languages = ['all', 'zh-CN', 'en-US', 'ja-JP', 'ko-KR'];
 
   const getLanguageName = (langCode: string) => {
     const langMap: Record<string, string> = {
       'zh-CN': '中文',
       'en-US': 'English',
-      'ja-JP': '日本,
-      'ko-KR': '한국,
+      'ja-JP': '日本語',
+      'ko-KR': '한국어',
     };
     return langMap[langCode] || langCode;
   };
@@ -147,15 +147,16 @@ export default function DocumentsPage() {
       {/* 页面标题 */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">产品说明/h1>
+          <h1 className="text-3xl font-bold text-gray-900">产品说明</h1>
           <p className="text-gray-600 mt-2">浏览和搜索各类产品的详细使用说明</p>
         </div>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
-          上传说明        </Button>
+          上传说明
+        </Button>
       </div>
 
-      {/* 搜索和筛*/}
+      {/* 搜索和筛选 */}
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
@@ -176,7 +177,7 @@ export default function DocumentsPage() {
             >
               {categories.map(category => (
                 <option key={category} value={category}>
-                  {category === 'all'  '全部分类' : category}
+                  {category === 'all' ? '全部分类' : category}
                 </option>
               ))}
             </select>
@@ -190,7 +191,7 @@ export default function DocumentsPage() {
             >
               {languages.map(lang => (
                 <option key={lang} value={lang}>
-                  {lang === 'all'  '全部语言' : getLanguageName(lang)}
+                  {lang === 'all' ? '全部语言' : getLanguageName(lang)}
                 </option>
               ))}
             </select>
@@ -198,7 +199,8 @@ export default function DocumentsPage() {
 
           <Button variant="outline">
             <Filter className="h-4 w-4 mr-2" />
-            高级筛          </Button>
+            高级筛选
+          </Button>
         </div>
       </div>
 
@@ -249,17 +251,17 @@ export default function DocumentsPage() {
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
                     document.status === 'published'
-                       'bg-green-100 text-green-800'
+                      ? 'bg-green-100 text-green-800'
                       : document.status === 'pending'
-                         'bg-yellow-100 text-yellow-800'
+                        ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-red-100 text-red-800'
                   }`}
                 >
                   {document.status === 'published'
-                     '已发
+                    ? '已发布'
                     : document.status === 'pending'
-                       '待审
-                      : '已拒}
+                      ? '待审核'
+                      : '已拒绝'}
                 </span>
               </div>
 
@@ -292,12 +294,13 @@ export default function DocumentsPage() {
         ))}
       </div>
 
-      {/* 空状*/}
+      {/* 空状态 */}
       {filteredDocuments.length === 0 && (
         <div className="text-center py-12">
           <BookOpen className="h-16 w-16 mx-auto text-gray-300 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            未找到相关文          </h3>
+            未找到相关文档
+          </h3>
           <p className="text-gray-500">尝试调整搜索条件或筛选器</p>
         </div>
       )}
@@ -312,4 +315,3 @@ export default function DocumentsPage() {
     </div>
   );
 }
-

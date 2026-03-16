@@ -8,6 +8,14 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 // 服务端客户端（使用服务角色密钥）
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
+// 检查 Supabase 是否已配置
+const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+// TODO: 移除此警告日志，配置好 Supabase 后删除
+if (!isSupabaseConfigured) {
+  console.warn('⚠️ [Supabase] 未配置 Supabase 环境变量！\n请在 .env.local 中设置：\n  - NEXT_PUBLIC_SUPABASE_URL\n  - NEXT_PUBLIC_SUPABASE_ANON_KEY\n  - SUPABASE_SERVICE_ROLE_KEY (可选)\n当前使用模拟数据模式。');
+}
+
 // 单例模式防止多实例问题 - 使用全局变量确保跨模块共享
 declare global {
   var __supabaseInstance: any | undefined;
@@ -113,6 +121,12 @@ export interface SystemConfig {
 export class DatabaseService {
   // 配件相关操作
   static async getParts() {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      console.warn('[DatabaseService] Supabase 未配置，返回模拟数据');
+      return mockData.parts;
+    }
+
     const { data, error } = await supabase
       .from('parts')
       .select('*')
@@ -123,6 +137,13 @@ export class DatabaseService {
   }
 
   static async getPartById(id: string) {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      const part = mockData.parts.find(p => p.id === id);
+      if (!part) throw new Error('配件不存在');
+      return part;
+    }
+
     const { data, error } = await supabase
       .from('parts')
       .select('*')
@@ -134,6 +155,11 @@ export class DatabaseService {
   }
 
   static async getPartsWithPrices() {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      return mockData.parts;
+    }
+
     const { data, error } = await supabase
       .from('parts_with_prices')
       .select('*')
@@ -145,6 +171,11 @@ export class DatabaseService {
 
   // 价格相关操作
   static async getPricesByPartId(partId: string) {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('part_prices')
       .select('*')
@@ -157,6 +188,11 @@ export class DatabaseService {
 
   // 上传内容相关操作
   static async getUploadedContent() {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('uploaded_content')
       .select('*')
@@ -169,6 +205,17 @@ export class DatabaseService {
   static async uploadContent(
     content: Omit<UploadedContent, 'id' | 'created_at' | 'updated_at'>
   ) {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      const newContent: UploadedContent = {
+        ...content,
+        id: Math.random().toString(36).substr(2, 9),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      return newContent;
+    }
+
     const { data, error } = await supabase
       .from('uploaded_content')
       .insert([content])
@@ -181,6 +228,14 @@ export class DatabaseService {
 
   // 预约相关操作
   static async getAppointments(userId?: string) {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      if (userId) {
+        return mockData.appointments.filter(a => a.user_id === userId);
+      }
+      return mockData.appointments;
+    }
+
     let query = supabase
       .from('appointments')
       .select('*')
@@ -199,6 +254,17 @@ export class DatabaseService {
   static async createAppointment(
     appointment: Omit<Appointment, 'id' | 'created_at' | 'updated_at'>
   ) {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      const newAppointment: Appointment = {
+        ...appointment,
+        id: Math.random().toString(36).substr(2, 9),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      return newAppointment;
+    }
+
     const { data, error } = await supabase
       .from('appointments')
       .insert([appointment])
@@ -211,6 +277,11 @@ export class DatabaseService {
 
   // 系统配置相关操作
   static async getConfig(key: string) {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      return null;
+    }
+
     const { data, error } = await supabase
       .from('system_config')
       .select('value')
@@ -222,6 +293,12 @@ export class DatabaseService {
   }
 
   static async setConfig(key: string, value: any) {
+    // TODO: 移除此检查，配置好 Supabase 后删除
+    if (!isSupabaseConfigured) {
+      console.warn('[DatabaseService] Supabase 未配置，无法保存配置');
+      return null;
+    }
+
     const { data, error } = await supabaseAdmin
       .from('system_config')
       .upsert({ key, value })
@@ -232,5 +309,24 @@ export class DatabaseService {
     return data as unknown as SystemConfig;
   }
 }
+
+// 导出配置状态，供其他模块检查
+export const isConfigured = isSupabaseConfigured;
+
+// 模拟数据生成器（当 Supabase 未配置时使用）
+export const mockData = {
+  // 配件模拟数据
+  parts: [
+    { id: '1', name: 'iPhone 14 Pro 屏幕', category: '屏幕', brand: 'Apple', description: '原装屏幕总成', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: '2', name: 'iPhone 14 电池', category: '电池', brand: 'Apple', description: '原装电池', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: '3', name: 'Samsung Galaxy S23 屏幕', category: '屏幕', brand: 'Samsung', description: '原装屏幕总成', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  ] as Part[],
+
+  // 预约模拟数据
+  appointments: [
+    { id: '1', user_id: 'user1', start_time: new Date().toISOString(), end_time: new Date(Date.now() + 3600000).toISOString(), status: 'pending', notes: 'iPhone 14 Pro 屏幕维修', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: '2', user_id: 'user2', start_time: new Date(Date.now() + 86400000).toISOString(), end_time: new Date(Date.now() + 90000000).toISOString(), status: 'confirmed', notes: 'MacBook Air 电池更换', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  ] as Appointment[],
+};
 
 export default supabase;

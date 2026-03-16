@@ -1,342 +1,299 @@
-﻿'use client';
+﻿"use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { User, Camera, Save, X, AlertCircle } from 'lucide-react';
-
-interface PersonalInfo {
-  name: string;
-  email: string;
-  phone: string;
-  birthday: string;
-  gender: string;
-  location: string;
-  bio: string;
-  avatar: string;
-}
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import {
+  User,
+  Lock,
+  Shield,
+  Camera,
+  Save,
+  X,
+} from 'lucide-react';
 
 export default function ProfileSettingsPage() {
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
-    name: '',
-    email: '',
-    phone: '',
-    birthday: '',
-    gender: '',
-    location: '',
-    bio: '',
-    avatar: '',
+  const { user } = useUnifiedAuth();
+
+  const [profile, setProfile] = useState({
+    name: (user as any)?.name || '用户',
+    email: (user as any)?.email || 'user@example.com',
+    phone: '138****8888',
+    location: '广东省深圳市',
+    bio: '热爱科技，专注维修服务',
   });
 
-  const [originalInfo, setOriginalInfo] = useState<PersonalInfo>(
-    {} as PersonalInfo
-  );
-  const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState({
+    email: true,
+    sms: true,
+    push: false,
+    orderUpdates: true,
+    marketing: false,
+  });
+
+  const [security, setSecurity] = useState({
+    twoFactor: true,
+    loginAlert: true,
+  });
+
   const [saving, setSaving] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasChanges, setHasChanges] = useState(false);
 
-  useEffect(() => {
-    // 模拟获取用户数据
-    setTimeout(() => {
-      const mockData: PersonalInfo = {
-        name: '张三',
-        email: 'zhangsan@example.com',
-        phone: '138****8888',
-        birthday: '1990-01-01',
-        gender: 'male',
-        location: '北京市朝阳区',
-        bio: '热爱科技产品的数码爱好者，专注于手机和平板设备的维修保养',
-        avatar: '',
-      };
-      setPersonalInfo(mockData);
-      setOriginalInfo({ ...mockData });
-      setLoading(false);
-    }, 500);
-  }, []);
+  const handleProfileChange = (field: string, value: string) => {
+    setProfile((prev) => ({ ...prev, [field]: value }));
+    setHasChanges(true);
+  };
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
+  const handleNotificationChange = (field: string, value: boolean) => {
+    setNotifications((prev) => ({ ...prev, [field]: value }));
+    setHasChanges(true);
+  };
 
-    if (!personalInfo.name.trim()) {
-      newErrors.name = '姓名不能为空';
-    }
-
-    if (!personalInfo.email.trim()) {
-      newErrors.email = '邮箱不能为空';
-    } else if (!/\S+@\S+\.\S+/.test(personalInfo.email)) {
-      newErrors.email = '请输入有效的邮箱地址';
-    }
-
-    if (
-      personalInfo.phone &&
-      !/^1[3-9]\d{9}$/.test(personalInfo.phone.replace(/\*/g, ''))
-    ) {
-      newErrors.phone = '请输入有效的手机号码';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleSecurityChange = (field: string, value: boolean) => {
+    setSecurity((prev) => ({ ...prev, [field]: value }));
+    setHasChanges(true);
   };
 
   const handleSave = async () => {
-    if (!validateForm()) {
-      alert('请检查表单填写是否正确');
-      return;
-    }
-
     setSaving(true);
-    try {
-      // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      setOriginalInfo({ ...personalInfo });
-      alert('个人资料更新成功');
-    } catch (error) {
-      alert('更新失败，请稍后重试');
-    } finally {
-      setSaving(false);
-    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setSaving(false);
+    setHasChanges(false);
   };
 
   const handleCancel = () => {
-    setPersonalInfo({ ...originalInfo });
-    setErrors({});
-    alert('已撤销更改');
+    setProfile({
+      name: (user as any)?.name || '用户',
+      email: (user as any)?.email || 'user@example.com',
+      phone: '138****8888',
+      location: '广东省深圳市',
+      bio: '热爱科技，专注维修服务',
+    });
+    setHasChanges(false);
   };
 
-  const hasChanges =
-    JSON.stringify(personalInfo) !== JSON.stringify(originalInfo);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">"
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  return (
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex items-center gap-3 mb-8">
+        <User className="w-8 h-8 text-gray-700" />
+        <h1 className="text-3xl font-bold">个人设置</h1>
       </div>
-    );
-  }
 
-  return ("
-    <div className="space-y-6">
-      {/* 页面标题 */}"
-      <div className="flex items-center justify-between">
-        <div>"
-          <h1 className="text-2xl font-bold text-gray-900">账户设置</h1>"
-          <p className="text-gray-600 mt-1">管理您的个人信息</p>
-        </div>
-        {hasChanges && ("
-          <div className="flex items-center space-x-3">"
-            <Button variant="outline" onClick={handleCancel}>"
-              <X className="w-4 h-4 mr-2" />
-              取消
-            </Button>
-            <Button onClick={handleSave} disabled={saving}>"
-              <Save className="w-4 h-4 mr-2" />
-              {saving  '保存中...' : '保存更改'}
-            </Button>
-          </div>
-        )}
-      </div>
-"
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左侧：头像上传 */}"
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>"
-              <CardTitle className="text-lg">头像</CardTitle>
-            </CardHeader>"
-            <CardContent className="text-center">"
-              <div className="relative inline-block">"
-                <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
-                  {personalInfo.avatar  (
-                    <img
-                      src={personalInfo.avatar}"
-                      alt="头像""
-                      className="w-32 h-32 rounded-full object-cover"
-                    />
-                  ) : ("
-                    <User className="w-16 h-16 text-gray-400" />
-                  )}
-                </div>"
-                <button className="absolute bottom-4 right-4 p-2 bg-blue-600 hover:bg-blue-700 transition-colors">"
-                  <Camera className="w-4 h-4" />
-                </button>
-              </div>"
-              <p className="text-sm text-gray-600 mt-2">
-                点击相机图标上传新头像
-              </p>"
-              <Button variant="outline" size="sm" className="mt-3">
-                选择文件
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="profile">个人资料</TabsTrigger>
+          <TabsTrigger value="notifications">通知设置</TabsTrigger>
+          <TabsTrigger value="security">账户安全</TabsTrigger>
+        </TabsList>
 
-        {/* 右侧：个人信息表单 */}"
-        <div className="lg:col-span-2">
+        {/* 个人资料 */}
+        <TabsContent value="profile">
           <Card>
-            <CardHeader>"
-              <CardTitle className="text-lg">基本信息</CardTitle>
-            </CardHeader>"
+            <CardHeader>
+              <CardTitle>基本信息</CardTitle>
+            </CardHeader>
             <CardContent className="space-y-6">
-              {/* 姓名 */}"
-              <div className="space-y-2">"
-                <Label htmlFor="name">姓名 *</Label>
-                <Input"
+              {/* 头像 */}
+              <div className="flex items-center gap-6">
+                <div className="relative">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                    <User className="w-12 h-12 text-white" />
+                  </div>
+                  <button className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-md border">
+                    <Camera className="w-4 h-4" />
+                  </button>
+                </div>
+                <div>
+                  <h3 className="font-medium">头像</h3>
+                  <p className="text-sm text-gray-500">点击更换头像</p>
+                </div>
+              </div>
+
+              {/* 姓名 */}
+              <div className="grid gap-2">
+                <Label htmlFor="name">姓名</Label>
+                <Input
                   id="name"
-                  value={personalInfo.name}
-                  onChange={e =>
-                    setPersonalInfo({ ...personalInfo, name: e.target.value })
-                  }
-                  className={errors.name  'border-red-500' : ''}
+                  value={profile.name}
+                  onChange={(e) => handleProfileChange('name', e.target.value)}
                 />
-                {errors.name && (
-                  <div className="flex items-center text-red-500 text-sm">"
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.name}
-                  </div>
-                )}
               </div>
 
-              {/* 邮箱 */}"
-              <div className="space-y-2">"
-                <Label htmlFor="email">邮箱 *</Label>
-                <Input"
-                  id="email""
+              {/* 邮箱 */}
+              <div className="grid gap-2">
+                <Label htmlFor="email">邮箱</Label>
+                <Input
+                  id="email"
                   type="email"
-                  value={personalInfo.email}
-                  onChange={e =>
-                    setPersonalInfo({ ...personalInfo, email: e.target.value })
-                  }
-                  className={errors.email  'border-red-500' : ''}
+                  value={profile.email}
+                  onChange={(e) => handleProfileChange('email', e.target.value)}
                 />
-                {errors.email && (
-                  <div className="flex items-center text-red-500 text-sm">"
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.email}
-                  </div>
-                )}
               </div>
 
-              {/* 手机号 */}"
-              <div className="space-y-2">"
+              {/* 手机 */}
+              <div className="grid gap-2">
                 <Label htmlFor="phone">手机号</Label>
-                <Input"
-                  id="phone""
-                  type="tel"
-                  value={personalInfo.phone}
-                  onChange={e =>
-                    setPersonalInfo({ ...personalInfo, phone: e.target.value })
-                  }
-                  className={errors.phone  'border-red-500' : ''}
-                  placeholder="请输入手机号"
+                <Input
+                  id="phone"
+                  value={profile.phone}
+                  onChange={(e) => handleProfileChange('phone', e.target.value)}
                 />
-                {errors.phone && ("
-                  <div className="flex items-center text-red-500 text-sm">"
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.phone}
-                  </div>
-                )}
               </div>
 
-              {/* 生日和性别 */}"
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">"
-                <div className="space-y-2">"
-                  <Label htmlFor="birthday">生日</Label>
-                  <Input"
-                    id="birthday""
-                    type="date"
-                    value={personalInfo.birthday}
-                    onChange={e =>
-                      setPersonalInfo({
-                        ...personalInfo,
-                        birthday: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">"
-                  <Label htmlFor="gender">性别</Label>
-                  <select"
-                    id="gender"
-                    value={personalInfo.gender}
-                    onChange={e =>
-                      setPersonalInfo({
-                        ...personalInfo,
-                        gender: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >"
-                    <option value="">请选择</option>"
-                    <option value="male">男</option>"
-                    <option value="female">女</option>"
-                    <option value="other">其他</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 地址 */}"
-              <div className="space-y-2">"
+              {/* 所在地 */}
+              <div className="grid gap-2">
                 <Label htmlFor="location">所在地</Label>
-                <Input"
+                <Input
                   id="location"
-                  value={personalInfo.location}
-                  onChange={e =>
-                    setPersonalInfo({
-                      ...personalInfo,
-                      location: e.target.value,
-                    })
-                  }
-                  placeholder="请输入所在地"
+                  value={profile.location}
+                  onChange={(e) => handleProfileChange('location', e.target.value)}
                 />
               </div>
 
-              {/* 个人简介 */}"
-              <div className="space-y-2">"
+              {/* 个人简介 */}
+              <div className="grid gap-2">
                 <Label htmlFor="bio">个人简介</Label>
-                <Textarea"
+                <Textarea
                   id="bio"
-                  value={personalInfo.bio}
-                  onChange={e =>
-                    setPersonalInfo({ ...personalInfo, bio: e.target.value })
-                  }
-                  placeholder="简单介绍一下自己..."
+                  value={profile.bio}
+                  onChange={(e) => handleProfileChange('bio', e.target.value)}
                   rows={4}
-                />"
-                <p className="text-sm text-gray-500">
-                  {personalInfo.bio.length}/200 字符
-                </p>
+                />
+                <p className="text-sm text-gray-500">{profile.bio.length}/200 字符</p>
               </div>
 
-              {/* 固定保存按钮（移动端） */}"
-              <div className="md:hidden pt-4 border-t">"
-                <div className="flex space-x-3">
-                  <Button"
-                    variant="outline""
-                    className="flex-1"
-                    onClick={handleCancel}
-                  >
-                    取消
-                  </Button>
-                  <Button"
-                    className="flex-1"
-                    onClick={handleSave}
-                    disabled={saving || !hasChanges}
-                  >
-                    {saving  '保存中...' : '保存更改'}
-                  </Button>
-                </div>
+              {/* 操作按钮 */}
+              <div className="flex gap-3 pt-4">
+                <Button variant="outline" onClick={handleCancel} disabled={!hasChanges}>
+                  <X className="w-4 h-4 mr-2" />
+                  取消
+                </Button>
+                <Button onClick={handleSave} disabled={!hasChanges || saving}>
+                  <Save className="w-4 h-4 mr-2" />
+                  {saving ? '保存中...' : '保存'}
+                </Button>
               </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </TabsContent>
+
+        {/* 通知设置 */}
+        <TabsContent value="notifications">
+          <Card>
+            <CardHeader>
+              <CardTitle>通知偏好</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>邮件通知</Label>
+                  <p className="text-sm text-gray-500">通过邮件接收重要通知</p>
+                </div>
+                <Switch
+                  checked={notifications.email}
+                  onCheckedChange={(checked) => handleNotificationChange('email', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>短信通知</Label>
+                  <p className="text-sm text-gray-500">通过短信接收重要通知</p>
+                </div>
+                <Switch
+                  checked={notifications.sms}
+                  onCheckedChange={(checked) => handleNotificationChange('sms', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>推送通知</Label>
+                  <p className="text-sm text-gray-500">接收应用推送通知</p>
+                </div>
+                <Switch
+                  checked={notifications.push}
+                  onCheckedChange={(checked) => handleNotificationChange('push', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>订单更新</Label>
+                  <p className="text-sm text-gray-500">接收订单状态变更通知</p>
+                </div>
+                <Switch
+                  checked={notifications.orderUpdates}
+                  onCheckedChange={(checked) => handleNotificationChange('orderUpdates', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>营销信息</Label>
+                  <p className="text-sm text-gray-500">接收促销和营销信息</p>
+                </div>
+                <Switch
+                  checked={notifications.marketing}
+                  onCheckedChange={(checked) => handleNotificationChange('marketing', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* 账户安全 */}
+        <TabsContent value="security">
+          <Card>
+            <CardHeader>
+              <CardTitle>安全设置</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>两步验证</Label>
+                  <p className="text-sm text-gray-500">启用两步验证以增强账户安全</p>
+                </div>
+                <Switch
+                  checked={security.twoFactor}
+                  onCheckedChange={(checked) => handleSecurityChange('twoFactor', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>登录提醒</Label>
+                  <p className="text-sm text-gray-500">新设备登录时接收通知</p>
+                </div>
+                <Switch
+                  checked={security.loginAlert}
+                  onCheckedChange={(checked) => handleSecurityChange('loginAlert', checked)}
+                />
+              </div>
+
+              <div className="pt-4 border-t">
+                <Button variant="outline">
+                  <Lock className="w-4 h-4 mr-2" />
+                  修改密码
+                </Button>
+              </div>
+
+              <div className="pt-4 border-t">
+                <Button variant="outline">
+                  <Shield className="w-4 h-4 mr-2" />
+                  查看登录历史
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
-
-'"

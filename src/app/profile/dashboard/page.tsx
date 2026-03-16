@@ -13,7 +13,6 @@ import {
   Edit3, 
   Camera,
   Award,
-  Clock,
   TrendingUp,
   Wrench,
   ShoppingCart,
@@ -70,7 +69,7 @@ interface QuickAccessModule {
 export default function ProfileDashboardPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const { is_admin, roles } = useUnifiedAuth()
+  const { is_admin } = useUnifiedAuth()
 
   // 快捷访问模块配置
   const quickAccessModules: QuickAccessModule[] = [
@@ -148,19 +147,19 @@ export default function ProfileDashboardPage() {
       id: 'loyalty_points',
       name: '积分商城',
       icon: Star,
-      description: `${user.points || 0} 积分可用`
+      description: `${user?.points || 0} 积分可用`
     },
     {
       id: 'coupon_wallet',
       name: '优惠券包',
       icon: Ticket,
-      description: `${user.coupons || 0} 张优惠券`
+      description: `${user?.coupons || 0} 张优惠券`
     },
     {
       id: 'achievement_center',
       name: '成就中心',
       icon: Award,
-      description: `${user.achievements.length || 0} 个成就`
+      description: `${user?.achievements?.length || 0} 个成就`
     },
     {
       id: 'preference_settings',
@@ -181,7 +180,7 @@ export default function ProfileDashboardPage() {
         avatar: '',
         joinDate: '2024-01-15',
         location: '北京市朝阳区',
-        role: is_admin  '管理员' : '普通用户',
+        role: is_admin ? '管理员' : '普通用户',
         memberLevel: '金牌会员',
         totalOrders: 24,
         totalSpent: 3280,
@@ -260,7 +259,7 @@ export default function ProfileDashboardPage() {
             <CardHeader className="text-center">
               <div className="relative mx-auto mb-4">
                 <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mx-auto">
-                  {user.avatar  (
+                  {user.avatar ? (
                     <img 
                       src={user.avatar} 
                       alt={user.name}
@@ -276,7 +275,7 @@ export default function ProfileDashboardPage() {
               </div>
               <CardTitle className="text-xl">{user.name}</CardTitle>
               <div className="flex flex-wrap gap-2 mt-2">
-                <Badge variant={is_admin  "destructive" : "secondary"}>
+                <Badge variant={is_admin ? "destructive" : "secondary"}>
                   {user.role}
                 </Badge>
                 <Badge variant="outline">
@@ -326,13 +325,17 @@ export default function ProfileDashboardPage() {
                 </div>
               </div>
               <div className="flex space-x-2">
-                <Button className="flex-1" variant="outline">
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  编辑资料
+                <Button className="flex-1" variant="outline" asChild>
+                  <a href="/profile/settings">
+                    <Edit3 className="w-4 h-4 mr-2" />
+                    编辑资料
+                  </a>
                 </Button>
-                <Button className="flex-1" variant="outline" size="sm">
-                  <Settings className="w-4 h-4 mr-1" />
-                  设置
+                <Button className="flex-1" variant="outline" size="sm" asChild>
+                  <a href="/profile/security">
+                    <Settings className="w-4 h-4 mr-1" />
+                    设置
+                  </a>
                 </Button>
               </div>
             </CardContent>
@@ -373,61 +376,69 @@ export default function ProfileDashboardPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* 业务统计数据卡片 */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="rounded-full bg-blue-100 p-3">
-                    <Wrench className="w-6 h-6 text-blue-600" />
+            <a href="/repair-shop" className="block">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="rounded-full bg-blue-100 p-3">
+                      <Wrench className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-2xl font-bold text-gray-900">{user.repairCount}</p>
+                      <p className="text-sm text-gray-600">维修订单</p>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-2xl font-bold text-gray-900">{user.repairCount}</p>
-                    <p className="text-sm text-gray-600">维修订单</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </a>
             
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="rounded-full bg-green-100 p-3">
-                    <ShoppingCart className="w-6 h-6 text-green-600" />
+            <a href="/parts-market" className="block">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="rounded-full bg-green-100 p-3">
+                      <ShoppingCart className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-2xl font-bold text-gray-900">{user.partsPurchased}</p>
+                      <p className="text-sm text-gray-600">配件购买</p>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-2xl font-bold text-gray-900">{user.partsPurchased}</p>
-                    <p className="text-sm text-gray-600">配件购买</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </a>
             
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="rounded-full bg-purple-100 p-3">
-                    <Home className="w-6 h-6 text-purple-600" />
+            <a href="/device" className="block">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="rounded-full bg-purple-100 p-3">
+                      <Home className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-2xl font-bold text-gray-900">{user.devicesManaged}</p>
+                      <p className="text-sm text-gray-600">设备管理</p>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-2xl font-bold text-gray-900">{user.devicesManaged}</p>
-                    <p className="text-sm text-gray-600">设备管理</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </a>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="rounded-full bg-orange-100 p-3">
-                    <TrendingUp className="w-6 h-6 text-orange-600" />
+            <a href="/profile/orders" className="block">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="rounded-full bg-orange-100 p-3">
+                      <TrendingUp className="w-6 h-6 text-orange-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-2xl font-bold text-gray-900">¥{user.totalSpent}</p>
+                      <p className="text-sm text-gray-600">累计消费</p>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-2xl font-bold text-gray-900">¥{user.totalSpent}</p>
-                    <p className="text-sm text-gray-600">累计消费</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </a>
           </div>
 
           {/* 快捷访问模块 */}
@@ -546,9 +557,9 @@ export default function ProfileDashboardPage() {
                 ].map((activity, index) => (
                   <div key={index} className="flex items-start">
                     <div className={`w-2 h-2 rounded-full mt-2 mr-3 ${
-                      activity.type === 'success'  'bg-green-500' :
-                      activity.type === 'info'  'bg-blue-500' :
-                      activity.type === 'warning'  'bg-yellow-500' :
+                      activity.type === 'success' ? 'bg-green-500' :
+                      activity.type === 'info' ? 'bg-blue-500' :
+                      activity.type === 'warning' ? 'bg-yellow-500' :
                       'bg-gray-500'
                     }`}></div>
                     <div className="flex-1">
