@@ -50,13 +50,23 @@ interface BehaviorAnalyticsData {
 interface BehaviorAnalyticsPanelProps {
   userId?: string;
   className?: string;
+  data?: BehaviorAnalyticsData; // 可选的外部数据
   onDataUpdate?: (data: BehaviorAnalyticsData) => void;
+  onSegmentClick?: (segment: {
+    segmentId: string;
+    segmentName: string;
+    userCount: number;
+    percentage: number;
+    characteristics: string[];
+  }) => void;
 }
 
 export function BehaviorAnalyticsPanel({
   userId,
   className = '',
+  data: externalData,
   onDataUpdate,
+  onSegmentClick,
 }: BehaviorAnalyticsPanelProps) {
   const [analyticsData, setAnalyticsData] =
     useState<BehaviorAnalyticsData | null>(null);
@@ -66,8 +76,15 @@ export function BehaviorAnalyticsPanel({
 
   // 加载分析数据
   useEffect(() => {
-    loadAnalyticsData();
-  }, [userId, timeRange]);
+    if (externalData) {
+      // 使用外部数据
+      setAnalyticsData(externalData);
+      setLoading(false);
+    } else {
+      // 内部加载数据
+      loadAnalyticsData();
+    }
+  }, [userId, timeRange, externalData]);
 
   // 生成模拟趋势数据
   const generateMockTrendData = (

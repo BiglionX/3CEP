@@ -24,6 +24,8 @@ import {
   TrendingUp,
   Users,
   X,
+  Headphones,
+  QrCode,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -103,6 +105,7 @@ export default function EnterpriseDashboardPage() {
 
   const menuItems = [
     { name: '仪表盘', href: '/enterprise/admin/dashboard', icon: BarChart3 },
+    { name: '售后管理', href: '/enterprise/after-sales', icon: Headphones },
     { name: '智能体管理', href: '/enterprise/admin/agents', icon: Bot },
     { name: 'Token管理', href: '/enterprise/admin/tokens', icon: Coins },
     { name: '门户管理', href: '/enterprise/admin/portal', icon: Globe },
@@ -121,6 +124,11 @@ export default function EnterpriseDashboardPage() {
     { name: '企业资料', href: '/enterprise/admin/documents', icon: FileText },
     { name: '设备管理', href: '/enterprise/admin/devices', icon: Package },
     { name: '数据分析', href: '/enterprise/admin/analytics', icon: TrendingUp },
+    {
+      name: '二维码溯源',
+      href: '/enterprise/admin/traceability',
+      icon: QrCode,
+    },
     { name: '团队管理', href: '/enterprise/admin/team', icon: Users },
     { name: '系统设置', href: '/enterprise/admin/settings', icon: Settings },
   ];

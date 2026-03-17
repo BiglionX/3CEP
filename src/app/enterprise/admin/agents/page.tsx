@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Bot,
   Calendar,
@@ -18,6 +16,21 @@ import {
   RefreshCw,
   ShoppingCart,
   Plus,
+  BarChart3,
+  Coins,
+  Globe,
+  CreditCard,
+  HelpCircle,
+  DollarSign,
+  FileText,
+  Package,
+  Users,
+  Settings,
+  Menu,
+  X,
+  LogOut,
+  Headphones,
+  QrCode,
 } from 'lucide-react';
 
 interface AgentSubscription {
@@ -42,6 +55,7 @@ interface AgentSubscription {
 }
 
 export default function EnterpriseAgentsPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [subscriptions] = useState<AgentSubscription[]>([
     {
       id: '1',
@@ -185,236 +199,359 @@ export default function EnterpriseAgentsPage() {
     }
   };
 
+  const menuItems = [
+    { name: '仪表盘', href: '/enterprise/admin/dashboard', icon: BarChart3 },
+    { name: '售后管理', href: '/enterprise/after-sales', icon: Headphones },
+    { name: '智能体管理', href: '/enterprise/admin/agents', icon: Bot },
+    { name: 'Token管理', href: '/enterprise/admin/tokens', icon: Coins },
+    { name: '门户管理', href: '/enterprise/admin/portal', icon: Globe },
+    { name: 'FXC管理', href: '/enterprise/admin/fxc', icon: CreditCard },
+    {
+      name: '采购管理',
+      href: '/enterprise/admin/procurement',
+      icon: ShoppingCart,
+    },
+    { name: '有奖问答', href: '/enterprise/admin/reward-qa', icon: HelpCircle },
+    {
+      name: '新品众筹',
+      href: '/enterprise/admin/crowdfunding',
+      icon: DollarSign,
+    },
+    { name: '企业资料', href: '/enterprise/admin/documents', icon: FileText },
+    { name: '设备管理', href: '/enterprise/admin/devices', icon: Package },
+    { name: '数据分析', href: '/enterprise/admin/analytics', icon: TrendingUp },
+    {
+      name: '二维码溯源',
+      href: '/enterprise/admin/traceability',
+      icon: QrCode,
+    },
+    { name: '团队管理', href: '/enterprise/admin/team', icon: Users },
+    { name: '系统设置', href: '/enterprise/admin/settings', icon: Settings },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* 页面标题 */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">智能体管理</h1>
-            <p className="mt-2 text-gray-600">
-              管理您的AI智能体订阅、查看使用情况和续费信息
-            </p>
-          </div>
-          <Link href="/agent-store">
-            <Button className="flex items-center gap-2">
-              <ShoppingCart className="w-4 h-4" />
-              订阅新智能体
-            </Button>
-          </Link>
-        </div>
-
-        {/* 统计卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">总智能体</CardTitle>
-              <Bot className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{subscriptions.length}</div>
-              <p className="text-xs text-muted-foreground">已订阅服务</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">运行中</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {subscriptions.filter(s => s.status === 'active').length}
+    <div className="min-h-screen bg-gray-50">
+      {/* 顶部导航 */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="mr-4 lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold">E</span>
               </div>
-              <p className="text-xs text-muted-foreground">正常服务</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">即将到期</CardTitle>
-              <AlertCircle className="h-4 w-4 text-yellow-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {subscriptions.filter(s => s.status === 'expiring').length}
-              </div>
-              <p className="text-xs text-muted-foreground">需要续费</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">总支出</CardTitle>
-              <TrendingUp className="h-4 w-4 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                ¥
-                {subscriptions
-                  .reduce((sum, s) => sum + s.price, 0)
-                  .toLocaleString()}
-              </div>
-              <p className="text-xs text-muted-foreground">月度费用</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 智能体列表 */}
-        <Card>
-          <CardHeader>
-            <CardTitle>已订阅的智能体</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {subscriptions.map(subscription => (
-                <div
-                  key={subscription.id}
-                  className="border rounded-lg p-6 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-semibold text-gray-900">
-                          {subscription.name}
-                        </h3>
-                        <Badge className={getStatusColor(subscription.status)}>
-                          <Clock className="w-3 h-3 mr-1" />
-                          {getStatusText(subscription.status)}
-                        </Badge>
-                        <Badge className={getPlanColor(subscription.plan)}>
-                          {getPlanText(subscription.plan)}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                        <span>¥{subscription.price.toLocaleString()}/月</span>
-                        <span>•</span>
-                        <span>v{subscription.version}</span>
-                        <span>•</span>
-                        <span>
-                          ⭐ {subscription.rating.toFixed(1)} (
-                          {subscription.review_count} 评价)
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        作者: {subscription.author_name} • ID:{' '}
-                        {subscription.agent_id}
-                      </p>
-                    </div>
-                    <Link href="/agent-store">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex items-center gap-2"
-                      >
-                        <ShoppingCart className="w-4 h-4" />
-                        续费
-                      </Button>
-                    </Link>
-                  </div>
-
-                  {/* 到期信息 */}
-                  <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-gray-500" />
-                        <span className="text-sm text-gray-700">
-                          订阅时间: {subscription.startDate}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-500" />
-                        <span className="text-sm text-gray-700">
-                          到期时间: {subscription.endDate}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <RefreshCw className="w-4 h-4 text-gray-500" />
-                        <span className="text-sm font-semibold text-gray-700">
-                          剩余 {getDaysRemaining(subscription.endDate)} 天
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 使用统计 */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">总请求数</span>
-                        <TrendingUp className="w-4 h-4 text-blue-500" />
-                      </div>
-                      <div className="text-2xl font-bold text-blue-700 mt-2">
-                        {subscription.usage.totalRequests.toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="bg-green-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">Token消耗</span>
-                        <Bot className="w-4 h-4 text-green-500" />
-                      </div>
-                      <div className="text-2xl font-bold text-green-700 mt-2">
-                        {subscription.usage.totalTokens.toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="bg-purple-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">平均响应</span>
-                        <Clock className="w-4 h-4 text-purple-500" />
-                      </div>
-                      <div className="text-2xl font-bold text-purple-700 mt-2">
-                        {subscription.usage.avgResponseTime}s
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <span className="ml-2 text-xl font-semibold text-gray-900">
+                企业管理中心
+              </span>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* 快捷操作 */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <Link href="/agent-store">
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm">
+              <Settings className="h-4 w-4 mr-2" />
+              设置
+            </Button>
+            <Button variant="ghost" size="sm">
+              <LogOut className="h-4 w-4 mr-2" />
+              退出登录
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex">
+        {/* 侧边栏 */}
+        <aside
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out`}
+        >
+          <div className="flex items-center justify-between h-16 px-4 border-b">
+            <h2 className="text-lg font-semibold text-gray-900">管理菜单</h2>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <nav className="mt-5 px-2 space-y-1">
+            {menuItems.map(item => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="flex items-center px-4 py-3 text-base font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  <Icon className="mr-3 h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* 主要内容区域 */}
+        <main className="flex-1 lg:ml-0">
+          <div className="py-6 px-4 sm:px-6 lg:px-8">
+            {/* 页面标题 */}
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">智能体管理</h1>
+                <p className="mt-2 text-gray-600">
+                  管理您的AI智能体订阅、查看使用情况和续费信息
+                </p>
+              </div>
+              <Link href="/agent-store">
+                <Button className="flex items-center gap-2">
+                  <ShoppingCart className="w-4 h-4" />
+                  订阅新智能体
+                </Button>
+              </Link>
+            </div>
+
+            {/* 统计卡片 */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    总智能体
+                  </CardTitle>
+                  <Bot className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {subscriptions.length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">已订阅服务</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">运行中</CardTitle>
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {subscriptions.filter(s => s.status === 'active').length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">正常服务</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    即将到期
+                  </CardTitle>
+                  <AlertCircle className="h-4 w-4 text-yellow-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {subscriptions.filter(s => s.status === 'expiring').length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">需要续费</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">总支出</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-blue-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    ¥
+                    {subscriptions
+                      .reduce((sum, s) => sum + s.price, 0)
+                      .toLocaleString()}
+                  </div>
+                  <p className="text-xs text-muted-foreground">月度费用</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 智能体列表 */}
+            <Card>
               <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Plus className="w-6 h-6 text-blue-500" />
-                  <CardTitle>订阅新智能体</CardTitle>
-                </div>
+                <CardTitle>已订阅的智能体</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600">
-                  浏览智能体商店，选择适合您业务的AI智能体
-                </p>
+                <div className="space-y-6">
+                  {subscriptions.map(subscription => (
+                    <div
+                      key={subscription.id}
+                      className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="text-xl font-semibold text-gray-900">
+                              {subscription.name}
+                            </h3>
+                            <Badge
+                              className={getStatusColor(subscription.status)}
+                            >
+                              <Clock className="w-3 h-3 mr-1" />
+                              {getStatusText(subscription.status)}
+                            </Badge>
+                            <Badge className={getPlanColor(subscription.plan)}>
+                              {getPlanText(subscription.plan)}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                            <span>
+                              ¥{subscription.price.toLocaleString()}/月
+                            </span>
+                            <span>•</span>
+                            <span>v{subscription.version}</span>
+                            <span>•</span>
+                            <span>
+                              ⭐ {subscription.rating.toFixed(1)} (
+                              {subscription.review_count} 评价)
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500">
+                            作者: {subscription.author_name} • ID:{' '}
+                            {subscription.agent_id}
+                          </p>
+                        </div>
+                        <Link href="/agent-store">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2"
+                          >
+                            <ShoppingCart className="w-4 h-4" />
+                            续费
+                          </Button>
+                        </Link>
+                      </div>
+
+                      {/* 到期信息 */}
+                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-gray-500" />
+                            <span className="text-sm text-gray-700">
+                              订阅时间: {subscription.startDate}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-gray-500" />
+                            <span className="text-sm text-gray-700">
+                              到期时间: {subscription.endDate}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <RefreshCw className="w-4 h-4 text-gray-500" />
+                            <span className="text-sm font-semibold text-gray-700">
+                              剩余 {getDaysRemaining(subscription.endDate)} 天
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 使用统计 */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="bg-blue-50 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">
+                              总请求数
+                            </span>
+                            <TrendingUp className="w-4 h-4 text-blue-500" />
+                          </div>
+                          <div className="text-2xl font-bold text-blue-700 mt-2">
+                            {subscription.usage.totalRequests.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="bg-green-50 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">
+                              Token消耗
+                            </span>
+                            <Bot className="w-4 h-4 text-green-500" />
+                          </div>
+                          <div className="text-2xl font-bold text-green-700 mt-2">
+                            {subscription.usage.totalTokens.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="bg-purple-50 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">
+                              平均响应
+                            </span>
+                            <Clock className="w-4 h-4 text-purple-500" />
+                          </div>
+                          <div className="text-2xl font-bold text-purple-700 mt-2">
+                            {subscription.usage.avgResponseTime}s
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
-            </Link>
-          </Card>
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <ShoppingCart className="w-6 h-6 text-green-500" />
-                <CardTitle>管理订阅</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                查看和管理所有已订阅的智能体服务
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <ExternalLink className="w-6 h-6 text-purple-500" />
-                <CardTitle>API文档</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                查看智能体API文档，快速集成到您的系统
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+            </Card>
+
+            {/* 快捷操作 */}
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <Link href="/agent-store">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <Plus className="w-6 h-6 text-blue-500" />
+                      <CardTitle>订阅新智能体</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">
+                      浏览智能体商店，选择适合您业务的AI智能体
+                    </p>
+                  </CardContent>
+                </Link>
+              </Card>
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <ShoppingCart className="w-6 h-6 text-green-500" />
+                    <CardTitle>管理订阅</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600">
+                    查看和管理所有已订阅的智能体服务
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <ExternalLink className="w-6 h-6 text-purple-500" />
+                    <CardTitle>API文档</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600">
+                    查看智能体API文档，快速集成到您的系统
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </main>
       </div>
+
+      {/* 遮罩层（移动端） */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }

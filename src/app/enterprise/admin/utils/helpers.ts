@@ -1,9 +1,10 @@
 ﻿/**
- * 佷笟绠＄悊绯荤粺氱敤宸ュ叿鍑芥暟
+ * 企业管理系统通用工具函数
  */
 
 /**
- * 鏍煎紡鍖栨枃跺ぇ */
+ * 格式化文件大小
+ */
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -13,7 +14,8 @@ export function formatFileSize(bytes: number): string {
 }
 
 /**
- * 鏍煎紡鍖栬揣甯侀噾 */
+ * 格式化货币金额
+ */
 export function formatCurrency(
   amount: number,
   currency: string = 'CNY'
@@ -27,7 +29,8 @@ export function formatCurrency(
 }
 
 /**
- * 鏍煎紡鍖栨棩鏈熸椂 */
+ * 格式化日期时间
+ */
 export function formatDateTime(date: string | Date): string {
   return new Date(date).toLocaleString('zh-CN', {
     year: 'numeric',
@@ -39,7 +42,8 @@ export function formatDateTime(date: string | Date): string {
 }
 
 /**
- * 鏍煎紡鍖栨棩 */
+ * 格式化日期
+ */
 export function formatDate(date: string | Date): string {
   return new Date(date).toLocaleDateString('zh-CN', {
     year: 'numeric',
@@ -49,14 +53,14 @@ export function formatDate(date: string | Date): string {
 }
 
 /**
- * 鐢熸垚闅忔満ID
+ * 生成随机ID
  */
 export function generateId(prefix: string = ''): string {
-  return `${prefix}${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${prefix}${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 /**
- * 闃叉姈鍑芥暟
+ * 防抖函数
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
@@ -76,7 +80,7 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 /**
- * 鑺傛祦鍑芥暟
+ * 节流函数
  */
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
@@ -123,7 +127,7 @@ export function deepClone<T>(obj: T): T {
 }
 
 /**
- * 楠岃瘉鏍煎紡
+ * 验证邮箱格式
  */
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -131,14 +135,15 @@ export function validateEmail(email: string): boolean {
 }
 
 /**
- * 楠岃瘉鎵嬫満鍙牸 */
+ * 验证手机格式
+ */
 export function validatePhone(phone: string): boolean {
   const phoneRegex = /^1[3-9]\d{9}$/;
   return phoneRegex.test(phone);
 }
 
 /**
- * 楠岃瘉韬唤璇佸彿鏍煎紡
+ * 验证身份证号格式
  */
 export function validateIdCard(idCard: string): boolean {
   const idCardRegex = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
@@ -146,14 +151,14 @@ export function validateIdCard(idCard: string): boolean {
 }
 
 /**
- * 鏁扮粍鍘婚噸
+ * 数组去重
  */
 export function uniqueArray<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
 
 /**
- * 鍒嗛〉澶勭悊
+ * 分页处理
  */
 export function paginate<T>(array: T[], page: number, pageSize: number): T[] {
   const startIndex = (page - 1) * pageSize;
@@ -161,21 +166,22 @@ export function paginate<T>(array: T[], page: number, pageSize: number): T[] {
 }
 
 /**
- * 璁＄畻鐧惧垎 */
+ * 计算百分比
+ */
 export function calculatePercentage(part: number, total: number): number {
   if (total === 0) return 0;
   return Math.round((part / total) * 100);
 }
 
 /**
- * 鐫＄湢鍑芥暟
+ * 睡眠函数
  */
 export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
- * 涓嬭浇鏂囦欢
+ * 下载文件
  */
 export function downloadFile(url: string, filename: string): void {
   const link = document.createElement('a');
@@ -187,14 +193,14 @@ export function downloadFile(url: string, filename: string): void {
 }
 
 /**
- * 澶嶅埗鏂囨湰鍒板壀璐存澘
+ * 复制文本到剪贴板
  */
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text);
     return true;
   } catch (err) {
-    console.error('澶嶅埗澶辫触:', err);
+    console.error('复制失败:', err);
     return false;
   }
 }
@@ -231,23 +237,23 @@ export function setUrlParams(params: Record<string, string>): void {
 }
 
 /**
- * 鏈湴瀛樺偍鎿嶄綔
+ * 本地存储操作
  */
 export const localStorageUtil = {
   set: (key: string, value: any): void => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error('localStorage 璁剧疆澶辫触:', error);
+      console.error('localStorage 设置失败:', error);
     }
   },
 
   get: <T>(key: string, defaultValue: T | null = null): T | null => {
     try {
       const item = localStorage.getItem(key);
-      return item  JSON.parse(item) : defaultValue;
+      return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
-      console.error('localStorage 鑾峰彇澶辫触:', error);
+      console.error('localStorage 获取失败:', error);
       return defaultValue;
     }
   },
@@ -256,7 +262,7 @@ export const localStorageUtil = {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error('localStorage 鍒犻櫎澶辫触:', error);
+      console.error('localStorage 删除失败:', error);
     }
   },
 
@@ -264,29 +270,29 @@ export const localStorageUtil = {
     try {
       localStorage.clear();
     } catch (error) {
-      console.error('localStorage 娓呯┖澶辫触:', error);
+      console.error('localStorage 清空失败:', error);
     }
   },
 };
 
 /**
- * 氳瘽瀛樺偍鎿嶄綔
+ * 会话存储操作
  */
 export const sessionStorageUtil = {
   set: (key: string, value: any): void => {
     try {
       sessionStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error('sessionStorage 璁剧疆澶辫触:', error);
+      console.error('sessionStorage 设置失败:', error);
     }
   },
 
   get: <T>(key: string, defaultValue: T | null = null): T | null => {
     try {
       const item = sessionStorage.getItem(key);
-      return item  JSON.parse(item) : defaultValue;
+      return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
-      console.error('sessionStorage 鑾峰彇澶辫触:', error);
+      console.error('sessionStorage 获取失败:', error);
       return defaultValue;
     }
   },
@@ -295,7 +301,7 @@ export const sessionStorageUtil = {
     try {
       sessionStorage.removeItem(key);
     } catch (error) {
-      console.error('sessionStorage 鍒犻櫎澶辫触:', error);
+      console.error('sessionStorage 删除失败:', error);
     }
   },
 };

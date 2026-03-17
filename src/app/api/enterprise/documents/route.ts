@@ -1,27 +1,43 @@
 ﻿import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import {
   FileStorageService,
   EnterpriseDocumentService,
 } from '@/services/file-storage-service';
 
-export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient({ cookies });
+// 初始化Supabase客户端
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
+export async function POST(request: Request) {
   try {
-    // 楠岃瘉鐢ㄦ埛韬唤
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    // 从Cookie获取token并验证用户
+    const cookieStore = await cookies();
+    const token = cookieStore.get('sb-access-token')?.value;
+
+    if (!token) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥 },
+        { success: false, error: '未授权，请先登录' },
         { status: 401 }
       );
     }
 
-    // 鑾峰彇琛ㄥ崟鏁版嵁
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { success: false, error: '身份验证失败' },
+        { status: 401 }
+      );
+    }
+
+    // 获取表单数据
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const title = formData.get('title') as string;
@@ -32,22 +48,23 @@ export async function POST(request: Request) {
     const accessLevel = (formData.get('access_level') as string) || 'private';
     const enterpriseId = formData.get('enterprise_id') as string;
 
-    // 楠岃瘉蹇呴渶瀛楁
+    // 验证必填字段
     if (!file) {
       return NextResponse.json(
-        { success: false, error: '璇烽€夋嫨瑕佷笂犵殑鏂囦欢' },
+        { success: false, error: '请选择要上传的文件' },
         { status: 400 }
       );
     }
 
     if (!title || !category || !enterpriseId) {
       return NextResponse.json(
-        { success: false, error: '璇峰～鍐欐墍鏈夊繀濉瓧 },
+        { success: false, error: '请填写所有必填字段' },
         { status: 400 }
       );
     }
 
-    // 涓婁紶鏂囦欢鍒板    const uploadResult = await FileStorageService.uploadFile(
+    // 上传文件到存储
+    const uploadResult = await FileStorageService.uploadFile(
       file,
       `enterprise/${enterpriseId}/documents`,
       user.id
@@ -60,7 +77,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 淇濆鏂囨。璁板綍鍒版暟鎹簱
+    // 保存文档记录到数据库
     const documentData = {
       enterprise_id: enterpriseId,
       title,
@@ -73,20 +90,21 @@ export async function POST(request: Request) {
       category,
       version,
       tags: tags
-         tags
+        ? tags
             .split(',')
-            .map(tag => tag.trim())
+            .map((tag: string) => tag.trim())
             .filter(Boolean)
         : [],
       access_level: accessLevel,
       uploaded_by: user.id,
-      status: 'pending', // 榛樿鐘舵€佷负寰呭    };
+      status: 'pending',
+    };
 
     const saveResult =
       await EnterpriseDocumentService.saveDocumentRecord(documentData);
 
     if (!saveResult.success) {
-      // 濡傛灉鏁版嵁搴撲繚瀛樺け璐ワ紝鍒犻櫎宸蹭笂犵殑鏂囦欢
+      // 如果数据库保存失败，删除已上传的文件
       if (uploadResult.fileId) {
         await FileStorageService.deleteFile(uploadResult.fileId);
       }
@@ -103,33 +121,43 @@ export async function POST(request: Request) {
         document: saveResult.data,
         fileUrl: uploadResult.fileUrl,
       },
-      message: '鏂囦欢涓婁紶鎴愬姛',
+      message: '文件上传成功',
     });
   } catch (error) {
-    console.error('鏂囦欢涓婁紶API閿欒:', error);
+    console.error('文件上传API错误:', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
+      { success: false, error: '服务器内部错误' },
       { status: 500 }
     );
   }
 }
 
 export async function GET(request: Request) {
-  const supabase = createRouteHandlerClient({ cookies });
-
   try {
-    // 楠岃瘉鐢ㄦ埛韬唤
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    // 从Cookie获取token并验证用户
+    const cookieStore = await cookies();
+    const token = cookieStore.get('sb-access-token')?.value;
+
+    if (!token) {
       return NextResponse.json(
-        { success: false, error: '鐢ㄦ埛鏈櫥 },
+        { success: false, error: '未授权，请先登录' },
         { status: 401 }
       );
     }
 
-    // 鑾峰彇鏌ヨ鍙傛暟
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { success: false, error: '身份验证失败' },
+        { status: 401 }
+      );
+    }
+
+    // 获取查询参数
     const { searchParams } = new URL(request.url);
     const enterpriseId = searchParams.get('enterprise_id');
     const category = searchParams.get('category');
@@ -137,12 +165,12 @@ export async function GET(request: Request) {
 
     if (!enterpriseId) {
       return NextResponse.json(
-        { success: false, error: '缂哄皯佷笟ID鍙傛暟' },
+        { success: false, error: '缺少企业ID参数' },
         { status: 400 }
       );
     }
 
-    // 鑾峰彇鏂囨。鍒楄〃
+    // 获取文档列表
     const result =
       await EnterpriseDocumentService.getEnterpriseDocuments(enterpriseId);
 
@@ -153,7 +181,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // 搴旂敤杩囨护鏉′欢
+    // 应用过滤条件
     let filteredDocuments = result.data;
 
     if (category && category !== 'all') {
@@ -174,11 +202,10 @@ export async function GET(request: Request) {
       total: filteredDocuments.length,
     });
   } catch (error) {
-    console.error('鑾峰彇鏂囨。鍒楄〃API閿欒:', error);
+    console.error('获取文档列表API错误:', error);
     return NextResponse.json(
-      { success: false, error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 },
+      { success: false, error: '服务器内部错误' },
       { status: 500 }
     );
   }
 }
-

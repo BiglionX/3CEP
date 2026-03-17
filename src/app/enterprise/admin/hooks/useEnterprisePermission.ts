@@ -6,7 +6,7 @@ import React from 'react';
 interface PermissionCheckResult {
   hasPermission: boolean;
   loading: boolean;
-  error: string;
+  error?: string;
 }
 
 interface User {
@@ -27,8 +27,8 @@ function useUser(): User {
 }
 
 /**
- * 佷笟涓撶敤鏉冮檺妫€Hook
- * 鍩轰簬 RBAC 鏉冮檺浣撶郴鎵╁睍佷笟鐩稿叧鏉冮檺
+ * 企业专用权限检查Hook
+ * 基于 RBAC 权限体系扩展企业相关权限
  */
 export function useEnterprisePermission() {
   const user = useUser();
@@ -38,15 +38,15 @@ export function useEnterprisePermission() {
   );
   const [loading, setLoading] = useState(true);
 
-  // 佷笟涓撶敤鏉冮檺閰嶇疆
+  // 企业专用权限配置
   const enterprisePermissions = {
-    // 鏈夊闂瓟绠＄悊鏉冮檺
+    // 有奖问答管理权限
     enterprise_reward_qa_view: ['admin', 'manager', 'content_manager'],
     enterprise_reward_qa_create: ['admin', 'manager', 'content_manager'],
     enterprise_reward_qa_manage: ['admin', 'manager'],
     enterprise_reward_qa_approve: ['admin', 'manager'],
 
-    // 鏂板搧楃绠＄悊鏉冮檺
+    // 新品众筹管理权限
     enterprise_crowdfunding_view: [
       'admin',
       'manager',
@@ -60,13 +60,13 @@ export function useEnterprisePermission() {
     enterprise_crowdfunding_manage: ['admin', 'manager'],
     enterprise_crowdfunding_approve: ['admin', 'manager'],
 
-    // 佷笟璧勬枡绠＄悊鏉冮檺
+    // 企业资料管理权限
     enterprise_documents_view: ['admin', 'manager', 'content_manager'],
     enterprise_documents_upload: ['admin', 'manager', 'content_manager'],
     enterprise_documents_manage: ['admin', 'manager'],
     enterprise_documents_approve: ['admin', 'manager'],
 
-    // 鏂囦欢瀛樺偍鏉冮檺
+    // 文件存储权限
     enterprise_file_upload: [
       'admin',
       'manager',
@@ -76,7 +76,7 @@ export function useEnterprisePermission() {
     enterprise_file_manage: ['admin', 'manager'],
     enterprise_file_delete: ['admin', 'manager'],
 
-    // 佷笟鏁版嵁璁块棶鏉冮檺
+    // 企业数据访问权限
     enterprise_data_view: ['admin', 'manager'],
     enterprise_data_export: ['admin', 'manager'],
     enterprise_data_analytics: ['admin', 'manager'],
@@ -88,7 +88,8 @@ export function useEnterprisePermission() {
     const checkPermissions = () => {
       const userPermissions: Record<string, boolean> = {};
 
-      // 瓒呯骇绠＄悊鍛樻嫢鏈夋墍鏈夋潈      if (roles.includes('admin')) {
+      // 超级管理员拥有所有权限
+      if (roles.includes('admin')) {
         Object.keys(enterprisePermissions).forEach(perm => {
           userPermissions[perm] = true;
         });
@@ -97,7 +98,8 @@ export function useEnterprisePermission() {
         return;
       }
 
-      // 妫€鏌ユ瘡涓潈      Object.entries(enterprisePermissions).forEach(
+      // 检查每个权限
+      Object.entries(enterprisePermissions).forEach(
         ([permission, allowedRoles]) => {
           userPermissions[permission] = roles.some((role: string) =>
             allowedRoles.includes(role)
@@ -113,56 +115,60 @@ export function useEnterprisePermission() {
   }, [user, roles, isLoading]);
 
   /**
-   * 妫€鏌ュ崟涓潈   */
+   * 检查单个权限
+   */
   const hasPermission = (permission: string): PermissionCheckResult => {
     if (isLoading || loading) {
-      return { hasPermission: false, loading: true };
+      return { hasPermission: false, loading: true, error: undefined };
     }
 
     if (!user) {
-      return { hasPermission: false, loading: false, error: '鐢ㄦ埛鏈櫥 };
+      return { hasPermission: false, loading: false, error: '用户未登录' };
     }
 
-    const hasPerm = permissionsState[permission]  false;
-    return { hasPermission: hasPerm, loading: false };
+    const hasPerm = permissionsState[permission] || false;
+    return { hasPermission: hasPerm, loading: false, error: undefined };
   };
 
   /**
-   * 妫€鏌ュ涓潈闄愶紙讳竴婊¤冻   */
+   * 检查多个权限（任一满足）
+   */
   const hasAnyPermission = (
     ...permissions: string[]
   ): PermissionCheckResult => {
     if (isLoading || loading) {
-      return { hasPermission: false, loading: true };
+      return { hasPermission: false, loading: true, error: undefined };
     }
 
     if (!user) {
-      return { hasPermission: false, loading: false, error: '鐢ㄦ埛鏈櫥 };
+      return { hasPermission: false, loading: false, error: '用户未登录' };
     }
 
     const hasPerm = permissions.some(perm => permissionsState[perm]);
-    return { hasPermission: hasPerm, loading: false };
+    return { hasPermission: hasPerm, loading: false, error: undefined };
   };
 
   /**
-   * 妫€鏌ュ涓潈闄愶紙鍏ㄩ儴婊¤冻   */
+   * 检查多个权限（全部满足）
+   */
   const hasAllPermissions = (
     ...permissions: string[]
   ): PermissionCheckResult => {
     if (isLoading || loading) {
-      return { hasPermission: false, loading: true };
+      return { hasPermission: false, loading: true, error: undefined };
     }
 
     if (!user) {
-      return { hasPermission: false, loading: false, error: '鐢ㄦ埛鏈櫥 };
+      return { hasPermission: false, loading: false, error: '用户未登录' };
     }
 
     const hasPerm = permissions.every(perm => permissionsState[perm]);
-    return { hasPermission: hasPerm, loading: false };
+    return { hasPermission: hasPerm, loading: false, error: undefined };
   };
 
   /**
-   * 鑾峰彇鐢ㄦ埛鍙闂殑鎵€鏈変紒涓氬姛   */
+   * 获取用户可访问的所有企业功能
+   */
   const getAccessibleFeatures = (): string[] => {
     if (isLoading || loading) return [];
 
@@ -172,34 +178,38 @@ export function useEnterprisePermission() {
   };
 
   /**
-   * 妫€鏌ユ槸鍚︿负佷笟绠＄悊   */
+   * 检查是否为企业管理
+   */
   const isEnterpriseAdmin = (): boolean => {
     return roles.includes('admin') || roles.includes('manager');
   };
 
   /**
-   * 妫€鏌ユ槸鍚︿负鍐呭绠＄悊   */
+   * 检查是否为内容管理
+   */
   const isContentManager = (): boolean => {
     return roles.includes('content_manager') || isEnterpriseAdmin();
   };
 
   /**
-   * 妫€鏌ユ槸鍚︿负閲囪喘涓撳憳
+   * 检查是否为采购专员
    */
   const isProcurementSpecialist = (): boolean => {
     return roles.includes('procurement_specialist') || isEnterpriseAdmin();
   };
 
   return {
-    // 鏉冮檺妫€鏌ユ柟    hasPermission,
+    // 权限检查方法
+    hasPermission,
     hasAnyPermission,
     hasAllPermissions,
 
-    // 瑙掕壊妫€鏌ユ柟    isEnterpriseAdmin,
+    // 角色检查方法
+    isEnterpriseAdmin,
     isContentManager,
     isProcurementSpecialist,
 
-    // 杈呭姪鏂规硶
+    // 辅助方法
     getAccessibleFeatures,
     permissions: permissionsState,
     loading: isLoading || loading,
@@ -207,7 +217,7 @@ export function useEnterprisePermission() {
 }
 
 /**
- * 鏉冮檺淇濇姢楂橀樁缁勪欢
+ * 权限保护高阶组件
  */
 export function withPermission<P extends object>(
   Component: React.ComponentType<P>,
@@ -215,8 +225,9 @@ export function withPermission<P extends object>(
   fallback: React.ReactNode
 ) {
   return function PermissionProtectedComponent(props: P) {
-    const { hasPermission, loading } = useEnterprisePermission();
-    const permissionCheck = hasPermission(requiredPermission);
+    const permissionHook = useEnterprisePermission();
+    const permissionCheck = permissionHook.hasPermission(requiredPermission);
+    const loading = permissionHook.loading;
 
     if (loading || permissionCheck.loading) {
       return React.createElement(
@@ -263,12 +274,12 @@ export function withPermission<P extends object>(
             React.createElement(
               'h2',
               { className: 'text-xl font-bold text-gray-900 mb-2' },
-              '鏉冮檺涓嶈冻'
+              '权限不足'
             ),
             React.createElement(
               'p',
               { className: 'text-gray-600' },
-              '鎮ㄦ病鏈夎闂鍔熻兘鐨勬潈
+              '您没有访问此功能的权限'
             )
           )
         )
@@ -278,4 +289,3 @@ export function withPermission<P extends object>(
     return React.createElement(Component, props);
   };
 }
-

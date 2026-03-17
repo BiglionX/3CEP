@@ -4,6 +4,16 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
   DollarSign,
   Plus,
   Edit,
@@ -11,10 +21,25 @@ import {
   Eye,
   Target,
   Users,
-  Calendar,
   TrendingUp,
   Clock,
+  BarChart3,
+  Bot,
+  Coins,
+  Globe,
+  CreditCard,
+  ShoppingCart,
+  HelpCircle,
+  FileText,
+  Package,
+  Settings,
+  Menu,
+  X,
+  LogOut,
+  Headphones,
+  QrCode,
 } from 'lucide-react';
+import Link from 'next/link';
 
 interface CrowdfundingProject {
   id: string;
@@ -33,8 +58,21 @@ interface CrowdfundingProject {
 }
 
 export default function CrowdfundingManagementPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [projects, setProjects] = useState<CrowdfundingProject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newProject, setNewProject] = useState({
+    title: '',
+    description: '',
+    product_model: '',
+    target_amount: 0,
+    min_contribution: 0,
+    max_contribution: 0,
+    start_date: '',
+    end_date: '',
+    delivery_date: '',
+  });
 
   // 模拟数据
   useEffect(() => {
@@ -56,7 +94,7 @@ export default function CrowdfundingManagementPage() {
       },
       {
         id: '2',
-        title: '便携式健康监测设,
+        title: '便携式健康监测设备',
         description: '可穿戴健康监测手环，实时监测心率、血压等健康指标',
         target_amount: 300000,
         current_amount: 315000,
@@ -80,10 +118,10 @@ export default function CrowdfundingManagementPage() {
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; color: string }> = {
       draft: { text: '草稿', color: 'bg-gray-100 text-gray-800' },
-      active: { text: '筹集, color: 'bg-blue-100 text-blue-800' },
+      active: { text: '筹集', color: 'bg-blue-100 text-blue-800' },
       successful: { text: '成功', color: 'bg-green-100 text-green-800' },
       failed: { text: '失败', color: 'bg-red-100 text-red-800' },
-      closed: { text: '已关, color: 'bg-purple-100 text-purple-800' },
+      closed: { text: '已关闭', color: 'bg-purple-100 text-purple-800' },
     };
 
     const config = statusMap[status] || statusMap.draft;
@@ -105,209 +143,530 @@ export default function CrowdfundingManagementPage() {
     }).format(amount);
   };
 
+  const menuItems = [
+    { name: '仪表盘', href: '/enterprise/admin/dashboard', icon: BarChart3 },
+    { name: '售后管理', href: '/enterprise/after-sales', icon: Headphones },
+    { name: '智能体管理', href: '/enterprise/admin/agents', icon: Bot },
+    { name: 'Token管理', href: '/enterprise/admin/tokens', icon: Coins },
+    { name: '门户管理', href: '/enterprise/admin/portal', icon: Globe },
+    { name: 'FXC管理', href: '/enterprise/admin/fxc', icon: CreditCard },
+    {
+      name: '采购管理',
+      href: '/enterprise/admin/procurement',
+      icon: ShoppingCart,
+    },
+    { name: '有奖问答', href: '/enterprise/admin/reward-qa', icon: HelpCircle },
+    {
+      name: '新品众筹',
+      href: '/enterprise/admin/crowdfunding',
+      icon: DollarSign,
+    },
+    { name: '企业资料', href: '/enterprise/admin/documents', icon: FileText },
+    { name: '设备管理', href: '/enterprise/admin/devices', icon: Package },
+    { name: '数据分析', href: '/enterprise/admin/analytics', icon: TrendingUp },
+    {
+      name: '二维码溯源',
+      href: '/enterprise/admin/traceability',
+      icon: QrCode,
+    },
+    { name: '团队管理', href: '/enterprise/admin/team', icon: Users },
+    { name: '系统设置', href: '/enterprise/admin/settings', icon: Settings },
+  ];
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      {/* 页面标题和操作按*/}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">新品众筹管理</h1>
-          <p className="text-gray-600 mt-1">管理和监控企业新品众筹项/p>
-        </div>
-        <Button className="bg-green-600 hover:bg-green-700">
-          <Plus className="w-4 h-4 mr-2" />
-          发起众筹项目
-        </Button>
-      </div>
-
-      {/* 统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">总项目数</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{projects.length}</div>
-            <p className="text-xs text-muted-foreground">所有众筹项/p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">筹集/CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {projects.filter(p => p.status === 'active').length}
+    <div className="min-h-screen bg-gray-50">
+      {/* 顶部导航 */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="mr-4 lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold">E</span>
+              </div>
+              <span className="ml-2 text-xl font-semibold text-gray-900">
+                企业管理中心
+              </span>
             </div>
-            <p className="text-xs text-muted-foreground">活跃项目</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">筹集资金</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatCurrency(
-                projects.reduce((sum, p) => sum + p.current_amount, 0)
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground">总筹集金/p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">支持/CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {projects.reduce((sum, p) => sum + p.supporters_count, 0)}
-            </div>
-            <p className="text-xs text-muted-foreground">总支持人/p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* 众筹项目列表 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>众筹项目列表</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium">项目名称</th>
-                  <th className="text-left py-3 px-4 font-medium">目标金额</th>
-                  <th className="text-left py-3 px-4 font-medium">当前筹集</th>
-                  <th className="text-left py-3 px-4 font-medium">进度</th>
-                  <th className="text-left py-3 px-4 font-medium">支持/th>
-                  <th className="text-left py-3 px-4 font-medium">状/th>
-                  <th className="text-left py-3 px-4 font-medium">截止时间</th>
-                  <th className="text-left py-3 px-4 font-medium">操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projects.map(project => (
-                  <tr key={project.id} className="border-b hover:bg-gray-50">
-                    <td className="py-4 px-4">
-                      <div>
-                        <div className="font-medium text-gray-900">
-                          {project.title}
-                        </div>
-                        <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                          {project.description}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="font-medium text-gray-900">
-                        {formatCurrency(project.target_amount)}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="font-medium text-gray-900">
-                        {formatCurrency(project.current_amount)}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm font-medium text-gray-700">
-                            {project.funding_progress}%
-                          </span>
-                        </div>
-                        <div className="w-32 bg-gray-200 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full ${
-                              project.funding_progress >= 100
-                                 'bg-green-600'
-                                : project.funding_progress >= 50
-                                   'bg-yellow-500'
-                                  : 'bg-red-500'
-                            }`}
-                            style={{
-                              width: `${Math.min(project.funding_progress, 100)}%`,
-                            }}
-                          ></div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center">
-                        <Users className="w-4 h-4 text-gray-400 mr-1" />
-                        <span className="text-sm font-medium">
-                          {project.supporters_count}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      {getStatusBadge(project.status)}
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="text-sm text-gray-500">
-                        {new Date(project.end_date).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="w-4 h-4 mr-1" />
-                          查看
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Edit className="w-4 h-4 mr-1" />
-                          编辑
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          删除
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
 
-          {projects.length === 0 && (
-            <div className="text-center py-12">
-              <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                暂无众筹项目
-              </h3>
-              <p className="text-gray-500 mb-4">
-                发起第一个新品众筹项目来获得资金支持
-              </p>
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Plus className="w-4 h-4 mr-2" />
-                发起众筹项目
-              </Button>
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm">
+              <Settings className="h-4 w-4 mr-2" />
+              设置
+            </Button>
+            <Button variant="ghost" size="sm">
+              <LogOut className="h-4 w-4 mr-2" />
+              退出登录
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex">
+        {/* 侧边栏 */}
+        <aside
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out`}
+        >
+          <div className="flex items-center justify-between h-16 px-4 border-b">
+            <h2 className="text-lg font-semibold text-gray-900">管理菜单</h2>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <nav className="mt-5 px-2 space-y-1">
+            {menuItems.map(item => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="flex items-center px-4 py-3 text-base font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  <Icon className="mr-3 h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* 主要内容区域 */}
+        <main className="flex-1 lg:ml-0">
+          <div className="py-6 px-4 sm:px-6 lg:px-8">
+            {/* 页面标题和操作按钮 */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  新品众筹管理
+                </h1>
+                <p className="text-gray-600 mt-1">管理和监控企业新品众筹项目</p>
+              </div>
+              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-green-600 hover:bg-green-700">
+                    <Plus className="w-4 h-4 mr-2" />
+                    发起众筹项目
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px]">
+                  <DialogHeader>
+                    <DialogTitle>发起新众筹项目</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto">
+                    <div className="grid gap-2">
+                      <Label htmlFor="title">项目名称</Label>
+                      <Input
+                        id="title"
+                        value={newProject.title}
+                        onChange={e =>
+                          setNewProject({
+                            ...newProject,
+                            title: e.target.value,
+                          })
+                        }
+                        placeholder="请输入项目名称"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="description">项目描述</Label>
+                      <Input
+                        id="description"
+                        value={newProject.description}
+                        onChange={e =>
+                          setNewProject({
+                            ...newProject,
+                            description: e.target.value,
+                          })
+                        }
+                        placeholder="请输入项目描述"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="product_model">产品型号</Label>
+                      <Input
+                        id="product_model"
+                        value={newProject.product_model}
+                        onChange={e =>
+                          setNewProject({
+                            ...newProject,
+                            product_model: e.target.value,
+                          })
+                        }
+                        placeholder="请输入产品型号"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="target_amount">目标金额</Label>
+                        <Input
+                          id="target_amount"
+                          type="number"
+                          value={newProject.target_amount}
+                          onChange={e =>
+                            setNewProject({
+                              ...newProject,
+                              target_amount: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="min_contribution">最低支持</Label>
+                        <Input
+                          id="min_contribution"
+                          type="number"
+                          value={newProject.min_contribution}
+                          onChange={e =>
+                            setNewProject({
+                              ...newProject,
+                              min_contribution: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="max_contribution">最高支持</Label>
+                        <Input
+                          id="max_contribution"
+                          type="number"
+                          value={newProject.max_contribution}
+                          onChange={e =>
+                            setNewProject({
+                              ...newProject,
+                              max_contribution: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="start_date">开始日期</Label>
+                        <Input
+                          id="start_date"
+                          type="date"
+                          value={newProject.start_date}
+                          onChange={e =>
+                            setNewProject({
+                              ...newProject,
+                              start_date: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="end_date">结束日期</Label>
+                        <Input
+                          id="end_date"
+                          type="date"
+                          value={newProject.end_date}
+                          onChange={e =>
+                            setNewProject({
+                              ...newProject,
+                              end_date: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="delivery_date">预计交付</Label>
+                        <Input
+                          id="delivery_date"
+                          type="date"
+                          value={newProject.delivery_date}
+                          onChange={e =>
+                            setNewProject({
+                              ...newProject,
+                              delivery_date: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsModalOpen(false)}
+                    >
+                      取消
+                    </Button>
+                    <Button
+                      className="bg-green-600 hover:bg-green-700"
+                      onClick={() => {
+                        const newP: CrowdfundingProject = {
+                          id: String(Date.now()),
+                          title: newProject.title,
+                          description: newProject.description,
+                          target_amount: newProject.target_amount,
+                          current_amount: 0,
+                          min_contribution: newProject.min_contribution,
+                          max_contribution: newProject.max_contribution,
+                          start_date: newProject.start_date,
+                          end_date: newProject.end_date,
+                          supporters_count: 0,
+                          status: 'draft',
+                          funding_progress: 0,
+                          created_at: new Date().toISOString(),
+                        };
+                        setProjects([...projects, newP]);
+                        setIsModalOpen(false);
+                        setNewProject({
+                          title: '',
+                          description: '',
+                          product_model: '',
+                          target_amount: 0,
+                          min_contribution: 0,
+                          max_contribution: 0,
+                          start_date: '',
+                          end_date: '',
+                          delivery_date: '',
+                        });
+                      }}
+                    >
+                      创建
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            {/* 统计卡片 */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    总项目数
+                  </CardTitle>
+                  <Target className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{projects.length}</div>
+                  <p className="text-xs text-muted-foreground">所有众筹项目</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">筹集中</CardTitle>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {projects.filter(p => p.status === 'active').length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">活跃项目</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    筹集资金
+                  </CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {formatCurrency(
+                      projects.reduce((sum, p) => sum + p.current_amount, 0)
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">总筹集金额</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">支持者</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {projects.reduce((sum, p) => sum + p.supporters_count, 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">总支持人数</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 众筹项目列表 */}
+            <Card>
+              <CardHeader>
+                <CardTitle>众筹项目列表</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-4 font-medium">
+                          项目名称
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium">
+                          目标金额
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium">
+                          当前筹集
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium">
+                          进度
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium">
+                          支持者
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium">
+                          状态
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium">
+                          截止时间
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium">
+                          操作
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {projects.map(project => (
+                        <tr
+                          key={project.id}
+                          className="border-b hover:bg-gray-50"
+                        >
+                          <td className="py-4 px-4">
+                            <div>
+                              <div className="font-medium text-gray-900">
+                                {project.title}
+                              </div>
+                              <div className="text-sm text-gray-500 mt-1 line-clamp-2">
+                                {project.description}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="font-medium text-gray-900">
+                              {formatCurrency(project.target_amount)}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="font-medium text-gray-900">
+                              {formatCurrency(project.current_amount)}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-sm font-medium text-gray-700">
+                                  {project.funding_progress}%
+                                </span>
+                              </div>
+                              <div className="w-32 bg-gray-200 rounded-full h-2">
+                                <div
+                                  className={`h-2 rounded-full ${
+                                    project.funding_progress >= 100
+                                      ? 'bg-green-600'
+                                      : project.funding_progress >= 50
+                                        ? 'bg-yellow-500'
+                                        : 'bg-red-500'
+                                  }`}
+                                  style={{
+                                    width: `${Math.min(project.funding_progress, 100)}%`,
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex items-center">
+                              <Users className="w-4 h-4 text-gray-400 mr-1" />
+                              <span className="text-sm font-medium">
+                                {project.supporters_count}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            {getStatusBadge(project.status)}
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="text-sm text-gray-500">
+                              {new Date(project.end_date).toLocaleDateString()}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm">
+                                <Eye className="w-4 h-4 mr-1" />
+                                查看
+                              </Button>
+                              <Button variant="outline" size="sm">
+                                <Edit className="w-4 h-4 mr-1" />
+                                编辑
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                删除
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {projects.length === 0 && (
+                  <div className="text-center py-12">
+                    <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      暂无众筹项目
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      发起第一个新品众筹项目来获得资金支持
+                    </p>
+                    <Button className="bg-green-600 hover:bg-green-700">
+                      <Plus className="w-4 h-4 mr-2" />
+                      发起众筹项目
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+
+      {/* 遮罩层（移动端） */}
+
+      {/* 遮罩层（移动端） */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }
-

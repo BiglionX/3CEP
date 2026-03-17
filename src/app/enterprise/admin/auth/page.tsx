@@ -1,23 +1,23 @@
-﻿"use client";
+﻿'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { 
-  Building, 
-  Users, 
-  Mail,
-  Lock,
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  ArrowRight,
+  Building,
+  CheckCircle,
   Eye,
   EyeOff,
-  CheckCircle,
-  ArrowRight,
-  Shield
-} from "lucide-react";
+  Lock,
+  Mail,
+  Shield,
+  Users,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface LoginForm {
   email: string;
@@ -37,7 +37,10 @@ interface RegisterForm {
 export default function EnterpriseAuthPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
-  const [loginForm, setLoginForm] = useState<LoginForm>({ email: '', password: '' });
+  const [loginForm, setLoginForm] = useState<LoginForm>({
+    email: '',
+    password: '',
+  });
   const [registerForm, setRegisterForm] = useState<RegisterForm>({
     companyName: '',
     businessLicense: '',
@@ -45,7 +48,7 @@ export default function EnterpriseAuthPage() {
     phone: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,21 +58,21 @@ export default function EnterpriseAuthPage() {
     e.preventDefault();
     setIsLoading(true);
     setErrors({});
-    
+
     try {
       // 模拟登录验证
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // 简单验
+
+      // 简单验证
       if (!loginForm.email || !loginForm.password) {
-        setErrors({ general: '请填写所有必填字 });
+        setErrors({ general: '请填写所有必填字段' });
         return;
       }
-      
+
       // 模拟成功登录，跳转到企业后台
       router.push('/enterprise/admin/dashboard');
     } catch (error) {
-      setErrors({ general: '登录失败，请检查用户名和密 });
+      setErrors({ general: '登录失败，请检查用户名和密码' });
     } finally {
       setIsLoading(false);
     }
@@ -79,29 +82,31 @@ export default function EnterpriseAuthPage() {
     e.preventDefault();
     setIsLoading(true);
     setErrors({});
-    
+
     try {
       // 表单验证
       const newErrors: Record<string, string> = {};
-      
-      if (!registerForm.companyName) newErrors.companyName = '请输入公司名;
-      if (!registerForm.businessLicense) newErrors.businessLicense = '请输入营业执照号;
-      if (!registerForm.contactPerson) newErrors.contactPerson = '请输入联系人姓名';
-      if (!registerForm.phone) newErrors.phone = '请输入联系电;
+
+      if (!registerForm.companyName) newErrors.companyName = '请输入公司名称';
+      if (!registerForm.businessLicense)
+        newErrors.businessLicense = '请输入营业执照号';
+      if (!registerForm.contactPerson)
+        newErrors.contactPerson = '请输入联系人姓名';
+      if (!registerForm.phone) newErrors.phone = '请输入联系电话';
       if (!registerForm.email) newErrors.email = '请输入邮箱地址';
-      if (!registerForm.password) newErrors.password = '请输入密;
+      if (!registerForm.password) newErrors.password = '请输入密码';
       if (registerForm.password !== registerForm.confirmPassword) {
-        newErrors.confirmPassword = '两次输入的密码不一;
+        newErrors.confirmPassword = '两次输入的密码不一致';
       }
-      
+
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
         return;
       }
-      
+
       // 模拟注册
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // 注册成功，自动登录并跳转
       router.push('/enterprise/admin/dashboard');
     } catch (error) {
@@ -127,7 +132,7 @@ export default function EnterpriseAuthPage() {
               一站式AI服务管理后台，助您轻松掌控企业智能化进程
             </p>
           </div>
-          
+
           <div className="space-y-6">
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
@@ -136,11 +141,15 @@ export default function EnterpriseAuthPage() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">智能体监/h3>
-                <p className="text-gray-600">实时监控AI智能体运行状态和性能指标</p>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  智能体监控
+                </h3>
+                <p className="text-gray-600">
+                  实时监控AI智能体运行状态和性能指标
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -148,11 +157,13 @@ export default function EnterpriseAuthPage() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">安全管理</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  安全管理
+                </h3>
                 <p className="text-gray-600">企业级安全防护和权限管理体系</p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
@@ -160,7 +171,9 @@ export default function EnterpriseAuthPage() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">团队协作</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  团队协作
+                </h3>
                 <p className="text-gray-600">多人协作管理，清晰的权限分工</p>
               </div>
             </div>
@@ -176,7 +189,7 @@ export default function EnterpriseAuthPage() {
                   onClick={() => setActiveTab('login')}
                   className={`flex-1 py-3 px-4 text-center font-medium ${
                     activeTab === 'login'
-                       'text-blue-600 border-b-2 border-blue-600'
+                      ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
@@ -186,7 +199,7 @@ export default function EnterpriseAuthPage() {
                   onClick={() => setActiveTab('register')}
                   className={`flex-1 py-3 px-4 text-center font-medium ${
                     activeTab === 'register'
-                       'text-blue-600 border-b-2 border-blue-600'
+                      ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
@@ -194,7 +207,7 @@ export default function EnterpriseAuthPage() {
                 </button>
               </div>
             </CardHeader>
-            
+
             <CardContent className="p-8">
               {activeTab === 'login' && (
                 <form onSubmit={handleLogin} className="space-y-6">
@@ -203,7 +216,7 @@ export default function EnterpriseAuthPage() {
                       <p className="text-red-700 text-sm">{errors.general}</p>
                     </div>
                   )}
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="login-email">企业邮箱 *</Label>
                     <div className="relative">
@@ -212,25 +225,32 @@ export default function EnterpriseAuthPage() {
                         id="login-email"
                         type="email"
                         value={loginForm.email}
-                        onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
+                        onChange={e =>
+                          setLoginForm({ ...loginForm, email: e.target.value })
+                        }
                         className="pl-10"
-                        placeholder="请输入企业邮
+                        placeholder="请输入企业邮箱"
                         required
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="login-password">密码 *</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <Input
                         id="login-password"
-                        type={showPassword  "text" : "password"}
+                        type={showPassword ? 'text' : 'password'}
                         value={loginForm.password}
-                        onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
+                        onChange={e =>
+                          setLoginForm({
+                            ...loginForm,
+                            password: e.target.value,
+                          })
+                        }
                         className="pl-10 pr-10"
-                        placeholder="请输入密
+                        placeholder="请输入密码"
                         required
                       />
                       <button
@@ -238,30 +258,42 @@ export default function EnterpriseAuthPage() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       >
-                        {showPassword  <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <label className="flex items-center">
-                      <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                      <span className="ml-2 text-sm text-gray-600">记住/span>
+                      <input
+                        type="checkbox"
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">
+                        记住登录
+                      </span>
                     </label>
-                    <Link href="/enterprise/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
+                    <Link
+                      href="/enterprise/forgot-password"
+                      className="text-sm text-blue-600 hover:text-blue-800"
+                    >
                       忘记密码
                     </Link>
                   </div>
-                  
-                  <Button 
-                    type="submit" 
+
+                  <Button
+                    type="submit"
                     className="w-full py-6 text-lg"
                     disabled={isLoading}
                   >
-                    {isLoading  (
+                    {isLoading ? (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        登录..
+                        登录中...
                       </>
                     ) : (
                       <>
@@ -270,10 +302,10 @@ export default function EnterpriseAuthPage() {
                       </>
                     )}
                   </Button>
-                  
+
                   <div className="text-center text-sm text-gray-600">
                     还没有企业账户{' '}
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setActiveTab('register')}
                       className="text-blue-600 hover:text-blue-800 font-medium"
@@ -283,7 +315,7 @@ export default function EnterpriseAuthPage() {
                   </div>
                 </form>
               )}
-              
+
               {activeTab === 'register' && (
                 <form onSubmit={handleRegister} className="space-y-6">
                   {errors.general && (
@@ -291,60 +323,94 @@ export default function EnterpriseAuthPage() {
                       <p className="text-red-700 text-sm">{errors.general}</p>
                     </div>
                   )}
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="companyName">公司名称 *</Label>
                       <Input
                         id="companyName"
                         value={registerForm.companyName}
-                        onChange={(e) => setRegisterForm({...registerForm, companyName: e.target.value})}
-                        placeholder="请输入公司全
+                        onChange={e =>
+                          setRegisterForm({
+                            ...registerForm,
+                            companyName: e.target.value,
+                          })
+                        }
+                        placeholder="请输入公司全称"
                         required
                       />
-                      {errors.companyName && <p className="text-red-500 text-xs">{errors.companyName}</p>}
+                      {errors.companyName && (
+                        <p className="text-red-500 text-xs">
+                          {errors.companyName}
+                        </p>
+                      )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="businessLicense">营业执照 *</Label>
                       <Input
                         id="businessLicense"
                         value={registerForm.businessLicense}
-                        onChange={(e) => setRegisterForm({...registerForm, businessLicense: e.target.value})}
-                        placeholder="请输入营业执照号
+                        onChange={e =>
+                          setRegisterForm({
+                            ...registerForm,
+                            businessLicense: e.target.value,
+                          })
+                        }
+                        placeholder="请输入营业执照号"
                         required
                       />
-                      {errors.businessLicense && <p className="text-red-500 text-xs">{errors.businessLicense}</p>}
+                      {errors.businessLicense && (
+                        <p className="text-red-500 text-xs">
+                          {errors.businessLicense}
+                        </p>
+                      )}
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="contactPerson">联系*</Label>
+                      <Label htmlFor="contactPerson">联系人 *</Label>
                       <Input
                         id="contactPerson"
                         value={registerForm.contactPerson}
-                        onChange={(e) => setRegisterForm({...registerForm, contactPerson: e.target.value})}
+                        onChange={e =>
+                          setRegisterForm({
+                            ...registerForm,
+                            contactPerson: e.target.value,
+                          })
+                        }
                         placeholder="请输入联系人姓名"
                         required
                       />
-                      {errors.contactPerson && <p className="text-red-500 text-xs">{errors.contactPerson}</p>}
+                      {errors.contactPerson && (
+                        <p className="text-red-500 text-xs">
+                          {errors.contactPerson}
+                        </p>
+                      )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="phone">联系电话 *</Label>
                       <Input
                         id="phone"
                         type="tel"
                         value={registerForm.phone}
-                        onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})}
-                        placeholder="请输入联系电
+                        onChange={e =>
+                          setRegisterForm({
+                            ...registerForm,
+                            phone: e.target.value,
+                          })
+                        }
+                        placeholder="请输入联系电话"
                         required
                       />
-                      {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
+                      {errors.phone && (
+                        <p className="text-red-500 text-xs">{errors.phone}</p>
+                      )}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="register-email">企业邮箱 *</Label>
                     <div className="relative">
@@ -353,15 +419,22 @@ export default function EnterpriseAuthPage() {
                         id="register-email"
                         type="email"
                         value={registerForm.email}
-                        onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
+                        onChange={e =>
+                          setRegisterForm({
+                            ...registerForm,
+                            email: e.target.value,
+                          })
+                        }
                         className="pl-10"
-                        placeholder="请输入企业邮
+                        placeholder="请输入企业邮箱"
                         required
                       />
                     </div>
-                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+                    {errors.email && (
+                      <p className="text-red-500 text-xs">{errors.email}</p>
+                    )}
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="password">密码 *</Label>
@@ -369,63 +442,90 @@ export default function EnterpriseAuthPage() {
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         <Input
                           id="password"
-                          type={showPassword  "text" : "password"}
+                          type={showPassword ? 'text' : 'password'}
                           value={registerForm.password}
-                          onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
+                          onChange={e =>
+                            setRegisterForm({
+                              ...registerForm,
+                              password: e.target.value,
+                            })
+                          }
                           className="pl-10 pr-10"
-                          placeholder="请输入密
+                          placeholder="请输入密码"
                           required
                         />
                       </div>
-                      {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
+                      {errors.password && (
+                        <p className="text-red-500 text-xs">
+                          {errors.password}
+                        </p>
+                      )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="confirmPassword">确认密码 *</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         <Input
                           id="confirmPassword"
-                          type={showPassword  "text" : "password"}
+                          type={showPassword ? 'text' : 'password'}
                           value={registerForm.confirmPassword}
-                          onChange={(e) => setRegisterForm({...registerForm, confirmPassword: e.target.value})}
+                          onChange={e =>
+                            setRegisterForm({
+                              ...registerForm,
+                              confirmPassword: e.target.value,
+                            })
+                          }
                           className="pl-10 pr-10"
-                          placeholder="请再次输入密
+                          placeholder="请再次输入密码"
                           required
                         />
                       </div>
-                      {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
+                      {errors.confirmPassword && (
+                        <p className="text-red-500 text-xs">
+                          {errors.confirmPassword}
+                        </p>
+                      )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       id="agreement"
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       required
                     />
-                    <label htmlFor="agreement" className="ml-2 text-sm text-gray-600">
+                    <label
+                      htmlFor="agreement"
+                      className="ml-2 text-sm text-gray-600"
+                    >
                       我同意{' '}
-                      <Link href="/terms" className="text-blue-600 hover:text-blue-800">
+                      <Link
+                        href="/terms"
+                        className="text-blue-600 hover:text-blue-800"
+                      >
                         服务条款
-                      </Link>
-                      {' '}和{' '}
-                      <Link href="/privacy" className="text-blue-600 hover:text-blue-800">
+                      </Link>{' '}
+                      和{' '}
+                      <Link
+                        href="/privacy"
+                        className="text-blue-600 hover:text-blue-800"
+                      >
                         隐私政策
                       </Link>
                     </label>
                   </div>
-                  
-                  <Button 
-                    type="submit" 
+
+                  <Button
+                    type="submit"
                     className="w-full py-6 text-lg"
                     disabled={isLoading}
                   >
-                    {isLoading  (
+                    {isLoading ? (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        注册..
+                        注册中...
                       </>
                     ) : (
                       <>
@@ -434,10 +534,10 @@ export default function EnterpriseAuthPage() {
                       </>
                     )}
                   </Button>
-                  
+
                   <div className="text-center text-sm text-gray-600">
                     已有企业账户{' '}
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setActiveTab('login')}
                       className="text-blue-600 hover:text-blue-800 font-medium"
@@ -449,9 +549,9 @@ export default function EnterpriseAuthPage() {
               )}
             </CardContent>
           </Card>
-          
+
           <div className="mt-8 text-center text-sm text-gray-600">
-            <p>© 2026 FixCycle AI Platform. 保留所有权利/p>
+            <p>© 2026 FixCycle AI Platform. 保留所有权利</p>
           </div>
         </div>
       </div>
