@@ -1,14 +1,14 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-// 妯℃嫙Token濂楅API绔偣
+// 模拟Token套餐API端点
 export async function GET() {
   try {
-    // 妯℃嫙濂楅鏁版嵁
+    // 模拟套餐数据
     const packages = [
       {
         id: 'pkg_1',
-        name: '鍩虹濂楅',
-        description: '傚悎鍋跺皵浣跨敤鐨勭敤,
+        name: '基础套餐',
+        description: '适合新手使用的用户',
         token_amount: 100,
         price: 9.9,
         discount_percentage: 0,
@@ -18,8 +18,8 @@ export async function GET() {
       },
       {
         id: 'pkg_2',
-        name: '鏍囧噯濂楅',
-        description: '鎬т环姣斾箣夛紝婊¤冻ュ父闇€,
+        name: '标准套餐',
+        description: '性价比最高，满足日常需求',
         token_amount: 500,
         price: 45.0,
         discount_percentage: 10,
@@ -35,9 +35,8 @@ export async function GET() {
     });
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: '鑾峰彇濂楅澶辫触' },
+      { success: false, error: '获取套餐失败' },
       { status: 500 }
     );
   }
 }
-

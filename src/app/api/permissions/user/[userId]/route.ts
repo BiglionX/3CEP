@@ -9,6 +9,7 @@ import {
   UserInfo,
 } from '@/modules/common/permissions/core/permission-manager';
 import { PermissionConfigManager } from '@/modules/common/permissions/config/permission-config';
+import { requireAuth } from '@/lib/auth';
 
 // GET /api/permissions/user/[userId]/permissions - 获取用户权限
 export async function GET_USER_PERMISSIONS(
@@ -21,34 +22,36 @@ export async function GET_USER_PERMISSIONS(
     const includeDetails = searchParams.get('includeDetails') === 'true';
     const category = searchParams.get('category') || undefined;
 
-    // 这里应该从认证系统获取当前用户信息
-    // const currentUser = await getCurrentUser(request);
-    // if (!currentUser) {
-    //   return NextResponse.json(
-    //     { success: false, error: '未授权访问' },
-    //     { status: 401 }
-    //   );
-    // }
+    // 验证用户身份
+    const auth = await requireAuth();
+
+    // 检查权限：只能查看自己的权限或管理员可以查看所有人
+    if (auth.user.id !== userId && !auth.isAdmin) {
+      return NextResponse.json(
+        { success: false, error: '无权查看其他用户的权限' },
+        { status: 403 }
+      );
+    }
 
     const permissionManager = PermissionManager.getInstance();
     const configManager = PermissionConfigManager.getInstance();
 
-    // 模拟用户信息（实际应用中应该从数据库获取）
-    const mockUser: UserInfo = {
-      id: userId,
-      email: `${userId}@example.com`,
-      roles: userId === 'admin'  ['admin'] : ['manager'],
+    // 构建用户信息
+    const userInfo: UserInfo = {
+      id: auth.user.id,
+      email: auth.user.email || '',
+      roles: auth.roles,
       isActive: true,
-      tenantId: 'default-tenant',
+      tenantId: auth.tenantId || 'default-tenant',
     };
 
     const config = configManager.getConfig();
     const userPermissions = permissionManager.getUserPermissions(
-      mockUser,
+      userInfo,
       config
     );
     const accessibleResources = permissionManager.getUserAccessibleResources(
-      mockUser,
+      userInfo,
       category
     );
 
@@ -56,8 +59,8 @@ export async function GET_USER_PERMISSIONS(
       userId,
       permissions: Array.from(userPermissions),
       accessibleResources,
-      userRoles: mockUser.roles,
-      tenantId: mockUser.tenantId,
+      userRoles: userInfo.roles,
+      tenantId: userInfo.tenantId,
     };
 
     // 添加详细信息（如果需要）
@@ -66,15 +69,15 @@ export async function GET_USER_PERMISSIONS(
         permId => {
           const permDef = config.permissions[permId];
           return permDef
-             { id: permId, ...permDef }
+            ? { id: permId, ...permDef }
             : { id: permId, name: permId };
         }
       );
 
-      responseData.roleDetails = mockUser.roles.map(roleId => {
+      responseData.roleDetails = userInfo.roles.map(roleId => {
         const roleDef = config.roles[roleId];
         return roleDef
-           { id: roleId, ...roleDef }
+          ? { id: roleId, ...roleDef }
           : { id: roleId, name: roleId };
       });
     }
@@ -86,10 +89,19 @@ export async function GET_USER_PERMISSIONS(
     });
   } catch (error) {
     console.error('获取用户权限失败:', error);
+
+    // 判断是否为认证错误
+    if (error instanceof Error && error.message === '未登录') {
+      return NextResponse.json(
+        { success: false, error: '未授权访问，请先登录' },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '获取用户权限失败',
+        error: error instanceof Error ? error.message : '获取用户权限失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -114,16 +126,26 @@ export async function CHECK_USER_PERMISSIONS(
       );
     }
 
-    const permissionManager = PermissionManager.getInstance();
-    const configManager = PermissionConfigManager.getInstance();
+    // 验证用户身份
+    const auth = await requireAuth();
 
-    // 模拟用户信息
-    const mockUser: UserInfo = {
-      id: userId,
-      email: `${userId}@example.com`,
-      roles: userId === 'admin'  ['admin'] : ['manager'],
+    // 检查权限：只能检查自己的权限或管理员可以检查所有人
+    if (auth.user.id !== userId && !auth.isAdmin) {
+      return NextResponse.json(
+        { success: false, error: '无权检查其他用户的权限' },
+        { status: 403 }
+      );
+    }
+
+    const permissionManager = PermissionManager.getInstance();
+
+    // 构建用户信息
+    const userInfo: UserInfo = {
+      id: auth.user.id,
+      email: auth.user.email || '',
+      roles: auth.roles,
       isActive: true,
-      tenantId: 'default-tenant',
+      tenantId: auth.tenantId || 'default-tenant',
     };
 
     let checkResult;
@@ -131,13 +153,13 @@ export async function CHECK_USER_PERMISSIONS(
     if (permissions) {
       // 检查具体权限
       const permsArray = Array.isArray(permissions)
-         permissions
+        ? permissions
         : [permissions];
-      checkResult = permissionManager.hasPermission(mockUser, permsArray);
+      checkResult = permissionManager.hasPermission(userInfo, permsArray);
     } else {
       // 检查资源访问权限
       checkResult = permissionManager.canAccessResource(
-        mockUser,
+        userInfo,
         resource,
         action
       );
@@ -155,10 +177,19 @@ export async function CHECK_USER_PERMISSIONS(
     });
   } catch (error) {
     console.error('权限检查失败:', error);
+
+    // 判断是否为认证错误
+    if (error instanceof Error && error.message === '未登录') {
+      return NextResponse.json(
+        { success: false, error: '未授权访问，请先登录' },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '权限检查失败',
+        error: error instanceof Error ? error.message : '权限检查失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -176,21 +207,32 @@ export async function GET_ACCESSIBLE_RESOURCES(
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category') || undefined;
 
+    // 验证用户身份
+    const auth = await requireAuth();
+
+    // 检查权限：只能查看自己的权限或管理员可以查看所有人
+    if (auth.user.id !== userId && !auth.isAdmin) {
+      return NextResponse.json(
+        { success: false, error: '无权查看其他用户的权限' },
+        { status: 403 }
+      );
+    }
+
     const permissionManager = PermissionManager.getInstance();
     const configManager = PermissionConfigManager.getInstance();
 
-    // 模拟用户信息
-    const mockUser: UserInfo = {
-      id: userId,
-      email: `${userId}@example.com`,
-      roles: userId === 'admin'  ['admin'] : ['manager'],
+    // 构建用户信息
+    const userInfo: UserInfo = {
+      id: auth.user.id,
+      email: auth.user.email || '',
+      roles: auth.roles,
       isActive: true,
-      tenantId: 'default-tenant',
+      tenantId: auth.tenantId || 'default-tenant',
     };
 
     const config = configManager.getConfig();
     const accessibleResources = permissionManager.getUserAccessibleResources(
-      mockUser,
+      userInfo,
       category
     );
 
@@ -223,10 +265,19 @@ export async function GET_ACCESSIBLE_RESOURCES(
     });
   } catch (error) {
     console.error('获取可访问资源失败:', error);
+
+    // 判断是否为认证错误
+    if (error instanceof Error && error.message === '未登录') {
+      return NextResponse.json(
+        { success: false, error: '未授权访问，请先登录' },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '获取可访问资源失败',
+        error: error instanceof Error ? error.message : '获取可访问资源失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -251,16 +302,26 @@ export async function BULK_PERMISSION_CHECK(
       );
     }
 
-    const permissionManager = PermissionManager.getInstance();
-    const configManager = PermissionConfigManager.getInstance();
+    // 验证用户身份
+    const auth = await requireAuth();
 
-    // 模拟用户信息
-    const mockUser: UserInfo = {
-      id: userId,
-      email: `${userId}@example.com`,
-      roles: userId === 'admin'  ['admin'] : ['manager'],
+    // 检查权限：只能检查自己的权限或管理员可以检查所有人
+    if (auth.user.id !== userId && !auth.isAdmin) {
+      return NextResponse.json(
+        { success: false, error: '无权检查其他用户的权限' },
+        { status: 403 }
+      );
+    }
+
+    const permissionManager = PermissionManager.getInstance();
+
+    // 构建用户信息
+    const userInfo: UserInfo = {
+      id: auth.user.id,
+      email: auth.user.email || '',
+      roles: auth.roles,
       isActive: true,
-      tenantId: 'default-tenant',
+      tenantId: auth.tenantId || 'default-tenant',
     };
 
     // 批量执行权限检查
@@ -269,10 +330,10 @@ export async function BULK_PERMISSION_CHECK(
         let result;
 
         if (check.permission) {
-          result = permissionManager.hasPermission(mockUser, check.permission);
+          result = permissionManager.hasPermission(userInfo, check.permission);
         } else if (check.resource && check.action) {
           result = permissionManager.canAccessResource(
-            mockUser,
+            userInfo,
             check.resource,
             check.action
           );
@@ -295,7 +356,7 @@ export async function BULK_PERMISSION_CHECK(
       } catch (error) {
         return {
           index,
-          error: error instanceof Error  error.message : '检查执行失败',
+          error: error instanceof Error ? error.message : '检查执行失败',
         };
       }
     });
@@ -318,10 +379,19 @@ export async function BULK_PERMISSION_CHECK(
     });
   } catch (error) {
     console.error('批量权限检查失败:', error);
+
+    // 判断是否为认证错误
+    if (error instanceof Error && error.message === '未登录') {
+      return NextResponse.json(
+        { success: false, error: '未授权访问，请先登录' },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '批量权限检查失败',
+        error: error instanceof Error ? error.message : '批量权限检查失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -330,12 +400,10 @@ export async function BULK_PERMISSION_CHECK(
 }
 
 // 健康检查端点
-export async function HEALTH_CHECK(request: NextRequest) {
+export async function HEALTH_CHECK(_request: NextRequest) {
   try {
     const permissionManager = PermissionManager.getInstance();
-    const configManager = PermissionConfigManager.getInstance();
-
-    const config = configManager.getConfig();
+    const config = PermissionConfigManager.getInstance().getConfig();
     const stats = permissionManager.getPermissionStats();
 
     return NextResponse.json({

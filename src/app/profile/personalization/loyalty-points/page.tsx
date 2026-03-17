@@ -1,20 +1,20 @@
-﻿"use client";
+﻿'use client';
 
-import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
-  Star,
-  TrendingUp,
-  TrendingDown,
-  Search,
   Award,
-  Zap,
-  ShoppingBag,
   Clock,
+  Search,
+  ShoppingBag,
+  Star,
+  TrendingDown,
+  TrendingUp,
+  Zap,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface Reward {
   id: string;
@@ -131,9 +131,10 @@ export default function LoyaltyPointsPage() {
     },
   ];
 
-  const filteredRewards = rewards.filter((reward) =>
-    reward.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reward.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredRewards = rewards.filter(
+    reward =>
+      reward.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      reward.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getCategoryBadge = (category: string) => {
@@ -251,20 +252,22 @@ export default function LoyaltyPointsPage() {
           <Input
             placeholder="搜索礼品"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-10"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {filteredRewards.map((reward) => (
+          {filteredRewards.map(reward => (
             <Card key={reward.id} className="overflow-hidden">
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-bold">{reward.name}</h3>
                   {getCategoryBadge(reward.category)}
                 </div>
-                <p className="text-sm text-gray-500 mb-3">{reward.description}</p>
+                <p className="text-sm text-gray-500 mb-3">
+                  {reward.description}
+                </p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 text-yellow-500" />
@@ -292,7 +295,7 @@ export default function LoyaltyPointsPage() {
         <Card>
           <CardContent className="p-0">
             <div className="divide-y">
-              {transactions.map((transaction) => (
+              {transactions.map(transaction => (
                 <div
                   key={transaction.id}
                   className="flex items-center justify-between p-4"

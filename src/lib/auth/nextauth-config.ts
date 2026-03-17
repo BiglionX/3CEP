@@ -1,12 +1,11 @@
 /**
  * NextAuth.js 配置文件
- * 适用?Next.js App Router
+ * 适用于Next.js App Router
  */
 
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { SupabaseAdapter } from '@auth/supabase-adapter';
-import bcrypt from 'bcryptjs';
 import { AuthErrorHandler, AuthErrorCode } from '@/lib/auth/error-handler';
 import { authStateManager } from '@/lib/auth/state-manager';
 
@@ -40,12 +39,14 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseSecret = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export const authOptions: NextAuthOptions = {
-  // 使用Supabase适配?  adapter: SupabaseAdapter({
+  // 使用Supabase适配器
+  adapter: SupabaseAdapter({
     url: supabaseUrl,
     secret: supabaseSecret,
   }),
 
-  // 认证提供者配?  providers: [
+  // 认证提供者配置
+  providers: [
     CredentialsProvider({
       name: 'credentials',
       credentials: {
@@ -108,7 +109,8 @@ export const authOptions: NextAuthOptions = {
   // 回调函数配置
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      // 初始登录时设置用户信?      if (user) {
+      // 初始登录时设置用户信息
+      if (user) {
         token.id = user.id;
         token.email = user.email;
         token.isAdmin = (user as any).isAdmin || false;
@@ -145,26 +147,31 @@ export const authOptions: NextAuthOptions = {
     },
 
     async redirect({ url, baseUrl }) {
-      // 允许相对路径重定?      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      // 允许回调URL重定?      else if (new URL(url).origin === baseUrl) return url;
+      // 允许相对路径重定向
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // 允许回调URL重定向
+      else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
   },
 
   // 事件处理
   events: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signIn({ user, account, profile, isNewUser }) {
-      console.log('用户登录:', user.email);
+      console.info('用户登录:', user.email);
       // 可以在这里记录登录事件或执行其他逻辑
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signOut({ session, token }) {
-      console.log('用户登出:', token?.email);
-      // 清理全局状?      authStateManager.setUnauthenticated();
+      console.info('用户登出:', token?.email);
+      // 清理全局状态
+      authStateManager.setUnauthenticated();
     },
 
     async createUser({ user }) {
-      console.log('新用户创?', user.email);
+      console.info('新用户创建', user.email);
     },
   },
 
@@ -178,12 +185,15 @@ export const authOptions: NextAuthOptions = {
   // 会话配置
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30�?    updateAge: 24 * 60 * 60, // 24小时更新一?  },
+    maxAge: 30 * 24 * 60 * 60, // 30天
+    updateAge: 24 * 60 * 60, // 24小时更新一次
+  },
 
   // JWT配置
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
-    maxAge: 30 * 24 * 60 * 60, // 30�?  },
+    maxAge: 30 * 24 * 60 * 60, // 30天
+  },
 
   // 调试模式
   debug: process.env.NODE_ENV === 'development',

@@ -23,34 +23,9 @@ const nextConfig = {
 
   // Chunk加载优化配置
   webpack: (config, { isServer }) => {
-    // 增加chunk加载超时时间
-    if (!isServer) {
-      config.output.chunkLoadingGlobal =
-        'webpackJsonp_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    // 优化代码分割
-    config.optimization.splitChunks = {
-      chunks: 'all',
-      cacheGroups: {
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true,
-        },
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          priority: -10,
-          chunks: 'all',
-        },
-      },
-    };
-
     // 为 SSR 环境添加 Node.js 模块的处理
-    // crypto 模块将在运行时动态导入
     if (!isServer) {
-      // 为客户端添加 polyfall
+      // 为客户端添加 polyfill
       config.resolve.fallback = {
         ...config.resolve.fallback,
         crypto: false,

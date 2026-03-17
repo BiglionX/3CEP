@@ -1,9 +1,8 @@
-﻿/**
- * 宸ュ崟绠＄悊API璺敱
+/**
+ * 任务管理API路由
  */
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { TicketManagementService } from '@/modules/fcx-alliance/services/ticket-management.service';
+import { NextResponse } from 'next/server';
 
 const ticketService = new TicketManagementService();
 
@@ -18,7 +17,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: ticket,
-          message: '宸ュ崟鍒涘缓鎴愬姛',
+          message: '任务创建成功',
         });
 
       case 'auto_assign':
@@ -26,7 +25,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: { assigned },
-          message: assigned  '宸ュ崟鍒嗛厤鎴愬姛' : '鏆傛棤鍚堥€傚伐绋嬪笀',
+          message: assigned ? '任务分配成功' : '暂无合适工程师',
         });
 
       case 'manual_assign':
@@ -37,7 +36,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: { assigned: manuallyAssigned },
-          message: manuallyAssigned  '宸ュ崟鍒嗛厤鎴愬姛' : '鍒嗛厤澶辫触',
+          message: manuallyAssigned ? '任务分配成功' : '分配失败',
         });
 
       case 'update_status':
@@ -48,36 +47,36 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: true,
-          message: '鐘舵€佹洿鏂版垚,
+          message: '状态更新成功',
         });
 
       case 'check_overdue':
         await ticketService.checkOverdueTickets();
         return NextResponse.json({
           success: true,
-          message: '瓒呮椂妫€鏌ュ畬,
+          message: '超时检查完成',
         });
 
       case 'process_settlement':
         await ticketService.processAutoSettlement();
         return NextResponse.json({
           success: true,
-          message: '缁撶畻澶勭悊瀹屾垚',
+          message: '结算处理完成',
         });
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鎿嶄綔' },
+          { success: false, error: '未知操作' },
           { status: 400 }
         );
     }
   } catch (error) {
-    console.error('宸ュ崟绠＄悊API閿欒:', error);
+    console.error('任务管理API错误:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鎿嶄綔澶辫触',
-        details: (error as Error).message,
+        error: '操作失败',
+        details: error instanceof Error ? error.message : '未知错误',
       },
       { status: 500 }
     );
@@ -98,7 +97,7 @@ export async function GET(request: Request) {
         });
 
       case 'ticket_details':
-        // 杩欓噷搴旇瀹炵幇鑾峰彇鍏蜂綋宸ュ崟璇︽儏鐨勯€昏緫
+        // 这里应该实现获取具体任务详情的逻辑
         return NextResponse.json({
           success: true,
           data: {},
@@ -106,20 +105,19 @@ export async function GET(request: Request) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '鏈煡鎿嶄綔' },
+          { success: false, error: '未知操作' },
           { status: 400 }
         );
     }
   } catch (error) {
-    console.error('宸ュ崟绠＄悊API閿欒:', error);
+    console.error('任务管理API错误:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏌ヨ澶辫触',
-        details: (error as Error).message,
+        error: '查询失败',
+        details: error instanceof Error ? error.message : '未知错误',
       },
       { status: 500 }
     );
   }
 }
-

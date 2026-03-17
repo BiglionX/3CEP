@@ -57,6 +57,30 @@ export default function SkillsPage() {
       rating: 4.9,
       link: '/skill-store/estimate-value',
     },
+    {
+      name: 'procyc-part-price',
+      title: '配件价格查询',
+      category: 'PART',
+      categoryName: '配件类',
+      icon: '🏷️',
+      description: '查询配件市场价格、库存情况和最优供应商报价',
+      version: '1.0.0',
+      downloads: '312',
+      rating: 4.8,
+      link: '/skill-store/part-price',
+    },
+    {
+      name: 'procyc-battery-version',
+      title: '电池版本查询',
+      category: 'PART',
+      categoryName: '配件类',
+      icon: '🔋',
+      description: '根据设备型号查询原装电池版本和兼容替代型号',
+      version: '1.0.0',
+      downloads: '287',
+      rating: 4.7,
+      link: '/skill-store/battery-version',
+    },
   ];
 
   const categories = [
@@ -71,9 +95,10 @@ export default function SkillsPage() {
     { code: 'INTEG', name: '集成类', icon: '🔗' },
   ];
 
-  const filteredSkills = selectedCategory && selectedCategory !== 'ALL'
-    ? skills.filter(skill => skill.category === selectedCategory)
-    : skills;
+  const filteredSkills =
+    selectedCategory && selectedCategory !== 'ALL'
+      ? skills.filter(skill => skill.category === selectedCategory)
+      : skills;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -104,7 +129,8 @@ export default function SkillsPage() {
               key={cat.code}
               href={`/skill-store/skills${cat.code === 'ALL' ? '' : `?category=${cat.code}`}`}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                (!selectedCategory && cat.code === 'ALL') || selectedCategory === cat.code
+                (!selectedCategory && cat.code === 'ALL') ||
+                selectedCategory === cat.code
                   ? 'bg-indigo-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}

@@ -3,6 +3,7 @@
  * 解决认证系统冲突问题
  */
 
+'use client';
 import { AuthService } from '@/lib/auth-service';
 import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
@@ -121,7 +122,10 @@ export function useUnifiedAuth() {
         const currentAuthState = session ? 'authenticated' : 'unauthenticated';
 
         // 只有当用户真正发生变化时才更新状态
-        if (currentUserId !== lastUserId || currentAuthState !== lastAuthState) {
+        if (
+          currentUserId !== lastUserId ||
+          currentAuthState !== lastAuthState
+        ) {
           lastUserId = currentUserId;
           lastAuthState = currentAuthState;
 

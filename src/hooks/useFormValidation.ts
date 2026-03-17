@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 
 interface ValidationRule {
@@ -22,7 +23,8 @@ export function useFormValidation(initialFields: Record<string, string>) {
   const [fields, setFields] = useState<FormValidationState>({});
   const [isValid, setIsValid] = useState(false);
 
-  // 初始化字?  useEffect(() => {
+  // 初始化字段
+  useEffect(() => {
     const initialValidation: FormValidationState = {};
     Object.keys(initialFields).forEach(key => {
       initialValidation[key] = {
@@ -35,7 +37,7 @@ export function useFormValidation(initialFields: Record<string, string>) {
   }, [initialFields]);
 
   const validateField = (
-    fieldName: string,
+    _fieldName: string,
     value: string,
     rules: ValidationRule
   ): FieldValidation => {
@@ -43,19 +45,22 @@ export function useFormValidation(initialFields: Record<string, string>) {
 
     // 必填验证
     if (rules.required && !value.trim()) {
-      error = '此字段为必填?;
+      error = '此字段为必填项';
     }
 
-    // 最小长度验?    if (!error && rules.minLength && value.length < rules.minLength) {
-      error = `最少需?{rules.minLength}个字符`;
+    // 最小长度验证
+    if (!error && rules.minLength && value.length < rules.minLength) {
+      error = `最少需要${rules.minLength}个字符`;
     }
 
-    // 最大长度验?    if (!error && rules.maxLength && value.length > rules.maxLength) {
-      error = `最多允?{rules.maxLength}个字符`;
+    // 最大长度验证
+    if (!error && rules.maxLength && value.length > rules.maxLength) {
+      error = `最多允许${rules.maxLength}个字符`;
     }
 
-    // 正则表达式验?    if (!error && rules.pattern && !rules.pattern.test(value)) {
-      error = '输入格式不正?;
+    // 正则表达式验证
+    if (!error && rules.pattern && !rules.pattern.test(value)) {
+      error = '输入格式不正确';
     }
 
     // 自定义验证器
@@ -64,7 +69,7 @@ export function useFormValidation(initialFields: Record<string, string>) {
       if (typeof customResult === 'string') {
         error = customResult;
       } else if (customResult === false) {
-        error = '输入不符合要?;
+        error = '输入不符合要求';
       }
     }
 
@@ -87,7 +92,8 @@ export function useFormValidation(initialFields: Record<string, string>) {
     }));
   };
 
-  // 批量验证所有字?  const validateAll = (
+  // 批量验证所有字段
+  const validateAll = (
     validationRules: Record<string, ValidationRule>
   ): boolean => {
     const newFields: FormValidationState = {};
@@ -111,7 +117,8 @@ export function useFormValidation(initialFields: Record<string, string>) {
     return allValid;
   };
 
-  // 获取字段?  const getFieldValues = (): Record<string, string> => {
+  // 获取字段值
+  const getFieldValues = (): Record<string, string> => {
     const values: Record<string, string> = {};
     Object.keys(fields).forEach(key => {
       values[key] = fields[key].value;
@@ -119,7 +126,8 @@ export function useFormValidation(initialFields: Record<string, string>) {
     return values;
   };
 
-  // 获取第一个错误字?  const getFirstError = (): string | null => {
+  // 获取第一个错误字段
+  const getFirstError = (): string | null => {
     for (const [fieldName, field] of Object.entries(fields)) {
       if (field.error) {
         return fieldName;

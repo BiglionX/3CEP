@@ -1,5 +1,6 @@
 ﻿/**
- * 搜索服务? * 提供高级搜索功能的业务逻辑实现
+ * 搜索服务
+ * 提供高级搜索功能的业务逻辑实现
  */
 
 import {
@@ -85,7 +86,8 @@ class SearchService {
 
       const response = await repairShopApi.getWorkOrders(apiFilters);
 
-      // 转换为搜索结果格?      const results: SearchResult<T>[] = response.data.map(
+      // 转换为搜索结果格式
+      const results: SearchResult<T>[] = response.data.map(
         (workOrder: any) => ({
           id: workOrder.id,
           type: 'work_order',
@@ -160,7 +162,8 @@ class SearchService {
   }
 
   /**
-   * 搜索技?   */
+   * 搜索技师
+   */
   private async searchTechnicians<T>(
     query: string,
     filters: AdvancedSearchFilters
@@ -193,17 +196,20 @@ class SearchService {
   }
 
   /**
-   * 跨实体搜?   */
+   * 跨实体搜索
+   */
   private async searchAllEntities<T>(
     query: string,
     filters: AdvancedSearchFilters
   ): Promise<SearchResponse<T>> {
-    // 并行搜索所有实体类?    const [workOrders, customers] = await Promise.all([
+    // 并行搜索所有实体类型
+    const [workOrders, customers] = await Promise.all([
       this.searchWorkOrders(query, filters),
       this.searchCustomers(query, filters),
     ]);
 
-    // 合并结果并按相关性排?    const allResults: SearchResult<T>[] = [
+    // 合并结果并按相关性排序
+    const allResults: SearchResult<T>[] = [
       ...workOrders.results,
       ...customers.results,
     ].sort((a, b) => (b.score || 0) - (a.score || 0)) as SearchResult<T>[];
@@ -228,7 +234,8 @@ class SearchService {
 
     const suggestions: SearchSuggestion[] = [];
 
-    // 添加最近搜索历?    const recentHistory = this.getRecentHistory(5);
+    // 添加最近搜索历史
+    const recentHistory = this.getRecentHistory(5);
     const matchingHistory = recentHistory
       .filter(item => item.query.toLowerCase().includes(query.toLowerCase()))
       .map(item => ({
@@ -286,7 +293,8 @@ class SearchService {
   }
 
   /**
-   * 获取最近搜索历?   */
+   * 获取最近搜索历史
+   */
   private getRecentHistory(count: number): SearchHistory[] {
     return this.getHistory(count);
   }
@@ -303,7 +311,8 @@ class SearchService {
     try {
       const history = this.getHistory();
 
-      // 检查是否已存在相同的搜?      const existingIndex = history.findIndex(
+      // 检查是否已存在相同的搜索
+      const existingIndex = history.findIndex(
         item =>
           item.query === query &&
           JSON.stringify(item.filters) === JSON.stringify(filters)
@@ -322,7 +331,8 @@ class SearchService {
         // 更新已存在的记录
         history[existingIndex] = newHistoryItem;
       } else {
-        // 添加新记?        history.unshift(newHistoryItem);
+        // 添加新记录
+        history.unshift(newHistoryItem);
       }
 
       // 限制历史记录数量
@@ -375,7 +385,8 @@ class SearchService {
   }
 
   /**
-   * 获取保存的搜?   */
+   * 获取保存的搜索
+   */
   getSavedSearches(): Array<{
     id: string;
     name: string;
@@ -386,20 +397,21 @@ class SearchService {
       const savedJson = localStorage.getItem(this.savedSearchesKey);
       return savedJson ? JSON.parse(savedJson) : [];
     } catch (error) {
-      console.error('获取保存的搜索失?', error);
+      console.error('获取保存的搜索失败:', error);
       return [];
     }
   }
 
   /**
-   * 删除保存的搜?   */
+   * 删除保存的搜索
+   */
   deleteSavedSearch(id: string): void {
     try {
       const savedSearches = this.getSavedSearches();
       const filtered = savedSearches.filter(search => search.id !== id);
       localStorage.setItem(this.savedSearchesKey, JSON.stringify(filtered));
     } catch (error) {
-      console.error('删除保存的搜索失?', error);
+      console.error('删除保存的搜索失败:', error);
     }
   }
 
@@ -410,7 +422,8 @@ class SearchService {
     const highlights: string[] = [];
     const lowerQuery = query.toLowerCase();
 
-    // 遍历对象的所有字符串属?    Object.entries(obj).forEach(([key, value]) => {
+    // 遍历对象的所有字符串属性
+    Object.entries(obj).forEach(([key, value]) => {
       if (
         typeof value === 'string' &&
         value.toLowerCase().includes(lowerQuery)
@@ -422,10 +435,12 @@ class SearchService {
       }
     });
 
-    return highlights.slice(0, 3); // 最多返?个高亮结?  }
+    return highlights.slice(0, 3); // 最多返回3个高亮结果
+  }
 
   /**
-   * 查找匹配的字?   */
+   * 查找匹配的字段
+   */
   private findMatchedFields(obj: any, query: string): string[] {
     const matchedFields: string[] = [];
     const lowerQuery = query.toLowerCase();
@@ -443,23 +458,27 @@ class SearchService {
   }
 
   /**
-   * 计算相关性分?   */
+   * 计算相关性分数
+   */
   private calculateRelevanceScore(obj: any, query: string): number {
     let score = 0;
     const lowerQuery = query.toLowerCase();
 
-    // 在标题字段中的匹配获得更高分?    if (obj.title && obj.title.toLowerCase().includes(lowerQuery)) {
+    // 在标题字段中的匹配获得更高分数
+    if (obj.title && obj.title.toLowerCase().includes(lowerQuery)) {
       score += 10;
     }
 
-    // 在重要字段中的匹?    const importantFields = ['name', 'customerName', 'deviceModel'];
+    // 在重要字段中的匹配
+    const importantFields = ['name', 'customerName', 'deviceModel'];
     importantFields.forEach(field => {
       if (obj[field] && obj[field].toLowerCase().includes(lowerQuery)) {
         score += 5;
       }
     });
 
-    // 在其他字段中的匹?    Object.values(obj).forEach(value => {
+    // 在其他字段中的匹配
+    Object.values(obj).forEach(value => {
       if (
         typeof value === 'string' &&
         value.toLowerCase().includes(lowerQuery)

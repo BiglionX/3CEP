@@ -1,13 +1,14 @@
 ﻿/**
- * 鏉冮檺閰嶇疆API绔偣
- * 鎻愪緵鏉冮檺閰嶇疆鐨勮幏鍙栥€佹洿鏂板拰绠＄悊鍔熻兘
+ * 权限配置管理 API 端点
+ * 提供权限配置的查询、更新和验证功能
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { PermissionConfigManager } from '@/modules/common/permissions/config/permission-config';
 import { PermissionLoader } from '@/modules/common/permissions/core/permission-loader';
+import { requireAuth } from '@/lib/auth';
 
-// GET /api/permissions/config - 鑾峰彇鏉冮檺閰嶇疆
+// GET /api/permissions/config - 获取权限配置
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     const config = configManager.getConfig();
 
-    // 娣诲姞缁熻淇℃伅锛堝鏋滈渶瑕侊級
+    // 包含统计信息（可选）
     if (includeStats) {
       const loaderStatus = permissionLoader.getStatus();
       const stats = {
@@ -49,11 +50,11 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('鑾峰彇鏉冮檺閰嶇疆澶辫触:', error);
+    console.error('获取权限配置失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '鑾峰彇鏉冮檺閰嶇疆澶辫触',
+        error: error instanceof Error ? error.message : '获取权限配置失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -61,17 +62,25 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/permissions/config - 鏇存柊鏉冮檺閰嶇疆
+// POST /api/permissions/config - 保存权限配置
 export async function POST(request: NextRequest) {
   try {
-    // 楠岃瘉璇眰鏉冮檺锛堣繖閲屽簲璇ユ坊鍔犵鐞嗗憳鏉冮檺妫€鏌ワ級
-    // const user = await getCurrentUser(request);
-    // if (!user || !user.roles.includes('admin')) {
-    //   return NextResponse.json(
-    //     { success: false, error: '犳潈闄愭墽琛屾鎿嶄綔' },
-    //     { status: 403 }
-    //   );
-    // }
+    // 验证用户权限
+    try {
+      const auth = await requireAuth();
+
+      if (!auth.isAdmin) {
+        return NextResponse.json(
+          { success: false, error: '权限不足，需要管理员权限' },
+          { status: 403 }
+        );
+      }
+    } catch (authError) {
+      return NextResponse.json(
+        { success: false, error: '未授权访问，请先登录' },
+        { status: 401 }
+      );
+    }
 
     const body = await request.json();
     const { config, action } = body;
@@ -82,18 +91,18 @@ export async function POST(request: NextRequest) {
       case 'update':
         if (!config) {
           return NextResponse.json(
-            { success: false, error: '缂哄皯閰嶇疆鏁版嵁' },
+            { success: false, error: '缺少配置内容' },
             { status: 400 }
           );
         }
 
-        // 楠岃瘉閰嶇疆
+        // 验证配置
         const validationResult = configManager.validateConfig(config);
         if (!validationResult.isValid) {
           return NextResponse.json(
             {
               success: false,
-              error: '閰嶇疆楠岃瘉澶辫触',
+              error: '配置验证失败',
               details: validationResult.errors,
             },
             { status: 400 }
@@ -114,23 +123,23 @@ export async function POST(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: '犳晥鐨勬搷浣滅被 },
+          { success: false, error: '不支持的操作类型' },
           { status: 400 }
         );
     }
 
     return NextResponse.json({
       success: true,
-      message: '鏉冮檺閰嶇疆鏇存柊鎴愬姛',
+      message: '权限配置保存成功',
       data: configManager.getConfig(),
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('鏇存柊鏉冮檺閰嶇疆澶辫触:', error);
+    console.error('保存权限配置失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '鏇存柊鏉冮檺閰嶇疆澶辫触',
+        error: error instanceof Error ? error.message : '保存权限配置失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -138,8 +147,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/permissions/config/roles - 鑾峰彇瑙掕壊鍒楄〃
-export async function GET_ROLES(request: NextRequest) {
+// GET /api/permissions/config/roles - 获取所有角色
+export async function GET_ROLES(_request: NextRequest) {
   try {
     const configManager = PermissionConfigManager.getInstance();
     const config = configManager.getConfig();
@@ -155,11 +164,11 @@ export async function GET_ROLES(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('鑾峰彇瑙掕壊鍒楄〃澶辫触:', error);
+    console.error('获取角色列表失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '鑾峰彇瑙掕壊鍒楄〃澶辫触',
+        error: error instanceof Error ? error.message : '获取角色列表失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -167,10 +176,10 @@ export async function GET_ROLES(request: NextRequest) {
   }
 }
 
-// GET /api/permissions/config/permissions - 鑾峰彇鏉冮檺鍒楄〃
-export async function GET_PERMISSIONS(request: NextRequest) {
+// GET /api/permissions/config/permissions - 获取所有权限
+export async function GET_PERMISSIONS(_request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = _request.nextUrl.searchParams;
     const category = searchParams.get('category');
 
     const configManager = PermissionConfigManager.getInstance();
@@ -183,7 +192,8 @@ export async function GET_PERMISSIONS(request: NextRequest) {
       })
     );
 
-    // 鎸夊垎绫昏繃    if (category) {
+    // 按类别筛选
+    if (category) {
       permissions = permissions.filter(perm => perm.category === category);
     }
 
@@ -193,11 +203,11 @@ export async function GET_PERMISSIONS(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('鑾峰彇鏉冮檺鍒楄〃澶辫触:', error);
+    console.error('获取权限列表失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '鑾峰彇鏉冮檺鍒楄〃澶辫触',
+        error: error instanceof Error ? error.message : '获取权限列表失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -205,8 +215,8 @@ export async function GET_PERMISSIONS(request: NextRequest) {
   }
 }
 
-// GET /api/permissions/config/validate - 楠岃瘉閰嶇疆
-export async function VALIDATE_CONFIG(request: NextRequest) {
+// GET /api/permissions/config/validate - 验证配置
+export async function VALIDATE_CONFIG(_request: NextRequest) {
   try {
     const configManager = PermissionConfigManager.getInstance();
     const config = configManager.getConfig();
@@ -219,11 +229,11 @@ export async function VALIDATE_CONFIG(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('閰嶇疆楠岃瘉澶辫触:', error);
+    console.error('配置验证失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error  error.message : '閰嶇疆楠岃瘉澶辫触',
+        error: error instanceof Error ? error.message : '配置验证失败',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -231,7 +241,8 @@ export async function VALIDATE_CONFIG(request: NextRequest) {
   }
 }
 
-// 鍋ュ悍妫€鏌ョexport async function HEALTH_CHECK(request: NextRequest) {
+// 健康检查
+export async function HEALTH_CHECK(_request: NextRequest) {
   try {
     const configManager = PermissionConfigManager.getInstance();
     const permissionLoader = PermissionLoader.getInstance();
@@ -252,15 +263,14 @@ export async function VALIDATE_CONFIG(request: NextRequest) {
       data: healthData,
     });
   } catch (error) {
-    console.error('鏉冮檺绯荤粺鍋ュ悍妫€鏌ュけ', error);
+    console.error('权限服务健康检查失败', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鏉冮檺绯荤粺涓嶅仴,
+        error: '权限服务不可用',
         timestamp: new Date().toISOString(),
       },
       { status: 503 }
     );
   }
 }
-

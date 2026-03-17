@@ -1,13 +1,15 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
+// 初始化 Supabase 客户端
+const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 鏅鸿兘浣撶姸鎬佹帴interface AgentStatus {
-  name: string;
+// 智能体状态接口
+interface AgentStatus {
+  agent_name: string;
   status: 'online' | 'offline' | 'degraded';
   last_heartbeat: string;
   metrics: {
@@ -25,17 +27,19 @@ import { createClient } from '@supabase/supabase-js';
 
 /**
  * GET /api/agents/status
- * 鑾峰彇鎵€鏈夋櫤鑳戒綋鐘 */
+ * 获取所有智能体状态
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const agentName = searchParams.get('agentName');
 
-    // 濡傛灉鎸囧畾浜嗙壒瀹氭櫤鑳戒綋锛岃繑鍥炶鏅鸿兘浣撶姸    if (agentName) {
+    // 如果指定了特定智能体，返回该智能体状态
+    if (agentName) {
       const status = await getAgentStatus(agentName);
       if (!status) {
         return NextResponse.json(
-          { error: '鏅鸿兘浣撲笉瀛樺湪鎴栨棤鐘舵€佷俊 },'
+          { error: '智能体不存在或无状态信息' },
           { status: 404 }
         );
       }
@@ -46,7 +50,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 杩斿洖鎵€鏈夋櫤鑳戒綋鐘    const statuses = await getAllAgentStatuses();
+    // 返回所有智能体状态
+    const statuses = await getAllAgentStatuses();
 
     return NextResponse.json({
       success: true,
@@ -54,10 +59,12 @@ export async function GET(request: NextRequest) {
       count: statuses.length,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
-    console.error('鑾峰彇鏅鸿兘浣撶姸鎬侀敊', error);
+  } catch (error) {
+    console.error('获取智能体状态错误:', error);
     return NextResponse.json(
-      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊 },'
+      {
+        error: error instanceof Error ? error.message : '内部服务器错误',
+      },
       { status: 500 }
     );
   }
@@ -65,29 +72,31 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/agents/status
- * 鏇存柊鏅鸿兘浣撶姸鎬侊紙鐢辨櫤鑳戒綋鑷韩鎴栫洃鎺ф湇鍔¤皟鐢級
+ * 更新智能体状态（由智能体自身或监控服务调用）
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // 楠岃瘉蹇呴渶瀛楁
+    // 验证必填字段
     if (!body.agent_name || !body.status) {
       return NextResponse.json(
-        { error: '缂哄皯蹇呴渶瀛楁: agent_name, status' },
+        { error: '缺少必填字段: agent_name, status' },
         { status: 400 }
       );
     }
 
-    // 楠岃瘉鐘舵€    const validStatuses = ['online', 'offline', 'degraded'];
+    // 验证状态
+    const validStatuses = ['online', 'offline', 'degraded'];
     if (!validStatuses.includes(body.status)) {
       return NextResponse.json(
-        { error: '犳晥鐨勭姸鎬佸€硷紝蹇呴』online, offline degraded' },
+        { error: '无效的状态值，必须是 online, offline 或 degraded' },
         { status: 400 }
       );
     }
 
-    // 鏇存柊鎴栨彃鍏ョ姸鎬佷俊    const { data, error } = await supabase
+    // 更新或插入状态信息
+    const { data, error } = await supabase
       .from('agent_status')
       .upsert(
         {
@@ -114,26 +123,29 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('鏇存柊鏅鸿兘浣撶姸鎬佸け', error);
-      return NextResponse.json({ error: '鏇存柊鐘舵€佸け }, { status: 500 });
+      console.error('更新智能体状态失败:', error);
+      return NextResponse.json({ error: '更新状态失败' }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
       data,
-      message: '鐘舵€佹洿鏂版垚,'
+      message: '状态更新成功',
     });
-  } catch (error: any) {
-    console.error('鏇存柊鏅鸿兘浣撶姸鎬侀敊', error);
+  } catch (error) {
+    console.error('更新智能体状态错误:', error);
     return NextResponse.json(
-      { error: error.message || '鍐呴儴鏈嶅姟鍣ㄩ敊 },'
+      {
+        error: error instanceof Error ? error.message : '内部服务器错误',
+      },
       { status: 500 }
     );
   }
 }
 
 /**
- * 鑾峰彇鐗瑰畾鏅鸿兘浣撶姸 */
+ * 获取特定智能体状态
+ */
 async function getAgentStatus(agentName: string): Promise<AgentStatus | null> {
   const { data, error } = await supabase
     .from('agent_status')
@@ -142,7 +154,7 @@ async function getAgentStatus(agentName: string): Promise<AgentStatus | null> {
     .single();
 
   if (error) {
-    console.error(`鑾峰彇鏅鸿兘${agentName} 鐘舵€佸け`, error);
+    console.error(`获取智能体 ${agentName} 状态失败:`, error);
     return null;
   }
 
@@ -150,15 +162,16 @@ async function getAgentStatus(agentName: string): Promise<AgentStatus | null> {
 }
 
 /**
- * 鑾峰彇鎵€鏈夋櫤鑳戒綋鐘 */
+ * 获取所有智能体状态
+ */
 async function getAllAgentStatuses(): Promise<AgentStatus[]> {
-  // 鍏堣幏鍙栨墍鏈夊凡娉ㄥ唽鐨勬櫤鑳戒綋
+  // 先获取所有已注册的智能体
   const { data: registeredAgents, error: registryError } = await supabase
     .from('agent_registry')
     .select('name');
 
   if (registryError) {
-    console.error('鑾峰彇娉ㄥ唽鏅鸿兘浣撳垪琛ㄥけ', registryError);
+    console.error('获取注册智能体列表失败:', registryError);
     return [];
   }
 
@@ -166,7 +179,8 @@ async function getAllAgentStatuses(): Promise<AgentStatus[]> {
     return [];
   }
 
-  // 鑾峰彇杩欎簺鏅鸿兘浣撶殑鐘  const agentNames = registeredAgents.map(agent => agent.name);
+  // 获取这些智能体的状态
+  const agentNames = registeredAgents.map(agent => agent.name);
 
   const { data: statuses, error: statusError } = await supabase
     .from('agent_status')
@@ -174,18 +188,20 @@ async function getAllAgentStatuses(): Promise<AgentStatus[]> {
     .in('agent_name', agentNames);
 
   if (statusError) {
-    console.error('鑾峰彇鏅鸿兘浣撶姸鎬佸け', statusError);
+    console.error('获取智能体状态失败:', statusError);
     return [];
   }
 
-  // 灏嗘敞鍐屼俊鎭拰鐘舵€佷俊鎭悎  const result: AgentStatus[] = registeredAgents.map(agent => {
+  // 将注册信息和状态信息合并
+  const result: AgentStatus[] = registeredAgents.map(agent => {
     const status = statuses.find(s => s.agent_name === agent.name);
 
     if (status) {
       return status as AgentStatus;
     } else {
-      // 濡傛灉娌℃湁鐘舵€佽褰曪紝杩斿洖榛樿鐘      return {
-        name: agent.name,
+      // 如果没有状态记录，返回默认状态
+      return {
+        agent_name: agent.name,
         status: 'offline',
         last_heartbeat: new Date(0).toISOString(),
         metrics: {
@@ -205,5 +221,3 @@ async function getAllAgentStatuses(): Promise<AgentStatus[]> {
 
   return result;
 }
-
-

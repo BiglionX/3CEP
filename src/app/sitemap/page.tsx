@@ -37,7 +37,7 @@ export default function SitemapPage() {
       items: [
         {
           name: '智能体商店',
-          href: '/agents',
+          href: '/agent-store',
           description: '浏览和获取AI智能体，提升工作效率',
           badge: '热门',
         },
@@ -60,7 +60,7 @@ export default function SitemapPage() {
       items: [
         {
           name: 'Skill商店',
-          href: '/skill-store/skills',
+          href: '/skill-store',
           description: '探索和安装各种Skill扩展功能',
           badge: 'NEW',
         },

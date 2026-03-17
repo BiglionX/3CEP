@@ -124,9 +124,17 @@ export class AuthService {
         .eq('is_active', true)
         .single();
 
-      return !error && data !== null;
-    } catch (error) {
-      console.error('检查管理员身份失败:', error);
+      // 即使有错误（401等），也返回 false，不阻塞登录
+      if (error) {
+        console.warn('检查管理员权限返回错误，视为非管理员:', error.message);
+        return false;
+      }
+      return data !== null;
+    } catch (error: any) {
+      console.warn(
+        '检查管理员身份异常，视为非管理员:',
+        error?.message || error
+      );
       return false;
     }
   }

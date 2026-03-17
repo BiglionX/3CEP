@@ -1,10 +1,9 @@
 /**
  * React Query配置文件
- * 为维修店应用配置React Query客户?
+ * 为维修店应用配置React Query客户端
  */
-
-import { QueryClient } from '@tanstack/react-query';
-import { QueryClientProvider } from '@tanstack/react-query';
+'use client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 
 // 创建QueryClient实例
@@ -33,7 +32,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-// 查询键常?
+// 查询键常量
 export const QUERY_KEYS = {
   REPAIR_SHOPS: 'repairShops',
   WORK_ORDERS: 'workOrders',
@@ -45,8 +44,6 @@ export const QUERY_KEYS = {
 // React Query Provider组件
 export function ReactQueryProvider({ children }: { children: ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }

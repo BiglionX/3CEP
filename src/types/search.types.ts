@@ -6,7 +6,8 @@
 export type SearchEntityType =
   | 'work_order' // 工单
   | 'customer' // 客户
-  | 'technician' // 技?  | 'device' // 设备
+  | 'technician' // 技师
+  | 'device' // 设备
   | 'part' // 配件
   | 'invoice' // 发票
   | 'all'; // 全部
@@ -30,12 +31,13 @@ export type SearchField =
 export type SearchOperator =
   | 'equals' // 等于
   | 'contains' // 包含
-  | 'starts_with' // �?..开?  | 'ends_with' // �?..结尾
+  | 'starts_with' // 以...开头
+  | 'ends_with' // 以...结尾
   | 'greater_than' // 大于
   | 'less_than' // 小于
-  | 'between' // �?..之间
+  | 'between' // 在...之间
   | 'in' // 在列表中
-  | 'not_in'; // 不在列表?
+  | 'not_in'; // 不在列表中
 // 搜索条件接口
 export interface SearchCondition {
   field: SearchField;
@@ -124,7 +126,8 @@ export interface SearchResponse<T = any> {
 
 // 搜索配置
 export interface SearchConfig {
-  // 启用的功?  enableSuggestions: boolean;
+  // 启用的功能
+  enableSuggestions: boolean;
   enableHistory: boolean;
   enableFacets: boolean;
   enableAutoComplete: boolean;
@@ -140,7 +143,8 @@ export interface SearchConfig {
   maxHistoryItems: number;
   maxSuggestions: number;
 
-  // 默认?  defaultEntityType: SearchEntityType;
+  // 默认值
+  defaultEntityType: SearchEntityType;
   defaultSortBy: string;
   defaultPageSize: number;
 }
@@ -158,7 +162,8 @@ export interface SearchContext {
 
 // 搜索钩子返回
 export interface UseSearchReturn<T = any> {
-  // 状?  results: SearchResult<T>[];
+  // 状态
+  results: SearchResult<T>[];
   isLoading: boolean;
   isError: boolean;
   error?: Error;
@@ -183,7 +188,8 @@ export interface UseSearchReturn<T = any> {
   searchFromHistory?: (historyItem: SearchHistory) => void;
   fetchSuggestions?: (query: string) => void;
 
-  // 当前上下?  currentQuery: string;
+  // 当前上下文
+  currentQuery: string;
   currentFilters: AdvancedSearchFilters;
   currentEntityType: SearchEntityType;
   getSearchHistory: () => SearchHistory[];

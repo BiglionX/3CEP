@@ -1,5 +1,6 @@
 /**
- * 认证错误处理? * 标准化错误处理机制，避免信息泄露并提供友好的用户反馈
+ * 认证错误处理
+ * 标准化错误处理机制，避免信息泄露并提供友好的用户反馈
  */
 
 // 认证错误代码枚举
@@ -25,7 +26,8 @@ export enum ErrorSeverity {
   CRITICAL = 'critical',
 }
 
-// 标准化错误响应接?export interface StandardizedError {
+// 标准化错误响应接口
+export interface StandardizedError {
   code: AuthErrorCode;
   message: string;
   userMessage: string;
@@ -35,7 +37,8 @@ export enum ErrorSeverity {
   timestamp: number;
 }
 
-// 错误上下文信?export interface ErrorContext {
+// 错误上下文信息
+export interface ErrorContext {
   userId?: string;
   ipAddress?: string;
   userAgent?: string;
@@ -45,7 +48,8 @@ export enum ErrorSeverity {
 }
 
 /**
- * 认证错误处理? * 提供统一的错误处理和映射机制
+ * 认证错误处理
+ * 提供统一的错误处理和映射机制
  */
 export class AuthErrorHandler {
   // 错误代码到用户友好消息的映射
@@ -59,7 +63,7 @@ export class AuthErrorHandler {
     }
   > = {
     [AuthErrorCode.INVALID_CREDENTIALS]: {
-      userMessage: '邮箱或密码错?,
+      userMessage: '邮箱或密码错误',
       severity: ErrorSeverity.MEDIUM,
       shouldLog: false,
       shouldRetry: true,
@@ -71,7 +75,7 @@ export class AuthErrorHandler {
       shouldRetry: false,
     },
     [AuthErrorCode.ACCOUNT_DISABLED]: {
-      userMessage: '账户已被禁用，请联系管理?,
+      userMessage: '账户已被禁用，请联系管理员',
       severity: ErrorSeverity.HIGH,
       shouldLog: true,
       shouldRetry: false,
@@ -89,7 +93,7 @@ export class AuthErrorHandler {
       shouldRetry: true,
     },
     [AuthErrorCode.SESSION_EXPIRED]: {
-      userMessage: '登录会话已过期，请重新登?,
+      userMessage: '登录会话已过期，请重新登录',
       severity: ErrorSeverity.LOW,
       shouldLog: false,
       shouldRetry: false,
@@ -101,19 +105,19 @@ export class AuthErrorHandler {
       shouldRetry: false,
     },
     [AuthErrorCode.PERMISSION_DENIED]: {
-      userMessage: '您没有执行此操作的权?,
+      userMessage: '您没有执行此操作的权限',
       severity: ErrorSeverity.HIGH,
       shouldLog: true,
       shouldRetry: false,
     },
     [AuthErrorCode.USER_NOT_FOUND]: {
-      userMessage: '用户不存?,
+      userMessage: '用户不存在',
       severity: ErrorSeverity.MEDIUM,
       shouldLog: false,
       shouldRetry: false,
     },
     [AuthErrorCode.PASSWORD_TOO_WEAK]: {
-      userMessage: '密码强度不够，请使用更强的密?,
+      userMessage: '密码强度不够，请使用更强的密码',
       severity: ErrorSeverity.LOW,
       shouldLog: false,
       shouldRetry: true,
@@ -127,11 +131,13 @@ export class AuthErrorHandler {
   };
 
   /**
-   * 将原始错误映射为标准化错?   */
+   * 将原始错误映射为标准化错误
+   */
   static mapError(error: any, context?: ErrorContext): StandardizedError {
     const timestamp = Date.now();
 
-    // 处理不同类型的错误输?    if (typeof error === 'string') {
+    // 处理不同类型的错误输出
+    if (typeof error === 'string') {
       return this.handleStringError(error, timestamp, context);
     }
 
@@ -153,13 +159,15 @@ export class AuthErrorHandler {
   }
 
   /**
-   * 处理字符串错?   */
+   * 处理字符串错误
+   */
   private static handleStringError(
     error: string,
     timestamp: number,
     context?: ErrorContext
   ): StandardizedError {
-    // 尝试匹配已知的错误模?    const lowerError = error.toLowerCase();
+    // 尝试匹配已知的错误模式
+    const lowerError = error.toLowerCase();
 
     if (
       lowerError.includes('invalid credentials') ||
@@ -227,7 +235,8 @@ export class AuthErrorHandler {
   }
 
   /**
-   * 处理对象形式的错?   */
+   * 处理对象形式的错误
+   */
   private static handleObjectError(
     error: any,
     timestamp: number,
@@ -259,7 +268,8 @@ export class AuthErrorHandler {
       }
     }
 
-    // 处理自定义错误对?    if (error.code && typeof error.code === 'string') {
+    // 处理自定义错误对象
+    if (error.code && typeof error.code === 'string') {
       const errorCode = error.code as AuthErrorCode;
       if (Object.values(AuthErrorCode).includes(errorCode)) {
         return this.createStandardError(
@@ -314,12 +324,13 @@ export class AuthErrorHandler {
   }
 
   /**
-   * 创建标准化错误对?   */
+   * 创建标准化错误对象
+   */
   private static createStandardError(
     code: AuthErrorCode,
     originalMessage: string,
     timestamp: number,
-    context?: ErrorContext
+    _context?: ErrorContext
   ): StandardizedError {
     const errorConfig = this.errorMessages[code];
 
@@ -335,7 +346,8 @@ export class AuthErrorHandler {
   }
 
   /**
-   * 格式化错误用于日志记?   */
+   * 格式化错误用于日志记录
+   */
   static formatForLogging(
     error: StandardizedError,
     context?: ErrorContext
@@ -361,14 +373,17 @@ export class AuthErrorHandler {
   }
 
   /**
-   * 获取错误的延迟重试时间（毫秒?   */
+   * 获取错误的延迟重试时间（毫秒）
+   */
   static getRetryDelay(error: StandardizedError, attempt: number): number {
     if (!this.shouldRetry(error)) {
       return 0;
     }
 
-    // 指数退避算?    const baseDelay = 1000; // 1秒基础延迟
-    const maxDelay = 30000; // 最?0�?    const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), maxDelay);
+    // 指数退避算法
+    const baseDelay = 1000; // 1秒基础延迟
+    const maxDelay = 30000; // 最大30秒
+    const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), maxDelay);
 
     // 添加随机抖动避免惊群效应
     const jitter = Math.random() * 1000;
@@ -390,7 +405,8 @@ export class AuthErrorHandler {
 
 /**
  * 认证错误边界组件
- * React组件级别的错误处? */
+ * React组件级别的错误处理
+ */
 export class AuthErrorBoundary {
   private static errorCounts: Map<string, number> = new Map();
   private static readonly MAX_ERRORS_PER_MINUTE = 10;
@@ -403,13 +419,15 @@ export class AuthErrorBoundary {
     const now = Date.now();
     const oneMinuteAgo = now - 60000;
 
-    // 清理过期的错误计?    this.cleanupOldErrors(oneMinuteAgo);
+    // 清理过期的错误计数
+    this.cleanupOldErrors(oneMinuteAgo);
 
     // 获取当前错误计数
     const currentCount = this.errorCounts.get(key) || 0;
 
-    // 如果超过限制，暂时停止处理此类错?    if (currentCount >= this.MAX_ERRORS_PER_MINUTE) {
-      console.warn(`错误处理频率过高，暂时忽略错? ${key}`);
+    // 如果超过限制，暂时停止处理此类错误
+    if (currentCount >= this.MAX_ERRORS_PER_MINUTE) {
+      console.warn(`错误处理频率过高，暂时忽略错误 ${key}`);
       return false;
     }
 
@@ -419,9 +437,12 @@ export class AuthErrorBoundary {
   }
 
   /**
-   * 清理过期的错误记?   */
-  private static cleanupOldErrors(cutoffTime: number) {
-    // 在实际实现中，这里应该基于时间戳清理旧记?    // 简化实现：定期清空所有记?    if (Math.random() < 0.1) {
+   * 清理过期的错误记录
+   */
+  private static cleanupOldErrors(_cutoffTime: number) {
+    // 在实际实现中，这里应该基于时间戳清理旧记录
+    // 简化实现：定期清空所有记录
+    if (Math.random() < 0.1) {
       // 10%概率清理
       this.errorCounts.clear();
     }

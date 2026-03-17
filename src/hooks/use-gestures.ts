@@ -1,6 +1,7 @@
 /**
  * 移动端手势识别Hook
- * 支持常见的触摸手势操? */
+ * 支持常见的触摸手势操作
+ */
 
 'use client';
 
@@ -86,7 +87,8 @@ const DEFAULT_CONFIG: Required<GestureConfig> = {
   throttleDelay: 16,
 };
 
-// 触摸点信?interface TouchPoint {
+// 触摸点信息
+interface TouchPoint {
   identifier: number;
   startX: number;
   startY: number;
@@ -114,7 +116,8 @@ export function useGestures<T extends HTMLElement = HTMLElement>(
 ): UseGesturesReturn<T> {
   const mergedConfig = { ...DEFAULT_CONFIG, ...config };
 
-  // 状态管?  const [isActive, setIsActive] = useState(false);
+  // 状态管理
+  const [isActive, setIsActive] = useState(false);
   const [touchPoints, setTouchPoints] = useState<TouchPoint[]>([]);
   const [isLongPressTriggered, setIsLongPressTriggered] = useState(false);
 
@@ -202,7 +205,8 @@ export function useGestures<T extends HTMLElement = HTMLElement>(
       const distanceX = Math.abs(deltaX);
       const distanceY = Math.abs(deltaY);
 
-      // 判断是水平还是垂直滑?      if (distanceX > distanceY) {
+      // 判断是水平还是垂直滑动
+      if (distanceX > distanceY) {
         if (
           distanceX >= mergedConfig.swipeDistance &&
           velocityX >= mergedConfig.swipeVelocity
@@ -247,7 +251,8 @@ export function useGestures<T extends HTMLElement = HTMLElement>(
 
       setTouchPoints(prev => [...prev, ...newPoints]);
 
-      // 启动长按定时?      if (newPoints.length === 1) {
+      // 启动长按定时器
+      if (newPoints.length === 1) {
         timerRef.current = setTimeout(() => {
           if (handlers.onLongPress && !isLongPressTriggered) {
             const point = newPoints[0];
@@ -292,7 +297,8 @@ export function useGestures<T extends HTMLElement = HTMLElement>(
         return updatedPoints;
       });
 
-      // 如果有多点触摸，处理捏合和旋?      if (touchPoints.length === 2 && event.touches.length === 2) {
+      // 如果有多点触摸，处理捏合和旋转
+      if (touchPoints.length === 2 && event.touches.length === 2) {
         const touch1 = event.touches[0];
         const touch2 = event.touches[1];
 
@@ -396,17 +402,20 @@ export function useGestures<T extends HTMLElement = HTMLElement>(
     (event: TouchEvent) => {
       setIsActive(false);
 
-      // 清除长按定时?      if (timerRef.current) {
+      // 清除长按定时器
+      if (timerRef.current) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
 
-      // 处理单点触摸的手?      if (touchPoints.length === 1) {
+      // 处理单点触摸的手势
+      if (touchPoints.length === 1) {
         const point = touchPoints[0];
 
         // 点击手势
         if (recognizeTap(point) && !isLongPressTriggered) {
-          // 双击检?          if (recognizeDoubleTap(point)) {
+          // 双击检测
+          if (recognizeDoubleTap(point)) {
             if (handlers.onDoubleTap) {
               handlers.onDoubleTap({
                 type: 'doubleTap',
@@ -463,7 +472,8 @@ export function useGestures<T extends HTMLElement = HTMLElement>(
         }
       }
 
-      // 清除触摸?      setTouchPoints([]);
+      // 清除触摸点
+      setTouchPoints([]);
       setIsLongPressTriggered(false);
     },
     [
@@ -514,7 +524,8 @@ export function useGestures<T extends HTMLElement = HTMLElement>(
 
 // 预定义的手势配置
 export const GesturePresets = {
-  // 快速响应配?  FAST: {
+  // 快速响应配置
+  FAST: {
     tapThreshold: 5,
     doubleTapDelay: 200,
     longPressDuration: 300,

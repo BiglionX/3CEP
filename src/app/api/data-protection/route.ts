@@ -1,54 +1,54 @@
-﻿import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { DataProtectionController } from '@/modules/common/permissions/core/data-protection-controller';
+﻿import { DataProtectionController } from '@/modules/common/permissions/core/data-protection-controller';
 import {
   PermissionManager,
   UserInfo,
 } from '@/modules/common/permissions/core/permission-manager';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-// 妯℃嫙鏁忔劅鏁版嵁绀轰緥
+// 模拟敏感数据示例
 const sampleSensitiveData = {
   users: [
     {
       id: 'user_001',
-      name: '寮犱笁',
+      name: '张三',
       email: 'zhangsan@example.com',
       phone: '13800138000',
       id_card: '110101199001011234',
       bank_card: '6222021234567890123',
-      address: '鍖椾含甯傛湞闃冲尯鏌愭煇琛楅亾123,
+      address: '北京市朝阳区某某路123号',
     },
     {
       id: 'user_002',
-      name: '鏉庡洓',
+      name: '李四',
       email: 'lisi@example.com',
       phone: '13900139000',
       id_card: '110101199002022345',
       bank_card: '6222022345678901234',
-      address: '涓婃捣甯傛郸涓滄柊鍖烘煇鏌愯矾456,
+      address: '上海市浦东新区某某路456号',
     },
   ],
   transactions: [
     {
       id: 'trans_001',
       amount: 850.0,
-      payer_name: '鐜嬩簲',
+      payer_name: '王五',
       payer_account: '6222023456789012345',
-      receiver_name: '璧靛叚',
+      receiver_name: '赵六',
       receiver_account: '6222024567890123456',
     },
   ],
 };
 
-// 鑾峰彇褰撳墠鐢ㄦ埛淇℃伅
+// 获取当前用户信息
 function getCurrentUser(): UserInfo | null {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get('auth-token').value;
+    const token = cookieStore.get('auth-token')?.value;
 
     if (!token) return null;
 
-    // 绠€鍖栧鐞嗭細瀹為檯搴旇瑙ｆ瀽JWT token
+    // 简化处理：实际应该解析JWT token
     const userId = 'user_admin';
     return {
       id: userId,
@@ -57,7 +57,7 @@ function getCurrentUser(): UserInfo | null {
       isActive: true,
     };
   } catch (error) {
-    console.error('鑾峰彇鐢ㄦ埛淇℃伅澶辫触:', error);
+    console.error('获取用户信息失败:', error);
     return null;
   }
 }
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
+      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
     const protection = DataProtectionController.getInstance();
@@ -137,14 +137,14 @@ export async function GET(request: Request) {
         });
 
       default:
-        return NextResponse.json({ error: '犳晥鐨勬搷浣滅被 }, { status: 400 });
+        return NextResponse.json({ error: '无效的操作类型' }, { status: 400 });
     }
   } catch (error) {
-    console.error('鏁版嵁淇濇姢GET鎿嶄綔澶辫触:', error);
+    console.error('数据保护GET操作失败:', error);
     return NextResponse.json(
       {
-        error: '鎿嶄綔澶辫触',
-        message: error instanceof Error  error.message : '鏈煡閿欒',
+        error: '操作失败',
+        message: error instanceof Error ? error.message : '未知错误',
       },
       { status: 500 }
     );
@@ -155,7 +155,7 @@ export async function POST(request: Request) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
+      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
     const protection = DataProtectionController.getInstance();
@@ -163,15 +163,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { action, ...params } = body;
 
-    // 鏉冮檺妫€- 闇€瑕佹暟鎹繚鎶ょ鐞嗘潈    const permissionResult = permissionManager.hasPermission(
+    // 权限检查 - 需要数据保护管理权限
+    const permissionResult = permissionManager.hasPermission(
       currentUser,
       'data_protection_manage'
     );
     if (!permissionResult.hasPermission) {
       return NextResponse.json(
         {
-          error: '鏉冮檺涓嶈冻',
-          reason: permissionResult.reason || '闇€瑕佹暟鎹繚鎶ょ鐞嗘潈,
+          error: '权限不足',
+          reason: permissionResult.reason || '需要数据保护管理权限',
         },
         { status: 403 }
       );
@@ -189,7 +190,7 @@ export async function POST(request: Request) {
         } = params;
         if (!field || !type) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬 field, type' },
+            { error: '缺少必要的参数 field, type' },
             { status: 400 }
           );
         }
@@ -199,13 +200,13 @@ export async function POST(request: Request) {
           type,
           maskChar,
           preserveLength,
-          customPattern: customPattern  new RegExp(customPattern) : undefined,
+          customPattern: customPattern ? new RegExp(customPattern) : undefined,
           customReplacement,
         });
 
         return NextResponse.json({
           success: true,
-          message: '鑴辨晱瑙勫垯娣诲姞鎴愬姛',
+          message: '脱敏规则添加成功',
           timestamp: new Date().toISOString(),
         });
 
@@ -213,7 +214,7 @@ export async function POST(request: Request) {
         const { field: removeField } = params;
         if (!removeField) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬 field' },
+            { error: '缺少必要的参数 field' },
             { status: 400 }
           );
         }
@@ -221,7 +222,7 @@ export async function POST(request: Request) {
         const removed = protection.removeMaskingRule(removeField);
         return NextResponse.json({
           success: removed,
-          message: removed  '鑴辨晱瑙勫垯绉婚櫎鎴愬姛' : '鑴辨晱瑙勫垯涓嶅,
+          message: removed ? '脱敏规则移除成功' : '脱敏规则不存在',
           timestamp: new Date().toISOString(),
         });
 
@@ -229,7 +230,7 @@ export async function POST(request: Request) {
         const { data, fields } = params;
         if (!data) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬 data' },
+            { error: '缺少必要的参数 data' },
             { status: 400 }
           );
         }
@@ -238,7 +239,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: maskedData,
-          message: '鏁版嵁鑴辨晱澶勭悊鎴愬姛',
+          message: '数据脱敏处理成功',
           timestamp: new Date().toISOString(),
         });
 
@@ -246,7 +247,7 @@ export async function POST(request: Request) {
         const { plaintext } = params;
         if (!plaintext) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬 plaintext' },
+            { error: '缺少必要的参数 plaintext' },
             { status: 400 }
           );
         }
@@ -255,7 +256,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: encryptedResult,
-          message: '鏁版嵁鍔犲瘑鎴愬姛',
+          message: '数据加密成功',
           timestamp: new Date().toISOString(),
         });
 
@@ -263,26 +264,30 @@ export async function POST(request: Request) {
         const { encrypted, authTag, iv } = params;
         if (!encrypted || !authTag || !iv) {
           return NextResponse.json(
-            { error: '缂哄皯蹇呰鐨勫弬 encrypted, authTag, iv' },
+            { error: '缺少必要的参数 encrypted, authTag, iv' },
             { status: 400 }
           );
         }
 
         try {
-          const decrypted = await protection.decryptData(encrypted, authTag, iv);
+          const decrypted = await protection.decryptData(
+            encrypted,
+            authTag,
+            iv
+          );
           return NextResponse.json({
             success: true,
             data: { decrypted },
-            message: '鏁版嵁瑙ｅ瘑鎴愬姛',
+            message: '数据解密成功',
             timestamp: new Date().toISOString(),
           });
         } catch (error) {
           return NextResponse.json(
             {
               success: false,
-              error: '鏁版嵁瑙ｅ瘑澶辫触',
+              error: '数据解密失败',
               message:
-                error instanceof Error  error.message : '瑙ｅ瘑杩囩▼涓彂鐢熼敊,
+                error instanceof Error ? error.message : '解密过程中发生错误',
               timestamp: new Date().toISOString(),
             },
             { status: 400 }
@@ -293,22 +298,21 @@ export async function POST(request: Request) {
         protection.clearAuditLogs();
         return NextResponse.json({
           success: true,
-          message: '瀹¤ュ織娓呯┖鎴愬姛',
+          message: '审计日志清空成功',
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: '犳晥鐨勬搷浣滅被 }, { status: 400 });
+        return NextResponse.json({ error: '无效的操作类型' }, { status: 400 });
     }
   } catch (error) {
-    console.error('鏁版嵁淇濇姢POST鎿嶄綔澶辫触:', error);
+    console.error('数据保护POST操作失败:', error);
     return NextResponse.json(
       {
-        error: '鎿嶄綔澶辫触',
-        message: error instanceof Error  error.message : '鏈煡閿欒',
+        error: '操作失败',
+        message: error instanceof Error ? error.message : '未知错误',
       },
       { status: 500 }
     );
   }
 }
-

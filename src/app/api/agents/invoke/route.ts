@@ -1,6 +1,6 @@
 ﻿/**
- * 鏅鸿兘浣撹皟API
- * 鎻愪緵鐩存帴璋冪敤鏅鸿兘浣撴墽琛岀壒瀹氫换鍔＄殑鍔熻兘锛屽甫鏉冮檺楠岃瘉
+ * 智能体调用API
+ * 提供直接调用智能体执行特定任务的功能，带权限验证
  */
 
 import { createClient } from '@supabase/supabase-js';
@@ -10,32 +10,33 @@ import { requirePermission } from '@/tech/middleware/permissions';
 import { audit } from '@/lib/audit';
 
 export async function POST(request: Request) {
-  // 鍒涘缓 Supabase 瀹㈡埛  const supabase = createClient(
+  // 创建 Supabase 客户端
+  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // cookies 鑾峰彇氳瘽淇℃伅
+  // cookies 获取会话信息
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('sb-access-token');
 
   try {
-    // 楠岃瘉鐢ㄦ埛璁よ瘉
+    // 验证用户认证
     if (!sessionCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
+      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
-    // 璁剧疆璁よ瘉ょ墝
+    // 设置认证令牌
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(sessionCookie.value);
 
     if (authError || !user) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
+      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
-    // 鑾峰彇鐢ㄦ埛瑙掕壊淇℃伅
+    // 获取用户角色信息
     const { data: adminUser } = await supabase
       .from('admin_users')
       .select('role, is_active')
@@ -44,36 +45,39 @@ export async function POST(request: Request) {
       .single();
 
     if (!adminUser) {
-      return NextResponse.json({ error: '鐢ㄦ埛鏉冮檺涓嶈冻' }, { status: 403 });
+      return NextResponse.json({ error: '用户权限不足' }, { status: 403 });
     }
 
-    // 鏋勯€犵敤鎴蜂笂涓嬫枃鐢ㄤ簬鏉冮檺妫€    const userContext = {
+    // 构建用户上下文用于权限检查
+    const userContext = {
       id: user.id,
       roles: [adminUser.role],
       tenant_id: null,
     };
 
-    // 妯℃嫙 Express 璇眰瀵硅薄鐢ㄤ簬鏉冮檺涓棿    const mockReq = {
+    // 模拟 Express 请求对象用于权限中间件
+    const mockReq = {
       user: userContext,
       body: await request.json(),
     };
 
     const mockRes = {
       status: (code: number) => ({
-        json: (data: any) => NextResponse.json(data, { status: code }),
+        json: (data: unknown) =>
+          NextResponse.json(data as any, { status: code }),
       }),
     };
 
-    // 妫€agents_invoke 鏉冮檺
+    // 检查 agents_invoke 权限
     const permissionCheck = requirePermission('agents_invoke');
     let permissionGranted = true;
-    let permissionError = null;
+    let permissionError: unknown = null;
 
     permissionCheck(
       mockReq,
       {
-        status: (code: number) => ({
-          json: (data: any) => {
+        status: (_code: number) => ({
+          json: (data: unknown) => {
             permissionGranted = false;
             permissionError = data;
             return mockRes;
@@ -87,17 +91,19 @@ export async function POST(request: Request) {
       return NextResponse.json(permissionError, { status: 403 });
     }
 
-    // 瑙ｆ瀽璇眰    const { agentName, taskId, parameters } = mockReq.body;
+    // 解析请求参数
+    const { agentName, taskId, parameters } = mockReq.body;
 
-    // 楠岃瘉蹇呰鍙傛暟
+    // 验证必填参数
     if (!agentName) {
       return NextResponse.json(
-        { error: '缂哄皯鏅鸿兘浣撳悕绉板弬 },'
+        { error: '缺少智能体名称参数' },
         { status: 400 }
       );
     }
 
-    // 璁板綍瀹¤ュ織 - 寮€濮嬭皟    await audit(
+    // 记录审计日志 - 开始调用
+    await audit(
       'agent_invoke_start',
       {
         id: user.id,
@@ -118,9 +124,10 @@ export async function POST(request: Request) {
       }
     );
 
-    // 妯℃嫙鏅鸿兘浣撹皟鐢紙瀹為檯搴旇璋冪敤鍏蜂綋鐨勬櫤鑳戒綋鏈嶅姟    try {
-      // 杩欓噷搴旇鏄疄闄呯殑鏅鸿兘浣撹皟鐢ㄩ€昏緫
-      // 渚嬪璋冪敤 LangChain銆丱penAI 鎴栬嚜瀹氫箟鏅鸿兘浣撴湇
+    // 模拟智能体调用（实际应该调用具体的智能体服务）
+    try {
+      // 这里应该是实际的智能体调用逻辑
+      // 例如调用 LangChain、OpenAI 或自定义智能体服务
       const invokeResult = {
         success: true,
         agentName,
@@ -128,10 +135,10 @@ export async function POST(request: Request) {
         invokeId: `invoke_${Date.now()}`,
         status: 'executing',
         timestamp: new Date().toISOString(),
-        estimatedCompletion: new Date(Date.now() + 30000).toISOString(), // 30绉掑悗
+        estimatedCompletion: new Date(Date.now() + 30000).toISOString(), // 30秒后
       };
 
-      // 璁板綍瀹¤ュ織 - 璋冪敤鎴愬姛鍚姩
+      // 记录审计日志 - 调用成功启动
       await audit(
         'agent_invoke_started',
         {
@@ -150,8 +157,8 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json(invokeResult);
-    } catch (agentError: any) {
-      // 璁板綍瀹¤ュ織 - 璋冪敤澶辫触
+    } catch (agentError) {
+      // 记录审计日志 - 调用失败
       await audit(
         'agent_invoke_failed',
         {
@@ -163,7 +170,7 @@ export async function POST(request: Request) {
         'agents',
         {
           agentName,
-          error: agentError.message,
+          error: agentError instanceof Error ? agentError.message : '未知错误',
           timestamp: new Date().toISOString(),
         },
         `invoke_${Date.now()}`,
@@ -175,16 +182,17 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         {
-          error: '鏅鸿兘浣撹皟鐢ㄥけ,'
-          details: agentError.message,
+          error: '智能体调用失败',
+          details:
+            agentError instanceof Error ? agentError.message : '未知错误',
         },
         { status: 500 }
       );
     }
-  } catch (error: any) {
-    console.error('鏅鸿兘浣撹皟API 閿欒:', error);
+  } catch (error) {
+    console.error('智能体调用API 错误:', error);
 
-    // 璁板綍瀹¤ュ織 - 绯荤粺閿欒
+    // 记录审计日志 - 系统错误
     await audit(
       'agent_invoke_error',
       {
@@ -195,7 +203,7 @@ export async function POST(request: Request) {
       },
       'agents',
       {
-        error: error.message,
+        error: error instanceof Error ? error.message : '未知错误',
         timestamp: new Date().toISOString(),
       },
       `invoke_${Date.now()}`,
@@ -205,25 +213,27 @@ export async function POST(request: Request) {
       }
     );
 
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
 
-// GET 鏂规硶鐢ㄤ簬鏌ヨ璋冪敤鐘export async function GET(request: Request) {
+// GET 方法用于查询调用状态
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const invokeId = searchParams.get('invokeId');
 
   if (!invokeId) {
-    return NextResponse.json({ error: '缂哄皯璋冪敤ID鍙傛暟' }, { status: 400 });
+    return NextResponse.json({ error: '缺少调用ID参数' }, { status: 400 });
   }
 
-  // 杩欓噷搴旇鏌ヨ瀹為檯鐨勮皟鐢ㄧ姸  // 鏆傛椂杩斿洖妯℃嫙鏁版嵁
+  // 这里应该查询实际的调用状态
+  // 暂时返回模拟数据
   return NextResponse.json({
     invokeId,
     status: 'completed',
     result: {
       success: true,
-      output: '鏅鸿兘浣撴墽琛屽畬,'
+      output: '智能体执行完成',
       data: {
         processedItems: 10,
         successRate: '95%',
@@ -232,5 +242,3 @@ export async function POST(request: Request) {
     timestamp: new Date().toISOString(),
   });
 }
-
-

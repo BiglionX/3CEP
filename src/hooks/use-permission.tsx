@@ -5,10 +5,9 @@
 
 'use client';
 
-import { useState, useEffect, ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import type { UserRole, UserInfo, Permission } from '@/types/common';
+import type { Permission, UserInfo, UserRole } from '@/types/common';
 
 interface UsePermissionReturn {
   userInfo: UserInfo | null;
@@ -43,7 +42,7 @@ export function usePermission(): UsePermissionReturn {
     try {
       setLoading(true);
 
-      // 首先检?Supabase 认证状?
+      // 首先检查Supabase 认证状态
       try {
         const response = await fetch('/api/auth/check-session');
         if (response.ok) {
@@ -60,9 +59,11 @@ export function usePermission(): UsePermissionReturn {
           }
         }
       } catch (supabaseError) {
-        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('Supabase 认证检查失?', supabaseError)}
+        // TODO: 移除调试日志
+        console.error('Supabase 认证检查失败', supabaseError);
+      }
 
-      // 备用方案：从 localStorage 获取用户信息（JWT token�?
+      // 备用方案：从 localStorage 获取用户信息（JWT token）
       const storedToken = localStorage.getItem('jwt_token');
       if (storedToken) {
         try {
@@ -88,17 +89,17 @@ export function usePermission(): UsePermissionReturn {
   };
 
   /**
-   * 检查是否具有指定权?
+   * 检查是否具有指定权限
    */
   const hasPermission = (permission: Permission): boolean => {
     if (!userInfo) return false;
 
-    // 超级管理员拥有所有权?
+    // 超级管理员拥有所有权限
     if (userInfo.roles.includes('admin')) {
       return true;
     }
 
-    // 这里应该?RBAC 配置中检查权限映?
+    // 这里应该在RBAC配置中检查权限映射
     // 简化实现：根据角色直接判断常见权限
     const rolePermissions: Record<UserRole, Permission[]> = {
       admin: ['*'],
@@ -178,41 +179,41 @@ export function usePermission(): UsePermissionReturn {
   };
 
   /**
-   * 检查是否具有任意一个权?
+   * 检查是否具有任意一个权限
    */
   const hasAnyPermission = (permissions: Permission[]): boolean => {
     return permissions.some(permission => hasPermission(permission));
   };
 
   /**
-   * 检查是否具有所有权?
+   * 检查是否具有所有权限
    */
   const hasAllPermissions = (permissions: Permission[]): boolean => {
     return permissions.every(permission => hasPermission(permission));
   };
 
   /**
-   * 检查是否具有指定角?
+   * 检查是否具有指定角色
    */
   const hasRole = (role: UserRole): boolean => {
     return userInfo?.roles.includes(role) || false;
   };
 
   /**
-   * 检查是否具有任意一个角?
+   * 检查是否具有任意一个角色
    */
   const hasAnyRole = (roles: UserRole[]): boolean => {
     return roles.some(role => hasRole(role));
   };
 
   /**
-   * 获取用户可访问的菜单?
+   * 获取用户可访问的菜单项
    */
   const getAccessibleMenus = (menuItems: any[]): any[] => {
     if (!userInfo) return [];
 
     return menuItems.filter(item => {
-      // 如果没有指定角色要求，默认可?
+      // 如果没有指定角色要求，默认可访问
       if (!item.roles) return true;
 
       // 检查用户是否具有所需角色之一
@@ -228,12 +229,12 @@ export function usePermission(): UsePermissionReturn {
   };
 
   /**
-   * 用户是否已认?
+   * 用户是否已认证
    */
   const isAuthenticated = (): boolean => {
     if (!userInfo) return false;
 
-    // 检?token 是否过期
+    // 检查token是否过期
     if (userInfo.exp) {
       return Date.now() < userInfo.exp * 1000;
     }
@@ -258,12 +259,12 @@ export function usePermission(): UsePermissionReturn {
   };
 
   return {
-    // 状?
+    // 状态
     userInfo,
     loading,
     isAuthenticated: isAuthenticated(),
 
-    // 权限检查方?
+    // 权限检查方法
     hasPermission,
     hasAnyPermission,
     hasAllPermissions,
@@ -297,15 +298,10 @@ export function PermissionGuard({
   fallback?: React.ReactNode;
   children: React.ReactNode;
 }) {
-  const {
-    hasPermission,
-    hasRole,
-    hasAnyPermission,
-    hasAllPermissions,
-    hasAnyRole,
-  } = usePermission();
+  const { hasRole, hasAnyPermission, hasAllPermissions, hasAnyRole } =
+    usePermission();
 
-  // 权限检?
+  // 权限检查
   let hasAccess = true;
 
   if (permission) {
@@ -315,7 +311,7 @@ export function PermissionGuard({
       : hasAnyPermission(permissions);
   }
 
-  // 角色检?
+  // 角色检查
   if (role && hasAccess) {
     const roles = Array.isArray(role) ? role : [role];
     hasAccess = requireAll ? roles.every(r => hasRole(r)) : hasAnyRole(roles);
@@ -329,7 +325,7 @@ export function PermissionGuard({
 }
 
 /**
- * 角色保护组件 - 简化版?
+ * 角色保护组件 - 简化版本
  */
 export function RoleGuard({
   roles,

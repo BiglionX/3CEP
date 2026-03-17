@@ -1,16 +1,16 @@
-﻿import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
 import { Database } from '@/lib/database.types';
+import { createClient } from '@supabase/supabase-js';
+// cookies() 已移除，不再需要此导入
+import { NextResponse } from 'next/server';
 
-// 璁＄畻涓ょ偣闂磋窛绂荤殑Haversine鍏紡
+// 计算两点间距离的 Haversine 公式
 function calculateDistance(
   lat1: number,
   lon1: number,
   lat2: number,
   lon2: number
 ): number {
-  const R = 6371; // 鍦扮悆鍗婂緞锛堝叕閲岋級
+  const R = 6371; // 地球半径（公里）
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
@@ -23,33 +23,37 @@ function calculateDistance(
   return R * c;
 }
 
-// GET /api/shops/nearbylat=39.9042&lng=116.4074&radius=10&limit=10
+// GET /api/shops/nearby?lat=39.9042&lng=116.4074&radius=10&limit=10
 export async function GET(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
 
   try {
     const { searchParams } = new URL(request.url);
     const lat = parseFloat(searchParams.get('lat') || '0');
     const lng = parseFloat(searchParams.get('lng') || '0');
-    const radius = parseFloat(searchParams.get('radius') || '10'); // 榛樿10鍏噷
+    const radius = parseFloat(searchParams.get('radius') || '10'); // 默认10公里
     const limit = parseInt(searchParams.get('limit') || '10');
 
-    // 楠岃瘉鍙傛暟
+    // 验证参数
     if (lat === 0 || lng === 0) {
       return NextResponse.json(
-        { error: '璇彁渚涙湁鏁堢殑缁忕含搴﹀弬 },
+        { error: '请提供有效的经纬度参数' },
         { status: 400 }
       );
     }
 
-    // 楠岃瘉缁忕含搴﹁寖    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    // 验证经纬度范围
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
       return NextResponse.json(
-        { error: '缁忕含搴﹀弬鏁拌秴鍑烘湁鏁堣寖 },
+        { error: '经纬度参数超出有效范围' },
         { status: 400 }
       );
     }
 
-    // 鏌ヨ闄勮繎鐨勭淮淇簵
+    // 查询附近的维修店
     const { data: shops, error } = await supabase
       .from('repair_shops')
       .select('*')
@@ -58,9 +62,9 @@ export async function GET(request: Request) {
       .limit(100);
 
     if (error) {
-      console.error('鏌ヨ闄勮繎搴楅摵澶辫触:', error);
+      console.error('查询附近维修店失败:', error);
       return NextResponse.json(
-        { error: '鏌ヨ闄勮繎搴楅摵澶辫触', details: error.message },
+        { error: '查询附近维修店失败', details: error.message },
         { status: 500 }
       );
     }
@@ -69,11 +73,12 @@ export async function GET(request: Request) {
       return NextResponse.json({
         success: true,
         data: [],
-        message: '闄勮繎鏆傛棤缁翠慨搴楅摵',
+        message: '附近暂无维修店',
       });
     }
 
-    // 璁＄畻璺濈骞惰繃    const shopsWithDistance: any[] = [];
+    // 计算距离并过滤
+    const shopsWithDistance: any[] = [];
 
     for (const shop of shops) {
       if (shop.latitude && shop.longitude) {
@@ -99,9 +104,9 @@ export async function GET(request: Request) {
             longitude: shop.longitude,
             logo_url: shop.logo_url,
             cover_image_url: shop.cover_image_url,
-            services: shop.services  JSON.parse(shop.services as string) : [],
-            specialties: shop.specialties
-               JSON.parse(shop.specialties as string)
+            services: shop.services ? JSON.parse(shop.services as string) : [],
+            specialties: shop.specialities
+              ? JSON.parse(shop.specialities as string)
               : [],
             rating: shop.rating,
             review_count: shop.review_count,
@@ -117,7 +122,7 @@ export async function GET(request: Request) {
       }
     }
 
-    // 鎸夎窛绂绘帓搴忓苟闄愬埗鏁伴噺
+    // 按距离排序并限制数量
     shopsWithDistance.sort((a, b) => a.distance - b.distance);
     const result = shopsWithDistance.slice(0, limit);
 
@@ -130,11 +135,10 @@ export async function GET(request: Request) {
         radius,
         center: { lat, lng },
       },
-      message: `鎵惧埌 ${result.length} 瀹堕檮杩戠殑缁翠慨搴楅摵`,
+      message: `找到 ${result.length} 家附近的维修店`,
     });
   } catch (error) {
-    console.error('闄勮繎搴楅摵API閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
+    console.error('附近维修店API错误:', error);
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
-

@@ -1,6 +1,6 @@
 /**
  * 认证模块导出文件
- * 统一导出认证相关的核心组? */
+ * 统一导出认证相关的核心组件 */
 
 // 状态管理器
 export {
@@ -18,7 +18,8 @@ export {
   useAuthInitialization,
 } from '../../hooks/use-safe-auth';
 
-// 错误处理?export {
+// 错误处理
+export {
   AuthErrorHandler,
   AuthErrorBoundary,
   type StandardizedError,
@@ -26,6 +27,15 @@ export {
   AuthErrorCode,
   ErrorSeverity,
 } from './error-handler';
+
+// 服务端认证
+export {
+  getCurrentUser,
+  getUserRoles,
+  isAdminUser,
+  getUserTenantId,
+  requireAuth,
+} from './server-auth';
 
 // 安全Cookie配置（将在Task 2.4中实现）
 // export { secureCookieOptions, getSessionExpiry } from './secure-cookies'

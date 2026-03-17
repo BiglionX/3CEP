@@ -47,9 +47,20 @@ export function UnifiedNavbar() {
         { name: '配件商城', href: '/parts-market' },
         { name: '智能估价', href: '/valuation' },
         { name: '维修网点', href: '/repair-shop' },
+        { name: '维修店主', href: '/repair-shop/dashboard' },
         { name: '企业服务', href: '/enterprise' },
         { name: '贸易服务', href: '/foreign-trade/company' },
-        { name: '维修店主', href: '/repair-shop/dashboard' },
+      ],
+    },
+    {
+      name: '商业合作',
+      href: '#',
+      icon: <Globe className="w-4 h-4" />,
+      children: [
+        { name: '入驻申请', href: '/business-register' },
+        { name: '企业注册', href: '/enterprise/admin/auth' },
+        { name: '维修店入驻', href: '/business-register' },
+        { name: '贸易商入驻', href: '/business-register' },
       ],
     },
     {

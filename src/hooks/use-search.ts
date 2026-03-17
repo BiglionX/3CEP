@@ -3,6 +3,7 @@
  * 提供搜索状态管理和业务逻辑
  */
 
+'use client';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   SearchEntityType,
@@ -46,13 +47,13 @@ export function useSearch<T = any>(
     [initialConfig]
   );
 
-  // 搜索状?
+  // 搜索状态
   const [results, setResults] = useState<SearchResult<T>[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<Error | undefined>(undefined);
 
-  // 分页状?
+  // 分页状态
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -63,7 +64,7 @@ export function useSearch<T = any>(
   );
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
 
-  // 当前搜索上下?
+  // 当前搜索上下文
   const [currentQuery, setCurrentQuery] = useState('');
   const [currentFilters, setCurrentFilters] = useState<AdvancedSearchFilters>(
     {}
@@ -71,7 +72,7 @@ export function useSearch<T = any>(
   const [currentEntityType, setCurrentEntityType] =
     useState<SearchEntityType>(initialEntityType);
 
-  // 获取搜索历史（不在Hook返回值中直接暴露?
+  // 获取搜索历史（不在Hook返回值中直接暴露）
   const getSearchHistory = useCallback(
     () =>
       config.enableHistory
@@ -80,7 +81,7 @@ export function useSearch<T = any>(
     [config.enableHistory, config.maxHistoryItems]
   );
 
-  // 执行搜索的主要函?
+  // 执行搜索的主要函数
   const performSearch = useCallback(
     async (
       query: string,
@@ -113,7 +114,7 @@ export function useSearch<T = any>(
         setTotalPages(searchResponse.totalPages);
         setFacets(searchResponse.facets);
 
-        // 保存到历史记?
+        // 保存到历史记录
         if (config.enableHistory && query.trim()) {
           searchService.saveToHistory(
             query,
@@ -123,7 +124,7 @@ export function useSearch<T = any>(
           );
         }
 
-        // 更新当前状?
+        // 更新当前状态
         setCurrentQuery(query);
         setCurrentFilters(filters);
         if (entityType) {
@@ -141,23 +142,6 @@ export function useSearch<T = any>(
       }
     },
     [currentEntityType, config.enableHistory]
-  );
-
-  // 防抖搜索包装函数
-  const debouncedSearchWrapper = useCallback(
-    (
-      query: string,
-      filters?: AdvancedSearchFilters,
-      entityType?: SearchEntityType
-    ) => {
-      return new Promise<void>(resolve => {
-        const debouncedFn = searchService.debouncedSearch(() => {
-          performSearch(query, filters, entityType).then(resolve);
-        }, config.debounceDelay);
-        debouncedFn();
-      });
-    },
-    [performSearch, config.debounceDelay]
   );
 
   // 获取搜索建议
@@ -188,16 +172,15 @@ export function useSearch<T = any>(
     [fetchSuggestions]
   );
 
-  // 公开的搜索方?
+  // 立即执行搜索（取消防抖）
   const search = useCallback(
     async (
       query: string,
       filters?: AdvancedSearchFilters,
       entityType?: SearchEntityType
     ) => {
-      // 取消防抖定时?
+      // 取消防抖定时器
       searchService.cancelDebounce();
-
       // 执行搜索
       await performSearch(query, filters || {}, entityType);
     },
@@ -211,8 +194,8 @@ export function useSearch<T = any>(
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
 
-    // 这里可以实现无限滚动或分页加载更?
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('加载更多结果，页?', nextPage)}, [isLoading, currentPage, totalPages]);
+    // 这里可以实现无限滚动或分页加载更多
+  }, [isLoading, currentPage, totalPages]);
 
   // 清空结果
   const clearResults = useCallback(() => {
@@ -239,7 +222,7 @@ export function useSearch<T = any>(
     [currentFilters]
   );
 
-  // 加载保存的搜?
+  // 加载保存的搜索
   const loadSavedSearch = useCallback((id: string) => {
     try {
       const savedSearches = searchService.getSavedSearches();
@@ -251,11 +234,11 @@ export function useSearch<T = any>(
         // performSearch('', savedSearch.filters);
       }
     } catch (err) {
-      console.error('加载保存的搜索失?', err);
+      console.error('加载保存的搜索失败:', err);
     }
   }, []);
 
-  // 从历史记录执行搜?
+  // 从历史记录执行搜索
   const searchFromHistory = useCallback(
     (historyItem: SearchHistory) => {
       setCurrentQuery(historyItem.query);
@@ -280,7 +263,7 @@ export function useSearch<T = any>(
   }, [currentEntityType, initialEntityType, clearResults]);
 
   return {
-    // 状?
+    // 状态
     results,
     isLoading,
     isError,
@@ -294,7 +277,7 @@ export function useSearch<T = any>(
     suggestions,
 
     // 方法
-    search: debouncedSearchWrapper,
+    search,
     loadMore,
     clearResults,
     saveSearch,
@@ -302,7 +285,7 @@ export function useSearch<T = any>(
     searchFromHistory,
     fetchSuggestions: debouncedFetchSuggestions,
 
-    // 当前上下?
+    // 当前上下文
     currentQuery,
     currentFilters,
     currentEntityType,

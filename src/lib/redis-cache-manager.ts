@@ -1,5 +1,13 @@
-// Redis缓存管理?import Redis from 'ioredis';
-import { logger } from '../utils/logger';
+// Redis缓存管理器
+import Redis from 'ioredis';
+
+// 简单的日志函数
+const logger = {
+  debug: (msg: string) => console.debug(`[DEBUG] ${msg}`),
+  info: (msg: string) => console.info(`[INFO] ${msg}`),
+  warn: (msg: string) => console.warn(`[WARN] ${msg}`),
+  error: (msg: string, error?: any) => console.error(`[ERROR] ${msg}`, error),
+};
 
 interface RedisConfig {
   host: string;
@@ -11,8 +19,9 @@ interface RedisConfig {
 }
 
 interface CacheOptions {
-  ttl?: number; // 过期时间(�?
-  tags?: string[]; // 缓存标签，用于批量删?}
+  ttl?: number; // 过期时间(秒)
+  tags?: string[]; // 缓存标签，用于批量删除
+}
 
 interface CacheStats {
   hits: number;
@@ -44,7 +53,6 @@ export class RedisCacheManager {
       port: config.port,
       password: config.password,
       db: config.db || 0,
-      retryDelayOnFailover: config.retryDelayOnFailover || 2000,
       maxRetriesPerRequest: 3,
       connectTimeout: 10000,
       lazyConnect: true,
@@ -55,10 +63,11 @@ export class RedisCacheManager {
   }
 
   /**
-   * 设置连接事件处理?   */
+   * 设置连接事件处理器
+   */
   private setupConnectionHandlers(): void {
     this.redis.on('connect', () => {
-      logger.info('Redis连接已建?);
+      logger.info('Redis连接已建立');
       this.connected = true;
     });
 
@@ -91,7 +100,7 @@ export class RedisCacheManager {
         this.connected = true;
       } catch (error) {
         logger.error('Redis连接失败', error as Error);
-        throw new Error('无法连接到Redis服务?);
+        throw new Error('无法连接到Redis服务器');
       }
     }
   }
@@ -104,13 +113,15 @@ export class RedisCacheManager {
   }
 
   /**
-   * 生成标签?   */
+   * 生成标签键
+   */
   private generateTagKey(tag: string): string {
     return `${this.keyPrefix}tag:${tag}`;
   }
 
   /**
-   * 获取缓存?   */
+   * 获取缓存值
+   */
   async get<T = any>(key: string): Promise<T | null> {
     await this.ensureConnection();
 
@@ -140,7 +151,8 @@ export class RedisCacheManager {
   }
 
   /**
-   * 设置缓存?   */
+   * 设置缓存值
+   */
   async set<T>(
     key: string,
     value: T,
@@ -187,7 +199,8 @@ export class RedisCacheManager {
     const fullKey = this.generateKey(key);
 
     try {
-      // 删除相关的标?      await this.removeTags(key);
+      // 删除相关的标签
+      await this.removeTags(key);
 
       const result = await this.redis.del(fullKey);
 
@@ -202,13 +215,14 @@ export class RedisCacheManager {
   }
 
   /**
-   * 批量删除缓存（按标签?   */
+   * 批量删除缓存（按标签）
+   */
   async deleteByTag(tag: string): Promise<number> {
     await this.ensureConnection();
 
     try {
       const tagKey = this.generateTagKey(tag);
-      const keys = await this.redis.smembers(tagKey);
+      const keys = (await this.redis.smembers(tagKey)) as string[];
 
       if (keys.length === 0) {
         return 0;
@@ -221,14 +235,16 @@ export class RedisCacheManager {
         pipeline.srem(tagKey, key);
       });
 
-      const results = await pipeline.exec();
+      const results = (await pipeline.exec()) as
+        | [Error | null, number][]
+        | null;
       const deletedCount = results
         ? results.filter(r => r[1] > 0).length / 2
         : 0;
 
       return Math.floor(deletedCount);
     } catch (error) {
-      logger.error(`Redis按标签删除失? ${tag}`, error as Error);
+      logger.error(`Redis按标签删除失败: ${tag}`, error as Error);
       return 0;
     }
   }
@@ -250,8 +266,10 @@ export class RedisCacheManager {
   /**
    * 移除标签
    */
-  private async removeTags(key: string): Promise<void> {
-    // 这里简化处理，实际项目中可能需要更复杂的标签管?    // 可以考虑存储键到标签的反向映?  }
+  private async removeTags(_key: string): Promise<void> {
+    // 这里简化处理，实际项目中可能需要更复杂的标签管理
+    // 可以考虑存储键到标签的反向映射
+  }
 
   /**
    * 增量操作
@@ -315,7 +333,8 @@ export class RedisCacheManager {
   }
 
   /**
-   * 清空所有缓?   */
+   * 清空所有缓存
+   */
   async flushAll(): Promise<boolean> {
     await this.ensureConnection();
 
@@ -331,7 +350,7 @@ export class RedisCacheManager {
       };
       return true;
     } catch (error) {
-      logger.error('Redis清空所有缓存失?, error as Error);
+      logger.error('Redis清空所有缓存失败', error as Error);
       return false;
     }
   }
@@ -352,7 +371,8 @@ export class RedisCacheManager {
   }
 
   /**
-   * 解析Redis信息字符?   */
+   * 解析Redis信息字符串
+   */
   private parseRedisInfo(info: string): any {
     const result: any = {};
     const lines = info.split('\n');
@@ -374,20 +394,22 @@ export class RedisCacheManager {
     try {
       await this.redis.quit();
       this.connected = false;
-      logger.info('Redis连接已关?);
+      logger.info('Redis连接已关闭');
     } catch (error) {
       logger.error('关闭Redis连接失败', error as Error);
     }
   }
 
   /**
-   * 检查连接状?   */
+   * 检查连接状态
+   */
   isConnected(): boolean {
     return this.connected;
   }
 }
 
-// 创建默认的Redis缓存管理器实?let defaultRedisManager: RedisCacheManager | null = null;
+// 创建默认的Redis缓存管理器实例
+let defaultRedisManager: RedisCacheManager | null = null;
 
 export function getDefaultRedisManager(): RedisCacheManager {
   if (!defaultRedisManager) {

@@ -1,6 +1,7 @@
-import { supabase } from "@/lib/supabase";
-import type { User } from "@supabase/supabase-js";
-import { useCallback, useEffect, useState } from "react";
+'use client';
+import { supabase } from '@/lib/supabase';
+import type { User } from '@supabase/supabase-js';
+import { useCallback, useEffect, useState } from 'react';
 
 interface AuthState {
   user: User | null;
@@ -12,11 +13,21 @@ export function useAuth(): {
   user: User | null;
   isLoading: boolean;
   error: string | null;
-  signIn: (email: string, password: string) => Promise<{ success: boolean; user?: User; error?: string }>;
-  signUp: (email: string, password: string) => Promise<{ success: boolean; user?: User; error?: string }>;
+  signIn: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; user?: User; error?: string }>;
+  signUp: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; user?: User; error?: string }>;
   signOut: () => Promise<{ success: boolean; error?: string }>;
-  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
-  updateUser: (userData: any) => Promise<{ success: boolean; user?: User; error?: string }>;
+  resetPassword: (
+    email: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  updateUser: (
+    userData: any
+  ) => Promise<{ success: boolean; user?: User; error?: string }>;
 } {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
@@ -24,7 +35,7 @@ export function useAuth(): {
     error: null,
   });
 
-  // 监听认证状态变?
+  // 监听认证状态变化
   useEffect(() => {
     // 获取当前用户
     const getUser = async () => {
@@ -32,16 +43,16 @@ export function useAuth(): {
         const {
           data: { session },
         } = await supabase.auth.getSession();
-        setAuthState((prev) => ({
+        setAuthState(prev => ({
           ...prev,
           user: session?.user || null,
           isLoading: false,
         }));
       } catch (error) {
-        console.error("获取用户信息失败:", error);
-        setAuthState((prev) => ({
+        console.error('获取用户信息失败:', error);
+        setAuthState(prev => ({
           ...prev,
-          error: "获取用户信息失败",
+          error: '获取用户信息失败',
           isLoading: false,
         }));
       }
@@ -49,10 +60,10 @@ export function useAuth(): {
 
     getUser();
 
-    // 监听认证状态变?
+    // 监听认证状态变化
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event: string, session: any) => {
       setAuthState({
         user: session?.user || null,
         isLoading: false,
@@ -68,7 +79,7 @@ export function useAuth(): {
   // 登录
   const signIn = useCallback(async (email: string, password: string) => {
     try {
-      setAuthState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -85,8 +96,8 @@ export function useAuth(): {
 
       return { success: true, user: data.user };
     } catch (error: any) {
-      const errorMessage = error.message || "登录失败";
-      setAuthState((prev) => ({
+      const errorMessage = error.message || '登录失败';
+      setAuthState(prev => ({
         ...prev,
         isLoading: false,
         error: errorMessage,
@@ -98,7 +109,7 @@ export function useAuth(): {
   // 注册
   const signUp = useCallback(async (email: string, password: string) => {
     try {
-      setAuthState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -115,8 +126,8 @@ export function useAuth(): {
 
       return { success: true, user: data.user };
     } catch (error: any) {
-      const errorMessage = error.message || "注册失败";
-      setAuthState((prev) => ({
+      const errorMessage = error.message || '注册失败';
+      setAuthState(prev => ({
         ...prev,
         isLoading: false,
         error: errorMessage,
@@ -128,7 +139,7 @@ export function useAuth(): {
   // 登出
   const signOut = useCallback(async () => {
     try {
-      setAuthState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
       const { error } = await supabase.auth.signOut();
 
@@ -142,8 +153,8 @@ export function useAuth(): {
 
       return { success: true };
     } catch (error: any) {
-      const errorMessage = error.message || "登出失败";
-      setAuthState((prev) => ({
+      const errorMessage = error.message || '登出失败';
+      setAuthState(prev => ({
         ...prev,
         isLoading: false,
         error: errorMessage,
@@ -163,27 +174,27 @@ export function useAuth(): {
 
       return { success: true };
     } catch (error: any) {
-      const errorMessage = error.message || "发送重置邮件失?;
+      const errorMessage = error.message || '发送重置邮件失败';
       return { success: false, error: errorMessage };
     }
   }, []);
 
   // 更新用户信息
   const updateUser = useCallback(
-    async (userData: any: { email?: string; password?: string; data?: object }) => {
+    async (userData: { email?: string; password?: string; data?: object }) => {
       try {
         const { data, error } = await supabase.auth.updateUser(userData);
 
         if (error) throw error;
 
-        setAuthState((prev) => ({
+        setAuthState(prev => ({
           ...prev,
           user: data.user || prev.user,
         }));
 
         return { success: true, user: data.user };
       } catch (error: any) {
-        const errorMessage = error.message || "更新用户信息失败";
+        const errorMessage = error.message || '更新用户信息失败';
         return { success: false, error: errorMessage };
       }
     },
@@ -209,38 +220,38 @@ export function useCrowdfundingAuth() {
     if (!user) return false;
 
     try {
-      // 检查用户是否在admin_users表中有记录且激?
+      // 检查用户是否在admin_users表中有记录且激活
       const { data, error } = await supabase
-        .from("admin_users")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("is_active", true)
+        .from('admin_users')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
         .single();
 
       return !error && data !== null;
     } catch (error) {
-      console.error("检查创建项目权限失?", error);
+      console.error('检查创建项目权限失败', error);
       return false;
     }
   }, [user]);
 
-  // 检查用户是否是项目创建?
+  // 检查用户是否是项目创建者
   const isProjectCreator = useCallback(
     async (projectId: string): Promise<boolean> => {
       if (!user) return false;
 
       try {
         const { data, error } = await supabase
-          .from("crowdfunding_projects")
-          .select("creator_id")
-          .eq("id", projectId)
+          .from('crowdfunding_projects')
+          .select('creator_id')
+          .eq('id', projectId)
           .single();
 
         if (error) return false;
 
         return data.creator_id === user.id;
       } catch (error) {
-        console.error("检查项目创建者身份失?", error);
+        console.error('检查项目创建者身份失败', error);
         return false;
       }
     },

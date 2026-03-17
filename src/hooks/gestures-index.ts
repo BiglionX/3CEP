@@ -1,22 +1,24 @@
 /**
- * 移动端手势支持入口文? * 导出所有相关的Hook和类型定? */
+ * 移动端手势支持入口文件
+ * 导出所有相关的Hook和类型定义 */
 
 // 核心Hook
-export {
-  useGestures,
-  useSwipe,
-  useTap,
-  useDoubleTap,
-  useLongPress,
-  usePinch,
-  useRotate,
-} from './use-gestures';
+export { useGestures, GesturePresets } from './use-gestures';
 
 // 类型定义
 export type {
   GestureType,
-  SwipeDirection,
-  TouchPoint,
+  GestureConfig,
   GestureEventData,
-  GestureOptions,
+  GestureCallback,
+  GestureHandlers,
+  UseGesturesReturn,
 } from './use-gestures';
+
+// 便捷Hook - 基于useGestures的简化包装
+export { useSwipe } from './use-swipe';
+export { useTap } from './use-tap';
+export { useDoubleTap } from './use-double-tap';
+export { useLongPress } from './use-long-press';
+export { usePinch } from './use-pinch';
+export { useRotate } from './use-rotate';

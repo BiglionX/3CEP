@@ -36,13 +36,29 @@ export default function SkillStorePage() {
       description: '基于设备档案和市场数据的智能估价服务',
       link: '/skill-store/estimate-value',
     },
+    {
+      name: 'procyc-part-price',
+      title: '配件价格查询',
+      category: '配件服务',
+      icon: '🏷️',
+      description: '查询配件市场价格、库存情况和最优供应商',
+      link: '/skill-store/part-price',
+    },
+    {
+      name: 'procyc-battery-version',
+      title: '电池版本查询',
+      category: '配件服务',
+      icon: '🔋',
+      description: '根据设备型号查询原装电池版本和兼容替代型号',
+      link: '/skill-store/battery-version',
+    },
   ];
 
   const categories = [
     { name: '诊断类', code: 'DIAG', icon: '🔍', count: 1 },
     { name: '估价类', code: 'ESTM', icon: '💰', count: 1 },
     { name: '定位类', code: 'LOCA', icon: '📍', count: 1 },
-    { name: '配件类', code: 'PART', icon: '🔧', count: 1 },
+    { name: '配件类', code: 'PART', icon: '🔧', count: 3 },
     { name: '数据类', code: 'DATA', icon: '📊', count: 0 },
     { name: '通讯类', code: 'COMM', icon: '💬', count: 0 },
     { name: '自动化类', code: 'AUTO', icon: '🤖', count: 0 },

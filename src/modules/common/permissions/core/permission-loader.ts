@@ -204,6 +204,8 @@ export class PermissionLoader {
       config: { ...config },
       timestamp: Date.now(),
     });
+    // 通知配置变更
+    this.notifyConfigChange(config);
   }
 
   /**
@@ -229,7 +231,15 @@ export class PermissionLoader {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
     try {
-      const response = await fetch('/api/permissions/config', {
+      // 构建完整的 URL，支持服务器端和客户端
+      const baseUrl =
+        typeof window !== 'undefined'
+          ? '' // 客户端使用相对路径
+          : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // 服务器端使用绝对路径
+
+      const url = `${baseUrl}/api/permissions/config`;
+
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
