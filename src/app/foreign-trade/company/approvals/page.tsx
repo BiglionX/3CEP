@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
+import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -202,15 +202,9 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <ForeignTradeSidebar
-        activeRole={activeRole}
-        onRoleChange={handleRoleChange}
-      />
-
-      <div className="flex-1 lg:ml-0">
-        {/* 头部导航 */}
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <>
+      {/* 头部导航 */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
@@ -450,11 +444,8 @@ export default function ApprovalsPage() {
                     </div>
                   ))
                 )}
-              </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
-    </div>
+        </>
   );
 }

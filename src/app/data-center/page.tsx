@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRbacPermission } from '@/hooks/use-rbac-permission';
-import { DataCenterUserMenu } from '@/components/data-center/DataCenterUserMenu';
 import {
   BarChart3,
   Database,
@@ -21,8 +20,6 @@ import {
   Download,
   Eye,
   ChevronRight,
-  Menu,
-  X,
   Bell,
   User,
 } from 'lucide-react';
@@ -66,7 +63,6 @@ interface Alert {
 export default function DataCenterPage() {
   const router = useRouter();
   const { hasPermission } = useRbacPermission();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [stats, setStats] = useState<DataCenterStats>({
     totalDevices: 0,
     activeQueries: 0,
@@ -187,16 +183,6 @@ export default function DataCenterPage() {
     }
   };
 
-  const menuItems = [
-    { name: '仪表, icon: BarChart3, href: '/data-center' },
-    { name: '数据源管理, icon: Database, href: '/data-center/sources' },
-    { name: '查询分析', icon: Search, href: '/data-center/query' },
-    { name: '元数据管, icon: FileText, href: '/data-center/metadata' },
-    { name: '监控告警', icon: Monitor, href: '/data-center/monitoring' },
-    { name: '安全管理', icon: Shield, href: '/data-center/security' },
-    { name: '系统设置', icon: Settings, href: '/data-center/settings' },
-  ];
-
   // 管理员专属快捷入  const adminQuickLinks = [
     {
       name: '管理后台',
@@ -227,84 +213,8 @@ export default function DataCenterPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* 侧边- 移动端优*/}
-      <div
-        className={`${sidebarOpen  'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out sm:w-72 lg:translate-x-0 lg:static lg:inset-0`}
-      >
-        <div className="flex items-center justify-between h-16 px-4 border-b">
-          <div className="flex items-center space-x-2">
-            <Database className="h-8 w-8 text-blue-600" />
-            <span className="text-lg sm:text-xl font-bold text-gray-800 truncate">
-              数据管理中心
-            </span>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <nav className="mt-5 px-2">
-          {menuItems.map(item => (
-            <Button
-              key={item.name}
-              variant="ghost"
-              className="w-full justify-start mb-1 py-3 px-4 text-left hover:bg-gray-100 transition-colors"
-              onClick={() => router.push(item.href)}
-            >
-              <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
-              <span className="truncate">{item.name}</span>
-            </Button>
-          ))}
-        </nav>
-      </div>
-
-      {/* 主内容区- 移动端优*/}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* 顶部导航- 响应式优*/}
-        <header className="bg-white shadow-sm border-b sticky top-0 z-40">
-          <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center min-w-0 flex-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="lg:hidden mr-2 p-2"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-              <h1 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">
-                数据管理中心仪表              </h1>
-            </div>
-
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* 管理员快速入*/}
-              {hasPermission('dashboard_read') && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                  onClick={() => router.push('/admin/dashboard')}
-                  title="访问管理后台"
-                >
-                  <Shield className="h-5 w-5" />
-                </Button>
-              )}
-              <Button variant="ghost" size="sm" className="p-2">
-                <Bell className="h-5 w-5" />
-              </Button>
-              <DataCenterUserMenu userEmail="user@example.com" />
-            </div>
-          </div>
-        </header>
-
-        {/* 内容区域 - 移动端优*/}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+    <div className="min-h-screen bg-gray-50">
+      <main className="p-4 sm:p-6">
           {/* 统计卡片 - 响应式网*/}
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <Card className="shadow-sm hover:shadow-md transition-shadow">

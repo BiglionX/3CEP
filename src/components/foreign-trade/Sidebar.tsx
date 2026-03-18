@@ -16,6 +16,13 @@ import {
   ChevronDown,
   Menu,
   X,
+  Headphones,
+  Bot,
+  Coins,
+  QrCode,
+  Gift,
+  Sparkles,
+  LayoutDashboard,
 } from 'lucide-react';
 
 interface MenuItem {
@@ -153,6 +160,63 @@ export function ForeignTradeSidebar({
       href: '/foreign-trade/company/settings',
       icon: Settings,
       activePaths: ['/foreign-trade/company/settings'],
+    },
+    // 企业模块（复用企业功能）
+    {
+      id: 'after-sales',
+      title: '售后管理',
+      href: '/foreign-trade/after-sales',
+      icon: Headphones,
+      activePaths: ['/foreign-trade/after-sales'],
+    },
+    {
+      id: 'ai-agents',
+      title: '智能体管理',
+      href: '/foreign-trade/admin/agents',
+      icon: Bot,
+      activePaths: ['/foreign-trade/admin/agents'],
+    },
+    {
+      id: 'tokens',
+      title: 'Token管理',
+      href: '/foreign-trade/admin/tokens',
+      icon: Coins,
+      activePaths: ['/foreign-trade/admin/tokens'],
+    },
+    {
+      id: 'fxc',
+      title: 'FCX管理',
+      href: '/foreign-trade/admin/fxc',
+      icon: Sparkles,
+      activePaths: ['/foreign-trade/admin/fxc'],
+    },
+    {
+      id: 'traceability',
+      title: '二维码溯源',
+      href: '/foreign-trade/admin/traceability',
+      icon: QrCode,
+      activePaths: ['/foreign-trade/admin/traceability'],
+    },
+    {
+      id: 'reward-qa',
+      title: '有奖问答',
+      href: '/foreign-trade/admin/reward-qa',
+      icon: Gift,
+      activePaths: ['/foreign-trade/admin/reward-qa'],
+    },
+    {
+      id: 'crowdfunding',
+      title: '新品众筹',
+      href: '/foreign-trade/admin/crowdfunding',
+      icon: Globe,
+      activePaths: ['/foreign-trade/admin/crowdfunding'],
+    },
+    {
+      id: 'portal',
+      title: '门户管理',
+      href: '/foreign-trade/admin/portal',
+      icon: LayoutDashboard,
+      activePaths: ['/foreign-trade/admin/portal'],
     },
   ];
 

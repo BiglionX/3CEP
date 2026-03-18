@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
 import {
   ShoppingCart,
   DollarSign,
@@ -56,9 +55,7 @@ interface CompanyStats {
 
 export default function ForeignTradeCompanyPage() {
   const router = useRouter();
-  const [activeRole, setActiveRole] = useState<'importer' | 'exporter'>(
-    'importer'
-  );
+  const [activeRole] = useState<'importer' | 'exporter'>('importer');
   const [orders, setOrders] = useState<TradeOrder[]>([]);
   const [stats, setStats] = useState<CompanyStats>({
     totalOrders: 0,
@@ -68,10 +65,6 @@ export default function ForeignTradeCompanyPage() {
     partners: 0,
     pendingApprovals: 0,
   });
-
-  const handleRoleChange = (role: 'importer' | 'exporter') => {
-    setActiveRole(role);
-  };
 
   useEffect(() => {
     loadTradeData();
@@ -223,15 +216,9 @@ export default function ForeignTradeCompanyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <ForeignTradeSidebar
-        activeRole={activeRole}
-        onRoleChange={handleRoleChange}
-      />
-
-      <div className="flex-1 lg:ml-0">
-        {/* 头部导航 */}
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <React.Fragment>
+      {/* 头部导航 */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
@@ -572,7 +559,6 @@ export default function ForeignTradeCompanyPage() {
             </TabsContent>
           </Tabs>
         </div>
-      </div>
-    </div>
+    </React.Fragment>
   );
 }

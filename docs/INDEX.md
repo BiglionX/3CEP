@@ -173,6 +173,7 @@ npm run dev
 - [`progress-summary.md`](./reports/progress-summary.md) - 进度总结
 - [`task-adjustment-summary.md`](./reports/task-adjustment-summary.md) - 任务调整总结
 - [`weekly-development-w7.md`](./reports/weekly-development-w7.md) - 第 7 周开发周报
+- [`2026-03-18-jsx-fix-and-progress-report.md`](./reports/2026-03-18-jsx-fix-and-progress-report.md) - 企业后台页面修复与进展报告 ⭐ 新增
 
 ### 🚀 部署文档 (Deployment)
 

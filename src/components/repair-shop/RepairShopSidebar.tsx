@@ -14,6 +14,13 @@ import {
   ChevronDown,
   Menu,
   X,
+  Headphones,
+  Bot,
+  Coins,
+  QrCode,
+  Gift,
+  Globe,
+  Sparkles,
 } from 'lucide-react';
 
 interface MenuItem {
@@ -90,6 +97,63 @@ export function RepairShopSidebar() {
       href: '/repair-shop/settings',
       icon: Settings,
       activePaths: ['/repair-shop/settings'],
+    },
+    // 企业模块（复用企业功能）
+    {
+      id: 'after-sales',
+      title: '售后管理',
+      href: '/repair-shop/after-sales',
+      icon: Headphones,
+      activePaths: ['/repair-shop/after-sales'],
+    },
+    {
+      id: 'ai-agents',
+      title: '智能体管理',
+      href: '/repair-shop/admin/agents',
+      icon: Bot,
+      activePaths: ['/repair-shop/admin/agents'],
+    },
+    {
+      id: 'tokens',
+      title: 'Token管理',
+      href: '/repair-shop/admin/tokens',
+      icon: Coins,
+      activePaths: ['/repair-shop/admin/tokens'],
+    },
+    {
+      id: 'fxc',
+      title: 'FCX管理',
+      href: '/repair-shop/admin/fxc',
+      icon: Sparkles,
+      activePaths: ['/repair-shop/admin/fxc'],
+    },
+    {
+      id: 'traceability',
+      title: '二维码溯源',
+      href: '/repair-shop/admin/traceability',
+      icon: QrCode,
+      activePaths: ['/repair-shop/admin/traceability'],
+    },
+    {
+      id: 'reward-qa',
+      title: '有奖问答',
+      href: '/repair-shop/admin/reward-qa',
+      icon: Gift,
+      activePaths: ['/repair-shop/admin/reward-qa'],
+    },
+    {
+      id: 'crowdfunding',
+      title: '新品众筹',
+      href: '/repair-shop/admin/crowdfunding',
+      icon: Globe,
+      activePaths: ['/repair-shop/admin/crowdfunding'],
+    },
+    {
+      id: 'portal',
+      title: '门户管理',
+      href: '/repair-shop/admin/portal',
+      icon: LayoutDashboard,
+      activePaths: ['/repair-shop/admin/portal'],
     },
   ];
 

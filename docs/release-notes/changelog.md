@@ -10,6 +10,35 @@ FixCycle 采用语义化版本控制 (SemVer)，版本号格式为 `MAJOR.MINOR.
 
 ## 🚀 最新版本
 
+### v3.0.1 (2026-03-18) - 质量优化版本
+
+#### 🔧 问题修复
+
+- ✅ **企业后台页面修复** - 修复 5 个页面的 JSX 结构问题
+  - 智能体管理页面 (`enterprise/admin/agents/page.tsx`)
+  - 众筹管理页面 (`enterprise/admin/crowdfunding/page.tsx`)
+  - 溯源管理页面 (`enterprise/admin/traceability/page.tsx`)
+  - 售后服务页面 (`enterprise/after-sales/page.tsx`)
+  - 文档管理页面 (`enterprise/admin/documents/page.tsx`)
+
+- ✅ **导入优化** - 清理未使用的导入,添加缺失的图标导入
+  - 添加: `Coins`, `BarChart3`, `Headphones`, `Package`
+  - 清理: 15 个未使用的图标导入
+
+#### 📊 修复统计
+
+| 指标 | 修复前 | 修复后 | 改善 |
+|------|-------|-------|------|
+| 错误数 | 32 | 0 | -100% |
+| 警告数 | 18 | 0 | -100% |
+| 文件修改 | 5 | 5 | - |
+
+#### 📝 相关文档
+
+- [企业后台页面修复报告](../reports/2026-03-18-jsx-fix-and-progress-report.md)
+
+---
+
 ### v3.0.0 (2024-02-21) - 重大功能更新
 
 #### 🎯 核心功能

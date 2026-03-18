@@ -73,7 +73,6 @@ interface Device {
 }
 
 export default function EnterpriseDevicesPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<
@@ -195,36 +194,6 @@ export default function EnterpriseDevicesPage() {
     },
   ]);
 
-  const menuItems = [
-    { name: '仪表盘', href: '/enterprise/admin/dashboard', icon: BarChart3 },
-    { name: '售后管理', href: '/enterprise/after-sales', icon: Headphones },
-    { name: '智能体管理', href: '/enterprise/admin/agents', icon: Bot },
-    { name: 'Token管理', href: '/enterprise/admin/tokens', icon: Coins },
-    { name: '门户管理', href: '/enterprise/admin/portal', icon: Globe },
-    { name: 'FXC管理', href: '/enterprise/admin/fxc', icon: CreditCard },
-    {
-      name: '采购管理',
-      href: '/enterprise/admin/procurement',
-      icon: ShoppingCart,
-    },
-    { name: '有奖问答', href: '/enterprise/admin/reward-qa', icon: HelpCircle },
-    {
-      name: '新品众筹',
-      href: '/enterprise/admin/crowdfunding',
-      icon: DollarSign,
-    },
-    { name: '企业资料', href: '/enterprise/admin/documents', icon: FileText },
-    { name: '设备管理', href: '/enterprise/admin/devices', icon: Package },
-    { name: '数据分析', href: '/enterprise/admin/analytics', icon: TrendingUp },
-    {
-      name: '二维码溯源',
-      href: '/enterprise/admin/traceability',
-      icon: QrCode,
-    },
-    { name: '团队管理', href: '/enterprise/admin/team', icon: Users },
-    { name: '系统设置', href: '/enterprise/admin/settings', icon: Settings },
-  ];
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'online':
@@ -339,78 +308,8 @@ export default function EnterpriseDevicesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 顶部导航 */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="mr-4 lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">E</span>
-              </div>
-              <span className="ml-2 text-xl font-semibold text-gray-900">
-                企业管理中心
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              设置
-            </Button>
-            <Button variant="ghost" size="sm">
-              <LogOut className="h-4 w-4 mr-2" />
-              退出登录
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex">
-        {/* 侧边栏 */}
-        <aside
-          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out`}
-        >
-          <div className="flex items-center justify-between h-16 px-4 border-b">
-            <h2 className="text-lg font-semibold text-gray-900">管理菜单</h2>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
-          <nav className="mt-5 px-2 space-y-1">
-            {menuItems.map(item => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors ${
-                    item.href === '/enterprise/admin/devices'
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
-                >
-                  <Icon className="mr-3 h-5 w-5" />
-                  {item.name}
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
-
-        {/* 主要内容区域 */}
-        <main className="flex-1 lg:ml-0">
-          <div className="py-6 px-4 sm:px-6 lg:px-8">
+      <main>
+        <div className="py-6 px-4 sm:px-6 lg:px-8">
             {/* 页面标题 */}
             <div className="flex justify-between items-center mb-8">
               <div>
@@ -752,14 +651,6 @@ export default function EnterpriseDevicesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* 遮罩层（移动端） */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
     </div>
   );
 }

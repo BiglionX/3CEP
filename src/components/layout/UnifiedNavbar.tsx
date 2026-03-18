@@ -111,8 +111,8 @@ export function UnifiedNavbar() {
             </span>
           </Link>
 
-          {/* 桌面导航 */}
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+          {/* 桌面导航 - 使用响应式类处理空间不足 */}
+          <div className="hidden xl:flex items-center space-x-6">
             {mainNavItems.map(item => (
               <div key={item.name} className="relative group">
                 {item.children ? (
@@ -149,6 +149,48 @@ export function UnifiedNavbar() {
                   >
                     {item.icon}
                     <span>{item.name}</span>
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* 紧凑模式导航 - 屏幕 < 1280px 时只显示图标 */}
+          <div className="hidden lg:flex xl:hidden items-center space-x-3">
+            {mainNavItems.map(item => (
+              <div key={item.name} className="relative group">
+                {item.children ? (
+                  <>
+                    <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors" title={item.name}>
+                      {item.icon}
+                    </button>
+                    {/* 下拉菜单 */}
+                    <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                      <div className="py-2">
+                        {item.children.map(child => (
+                          <Link
+                            key={child.name}
+                            href={child.href}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {child.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`p-2 font-medium transition-colors ${
+                      isActiveRoute(item.href)
+                        ? 'text-blue-600'
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
+                    title={item.name}
+                  >
+                    {item.icon}
                   </Link>
                 )}
               </div>

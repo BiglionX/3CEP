@@ -92,23 +92,24 @@ export function UnifiedFooter() {
               <div className="w-20 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">3CEP</span>
               </div>
-              <span className="text-2xl font-bold">ProCycle AI</span>
+              <span className="text-2xl font-bold hidden lg:block">ProCycle AI</span>
             </div>
-            <p className="text-gray-400 mb-6 max-w-xs">
+            <p className="text-gray-400 mb-6 max-w-xs hidden lg:block">
               专注3C售后服务市场，提供专业维修、配件供应和智能估价服务{' '}
             </p>
 
-            {/* 联系方式 */}
+            {/* 联系方式 - 响应式显示 */}
             <div className="space-y-3 mb-6">
               {contactInfo.map((contact, index) => {
                 const Icon = contact.icon;
                 return (
                   <div key={index} className="flex items-start space-x-3">
                     <Icon className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                    <div>
+                    <div className="hidden sm:block">
                       <p className="text-white font-medium">{contact.text}</p>
                       <p className="text-gray-400 text-sm">{contact.subtext}</p>
                     </div>
+                    <p className="text-white font-medium sm:hidden">{contact.text}</p>
                   </div>
                 );
               })}

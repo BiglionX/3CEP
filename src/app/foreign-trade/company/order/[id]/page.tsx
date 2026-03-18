@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ForeignTradeSidebar } from '@/components/foreign-trade/Sidebar';
 import {
   ArrowLeft,
   Globe,
@@ -256,15 +255,9 @@ export default function OrderDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <ForeignTradeSidebar
-        activeRole={activeRole}
-        onRoleChange={handleRoleChange}
-      />
-
-      <div className="flex-1 lg:ml-0">
-        {/* 头部导航 */}
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <>
+      {/* 头部导航 */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
@@ -624,14 +617,9 @@ export default function OrderDetailPage() {
                   </Button>
                   <Button variant="outline" className="w-full">
                     <Mail className="h-4 w-4 mr-2" />
-                    发送消息
                   </Button>
                 </CardContent>
               </Card>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </>
   );
 }
