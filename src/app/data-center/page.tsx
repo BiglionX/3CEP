@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRbacPermission } from '@/hooks/use-rbac-permission';
 import {
-  BarChart3,
   Database,
   Shield,
   Activity,
@@ -12,19 +11,13 @@ import {
   Monitor,
   AlertTriangle,
   TrendingUp,
-  PieChart,
   Globe,
   Search,
-  Filter,
   RefreshCw,
   Download,
-  Eye,
-  ChevronRight,
-  Bell,
   User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
@@ -87,7 +80,7 @@ export default function DataCenterPage() {
       // 获取统计数据
       const statsResponse = await fetch('/api/data-centeraction=health');
       if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
+        await statsResponse.json();
         setStats({
           totalDevices: 1247,
           activeQueries: 23,
@@ -98,7 +91,8 @@ export default function DataCenterPage() {
         });
       }
 
-      // 获取数据源列表      setDataSources([
+      // 获取数据源列表
+      setDataSources([
         {
           id: '1',
           name: '设备管理系统',
@@ -109,7 +103,7 @@ export default function DataCenterPage() {
         },
         {
           id: '2',
-          name: '供应链系,
+          name: '供应链系统',
           type: 'MySQL',
           status: 'connected',
           lastUpdate: '2026-02-28 14:25:00',
@@ -138,7 +132,7 @@ export default function DataCenterPage() {
         {
           id: '1',
           severity: 'warning',
-          message: '维修记录系统同步延迟超过阈,
+          message: '维修记录系统同步延迟超过阈值',
           timestamp: '2026-02-28 14:20:00',
           source: '数据同步服务',
         },
@@ -150,8 +144,10 @@ export default function DataCenterPage() {
           source: '数据接入服务',
         },
       ]);
+
+      setLoading(false);
     } catch (error) {
-      console.error('加载仪表板数据失', error);
+      console.error('加载仪表板数据失败', error);
     } finally {
       setLoading(false);
     }
@@ -183,7 +179,8 @@ export default function DataCenterPage() {
     }
   };
 
-  // 管理员专属快捷入  const adminQuickLinks = [
+  // 管理员专属快捷入口
+  const adminQuickLinks = [
     {
       name: '管理后台',
       icon: Settings,
@@ -245,7 +242,7 @@ export default function DataCenterPage() {
 
             <Card className="shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">数据源/CardTitle>
+                <CardTitle className="text-sm font-medium">数据源</CardTitle>
                 <Globe className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -336,9 +333,9 @@ export default function DataCenterPage() {
                         <div className="flex-1">
                           <Badge className={getSeverityColor(alert.severity)}>
                             {alert.severity === 'critical'
-                               '严重'
+                              ? '严重'
                               : alert.severity === 'warning'
-                                 '警告'
+                                ? '警告'
                                 : '信息'}
                           </Badge>
                           <p className="mt-2 text-sm leading-relaxed">
@@ -410,7 +407,7 @@ export default function DataCenterPage() {
                 <CardTitle className="flex items-center text-base sm:text-lg text-blue-700">
                   <Shield className="mr-2 h-5 w-5" />
                   管理员专                </CardTitle>
-                <CardDescription>管理后台快速访问入/CardDescription>
+                <CardDescription>管理后台快速访问入口</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -433,7 +430,6 @@ export default function DataCenterPage() {
           )}
         </main>
       </div>
-    </div>
   );
 }
 

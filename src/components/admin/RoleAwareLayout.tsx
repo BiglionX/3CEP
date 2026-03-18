@@ -55,7 +55,7 @@ export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-disable-unified-layout>
       {/* 角色感知侧边栏 */}
       <RoleAwareSidebar />
 

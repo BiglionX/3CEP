@@ -32,7 +32,7 @@ export default function RepairShopLayout({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-disable-unified-layout>
       {/* 顶部导航 */}
       <header className="bg-white shadow-sm border-b lg:pl-0">
         <div className="max-w-full px-4 sm:px-6 lg:px-8">

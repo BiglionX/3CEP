@@ -225,7 +225,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-disable-unified-layout>
       {/* 移动端侧边栏遮罩 */}
       {sidebarOpen && (
         <div

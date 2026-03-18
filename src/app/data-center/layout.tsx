@@ -27,7 +27,7 @@ export default function DataCenterLayout({
   const { hasPermission } = useRbacPermission() as unknown as RbacPermissionResult;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex" data-disable-unified-layout>
       {/* 侧边栏 */}
       <DataCenterSidebar hasPermission={hasPermission} />
 

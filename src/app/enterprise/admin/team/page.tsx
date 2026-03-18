@@ -127,17 +127,6 @@ export default function TeamManagementPage() {
     phone: '',
   });
 
-
-    { name: '数据分析', href: '/enterprise/admin/analytics', icon: TrendingUp },
-    {
-      name: '二维码溯源',
-      href: '/enterprise/admin/traceability',
-      icon: QrCode,
-    },
-    { name: '团队管理', href: '/enterprise/admin/team', icon: Users },
-    { name: '系统设置', href: '/enterprise/admin/settings', icon: Settings },
-  ];
-
   useEffect(() => {
     fetchTeamData();
   }, []);
