@@ -36,14 +36,15 @@ import {
 import { PermissionManagementPanel } from '@/components/enhanced-rbac/PermissionManagementPanel';
 import { RoleManagementPanel } from '@/components/enhanced-rbac/RoleManagementPanel';
 
-// 模拟用户权限上下const MOCK_USER_CONTEXT = {
+// 模拟用户权限上下文
+const MOCK_USER_CONTEXT = {
   userId: 'user_123',
   roles: ['manager'],
   directPermissions: ['dashboard_read'],
   effectivePermissions: ['dashboard_read', 'users_read', 'users_create'],
   tenantId: 'tenant_001',
   department: 'IT部门',
-  position: '系统管理员,
+  position: '系统管理员',
 };
 
 // 演示业务组件
@@ -68,7 +69,8 @@ function DemoBusinessComponents() {
     setConditionalResult(result);
   };
 
-  // 测试批量权限检  const testBatchPermissions = () => {
+  // 测试批量权限检查
+  const testBatchPermissions = () => {
     const permissionsToCheck = [
       'dashboard_read',
       'users_create',
@@ -79,7 +81,8 @@ function DemoBusinessComponents() {
     setBatchResult(results);
 
     const missing = getMissingPermissions(permissionsToCheck);
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('缺少的权', missing)};
+    // TODO: 移除调试日志 - console.log('缺少的权限:', missing);
+  };
 
   return (
     <div className="space-y-6">
@@ -95,12 +98,12 @@ function DemoBusinessComponents() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg">基础权限检/CardTitle>
+            <CardTitle className="text-lg">基础权限检查</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                  <span>仪表板查看权/span>
-                  {hasPermission('dashboard_read')  (
+                  <span>仪表板查看权限</span>
+                  {hasPermission('dashboard_read') ? (
                     <CheckCircle className="w-5 h-5 text-green-500" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-500" />
@@ -109,7 +112,7 @@ function DemoBusinessComponents() {
 
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <span>用户管理权限</span>
-                  {canAccessResource('users', 'create')  (
+                  {canAccessResource('users', 'create') ? (
                     <CheckCircle className="w-5 h-5 text-green-500" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-500" />
@@ -118,7 +121,7 @@ function DemoBusinessComponents() {
 
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <span>系统设置权限</span>
-                  {hasPermission('settings_update')  (
+                  {hasPermission('settings_update') ? (
                     <CheckCircle className="w-5 h-5 text-green-500" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-500" />
@@ -127,10 +130,10 @@ function DemoBusinessComponents() {
               </CardContent>
             </Card>
 
-            {/* 条件权限检*/}
+            {/* 条件权限检查 */}
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg">条件权限检/CardTitle>
+                <CardTitle className="text-lg">条件权限检查</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button onClick={testConditionalPermission} className="w-full">
@@ -141,19 +144,19 @@ function DemoBusinessComponents() {
                 {conditionalResult && (
                   <div className="p-3 bg-blue-50 rounded">
                     <div className="flex items-center gap-2 mb-2">
-                      {conditionalResult.allowed  (
+                      {conditionalResult.allowed ? (
                         <CheckCircle className="w-4 h-4 text-green-500" />
                       ) : (
                         <XCircle className="w-4 h-4 text-red-500" />
                       )}
-                      <span className="font-medium">检查结/span>
+                      <span className="font-medium">检查结果</span>
                     </div>
                     <p className="text-sm text-gray-600">
-                      {conditionalResult.reason || '权限检查完}
+                      {conditionalResult.reason || '权限检查完成'}
                     </p>
                     {conditionalResult.requiresApproval && (
                       <Badge className="mt-2" variant="destructive">
-                        需要审                      </Badge>
+                        需要审批                      </Badge>
                     )}
                   </div>
                 )}
@@ -161,7 +164,7 @@ function DemoBusinessComponents() {
             </Card>
           </div>
 
-          {/* 批量权限检*/}
+          {/* 批量权限检查 */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -170,7 +173,7 @@ function DemoBusinessComponents() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <Button onClick={testBatchPermissions}>执行批量检/Button>
+                <Button onClick={testBatchPermissions}>执行批量检查</Button>
 
                 {Object.keys(batchResult).length > 0 && (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -180,13 +183,13 @@ function DemoBusinessComponents() {
                           {perm}
                         </div>
                         <div className="flex items-center gap-1">
-                          {allowed  (
+                          {allowed ? (
                             <CheckCircle className="w-4 h-4 text-green-500" />
                           ) : (
                             <XCircle className="w-4 h-4 text-red-500" />
                           )}
                           <span className="text-xs">
-                            {allowed  '允许' : '拒绝'}
+                            {allowed ? '允许' : '拒绝'}
                           </span>
                         </div>
                       </div>
@@ -287,7 +290,8 @@ function DemoBusinessComponents() {
   );
 }
 
-// 主演示组function EnhancedRbacDemo() {
+// 主演示组件
+function EnhancedRbacDemo() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
