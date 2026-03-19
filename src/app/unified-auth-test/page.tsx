@@ -62,25 +62,25 @@ export default function UnifiedAuthTest() {
               <div>
                 <p className="text-sm text-gray-600">认证状态</p>
                 <p
-                  className={`font-medium ${isAuthenticated  'text-green-600' : 'text-red-600'}`}
+                  className={`font-medium ${isAuthenticated ? 'text-green-600' : 'text-red-600'}`}
                 >
-                  {isAuthenticated  '已认证' : '未认证'}
+                  {isAuthenticated ? '已认证' : '未认证'}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">管理员权限</p>
                 <p
-                  className={`font-medium ${is_admin  'text-green-600' : 'text-red-600'}`}
+                  className={`font-medium ${is_admin ? 'text-green-600' : 'text-red-600'}`}
                 >
-                  {is_admin  '是管理员' : '非管理员'}
+                  {is_admin ? '是管理员' : '非管理员'}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">加载状态</p>
                 <p
-                  className={`font-medium ${isLoading  'text-yellow-600' : 'text-green-600'}`}
+                  className={`font-medium ${isLoading ? 'text-yellow-600' : 'text-green-600'}`}
                 >
-                  {isLoading  '加载中...' : '已就绪'}
+                  {isLoading ? '加载中...' : '已就绪'}
                 </p>
               </div>
               <div>
@@ -177,15 +177,15 @@ export default function UnifiedAuthTest() {
                 <p>用户角色: {roles.join(', ') || '无'}</p>
                 <p>
                   dashboard.view 权限:{' '}
-                  {hasPermission('dashboard.view')  '有权限' : '无权限'}
+                  {hasPermission('dashboard.view') ? '有权限' : '无权限'}
                 </p>
                 <p>
                   user.manage 权限:{' '}
-                  {hasPermission('user.manage')  '有权限' : '无权限'}
+                  {hasPermission('user.manage') ? '有权限' : '无权限'}
                 </p>
                 <p>
                   system.admin 权限:{' '}
-                  {hasPermission('system.admin')  '有权限' : '无权限'}
+                  {hasPermission('system.admin') ? '有权限' : '无权限'}
                 </p>
               </div>
             </div>
