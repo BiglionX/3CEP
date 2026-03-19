@@ -289,7 +289,7 @@ export default function MonitoringPage() {
                   <div className="flex items-center mt-2">
                     <Badge
                       variant={
-                        metric.status === 'normal'  'default' : 'destructive'
+                        metric.status === 'normal' ? 'default' : 'destructive'
                       }
                       className="text-xs"
                     >
@@ -494,8 +494,8 @@ export default function MonitoringPage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-lg font-medium">{rule.name}</h3>
-                        <Badge variant={rule.enabled  'default' : 'secondary'}>
-                          {rule.enabled  '启用' : '禁用'}
+                        <Badge variant={rule.enabled ? 'default' : 'secondary'}>
+                          {rule.enabled ? '启用' : '禁用'}
                         </Badge>
                         <Badge className={getSeverityColor(rule.severity)}>
                           {rule.severity === 'critical'

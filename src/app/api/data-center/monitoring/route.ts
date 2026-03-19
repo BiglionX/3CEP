@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
           systemHealth: {
-            status: activeAlerts.length === 0  'healthy' : 'degraded',
+            status: activeAlerts.length === 0 ? 'healthy' : 'degraded',
             activeAlerts: activeAlerts.length,
             criticalAlerts: activeAlerts.filter(a => a.severity === 'critical')
               .length,

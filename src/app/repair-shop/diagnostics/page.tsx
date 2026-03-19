@@ -20,11 +20,6 @@ import {
   Smartphone,
   Tablet,
   Laptop,
-  Battery,
-  Wifi,
-  Camera,
-  Volume2,
-  Power,
   AlertTriangle,
   CheckCircle,
   XCircle,
@@ -51,8 +46,8 @@ export default function DiagnosticsPage() {
 
   const deviceTypes = [
     { id: 'smartphone', name: '智能手机', icon: Smartphone },
-{ id: 'tablet', name: '平板电脑', icon: Tablet },
-{ id: 'laptop', name: '笔记本电脑', icon: Laptop },
+    { id: 'tablet', name: '平板电脑', icon: Tablet },
+    { id: 'laptop', name: '笔记本电脑', icon: Laptop },
   ];
 
   const diagnosticTests: DiagnosticTest[] = [
@@ -62,41 +57,53 @@ export default function DiagnosticsPage() {
       category: '硬件检测',
       description: '检测电池状态和充电功能',
       status: 'pending',
+      result: '',
+      duration: 0,
     },
-{
+    {
       id: 'display_test',
       name: '显示屏测试',
       category: '硬件检测',
       description: '检测屏幕显示和触控功能',
       status: 'pending',
+      result: '',
+      duration: 0,
     },
-{
+    {
       id: 'wifi_test',
       name: 'WiFi连接测试',
       category: '网络检测',
       description: '检测无线网络连接功能',
       status: 'pending',
+      result: '',
+      duration: 0,
     },
-{
+    {
       id: 'camera_test',
       name: '摄像头测试',
       category: '硬件检测',
       description: '检测前后摄像头功能',
       status: 'pending',
+      result: '',
+      duration: 0,
     },
-{
+    {
       id: 'audio_test',
       name: '音频测试',
       category: '硬件检测',
       description: '检测扬声器和麦克风功能',
       status: 'pending',
+      result: '',
+      duration: 0,
     },
-{
+    {
       id: 'storage_test',
       name: '存储测试',
       category: '性能检测',
       description: '检测存储空间和读写速度',
       status: 'pending',
+      result: '',
+      duration: 0,
     },
   ];
 
@@ -115,7 +122,7 @@ export default function DiagnosticsPage() {
       // 更新当前测试状态为运行中
       setTestResults(prev =>
         prev.map((test, index) =>
-          index === i  { ...test, status: 'running' } : test
+          index === i ? { ...test, status: 'running' } : test
         )
       );
 
@@ -131,10 +138,10 @@ export default function DiagnosticsPage() {
       setTestResults(prev =>
         prev.map((test, index) =>
           index === i
-             {
+            ? {
                 ...test,
-                status: isSuccess  'passed' : 'failed',
-                result: isSuccess  '测试通过' : '发现问题',
+                status: isSuccess ? 'passed' : 'failed',
+                result: isSuccess ? '测试通过' : '发现问题',
                 duration: 1500 + Math.random() * 1000,
               }
             : test
@@ -151,11 +158,11 @@ export default function DiagnosticsPage() {
     switch (status) {
       case 'passed':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'failed':"
+      case 'failed':
         return <XCircle className="h-4 w-4 text-red-500" />;
-      case 'running':"
+      case 'running':
         return <Loader className="h-4 w-4 text-blue-500 animate-spin" />;
-      default:"
+      default:
         return <div className="h-4 w-4 rounded-full bg-gray-300"></div>;
     }
   };
@@ -177,7 +184,6 @@ export default function DiagnosticsPage() {
     if (testResults.length === 0) return null;
 
     const failedCount = testResults.filter(t => t.status === 'failed').length;
-    const passedCount = testResults.filter(t => t.status === 'passed').length;
 
     if (failedCount === 0)
       return { status: 'excellent', text: '优秀', color: 'text-green-600' };
@@ -190,18 +196,18 @@ export default function DiagnosticsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 头部导航 */}"
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">"
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">"
-          <div className="flex items-center justify-between h-16">"
+      {/* 头部导航 */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <Button"
+              <Button
                 variant="ghost"
-                onClick={() => router.back()}"
+                onClick={() => router.back()}
                 className="mr-4"
               >
                 ← 返回
-              </Button>"
+              </Button>
               <h1 className="text-xl font-semibold text-gray-900">
                 设备诊断工具
               </h1>
@@ -209,62 +215,62 @@ export default function DiagnosticsPage() {
           </div>
         </div>
       </header>
-"
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 设备信息输入 */}"
+        {/* 设备信息输入 */}
         <Card className="mb-8">
-          <CardHeader>"
-            <CardTitle className="flex items-center gap-2">"
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Wrench className="h-5 w-5" />
               设备信息
             </CardTitle>
             <CardDescription>输入要诊断的设备信息</CardDescription>
           </CardHeader>
-          <CardContent>"
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">"
-              <div className="space-y-2">"
-                <Label htmlFor="deviceType">设备类型</Label>"
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="deviceType">设备类型</Label>
                 <div className="grid grid-cols-3 gap-2">
                   {deviceTypes.map(type => {
                     const Icon = type.icon;
                     return (
                       <Button
                         key={type.id}
-                        variant={deviceType === type.id  'default' : 'outline'}
-                        onClick={() => setDeviceType(type.id)}"
+                        variant={deviceType === type.id ? 'default' : 'outline'}
+                        onClick={() => setDeviceType(type.id)}
                         className="flex flex-col items-center gap-1 h-20"
-                      >"
-                        <Icon className="h-6 w-6" />"
+                      >
+                        <Icon className="h-6 w-6" />
                         <span className="text-xs">{type.name}</span>
                       </Button>
                     );
                   })}
                 </div>
               </div>
-"
-              <div className="space-y-2">"
+
+              <div className="space-y-2">
                 <Label htmlFor="deviceModel">设备型号 *</Label>
-                <Input"
+                <Input
                   id="deviceModel"
                   value={deviceModel}
-                  onChange={e => setDeviceModel(e.target.value)}"
+                  onChange={e => setDeviceModel(e.target.value)}
                   placeholder="例如: iPhone 14 Pro"
                 />
               </div>
-"
+
               <div className="flex items-end">
                 <Button
                   onClick={startDiagnostic}
-                  disabled={isTesting || !deviceModel.trim()}"
+                  disabled={isTesting || !deviceModel.trim()}
                   className="w-full bg-blue-600 hover:bg-blue-700"
                 >
-                  {isTesting  (
-                    <>"
+                  {isTesting ? (
+                    <>
                       <Loader className="h-4 w-4 mr-2 animate-spin" />
                       诊断中... ({currentTestIndex}/{diagnosticTests.length})
                     </>
                   ) : (
-                    <>"
+                    <>
                       <Search className="h-4 w-4 mr-2" />
                       开始诊断
                     </>
@@ -278,13 +284,13 @@ export default function DiagnosticsPage() {
         {/* 诊断结果 */}
         {testResults.length > 0 && (
           <>
-            {/* 总体评估 */}"
+            {/* 总体评估 */}
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle>总体评估</CardTitle>
               </CardHeader>
-              <CardContent>"
-                <div className="flex items-center justify-between">"
+              <CardContent>
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     {overallStatus && (
                       <>
@@ -292,7 +298,7 @@ export default function DiagnosticsPage() {
                           className={`text-3xl font-bold ${overallStatus.color}`}
                         >
                           {overallStatus.text}
-                        </div>"
+                        </div>
                         <div className="text-gray-600">
                           {
                             testResults.filter(t => t.status === 'passed')
@@ -308,9 +314,9 @@ export default function DiagnosticsPage() {
                       </>
                     )}
                   </div>
-"
-                  <div className="text-right">"
-                    <div className="text-sm text-gray-500">诊断完成时间</div>"
+
+                  <div className="text-right">
+                    <div className="text-sm text-gray-500">诊断完成时间</div>
                     <div className="font-medium">
                       {new Date().toLocaleString('zh-CN')}
                     </div>
@@ -325,28 +331,28 @@ export default function DiagnosticsPage() {
                 <CardTitle>详细测试结果</CardTitle>
                 <CardDescription>各项功能的详细诊断结果</CardDescription>
               </CardHeader>
-              <CardContent>"
+              <CardContent>
                 <div className="space-y-4">
-                  {testResults.map((test, index) => (
+                  {testResults.map(test => (
                     <div
                       key={test.id}
                       className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
-                    >"
-                      <div className="flex items-start justify-between">"
-                        <div className="flex-1">"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             {getStatusIcon(test.status)}
-                            <div>"
+                            <div>
                               <h3 className="font-medium text-gray-900">
                                 {test.name}
-                              </h3>"
+                              </h3>
                               <p className="text-sm text-gray-600">
                                 {test.description}
                               </p>
                             </div>
                           </div>
-"
-                          <div className="flex items-center gap-4 text-sm text-gray-500">"
+
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
                             <Badge variant="secondary">{test.category}</Badge>
                             {test.duration && (
                               <span>耗时: {Math.round(test.duration)}ms</span>
@@ -357,8 +363,8 @@ export default function DiagnosticsPage() {
                             <div
                               className={`mt-2 text-sm font-medium ${
                                 test.status === 'passed'
-                                   'text-green-700'
-                                  : 'text-red-700'`
+                                  ? 'text-green-700'
+                                  : 'text-red-700'
                               }`}
                             >
                               {test.result}
@@ -368,11 +374,11 @@ export default function DiagnosticsPage() {
 
                         <Badge className={getStatusColor(test.status)}>
                           {test.status === 'passed'
-                             '通过'
+                            ? '通过'
                             : test.status === 'failed'
-                               '失败'
+                              ? '失败'
                               : test.status === 'running'
-                                 '进行中'
+                                ? '进行中'
                                 : '待测试'}
                         </Badge>
                       </div>
@@ -382,31 +388,31 @@ export default function DiagnosticsPage() {
               </CardContent>
             </Card>
 
-            {/* 建议和报告 */}"
+            {/* 建议和报告 */}
             <Card className="mt-8">
               <CardHeader>
                 <CardTitle>维修建议</CardTitle>
               </CardHeader>
-              <CardContent>"
+              <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>"
+                  <div>
                     <h4 className="font-medium text-gray-900 mb-3">
                       发现的问题
-                    </h4>"
+                    </h4>
                     <ul className="space-y-2">
                       {testResults
                         .filter(test => test.status === 'failed')
-                        .map(test => ("
-                          <li key={test.id} className="flex items-start gap-2">"
-                            <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />"
+                        .map(test => (
+                          <li key={test.id} className="flex items-start gap-2">
+                            <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
                             <span className="text-gray-700">
                               {test.name}: {test.result}
                             </span>
                           </li>
                         ))}
                       {testResults.filter(test => test.status === 'failed')
-                        .length === 0 && ("
-                        <li className="flex items-center gap-2 text-green-700">"
+                        .length === 0 && (
+                        <li className="flex items-center gap-2 text-green-700">
                           <CheckCircle className="h-4 w-4" />
                           <span>未发现明显硬件问题</span>
                         </li>
@@ -414,14 +420,14 @@ export default function DiagnosticsPage() {
                     </ul>
                   </div>
 
-                  <div>"
+                  <div>
                     <h4 className="font-medium text-gray-900 mb-3">处理建议</h4>
-                    <Textarea"
+                    <Textarea
                       placeholder="根据诊断结果输入维修建议..."
-                      rows={4}"
+                      rows={4}
                       className="mb-4"
-                    />"
-                    <div className="flex gap-3">"
+                    />
+                    <div className="flex gap-3">
                       <Button variant="outline">保存报告</Button>
                       <Button>生成报价</Button>
                     </div>
@@ -438,39 +444,39 @@ export default function DiagnosticsPage() {
             <CardHeader>
               <CardTitle>使用说明</CardTitle>
             </CardHeader>
-            <CardContent>"
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">"
-                <div className="text-center">"
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">"
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <Smartphone className="h-6 w-6 text-blue-600" />
-                  </div>"
+                  </div>
                   <h3 className="font-medium text-gray-900 mb-2">
                     1. 输入设备信息
-                  </h3>"
+                  </h3>
                   <p className="text-sm text-gray-600">
                     选择设备类型并输入准确的设备型号
                   </p>
                 </div>
-"
-                <div className="text-center">"
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">"
+
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <Search className="h-6 w-6 text-green-600" />
-                  </div>"
+                  </div>
                   <h3 className="font-medium text-gray-900 mb-2">
                     2. 开始诊断
-                  </h3>"
+                  </h3>
                   <p className="text-sm text-gray-600">
                     点击开始诊断按钮，系统将自动运行多项测试
                   </p>
                 </div>
-"
-                <div className="text-center">"
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">"
+
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <Wrench className="h-6 w-6 text-purple-600" />
-                  </div>"
+                  </div>
                   <h3 className="font-medium text-gray-900 mb-2">
                     3. 查看结果
-                  </h3>"
+                  </h3>
                   <p className="text-sm text-gray-600">
                     根据诊断结果制定维修方案和报价
                   </p>
@@ -483,4 +489,3 @@ export default function DiagnosticsPage() {
     </div>
   );
 }
-'"`

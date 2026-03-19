@@ -163,16 +163,16 @@ export default function UltimateMinimalLogin() {
             style={{
               width: '100%',
               padding: '14px',
-              background: loading  '#a0aec0' : '#667eea',
+              background: loading ? '#a0aec0' : '#667eea',
               color: 'white',
               border: 'none',
               borderRadius: '6px',
               fontSize: '16px',
               fontWeight: '600',
-              cursor: loading  'not-allowed' : 'pointer',
+              cursor: loading ? 'not-allowed' : 'pointer',
             }}
           >
-            {loading  '登录中...' : '登录'}
+            {loading ? '登录中...' : '登录'}
           </button>
         </form>
 

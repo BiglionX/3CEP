@@ -187,7 +187,7 @@ export default function MobileScanPage() {
                 <button
                   onClick={toggleTorch}
                   className={`p-3 rounded-full bg-black/50 backdrop-blur-sm ${
-                    torchEnabled  'text-yellow-400' : 'text-gray-400'
+                    torchEnabled ? 'text-yellow-400' : 'text-gray-400'
                   }`}
                 >
                   <Flashlight className="w-6 h-6" />

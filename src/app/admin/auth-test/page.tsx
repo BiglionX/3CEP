@@ -41,7 +41,7 @@ export default function AuthTestPage() {
   const handleTestPermission = () => {
     const hasPerm = hasPermission(testPermission);
     alert(
-      `权限 "${testPermission}" 检查结果：${hasPerm  '有权限' : '无权限'}`
+      `权限 "${testPermission}" 检查结果：${hasPerm ? '有权限' : '无权限'}`
     );
   };
 

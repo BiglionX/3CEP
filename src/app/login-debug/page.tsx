@@ -31,7 +31,7 @@ export default function LoginJumpDebugger() {
 
       results[0] = {
         step: '1. 检查当前认证状态',
-        status: authData.authenticated  '✓ 已登录' : '✗ 未登录',
+        status: authData.authenticated ? '✓ 已登录' : '✗ 未登录',
         details: `用户: ${authData.email || '无'}, 管理员: ${authData.is_admin || false}`,
       };
 
@@ -58,7 +58,7 @@ export default function LoginJumpDebugger() {
 
         results[1] = {
           step: '2. 执行登录测试',
-          status: loginResponse.ok  '✓ 登录成功' : '✗ 登录失败',
+          status: loginResponse.ok ? '✓ 登录成功' : '✗ 登录失败',
           details: loginResponse.ok
              `用户: ${loginData.email}, 管理员: ${loginData.is_admin}, 跳转目标: /admin/dashboard`
             : `错误: ${loginData.error}`,
@@ -128,7 +128,7 @@ export default function LoginJumpDebugger() {
               disabled={isTesting}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors disabled:opacity-50 mr-4"
             >
-              {isTesting  '测试进行中...' : '运行完整测试'}
+              {isTesting ? '测试进行中...' : '运行完整测试'}
             </button>
 
             <button

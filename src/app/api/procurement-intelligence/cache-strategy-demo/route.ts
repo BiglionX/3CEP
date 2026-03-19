@@ -286,7 +286,7 @@ async function runCacheTest() {
     testResults.tests.push({
       name: '鎬ц兘鍩哄噯娴嬭瘯',
       passed: avgTime < 50,
-      details: `骞冲潎鍝嶅簲堕棿: ${avgTime.toFixed(2)}ms (${avgTime < 50  '杈炬爣' : '鏈揪})`,
+      details: `骞冲潎鍝嶅簲堕棿: ${avgTime.toFixed(2)}ms (${avgTime < 50 ? '杈炬爣' : '鏈揪})`,
     });
   } catch (error) {
     testResults.tests.push({

@@ -174,7 +174,7 @@ import { cookies } from 'next/headers';
 
     return NextResponse.json({
       success: true,
-      message: `鎴愬姛${action === 'publish'  '鍙戝竷' : '椹冲洖'} ${ids.length} 鏉¤褰昤,
+      message: `鎴愬姛${action === 'publish' ? '鍙戝竷' : '椹冲洖'} ${ids.length} 鏉¤褰昤,
     }) as any;
   } catch (error) {
     console.error('鎵归噺鎿嶄綔澶辫触:', error);

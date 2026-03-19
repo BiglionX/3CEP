@@ -188,19 +188,19 @@ export default function FinanceManagementPage() {
       {/* 时间范围选择 */}
       <div className="flex gap-2">
         <Button
-          variant={dateRange === '7'  'default' : 'outline'}
+          variant={dateRange === '7' ? 'default' : 'outline'}
           onClick={() => setDateRange('7')}
           size="sm"
         >
           最        </Button>
         <Button
-          variant={dateRange === '30'  'default' : 'outline'}
+          variant={dateRange === '30' ? 'default' : 'outline'}
           onClick={() => setDateRange('30')}
           size="sm"
         >
           最0        </Button>
         <Button
-          variant={dateRange === '90'  'default' : 'outline'}
+          variant={dateRange === '90' ? 'default' : 'outline'}
           onClick={() => setDateRange('90')}
           size="sm"
         >
@@ -237,7 +237,7 @@ export default function FinanceManagementPage() {
           <CardHeader className="pb-2">
             <CardDescription>净利润</CardDescription>
             <CardTitle
-              className={`text-2xl ${summary.net_profit >= 0  'text-green-600' : 'text-red-600'}`}
+              className={`text-2xl ${summary.net_profit >= 0 ? 'text-green-600' : 'text-red-600'}`}
             >
               {formatCurrency(summary.net_profit)}
             </CardTitle>
@@ -410,7 +410,7 @@ export default function FinanceManagementPage() {
                             : 'text-red-600'
                         }`}
                       >
-                        {transaction.type === 'income'  '+' : '-'}
+                        {transaction.type === 'income' ? '+' : '-'}
                         {formatCurrency(Math.abs(transaction.amount))}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">

@@ -253,10 +253,10 @@ export default function SecurityManagementPage() {'
                     </div>
                     <Badge
                       variant={'
-                        role.status === 'active'  'default' : 'secondary'
+                        role.status === 'active' ? 'default' : 'secondary'
                       }
                     >'
-                      {role.status === 'active'  '启用' : '禁用'}
+                      {role.status === 'active' ? '启用' : '禁用'}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -457,10 +457,10 @@ export default function SecurityManagementPage() {'
                       <div className="text-right">
                         <Badge
                           variant={'
-                            log.status === 'success'  'default' : 'destructive'
+                            log.status === 'success' ? 'default' : 'destructive'
                           }
                         >'
-                          {log.status === 'success'  '成功' : '失败'}
+                          {log.status === 'success' ? '成功' : '失败'}
                         </Badge>"
                         <p className="text-xs text-gray-500 mt-1">
                           {log.timestamp}

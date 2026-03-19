@@ -163,7 +163,7 @@ export default function MobileReportPage() {
           {num < 3 && (
             <div
               className={`w-12 h-1 mx-2 ${
-                step > num  'bg-blue-600' : 'bg-gray-300'
+                step > num ? 'bg-blue-600' : 'bg-gray-300'
               }`}
             />
           )}
@@ -260,7 +260,7 @@ export default function MobileReportPage() {
                   value={formData.brand}
                   onChange={e => handleInputChange('brand', e.target.value)}
                   placeholder="如：苹果、华为、小米..."
-                  className={errors.brand  'border-red-500' : ''}
+                  className={errors.brand ? 'border-red-500' : ''}
                 />
                 {errors.brand && (
                   <div className="flex items-center text-red-500 text-sm mt-1">
@@ -278,7 +278,7 @@ export default function MobileReportPage() {
                   value={formData.model}
                   onChange={e => handleInputChange('model', e.target.value)}
                   placeholder="如：iPhone 14 Pro、Mate 50..."
-                  className={errors.model  'border-red-500' : ''}
+                  className={errors.model ? 'border-red-500' : ''}
                 />
                 {errors.model && (
                   <div className="flex items-center text-red-500 text-sm mt-1">
@@ -337,7 +337,7 @@ export default function MobileReportPage() {
                 onChange={e => handleInputChange('description', e.target.value)}
                 placeholder="请详细描述设备的具体问题、出现时间、使用情况等..."
                 rows={5}
-                className={errors.description  'border-red-500' : ''}
+                className={errors.description ? 'border-red-500' : ''}
               />
               <div className="flex justify-between items-center mt-2">
                 {errors.description && (
@@ -425,7 +425,7 @@ export default function MobileReportPage() {
                   value={formData.location}
                   onChange={e => handleInputChange('location', e.target.value)}
                   placeholder="请输入详细地址"
-                  className={`pl-10 ${errors.location  'border-red-500' : ''}`}
+                  className={`pl-10 ${errors.location ? 'border-red-500' : ''}`}
                 />
               </div>
               {errors.location && (
@@ -446,7 +446,7 @@ export default function MobileReportPage() {
                 onChange={e => handleInputChange('contact', e.target.value)}
                 placeholder="请输入手机号码"
                 type="tel"
-                className={errors.contact  'border-red-500' : ''}
+                className={errors.contact ? 'border-red-500' : ''}
               />
               {errors.contact && (
                 <div className="flex items-center text-red-500 text-sm mt-1">
@@ -497,7 +497,7 @@ export default function MobileReportPage() {
                 className="flex-1 bg-blue-600 hover:bg-blue-700"
                 disabled={isSubmitting}
               >
-                {isSubmitting  '提交中...' : '提交报修'}
+                {isSubmitting ? '提交中...' : '提交报修'}
               </Button>
             )}
           </div>

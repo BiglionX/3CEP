@@ -65,8 +65,8 @@ export default function ContentManagementPage() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
         search: searchTerm,
-        type: typeFilter === 'all'  '' : typeFilter,
-        status: statusFilter === 'all'  '' : statusFilter,
+        type: typeFilter === 'all' ? '' : typeFilter,
+        status: statusFilter === 'all' ? '' : statusFilter,
       });
 
       const response = await fetch(`/api/admin/content${params}`);
@@ -139,7 +139,7 @@ export default function ContentManagementPage() {
          `/api/admin/content/${editingContent.id}`
         : '/api/admin/content';
 
-      const method = editingContent.id  'PUT' : 'POST';
+      const method = editingContent.id ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -151,7 +151,7 @@ export default function ContentManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert(editingContent.id  '内容更新成功' : '内容创建成功');
+        alert(editingContent.id ? '内容更新成功' : '内容创建成功');
         setShowEditDialog(false);
         setEditingContent(null);
         fetchContents();
@@ -169,8 +169,8 @@ export default function ContentManagementPage() {
     contentId: string,
     currentStatus: string
   ) => {
-    const newStatus = currentStatus === 'published'  'draft' : 'published';
-    const actionText = newStatus === 'published'  '发布' : '下架';
+    const newStatus = currentStatus === 'published' ? 'draft' : 'published';
+    const actionText = newStatus === 'published' ? '发布' : '下架';
 
     if (!confirm(`确定{actionText}这篇内容吗？`)) return;
 
@@ -400,14 +400,14 @@ export default function ContentManagementPage() {
                       </Button>
                       <Button
                         variant={
-                          content.status === 'published'  'outline' : 'default'
+                          content.status === 'published' ? 'outline' : 'default'
                         }
                         size="sm"
                         onClick={() =>
                           toggleContentStatus(content.id, content.status)
                         }
                       >
-                        {content.status === 'published'  '下架' : '发布'}
+                        {content.status === 'published' ? '下架' : '发布'}
                       </Button>
                     </div>
                   </TableCell>
@@ -459,7 +459,7 @@ export default function ContentManagementPage() {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingContent.id  '编辑内容' : '新建内容'}
+              {editingContent.id ? '编辑内容' : '新建内容'}
             </DialogTitle>
           </DialogHeader>
 
@@ -580,7 +580,7 @@ export default function ContentManagementPage() {
               取消
             </Button>
             <Button onClick={saveContent}>
-              {editingContent.id  '保存更改' : '创建内容'}
+              {editingContent.id ? '保存更改' : '创建内容'}
             </Button>
           </DialogFooter>
         </DialogContent>

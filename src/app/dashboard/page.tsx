@@ -178,13 +178,13 @@ export default function DashboardPage() {
           <div>
             <h3
               className={`font-medium ${
-                hasAccess  'text-gray-900' : 'text-gray-500'
+                hasAccess ? 'text-gray-900' : 'text-gray-500'
               }`}
             >
               {module.name}
             </h3>
             <p className="text-sm text-gray-500 mt-1">
-              {hasAccess  '点击进入' : '无访问权}
+              {hasAccess ? '点击进入' : '无访问权}
             </p>
           </div>
         </div>

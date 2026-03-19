@@ -236,11 +236,11 @@ export default function WMSEfficiencyDashboard() {
             className={`${getStatusBg(status)} ${getStatusColor(status)} mt-2`}
           >
             {status === 'excellent'
-               '优秀'
+              ? '优秀'
               : status === 'good'
-                 '良好'
+                ? '良好'
                 : status === 'warning'
-                   '警告'
+                  ? '警告'
                   : '危险'}
           </Badge>
         </CardContent>
@@ -400,10 +400,10 @@ export default function WMSEfficiencyDashboard() {
           </CardHeader>
           <CardContent>
             <div
-              className={`text-2xl font-bold ${dashboardData.summary.periodComparison.scoreChange >= 0  'text-green-600' : 'text-red-600'}`}
+              className={`text-2xl font-bold ${dashboardData.summary.periodComparison.scoreChange >= 0 ? 'text-green-600' : 'text-red-600'}`}
             >
               {dashboardData.summary.periodComparison.scoreChange >= 0
-                 '+'
+                ? '+'
                 : ''}
               {dashboardData.summary.periodComparison.scoreChange.toFixed(1)}%
             </div>
@@ -607,15 +607,15 @@ export default function WMSEfficiencyDashboard() {
                   <Badge
                     variant={
                       trend.trend === 'up'
-                         'default'
+                        ? 'default'
                         : trend.trend === 'down'
-                           'destructive'
+                          ? 'destructive'
                           : 'secondary'
                     }
                   >
                     {renderTrendIcon(trend.trend)}
                     <span className="ml-1">
-                      {trend.variance > 0  '+' : ''}
+                      {trend.variance > 0 ? '+' : ''}
                       {trend.variance.toFixed(1)}%
                     </span>
                   </Badge>
@@ -667,16 +667,16 @@ export default function WMSEfficiencyDashboard() {
                   <Badge
                     variant={
                       alert.severity === 'critical'
-                         'destructive'
+                        ? 'destructive'
                         : 'secondary'
                     }
                   >
                     {alert.severity === 'critical'
-                       '严重'
+                      ? '严重'
                       : alert.severity === 'high'
-                         '高'
+                        ? '高'
                         : alert.severity === 'medium'
-                           '中'
+                          ? '中'
                           : '低'}
                   </Badge>
                 </div>
@@ -730,9 +730,9 @@ export default function WMSEfficiencyDashboard() {
                       <Badge
                         variant={
                           warehouse.compositeScore.overallScore >= 90
-                             'default'
+                            ? 'default'
                             : warehouse.compositeScore.overallScore >= 80
-                               'secondary'
+                              ? 'secondary'
                               : 'destructive'
                         }
                       >

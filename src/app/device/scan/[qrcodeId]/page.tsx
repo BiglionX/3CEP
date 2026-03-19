@@ -142,7 +142,7 @@ export default function DeviceScanPage({ params }: ScanPageProps) {
                       {
                         true: 'bg-green-600 hover:bg-green-700',
                         false: 'bg-blue-600 hover:bg-blue-700',
-                      }[activationSuccess  'true' : 'false']
+                      }[activationSuccess ? 'true' : 'false']
                     } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
                   >
                     {isActivating  (

@@ -23,7 +23,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
   Smartphone,
   Heart,
@@ -33,9 +32,7 @@ import {
   Volume2,
   VolumeX,
   Sun,
-  Moon,
   Zap,
-  Battery,
 } from 'lucide-react';
 
 // 演示卡片内容
@@ -171,8 +168,8 @@ function GestureDemo() {
             <TouchButton
               variant="primary"
               size="lg"
-              onPress={() => console.log('主要按钮被点击')}
-              onLongPress={() => console.log('主要按钮被长按')}
+              onPress={() => {}}
+              onLongPress={() => {}}
             >
               <ThumbsUp className="w-5 h-5 mr-2" />
               点赞
@@ -181,7 +178,7 @@ function GestureDemo() {
             <TouchButton
               variant="secondary"
               size="md"
-              onPress={() => console.log('分享按钮被点击')}
+              onPress={() => {}}
             >
               <Share2 className="w-4 h-4 mr-2" />
               分享
@@ -190,8 +187,8 @@ function GestureDemo() {
             <TouchButton
               variant="danger"
               size="sm"
-              onPress={() => console.log('删除按钮被点击')}
-              onLongPress={() => console.log('删除按钮被长按')}
+              onPress={() => {}}
+              onLongPress={() => {}}
             >
               <VolumeX className="w-4 h-4 mr-1" />
               静音
@@ -200,7 +197,7 @@ function GestureDemo() {
             <TouchButton
               variant="ghost"
               size="md"
-              onPress={() => console.log('收藏按钮被点击')}
+              onPress={() => {}}
             >
               <Star className="w-4 h-4 mr-2" />
               收藏

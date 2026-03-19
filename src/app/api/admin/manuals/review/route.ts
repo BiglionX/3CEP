@@ -115,7 +115,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `璇存槑{action === 'approve'  '宸查€氳繃' : '宸叉嫆}瀹℃牳`,
+      message: `璇存槑{action === 'approve' ? '宸查€氳繃' : '宸叉嫆}瀹℃牳`,
     });
   } catch (error: any) {
     console.error('瀹℃牳鎿嶄綔澶辫触:', error);

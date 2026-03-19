@@ -74,7 +74,7 @@ const TestComponentDemo = () => {
           resolve({
             id: testCase.id,
             name: testCase.name,
-            status: isSuccess  'passed' : 'failed',
+            status: isSuccess ? 'passed' : 'failed',
             duration,
             message: isSuccess
                '测试通过 '
@@ -173,7 +173,7 @@ const TestComponentDemo = () => {
               className="flex items-center gap-2"
             >"
               <Play className="h-4 w-4" />'
-              {isRunning  '测试进行..' : '运行所有测}
+              {isRunning ? '测试进行..' : '运行所有测}
             </Button>
 
             <Button

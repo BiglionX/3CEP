@@ -84,12 +84,10 @@ export default function ScanLandingPage() {
   const [lifecycleEvents, setLifecycleEvents] = useState<LifecycleEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
-  const [eventsLoading, setEventsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [detectedDevice, setDetectedDevice] =
     useState<DeviceDetectionResult | null>(null);
   const [currentLanguage, setCurrentLanguage] = useState('zh');
-  const [activeTab, setActiveTab] = useState('manuals');
 
   useEffect(() => {
     if (qrcodeId) {
@@ -120,7 +118,7 @@ export default function ScanLandingPage() {
         setProduct(data.product);
       }
     } catch (err) {
-      setError(err instanceof Error  err.message : '获取产品信息失败');
+      setError(err instanceof Error ? err.message : '获取产品信息失败');
     } finally {
       setLoading(false);
     }
@@ -177,7 +175,7 @@ export default function ScanLandingPage() {
       setError(null);
 
       const response = await fetch(
-        `/api/lifecycle/profileqrcodeId=${qrcodeId}`,
+        `/api/lifecycle/profile?qrcodeId=${qrcodeId}`,
         {
           headers: {
             Authorization: `Bearer ${
@@ -196,10 +194,9 @@ export default function ScanLandingPage() {
         setError(result.error || '获取设备档案失败');
       }
     } catch (err) {
-      setError(err instanceof Error  err.message : '网络错误');
+      setError(err instanceof Error ? err.message : '网络错误');
     } finally {
       setProfileLoading(false);
-      setEventsLoading(false);
     }
   };
 
@@ -238,7 +235,7 @@ export default function ScanLandingPage() {
 
   // 获取当前语言的说明书
   const getCurrentLanguageManuals = () => {
-    if (!product.manuals) return [];
+    if (!product || !product.manuals) return [];
     return product.manuals.filter(
       manual =>
         manual.is_published && manual.language_codes.includes(currentLanguage)
@@ -247,7 +244,6 @@ export default function ScanLandingPage() {
 
   // Tab切换时加载数据
   const handleTabChange = (value: string) => {
-    setActiveTab(value);
     if (value === 'archive' && !deviceProfile) {
       loadDeviceProfile();
     }
@@ -315,10 +311,10 @@ export default function ScanLandingPage() {
             <div className="mt-3 flex items-center space-x-3">
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  STATUS_COLORS[deviceProfile.currentStatus]
+                  STATUS_COLORS[deviceProfile?.currentStatus]
                 }`}
               >
-                {DEVICE_STATUS_LABELS[deviceProfile.currentStatus]}
+                {DEVICE_STATUS_LABELS[deviceProfile?.currentStatus]}
               </span>
               <span className="text-sm text-gray-500">
                 最后更新: {formatDate(deviceProfile.updatedAt)}
@@ -385,28 +381,28 @@ export default function ScanLandingPage() {
                     🎯 设备识别
                   </h3>
 
-                  {detectedDevice  (
+                  {detectedDevice ? (
                     <div className="bg-blue-50 rounded-lg p-4 mb-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium text-gray-800">
                             检测到您的设备:{' '}
                             <span className="text-blue-600">
-                              {detectedDevice.brand} {detectedDevice.model}
+                              {detectedDevice?.brand} {detectedDevice?.model}
                             </span>
                           </p>
                           <p className="text-sm text-gray-600">
-                            设备类型: {detectedDevice.deviceType} | 置信度:{' '}
-                            {detectedDevice.confidence}%
+                            设备类型: {detectedDevice?.deviceType} | 置信度:{' '}
+                            {detectedDevice?.confidence}%
                           </p>
                         </div>
                         <div className="text-2xl">
-                          {detectedDevice.brand === 'Apple'
-                             '🍎'
-                            : detectedDevice.brand === 'Samsung'
-                               '📱'
-                              : detectedDevice.deviceType === 'computer'
-                                 '💻'
+                          {detectedDevice?.brand === 'Apple'
+  ? '🍎'
+                            : detectedDevice?.brand === 'Samsung'
+  ? '📱'
+                              : detectedDevice?.deviceType === 'computer'
+  ? '💻'
                                 : '📱'}
                         </div>
                       </div>
@@ -457,9 +453,9 @@ export default function ScanLandingPage() {
                           )
                         }
                         className={`p-3 rounded-lg border-2 transition-all ${
-                          detectedDevice.brand === device.brand &&
-                          detectedDevice.model === device.model
-                             'border-blue-500 bg-blue-50'
+                          detectedDevice?.brand === device.brand &&
+                          detectedDevice?.model === device.model
+                            ? 'border-blue-500 bg-blue-50'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -485,7 +481,7 @@ export default function ScanLandingPage() {
                       onClick={() => switchLanguage('zh')}
                       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                         currentLanguage === 'zh'
-                           'bg-blue-500 text-white'
+  ? 'bg-blue-500 text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -495,7 +491,7 @@ export default function ScanLandingPage() {
                       onClick={() => switchLanguage('en')}
                       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                         currentLanguage === 'en'
-                           'bg-blue-500 text-white'
+  ? 'bg-blue-500 text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -539,7 +535,7 @@ export default function ScanLandingPage() {
                         </div>
                       </div>
 
-                      {getCurrentLanguageManuals()\.length > 0  \(
+                      {getCurrentLanguageManuals().length > 0 ? (
                         <div className="mb-4">
                           <div className="flex flex-wrap gap-2">
                             {getCurrentLanguageManuals().map(manual => (
@@ -569,15 +565,15 @@ export default function ScanLandingPage() {
                         className={`w-full py-3 rounded-lg font-medium transition-colors ${
                           detectedDevice &&
                           getCurrentLanguageManuals().length > 0
-                             'bg-blue-500 hover:bg-blue-600 text-white'
+                            ? 'bg-blue-500 hover:bg-blue-600 text-white'
                             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                         }`}
                       >
-                        {detectedDevice
-                           getCurrentLanguageManuals().length > 0
-                             '查看说明书'
-                            : '暂无说明书'
-                          : '请先识别设备'}
+                        {detectedDevice && getCurrentLanguageManuals().length > 0
+                          ? '查看说明书'
+                          : detectedDevice
+                            ? '暂无说明书'
+                            : '请先识别设备'}
                       </button>
                     </div>
                   </div>
@@ -615,11 +611,11 @@ export default function ScanLandingPage() {
                         disabled={!detectedDevice}
                         className={`w-full py-3 rounded-lg font-medium transition-colors ${
                           detectedDevice
-                             'bg-green-500 hover:bg-green-600 text-white'
+                            ? 'bg-green-500 hover:bg-green-600 text-white'
                             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                         }`}
                       >
-                        {detectedDevice  '开始诊断' : '请先识别设备'}
+                        {detectedDevice ? '开始诊断' : '请先识别设备'}
                       </button>
                     </div>
                   </div>
@@ -630,12 +626,12 @@ export default function ScanLandingPage() {
             {/* 设备档案 Tab */}
             <TabsContent value="archive">
               <div className="space-y-6">
-                {profileLoading  (
+                {profileLoading ? (
                   <div className="bg-white rounded-xl shadow-lg p-8 text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">正在加载设备档案...</p>
                   </div>
-                ) : error  (
+                ) : error ? (
                   <div className="bg-white rounded-xl shadow-lg p-8 text-center">
                     <div className="text-red-500 text-4xl mb-4">⚠️</div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -649,7 +645,7 @@ export default function ScanLandingPage() {
                       重新加载
                     </button>
                   </div>
-                ) : deviceProfile  (
+                ) : deviceProfile ? (
                   <>
                     {/* 设备档案摘要 */}
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -670,13 +666,13 @@ export default function ScanLandingPage() {
                                   产品型号
                                 </dt>
                                 <dd className="text-sm font-medium text-gray-900">
-                                  {deviceProfile.productModel}
+                                  {deviceProfile?.productModel}
                                 </dd>
                               </div>
                               <div>
                                 <dt className="text-sm text-gray-600">品牌</dt>
                                 <dd className="text-sm font-medium text-gray-900">
-                                  {deviceProfile.brandName || '未知'}
+                                  {deviceProfile?.brandName || '未知'}
                                 </dd>
                               </div>
                               <div>
@@ -684,7 +680,7 @@ export default function ScanLandingPage() {
                                   序列号
                                 </dt>
                                 <dd className="text-sm font-medium text-gray-900">
-                                  {deviceProfile.serialNumber || '无'}
+                                  {deviceProfile?.serialNumber || '无'}
                                 </dd>
                               </div>
                               <div>
@@ -692,7 +688,7 @@ export default function ScanLandingPage() {
                                   制造日期
                                 </dt>
                                 <dd className="text-sm font-medium text-gray-900">
-                                  {formatDate(deviceProfile.manufacturingDate)}
+                                  {formatDate(deviceProfile?.manufacturingDate)}
                                 </dd>
                               </div>
                             </dl>
@@ -710,12 +706,12 @@ export default function ScanLandingPage() {
                                 <dd>
                                   <span
                                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                      STATUS_COLORS[deviceProfile.currentStatus]
+                                      STATUS_COLORS[deviceProfile?.currentStatus]
                                     }`}
                                   >
                                     {
                                       DEVICE_STATUS_LABELS[
-                                        deviceProfile.currentStatus
+                                        deviceProfile?.currentStatus
                                       ]
                                     }
                                   </span>
@@ -726,7 +722,7 @@ export default function ScanLandingPage() {
                                   首次激活
                                 </dt>
                                 <dd className="text-sm font-medium text-gray-900">
-                                  {formatDate(deviceProfile.firstActivatedAt)}
+                                  {formatDate(deviceProfile?.firstActivatedAt)}
                                 </dd>
                               </div>
                               <div>
@@ -734,7 +730,7 @@ export default function ScanLandingPage() {
                                   最后事件
                                 </dt>
                                 <dd className="text-sm font-medium text-gray-900">
-                                  {formatDate(deviceProfile.lastEventAt)}
+                                  {formatDate(deviceProfile?.lastEventAt)}
                                 </dd>
                               </div>
                               <div>
@@ -742,7 +738,7 @@ export default function ScanLandingPage() {
                                   当前位置
                                 </dt>
                                 <dd className="text-sm font-medium text-gray-900">
-                                  {deviceProfile.currentLocation || '未知'}
+                                  {deviceProfile?.currentLocation || '未知'}
                                 </dd>
                               </div>
                             </dl>
@@ -757,7 +753,7 @@ export default function ScanLandingPage() {
                           <div className="grid grid-cols-3 gap-4">
                             <div className="text-center p-3 bg-blue-50 rounded-lg">
                               <div className="text-2xl font-bold text-blue-600">
-                                {deviceProfile.totalRepairCount}
+                                {deviceProfile?.totalRepairCount}
                               </div>
                               <div className="text-xs text-blue-500">
                                 维修次数
@@ -765,7 +761,7 @@ export default function ScanLandingPage() {
                             </div>
                             <div className="text-center p-3 bg-green-50 rounded-lg">
                               <div className="text-2xl font-bold text-green-600">
-                                {deviceProfile.totalPartReplacementCount}
+                                {deviceProfile?.totalPartReplacementCount}
                               </div>
                               <div className="text-xs text-green-500">
                                 换件次数
@@ -773,7 +769,7 @@ export default function ScanLandingPage() {
                             </div>
                             <div className="text-center p-3 bg-purple-50 rounded-lg">
                               <div className="text-2xl font-bold text-purple-600">
-                                {deviceProfile.totalTransferCount}
+                                {deviceProfile?.totalTransferCount}
                               </div>
                               <div className="text-xs text-purple-500">
                                 转移次数
@@ -832,7 +828,7 @@ export default function ScanLandingPage() {
                                     event.eventTimestamp
                                   ),
                                 }}
-                                onDetailClick={eventId => {
+                                onDetailClick={_eventId => {
                                   // TODO: 实现查看维修工单详情功能
                                 }}
                               />

@@ -26,6 +26,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { RepairShopSidebar } from '@/components/repair-shop/RepairShopSidebar';
+import { UnifiedNavbar } from '@/components/layout/UnifiedNavbar';
 
 interface CrowdfundingProject {
   id: string;
@@ -139,8 +141,10 @@ export default function CrowdfundingManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main>
+    <div className="flex min-h-screen bg-gray-50 flex-col">
+      <UnifiedNavbar />
+      <div className="flex flex-1">
+        <main className="flex-1">
           <div className="py-6 px-4 sm:px-6 lg:px-8">
             {/* 页面标题和操作按钮 */}
             <div className="flex items-center justify-between mb-6">
@@ -545,6 +549,7 @@ export default function CrowdfundingManagementPage() {
             </Card>
           </div>
         </main>
+      </div>
     </div>
   );
 }

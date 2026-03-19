@@ -136,7 +136,7 @@ export async function POST(request: Request) {
       message: 'ok',
       data: {
         is_favorite: isFavorite,
-        action: isFavorite  '鏀惰棌鎴愬姛' : '鍙栨秷鏀惰棌鎴愬姛',
+        action: isFavorite ? '鏀惰棌鎴愬姛' : '鍙栨秷鏀惰棌鎴愬姛',
       },
       timestamp: new Date().toISOString(),
     }) as any;

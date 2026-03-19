@@ -274,7 +274,7 @@ export async function GET(request: Request) {
 
 // 鐢熸垚璁㈠崟缂栧彿
 async function generateOrderNumber(type: 'import' | 'export'): Promise<string> {
-  const prefix = type === 'import'  'PO' : 'SO';
+  const prefix = type === 'import' ? 'PO' : 'SO';
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const random = Math.floor(Math.random() * 1000)
     .toString()

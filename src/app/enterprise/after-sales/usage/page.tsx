@@ -4,34 +4,26 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  BarChart3, 
-  Blockchain, 
-  RefreshCw, 
-  QrCode,
+import { Input } from '@/components/ui/input';
+import {
+  RefreshCw,
   TrendingUp,
-  TrendingDown,
   Activity,
   CheckCircle,
-  Clock,
   Eye,
   Download,
-  Calendar,
-  Filter,
   Search,
   Loader2,
   Hash,
   Package,
-  Users,
 } from 'lucide-react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   LineChart,
   Line,
@@ -124,7 +116,7 @@ export default function UsageStatsPage() {
   const usageRate = stats ? Math.round((stats.usedCodes / stats.totalCodes) * 100) : 0;
 
   // 过滤活动记录
-  const filteredActivity = recentActivity.filter(a => 
+  const filteredActivity = recentActivity.filter(a =>
     a.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
     a.productName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -291,27 +283,27 @@ export default function UsageStatsPage() {
                             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                             <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                             <YAxis tick={{ fontSize: 12 }} />
-                            <Tooltip 
-                              contentStyle={{ 
-                                background: '#fff', 
+                            <Tooltip
+                              contentStyle={{
+                                background: '#fff',
                                 border: '1px solid #e5e7eb',
                                 borderRadius: '8px'
                               }}
                             />
                             <Legend />
-                            <Line 
-                              type="monotone" 
-                              dataKey="scanned" 
+                            <Line
+                              type="monotone"
+                              dataKey="scanned"
                               name="扫码"
-                              stroke="#3b82f6" 
+                              stroke="#3b82f6"
                               strokeWidth={2}
                               dot={{ fill: '#3b82f6', r: 4 }}
                             />
-                            <Line 
-                              type="monotone" 
-                              dataKey="verified" 
+                            <Line
+                              type="monotone"
+                              dataKey="verified"
                               name="验证"
-                              stroke="#10b981" 
+                              stroke="#10b981"
                               strokeWidth={2}
                               dot={{ fill: '#10b981', r: 4 }}
                             />
@@ -339,18 +331,18 @@ export default function UsageStatsPage() {
                             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                             <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                             <YAxis tick={{ fontSize: 12 }} />
-                            <Tooltip 
-                              contentStyle={{ 
-                                background: '#fff', 
+                            <Tooltip
+                              contentStyle={{
+                                background: '#fff',
                                 border: '1px solid #e5e7eb',
                                 borderRadius: '8px'
                               }}
                             />
-                            <Bar 
-                              dataKey="bound" 
+                            <Bar
+                              dataKey="bound"
                               name="绑定"
-                              fill="#8b5cf6" 
-                              radius={[4, 4, 0, 0]} 
+                              fill="#8b5cf6"
+                              radius={[4, 4, 0, 0]}
                             />
                           </BarChart>
                         </ResponsiveContainer>
@@ -424,6 +416,5 @@ export default function UsageStatsPage() {
           </div>
         </main>
       </div>
-    </div>
   );
 }

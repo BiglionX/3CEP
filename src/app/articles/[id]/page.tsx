@@ -129,7 +129,7 @@ export default function ArticleDetailPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: liked  'unlike' : 'like',
+          action: liked ? 'unlike' : 'like',
         }),
       });
 
@@ -143,7 +143,7 @@ export default function ArticleDetailPage() {
         });
 
         // 显示操作反馈
-        const message = liked  '已取消点赞' : '点赞成功！';
+        const message = liked ? '已取消点赞' : '点赞成功！';
         // 这里可以添加一个临时的消息提示
         // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(message)} else {'
         console.error('点赞操作失败:', result.error);
@@ -358,12 +358,12 @@ export default function ArticleDetailPage() {
                 <button
                   onClick={handleLike}
                   className={`flex items-center text-sm ${
-                    liked  'text-red-500' : 'text-gray-500 hover:text-red-500'`
+                    liked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'`
                   }`}
                 >
                   <svg"
                     className="w-4 h-4 mr-1"'
-                    fill={liked  'currentColor' : 'none'}"
+                    fill={liked ? 'currentColor' : 'none'}"
                     stroke="currentColor""
                     viewBox="0 0 20 20"
                   >

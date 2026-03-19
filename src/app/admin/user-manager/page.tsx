@@ -1006,7 +1006,7 @@ export default function UserManager() {
                   >
                     取消
                   </Button>
-                  <Button>{dialogMode === 'edit'  '保存' : '创建'}</Button>
+                  <Button>{dialogMode === 'edit' ? '保存' : '创建'}</Button>
                 </div>
               )}
             </div>

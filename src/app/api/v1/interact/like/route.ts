@@ -123,8 +123,8 @@ export async function POST(request: Request) {
 
     // 鏇存柊鐩爣瀵硅薄鐨勭偣璧炴暟
     const targetTable =
-      target_type === 'article'  'articles' : 'hot_link_pool';
-    const likeField = target_type === 'article'  'like_count' : 'likes';
+      target_type === 'article' ? 'articles' : 'hot_link_pool';
+    const likeField = target_type === 'article' ? 'like_count' : 'likes';
 
     // 鑾峰彇褰撳墠鐐硅禐    const { data: targetData, error: targetError } = await supabase
       .from(targetTable)

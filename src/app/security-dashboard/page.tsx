@@ -13,14 +13,10 @@ import {
   Users,
   Globe,
   Clock,
-  TrendingUp,
-  TrendingDown,
   CheckCircle,
   XCircle,
-  Settings,
   RefreshCw,
   Bell,
-  Eye,
   Zap,
 } from 'lucide-react';
 
@@ -72,7 +68,7 @@ export default function SecurityMonitoringDashboard() {
     useState<SecurityDashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [refreshInterval, setRefreshInterval] = useState(30000); // 30秒刷新
+  const [refreshInterval] = useState(30000); // 30秒刷新
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   useEffect(() => {
@@ -89,7 +85,7 @@ export default function SecurityMonitoringDashboard() {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch('/api/security-monitoringaction=dashboard');
+      const response = await fetch('/api/security-monitoring?action=dashboard');
       const result = await response.json();
 
       if (result.success) {
@@ -127,7 +123,7 @@ export default function SecurityMonitoringDashboard() {
   };
 
   const getComplianceColor = (status: boolean) => {
-    return status  'text-green-600' : 'text-red-600';
+    return status ? 'text-green-600' : 'text-red-600';
   };
 
   if (isLoading && !dashboardData) {
@@ -174,7 +170,6 @@ export default function SecurityMonitoringDashboard() {
 
   const {
     threatMetrics,
-    userRiskProfiles,
     systemSecurityScore,
     recentAlerts,
     complianceStatus,
@@ -200,19 +195,19 @@ export default function SecurityMonitoringDashboard() {
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
                 <div
-                  className={`w-3 h-3 rounded-full ${autoRefresh  'bg-green-500' : 'bg-gray-400'}`}
+                  className={`w-3 h-3 rounded-full ${autoRefresh ? 'bg-green-500' : 'bg-gray-400'}`}
                 ></div>
                 <span className="text-sm text-gray-600">
-                  {autoRefresh  '自动刷新' : '手动刷新'}
+                  {autoRefresh ? '自动刷新' : '手动刷新'}
                 </span>
               </div>
 
               <button
                 onClick={() => setAutoRefresh(!autoRefresh)}
-                className={`p-2 rounded-lg ${autoRefresh  'bg-gray-100 hover:bg-gray-200' : 'bg-blue-100 hover:bg-blue-200'}`}
+                className={`p-2 rounded-lg ${autoRefresh ? 'bg-gray-100 hover:bg-gray-200' : 'bg-blue-100 hover:bg-blue-200'}`}
               >
                 <RefreshCw
-                  className={`w-4 h-4 ${autoRefresh  'text-gray-600' : 'text-blue-600'}`}
+                  className={`w-4 h-4 ${autoRefresh ? 'text-gray-600' : 'text-blue-600'}`}
                 />
               </button>
 
@@ -222,7 +217,7 @@ export default function SecurityMonitoringDashboard() {
                 className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
                 <RefreshCw
-                  className={`w-4 h-4 ${isLoading  'animate-spin' : ''}`}
+                  className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`}
                 />
                 <span>刷新</span>
               </button>
@@ -251,11 +246,11 @@ export default function SecurityMonitoringDashboard() {
               <div className="text-gray-600">
                 安全等级:{' '}
                 {systemSecurityScore >= 90
-                   '优秀'
+                  ? '优秀'
                   : systemSecurityScore >= 70
-                     '良好'
+                    ? '良好'
                     : systemSecurityScore >= 50
-                       '一般'
+                      ? '一般'
                       : '危险'}
               </div>
 
@@ -264,11 +259,11 @@ export default function SecurityMonitoringDashboard() {
                   <div
                     className={`h-2 rounded-full transition-all duration-500 ${
                       systemSecurityScore >= 90
-                         'bg-green-500'
+                        ? 'bg-green-500'
                         : systemSecurityScore >= 70
-                           'bg-yellow-500'
+                          ? 'bg-yellow-500'
                           : systemSecurityScore >= 50
-                             'bg-orange-500'
+                            ? 'bg-orange-500'
                             : 'bg-red-500'
                     }`}
                     style={{ width: `${systemSecurityScore}%` }}
@@ -288,10 +283,10 @@ export default function SecurityMonitoringDashboard() {
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.gdpr  'bg-green-100' : 'bg-red-100'
+                    complianceStatus.gdpr ? 'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.gdpr  (
+                  {complianceStatus.gdpr ? (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -301,17 +296,17 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.gdpr)}`}
                 >
-                  {complianceStatus.gdpr  '合规' : '不合规'}
+                  {complianceStatus.gdpr ? '合规' : '不合规'}
                 </div>
               </div>
 
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.pci  'bg-green-100' : 'bg-red-100'
+                    complianceStatus.pci ? 'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.pci  (
+                  {complianceStatus.pci ? (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -321,17 +316,17 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.pci)}`}
                 >
-                  {complianceStatus.pci  '合规' : '不合规'}
+                  {complianceStatus.pci ? '合规' : '不合规'}
                 </div>
               </div>
 
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.soc2  'bg-green-100' : 'bg-red-100'
+                    complianceStatus.soc2 ? 'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.soc2  (
+                  {complianceStatus.soc2 ? (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -341,17 +336,17 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.soc2)}`}
                 >
-                  {complianceStatus.soc2  '合规' : '不合规'}
+                  {complianceStatus.soc2 ? '合规' : '不合规'}
                 </div>
               </div>
 
               <div className="text-center">
                 <div
                   className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-2 ${
-                    complianceStatus.hipaa  'bg-green-100' : 'bg-red-100'
+                    complianceStatus.hipaa ? 'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {complianceStatus.hipaa  (
+                  {complianceStatus.hipaa ? (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600" />
@@ -361,7 +356,7 @@ export default function SecurityMonitoringDashboard() {
                 <div
                   className={`text-sm ${getComplianceColor(complianceStatus.hipaa)}`}
                 >
-                  {complianceStatus.hipaa  '合规' : '不合规'}
+                  {complianceStatus.hipaa ? '合规' : '不合规'}
                 </div>
               </div>
             </div>

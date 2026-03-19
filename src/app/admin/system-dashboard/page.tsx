@@ -195,7 +195,7 @@ export default function SystemDashboard() {
       });
 
       if (response.ok) {
-        alert(`告警{action === 'acknowledge'  '确认' : '解决'}`);
+        alert(`告警{action === 'acknowledge' ? '确认' : '解决'}`);
         fetchSystemAlerts(); // 刷新告警列表
       }
     } catch (error) {

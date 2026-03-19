@@ -285,7 +285,7 @@ export default function DeviceManager() {
          `/api/admin/devices/groups/${selectedGroup.id}`
         : '/api/admin/devices/groups';
 
-      const method = selectedGroup  'PUT' : 'POST';
+      const method = selectedGroup ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -294,7 +294,7 @@ export default function DeviceManager() {
       });
 
       if (response.ok) {
-        alert(selectedGroup  '分组更新成功' : '分组创建成功');
+        alert(selectedGroup ? '分组更新成功' : '分组创建成功');
         setIsGroupDialogOpen(false);
         fetchGroups();
       } else {
@@ -345,7 +345,7 @@ export default function DeviceManager() {
          `/api/admin/devices/tags/${selectedTag.id}`
         : '/api/admin/devices/tags';
 
-      const method = selectedTag  'PUT' : 'POST';
+      const method = selectedTag ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -354,7 +354,7 @@ export default function DeviceManager() {
       });
 
       if (response.ok) {
-        alert(selectedTag  '标签更新成功' : '标签创建成功');
+        alert(selectedTag ? '标签更新成功' : '标签创建成功');
         setIsTagDialogOpen(false);
         fetchTags();
       } else {
@@ -1153,7 +1153,7 @@ export default function DeviceManager() {
                   >
                     取消
                   </Button>
-                  <Button>{dialogMode === 'edit'  '保存' : '创建'}</Button>
+                  <Button>{dialogMode === 'edit' ? '保存' : '创建'}</Button>
                 </div>
               )}
             </div>
@@ -1165,7 +1165,7 @@ export default function DeviceManager() {
       <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedGroup  '编辑分组' : '创建分组'}</DialogTitle>
+            <DialogTitle>{selectedGroup ? '编辑分组' : '创建分组'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -1228,7 +1228,7 @@ export default function DeviceManager() {
               取消
             </Button>
             <Button onClick={handleSaveGroup}>
-              {selectedGroup  '保存' : '创建'}
+              {selectedGroup ? '保存' : '创建'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1238,7 +1238,7 @@ export default function DeviceManager() {
       <Dialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedTag  '编辑标签' : '创建标签'}</DialogTitle>
+            <DialogTitle>{selectedTag ? '编辑标签' : '创建标签'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -1284,7 +1284,7 @@ export default function DeviceManager() {
               取消
             </Button>
             <Button onClick={handleSaveTag}>
-              {selectedTag  '保存' : '创建'}
+              {selectedTag ? '保存' : '创建'}
             </Button>
           </DialogFooter>
         </DialogContent>

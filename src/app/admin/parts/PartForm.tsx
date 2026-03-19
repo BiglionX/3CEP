@@ -99,7 +99,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => { // @ts-igno
     
     try {
       const url = part  `/api/admin/parts/${part.id}` : '/api/admin/parts';
-      const method = part  'PUT' : 'POST';
+      const method = part ? 'PUT' : 'POST';
       
       const response = await fetch(url, {
         method,
@@ -365,7 +365,7 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => { // @ts-igno
           取消
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading  '保存..' : (part  '更新' : '创建')}
+          {loading ? '保存..' : (part ? '更新' : '创建')}
         </Button>
       </div>
     </form>

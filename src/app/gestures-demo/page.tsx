@@ -153,7 +153,7 @@ export default function GesturesDemoPage() {
                       <div key={gesture} className="flex items-center gap-2">
                         <Badge
                           variant={
-                            gestureStats[gesture]  'default' : 'secondary'
+                            gestureStats[gesture] ? 'default' : 'secondary'
                           }
                           className="capitalize"
                         >

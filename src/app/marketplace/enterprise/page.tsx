@@ -667,9 +667,9 @@ export default function EnterprisePage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">自动续费</span>
                   <span
-                    className={`font-medium ${subscription.auto_renew  'text-green-600' : 'text-gray-600'}`}
+                    className={`font-medium ${subscription.auto_renew ? 'text-green-600' : 'text-gray-600'}`}
                   >
-                    {subscription.auto_renew  '开启' : '关闭'}
+                    {subscription.auto_renew ? '开启' : '关闭'}
                   </span>
                 </div>
                 <div className="flex justify-between">

@@ -127,7 +127,7 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
           <div>
             <p className="text-sm text-gray-500">当前库存</p>
             <p
-              className={`font-medium ${part.stock_quantity !== null && part.min_stock !== null && part.stock_quantity <= part.min_stock  'text-red-600' : 'text-gray-900'}`}
+              className={`font-medium ${part.stock_quantity !== null && part.min_stock !== null && part.stock_quantity <= part.min_stock ? 'text-red-600' : 'text-gray-900'}`}
             >
               {part.stock_quantity !== null  part.stock_quantity : 0}
               {part.unit || '}
@@ -314,7 +314,7 @@ const PartDetail = ({ partId, onClose }: PartDetailProps) => {
                           : 'text-red-600'
                       }`}
                     >
-                      {record.quantity_change > 0  '+' : ''}
+                      {record.quantity_change > 0 ? '+' : ''}
                       {record.quantity_change}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900">

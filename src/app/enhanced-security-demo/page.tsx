@@ -128,7 +128,7 @@ function SecurityDemo() {
               {['admin', 'manager', 'viewer', 'external_partner'].map(role => (
                 <Button
                   key={role}
-                  variant={currentUserRole === role  'default' : 'outline'}
+                  variant={currentUserRole === role ? 'default' : 'outline'}
                   onClick={() => setCurrentUserRole(role)}
                   className="capitalize"
                 >
@@ -441,7 +441,7 @@ function SecurityDemo() {
                             <XCircle className="w-4 h-4 text-red-500" />
                           )}
                           <span className="text-sm">
-                            {hashDemo.verified  '验证通过' : '验证失败'}
+                            {hashDemo.verified ? '验证通过' : '验证失败'}
                           </span>
                         </div>
                       </div>

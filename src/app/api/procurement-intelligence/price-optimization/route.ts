@@ -839,7 +839,7 @@ function createCommodityStrategy(
     commodity,
     currentPrice: currentPrices.current,
     trend: trendAnalysis.trend,
-    recommendedAction: trendAnalysis.trend === 'down'  'BUY' : 'HOLD',
+    recommendedAction: trendAnalysis.trend === 'down' ? 'BUY' : 'HOLD',
     budgetAllocation: Math.min(
       budgetConstraints.maxAllocation || 100000,
       currentPrices.current * 1000

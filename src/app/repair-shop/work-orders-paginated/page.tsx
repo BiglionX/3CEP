@@ -24,9 +24,7 @@ import {
   Filter,
   User,
   Phone,
-  Calendar,
   Wrench,
-  ChevronDown,
   Loader2,
 } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
@@ -67,8 +65,8 @@ export default function WorkOrderListWithPagination({
     pageSize
   );
 
-  const workOrders: WorkOrder[] = data.data || [];
-  const pagination = data.pagination || {
+  const workOrders: WorkOrder[] = data?.data || [];
+  const pagination = data?.pagination || {
     currentPage,
     pageSize,
     total: workOrders.length,
@@ -224,12 +222,12 @@ export default function WorkOrderListWithPagination({
             <CardDescription>管理所有维修工单的状态和进度</CardDescription>
           </CardHeader>
           <CardContent>
-            {isLoading  (
+            {isLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
                 <span className="ml-2 text-gray-600">加载中...</span>
               </div>
-            ) : isError  (
+            ) : isError ? (
               <div className="text-center py-12">
                 <div className="text-red-500 mb-2">
                   <FileText className="mx-auto h-12 w-12" />
@@ -257,7 +255,7 @@ export default function WorkOrderListWithPagination({
                   {searchTerm ||
                   statusFilter !== 'all' ||
                   priorityFilter !== 'all'
-                     '没有找到匹配的工单'
+                    ? '没有找到匹配的工单'
                     : '开始创建第一个工单吧'}
                 </p>
                 {!searchTerm &&
@@ -293,26 +291,26 @@ export default function WorkOrderListWithPagination({
                           </span>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status === 'in_progress'
-                               '进行中'
+                              ? '进行中'
                               : order.status === 'pending'
-                                 '待处理'
+                                ? '待处理'
                                 : order.status === 'completed'
-                                   '已完成'
+                                  ? '已完成'
                                   : order.status === 'cancelled'
-                                     '已取消'
+                                    ? '已取消'
                                     : order.status === 'on_hold'
-                                       '暂停'
+                                      ? '暂停'
                                       : order.status}
                           </Badge>
                           <Badge className={getPriorityColor(order.priority)}>
                             {order.priority === 'high'
-                               '紧急'
+                              ? '紧急'
                               : order.priority === 'medium'
-                                 '中等'
+                                ? '中等'
                                 : order.priority === 'low'
-                                   '普通'
+                                  ? '普通'
                                   : order.priority === 'urgent'
-                                     '特急'
+                                    ? '特急'
                                     : order.priority}
                           </Badge>
                         </div>

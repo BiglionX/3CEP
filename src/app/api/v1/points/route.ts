@@ -433,6 +433,6 @@ function getDefaultDescription(action: string, amount: number) {
   };
 
   const baseDesc = actionDescriptions[action] || '绉垎鍙樺姩';
-  return `${baseDesc} ${amount > 0  '+' : ''}${amount}绉垎`;
+  return `${baseDesc} ${amount > 0 ? '+' : ''}${amount}绉垎`;
 }
 

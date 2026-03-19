@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
             trends: Object.keys(mockMetrics).reduce(
               (acc, key) => {
                 acc[key as keyof typeof mockMetrics] =
-                  Math.random() > 0.5  'up' : 'stable';
+                  Math.random() > 0.5 ? 'up' : 'stable';
                 return acc;
               },
               {} as Record<keyof typeof mockMetrics, 'up' | 'down' | 'stable'>

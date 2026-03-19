@@ -77,11 +77,11 @@ export default function EnterpriseDemoPage() {
       title: '状,
       render: (value: string) => (
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          value === 'active'  'bg-green-100 text-green-800' :
-          value === 'pending'  'bg-yellow-100 text-yellow-800' :
+          value === 'active' ? 'bg-green-100 text-green-800' :
+          value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
           'bg-gray-100 text-gray-800'
         }`}>
-          {value === 'active'  '运行 : value === 'pending'  '待启 : '已停}
+          {value === 'active' ? '运行 : value === 'pending' ? '待启 : '已停}
         </span>
       )
     },
@@ -290,11 +290,11 @@ export default function EnterpriseDemoPage() {
                   { key: 'amount', title: '金额', render: (value: number) => `¥${value.toLocaleString()}` },
                   { key: 'status', title: '状, render: (value: string) => (
                     <span className={`px-2 py-1 rounded text-xs ${
-                      value === 'pending'  'bg-yellow-100 text-yellow-800' :
-                      value === 'approved'  'bg-green-100 text-green-800' :
+                      value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                      value === 'approved' ? 'bg-green-100 text-green-800' :
                       'bg-gray-100 text-gray-800'
                     }`}>
-                      {value === 'pending'  '待审 : value === 'approved'  '已批 : '未知'}
+                      {value === 'pending' ? '待审 : value === 'approved' ? '已批 : '未知'}
                     </span>
                   )},
                   { key: 'date', title: '日期' }

@@ -7,20 +7,18 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { 
-  BarChart3, 
-  Blockchain, 
-  RefreshCw, 
-  ShoppingCart, 
+import {
+  RefreshCw,
+  ShoppingCart,
   DollarSign,
   Package,
   CheckCircle,
@@ -29,12 +27,6 @@ import {
   Loader2,
   CreditCard,
   Wallet,
-  Users,
-  TrendingUp,
-  Plus,
-  Filter,
-  Search,
-  ExternalLink,
 } from 'lucide-react';
 
 interface Product {
@@ -82,7 +74,7 @@ export default function PurchasePage() {
   const [orderStats, setOrderStats] = useState<OrderStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('products');
-  
+
   // 购买对话框
   const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -309,7 +301,7 @@ export default function PurchasePage() {
                               )}
                             </div>
                           </div>
-                          <Dialog 
+                          <Dialog
                             open={purchaseDialogOpen && selectedProduct?.id === product.id}
                             onOpenChange={(open) => {
                               setPurchaseDialogOpen(open);
@@ -318,7 +310,7 @@ export default function PurchasePage() {
                             }}
                           >
                             <DialogTrigger asChild>
-                              <Button 
+                              <Button
                                 className="w-full bg-purple-600 hover:bg-purple-700"
                                 disabled={product.status !== 'available'}
                               >
@@ -457,7 +449,7 @@ export default function PurchasePage() {
                       <div className="text-center py-12">
                         <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                         <p className="text-gray-500">暂无订单记录</p>
-                        <Button 
+                        <Button
                           className="mt-4 bg-purple-600 hover:bg-purple-700"
                           onClick={() => setActiveTab('products')}
                         >
@@ -472,6 +464,5 @@ export default function PurchasePage() {
           </div>
         </main>
       </div>
-    </div>
   );
 }

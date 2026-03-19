@@ -19,7 +19,7 @@ export default function MigrationTestPage() {
       // 测试2: 检查顶部导航是否存      const topbarExists = document.querySelector('header.bg-white.border-b');
       results.push({
         test: '统一顶部导航',
-        status: topbarExists  '通过' : '失败',
+        status: topbarExists ? '通过' : '失败',
         description: topbarExists
            'RoleAwareTopbar组件已正确加
           : '未找到统一顶部导航',
@@ -31,7 +31,7 @@ export default function MigrationTestPage() {
       );
       results.push({
         test: '登录状态控,
-        status: hasLoginButton  '待验 : '待验,
+        status: hasLoginButton ? '待验 : '待验,
         description: '请手动检查右上角是否显示正确的登用户状态控,
       });
 

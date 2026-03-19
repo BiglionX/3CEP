@@ -272,8 +272,7 @@ const PartsManagement = () => { // @ts-ignore
                     </TableCell>
                     <TableCell>{part.part_number || '-'}</TableCell>
                     <TableCell>
-                      <div className={part.stock_quantity !== null && part.min_stock !== null && part.stock_quantity <= part.min_stock 
-                         'text-red-600 font-medium' 
+                      <div className={part.stock_quantity !== null && part.min_stock !== null && part.stock_quantity <= part.min_stock ? 'text-red-600 font-medium' 
                         : 'text-gray-900'}>
                         {part.stock_quantity !== null  part.stock_quantity : 0}
                         {part.unit || '}
@@ -284,12 +283,12 @@ const PartsManagement = () => { // @ts-ignore
                     </TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs ${
-                        part.status === 'active'  'bg-green-100 text-green-800' :
-                        part.status === 'inactive'  'bg-yellow-100 text-yellow-800' :
+                        part.status === 'active' ? 'bg-green-100 text-green-800' :
+                        part.status === 'inactive' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
                       }`}>
-                        {part.status === 'active'  '正常' : 
-                         part.status === 'inactive'  '停用' : '已删}
+                        {part.status === 'active' ? '正常' : 
+                         part.status === 'inactive' ? '停用' : '已删}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -364,7 +363,7 @@ const PartsManagement = () => { // @ts-ignore
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingPart  '编辑配件' : '新增配件'}</DialogTitle>
+            <DialogTitle>{editingPart ? '编辑配件' : '新增配件'}</DialogTitle>
           </DialogHeader>
           <PartForm 
             part={editingPart} 
@@ -451,12 +450,12 @@ const ImportForm = ({ onSuccess }: { onSuccess: () => void }) => {
         disabled={!file || loading}
         className="w-full"
       >
-        {loading  '导入..' : '开始导}
+        {loading ? '导入..' : '开始导}
       </Button>
       
       {result && (
-        <div className={`p-4 rounded-md ${result.success  'bg-green-50' : 'bg-red-50'}`}>
-          <h4 className={`font-medium ${result.success  'text-green-800' : 'text-red-800'}`}>
+        <div className={`p-4 rounded-md ${result.success ? 'bg-green-50' : 'bg-red-50'}`}>
+          <h4 className={`font-medium ${result.success ? 'text-green-800' : 'text-red-800'}`}>
             导入结果
           </h4>
           <p className="mt-1 text-sm">

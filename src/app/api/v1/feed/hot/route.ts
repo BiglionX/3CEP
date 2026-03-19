@@ -59,7 +59,7 @@ export async function GET(request: Request) {
     // 澶勭悊鏁版嵁鏍煎紡杞崲
     const formattedData = (hotLinks || []).map((link: any) => ({
       id: link.id,
-      type: link.article_id  'article' : 'hot_link',
+      type: link.article_id ? 'article' : 'hot_link',
       title: link.title,
       url: link.article_id  `/articles/${link.article_id}` : link.url,
       source: link.source,

@@ -249,14 +249,14 @@ export default function PerformanceMonitoringDashboard() {
 
             <div className="flex items-center gap-3">
               <Button
-                variant={realTimeEnabled  'default' : 'outline'}
+                variant={realTimeEnabled ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setRealTimeEnabled(!realTimeEnabled)}
               >
                 <Activity
-                  className={`h-4 w-4 mr-2 ${realTimeEnabled  'animate-pulse' : ''}`}
+                  className={`h-4 w-4 mr-2 ${realTimeEnabled ? 'animate-pulse' : ''}`}
                 />
-                {realTimeEnabled  '实时监控' : '手动刷新'}
+                {realTimeEnabled ? '实时监控' : '手动刷新'}
               </Button>
 
               <Button
@@ -266,7 +266,7 @@ export default function PerformanceMonitoringDashboard() {
                 disabled={loading}
               >
                 <Zap
-                  className={`h-4 w-4 mr-2 ${loading  'animate-spin' : ''}`}
+                  className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`}
                 />
                 刷新数据
               </Button>

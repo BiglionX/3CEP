@@ -197,7 +197,7 @@ export default function TeamManagementPage() {
                               : 'bg-gray-100 text-gray-800'
                           }`}
                         >
-                          {team.status === 'active'  '活跃' : '已归档'}
+                          {team.status === 'active' ? '活跃' : '已归档'}
                         </span>
                       </div>
                       <p className="text-gray-600 text-sm mb-4 line-clamp-2">

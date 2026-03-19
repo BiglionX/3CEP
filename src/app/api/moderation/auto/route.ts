@@ -324,11 +324,11 @@ export async function PUT(request: NextRequest) {
 
         if (toggleSuccess) {
           logger.info(
-            `Moderation rule ${ruleId} ${rule.enabled  'disabled' : 'enabled'}`
+            `Moderation rule ${ruleId} ${rule.enabled ? 'disabled' : 'enabled'}`
           );
           return NextResponse.json({
             success: true,
-            message: `瀹℃牳瑙勫垯{rule.enabled  '绂佺敤' : '鍚敤'}`,
+            message: `瀹℃牳瑙勫垯{rule.enabled ? '绂佺敤' : '鍚敤'}`,
             rule_id: ruleId,
             enabled: !rule.enabled,
             timestamp: new Date().toISOString(),

@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import {
   AlertCircle,
   BarChart3,
+  CheckCircle,
+  Clock,
   Headphones,
   Package,
   Plus,

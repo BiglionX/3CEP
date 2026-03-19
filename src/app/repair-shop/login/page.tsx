@@ -10,8 +10,9 @@ export default function LoginPage() {
 
   const handleLoginSuccess = (user: any) => {
     // 登录成功处理逻辑
+    // eslint-disable-next-line no-console
     console.log('登录成功:', user);
-    
+
     if (redirect.startsWith('/admin') && !user.is_admin) {
       router.push('/unauthorized');
       return;

@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
 
       return new NextResponse(exportedData, {
         headers: {
-          'Content-Type': format === 'csv'  'text/csv' : 'application/json',
+          'Content-Type': format === 'csv' ? 'text/csv' : 'application/json',
           'Content-Disposition': `attachment; filename=data-export.${format}`,
         },
       });

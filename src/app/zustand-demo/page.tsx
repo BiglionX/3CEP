@@ -212,7 +212,7 @@ export default function ZustandDemoPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {user.isAuthenticated  '已登录' : '未登录'}
+                    {user.isAuthenticated ? '已登录' : '未登录'}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {user.name || '访客'}
@@ -256,7 +256,7 @@ export default function ZustandDemoPage() {
                     {ui.theme}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {ui.sidebarCollapsed  '侧边栏折叠' : '侧边栏展开'}
+                    {ui.sidebarCollapsed ? '侧边栏折叠' : '侧边栏展开'}
                   </p>
                 </CardContent>
               </Card>
@@ -300,7 +300,7 @@ export default function ZustandDemoPage() {
                       variant="secondary"
                       className="flex-1"
                     >
-                      {ui.loading  '停止加载' : '开始加载'}
+                      {ui.loading ? '停止加载' : '开始加载'}
                     </Button>
                   </div>
                 </CardContent>
@@ -315,7 +315,7 @@ export default function ZustandDemoPage() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="theme-light">浅色模式</Label>
                     <Button
-                      variant={ui.theme === 'light'  'default' : 'outline'}
+                      variant={ui.theme === 'light' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setTheme('light')}
                     >
@@ -327,7 +327,7 @@ export default function ZustandDemoPage() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="theme-dark">深色模式</Label>
                     <Button
-                      variant={ui.theme === 'dark'  'default' : 'outline'}
+                      variant={ui.theme === 'dark' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setTheme('dark')}
                     >
@@ -339,7 +339,7 @@ export default function ZustandDemoPage() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="theme-system">跟随系统</Label>
                     <Button
-                      variant={ui.theme === 'system'  'default' : 'outline'}
+                      variant={ui.theme === 'system' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setTheme('system')}
                     >
@@ -517,10 +517,10 @@ export default function ZustandDemoPage() {
                           ¥{product.price.toFixed(2)}
                         </p>
                         <Badge
-                          variant={product.inStock  'default' : 'secondary'}
+                          variant={product.inStock ? 'default' : 'secondary'}
                           className="mt-2"
                         >
-                          {product.inStock  '有库存' : '缺货'}
+                          {product.inStock ? '有库存' : '缺货'}
                         </Badge>
                         <Button
                           onClick={() => handleAddToCart(product)}
@@ -578,7 +578,7 @@ export default function ZustandDemoPage() {
                         key={notification.id}
                         className={`p-4 rounded-lg border ${
                           notification.read
-                             'bg-gray-50'
+                            ? 'bg-gray-50'
                             : 'bg-blue-50 border-blue-200'
                         }`}
                       >
@@ -739,7 +739,7 @@ export default function ZustandDemoPage() {
                         <Label>显示模式</Label>
                         <Button
                           variant={
-                            products.viewMode === 'grid'  'default' : 'outline'
+                            products.viewMode === 'grid' ? 'default' : 'outline'
                           }
                           size="sm"
                           onClick={() => setViewMode('grid')}
@@ -749,7 +749,7 @@ export default function ZustandDemoPage() {
                         </Button>
                         <Button
                           variant={
-                            products.viewMode === 'list'  'default' : 'outline'
+                            products.viewMode === 'list' ? 'default' : 'outline'
                           }
                           size="sm"
                           onClick={() => setViewMode('list')}
@@ -774,7 +774,7 @@ export default function ZustandDemoPage() {
                     <div
                       className={
                         products.viewMode === 'grid'
-                           'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+                          ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
                           : 'space-y-3'
                       }
                     >
@@ -783,7 +783,7 @@ export default function ZustandDemoPage() {
                           key={product.id}
                           className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                             products.selectedProducts.includes(product.id)
-                               'ring-2 ring-blue-500 bg-blue-50'
+                              ? 'ring-2 ring-blue-500 bg-blue-50'
                               : 'hover:bg-gray-50'
                           }`}
                           onClick={() => toggleProductSelection(product.id)}
@@ -796,7 +796,7 @@ export default function ZustandDemoPage() {
                                     products.selectedProducts.includes(
                                       product.id
                                     )
-                                       'bg-blue-500 border-blue-500'
+                                      ? 'bg-blue-500 border-blue-500'
                                       : 'border-gray-300'
                                   }`}
                                 >
@@ -814,10 +814,10 @@ export default function ZustandDemoPage() {
                                 <h3 className="font-medium">{product.name}</h3>
                                 <Badge
                                   variant={
-                                    product.inStock  'default' : 'secondary'
+                                    product.inStock ? 'default' : 'secondary'
                                   }
                                 >
-                                  {product.inStock  '有库存' : '缺货'}
+                                  {product.inStock ? '有库存' : '缺货'}
                                 </Badge>
                               </div>
                               <p className="text-sm text-gray-500 mt-1">
@@ -851,7 +851,7 @@ export default function ZustandDemoPage() {
                           onChange={e =>
                             updateProductFilters({
                               minPrice: e.target.value
-                                 parseFloat(e.target.value)
+                                ? parseFloat(e.target.value)
                                 : undefined,
                             })
                           }
@@ -864,7 +864,7 @@ export default function ZustandDemoPage() {
                           onChange={e =>
                             updateProductFilters({
                               maxPrice: e.target.value
-                                 parseFloat(e.target.value)
+                                ? parseFloat(e.target.value)
                                 : undefined,
                             })
                           }

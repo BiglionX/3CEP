@@ -390,7 +390,7 @@ async function checkModelConnection(): Promise<{
 
     return {
       connected: true,
-      model: process.env.DEEPSEEK_API_KEY  'deepseek-chat' : 'qwen-plus',
+      model: process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'qwen-plus',
     };
   } catch (error: any) {
     return { connected: false, error: error.message };

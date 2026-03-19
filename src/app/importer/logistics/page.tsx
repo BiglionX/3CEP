@@ -478,7 +478,7 @@ export default function LogisticsPage() {
                             <div className="flex flex-col items-center">
                               <div
                                 className={`w-3 h-3 rounded-full ${
-                                  index === 0  'bg-blue-500' : 'bg-gray-300'
+                                  index === 0 ? 'bg-blue-500' : 'bg-gray-300'
                                 }`}
                               ></div>
                               {index < selectedShipment.events.length - 1 && (

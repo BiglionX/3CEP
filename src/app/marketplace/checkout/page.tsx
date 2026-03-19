@@ -117,7 +117,7 @@ export default function CheckoutPage() {
 
   const handlePayment = () => {
     // 模拟支付处理
-    alert(`使用${paymentMethod === 'alipay'  '支付宝' : '微信支付'}完成支付`);
+    alert(`使用${paymentMethod === 'alipay' ? '支付宝' : '微信支付'}完成支付`);
     router.push('/marketplace/orders');
   };
 
@@ -197,7 +197,7 @@ export default function CheckoutPage() {
                     {step < 3 && (
                       <div
                         className={`w-16 h-1 mx-2 ${
-                          currentStep > step  'bg-blue-600' : 'bg-gray-200'
+                          currentStep > step ? 'bg-blue-600' : 'bg-gray-200'
                         }`}
                       ></div>
                     )}
@@ -456,11 +456,11 @@ export default function CheckoutPage() {
                   <h3 className="font-medium text-gray-900 mb-3">支付方式</h3>
                   <div className="flex items-center">
                     <div className="text-2xl mr-3">
-                      {paymentMethod === 'alipay'  '📱' : '💬'}
+                      {paymentMethod === 'alipay' ? '📱' : '💬'}
                     </div>
                     <div>
                       <div className="font-medium text-gray-900">
-                        {paymentMethod === 'alipay'  '支付宝' : '微信支付'}
+                        {paymentMethod === 'alipay' ? '支付宝' : '微信支付'}
                       </div>
                       <div className="text-sm text-gray-600">
                         安全快捷的移动支付

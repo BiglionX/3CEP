@@ -82,7 +82,7 @@ export async function POST(
       try {
         // 模拟执行结果
         const executionResult = {
-          status: Math.random() > 0.1  'completed' : 'failed',
+          status: Math.random() > 0.1 ? 'completed' : 'failed',
           output_data: {
             result: 'success',
             data: { message: '工作流执行完成', timestamp: new Date().toISOString() }

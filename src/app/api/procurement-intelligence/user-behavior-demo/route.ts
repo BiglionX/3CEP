@@ -108,7 +108,7 @@ function generateDemoData(userId: string): void {
       eventName: 'page_view',
       pageUrl: page,
 
-      referrer: index === 0  '' : pages[index - 1],
+      referrer: index === 0 ? '' : pages[index - 1],
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       ipAddress: '192.168.1.100',
       deviceInfo: {

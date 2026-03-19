@@ -212,7 +212,7 @@ export default function EmailLoginJumpDebug() {
                   disabled={isLoggingIn}
                   className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white py-3 px-4 rounded-lg font-medium transition-colors"
                 >
-                  {isLoggingIn  '测试进行..' : '执行邮箱登录跳转测试'}
+                  {isLoggingIn ? '测试进行..' : '执行邮箱登录跳转测试'}
                 </button>
 
                 <button

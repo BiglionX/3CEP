@@ -211,14 +211,14 @@ export default function BehaviorTrackingDashboard() {
 
             <div className="flex items-center gap-3">
               <Button
-                variant={realTimeEnabled  'default' : 'outline'}
+                variant={realTimeEnabled ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setRealTimeEnabled(!realTimeEnabled)}
               >
                 <RefreshCw
-                  className={`h-4 w-4 mr-2 ${realTimeEnabled  'animate-spin' : ''}`}
+                  className={`h-4 w-4 mr-2 ${realTimeEnabled ? 'animate-spin' : ''}`}
                 />
-                {realTimeEnabled  '实时更新' : '手动刷新'}
+                {realTimeEnabled ? '实时更新' : '手动刷新'}
               </Button>
 
               <Button
@@ -228,7 +228,7 @@ export default function BehaviorTrackingDashboard() {
                 disabled={loading}
               >
                 <RefreshCw
-                  className={`h-4 w-4 mr-2 ${loading  'animate-spin' : ''}`}
+                  className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`}
                 />
                 刷新
               </Button>
@@ -369,7 +369,7 @@ export default function BehaviorTrackingDashboard() {
                   disabled={loading}
                 >
                   <RefreshCw
-                    className={`h-4 w-4 mr-2 ${loading  'animate-spin' : ''}`}
+                    className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`}
                   />
                   应用过滤
                 </Button>

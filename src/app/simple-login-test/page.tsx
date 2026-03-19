@@ -86,13 +86,13 @@ export default function SimpleLoginTest() {
           style={{
             width: '100%',
             padding: '10px',
-            backgroundColor: loading  '#ccc' : '#007bff',
+            backgroundColor: loading ? '#ccc' : '#007bff',
             color: 'white',
             border: 'none',
-            cursor: loading  'not-allowed' : 'pointer',
+            cursor: loading ? 'not-allowed' : 'pointer',
           }}
         >
-          {loading  '登录中...' : '登录'}
+          {loading ? '登录中...' : '登录'}
         </button>
       </form>
       <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>

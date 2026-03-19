@@ -201,7 +201,7 @@ export default function TeamDetailPage() {
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(team.status)}`}
               >
-                {team.status === 'active'  '活跃' : '已归档'}
+                {team.status === 'active' ? '活跃' : '已归档'}
               </span>
               <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
                 <MoreHorizontal className="w-5 h-5" />

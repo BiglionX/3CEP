@@ -276,8 +276,8 @@ export default function DataSourcesPage() {
                 <div className="flex items-center space-x-2">
                   {getStatusIcon(source.status)}
                   <Badge variant={
-                    source.status === 'connected'  'default' : 
-                    source.status === 'error'  'destructive' : 'secondary'
+                    source.status === 'connected' ? 'default' : 
+                    source.status === 'error' ? 'destructive' : 'secondary'
                   }>
                     {getStatusText(source.status)}
                   </Badge>

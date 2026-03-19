@@ -103,7 +103,7 @@ export default function ProcurementManagementPage() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
         search: searchTerm,
-        status: statusFilter === 'all'  '' : statusFilter,
+        status: statusFilter === 'all' ? '' : statusFilter,
       });
 
       const response = await fetch(`/api/admin/procurement/orders${params}`);
@@ -197,7 +197,7 @@ export default function ProcurementManagementPage() {
          `/api/admin/procurement/orders/${editingOrder.id}`
         : '/api/admin/procurement/orders';
 
-      const method = editingOrder.id  'PUT' : 'POST';
+      const method = editingOrder.id ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -209,7 +209,7 @@ export default function ProcurementManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert(editingOrder.id  '采购订单更新成功' : '采购订单创建成功');
+        alert(editingOrder.id ? '采购订单更新成功' : '采购订单创建成功');
         setShowOrderDialog(false);
         setEditingOrder(null);
         fetchOrders();
@@ -609,7 +609,7 @@ export default function ProcurementManagementPage() {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingOrder.id  '编辑采购订单' : '新建采购订单'}
+              {editingOrder.id ? '编辑采购订单' : '新建采购订单'}
             </DialogTitle>
           </DialogHeader>
 
@@ -706,7 +706,7 @@ export default function ProcurementManagementPage() {
               取消
             </Button>
             <Button onClick={saveOrder}>
-              {editingOrder.id  '保存更改' : '创建订单'}
+              {editingOrder.id ? '保存更改' : '创建订单'}
             </Button>
           </DialogFooter>
         </DialogContent>

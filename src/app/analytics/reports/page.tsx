@@ -167,7 +167,7 @@ export default function AnalyticsReportsPage() {
                 disabled={loading || !selectedTemplate}
                 className="flex-1"
               >
-                {loading  '生成..' : '生成报表'}
+                {loading ? '生成..' : '生成报表'}
               </Button>
               <Button variant="outline" onClick={() => setReportData(null)}>
                 清空结果

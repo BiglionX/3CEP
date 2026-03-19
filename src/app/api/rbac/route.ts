@@ -165,7 +165,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: assignSuccess,
-          message: assignSuccess  '瑙掕壊鍒嗛厤鎴愬姛' : '瑙掕壊鍒嗛厤澶辫触',
+          message: assignSuccess ? '瑙掕壊鍒嗛厤鎴愬姛' : '瑙掕壊鍒嗛厤澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: removeSuccess,
-          message: removeSuccess  '瑙掕壊绉婚櫎鎴愬姛' : '瑙掕壊绉婚櫎澶辫触',
+          message: removeSuccess ? '瑙掕壊绉婚櫎鎴愬姛' : '瑙掕壊绉婚櫎澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -207,7 +207,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: grantSuccess,
-          message: grantSuccess  '鏉冮檺鎺堜簣鎴愬姛' : '鏉冮檺鎺堜簣澶辫触',
+          message: grantSuccess ? '鏉冮檺鎺堜簣鎴愬姛' : '鏉冮檺鎺堜簣澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -227,7 +227,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: revokeSuccess,
-          message: revokeSuccess  '鏉冮檺鎾ら攢鎴愬姛' : '鏉冮檺鎾ら攢澶辫触',
+          message: revokeSuccess ? '鏉冮檺鎾ら攢鎴愬姛' : '鏉冮檺鎾ら攢澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -247,7 +247,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: hierarchySuccess,
-          message: hierarchySuccess  '瑙掕壊灞傛鍒涘缓鎴愬姛' : '瑙掕壊灞傛鍒涘缓澶辫触',
+          message: hierarchySuccess ? '瑙掕壊灞傛鍒涘缓鎴愬姛' : '瑙掕壊灞傛鍒涘缓澶辫触',
           timestamp: new Date().toISOString(),
         });
 
@@ -296,7 +296,7 @@ export async function POST(request: Request) {
         );
         return NextResponse.json({
           success: reviewSuccess,
-          message: reviewSuccess  '璁块棶璇眰瀹℃壒鎴愬姛' : '璁块棶璇眰瀹℃壒澶辫触',
+          message: reviewSuccess ? '璁块棶璇眰瀹℃壒鎴愬姛' : '璁块棶璇眰瀹℃壒澶辫触',
           timestamp: new Date().toISOString(),
         });
 

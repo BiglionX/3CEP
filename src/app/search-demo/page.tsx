@@ -12,10 +12,6 @@ export default function SearchDemoPage() {
     toast.success(`执行搜索: ${query}`);
   };
 
-  const handleEnhancedSearch = (result: any) => {
-    toast.info(`选择了: ${result.title}`);
-  };
-
   const handleResultSelect = (result: any) => {
     toast.success(`跳转到: ${result.url}`);
   };

@@ -99,7 +99,7 @@ export default function UnifiedAuthTest() {
           </div>
 
           {/* 登录测试区域 */}
-          {!isAuthenticated  (
+          {!isAuthenticated ? (
             <div className="mb-8 p-4 bg-gray-50 rounded-lg">
               <h2 className="text-lg font-semibold text-gray-800 mb-4">
                 登录测试
@@ -141,7 +141,7 @@ export default function UnifiedAuthTest() {
                   disabled={loginLoading}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
                 >
-                  {loginLoading  '登录中...' : '测试登录'}
+                  {loginLoading ? '登录中...' : '测试登录'}
                 </button>
               </div>
             </div>

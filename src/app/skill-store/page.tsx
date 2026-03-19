@@ -125,7 +125,7 @@ export default function SkillStorePage() {
           {categories.map(category => (
             <Link
               key={category.code}
-              href={`/skill-store/skillscategory=${category.code}`}
+              href={`/skill-store/skills?category=${category.code}`}
               className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
             >
               <div className="text-3xl mb-3">{category.icon}</div>

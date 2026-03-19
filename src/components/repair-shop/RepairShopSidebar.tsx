@@ -1,26 +1,26 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
-  Wrench,
-  LayoutDashboard,
-  ClipboardList,
-  Calendar,
-  Settings,
-  ChevronDown,
-  Menu,
-  X,
-  Headphones,
   Bot,
+  Calendar,
+  ChevronDown,
+  ClipboardList,
   Coins,
-  QrCode,
   Gift,
   Globe,
+  Headphones,
+  LayoutDashboard,
+  Menu,
+  QrCode,
+  Settings,
   Sparkles,
+  Wrench,
+  X,
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 interface MenuItem {
   id: string;
@@ -244,9 +244,11 @@ export function RepairShopSidebar() {
       {/* 侧边栏 */}
       <div
         className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out
+        lg:translate-x-0 lg:static lg:inset-0
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}
+        lg:!-translate-x-0
+        `}
       >
         <div className="flex flex-col h-full">
           {/* Logo 和标题 */}

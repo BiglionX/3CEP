@@ -350,14 +350,14 @@ export default function ManualsManagementPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            manual.status === 'published'  'bg-green-100 text-green-800' :
-                            manual.status === 'pending_review'  'bg-yellow-100 text-yellow-800' :
-                            manual.status === 'rejected'  'bg-red-100 text-red-800' :
+                            manual.status === 'published' ? 'bg-green-100 text-green-800' :
+                            manual.status === 'pending_review' ? 'bg-yellow-100 text-yellow-800' :
+                            manual.status === 'rejected' ? 'bg-red-100 text-red-800' :
                             'bg-gray-100 text-gray-800'
                           }`}>
-                            {manual.status === 'published'  '已发 :
-                             manual.status === 'pending_review'  '审核 :
-                             manual.status === 'rejected'  '已拒 : '草稿'}
+                            {manual.status === 'published' ? '已发 :
+                             manual.status === 'pending_review' ? '审核 :
+                             manual.status === 'rejected' ? '已拒 : '草稿'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -402,7 +402,7 @@ export default function ManualsManagementPage() {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900">
-                {activeTab === 'create'  '创建说明 : '编辑说明}
+                {activeTab === 'create' ? '创建说明 : '编辑说明}
               </h2>
               <button 
                 onClick={() => {
@@ -489,7 +489,7 @@ export default function ManualsManagementPage() {
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         }`}
                       >
-                        {lang === 'zh'  '中文' : 'English'}
+                        {lang === 'zh' ? '中文' : 'English'}
                       </button>
                     ))}
                   </nav>
@@ -500,7 +500,7 @@ export default function ManualsManagementPage() {
               {formData.languageCodes.includes(currentLanguage) && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {currentLanguage === 'zh'  '中文标题' : 'English Title'} *
+                    {currentLanguage === 'zh' ? '中文标题' : 'English Title'} *
                   </label>
                   <input
                     type="text"
@@ -513,7 +513,7 @@ export default function ManualsManagementPage() {
                       }
                     })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder={currentLanguage === 'zh'  '请输入说明书标题' : 'Enter manual title'}
+                    placeholder={currentLanguage === 'zh' ? '请输入说明书标题' : 'Enter manual title'}
                   />
                 </div>
               )}
@@ -522,7 +522,7 @@ export default function ManualsManagementPage() {
               {formData.languageCodes.includes(currentLanguage) && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {currentLanguage === 'zh'  '中文内容' : 'English Content'} *
+                    {currentLanguage === 'zh' ? '中文内容' : 'English Content'} *
                   </label>
                   <RichTextEditor
                     value={formData.content[currentLanguage] || ''}
@@ -533,7 +533,7 @@ export default function ManualsManagementPage() {
                         [currentLanguage]: content
                       }
                     })}
-                    placeholder={currentLanguage === 'zh'  '请输入说明书内容...' : 'Enter manual content...'}
+                    placeholder={currentLanguage === 'zh' ? '请输入说明书内容...' : 'Enter manual content...'}
                   />
                 </div>
               )}
@@ -585,7 +585,7 @@ export default function ManualsManagementPage() {
                 disabled={!formData.productId || !formData.title[currentLanguage] || !formData.content[currentLanguage]}
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
               >
-                {activeTab === 'create'  '创建说明 : '更新说明}
+                {activeTab === 'create' ? '创建说明 : '更新说明}
               </button>
             </div>
           </div>

@@ -365,7 +365,7 @@ export default function TokenPurchasePage() {
                       </div>
                       <div className="text-right">
                         <div className={`text-lg font-semibold ${getTransactionTypeColor(transaction.transaction_type)}`}>
-                          {transaction.amount > 0  '+' : ''}{transaction.amount} Token
+                          {transaction.amount > 0 ? '+' : ''}{transaction.amount} Token
                         </div>
                         <div className="text-sm text-gray-500">
                           余额: {transaction.balance_after} Token

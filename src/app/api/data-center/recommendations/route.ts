@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 
       case 'model-info':
         return NextResponse.json({
-          status: isTrained  'trained' : 'pending',
+          status: isTrained ? 'trained' : 'pending',
           modelTypes: ['collaborative-filter', 'content-based'],
           trainingDataSize: mockUserData.length,
           lastTrained: isTrained  new Date().toISOString() : null,

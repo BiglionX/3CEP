@@ -80,7 +80,7 @@ export function FeaturesSection({
             <FeatureCard
               key={index}
               {...feature}
-              variant={index === 0  'highlight' : 'default'}
+              variant={index === 0 ? 'highlight' : 'default'}
             />
           ))}
         </div>

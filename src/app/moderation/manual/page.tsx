@@ -262,7 +262,7 @@ export default function ManualReviewPage() {
                             任务 #{task.id.split('-')[1]}
                           </span>
                           <Badge className={getStatusColor(task.status)}>
-                            {task.status === 'approved'  '已批准' : '已拒绝'}
+                            {task.status === 'approved' ? '已批准' : '已拒绝'}
                           </Badge>
                         </div>
                         <p className="text-gray-700 text-sm mb-2">

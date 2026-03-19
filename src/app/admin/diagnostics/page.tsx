@@ -522,7 +522,7 @@ export default function DiagnosticsManagement() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              {dialogMode === 'view'  '诊断详情' : '编辑诊断'}
+              {dialogMode === 'view' ? '诊断详情' : '编辑诊断'}
             </DialogTitle>
           </DialogHeader>
           {selectedRecord && (

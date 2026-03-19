@@ -28,7 +28,7 @@ export default function LoginJumpTest() {
 
       results[0] = {
         step: '检查认证状态',
-        status: authData.authenticated  '✓ 已登录' : '✗ 未登录',
+        status: authData.authenticated ? '✓ 已登录' : '✗ 未登录',
         details: `用户: ${authData.email || '无'}, 管理员: ${authData.is_admin || false}`,
       };
 
@@ -55,7 +55,7 @@ export default function LoginJumpTest() {
 
         results[1] = {
           step: '执行登录测试',
-          status: loginResponse.ok  '✓ 登录成功' : '✗ 登录失败',
+          status: loginResponse.ok ? '✓ 登录成功' : '✗ 登录失败',
           details: loginResponse.ok
              `用户: ${loginData.email}, 管理员: ${loginData.is_admin}`
             : `错误: ${loginData.error}`,
@@ -126,7 +126,7 @@ export default function LoginJumpTest() {
               disabled={isTesting}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
             >
-              {isTesting  '测试进行中...' : '开始测试'}
+              {isTesting ? '测试进行中...' : '开始测试'}
             </button>
           </div>
 

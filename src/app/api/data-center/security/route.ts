@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
           resource: 'login',
           ipAddress,
           userAgent: request.headers.get('user-agent') || 'unknown',
-          status: authResult.success  'success' : 'failed',
+          status: authResult.success ? 'success' : 'failed',
           details: authResult.error  { error: authResult.error } : undefined,
         });
 
@@ -274,7 +274,7 @@ export async function POST(request: NextRequest) {
           resource,
           ipAddress,
           userAgent: request.headers.get('user-agent') || 'unknown',
-          status: accessResult.allowed  'success' : 'failed',
+          status: accessResult.allowed ? 'success' : 'failed',
           details: accessResult.reason
              { reason: accessResult.reason }
             : undefined,

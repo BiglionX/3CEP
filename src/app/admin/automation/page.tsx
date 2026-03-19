@@ -144,7 +144,7 @@ export default function AutomationPage() {
                 <label className="text-sm font-medium">密码</label>
                 <div className="flex items-center gap-2">
                   <input
-                    type={showCredentials  'text' : 'password'}
+                    type={showCredentials ? 'text' : 'password'}
                     value="N8n_105!^-^"
                     readOnly
                     className="flex-1 px-3 py-2 border rounded-md bg-muted text-muted-foreground font-mono text-sm"
@@ -272,12 +272,12 @@ export default function AutomationPage() {
           </div>
           <div className="flex items-center space-x-4">
             <span
-              className={`flex items-center ${isLoading  'text-yellow-600' : error  'text-red-600' : 'text-green-600'}`}
+              className={`flex items-center ${isLoading ? 'text-yellow-600' : error ? 'text-red-600' : 'text-green-600'}`}
             >
               <span
-                className={`w-2 h-2 rounded-full mr-2 ${isLoading  'bg-yellow-500 animate-pulse' : error  'bg-red-500' : 'bg-green-500'}`}
+                className={`w-2 h-2 rounded-full mr-2 ${isLoading ? 'bg-yellow-500 animate-pulse' : error ? 'bg-red-500' : 'bg-green-500'}`}
               ></span>
-              {isLoading  '连接中' : error  '连接失败' : '已连接'}
+              {isLoading ? '连接中' : error ? '连接失败' : '已连接'}
             </span>
           </div>
         </div>

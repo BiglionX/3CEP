@@ -162,16 +162,16 @@ export default function RbacDemoPage() {
             <div className="p-4 bg-blue-50 rounded-lg">"
               <h3 className="font-medium text-blue-800 mb-2">单一权限检查</h3>
               <div
-                className={`text-lg font-semibold ${hasPermission(testPermission)  'text-green-600' : 'text-red-600'}`}
+                className={`text-lg font-semibold ${hasPermission(testPermission) ? 'text-green-600' : 'text-red-600'}`}
               >
-                {hasPermission(testPermission)  '✓ 有权限' : '✗ 无权限'}
+                {hasPermission(testPermission) ? '✓ 有权限' : '✗ 无权限'}
               </div>
             </div>
 "
             <div className="p-4 bg-green-50 rounded-lg">"
               <h3 className="font-medium text-green-800 mb-2">任意权限检查</h3>
               <div'`
-                className={`text-lg font-semibold ${hasAnyPermission(['dashboard_read', testPermission])  'text-green-600' : 'text-red-600'}`}
+                className={`text-lg font-semibold ${hasAnyPermission(['dashboard_read', testPermission]) ? 'text-green-600' : 'text-red-600'}`}
               >
                 {hasAnyPermission(['dashboard_read', testPermission])
                    '✓ 有任一权限'
@@ -182,7 +182,7 @@ export default function RbacDemoPage() {
             <div className="p-4 bg-purple-50 rounded-lg">"
               <h3 className="font-medium text-purple-800 mb-2">全部权限检查</h3>
               <div
-                className={`text-lg font-semibold ${hasAllPermissions(['dashboard_read', testPermission])  'text-green-600' : 'text-red-600'}`}
+                className={`text-lg font-semibold ${hasAllPermissions(['dashboard_read', testPermission]) ? 'text-green-600' : 'text-red-600'}`}
               >
                 {hasAllPermissions(['dashboard_read', testPermission])
                    '✓ 有全部权限'
@@ -225,7 +225,7 @@ export default function RbacDemoPage() {
             <div className="p-4 border rounded-lg">"
               <h3 className="font-medium mb-2">工作流回放 (/api/n8n/replay)</h3>
               <div
-                className={`text-sm ${hasPermission('n8n_workflows_replay')  'text-green-600' : 'text-red-600'}`}
+                className={`text-sm ${hasPermission('n8n_workflows_replay') ? 'text-green-600' : 'text-red-600'}`}
               >
                 {hasPermission('n8n_workflows_replay')
                    '✓ 可以调用 - 已通过权限验证'
@@ -238,7 +238,7 @@ export default function RbacDemoPage() {
                 智能体调用 (/api/agents/invoke)
               </h3>
               <div'`
-                className={`text-sm ${hasPermission('agents_invoke')  'text-green-600' : 'text-red-600'}`}
+                className={`text-sm ${hasPermission('agents_invoke') ? 'text-green-600' : 'text-red-600'}`}
               >
                 {hasPermission('agents_invoke')
                    '✓ 可以调用 - 已通过权限验证'
@@ -251,7 +251,7 @@ export default function RbacDemoPage() {
                 工具执行 (/api/tools/execute)
               </h3>
               <div'`
-                className={`text-sm ${hasPermission('tools_execute')  'text-green-600' : 'text-red-600'}`}
+                className={`text-sm ${hasPermission('tools_execute') ? 'text-green-600' : 'text-red-600'}`}
               >
                 {hasPermission('tools_execute')
                    '✓ 可以执行 - 已通过权限验证'

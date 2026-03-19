@@ -38,13 +38,13 @@ export default function PaginationTestPage() {
   // 使用分页Hook
   const { data, isLoading, isError, error, isFetching } =
     useWorkOrdersPaginated(
-      testScenario === 'error'  { status: 'invalid' as any } : undefined,
+      testScenario === 'error' ? { status: 'invalid' as any } : undefined,
       currentPage,
       pageSize
     );
 
-  const workOrders: WorkOrder[] = data.data || [];
-  const pagination = data.pagination || {
+  const workOrders: WorkOrder[] = data?.data || [];
+  const pagination = data?.pagination || {
     currentPage,
     pageSize,
     total: workOrders.length,
@@ -87,7 +87,7 @@ export default function PaginationTestPage() {
               <h3 className="font-medium mb-3">测试场景</h3>
               <div className="space-y-2">
                 <Button
-                  variant={testScenario === 'normal'  'default' : 'outline'}
+                  variant={testScenario === 'normal' ? 'default' : 'outline'}
                   onClick={() => setTestScenario('normal')}
                   className="w-full justify-start"
                 >
@@ -95,7 +95,7 @@ export default function PaginationTestPage() {
                   正常响应
                 </Button>
                 <Button
-                  variant={testScenario === 'slow'  'default' : 'outline'}
+                  variant={testScenario === 'slow' ? 'default' : 'outline'}
                   onClick={() => setTestScenario('slow')}
                   className="w-full justify-start"
                 >
@@ -103,7 +103,7 @@ export default function PaginationTestPage() {
                   慢速网络
                 </Button>
                 <Button
-                  variant={testScenario === 'error'  'default' : 'outline'}
+                  variant={testScenario === 'error' ? 'default' : 'outline'}
                   onClick={() => setTestScenario('error')}
                   className="w-full justify-start"
                 >
@@ -172,9 +172,9 @@ export default function PaginationTestPage() {
                     variant="outline"
                     className={`capitalize ${
                       scenarioConfig.color === 'green'
-                         'text-green-600 border-green-200'
+                        ? 'text-green-600 border-green-200'
                         : scenarioConfig.color === 'yellow'
-                           'text-yellow-600 border-yellow-200'
+                          ? 'text-yellow-600 border-yellow-200'
                           : 'text-red-600 border-red-200'
                     }`}
                   >
@@ -186,19 +186,19 @@ export default function PaginationTestPage() {
                   <Badge
                     variant={
                       isLoading
-                         'secondary'
+                        ? 'secondary'
                         : isError
-                           'destructive'
+                          ? 'destructive'
                           : 'default'
                     }
                   >
-                    {isLoading  '加载中' : isError  '错误' : '就绪'}
+                    {isLoading ? '加载中' : isError ? '错误' : '就绪'}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">获取时间:</span>
                   <span className="text-sm">
-                    {isFetching  '正在获取...' : '已缓存'}
+                    {isFetching ? '正在获取...' : '已缓存'}
                   </span>
                 </div>
               </div>
@@ -231,7 +231,7 @@ export default function PaginationTestPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoading  (
+              {isLoading ? (
                 <div className="space-y-3">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="animate-pulse">
@@ -240,7 +240,7 @@ export default function PaginationTestPage() {
                     </div>
                   ))}
                 </div>
-              ) : isError  (
+              ) : isError ? (
                 <div className="text-center py-8">
                   <XCircle className="mx-auto h-12 w-12 text-red-500 mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">
@@ -261,7 +261,7 @@ export default function PaginationTestPage() {
                   </h3>
                   <p className="text-gray-500">
                     {testScenario === 'error'
-                       '模拟错误场景下无数据'
+                      ? '模拟错误场景下无数据'
                       : '当前筛选条件下无匹配数据'}
                   </p>
                 </div>
@@ -288,9 +288,9 @@ export default function PaginationTestPage() {
                           <Badge
                             variant={
                               order.status === 'completed'
-                                 'default'
+                                ? 'default'
                                 : order.status === 'in_progress'
-                                   'secondary'
+                                  ? 'secondary'
                                   : 'outline'
                             }
                           >
@@ -340,7 +340,7 @@ export default function PaginationTestPage() {
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">缓存状态</span>
                   <Badge variant="outline">
-                    {isFetching  '刷新中' : '已缓存'}
+                    {isFetching ? '刷新中' : '已缓存'}
                   </Badge>
                 </div>
                 <div className="pt-4 border-t">

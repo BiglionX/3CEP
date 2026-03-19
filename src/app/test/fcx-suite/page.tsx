@@ -101,7 +101,7 @@ export default function FcxTestSuite() {
                           : 'bg-yellow-100 text-yellow-800'
                       }`}
                     >
-                      {component.status === 'complete'  '已完成' : '开发中'}
+                      {component.status === 'complete' ? '已完成' : '开发中'}
                     </span>
                   </div>
                 </CardHeader>

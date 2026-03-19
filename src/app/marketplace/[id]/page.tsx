@@ -176,7 +176,7 @@ export default function AgentDetailPage() {
   }, [agentId]);
 
   const formatPrice = (price: number) => {
-    return price === 0  '免费' : `¥${price.toFixed(2)}`;
+    return price === 0 ? '免费' : `¥${price.toFixed(2)}`;
   };
 
   const addToCart = () => {
@@ -311,7 +311,7 @@ export default function AgentDetailPage() {
                       }`}
                     >
                       <Heart
-                        className={`w-5 h-5 ${isFavorite  'fill-current' : ''}`}
+                        className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`}
                       />
                     </button>
                     <button className="p-3 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors">

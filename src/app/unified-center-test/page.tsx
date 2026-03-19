@@ -287,11 +287,11 @@ export default function UnifiedCenterTestPage() {
                           <span
                             className={`px-2 py-1 rounded text-xs font-medium ${
                               is_admin
-                                 'bg-red-100 text-red-800'
+                                ? 'bg-red-100 text-red-800'
                                 : 'bg-gray-100 text-gray-800'
                             }`}
                           >
-                            {is_admin  '已启用' : '未启用'}
+                            {is_admin ? '已启用' : '未启用'}
                           </span>
                         </div>
 

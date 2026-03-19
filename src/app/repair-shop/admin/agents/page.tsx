@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { RepairShopSidebar } from '@/components/repair-shop/RepairShopSidebar';
+import { UnifiedNavbar } from '@/components/layout/UnifiedNavbar';
 import {
   Bot,
   Calendar,
@@ -164,8 +166,10 @@ export default function RepairShopAgentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main>
+    <div className="flex min-h-screen bg-gray-50 flex-col">
+      <UnifiedNavbar />
+      <div className="flex flex-1">
+        <main className="flex-1">
           <div className="py-6 px-4 sm:px-6 lg:px-8">
             {/* 页面标题 */}
             <div className="flex justify-between items-center mb-8">
@@ -398,7 +402,8 @@ export default function RepairShopAgentsPage() {
               </Card>
             </div>
           </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

@@ -290,7 +290,7 @@ const AlertRuleForm: React.FC<AlertRuleFormProps> = ({
           <Button type="button" variant="outline" onClick={onCancel}>
             取消
           </Button>
-          <Button type="submit">{rule  '更新规则' : '创建规则'}</Button>
+          <Button type="submit">{rule ? '更新规则' : '创建规则'}</Button>
         </div>
       </div>
     </form>
@@ -564,7 +564,7 @@ export default function AlertManagementPage() {
             <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>
-                  {editingRule  '编辑告警规则' : '新建告警规则'}
+                  {editingRule ? '编辑告警规则' : '新建告警规则'}
                 </DialogTitle>
               </DialogHeader>
               {showRuleForm && (
@@ -725,8 +725,8 @@ export default function AlertManagementPage() {
                       监控 {rule.metric} {rule.condition} {rule.threshold}
                     </p>
                     <div className="flex items-center space-x-4 mt-2">
-                      <Badge variant={rule.enabled  'default' : 'secondary'}>
-                        {rule.enabled  '启用' : '禁用'}
+                      <Badge variant={rule.enabled ? 'default' : 'secondary'}>
+                        {rule.enabled ? '启用' : '禁用'}
                       </Badge>
                       <Badge variant="outline" className="capitalize">
                         {rule.severity}
@@ -756,7 +756,7 @@ export default function AlertManagementPage() {
                     </Button>
                     <Button
                       size="sm"
-                      variant={rule.enabled  'outline' : 'default'}
+                      variant={rule.enabled ? 'outline' : 'default'}
                       onClick={() => {
                         // alertManager.updateAlertRule(rule.id, {
                         //   enabled: !rule.enabled,
@@ -769,7 +769,7 @@ export default function AlertManagementPage() {
                       ) : (
                         <Play className="w-4 h-4 mr-2" />
                       )}
-                      {rule.enabled  '禁用' : '启用'}
+                      {rule.enabled ? '禁用' : '启用'}
                     </Button>
                   </div>
                 </div>

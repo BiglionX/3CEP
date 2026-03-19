@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         parsedRequest,
         enhancement: 'BERT + 瑙勫垯娣峰悎鏋舵瀯',
         confidenceImprovement:
-          parsedRequest.aiConfidence > 85  '鏄捐憲鎻愬崌' : '淇濇寔绋冲畾',
+          parsedRequest.aiConfidence > 85 ? '鏄捐憲鎻愬崌' : '淇濇寔绋冲畾',
       },
       message: '閲囪喘闇€姹傝В鏋愭垚鍔燂紙澧炲己鐗堬級',
     });

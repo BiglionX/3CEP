@@ -372,12 +372,12 @@ export default function TutorialDetailPage() {
             <div className="flex items-center space-x-4">
               <Button
                 onClick={handleLike}
-                variant={liked  'default' : 'outline'}
-                className={liked  'bg-red-500 hover:bg-red-600' : ''}
+                variant={liked ? 'default' : 'outline'}
+                className={liked ? 'bg-red-500 hover:bg-red-600' : ''}
               >
                 <svg
                   className="w-5 h-5 mr-2"
-                  fill={liked  'white' : 'currentColor'}
+                  fill={liked ? 'white' : 'currentColor'}
                   viewBox="0 0 20 20"
                 >
                   <path
@@ -386,7 +386,7 @@ export default function TutorialDetailPage() {
                     clipRule="evenodd"
                   />
                 </svg>
-                {liked  '已喜欢' : '喜欢'} (
+                {liked ? '已喜欢' : '喜欢'} (
                 {tutorial.like_count + (liked  1 : 0)})
               </Button>
 

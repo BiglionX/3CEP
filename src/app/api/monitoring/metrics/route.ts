@@ -29,7 +29,7 @@ const durationHistogram: Record<string, number[]> = {
     result += `# TYPE http_request_duration_seconds histogram\n`;
     buckets.forEach((count, index) => {
       const le =
-        index === buckets.length - 1  '+Inf' : histogramBuckets[index];
+        index === buckets.length - 1 ? '+Inf' : histogramBuckets[index];
       result += `http_request_duration_seconds_bucket{le="${le}",endpoint="${endpoint}"} ${count}\n`;
     });
     // 娣诲姞_sum鍜宊count

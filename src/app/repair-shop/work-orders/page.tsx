@@ -16,14 +16,11 @@ import {
   FileText,
   Plus,
   Search,
-  Filter,
   Calendar,
   User,
   Phone,
   Wrench,
   Clock,
-  CheckCircle,
-  XCircle,
   MoreHorizontal,
 } from 'lucide-react';
 import { SimpleSearch } from '@/components/search/SimpleSearch';
@@ -67,6 +64,7 @@ export default function WorkOrdersPage() {
         createdAt: '2026-02-21T09:30:00',
         updatedAt: '2026-02-21T14:20:00',
         estimatedCompletion: '2026-02-21T15:00:00',
+        actualCompletion: '',
         price: 880,
       },
       {
@@ -81,6 +79,7 @@ export default function WorkOrdersPage() {
         createdAt: '2026-02-21T10:15:00',
         updatedAt: '2026-02-21T10:15:00',
         estimatedCompletion: '2026-02-22T14:00:00',
+        actualCompletion: '',
         price: 450,
       },
       {
@@ -110,6 +109,7 @@ export default function WorkOrdersPage() {
         createdAt: '2026-02-20T16:20:00',
         updatedAt: '2026-02-21T09:15:00',
         estimatedCompletion: '2026-02-22T16:00:00',
+        actualCompletion: '',
         price: 0,
       },
     ];
@@ -246,17 +246,17 @@ export default function WorkOrdersPage() {
                 size="sm"
                 onClick={() => setAdvancedSearchMode(!advancedSearchMode)}
               >
-                {advancedSearchMode  '基础搜索' : '高级搜索'}
+                {advancedSearchMode ? '基础搜索' : '高级搜索'}
               </Button>
             </div>
             <CardDescription>
               {advancedSearchMode
-                 '使用高级搜索功能进行精准查找'
+                ? '使用高级搜索功能进行精准查找'
                 : '快速搜索工单信息'}
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            {advancedSearchMode  (
+            {advancedSearchMode ? (
               <SimpleSearch
                 placeholder="搜索工单号、客户姓名或设备型号..."
                 onSearch={handleAdvancedSearch}
@@ -370,7 +370,7 @@ export default function WorkOrdersPage() {
                     {searchTerm ||
                     statusFilter !== 'all' ||
                     priorityFilter !== 'all'
-                       '没有找到匹配的工单'
+                      ? '没有找到匹配的工单'
                       : '开始创建第一个工单吧'}
                   </p>
                   {!searchTerm &&

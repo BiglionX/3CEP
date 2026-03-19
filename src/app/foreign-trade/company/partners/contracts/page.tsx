@@ -579,7 +579,7 @@ export default function ContractsPage() {
                         <TableCell>
                           <div className="flex flex-col">
                             <div className="font-medium">
-                              {contract.currency === 'USD'  '$' : '€'}
+                              {contract.currency === 'USD' ? '$' : '€'}
                               {(contract.amount / 1000000).toFixed(1)}M
                             </div>
                             <div className="text-sm text-gray-500">

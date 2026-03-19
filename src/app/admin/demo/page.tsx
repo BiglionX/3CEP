@@ -189,7 +189,7 @@ export default function AdminDemoPage() {
                             : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {user.status === 'active'  '活跃' : '非活跃'}
+                        {user.status === 'active' ? '活跃' : '非活跃'}
                       </span>
                     </TableCell>
                     <TableCell>{user.createdAt}</TableCell>

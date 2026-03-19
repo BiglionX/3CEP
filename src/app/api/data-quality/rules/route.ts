@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
           message: toggleResult
-             `瑙勫垯${group} ${enabled  '鍚敤' : '绂佺敤'}鎴愬姛`
+             `瑙勫垯${group} ${enabled ? '鍚敤' : '绂佺敤'}鎴愬姛`
             : `瑙勫垯${group} 鎿嶄綔澶辫触`,
           groupName: group,
           enabled: enabled,

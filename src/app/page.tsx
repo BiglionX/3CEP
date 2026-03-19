@@ -9,14 +9,12 @@ import {
   CheckCircle,
   Cpu,
   FileText,
-  Globe,
   Headphones,
   MessageSquare,
   Package,
   Shield,
   Smartphone,
   Store,
-  Users,
   Wrench,
   Zap,
 } from 'lucide-react';
@@ -89,20 +87,23 @@ export default function HomePage() {
     {
       name: '文档中心',
       href: '/documents',
-      icon: <FileText className="w-6 h-6" />,
+      icon: <FileText className="w-8 h-8 mb-4" />,
       description: '完整的使用手册和技术文档',
+      buttonText: '浏览文档',
     },
     {
       name: '维修教程',
       href: '/tutorials',
-      icon: <BookOpen className="w-6 h-6" />,
+      icon: <BookOpen className="w-8 h-8 mb-4" />,
       description: '详细的设备维修指导教程',
+      buttonText: '查看教程',
     },
     {
       name: '社区支持',
       href: '/community',
-      icon: <MessageSquare className="w-6 h-6" />,
+      icon: <MessageSquare className="w-8 h-8 mb-4" />,
       description: '专业的技术支持和用户交流',
+      buttonText: '获取帮助',
     },
   ];
 
@@ -117,14 +118,13 @@ export default function HomePage() {
               <div className="text-center lg:text-left">
                 <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    智能循环经济
+                    3C全球售后服务网
                   </span>
                   <br />
-                  一体化平台
+                  AI驱动的一体化平台
                 </h1>
                 <p className="text-xl text-gray-600 mb-8 max-w-2xl">
-                  连接设备、服务、数据的完整生态系统，让每一次维修都创造价值，
-                  让每一台设备都能循环利用
+                  连接产品、服务、数据的完整售后生态系统，让每一个产品都创造售后价值，AI驱动轻松实现布局3C全球售后服务网的愿景。
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <Button
@@ -228,7 +228,7 @@ export default function HomePage() {
                 核心功能模块
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                覆盖设备全生命周期的智能化解决方案
+                覆盖产品全生命周期的智能化解决方案
               </p>
             </div>
 
@@ -301,44 +301,23 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
-                <CardHeader>
-                  <Globe className="w-8 h-8 mb-4" />
-                  <CardTitle className="text-white">文档中心</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-blue-100 mb-4">完整的使用手册和技术文档</p>
-                  <Button variant="secondary" asChild>
-                    <Link href="/documents">浏览文档</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
-                <CardHeader>
-                  <Wrench className="w-8 h-8 mb-4" />
-                  <CardTitle className="text-white">维修教程</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-blue-100 mb-4">详细的设备维修指导教程</p>
-                  <Button variant="secondary" asChild>
-                    <Link href="/tutorials">查看教程</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
-                <CardHeader>
-                  <Users className="w-8 h-8 mb-4" />
-                  <CardTitle className="text-white">社区支持</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-blue-100 mb-4">专业的技术支持和用户交流</p>
-                  <Button variant="secondary" asChild>
-                    <Link href="/diagnosis">获取帮助</Link>
-                  </Button>
-                </CardContent>
-              </Card>
+              {contentHub.map((hub, index) => (
+                <Card
+                  key={index}
+                  className="bg-white/10 backdrop-blur border-white/20 text-white"
+                >
+                  <CardHeader>
+                    {hub.icon}
+                    <CardTitle className="text-white">{hub.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-blue-100 mb-4">{hub.description}</p>
+                    <Button variant="secondary" asChild>
+                      <Link href={hub.href}>{hub.buttonText}</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -347,7 +326,7 @@ export default function HomePage() {
         <section className="py-20 bg-gray-900 text-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              开始您的智能循环之旅
+              开始创建您的3C全球售后服务网
             </h2>
             <p className="text-xl text-gray-300 mb-8">
               加入数千家企业，共同构建可持续的设备生态
@@ -363,10 +342,10 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3 text-lg"
+                className="border-white text-gray-900 hover:bg-white hover:text-gray-900 px-8 py-3 text-lg"
                 asChild
               >
-                <Link href="/contact">联系销售</Link>
+                <Link href="/contact">联系我们</Link>
               </Button>
             </div>
           </div>

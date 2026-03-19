@@ -393,7 +393,7 @@ export default function PendingLinksPage() {
                             onClick={() => toggleRowExpansion(link.id)}
                             className="text-blue-600 hover:text-blue-800 text-sm mt-1"
                           >
-                            {expandedRows.includes(link.id)  '收起详情' : '查看详情'}
+                            {expandedRows.includes(link.id) ? '收起详情' : '查看详情'}
                           </button>
                         </div>
                       </div>

@@ -216,12 +216,12 @@ export default function DataPipelinePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">运行状态/p>
-                  <Badge variant={status.isRunning  'default' : 'destructive'}>
-                    {status.isRunning  '运行 : '已停}
+                  <Badge variant={status.isRunning ? 'default' : 'destructive'}>
+                    {status.isRunning ? '运行 : '已停}
                   </Badge>
                 </div>
                 <div
-                  className={`w-3 h-3 rounded-full ${status.isRunning  'bg-green-500' : 'bg-red-500'}`}
+                  className={`w-3 h-3 rounded-full ${status.isRunning ? 'bg-green-500' : 'bg-red-500'}`}
                 />
               </div>
             </CardContent>
@@ -390,7 +390,7 @@ export default function DataPipelinePage() {
                 disabled={loading}
                 variant="outline"
               >
-                {loading  '加载中..' : '加载数据'}
+                {loading ? '加载中..' : '加载数据'}
               </Button>
             </div>
 

@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
           await autoFixCoordinator.cancelExecution(suggestionId);
 
         return NextResponse.json({
-          message: cancelled  '鎵ц宸插彇 : '鍙栨秷澶辫触鎴栨墽琛屽凡瀹屾垚',
+          message: cancelled ? '鎵ц宸插彇 : '鍙栨秷澶辫触鎴栨墽琛屽凡瀹屾垚',
           suggestionId: suggestionId,
           cancelled: cancelled,
           timestamp: new Date().toISOString(),

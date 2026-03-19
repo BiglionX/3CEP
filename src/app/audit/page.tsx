@@ -152,7 +152,7 @@ export default function AuditPage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `audit_logs.${exportFormat === 'csv'  'csv' : 'json'}`;
+      a.download = `audit_logs.${exportFormat === 'csv' ? 'csv' : 'json'}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -184,9 +184,9 @@ export default function AuditPage() {
                 <TrendingDown className="w-4 h-4 text-red-500 mr-1" />
               )}
               <span
-                className={`text-sm ${trend === 'up'  'text-green-600' : 'text-red-600'}`}
+                className={`text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}
               >
-                {trend === 'up'  '上升' : '下降'}
+                {trend === 'up' ? '上升' : '下降'}
               </span>
             </div>
           )}

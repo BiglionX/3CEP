@@ -247,9 +247,9 @@ const ReviewDecisionPanel: React.FC<{
           <Label className="text-sm font-medium mb-2 block">审核决定</Label>
           <div className="grid grid-cols-3 gap-2">
             <Button
-              variant={decision === 'approve'  'default' : 'outline'}
+              variant={decision === 'approve' ? 'default' : 'outline'}
               className={
-                decision === 'approve'  'bg-green-600 hover:bg-green-700' : ''
+                decision === 'approve' ? 'bg-green-600 hover:bg-green-700' : ''
               }
               onClick={() => setDecision('approve')}
             >
@@ -257,9 +257,9 @@ const ReviewDecisionPanel: React.FC<{
               通过
             </Button>
             <Button
-              variant={decision === 'modify'  'default' : 'outline'}
+              variant={decision === 'modify' ? 'default' : 'outline'}
               className={
-                decision === 'modify'  'bg-yellow-600 hover:bg-yellow-700' : ''
+                decision === 'modify' ? 'bg-yellow-600 hover:bg-yellow-700' : ''
               }
               onClick={() => setDecision('modify')}
             >
@@ -267,9 +267,9 @@ const ReviewDecisionPanel: React.FC<{
               修改
             </Button>
             <Button
-              variant={decision === 'reject'  'default' : 'outline'}
+              variant={decision === 'reject' ? 'default' : 'outline'}
               className={
-                decision === 'reject'  'bg-red-600 hover:bg-red-700' : ''
+                decision === 'reject' ? 'bg-red-600 hover:bg-red-700' : ''
               }
               onClick={() => setDecision('reject')}
             >

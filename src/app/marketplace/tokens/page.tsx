@@ -208,7 +208,7 @@ export default function TokensPage() {
 
   const formatAmount = (amount: number) => {
     const absAmount = Math.abs(amount);
-    const sign = amount >= 0  '+' : '-';
+    const sign = amount >= 0 ? '+' : '-';
     return `${sign}${absAmount.toFixed(2)}`;
   };
 

@@ -257,7 +257,7 @@ export default function DevicesDictPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{editingDevice  '编辑设备' : '添加设备'}</DialogTitle>
+                <DialogTitle>{editingDevice ? '编辑设备' : '添加设备'}</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
@@ -305,7 +305,7 @@ export default function DevicesDictPage() {
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button variant="outline" onClick={() => setIsDialogOpen(false)}>取消</Button>
                   <Button onClick={editingDevice  handleUpdate : handleCreate}>
-                    {editingDevice  '更新' : '创建'}
+                    {editingDevice ? '更新' : '创建'}
                   </Button>
                 </div>
               </div>
@@ -341,7 +341,7 @@ export default function DevicesDictPage() {
             {filteredDevices.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                  {searchTerm  '没有找到匹配的设备' : '暂无设备数据'}
+                  {searchTerm ? '没有找到匹配的设备' : '暂无设备数据'}
                 </TableCell>
               </TableRow>
             ) : (

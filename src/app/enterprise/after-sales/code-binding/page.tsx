@@ -6,12 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
@@ -167,7 +167,7 @@ export default function CodeBindingPage() {
 
       setBoundCodes([newBoundCode, ...boundCodes]);
       setAvailableCodes(availableCodes.filter(c => c.code !== selectedBlockchainCode));
-      
+
       setStats(prev => ({
         ...prev,
         totalBound: prev.totalBound + 1,
@@ -209,7 +209,7 @@ export default function CodeBindingPage() {
 
       setBoundCodes([...newBoundCodes, ...boundCodes]);
       setAvailableCodes(availableCodes.filter(c => !codesToBind.find(bc => bc.code === c.code)));
-      
+
       setStats(prev => ({
         ...prev,
         totalBound: prev.totalBound + newBoundCodes.length,
@@ -231,9 +231,9 @@ export default function CodeBindingPage() {
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      setBoundCodes(boundCodes.map(c => 
-        c.id === codeId 
-          ? { ...c, status: 'synced' as const, txHash: '0x' + Math.random().toString(16).slice(2, 10) + '...' + Math.random().toString(16).slice(2, 6) }
+      setBoundCodes(boundCodes.map(c =>
+        c.id === codeId
+          ? { ...c, status: 'synced' as const, txHash: `0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 6)}` }
           : c
       ));
 
@@ -260,7 +260,7 @@ export default function CodeBindingPage() {
     }
   };
 
-  const filteredBoundCodes = boundCodes.filter(c => 
+  const filteredBoundCodes = boundCodes.filter(c =>
     c.serialCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
     c.blockchainCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
     c.productName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -505,7 +505,7 @@ export default function CodeBindingPage() {
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        code.status === 'synced' ? 'bg-green-100' : 
+                        code.status === 'synced' ? 'bg-green-100' :
                         code.status === 'bound' ? 'bg-yellow-100' : 'bg-red-100'
                       }`}>
                         {code.status === 'synced' ? (

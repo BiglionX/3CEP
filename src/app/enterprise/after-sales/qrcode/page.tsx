@@ -1,35 +1,27 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import QRCode from 'qrcode';
-import { 
-  BarChart3, 
-  Blockchain, 
-  QrCode, 
-  RefreshCw, 
-  Download, 
+import {
+  QrCode,
+  Download,
   Printer,
   Copy,
   Search,
   Loader2,
   ExternalLink,
   Hash,
-  Package,
-  CheckCircle,
-  XCircle,
   ZoomIn,
   ZoomOut,
   RotateCw,
@@ -55,7 +47,6 @@ export default function QrCodeGenerationPage() {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // 模拟历史记录
   const mockRecords: QrCodeRecord[] = [
@@ -213,7 +204,7 @@ export default function QrCodeGenerationPage() {
     }
   };
 
-  const filteredRecords = records.filter(r => 
+  const filteredRecords = records.filter(r =>
     r.blockchainCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
     r.productName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -260,7 +251,7 @@ export default function QrCodeGenerationPage() {
                       onChange={(e) => setProductName(e.target.value)}
                     />
                   </div>
-                  <Button 
+                  <Button
                     className="w-full bg-purple-600 hover:bg-purple-700"
                     onClick={handleGenerate}
                     disabled={generating || !blockchainCode}
@@ -282,15 +273,15 @@ export default function QrCodeGenerationPage() {
                   {qrCodeDataUrl && (
                     <div className="mt-6 p-4 border rounded-lg bg-white">
                       <div className="flex justify-center mb-4">
-                        <div 
+                        <div
                           className="relative"
-                          style={{ 
+                          style={{
                             transform: `scale(${zoom}) rotate(${rotation}deg)`,
                             transition: 'transform 0.3s ease'
                           }}
                         >
-                          <img 
-                            src={qrCodeDataUrl} 
+                          <img
+                            src={qrCodeDataUrl}
                             alt="Generated QR Code"
                             className="w-48 h-48"
                           />
@@ -302,7 +293,7 @@ export default function QrCodeGenerationPage() {
                           <p className="text-sm text-gray-500">{productName}</p>
                         )}
                       </div>
-                      
+
                       {/* 调整工具 */}
                       <div className="flex justify-center gap-2 mb-4">
                         <Button
@@ -418,8 +409,8 @@ export default function QrCodeGenerationPage() {
                                 <DialogTitle>二维码预览</DialogTitle>
                               </DialogHeader>
                               <div className="flex flex-col items-center py-4">
-                                <img 
-                                  src={record.qrCodeDataUrl || qrCodeDataUrl} 
+                                <img
+                                  src={record.qrCodeDataUrl || undefined}
                                   alt="QR Code"
                                   className="w-64 h-64"
                                 />
@@ -428,8 +419,8 @@ export default function QrCodeGenerationPage() {
                               </div>
                             </DialogContent>
                           </Dialog>
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={() => navigator.clipboard.writeText(record.blockchainCode)}
                           >
@@ -494,6 +485,5 @@ export default function QrCodeGenerationPage() {
           </div>
         </main>
       </div>
-    </div>
   );
 }

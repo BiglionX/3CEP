@@ -105,8 +105,8 @@ export default function InventoryManagementPage() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
         search: searchTerm,
-        category: categoryFilter === 'all'  '' : categoryFilter,
-        status: statusFilter === 'all'  '' : statusFilter,
+        category: categoryFilter === 'all' ? '' : categoryFilter,
+        status: statusFilter === 'all' ? '' : statusFilter,
       });
 
       const response = await fetch(`/api/admin/inventory/items${params}`);
@@ -225,7 +225,7 @@ export default function InventoryManagementPage() {
          `/api/admin/inventory/items/${editingItem.id}`
         : '/api/admin/inventory/items';
 
-      const method = editingItem.id  'PUT' : 'POST';
+      const method = editingItem.id ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -237,7 +237,7 @@ export default function InventoryManagementPage() {
 
       const result = await response.json();
       if (result.success) {
-        alert(editingItem.id  '库存项目更新成功' : '库存项目创建成功');
+        alert(editingItem.id ? '库存项目更新成功' : '库存项目创建成功');
         setShowItemDialog(false);
         setEditingItem(null);
         fetchInventory();
@@ -518,7 +518,7 @@ export default function InventoryManagementPage() {
                       </TableCell>
                       <TableCell>
                         <div
-                          className={`font-medium ${item.current_stock <= item.min_stock_level  'text-red-600' : 'text-gray-900'}`}
+                          className={`font-medium ${item.current_stock <= item.min_stock_level ? 'text-red-600' : 'text-gray-900'}`}
                         >
                           {item.current_stock}
                         </div>
@@ -673,7 +673,7 @@ export default function InventoryManagementPage() {
                               : 'text-red-600'
                           }`}
                         >
-                          {movement.movement_type === 'in'  '+' : '-'}
+                          {movement.movement_type === 'in' ? '+' : '-'}
                           {movement.quantity}
                         </div>
                       </TableCell>
@@ -717,7 +717,7 @@ export default function InventoryManagementPage() {
                           : 'bg-gray-100 text-gray-800'
                       }`}
                     >
-                      {location.status === 'active'  '启用' : '停用'}
+                      {location.status === 'active' ? '启用' : '停用'}
                     </span>
                   </CardTitle>
                   <CardDescription>编码: {location.code}</CardDescription>
@@ -762,7 +762,7 @@ export default function InventoryManagementPage() {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingItem.id  '编辑库存商品' : '新增库存商品'}
+              {editingItem.id ? '编辑库存商品' : '新增库存商品'}
             </DialogTitle>
           </DialogHeader>
 
@@ -942,7 +942,7 @@ export default function InventoryManagementPage() {
               取消
             </Button>
             <Button onClick={saveItem}>
-              {editingItem.id  '保存更改' : '创建商品'}
+              {editingItem.id ? '保存更改' : '创建商品'}
             </Button>
           </DialogFooter>
         </DialogContent>

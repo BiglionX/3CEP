@@ -184,7 +184,7 @@ export default function BrandProfilePage() {
               </Button>
               <Button onClick={handleSave} disabled={saving}>"
                 <Save className="w-4 h-4 mr-2" />'
-                {saving  '保存..' : '保存'}
+                {saving ? '保存..' : '保存'}
               </Button>
             </>
           ) : (
@@ -281,7 +281,7 @@ export default function BrandProfilePage() {
                     onChange={e =>
                       setBrand({ ...brand, companyName: e.target.value })
                     }
-                    className={errors.companyName  'border-red-500' : ''}
+                    className={errors.companyName ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
                   {errors.companyName && (
@@ -301,7 +301,7 @@ export default function BrandProfilePage() {
                     onChange={e =>
                       setBrand({ ...brand, businessLicense: e.target.value })
                     }
-                    className={errors.businessLicense  'border-red-500' : ''}
+                    className={errors.businessLicense ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
                   {errors.businessLicense && (
@@ -325,7 +325,7 @@ export default function BrandProfilePage() {
                       })
                     }
                     className={
-                      errors.legalRepresentative  'border-red-500' : ''
+                      errors.legalRepresentative ? 'border-red-500' : ''
                     }
                     disabled={!editing}
                   />
@@ -417,7 +417,7 @@ export default function BrandProfilePage() {
                     onChange={e =>
                       setBrand({ ...brand, contactPhone: e.target.value })
                     }
-                    className={errors.contactPhone  'border-red-500' : ''}
+                    className={errors.contactPhone ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
                   {errors.contactPhone && (
@@ -438,7 +438,7 @@ export default function BrandProfilePage() {
                     onChange={e =>
                       setBrand({ ...brand, contactEmail: e.target.value })
                     }
-                    className={errors.contactEmail  'border-red-500' : ''}
+                    className={errors.contactEmail ? 'border-red-500' : ''}
                     disabled={!editing}
                   />
                   {errors.contactEmail && (

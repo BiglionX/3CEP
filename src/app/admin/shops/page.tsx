@@ -60,7 +60,7 @@ export default function ShopsManagementPage() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
         search: searchTerm,
-        status: statusFilter === 'all'  '' : statusFilter
+        status: statusFilter === 'all' ? '' : statusFilter
       })
       
       const response = await fetch(`/api/admin/shops${params}`)
@@ -135,8 +135,8 @@ export default function ShopsManagementPage() {
 
   // 禁用/启用店铺
   const toggleShopStatus = async (shopId: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'approved'  'disabled' : 'approved'
-    const actionText = newStatus === 'disabled'  '禁用' : '启用'
+    const newStatus = currentStatus === 'approved' ? 'disabled' : 'approved'
+    const actionText = newStatus === 'disabled' ? '禁用' : '启用'
     
     if (!confirm(`确定{actionText}这家店铺吗？`)) return
     
@@ -377,11 +377,11 @@ export default function ShopsManagementPage() {
                         编辑
                       </Button>
                       <Button
-                        variant={shop.status === 'approved'  'outline' : 'default'}
+                        variant={shop.status === 'approved' ? 'outline' : 'default'}
                         size="sm"
                         onClick={() => toggleShopStatus(shop.id, shop.status)}
                       >
-                        {shop.status === 'approved'  '禁用' : '启用'}
+                        {shop.status === 'approved' ? '禁用' : '启用'}
                       </Button>
                     </div>
                   </TableCell>

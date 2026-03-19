@@ -131,9 +131,9 @@ export default function BusinessIntelligenceDashboard() {
                 variant="outline"
               >
                 <RefreshCw
-                  className={`w-4 h-4 mr-2 ${refreshing  'animate-spin' : ''}`}
+                  className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`}
                 />
-                {refreshing  '刷新..' : '刷新数据'}
+                {refreshing ? '刷新..' : '刷新数据'}
               </Button>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function BusinessIntelligenceDashboard() {
                       <span
                         className={`text-sm font-medium ${getTrendColor(kpi.trend)}`}
                       >
-                        {kpi.change > 0  '+' : ''}
+                        {kpi.change > 0 ? '+' : ''}
                         {kpi.change}%
                       </span>
                       <span className="text-xs text-gray-500">vs 目标</span>
@@ -187,7 +187,7 @@ export default function BusinessIntelligenceDashboard() {
                     <span>
                       达成 {Math.round((kpi.value / kpi.target) * 100)}%
                     </span>
-                    <span>{kpi.unit === '%'  '百分 : '绝对}</span>
+                    <span>{kpi.unit === '%' ? '百分 : '绝对}</span>
                   </div>
                 </div>
               </CardContent>
@@ -222,7 +222,7 @@ export default function BusinessIntelligenceDashboard() {
                       : 'destructive'
                   }
                 >
-                  {dashboardData.revenueMetrics.growthRate >= 0  '+' : ''}
+                  {dashboardData.revenueMetrics.growthRate >= 0 ? '+' : ''}
                   {dashboardData.revenueMetrics.growthRate}%
                 </Badge>
               </div>

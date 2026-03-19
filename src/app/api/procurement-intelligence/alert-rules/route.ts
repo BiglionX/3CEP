@@ -193,7 +193,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           data: toggledRule,
-          message: `鍛婅瑙勫垯{params.enabled  '鍚敤' : '绂佺敤'}`,
+          message: `鍛婅瑙勫垯{params.enabled ? '鍚敤' : '绂佺敤'}`,
           timestamp: new Date().toISOString(),
         });
 

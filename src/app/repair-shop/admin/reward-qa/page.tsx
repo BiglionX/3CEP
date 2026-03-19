@@ -1,28 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { UnifiedNavbar } from '@/components/layout/UnifiedNavbar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+  Award,
+  Edit,
+  Eye,
   HelpCircle,
   Plus,
-  Edit,
   Trash2,
-  Eye,
   Trophy,
   Users,
-  Award,
 } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface Question {
   id: string;
@@ -136,9 +138,11 @@ export default function RewardQaManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main>
-        <div className="py-6 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen bg-gray-50 flex-col">
+      <UnifiedNavbar />
+      <div className="flex flex-1">
+        <main className="flex-1">
+          <div className="py-6 px-4 sm:px-6 lg:px-8">
             {/* 页面标题和操作按钮 */}
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -518,6 +522,7 @@ export default function RewardQaManagementPage() {
             </Card>
           </div>
         </main>
+      </div>
     </div>
   );
 }

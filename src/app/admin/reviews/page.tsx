@@ -463,7 +463,7 @@ export default function AdminReviewPage() {
                 onClick={handleAssignReviewer}
                 disabled={!selectedReviewer || assigning}
               >
-                {assigning  '分配..' : '确认分配'}
+                {assigning ? '分配..' : '确认分配'}
               </Button>
             </div>
           </div>

@@ -134,7 +134,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `鍛婅瑙勫垯${action === 'create'  '鍒涘缓' : '鏇存柊'}鎴愬姛`,
+      message: `鍛婅瑙勫垯${action === 'create' ? '鍒涘缓' : '鏇存柊'}鎴愬姛`,
       data: result,
       timestamp: new Date().toISOString(),
     });

@@ -238,8 +238,8 @@ export default function PWADemoPage() {
 "
                   <div className="flex items-center justify-between mt-4 p-3 bg-gray-50 rounded-lg">"
                     <span className="text-sm">当前网络状</span>
-                    <Badge variant={isOnline  'default' : 'destructive'}>
-                      {isOnline  '在线' : '离线'}
+                    <Badge variant={isOnline ? 'default' : 'destructive'}>
+                      {isOnline ? '在线' : '离线'}
                     </Badge>
                   </div>
                 </CardContent>
@@ -406,8 +406,8 @@ export default function PWADemoPage() {
                         应用是否已安装
                       </div>
                     </div>
-                    <Badge variant={isInstalled  'default' : 'secondary'}>
-                      {isInstalled  '已安装' : 'Web版本'}
+                    <Badge variant={isInstalled ? 'default' : 'secondary'}>
+                      {isInstalled ? '已安装' : 'Web版本'}
                     </Badge>
                   </div>
 "
@@ -416,8 +416,8 @@ export default function PWADemoPage() {
                       <div className="font-medium">可安装</div>"
                       <div className="text-sm text-gray-600">是否支持安装</div>
                     </div>
-                    <Badge variant={canInstall  'default' : 'secondary'}>
-                      {canInstall  '可安装' : '暂不支持'}
+                    <Badge variant={canInstall ? 'default' : 'secondary'}>
+                      {canInstall ? '可安装' : '暂不支持'}
                     </Badge>
                   </div>
 "
@@ -426,8 +426,8 @@ export default function PWADemoPage() {
                       <div className="font-medium">网络状态</div>"
                       <div className="text-sm text-gray-600">当前连接状态</div>
                     </div>
-                    <Badge variant={isOnline  'default' : 'destructive'}>
-                      {isOnline  '在线' : '离线'}
+                    <Badge variant={isOnline ? 'default' : 'destructive'}>
+                      {isOnline ? '在线' : '离线'}
                     </Badge>
                   </div>
                 </div>
@@ -449,8 +449,8 @@ export default function PWADemoPage() {
                       <div className="font-medium">安装状态</div>"
                       <div className="text-sm text-gray-600">应用是否已安装</div>
                     </div>
-                    <Badge variant={isInstalled  'default' : 'secondary'}>
-                      {isInstalled  '已安装' : 'Web版本'}
+                    <Badge variant={isInstalled ? 'default' : 'secondary'}>
+                      {isInstalled ? '已安装' : 'Web版本'}
                     </Badge>
                   </div>
 "
@@ -459,8 +459,8 @@ export default function PWADemoPage() {
                       <div className="font-medium">网络状态</div>"
                       <div className="text-sm text-gray-600">当前连接状态</div>
                     </div>
-                    <Badge variant={isOnline  'default' : 'destructive'}>
-                      {isOnline  '在线' : '离线'}
+                    <Badge variant={isOnline ? 'default' : 'destructive'}>
+                      {isOnline ? '在线' : '离线'}
                     </Badge>
                   </div>
                 </div>

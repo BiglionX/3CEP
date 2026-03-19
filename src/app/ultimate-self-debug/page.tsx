@@ -43,7 +43,7 @@ export default function UltimateSelfDebug() {
         log(1, `健康检查响应: ${healthResponse.status}`, 'data');
       } catch (error: unknown) {
         const errorMessage =
-          error instanceof Error  error.message : String(error);
+          error instanceof Error ? error.message : String(error);
         log(1, `健康检查失败: ${errorMessage}`, 'warning');
       }
 
@@ -79,7 +79,7 @@ export default function UltimateSelfDebug() {
         'success'
       );
       log(2, `管理员状态: ${loginResult.is_admin}`, 'data');
-      log(2, `会话令牌: ${loginResult.access_token  '已生成' : '未生成'}`, 'data');
+      log(2, `会话令牌：${loginResult.access_token ? '已生成' : '未生成'}`, 'data');
 
       setTestPhase(3);
 
@@ -99,13 +99,13 @@ export default function UltimateSelfDebug() {
             log(3, '成功: Next.js路由跳转指令已发送', 'success');
           } catch (error: unknown) {
             const errorMessage =
-              error instanceof Error  error.message : String(error);
+              error instanceof Error ? error.message : String(error);
             log(3, `错误: Next.js路由跳转失败: ${errorMessage}`, 'error');
           }
         }, 100);
       } catch (error: unknown) {
         const errorMessage =
-          error instanceof Error  error.message : String(error);
+          error instanceof Error ? error.message : String(error);
         log(3, `获取router失败: ${errorMessage}`, 'error');
       }
 
@@ -117,7 +117,7 @@ export default function UltimateSelfDebug() {
           log(3, '成功: Window.location跳转已执行', 'success');
         } catch (error: unknown) {
           const errorMessage =
-            error instanceof Error  error.message : String(error);
+            error instanceof Error ? error.message : String(error);
           log(3, `错误: Window.location跳转失败: ${errorMessage}`, 'error');
         }
       }, 500);
@@ -132,7 +132,7 @@ export default function UltimateSelfDebug() {
           }, 1000);
         } catch (error: unknown) {
           const errorMessage =
-            error instanceof Error  error.message : String(error);
+            error instanceof Error ? error.message : String(error);
           log(3, `错误: 延迟跳转失败: ${errorMessage}`, 'error');
         }
       }, 1000);
@@ -190,7 +190,7 @@ export default function UltimateSelfDebug() {
                   break;
                 } catch (error: unknown) {
                   const errorMessage =
-                    error instanceof Error  error.message : String(error);
+                    error instanceof Error ? error.message : String(error);
                   log(4, `警告: 跳转方式${i + 1}失败: ${errorMessage}`, 'warning');
                 }
               }
@@ -198,13 +198,13 @@ export default function UltimateSelfDebug() {
           }
         } catch (error: unknown) {
           const errorMessage =
-            error instanceof Error  error.message : String(error);
+            error instanceof Error ? error.message : String(error);
           log(4, `综合测试失败: ${errorMessage}`, 'error');
         }
       }, 2000);
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error  error.message : String(error);
+        error instanceof Error ? error.message : String(error);
       log(testPhase, `测试过程出错: ${errorMessage}`, 'error');
     } finally {
       setIsTesting(false);
@@ -239,9 +239,7 @@ export default function UltimateSelfDebug() {
                   disabled={isTesting}
                   className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
-                  {isTesting
-                     `测试中... (阶段${testPhase}/5)`
-                    : '运行完整诊断'}
+                  {isTesting ? `测试中... (阶段${testPhase}/5)` : '运行完整诊断'}
                 </button>
 
                 <button
@@ -270,9 +268,9 @@ export default function UltimateSelfDebug() {
                     key={phase}
                     className={`p-3 rounded-lg ${
                       testPhase === phase
-                         'bg-blue-600'
+                        ? 'bg-blue-600'
                         : testPhase > phase
-                           'bg-green-600'
+                          ? 'bg-green-600'
                           : 'bg-gray-600'
                     }`}
                   >
@@ -305,13 +303,13 @@ export default function UltimateSelfDebug() {
                     key={index}
                     className={`mb-2 p-3 rounded ${
                       result.status === 'error'
-                         'bg-red-900/30 border border-red-700'
+                        ? 'bg-red-900/30 border border-red-700'
                         : result.status === 'success'
-                           'bg-green-900/30 border border-green-700'
+                          ? 'bg-green-900/30 border border-green-700'
                           : result.status === 'warning'
-                             'bg-yellow-900/30 border border-yellow-700'
+                            ? 'bg-yellow-900/30 border border-yellow-700'
                             : result.status === 'data'
-                               'bg-blue-900/30 border border-blue-700'
+                              ? 'bg-blue-900/30 border border-blue-700'
                               : 'bg-gray-800'
                     }`}
                   >
@@ -326,13 +324,13 @@ export default function UltimateSelfDebug() {
                     <div
                       className={
                         result.status === 'error'
-                           'text-red-400'
+                          ? 'text-red-400'
                           : result.status === 'success'
-                             'text-green-400'
+                            ? 'text-green-400'
                             : result.status === 'warning'
-                               'text-yellow-400'
+                              ? 'text-yellow-400'
                               : result.status === 'data'
-                                 'text-blue-400'
+                                ? 'text-blue-400'
                                 : 'text-yellow-400'
                       }
                     >

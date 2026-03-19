@@ -173,9 +173,9 @@ export default function PerformanceMonitoringDemoPage() {
         <div className="flex items-center gap-4 mb-6">
           <Button
             onClick={toggleMonitoring}
-            variant={isMonitoringEnabled  'default' : 'outline'}
+            variant={isMonitoringEnabled ? 'default' : 'outline'}
           >
-            {isMonitoringEnabled  '停止监控' : '开始监控'}
+            {isMonitoringEnabled ? '停止监控' : '开始监控'}
           </Button>
           <Button onClick={simulateApiCall} variant="secondary">
             <Timer className="h-4 w-4 mr-2" />
@@ -186,8 +186,8 @@ export default function PerformanceMonitoringDemoPage() {
             刷新数据
           </Button>
 
-          <Badge variant={isMonitoringEnabled  'default' : 'secondary'}>
-            {isMonitoringEnabled  '监控中' : '已暂停'}
+          <Badge variant={isMonitoringEnabled ? 'default' : 'secondary'}>
+            {isMonitoringEnabled ? '监控中' : '已暂停'}
           </Badge>
         </div>
 

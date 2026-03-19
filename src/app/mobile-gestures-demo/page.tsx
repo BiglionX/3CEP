@@ -254,7 +254,7 @@ export default function MobileGesturesDemoPage() {
                       {/* 手势提示 */}
                       <div className="absolute bottom-4 left-4 space-y-2">
                         <Badge
-                          variant={activeGesture  'default' : 'secondary'}
+                          variant={activeGesture ? 'default' : 'secondary'}
                         >
                           {activeGesture || '等待手势'}
                         </Badge>

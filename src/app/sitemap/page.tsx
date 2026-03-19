@@ -12,7 +12,6 @@ import {
   ArrowRight,
   Map,
   Building,
-  Store,
   Puzzle,
   Sparkles,
 } from 'lucide-react';
@@ -25,7 +24,7 @@ interface SitemapSection {
     name: string;
     href: string;
     description: string;
-    badge: string;
+    badge?: string;
   }[];
 }
 

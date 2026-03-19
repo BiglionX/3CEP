@@ -316,7 +316,7 @@ export default function PendingShopsPage() {
                       size="sm"
                       onClick={() => toggleRowExpansion(shop.id)}
                     >
-                      {expandedRows.includes(shop.id)  '收起' : '详情'}
+                      {expandedRows.includes(shop.id) ? '收起' : '详情'}
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -254,8 +254,8 @@ export default function PerformanceTestingDemoPage() {
             </Button>
           )}
 
-          <Badge variant={isRunning  'default' : 'secondary'}>
-            {isRunning  '执行中' : '就绪'}
+          <Badge variant={isRunning ? 'default' : 'secondary'}>
+            {isRunning ? '执行中' : '就绪'}
           </Badge>
         </div>
 

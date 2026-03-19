@@ -114,7 +114,7 @@ export default function TenantDemoPage() {
               </div>
             ) : (
               <div className="text-gray-500 text-center py-8">
-                {isLoading  '加载中...' : '请选择租户查看数据'}
+                {isLoading ? '加载中...' : '请选择租户查看数据'}
               </div>
             )}
           </div>
@@ -134,7 +134,7 @@ export default function TenantDemoPage() {
               </div>
             ) : (
               <div className="text-gray-500 text-center py-8">
-                {isLoading  '加载中...' : '请选择租户查看数据'}
+                {isLoading ? '加载中...' : '请选择租户查看数据'}
               </div>
             )}
           </div>
@@ -159,7 +159,7 @@ export default function TenantDemoPage() {
               </div>
             ) : (
               <div className="text-gray-500 text-center py-8">
-                {isLoading  '加载中...' : '请选择租户查看信息'}
+                {isLoading ? '加载中...' : '请选择租户查看信息'}
               </div>
             )}
           </div>

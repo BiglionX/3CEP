@@ -275,7 +275,7 @@ export default function SystemSettingsPage() {
                     <Button
                       key={theme}
                       variant={
-                        config.general.theme === theme  'default' : 'outline'
+                        config.general.theme === theme ? 'default' : 'outline'
                       }
                       onClick={() =>
                         handleInputChange('general', 'theme', theme)

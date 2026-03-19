@@ -36,7 +36,7 @@ export default function AdminAccessTestPage() {
       const user = session.user;
 
       setCurrentUser(user);
-      addTestResult('当前用户检查', user  'pass' : 'info', {
+      addTestResult('当前用户检查', user ? 'pass' : 'info', {
         hasSession: !!session,
         userId: user.id || '未登录',
         userEmail: user.email || '无邮箱',
@@ -120,7 +120,7 @@ export default function AdminAccessTestPage() {
       const isRedirected = response.status >= 300 && response.status < 400;
       const canAccess = response.status === 200;
 
-      addTestResult('管理员页面访问测试', canAccess  'pass' : 'fail', {
+      addTestResult('管理员页面访问测试', canAccess ? 'pass' : 'fail', {
         statusCode: response.status,
         statusText: response.statusText,
         isRedirected,
@@ -230,7 +230,7 @@ export default function AdminAccessTestPage() {
               disabled={isLoading}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
             >
-              {isLoading  '测试中...' : '重新运行所有测试'}
+              {isLoading ? '测试中...' : '重新运行所有测试'}
             </button>
 
             <button

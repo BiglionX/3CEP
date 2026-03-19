@@ -290,7 +290,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
             disabled={isSubmitting}
             className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
           >
-            {isSubmitting  '提交中...' : '立即获取演示'}
+            {isSubmitting ? '提交中...' : '立即获取演示'}
           </button>
 
           <p className="text-center text-sm text-gray-500">

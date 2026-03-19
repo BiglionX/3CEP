@@ -1,23 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { UnifiedNavbar } from '@/components/layout/UnifiedNavbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import Link from 'next/link';
 import {
-  CreditCard,
-  TrendingUp,
   ArrowDown,
   ArrowUp,
+  CreditCard,
+  ExternalLink,
+  History,
+  Plus,
   RefreshCw,
   Wallet,
-  History,
-  DollarSign,
-  Plus,
-  ExternalLink,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface FXCBalance {
   balance: number;
@@ -163,8 +161,10 @@ export default function RepairShopFXCPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main>
+    <div className="flex min-h-screen bg-gray-50 flex-col">
+      <UnifiedNavbar />
+      <div className="flex flex-1">
+        <main className="flex-1">
           <div className="py-6 px-4 sm:px-6 lg:px-8">
             {/* 页面标题 */}
             <div className="flex justify-between items-center mb-8">
@@ -190,34 +190,40 @@ export default function RepairShopFXCPage() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-6 min-w-0">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-600">总余额</span>
-                      <Wallet className="w-5 h-5 text-purple-500" />
+                      <span className="text-sm text-gray-600 truncate">
+                        总余额
+                      </span>
+                      <Wallet className="w-5 h-5 text-purple-500 flex-shrink-0" />
                     </div>
-                    <div className="text-3xl font-bold text-purple-700">
+                    <div className="text-3xl font-bold text-purple-700 truncate">
                       {balance.balance.toLocaleString()} FXC
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-1 truncate">
                       ≈ ¥{(balance.balance * 0.1).toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 min-w-0">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-600">可用余额</span>
-                      <ArrowUp className="w-5 h-5 text-blue-500" />
+                      <span className="text-sm text-gray-600 truncate">
+                        可用余额
+                      </span>
+                      <ArrowUp className="w-5 h-5 text-blue-500 flex-shrink-0" />
                     </div>
-                    <div className="text-3xl font-bold text-blue-700">
+                    <div className="text-3xl font-bold text-blue-700 truncate">
                       {balance.available.toLocaleString()} FXC
                     </div>
                     <p className="text-xs text-gray-500 mt-1">可立即使用</p>
                   </div>
-                  <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-6 min-w-0">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-600">冻结金额</span>
-                      <ArrowDown className="w-5 h-5 text-yellow-500" />
+                      <span className="text-sm text-gray-600 truncate">
+                        冻结金额
+                      </span>
+                      <ArrowDown className="w-5 h-5 text-yellow-500 flex-shrink-0" />
                     </div>
-                    <div className="text-3xl font-bold text-yellow-700">
+                    <div className="text-3xl font-bold text-yellow-700 truncate">
                       {balance.frozen.toLocaleString()} FXC
                     </div>
                     <p className="text-xs text-gray-500 mt-1">待确认交易</p>
@@ -272,33 +278,35 @@ export default function RepairShopFXCPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                   {exchangeRates.map(rate => (
                     <div
                       key={rate.currency}
-                      className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+                      className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors min-w-0"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 truncate">
                           {rate.currency}
                         </span>
-                        <RefreshCw className="w-4 h-4 text-gray-400" />
+                        <RefreshCw className="w-4 h-4 text-gray-400 flex-shrink-0" />
                       </div>
-                      <div className="text-2xl font-bold text-gray-900">
+                      <div className="text-xl font-bold text-gray-900 truncate">
                         {rate.rate.toFixed(4)}
                       </div>
                       <div
-                        className={`flex items-center text-xs mt-1 ${
+                        className={`flex items-center text-xs mt-1 truncate ${
                           rate.change >= 0 ? 'text-green-600' : 'text-red-600'
                         }`}
                       >
                         {rate.change >= 0 ? (
-                          <ArrowUp className="w-3 h-3 mr-1" />
+                          <ArrowUp className="w-3 h-3 mr-1 flex-shrink-0" />
                         ) : (
-                          <ArrowDown className="w-3 h-3 mr-1" />
+                          <ArrowDown className="w-3 h-3 mr-1 flex-shrink-0" />
                         )}
-                        {rate.change > 0 ? '+' : ''}
-                        {rate.change.toFixed(4)}
+                        <span className="truncate">
+                          {rate.change > 0 ? '+' : ''}
+                          {rate.change.toFixed(4)}
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -414,6 +422,7 @@ export default function RepairShopFXCPage() {
             </div>
           </div>
         </main>
+      </div>
     </div>
   );
 }

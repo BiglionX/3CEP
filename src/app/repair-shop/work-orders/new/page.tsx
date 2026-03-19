@@ -8,14 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Plus, 
-  User, 
-  Phone, 
-  Wrench, 
+import {
+  Plus,
+  User,
+  Wrench,
   Calendar,
   AlertCircle,
-  CheckCircle
 } from 'lucide-react';
 
 export default function NewWorkOrderPage() {
@@ -60,53 +58,53 @@ export default function NewWorkOrderPage() {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.customerName.trim()) {
       newErrors.customerName = '请输入客户姓名';
     }
-    
+
     if (!formData.customerPhone.trim()) {
       newErrors.customerPhone = '请输入客户电话';
     } else if (!/^1[3-9]\d{9}$/.test(formData.customerPhone)) {
       newErrors.customerPhone = '请输入正确的手机号码';
     }
-    
+
     if (!formData.deviceBrand) {
       newErrors.deviceBrand = '请选择设备品牌';
     }
-    
+
     if (!formData.deviceModel.trim()) {
       newErrors.deviceModel = '请输入设备型号';
     }
-    
+
     if (!formData.deviceIssue.trim()) {
       newErrors.deviceIssue = '请描述设备问题';
     }
-    
+
     if (!formData.technician) {
       newErrors.technician = '请选择负责技师';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // 生成工单号
       const workOrderId = `WO-${Date.now().toString().slice(-6)}`;
-      
+
       // 跳转到工单详情页
       router.push(`/repair-shop/work-orders/${workOrderId}`);
     } catch (error) {
@@ -127,8 +125,8 @@ export default function NewWorkOrderPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 onClick={handleCancel}
                 className="mr-4"
               >
@@ -140,12 +138,12 @@ export default function NewWorkOrderPage() {
               <Button variant="outline" onClick={handleCancel}>
                 取消
               </Button>
-              <Button 
+              <Button
                 onClick={handleSubmit}
                 disabled={isLoading}
                 className="bg-blue-600 hover:bg-blue-700"
               >
-                {isLoading  (
+                {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     创建中...
@@ -184,7 +182,7 @@ export default function NewWorkOrderPage() {
                     value={formData.customerName}
                     onChange={(e) => handleChange('customerName', e.target.value)}
                     placeholder="请输入客户姓名"
-                    className={errors.customerName  'border-red-500' : ''}
+                    className={errors.customerName ? 'border-red-500' : ''}
                   />
                   {errors.customerName && (
                     <div className="flex items-center gap-1 text-red-500 text-sm">
@@ -193,7 +191,7 @@ export default function NewWorkOrderPage() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="customerPhone">联系电话 *</Label>
                   <Input
@@ -201,7 +199,7 @@ export default function NewWorkOrderPage() {
                     value={formData.customerPhone}
                     onChange={(e) => handleChange('customerPhone', e.target.value)}
                     placeholder="请输入手机号码"
-                    className={errors.customerPhone  'border-red-500' : ''}
+                    className={errors.customerPhone ? 'border-red-500' : ''}
                   />
                   {errors.customerPhone && (
                     <div className="flex items-center gap-1 text-red-500 text-sm">
@@ -229,11 +227,11 @@ export default function NewWorkOrderPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="deviceBrand">设备品牌 *</Label>
-                  <Select 
-                    value={formData.deviceBrand} 
+                  <Select
+                    value={formData.deviceBrand}
                     onValueChange={(value: string) => handleChange('deviceBrand', value)}
                   >
-                    <SelectTrigger className={errors.deviceBrand  'border-red-500' : ''}>
+                    <SelectTrigger className={errors.deviceBrand ? 'border-red-500' : ''}>
                       <SelectValue placeholder="选择品牌" />
                     </SelectTrigger>
                     <SelectContent>
@@ -249,7 +247,7 @@ export default function NewWorkOrderPage() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="deviceModel">设备型号 *</Label>
                   <Input
@@ -257,7 +255,7 @@ export default function NewWorkOrderPage() {
                     value={formData.deviceModel}
                     onChange={(e) => handleChange('deviceModel', e.target.value)}
                     placeholder="例如: iPhone 14 Pro"
-                    className={errors.deviceModel  'border-red-500' : ''}
+                    className={errors.deviceModel ? 'border-red-500' : ''}
                   />
                   {errors.deviceModel && (
                     <div className="flex items-center gap-1 text-red-500 text-sm">
@@ -267,7 +265,7 @@ export default function NewWorkOrderPage() {
                   )}
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="deviceIssue">故障描述 *</Label>
                 <Textarea
@@ -276,7 +274,7 @@ export default function NewWorkOrderPage() {
                   onChange={(e) => handleChange('deviceIssue', e.target.value)}
                   placeholder="详细描述设备出现的问题..."
                   rows={4}
-                  className={errors.deviceIssue  'border-red-500' : ''}
+                  className={errors.deviceIssue ? 'border-red-500' : ''}
                 />
                 {errors.deviceIssue && (
                   <div className="flex items-center gap-1 text-red-500 text-sm">
@@ -285,11 +283,11 @@ export default function NewWorkOrderPage() {
                   </div>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="priority">优先级</Label>
-                <Select 
-                  value={formData.priority} 
+                <Select
+                  value={formData.priority}
                   onValueChange={(value: string) => handleChange('priority', value)}
                 >
                   <SelectTrigger>
@@ -320,11 +318,11 @@ export default function NewWorkOrderPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="technician">负责技师*</Label>
-                  <Select 
-                    value={formData.technician} 
+                  <Select
+                    value={formData.technician}
                     onValueChange={(value: string) => handleChange('technician', value)}
                   >
-                    <SelectTrigger className={errors.technician  'border-red-500' : ''}>
+                    <SelectTrigger className={errors.technician ? 'border-red-500' : ''}>
                       <SelectValue placeholder="选择技师" />
                     </SelectTrigger>
                     <SelectContent>
@@ -342,7 +340,7 @@ export default function NewWorkOrderPage() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="estimatedCompletion">预估完成时间</Label>
                   <Input
@@ -353,7 +351,7 @@ export default function NewWorkOrderPage() {
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="price">预估价格 (¥)</Label>
                 <Input
@@ -374,12 +372,12 @@ export default function NewWorkOrderPage() {
             <Button variant="outline" onClick={handleCancel} type="button">
               取消
             </Button>
-            <Button 
+            <Button
               type="submit"
               disabled={isLoading}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              {isLoading  (
+              {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                   创建中...

@@ -153,7 +153,7 @@ async function demoSupplierAnalysisAsync() {
     taskId,
     submission: {
       timeMs: submissionTime,
-      status: initialStatus.success  'completed' : 'processing',
+      status: initialStatus.success ? 'completed' : 'processing',
     },
     completion: {
       timeMs: completedTask.duration,
@@ -257,7 +257,7 @@ async function runAsyncTest() {
     testResults.tests.push({
       name: '鐘舵€佹煡璇㈡祴,
       passed: !!status,
-      details: `诲姟鐘 ${status  (status.success  '鎴愬姛' : '澶勭悊) : '鏈壘}`,
+      details: `诲姟鐘 ${status  (status.success ? '鎴愬姛' : '澶勭悊) : '鏈壘}`,
     });
 
     // 娴嬭瘯鎵瑰    const batchTasks = await asyncBusinessService.batchProcessAsync([

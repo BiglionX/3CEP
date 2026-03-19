@@ -49,7 +49,7 @@ export default function LoginOptimizationTest() {
         ...prev,
         {
           feature: '重定向上下文提示',
-          status: hasRedirectContext  'success' : 'failed',
+          status: hasRedirectContext ? 'success' : 'failed',
           details: hasRedirectContext
              `检测到重定向参数: ${redirect}`
             : '未检测到重定向参数',
@@ -79,7 +79,7 @@ export default function LoginOptimizationTest() {
         ...prev,
         {
           feature: '智能目标识别',
-          status: targetPath  'success' : 'pending',
+          status: targetPath ? 'success' : 'pending',
           details: `识别为目标: ${targetDescription} (${targetPath || '通用页面'})`,
         },
       ]);
@@ -105,7 +105,7 @@ export default function LoginOptimizationTest() {
         ...prev,
         {
           feature: '登录流程验证',
-          status: loginSuccess  'success' : 'failed',
+          status: loginSuccess ? 'success' : 'failed',
           details: loginSuccess
              `登录成功 - 用户: ${loginData.email}, 管理员: ${loginData.is_admin}`
             : `登录失败 - ${loginData.error || '未知错误'}`,

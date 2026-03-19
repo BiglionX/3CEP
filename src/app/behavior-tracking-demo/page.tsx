@@ -159,9 +159,9 @@ export default function UserBehaviorTrackingDemoPage() {
         <div className="flex items-center gap-4 mb-6">
           <Button
             onClick={toggleTracking}
-            variant={isTrackingEnabled  'default' : 'outline'}
+            variant={isTrackingEnabled ? 'default' : 'outline'}
           >
-            {isTrackingEnabled  '停止追踪' : '开始追}
+            {isTrackingEnabled ? '停止追踪' : '开始追}
           </Button>
           <Button onClick={triggerTestEvents} variant="secondary">
             触发测试事件
@@ -169,8 +169,8 @@ export default function UserBehaviorTrackingDemoPage() {
           <Button onClick={clearEvents} variant="outline">
             清除事件
           </Button>
-          <Badge variant={isTrackingEnabled  'default' : 'secondary'}>
-            {isTrackingEnabled  '追踪 : '已暂}
+          <Badge variant={isTrackingEnabled ? 'default' : 'secondary'}>
+            {isTrackingEnabled ? '追踪 : '已暂}
           </Badge>
         </div>
 
@@ -716,9 +716,9 @@ export default function UserBehaviorTrackingDemoPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">追踪状/span>
                       <Badge
-                        variant={isTrackingEnabled  'default' : 'secondary'}
+                        variant={isTrackingEnabled ? 'default' : 'secondary'}
                       >
-                        {isTrackingEnabled  '启用' : '禁用'}
+                        {isTrackingEnabled ? '启用' : '禁用'}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">

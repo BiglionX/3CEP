@@ -284,7 +284,7 @@ export default function FaultsDictPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{editingFault  '编辑故障' : '添加故障'}</DialogTitle>
+                <DialogTitle>{editingFault ? '编辑故障' : '添加故障'}</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
@@ -338,7 +338,7 @@ export default function FaultsDictPage() {
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button variant="outline" onClick={() => setIsDialogOpen(false)}>取消</Button>
                   <Button onClick={editingFault  handleUpdate : handleCreate}>
-                    {editingFault  '更新' : '创建'}
+                    {editingFault ? '更新' : '创建'}
                   </Button>
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function FaultsDictPage() {
             {filteredFaults.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                  {searchTerm  '没有找到匹配的故 : '暂无故障数据'}
+                  {searchTerm ? '没有找到匹配的故 : '暂无故障数据'}
                 </TableCell>
               </TableRow>
             ) : (

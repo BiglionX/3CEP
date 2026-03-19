@@ -248,7 +248,7 @@ export default function SandboxPage() {
                     : 'bg-indigo-600 hover:bg-indigo-700'
                 }`}
               >
-                {loading  '⏳ 执行中...' : '🚀 执行技能'}
+                {loading ? '⏳ 执行中...' : '🚀 执行技能'}
               </button>
             </div>
 
@@ -266,7 +266,7 @@ export default function SandboxPage() {
                     >
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-lg ${item.success  '✅' : '❌'}`}
+                          className={`text-lg ${item.success ? '✅' : '❌'}`}
                         ></span>
                         <span className="text-sm font-medium text-gray-700">
                           {item.skill}
@@ -356,7 +356,7 @@ export default function SandboxPage() {
                       <div>
                         <span className="text-green-700">已计费:</span>
                         <span className="ml-2 font-medium">
-                          {result.metadata.billing.charged  '是' : '否'}
+                          {result.metadata.billing.charged ? '是' : '否'}
                         </span>
                       </div>
                       <div>

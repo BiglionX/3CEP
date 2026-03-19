@@ -107,7 +107,7 @@ export default function FreshLoginPage() {
             }}
           ></div>
           <p style={{ color: '#4a5568', fontSize: '18px' }}>
-            {isInitializing  '初始化认证系统...' : '验证用户身份...'}
+            {isInitializing ? '初始化认证系统...' : '验证用户身份...'}
           </p>
         </div>
         <style jsx>{`
@@ -256,7 +256,7 @@ export default function FreshLoginPage() {
               width: '100%',
               padding: '14px',
               background:
-                isSubmitting || hasPendingOperations  '#a0aec0' : '#667eea',
+                isSubmitting || hasPendingOperations ? '#a0aec0' : '#667eea',
               color: 'white',
               border: 'none',
               borderRadius: '6px',
@@ -269,7 +269,7 @@ export default function FreshLoginPage() {
               transition: 'all 0.3s',
             }}
           >
-            {isSubmitting || hasPendingOperations  '登录中...' : '登录'}
+            {isSubmitting || hasPendingOperations ? '登录中...' : '登录'}
           </button>
         </form>
 

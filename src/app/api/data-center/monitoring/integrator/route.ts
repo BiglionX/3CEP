@@ -283,7 +283,7 @@ async function validateIntegration() {
     passedTests,
     successRate: Math.round((passedTests / validationTests.length) * 100),
     testResults: validationTests,
-    overallStatus: passedTests === validationTests.length  'PASSED' : 'FAILED',
+    overallStatus: passedTests === validationTests.length ? 'PASSED' : 'FAILED',
   };
 }
 

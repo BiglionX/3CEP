@@ -1,71 +1,47 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
-console.log('开始批量修复 src/app 中的三元运算符错误...\n');
+const filesToFix = [
+  'src/app/admin/finance/page.tsx',
+  'src/app/admin/content-review/manual/page.tsx',
+  'src/app/data-center/query/page.tsx',
+  'src/app/bi/dashboard/page.tsx',
+  'src/app/foreign-trade/company/partners/contracts/page.tsx',
+  'src/app/enterprise/demo/page.tsx',
+  'src/app/data-center/sources/page.tsx',
+  'src/app/data-center/security/page.tsx',
+  'src/app/data-center/monitoring/page.tsx',
+  'src/app/admin/user-manager/page.tsx',
+  'src/app/admin/manuals/page.tsx',
+  'src/app/admin/system-dashboard/page.tsx',
+  'src/app/admin/inventory/page.tsx',
+  'src/app/admin/diagnostics/page.tsx',
+  'src/app/admin/device-manager/page.tsx',
+  'src/app/admin/demo/page.tsx',
+  'src/app/admin/parts-market/page.tsx',
+  'src/app/admin/parts/page.tsx',
+  'src/app/admin/content/page.tsx',
+];
 
-// 获取所有 tsx/ts 文件
-function findFiles(dir, ext) {
-  const files = [];
-  const items = fs.readdirSync(dir, { withFileTypes: true });
-  
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      files.push(...findFiles(fullPath, ext));
-    } else if (ext.includes(path.extname(item.name))) {
-      files.push(fullPath);
-    }
-  }
-  
-  return files;
-}
-
-const srcAppDir = path.join(__dirname, 'src/app');
-const allFiles = findFiles(srcAppDir, ['.ts', '.tsx']);
-
-console.log(`找到 ${allFiles.length} 个文件\n`);
-
-// 模式：缺少问号的三元运算符
-// 匹配：condition  'value1' : 'value2'
-// 应该：condition ? 'value1' : 'value2'
-const ternaryPattern = /([a-zA-Z_$][a-zA-Z0-9_$]*(?:\[[^\]]+\]|\.[a-zA-Z_$][a-zA-Z0-9_$]*|\([^)]*\))?\s+['"]\s*[^'"][^'"]*['"]?\s*:)/g;
-
-let totalFixed = 0;
-const fileErrors = {};
-
-allFiles.forEach(filePath => {
-  try {
-    let content = fs.readFileSync(filePath, 'utf8');
-    let fixedCount = 0;
+filesToFix.forEach(filePath => {
+  const fullPath = path.join(process.cwd(), filePath);
+  if (fs.existsSync(fullPath)) {
+    let content = fs.readFileSync(fullPath, 'utf-8');
     
-    // 修复缺少问号的三元运算符
-    const matches = content.match(ternaryPattern);
-    if (matches) {
-      content = content.replace(ternaryPattern, '$1?');
-      fixedCount = matches.length;
-      totalFixed += matches.length;
-      
-      const relativePath = path.relative(__dirname, filePath);
-      fileErrors[relativePath] = (fileErrors[relativePath] || 0) + matches.length;
-    }
+    // 替换三元运算符中缺少的 ? (模式: === 'xxx'  'xxx' : 'xxx')
+    content = content.replace(/=== '([^']*)'  '([^']*)' : '([^']*)'/g, "=== '$1' ? '$2' : '$3'");
     
-    if (fixedCount > 0) {
-      fs.writeFileSync(filePath, content, 'utf8');
-      console.log(`✓ ${path.relative(__dirname, filePath)} - 修复 ${fixedCount} 处错误`);
-    }
-  } catch (error) {
-    console.error(`✗ ${filePath}: ${error.message}`);
+    // 替换变量三元运算符 (模式: 变量  'xxx' : 'xxx')
+    content = content.replace(/(\w)  '([^']*)' : '([^']*)'/g, '$1 ? \'$2\' : \'$3\'');
+    
+    // 替换 className 模式
+    content = content.replace(/(\w)  '([^']*)'/g, '$1 ? \'$2\'');
+    
+    fs.writeFileSync(fullPath, content, 'utf-8');
+    console.log(`Fixed: ${filePath}`);
+  } else {
+    console.log(`Skipped (not found): ${filePath}`);
   }
 });
 
-console.log(`\n总共修复了 ${totalFixed} 处错误\n`);
-console.log('\n错误最多的文件：');
-Object.entries(fileErrors)
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 10)
-  .forEach(([file, count]) => {
-    console.log(`  ${file}: ${count} 处错误`);
-  });
-
-console.log('\n修复完成！');
+console.log('\nBatch fix completed!');

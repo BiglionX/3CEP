@@ -68,7 +68,7 @@ export default function LoginRedirectFixTest() {
     // 测试2: SearchParams Hook检测
     const hookTest: any = {
       feature: 'SearchParams Hook检测',
-      status: redirect  'success' : 'failed',
+      status: redirect ? 'success' : 'failed',
       details: redirect
          `Hook获取到参数: ${redirect}`
         : 'Hook未能获取到redirect参数',
@@ -77,7 +77,7 @@ export default function LoginRedirectFixTest() {
     // 测试3: 参数解析准确性
     const parseTest: any = {
       feature: '参数解析准确性',
-      status: redirect !== '/admin/dashboard'  'success' : 'pending',
+      status: redirect !== '/admin/dashboard' ? 'success' : 'pending',
       details:
         redirect !== '/admin/dashboard'
            `参数解析正确: ${redirect}`

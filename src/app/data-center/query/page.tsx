@@ -187,7 +187,7 @@ export default function QueryAnalysisPage() {
   const formatQuery = () => {
     // 简单的SQL格式    const formatted = query
       .replace(/\s+/g, ' ')
-      .replace(/([,(])/g, '$1\n  ')
+      .replace(/([,(])/g, '$1\n ? ')
       .replace(/([)])/, '\n$1')
       .replace(/(SELECT|FROM|WHERE|GROUP BY|ORDER BY|HAVING)/gi, '\n$1')
       .trim();
@@ -241,7 +241,7 @@ export default function QueryAnalysisPage() {
           <p className="text-gray-500">可视化图表区/p>
           <p className="text-sm text-gray-400">
             基于查询结果生成
-            {type === 'bar'  '柱状 : type === 'pie'  '饼图' : '折线}
+            {type === 'bar' ? '柱状 : type === 'pie' ? '饼图' : '折线}
           </p>
         </div>
       </div>
@@ -289,7 +289,7 @@ export default function QueryAnalysisPage() {
         {/* 移动端额外的历史和保存选项 */}
         <div className="sm:hidden flex space-x-2 mt-2">
           <Button
-            variant={activeTab === 'history'  'default' : 'outline'}
+            variant={activeTab === 'history' ? 'default' : 'outline'}
             size="sm"
             className="flex-1 text-xs py-2"
             onClick={() => setActiveTab('history')}
@@ -298,7 +298,7 @@ export default function QueryAnalysisPage() {
             历史
           </Button>
           <Button
-            variant={activeTab === 'saved'  'default' : 'outline'}
+            variant={activeTab === 'saved' ? 'default' : 'outline'}
             size="sm"
             className="flex-1 text-xs py-2"
             onClick={() => setActiveTab('saved')}
@@ -502,7 +502,7 @@ export default function QueryAnalysisPage() {
                             }
                             className="text-xs"
                           >
-                            {item.status === 'success'  '成功' : '失败'}
+                            {item.status === 'success' ? '成功' : '失败'}
                           </Badge>
                         </div>
                         <p className="text-xs sm:text-sm text-gray-600 font-mono mb-2 line-clamp-2">

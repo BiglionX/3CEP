@@ -143,7 +143,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: action === 'approve'  '瀹℃牳氳繃鎴愬姛' : '椹冲洖鎿嶄綔鎴愬姛',
+      message: action === 'approve' ? '瀹℃牳氳繃鎴愬姛' : '椹冲洖鎿嶄綔鎴愬姛',
       affected: ids.length,
     });
   } catch (error) {

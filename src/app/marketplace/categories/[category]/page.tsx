@@ -206,7 +206,7 @@ export default function CategoryPage() {
   };
 
   const formatPrice = (price: number) => {
-    return price === 0  '免费' : `¥${price.toFixed(2)}`;
+    return price === 0 ? '免费' : `¥${price.toFixed(2)}`;
   };
 
   if (isLoading) {
@@ -337,13 +337,13 @@ export default function CategoryPage() {
             <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid'  'bg-white shadow-sm' : 'text-gray-500'}`}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
               >
                 <Grid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list'  'bg-white shadow-sm' : 'text-gray-500'}`}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
               >
                 <List className="w-5 h-5" />
               </button>
@@ -374,7 +374,7 @@ export default function CategoryPage() {
             <div
               key={agent.id}
               className={`bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
-                viewMode === 'list'  'p-6' : 'p-6'
+                viewMode === 'list' ? 'p-6' : 'p-6'
               }`}
               onClick={() => router.push(`/marketplace/${agent.id}`)}
             >
