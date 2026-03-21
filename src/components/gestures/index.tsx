@@ -1,31 +1,31 @@
 ﻿/**
- * 手势支持组件? * 提供常用的移动端手势交互组件
+ * 手势支持组件
+ * 提供常用的移动端手势交互组件
  */
 
 'use client';
 
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
-  useGestures,
-  GestureType,
   GestureEventData,
+  GestureType,
+  useGestures,
 } from '@/hooks/use-gestures';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
-  ChevronDown,
-  ZoomIn,
-  ZoomOut,
-  RotateCw,
-  Move,
   Hand,
   Maximize2,
   Minimize2,
+  Move,
+  RotateCw,
 } from 'lucide-react';
+import { useRef, useState } from 'react';
 
-// 手势可视化反馈组?interface GestureVisualizerProps {
+// 手势可视化反馈组件
+interface GestureVisualizerProps {
   gesture?: GestureType;
   eventData?: GestureEventData;
   isVisible?: boolean;
@@ -124,7 +124,8 @@ function GestureVisualizer({
   );
 }
 
-// 可手势操作的图片查看?interface GestureImageViewerProps {
+// 可手势操作的图片查看器
+interface GestureImageViewerProps {
   src: string;
   alt?: string;
   className?: string;
@@ -208,7 +209,7 @@ export function GestureImageViewer({
     },
   };
 
-  const { ref } = useGestures(handlers);
+  const { ref: imageRef } = useGestures<HTMLDivElement>(handlers);
 
   // 重置手势
   const resetGestures = () => {
@@ -220,7 +221,7 @@ export function GestureImageViewer({
   return (
     <div className="relative">
       <div
-        ref={ref}
+        ref={imageRef as any}
         className={`overflow-hidden cursor-grab active:cursor-grabbing ${className}`}
         style={{
           transform: `translate(${position.x}px, ${position.y}px)`,
@@ -257,10 +258,13 @@ export function GestureImageViewer({
         </button>
       </div>
 
-      {/* 手势可视化反?*/}
+      {/* 手势可视化反馈 */}
       <AnimatePresence>
         {showVisualizer && lastGesture && (
-          <GestureVisualizer gesture={lastGesture} eventData={gestureData} />
+          <GestureVisualizer
+            gesture={lastGesture}
+            eventData={gestureData ?? undefined}
+          />
         )}
       </AnimatePresence>
     </div>
@@ -334,15 +338,18 @@ export function GestureCard({
     },
   };
 
-  const { ref } = useGestures(handlers);
+  const { ref: cardRef } = useGestures<HTMLDivElement>(handlers);
 
   return (
-    <div ref={ref} className={`relative ${className}`}>
+    <div ref={cardRef as any} className={`relative ${className}`}>
       {children}
 
       <AnimatePresence>
         {showVisualizer && lastGesture && (
-          <GestureVisualizer gesture={lastGesture} eventData={gestureData} />
+          <GestureVisualizer
+            gesture={lastGesture}
+            eventData={gestureData ?? undefined}
+          />
         )}
       </AnimatePresence>
     </div>
@@ -415,7 +422,9 @@ export function GestureCanvas({
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -428,7 +437,10 @@ export function GestureCanvas({
       clearCanvas();
     },
     onPan: (data: GestureEventData) => {
-      const rect = canvasRef?.getBoundingClientRect();
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
       if (!rect) return;
 
       const x = data.x - rect.left;
@@ -442,14 +454,16 @@ export function GestureCanvas({
     },
   };
 
-  const { ref } = useGestures(handlers);
+  // GestureCanvas 使用原生 canvas 事件，不需要 useGestures hook
+  // const { ref: _canvasRefGesture } = useGestures<HTMLCanvasElement>(_handlers);
 
   return (
     <div className="relative inline-block">
       <canvas
         ref={el => {
-          canvasRef.current = el;
-          if (el) {
+          if (canvasRef.current === null && el) {
+            // 只在第一次时设置
+            Object.assign(canvasRef, { current: el });
             el.width = width;
             el.height = height;
           }
@@ -474,4 +488,4 @@ export function GestureCanvas({
 }
 
 // 手势支持导出
-export { GestureVisualizer, GestureImageViewer, GestureCard, GestureCanvas };
+export { GestureCanvas, GestureCard, GestureImageViewer, GestureVisualizer };
