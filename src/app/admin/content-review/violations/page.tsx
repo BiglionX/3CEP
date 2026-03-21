@@ -1,32 +1,10 @@
 ﻿'use client';
 
-import React, { useState, useEffect } from 'react';
-import {
-  Shield,
-  AlertTriangle,
-  Ban,
-  UserX,
-  Clock,
-  CheckCircle,
-  XCircle,
-  Eye,
-  Edit,
-  Search,
-  Filter,
-  Calendar,
-  User,
-  FileText,
-  Scale,
-  Hammer,
-  History,
-  TrendingUp,
-  Award,
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -34,20 +12,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import {
-  violationManagementService,
-  ViolationRecord,
   UserPenalty,
+  ViolationRecord,
 } from '@/lib/violation-management-service';
+import {
+  AlertTriangle,
+  Award,
+  Ban,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Edit,
+  Eye,
+  FileText,
+  Hammer,
+  History,
+  RefreshCw,
+  Scale,
+  Search,
+  Shield,
+  User,
+  XCircle,
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface ViolationWithDetails extends ViolationRecord {
   userName: string;
@@ -75,11 +64,11 @@ const ViolationSeverityBadge: React.FC<{ severity: string }> = ({
   return (
     <Badge className={`${getSeverityStyle()} font-medium capitalize`}>
       {severity === 'severe'
-         '严重'
+        ? '严重'
         : severity === 'serious'
-           '重度'
+          ? '重度'
           : severity === 'moderate'
-             '中度'
+            ? '中度'
             : '轻微'}
     </Badge>
   );
@@ -102,9 +91,9 @@ const PenaltyStatusBadge: React.FC<{ status: string }> = ({ status }) => {
   return (
     <Badge className={`${getStatusStyle()} capitalize`}>
       {status === 'active'
-         '生效中'
+        ? '生效中'
         : status === 'expired'
-           '已过期'
+          ? '已过期'
           : '已解除'}
     </Badge>
   );
@@ -143,13 +132,13 @@ const ViolationListItem: React.FC<{
             <ViolationSeverityBadge severity={violation.severity} />
             <Badge variant="outline" className="text-xs capitalize">
               {violation.status === 'pending'
-                 '待处理'
+                ? '待处理'
                 : violation.status === 'processing'
-                   '处理中'
+                  ? '处理中'
                   : violation.status === 'resolved'
-                     '已解决'
+                    ? '已解决'
                     : violation.status === 'appealed'
-                       '申诉中'
+                      ? '申诉中'
                       : '已驳回'}
             </Badge>
           </div>
@@ -164,7 +153,7 @@ const ViolationListItem: React.FC<{
             <span className="flex items-center">
               <User className="w-3 h-3 mr-1" />
               {violation.userName ||
-                violation.reporterId.substring(0, 8) ||
+                violation.reporterId?.substring(0, 8) ||
                 '匿名用户'}
             </span>
             <span className="flex items-center">
@@ -190,7 +179,7 @@ const ViolationListItem: React.FC<{
 const PenaltyManagementPanel: React.FC<{
   penalties: UserPenalty[];
   userId: string;
-}> = ({ penalties, userId }) => {
+}> = ({ penalties }) => {
   if (penalties.length === 0) {
     return (
       <Card>
@@ -220,16 +209,16 @@ const PenaltyManagementPanel: React.FC<{
                   <Badge
                     variant={
                       penalty.penaltyType === 'warning'
-                         'secondary'
+                        ? 'secondary'
                         : penalty.penaltyType === 'temporary_suspension'
-                           'destructive'
+                          ? 'destructive'
                           : 'outline'
                     }
                   >
                     {penalty.penaltyType === 'warning'
-                       '警告'
+                      ? '警告'
                       : penalty.penaltyType === 'temporary_suspension'
-                         '临时封禁'
+                        ? '临时封禁'
                         : '永久封禁'}
                   </Badge>
                   <PenaltyStatusBadge status={penalty.status} />
@@ -280,7 +269,8 @@ export default function ViolationManagementPage() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 30000); // 30 秒刷新一次
+    const _interval = setInterval(loadData, 30000); // 30 秒刷新一次
+    return () => clearInterval(_interval);
   }, []);
 
   const loadData = async () => {
@@ -383,9 +373,7 @@ export default function ViolationManagementPage() {
 
   const filteredViolations = violations.filter(violation => {
     const matchesSearch =
-      violation.contentTitle
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
+      violation.contentTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
       violation.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       violation.userName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType =
@@ -446,7 +434,8 @@ export default function ViolationManagementPage() {
                 onCheckedChange={setShowResolved}
               />
               <Label htmlFor="show-resolved" className="text-sm text-gray-600">
-                显示已解              </Label>
+                显示已解{' '}
+              </Label>
             </div>
 
             <Button variant="outline" onClick={loadData}>
@@ -641,7 +630,7 @@ export default function ViolationManagementPage() {
 
         {/* 详细信息面板 */}
         <div className="lg:col-span-1">
-          {selectedViolation  (
+          {selectedViolation ? (
             <div className="space-y-6">
               {/* 违规详情 */}
               <Card>
@@ -671,9 +660,9 @@ export default function ViolationManagementPage() {
                       <Label className="text-sm font-medium">检测方式</Label>
                       <Badge variant="outline" className="capitalize">
                         {selectedViolation.detectionMethod === 'auto'
-                           '自动检测'
+                          ? '自动检测'
                           : selectedViolation.detectionMethod === 'manual'
-                             '人工审核'
+                            ? '人工审核'
                             : '用户举报'}
                       </Badge>
                     </div>
@@ -710,16 +699,16 @@ export default function ViolationManagementPage() {
                             <Badge variant="secondary">
                               {selectedViolation.resolution.action ===
                               'content_removed'
-                                 '内容移除'
+                                ? '内容移除'
                                 : selectedViolation.resolution.action ===
                                     'content_modified'
-                                   '内容修改'
+                                  ? '内容修改'
                                   : selectedViolation.resolution.action ===
                                       'account_warned'
-                                     '账户警告'
+                                    ? '账户警告'
                                     : selectedViolation.resolution.action ===
                                         'account_suspended'
-                                       '账户暂停'
+                                      ? '账户暂停'
                                       : '账户封禁'}
                             </Badge>
                           </div>
@@ -787,7 +776,8 @@ export default function ViolationManagementPage() {
                   选择违规记录
                 </h3>
                 <p className="text-gray-600">
-                  从左侧列表中选择一条违规记录查看详                </p>
+                  从左侧列表中选择一条违规记录查看详{' '}
+                </p>
               </CardContent>
             </Card>
           )}
@@ -796,4 +786,3 @@ export default function ViolationManagementPage() {
     </div>
   );
 }
-

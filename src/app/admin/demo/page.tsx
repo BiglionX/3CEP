@@ -1,16 +1,8 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { BreadcrumbNav } from '@/components/admin/BreadcrumbNav';
+import { DynamicMenu } from '@/components/admin/DynamicMenu';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -20,9 +12,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { DynamicMenu } from '@/components/admin/DynamicMenu';
-import { BreadcrumbNav } from '@/components/admin/BreadcrumbNav';
-import { Plus, Edit, Trash2, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Edit, Plus, Search, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface User {
   id: string;
@@ -185,7 +185,7 @@ export default function AdminDemoPage() {
                       <span
                         className={`inline-flex items-center rounded-full text-xs px-2.5 py-0.5 ${
                           user.status === 'active'
-                             'bg-green-100 text-green-800'
+                            ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
                         }`}
                       >
@@ -248,4 +248,3 @@ export default function AdminDemoPage() {
     </div>
   );
 }
-

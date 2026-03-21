@@ -42,9 +42,36 @@ async function loadRbacConfig() {
 }
 
 /**
+ * RBAC 权限检查 Hook 返回类型
+ */
+interface UseRbacPermissionReturn {
+  // 状态
+  isLoading: boolean;
+  isConfigLoaded: boolean;
+
+  // 用户信息
+  user: any;
+  roles: string[] | undefined;
+
+  // 权限检查方法
+  hasPermission: (permission: string) => boolean;
+  hasAnyPermission: (permissions: string[]) => boolean;
+  hasAllPermissions: (permissions: string[]) => boolean;
+  canAccessResource: (resource: string, action: string) => boolean;
+
+  // 资源访问
+  getAccessibleResources: (category?: string) => string[];
+
+  // 配置信息
+  getPermissionInfo: (permission: string) => PermissionInfo | null;
+  getRoleInfo: (role: string) => RoleInfo | null;
+  rbacConfig: RbacConfig | null;
+}
+
+/**
  * RBAC 权限检查 Hook
  */
-export function useRbacPermission() {
+export function useRbacPermission(): UseRbacPermissionReturn {
   const { user, roles, isLoading } = useUser();
   const [rbacConfig, setRbacConfig] = useState<RbacConfig | null>(null);
   const [configLoading, setConfigLoading] = useState(true);
@@ -108,13 +135,15 @@ export function useRbacPermission() {
 
     const accessibleResources = new Set<string>();
 
-    // 超级管理员可以访问所有资?    if (roles.includes('admin')) {
+    // 超级管理员可以访问所有资源
+    if (roles.includes('admin')) {
       return Object.keys(rbacConfig.permissions).map(
         key => rbacConfig.permissions[key].resource
       );
     }
 
-    // 收集用户所有角色的权限对应的资?    for (const role of roles) {
+    // 收集用户所有角色的权限对应的资源
+    for (const role of roles) {
       const permissions = rbacConfig.role_permissions[role] || [];
       for (const permKey of permissions) {
         const permission = rbacConfig.permissions[permKey];

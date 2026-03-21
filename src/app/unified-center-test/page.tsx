@@ -1,17 +1,17 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import UserSidebarNavigation from '@/components/user/UserSidebarNavigation';
 import DynamicModuleMenu from '@/components/user/DynamicModuleMenu';
+import UserSidebarNavigation from '@/components/user/UserSidebarNavigation';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import {
   getAllModules,
   getModulesByCategory,
   type ModuleConfig,
 } from '@/lib/module-registry';
-import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import { useState } from 'react';
 
 export default function UnifiedCenterTestPage() {
   const { is_admin } = useUnifiedAuth();
@@ -153,19 +153,21 @@ export default function UnifiedCenterTestPage() {
                             业务功能模块
                           </h3>
                           <ul className="space-y-2">
-                            {businessModules.slice(0, 5).map((module: ModuleConfig) => (
-                              <li
-                                key={module.id}
-                                className="flex items-center justify-between text-sm"
-                              >
-                                <span className="text-gray-600">
-                                  {module.name}
-                                </span>
-                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                                  {module.path}
-                                </span>
-                              </li>
-                            ))}
+                            {businessModules
+                              .slice(0, 5)
+                              .map((module: ModuleConfig) => (
+                                <li
+                                  key={module.id}
+                                  className="flex items-center justify-between text-sm"
+                                >
+                                  <span className="text-gray-600">
+                                    {module.name}
+                                  </span>
+                                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                    {module.path}
+                                  </span>
+                                </li>
+                              ))}
                           </ul>
                         </div>
 
@@ -174,19 +176,21 @@ export default function UnifiedCenterTestPage() {
                             管理功能模块
                           </h3>
                           <ul className="space-y-2">
-                            {managementModules.slice(0, 5).map((module: ModuleConfig) => (
-                              <li
-                                key={module.id}
-                                className="flex items-center justify-between text-sm"
-                              >
-                                <span className="text-gray-600">
-                                  {module.name}
-                                </span>
-                                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                                  {module.path}
-                                </span>
-                              </li>
-                            ))}
+                            {managementModules
+                              .slice(0, 5)
+                              .map((module: ModuleConfig) => (
+                                <li
+                                  key={module.id}
+                                  className="flex items-center justify-between text-sm"
+                                >
+                                  <span className="text-gray-600">
+                                    {module.name}
+                                  </span>
+                                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                                    {module.path}
+                                  </span>
+                                </li>
+                              ))}
                           </ul>
                         </div>
                       </div>
@@ -320,7 +324,10 @@ export default function UnifiedCenterTestPage() {
                         <div className="flex justify-between">
                           <span className="text-gray-600">启用模块:</span>
                           <span className="font-medium">
-                            {allModules.filter((m: ModuleConfig) => m.enabled).length}
+                            {
+                              allModules.filter((m: ModuleConfig) => m.enabled)
+                                .length
+                            }
                           </span>
                         </div>
                         <div className="flex justify-between">

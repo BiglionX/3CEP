@@ -176,10 +176,10 @@ const PartForm = ({ part, onSuccess, onCancel }: PartFormProps) => { // @ts-igno
               <option value="屏幕">屏幕</option>
               <option value="电池">电池</option>
               <option value="摄像>摄像/option>
-              <option value="外壳">外壳</option>
+              <option value=">外壳</option>
               <option value="线材">线材</option>
               <option value="充电>充电/option>
-              <option value="其他">其他</option>
+              <option value=">其他</option>
             </select>
           </div>
           

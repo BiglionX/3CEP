@@ -1,6 +1,7 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,25 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -35,21 +25,26 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  RefreshCw,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import {
+  Battery,
   Download,
+  Edit,
+  Eye,
+  Plus,
+  RefreshCw,
   Search,
   Smartphone,
-  HardDrive,
-  Battery,
-  Wifi,
-  Settings,
-  AlertTriangle,
+  Trash2,
 } from 'lucide-react';
-import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import { useEffect, useState } from 'react';
 
 interface Device {
   id: string;
@@ -89,13 +84,13 @@ export default function DeviceManager() {
     'view'
   );
 
-  // 权限检
-  const { hasPermission } = useRbacPermission();
-  const canView = hasPermission('devicemgr.view');
-  const canManage = hasPermission('devicemgr.manage');
-  const canDelete = hasPermission('devicemgr.delete');
+  // 权限检查
+  const { hasPermission, isLoading: permissionLoading } = useRbacPermission();
+  const canView = !permissionLoading && hasPermission('devicemgr.view');
+  const canManage = !permissionLoading && hasPermission('devicemgr.manage');
+  const canDelete = !permissionLoading && hasPermission('devicemgr.delete');
 
-  // 筛选条
+  // 筛选条件
   const [filters, setFilters] = useState({
     category: '',
     status: '',
@@ -105,7 +100,7 @@ export default function DeviceManager() {
     search: '',
   });
 
-  // 分组和标签相关状
+  // 分组和标签相关状态
   const [groups, setGroups] = useState<any[]>([]);
   const [tags, setTags] = useState<any[]>([]);
   const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
@@ -149,7 +144,7 @@ export default function DeviceManager() {
   const fetchDevices = async () => {
     setLoading(true);
     try {
-      // 模拟API调用
+      // 模拟 API 调用
       const mockData: Device[] = [
         {
           id: 'device_001',
@@ -174,6 +169,9 @@ export default function DeviceManager() {
           warranty_end: '2025-01-01T10:00:00Z',
           purchase_date: '2024-01-01T10:00:00Z',
           repair_count: 0,
+          group_id: '',
+          group_name: '',
+          tags: [],
         },
         {
           id: 'device_002',
@@ -198,6 +196,9 @@ export default function DeviceManager() {
           warranty_end: '2024-12-31T09:30:00Z',
           purchase_date: '2024-01-05T09:30:00Z',
           repair_count: 1,
+          group_id: '',
+          group_name: '',
+          tags: [],
         },
       ];
 
@@ -210,7 +211,7 @@ export default function DeviceManager() {
     }
   };
 
-  // 应用筛
+  // 应用筛选
   const applyFilters = () => {
     let filtered = [...devices];
 
@@ -254,7 +255,7 @@ export default function DeviceManager() {
     setFilteredDevices(filtered);
   };
 
-  // 处理筛选变
+  // 处理筛选变化
   const handleFilterChange = (field: string, value: string) => {
     setFilters(prev => ({
       ...prev,
@@ -269,7 +270,7 @@ export default function DeviceManager() {
     setIsGroupDialogOpen(true);
   };
 
-  const handleEditGroup = (group: any) => {
+  const _handleEditGroup = (group: any) => {
     setSelectedGroup(group);
     setGroupForm({
       name: group.name,
@@ -282,7 +283,7 @@ export default function DeviceManager() {
   const handleSaveGroup = async () => {
     try {
       const url = selectedGroup
-         `/api/admin/devices/groups/${selectedGroup.id}`
+        ? `/api/admin/devices/groups/${selectedGroup.id}`
         : '/api/admin/devices/groups';
 
       const method = selectedGroup ? 'PUT' : 'POST';
@@ -306,7 +307,7 @@ export default function DeviceManager() {
     }
   };
 
-  const handleDeleteGroup = async (groupId: string) => {
+  const _handleDeleteGroup = async (groupId: string) => {
     if (!confirm('确定要删除这个分组吗？')) return;
 
     try {
@@ -333,7 +334,7 @@ export default function DeviceManager() {
     setIsTagDialogOpen(true);
   };
 
-  const handleEditTag = (tag: any) => {
+  const _handleEditTag = (tag: any) => {
     setSelectedTag(tag);
     setTagForm({ name: tag.name, color: tag.color });
     setIsTagDialogOpen(true);
@@ -342,7 +343,7 @@ export default function DeviceManager() {
   const handleSaveTag = async () => {
     try {
       const url = selectedTag
-         `/api/admin/devices/tags/${selectedTag.id}`
+        ? `/api/admin/devices/tags/${selectedTag.id}`
         : '/api/admin/devices/tags';
 
       const method = selectedTag ? 'PUT' : 'POST';
@@ -366,7 +367,7 @@ export default function DeviceManager() {
     }
   };
 
-  const handleDeleteTag = async (tagId: string) => {
+  const _handleDeleteTag = async (tagId: string) => {
     if (!confirm('确定要删除这个标签吗？')) return;
 
     try {
@@ -415,9 +416,9 @@ export default function DeviceManager() {
     }
   };
 
-  // 导出数据
-  const handleExport = () => {
-    console.log('导出设备数据');
+  // 导出数据 - TODO: 实现导出功能
+  const _handleExport = () => {
+    // console.log('导出设备数据');
   };
 
   // 刷新数据
@@ -478,7 +479,7 @@ export default function DeviceManager() {
       <div className="flex flex-wrap gap-1">
         {deviceTags.slice(0, 3).map(tagId => {
           const tag = tags.find(t => t.id === tagId);
-          return tag  (
+          return tag ? (
             <Badge
               key={tag.id}
               className="text-xs"
@@ -502,7 +503,7 @@ export default function DeviceManager() {
     if (!groupId) return '-';
 
     const group = groups.find(g => g.id === groupId);
-    return group  (
+    return group ? (
       <div className="flex items-center">
         <div
           className="w-3 h-3 rounded-full mr-2"
@@ -552,14 +553,14 @@ export default function DeviceManager() {
     { key: 'actions', title: '操作', width: '150px' },
   ];
 
-  // 初始化数
+  // 初始化数据
   useEffect(() => {
     fetchDevices();
     fetchGroups();
     fetchTags();
   }, []);
 
-  // 筛选变化时重新应用筛
+  // 筛选变化时重新应用筛选
   useEffect(() => {
     applyFilters();
   }, [filters, devices]);
@@ -577,7 +578,7 @@ export default function DeviceManager() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作按*/}
+      {/* 页面标题和操作按钮 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">设备管理</h1>
@@ -594,14 +595,14 @@ export default function DeviceManager() {
               新增设备
             </Button>
           )}
-          <Button variant="outline" onClick={handleExport}>
+          <Button variant="outline" onClick={_handleExport}>
             <Download className="w-4 h-4 mr-2" />
             导出数据
           </Button>
         </div>
       </div>
 
-      {/* 筛选面*/}
+      {/* 筛选面板 */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">筛选条件</CardTitle>
@@ -718,7 +719,7 @@ export default function DeviceManager() {
             <Button onClick={applyFilters}>应用筛选</Button>
           </div>
 
-          {/* 分组和标签管理按*/}
+          {/* 分组和标签管理按钮 */}
           <div className="flex space-x-2 mt-4 pt-4 border-t">
             <Button variant="outline" size="sm" onClick={handleCreateGroup}>
               管理分组
@@ -805,7 +806,7 @@ export default function DeviceManager() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {loading  (
+                {loading ? (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -852,7 +853,7 @@ export default function DeviceManager() {
                       <TableCell>{device.shop_name || '-'}</TableCell>
                       <TableCell>{renderStatusTag(device.status)}</TableCell>
                       <TableCell>
-                        {device.battery_level !== null  (
+                        {device.battery_level !== null ? (
                           <div className="flex items-center">
                             <Battery className="w-4 h-4 text-blue-500 mr-1" />
                             <span>{device.battery_level}%</span>
@@ -862,7 +863,7 @@ export default function DeviceManager() {
                         )}
                       </TableCell>
                       <TableCell>
-                        {device.storage_total  (
+                        {device.storage_total ? (
                           <div className="text-sm">
                             <div>
                               {calculateStorageUsage(
@@ -920,15 +921,15 @@ export default function DeviceManager() {
         </CardContent>
       </Card>
 
-      {/* 详情/编辑对话*/}
+      {/* 详情/编辑对话框 */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>
               {dialogMode === 'view'
-                 '设备详情'
+                ? '设备详情'
                 : dialogMode === 'edit'
-                   '编辑设备'
+                  ? '编辑设备'
                   : '新增设备'}
             </DialogTitle>
           </DialogHeader>
@@ -1059,7 +1060,7 @@ export default function DeviceManager() {
                     type="date"
                     value={
                       selectedDevice.purchase_date
-                         selectedDevice.purchase_date.split('T')[0]
+                        ? selectedDevice.purchase_date.split('T')[0]
                         : ''
                     }
                     readOnly={dialogMode === 'view'}
@@ -1073,7 +1074,7 @@ export default function DeviceManager() {
                     type="date"
                     value={
                       selectedDevice.warranty_end
-                         selectedDevice.warranty_end.split('T')[0]
+                        ? selectedDevice.warranty_end.split('T')[0]
                         : ''
                     }
                     readOnly={dialogMode === 'view'}
@@ -1108,7 +1109,7 @@ export default function DeviceManager() {
                   <CardContent>
                     <div className="text-2xl font-bold text-blue-600">
                       {selectedDevice.battery_level !== null
-                         `${selectedDevice.battery_level}%`
+                        ? `${selectedDevice.battery_level}%`
                         : 'N/A'}
                     </div>
                   </CardContent>
@@ -1121,7 +1122,7 @@ export default function DeviceManager() {
                   <CardContent>
                     <div className="text-lg font-medium">
                       {selectedDevice.storage_total
-                         `${selectedDevice.storage_used}GB / ${selectedDevice.storage_total}GB`
+                        ? `${selectedDevice.storage_used}GB / ${selectedDevice.storage_total}GB`
                         : 'N/A'}
                     </div>
                     <div className="text-sm text-gray-500">
@@ -1161,7 +1162,7 @@ export default function DeviceManager() {
         </DialogContent>
       </Dialog>
 
-      {/* 分组管理对话*/}
+      {/* 分组管理对话框 */}
       <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -1234,7 +1235,7 @@ export default function DeviceManager() {
         </DialogContent>
       </Dialog>
 
-      {/* 标签管理对话*/}
+      {/* 标签管理对话框 */}
       <Dialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
         <DialogContent>
           <DialogHeader>

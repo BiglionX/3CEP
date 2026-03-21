@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import { useState } from 'react';
 
 export default function UnifiedAuthTest() {
   const {
@@ -86,7 +86,7 @@ export default function UnifiedAuthTest() {
               <div>
                 <p className="text-sm text-gray-600">用户邮箱:</p>
                 <p className="font-medium text-gray-900">
-                  {user.email || '无'}
+                  {user?.email || '无'}
                 </p>
               </div>
             </div>

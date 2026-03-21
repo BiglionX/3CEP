@@ -113,7 +113,7 @@ const mockPortals = [
     user_name: '赵六',
     business_type: 'repair-shop',
     portal_name: '赵六汽修',
-    portal_description: '快速维修，质量保证',
+    portal_description: '快速维修',质量保证',
     business_links_count: 2,
     promotional_images_count: 1,
     blog_posts_count: 0,

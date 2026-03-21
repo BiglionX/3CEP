@@ -82,8 +82,7 @@ export default function PermissionsDemoPage() {
               onClick={() => setSelectedRole(role)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedRole === role
-                   'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               {role}

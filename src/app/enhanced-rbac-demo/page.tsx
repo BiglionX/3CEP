@@ -5,18 +5,15 @@
 
 'use client';
 
-import { useState } from 'react';
 import {
-  Shield,
-  Users,
-  Key,
-  Activity,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Clock,
-  UserCheck,
-} from 'lucide-react';
+  EnhancedRbacProvider,
+  PermissionGuard,
+  RoleGuard,
+  useEnhancedRbac,
+} from '@/components/enhanced-rbac/EnhancedRbacManager';
+import { PermissionManagementPanel } from '@/components/enhanced-rbac/PermissionManagementPanel';
+import { RoleManagementPanel } from '@/components/enhanced-rbac/RoleManagementPanel';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -26,15 +23,18 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import {
-  EnhancedRbacProvider,
-  useEnhancedRbac,
-  PermissionGuard,
-  RoleGuard,
-} from '@/components/enhanced-rbac/EnhancedRbacManager';
-import { PermissionManagementPanel } from '@/components/enhanced-rbac/PermissionManagementPanel';
-import { RoleManagementPanel } from '@/components/enhanced-rbac/RoleManagementPanel';
+  Activity,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Key,
+  Shield,
+  UserCheck,
+  Users,
+  XCircle,
+} from 'lucide-react';
+import { useState } from 'react';
 
 // 模拟用户权限上下文
 const MOCK_USER_CONTEXT = {
@@ -80,8 +80,8 @@ function DemoBusinessComponents() {
     const results = batchCheckPermissions(permissionsToCheck);
     setBatchResult(results);
 
-    const missing = getMissingPermissions(permissionsToCheck);
-    // TODO: 移除调试日志 - console.log('缺少的权限:', missing);
+    const _missing = getMissingPermissions(permissionsToCheck);
+    // TODO: 移除调试日志 - console.log('缺少的权限:', _missing);
   };
 
   return (
@@ -90,7 +90,8 @@ function DemoBusinessComponents() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="w-5 h-5" />
-            权限检查演          </CardTitle>
+            权限检查演{' '}
+          </CardTitle>
           <CardDescription>实时展示各种权限检查功能的效果</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -98,7 +99,7 @@ function DemoBusinessComponents() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-3">
-            <CardTitle className="text-lg">基础权限检查</CardTitle>
+                <CardTitle className="text-lg">基础权限检查</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
@@ -156,7 +157,8 @@ function DemoBusinessComponents() {
                     </p>
                     {conditionalResult.requiresApproval && (
                       <Badge className="mt-2" variant="destructive">
-                        需要审批                      </Badge>
+                        需要审批{' '}
+                      </Badge>
                     )}
                   </div>
                 )}
@@ -169,7 +171,8 @@ function DemoBusinessComponents() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <UserCheck className="w-5 h-5" />
-                批量权限检              </CardTitle>
+                批量权限检{' '}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -207,7 +210,8 @@ function DemoBusinessComponents() {
         <CardHeader>
           <CardTitle>权限保护组件演示</CardTitle>
           <CardDescription>
-            展示如何使用权限保护组件控制UI元素的可见          </CardDescription>
+            展示如何使用权限保护组件控制UI元素的可见{' '}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* 权限保护 */}
@@ -220,7 +224,8 @@ function DemoBusinessComponents() {
                 </span>
               </div>
               <p className="text-sm text-green-600 mt-1">
-                因为您拥users_create 权限，所以可以看到这个受保护的内              </p>
+                因为您拥users_create 权限，所以可以看到这个受保护的内{' '}
+              </p>
             </div>
           </PermissionGuard>
 
@@ -236,7 +241,8 @@ function DemoBusinessComponents() {
                 </span>
               </div>
               <p className="text-sm text-blue-600 mt-1">
-                因为您拥有系统管理相关权限之一，所以可以看到这个内              </p>
+                因为您拥有系统管理相关权限之一，所以可以看到这个内{' '}
+              </p>
             </div>
           </PermissionGuard>
 
@@ -248,10 +254,12 @@ function DemoBusinessComponents() {
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-yellow-600" />
                   <span className="font-medium text-yellow-800">
-                    采购审批功能不可                  </span>
+                    采购审批功能不可{' '}
+                  </span>
                 </div>
                 <p className="text-sm text-yellow-600 mt-1">
-                  因为您没procurement_approve 权限，所以这个功能被隐藏                </p>
+                  因为您没procurement_approve 权限，所以这个功能被隐藏{' '}
+                </p>
               </div>
             }
           >
@@ -270,7 +278,8 @@ function DemoBusinessComponents() {
             roles={['admin', 'manager']}
             fallback={
               <div className="p-4 bg-gray-100 rounded text-gray-500">
-                此内容仅对管理员和经理可              </div>
+                此内容仅对管理员和经理可{' '}
+              </div>
             }
           >
             <div className="p-4 bg-purple-50 border border-purple-200 rounded">
@@ -281,7 +290,8 @@ function DemoBusinessComponents() {
                 </span>
               </div>
               <p className="text-sm text-purple-600 mt-1">
-                作为管理员，您可以访问这些高级管理功              </p>
+                作为管理员，您可以访问这些高级管理功{' '}
+              </p>
             </div>
           </RoleGuard>
         </CardContent>
@@ -312,7 +322,8 @@ function EnhancedRbacDemo() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Key className="w-5 h-5" />
-                细粒度权              </CardTitle>
+                细粒度权{' '}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
@@ -330,7 +341,8 @@ function EnhancedRbacDemo() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                支持角色间的继承关系，简化权限管              </p>
+                支持角色间的继承关系，简化权限管{' '}
+              </p>
             </CardContent>
           </Card>
 
@@ -338,11 +350,13 @@ function EnhancedRbacDemo() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Clock className="w-5 h-5" />
-                动态授              </CardTitle>
+                动态授{' '}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                支持临时权限分配和条件访问控              </p>
+                支持临时权限分配和条件访问控{' '}
+              </p>
             </CardContent>
           </Card>
 
@@ -412,4 +426,3 @@ export default function EnhancedRbacDemoPage() {
     </EnhancedRbacProvider>
   );
 }
-

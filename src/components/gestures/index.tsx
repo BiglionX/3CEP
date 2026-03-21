@@ -431,7 +431,7 @@ export function GestureCanvas({
     onClear?.();
   };
 
-  const handlers = {
+  const _handlers = {
     onTap: () => {
       // 点击清空画布
       clearCanvas();

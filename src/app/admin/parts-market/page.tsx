@@ -129,7 +129,7 @@ export default function PartsMarketManagement() {
           unit: ',
           status: 'out_of_stock',
           image_url: null,
-          description: '原装电池，容000mAh',
+          description: '原装电池',容000mAh',
           supplier: '三星电子',
           created_at: '2024-01-10T09:15:00Z',
           updated_at: '2024-01-18T16:45:00Z',

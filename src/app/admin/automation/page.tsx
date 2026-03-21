@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Copy, Eye, EyeOff, Info } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function AutomationPage() {
   const [n8nUrl, setN8nUrl] = useState<string>('https://n8n.yourdomain.com');
@@ -38,7 +38,7 @@ export default function AutomationPage() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch(url, {
+      const _response = await fetch(url, {
         method: 'HEAD',
         signal: controller.signal,
         mode: 'no-cors', // 避免 CORS 问题
@@ -170,7 +170,7 @@ export default function AutomationPage() {
                     onClick={() => setShowCredentials(!showCredentials)}
                     className="flex items-center gap-1"
                   >
-                    {showCredentials  (
+                    {showCredentials ? (
                       <EyeOff className="w-3 h-3" />
                     ) : (
                       <Eye className="w-3 h-3" />

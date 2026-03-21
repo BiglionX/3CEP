@@ -327,7 +327,7 @@ export default function PendingLinksPage() {
               <option value="维修教程">维修教程</option>
               <option value="视频教程">视频教程</option>
               <option value="技术分>技术分/option>
-              <option value="官方指南">官方指南</option>
+              <option value=">官方指南</option>
               <option value="检测指>检测指/option>
             </select>
           </div>

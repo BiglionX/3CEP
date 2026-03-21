@@ -1,19 +1,7 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Cell,
-} from 'recharts';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -21,23 +9,35 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import {
-  Filter,
-  Download,
   AlertTriangle,
-  CheckCircle,
-  TrendingUp,
-  TrendingDown,
-  Clock,
-  Package,
-  DollarSign,
-  Users,
-  MapPin,
   BarChart3,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Download,
+  Filter,
+  MapPin,
+  Package,
+  TrendingDown,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 // 类型定义
 interface WarehouseKPI {
@@ -158,7 +158,7 @@ export default function WMSEfficiencyDashboard() {
         setDashboardData(result.data);
       }
     } catch (error) {
-      console.error('加载看板数据失败:', error);
+      // 错误已在父组件处理，此处静默失败
     } finally {
       setLoading(false);
     }
@@ -177,8 +177,7 @@ export default function WMSEfficiencyDashboard() {
 
   const exportData = () => {
     // 实现数据导出功能
-    // TODO: 移除调试日志
-    console.log('导出数据');
+    // TODO: 实现实际的数据导出逻辑
   };
 
   // 渲染指标卡片

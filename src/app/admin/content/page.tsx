@@ -1,15 +1,14 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -18,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useEffect, useState } from 'react';
 
 interface Content {
   id: string;
@@ -87,7 +87,7 @@ export default function ContentManagementPage() {
     fetchContents();
   }, [pagination.page, searchTerm, typeFilter, statusFilter]);
 
-  // 处理全
+  // 处理全选
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(contents.map(content => content.id));
@@ -136,7 +136,7 @@ export default function ContentManagementPage() {
 
     try {
       const url = editingContent.id
-         `/api/admin/content/${editingContent.id}`
+        ? `/api/admin/content/${editingContent.id}`
         : '/api/admin/content';
 
       const method = editingContent.id ? 'PUT' : 'POST';
@@ -190,17 +190,17 @@ export default function ContentManagementPage() {
         alert(`${actionText}成功`);
         fetchContents();
       } else {
-        alert(`操作失败: ${result.error}`);
+        alert(`操作失败：${result.error}`);
       }
     } catch (error) {
-      console.error('状态切换失', error);
+      console.error('状态切换失败', error);
       alert('操作失败');
     }
   };
 
   // 删除内容
-  const deleteContent = async (contentId: string, title: string) => {
-    if (!confirm(`确定要删除内"${title}" 吗？此操作不可撤销！`)) return;
+  const _deleteContent = async (contentId: string, title: string) => {
+    if (!confirm(`确定要删除内容"${title}" 吗？此操作不可撤销！`)) return;
 
     try {
       const response = await fetch(`/api/admin/content/${contentId}`, {
@@ -315,7 +315,7 @@ export default function ContentManagementPage() {
 
       {/* 内容列表表格 */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        {loading  (
+        {loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             <span className="ml-2 text-gray-600">加载中...</span>
@@ -426,7 +426,7 @@ export default function ContentManagementPage() {
                 pagination.page * pagination.pageSize,
                 pagination.total
               )}{' '}
-              条， {pagination.total} 条记
+              条，共 {pagination.total} 条记录
             </div>
             <div className="flex gap-2">
               <Button
@@ -454,12 +454,12 @@ export default function ContentManagementPage() {
         )}
       </div>
 
-      {/* 编辑内容对话*/}
+      {/* 编辑内容对话框 */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingContent.id ? '编辑内容' : '新建内容'}
+              {editingContent?.id ? '编辑内容' : '新建内容'}
             </DialogTitle>
           </DialogHeader>
 
@@ -484,7 +484,7 @@ export default function ContentManagementPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    作*
+                    作者 *
                   </label>
                   <Input
                     value={editingContent.author}
@@ -569,7 +569,7 @@ export default function ContentManagementPage() {
                   }
                   rows={10}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="请输入内.."
+                  placeholder="请输入内容..."
                 />
               </div>
             </div>
@@ -580,7 +580,7 @@ export default function ContentManagementPage() {
               取消
             </Button>
             <Button onClick={saveContent}>
-              {editingContent.id ? '保存更改' : '创建内容'}
+              {editingContent?.id ? '保存更改' : '创建内容'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -588,4 +588,3 @@ export default function ContentManagementPage() {
     </div>
   );
 }
-

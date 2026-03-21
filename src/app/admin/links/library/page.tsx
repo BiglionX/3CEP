@@ -192,7 +192,7 @@ export default function LinkLibraryManagementPage() {
               <option value="">全部分类</option>
               <option value="维修教程">维修教程</option>
               <option value="技术分>技术分/option>
-              <option value="行业资讯">行业资讯</option>
+              <option value=">行业资讯</option>
               <option value="工具推荐">工具推荐</option>
               <option value="案例分析">案例分析</option>
             </select>

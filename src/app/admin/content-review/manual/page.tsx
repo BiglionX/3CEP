@@ -1,33 +1,10 @@
 ﻿'use client';
 
-import React, { useState, useEffect } from 'react';
-import {
-  Eye,
-  ThumbsUp,
-  ThumbsDown,
-  Flag,
-  Edit,
-  User,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Search,
-  Filter,
-  Calendar,
-  Tag,
-  MessageSquare,
-  History,
-  Shield,
-  Award,
-  TrendingUp,
-  RefreshCw,
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -35,20 +12,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { ContentItem, ModerationResult } from '@/lib/auto-moderation-service';
 import {
-  autoModerationService,
-  ContentItem,
-  ModerationResult,
-} from '@/lib/auto-moderation-service';
+  Award,
+  CheckCircle,
+  Clock,
+  Edit,
+  Eye,
+  Flag,
+  MessageSquare,
+  RefreshCw,
+  Search,
+  Shield,
+  Tag,
+  ThumbsDown,
+  ThumbsUp,
+  User,
+  XCircle,
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface ReviewTask {
   id: string;
@@ -76,7 +60,7 @@ interface Reviewer {
 
 const ContentPreview: React.FC<{
   content: ContentItem;
-  className: string;
+  className?: string;
 }> = ({ content, className = '' }) => {
   return (
     <div className={`bg-gray-50 rounded-lg p-4 ${className}`}>
@@ -224,7 +208,7 @@ const ReviewDecisionPanel: React.FC<{
     decision: 'approve' | 'reject' | 'modify',
     notes: string
   ) => void;
-}> = ({ taskId, onDecision }) => {
+}> = ({ onDecision }) => {
   const [decision, setDecision] = useState<'approve' | 'reject' | 'modify'>(
     'approve'
   );
@@ -357,6 +341,11 @@ export default function ManualReviewTool() {
             confidence: 0.85,
           },
           status: 'pending',
+          assignedTo: '',
+          assignedAt: 0,
+          completedAt: 0,
+          reviewerNotes: '',
+          finalDecision: 'approve',
         },
         {
           id: 'task_2',
@@ -364,8 +353,8 @@ export default function ManualReviewTool() {
             id: 'content_2',
             type: 'text',
             content:
-              '免费领取iPhone 15 Pro Max，点击链接立即获取！限时优惠，错过不再！',
-            title: '免费领iPhone',
+              '免费领取 iPhone 15 Pro Max，点击链接立即获取！限时优惠，错过不再！',
+            title: '免费领 iPhone',
             authorId: 'user_xyz789',
             submittedAt: Date.now() - 7200000,
           },
@@ -389,6 +378,11 @@ export default function ManualReviewTool() {
             confidence: 0.95,
           },
           status: 'pending',
+          assignedTo: '',
+          assignedAt: 0,
+          completedAt: 0,
+          reviewerNotes: '',
+          finalDecision: 'reject',
         },
       ];
 
@@ -440,7 +434,7 @@ export default function ManualReviewTool() {
     setTasks(prev =>
       prev.map(task =>
         task.id === taskId
-           {
+          ? {
               ...task,
               status: 'completed',
               finalDecision: decision,
@@ -452,15 +446,14 @@ export default function ManualReviewTool() {
     );
 
     setSelectedTask(null);
-  
+
     // 实际应用中会调用 API 保存审核结果
-    // TODO: 移除调试日志
-    console.log(`Task ${taskId} decided: ${decision}`, { notes });
   };
-  
+
   const filteredTasks = tasks.filter(task => {
     const matchesSearch =
-      task.content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (task.content.title?.toLowerCase().includes(searchTerm.toLowerCase()) ??
+        false) ||
       task.content.content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === 'all' || task.status === statusFilter;
@@ -663,9 +656,9 @@ export default function ManualReviewTool() {
                             <Badge
                               variant={
                                 priority === 'high'
-                                   'destructive'
+                                  ? 'destructive'
                                   : priority === 'medium'
-                                     'default'
+                                    ? 'default'
                                     : 'secondary'
                               }
                             >
@@ -674,9 +667,9 @@ export default function ManualReviewTool() {
 
                             <Badge variant="outline" className="text-xs">
                               {task.status === 'pending'
-                                 '待审核'
+                                ? '待审核'
                                 : task.status === 'reviewing'
-                                   '审核中'
+                                  ? '审核中'
                                   : '已完成'}
                             </Badge>
 
@@ -730,7 +723,7 @@ export default function ManualReviewTool() {
 
         {/* 详细信息面板 */}
         <div className="lg:col-span-1">
-          {selectedTask  (
+          {selectedTask ? (
             <div className="space-y-6">
               <ContentPreview content={selectedTask.content} />
 
@@ -744,6 +737,7 @@ export default function ManualReviewTool() {
                   handleDecision(selectedTask.id, decision, notes)
                 }
               />
+              {/* TODO: 移除调试日志 */}
             </div>
           ) : (
             <Card>
@@ -784,7 +778,8 @@ export default function ManualReviewTool() {
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-gray-600">
-                        准确率 {(reviewer.performance.accuracy * 100).toFixed(0)}%
+                        准确率{' '}
+                        {(reviewer.performance.accuracy * 100).toFixed(0)}%
                       </div>
                       <div className="text-xs text-gray-600">
                         处理 {reviewer.performance.workload} 个任务
@@ -800,4 +795,3 @@ export default function ManualReviewTool() {
     </div>
   );
 }
-

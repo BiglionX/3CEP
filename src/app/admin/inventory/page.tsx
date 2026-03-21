@@ -384,7 +384,7 @@ export default function InventoryManagementPage() {
                 <option value="手机配件">手机配件</option>
                 <option value="电池">电池</option>
                 <option value="数据源>数据源/option>
-                <option value="充电设备">充电设备</option>
+                <option value=">充电设备</option>
                 <option value="芯片">芯片</option>
                 <option value="工具">工具</option>
               </select>
@@ -813,7 +813,7 @@ export default function InventoryManagementPage() {
                     <option value="手机配件">手机配件</option>
                     <option value="电池">电池</option>
                     <option value="数据源>数据源/option>
-                    <option value="充电设备">充电设备</option>
+                    <option value=">充电设备</option>
                     <option value="芯片">芯片</option>
                     <option value="工具">工具</option>
                   </select>

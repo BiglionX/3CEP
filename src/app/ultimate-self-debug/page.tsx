@@ -79,7 +79,11 @@ export default function UltimateSelfDebug() {
         'success'
       );
       log(2, `管理员状态: ${loginResult.is_admin}`, 'data');
-      log(2, `会话令牌：${loginResult.access_token ? '已生成' : '未生成'}`, 'data');
+      log(
+        2,
+        `会话令牌：${loginResult.access_token ? '已生成' : '未生成'}`,
+        'data'
+      );
 
       setTestPhase(3);
 
@@ -191,7 +195,11 @@ export default function UltimateSelfDebug() {
                 } catch (error: unknown) {
                   const errorMessage =
                     error instanceof Error ? error.message : String(error);
-                  log(4, `警告: 跳转方式${i + 1}失败: ${errorMessage}`, 'warning');
+                  log(
+                    4,
+                    `警告: 跳转方式${i + 1}失败: ${errorMessage}`,
+                    'warning'
+                  );
                 }
               }
             }
@@ -239,7 +247,9 @@ export default function UltimateSelfDebug() {
                   disabled={isTesting}
                   className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
-                  {isTesting ? `测试中... (阶段${testPhase}/5)` : '运行完整诊断'}
+                  {isTesting
+                    ? `测试中... (阶段${testPhase}/5)`
+                    : '运行完整诊断'}
                 </button>
 
                 <button
@@ -358,9 +368,7 @@ export default function UltimateSelfDebug() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium text-red-300 mb-2">
-                  技术层面排查:
-                </h4>
+                <h4 className="font-medium text-red-300 mb-2">技术层面排查:</h4>
                 <ul className="space-y-1 text-red-200">
                   <li>✓ Next.js路由配置问题</li>
                   <li>✓ 浏览器同源策略限制</li>

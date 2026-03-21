@@ -234,7 +234,7 @@ export default function UserManager() {
       }
     } catch (error) {
       console.error('导出失败:', error);
-      alert('导出失败，请重试');
+      alert('导出失败',请重试');
     }
   };
 
@@ -269,7 +269,7 @@ export default function UserManager() {
       }
     } catch (error) {
       console.error('导入失败:', error);
-      alert('导入失败，请重试');
+      alert('导入失败',请重试');
     }
   };
 
@@ -1026,7 +1026,7 @@ export default function UserManager() {
               <Input
                 type="file"
                 accept=".csv,.xlsx,.xls"
-                onChange={(e) => setImportFile(e.target.files.[0] || null)}
+                onChange={(e) => setImportFile(e.target.files[0] || null)}
                 className="mb-2"
               />
               <p className="text-xs text-gray-500">

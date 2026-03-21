@@ -1,13 +1,13 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
 import {
-  useUser,
-  setMockToken,
   clearMockToken,
+  setMockToken,
+  useUser,
 } from '@/components/providers/AuthProvider';
-import { RoleGuard, PermissionGuard, Guard } from '@/components/RoleGuard';
+import { PermissionGuard, RoleGuard } from '@/components/RoleGuard';
 import { UserRole } from '@/lib/auth-service';
+import { useState } from 'react';
 
 export default function AuthTestPage() {
   const { user, roles, tenantId, isLoading, hasPermission, refreshUser } =
@@ -61,7 +61,7 @@ export default function AuthTestPage() {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">当前用户信息</h2>
 
-          {isLoading  (
+          {isLoading ? (
             <div className="text-center py-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
               <p className="mt-2 text-gray-500">加载中心..</p>
@@ -147,7 +147,7 @@ export default function AuthTestPage() {
                   onClick={() => handleSetMockUser(role)}
                   className={`px-4 py-2 rounded-md font-medium transition-colors ${
                     selectedRole === role
-                       'bg-blue-500 text-white'
+                      ? 'bg-blue-500 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
