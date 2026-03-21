@@ -96,7 +96,9 @@ export default function ApiConfigManager() {
 
       // 更新配置状态
       const updatedConfigs = configs.map(config => {
-        const result = results.find(r => r.provider === config.provider);
+        const result = results.find(
+          (r: ApiTestResult) => r.provider === config.provider
+        );
         if (result) {
           return {
             ...config,
@@ -112,7 +114,9 @@ export default function ApiConfigManager() {
       });
       setConfigs(updatedConfigs);
 
-      const successCount = results.filter(r => r.success).length;
+      const successCount = results.filter(
+        (r: ApiTestResult) => r.success
+      ).length;
       toast.success(
         `API测试完成：${successCount}/${results.length} 个API连接成功`
       );
@@ -343,7 +347,7 @@ export default function ApiConfigManager() {
         {Object.entries(groupedConfigs).map(([category, categoryConfigs]) => (
           <TabsContent key={category} value={category}>
             <div className="grid gap-6 md:grid-cols-2">
-              {categoryConfigs.map(config => (
+              {(categoryConfigs as ApiConfig[]).map((config: ApiConfig) => (
                 <Card
                   key={config.provider}
                   className={config.is_required ? 'border-primary' : ''}
@@ -375,7 +379,7 @@ export default function ApiConfigManager() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor={`config-${config.provider}`}>
-                          配置?
+                          API 配置
                         </Label>
                         <div className="relative">
                           <Input

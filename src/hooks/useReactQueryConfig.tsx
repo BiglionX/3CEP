@@ -36,8 +36,17 @@ export const queryClient = new QueryClient({
 export const QUERY_KEYS = {
   REPAIR_SHOPS: 'repairShops',
   WORK_ORDERS: 'workOrders',
+  WORK_ORDER_DETAIL: (id: string) => ['workOrderDetail', id],
   SHOP_DETAILS: (id: string) => ['shopDetails', id],
   SHOP_REVIEWS: (id: string) => ['shopReviews', id],
+  SHOP_STATISTICS: 'shopStatistics',
+  TECHNICIANS: 'technicians',
+  CUSTOMERS: 'customers',
+  CUSTOMER_SEARCH: (query: string) => ['customerSearch', query],
+  DEVICE_TYPES: 'deviceTypes',
+  FAULT_TYPES: (deviceTypeId?: string) => ['faultTypes', deviceTypeId],
+  PRICING_TEMPLATES: (category?: string) => ['pricingTemplates', category],
+  NOTIFICATIONS: 'notifications',
   INFINITE_SCROLL: 'infiniteScroll',
 };
 

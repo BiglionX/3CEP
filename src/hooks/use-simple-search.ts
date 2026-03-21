@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 // 简化的搜索结果类型
 interface SearchResult {
@@ -11,7 +11,7 @@ interface SearchResult {
   url: string;
 }
 
-// 简化的搜索状?
+// 简化的搜索状态
 interface SearchState {
   query: string;
   results: SearchResult[];
@@ -20,7 +20,7 @@ interface SearchState {
 }
 
 /**
- * 简化版搜索Hook - 专为Next.js Server/Client Components兼容性设?
+ * 简化版搜索Hook - 专为Next.js Server/Client Components 兼容性设计
  */
 export function useSimpleSearch() {
   const [state, setState] = useState<SearchState>({
@@ -30,7 +30,7 @@ export function useSimpleSearch() {
     error: null,
   });
 
-  // 执行搜索的函?
+  // 执行搜索的函数
   const performSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
       setState(prev => ({ ...prev, results: [], query: '', isLoading: false }));
@@ -46,7 +46,7 @@ export function useSimpleSearch() {
         {
           id: '1',
           title: `搜索结果: ${query}`,
-          description: '这是模拟的搜索结果描?,
+          description: '这是模拟的搜索结果描述',
           type: 'work-order',
           url: '/work-orders/1',
         },
@@ -94,7 +94,7 @@ export function useSimpleSearch() {
   }, []);
 
   return {
-    // 状?
+    // 状态
     query: state.query,
     results: state.results,
     isLoading: state.isLoading,

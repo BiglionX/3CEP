@@ -1,17 +1,20 @@
 ﻿/**
- * 维修店API服务? * 用于替换模拟数据，提供真实的数据获取能力
+ * 维修店 API 服务
+ * 用于替换模拟数据，提供真实的数据获取能力
  */
 
 import {
+  PriorityLevel,
   WorkOrder,
   WorkOrderStatus,
-  PriorityLevel,
 } from '@/types/repair-shop.types';
 
 // API基础配置
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-const API_TIMEOUT = 10000; // 10秒超?
-// 错误处理?class ApiError extends Error {
+const API_TIMEOUT = 10000; // 10 秒超时
+
+// 错误处理类
+class ApiError extends Error {
   constructor(
     public status: number,
     public message: string,
@@ -117,7 +120,8 @@ export class RepairShopApiService {
       } catch (error) {
         lastError = error as Error;
 
-        // 如果是最后一次重试或者不是网络错误，则抛出异?        if (i === retries || !(error instanceof TypeError)) {
+        // 如果是最后一次重试或者不是网络错误，则抛出异常
+        if (i === retries || !(error instanceof TypeError)) {
           throw new ApiError(
             (error as ApiError).status || 500,
             `请求失败: ${(error as Error).message}`,
@@ -125,7 +129,8 @@ export class RepairShopApiService {
           );
         }
 
-        // 等待后重?        await new Promise(resolve =>
+        // 等待后重试
+        await new Promise(resolve =>
           setTimeout(resolve, Math.pow(2, i) * 1000)
         );
       }
@@ -315,9 +320,9 @@ export const repairShopApi = new RepairShopApiService();
 
 // 导出类型定义
 export type {
-  WorkOrderFilters,
+  ApiError,
+  ApiResponse,
   PaginationParams,
   RequestOptions,
-  ApiResponse,
-  ApiError,
+  WorkOrderFilters,
 };

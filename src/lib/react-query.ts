@@ -33,7 +33,8 @@ export const queryClient = new QueryClient({
   },
 });
 
-// 查询键常?export const QUERY_KEYS = {
+// 查询键常量
+export const QUERY_KEYS = {
   // 工单相关
   WORK_ORDERS: ['repair-shop', 'work-orders'] as const,
   WORK_ORDER_DETAIL: (id: string) =>
@@ -42,7 +43,8 @@ export const queryClient = new QueryClient({
   // 统计数据
   SHOP_STATISTICS: ['repair-shop', 'statistics'] as const,
 
-  // 技师相?  TECHNICIANS: ['repair-shop', 'technicians'] as const,
+  // 技师相关
+  TECHNICIANS: ['repair-shop', 'technicians'] as const,
 
   // 客户相关
   CUSTOMERS: ['repair-shop', 'customers'] as const,
