@@ -1,6 +1,6 @@
-﻿import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,14 +16,15 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('pageSize') || '20');
 
-    // 楠岃瘉绠＄悊鍛樻潈    const cookieStore = await cookies();
+    // 验证管理员权限
+    const cookieStore = await cookies();
     const session = cookieStore.get('supabase-auth-token');
 
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
+      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
-    // 鏋勫缓鏌ヨ
+    // 构建查询
     let query = supabase
       .from('articles')
       .select(
@@ -43,24 +44,25 @@ export async function GET(request: Request) {
       )
       .range((page - 1) * pageSize, page * pageSize - 1);
 
-    // 娣诲姞鎼滅储鏉′欢
+    // 添加搜索条件
     if (search) {
       query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`);
     }
 
-    // 娣诲姞鐘舵€佺瓫    if (status) {
+    // 添加状态筛选
+    if (status) {
       query = query.eq('status', status);
     }
 
-    // 娣诲姞鎺掑簭
+    // 添加排序
     query = query.order(sortBy, { ascending: false });
 
     const { data: articles, error, count } = await query;
 
     if (error) {
-      console.error('鑾峰彇鏂囩珷鍒楄〃澶辫触:', error);
+      console.error('获取文章列表失败:', error);
       return NextResponse.json(
-        { error: '鑾峰彇鏂囩珷鍒楄〃澶辫触', details: error.message },
+        { error: '获取文章列表失败', details: error.message },
         { status: 500 }
       );
     }
@@ -76,11 +78,10 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('鑾峰彇鏂囩珷鍒楄〃寮傚父:', error);
+    console.error('获取文章列表异常:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
+      { error: `服务器内部错误：${(error as Error).message}` },
       { status: 500 }
     );
   }
 }
-

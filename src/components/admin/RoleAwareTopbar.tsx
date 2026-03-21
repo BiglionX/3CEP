@@ -7,15 +7,15 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { usePermission } from '@/modules/common/permissions/hooks/use-permission';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import {
+  BarChart3,
   Bell,
   ChevronDown,
   HelpCircle,
   LogOut,
   Settings,
   User,
-  BarChart3,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -23,7 +23,11 @@ import { useState } from 'react';
 export function RoleAwareTopbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const { user } = usePermission();
+  const { user } = useUnifiedAuth();
+
+  // 从 user_metadata 中获取角色
+  const userRoles = (user as any)?.user_metadata?.roles || [];
+  const primaryRole = userRoles.length > 0 ? userRoles[0] : null;
 
   // 模拟通知数据
   const notifications = [
@@ -81,15 +85,15 @@ export function RoleAwareTopbar() {
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* 左侧标题区域 */}
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
             <h1 className="text-xl font-semibold text-gray-900">管理控制台</h1>
-            {user && user.roles && user.roles.length > 0 && (
-              <Badge className="ml-3">{getRoleName(user.roles[0])}</Badge>
+            {primaryRole && (
+              <Badge className="ml-2">{getRoleName(primaryRole)}</Badge>
             )}
           </div>
 
           {/* 右侧功能区域 */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {/* 通知按钮 */}
             <div className="relative">
               <Button
@@ -163,9 +167,7 @@ export function RoleAwareTopbar() {
                         {user.email}
                       </div>
                       <div className="text-xs text-muted-foreground truncate">
-                        {user.roles && user.roles.length > 0
-                          ? getRoleName(user.roles[0])
-                          : '访客'}
+                        {primaryRole ? getRoleName(primaryRole) : '访客'}
                       </div>
                     </div>
                     <ChevronDown className="w-4 h-4" />
@@ -179,8 +181,8 @@ export function RoleAwareTopbar() {
                           {user.email}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {user.roles && user.roles.length > 0
-                            ? user.roles
+                          {userRoles.length > 0
+                            ? userRoles
                                 .map((role: string) => getRoleName(role))
                                 .join(', ')
                             : '访客角色'}

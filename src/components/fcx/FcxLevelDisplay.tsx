@@ -1,17 +1,16 @@
 ﻿'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Trophy,
-  Star,
-  TrendingUp,
   Award,
   ChevronRight,
   RefreshCw,
+  Star,
+  TrendingUp,
+  Trophy,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface UserLevelInfo {
   currentLevel: string;
@@ -38,7 +37,7 @@ interface FcxLevelDisplayProps {
 
 const LEVEL_CONFIG = {
   bronze: {
-    name: '青铜?,
+    name: '青铜级',
     color: 'text-amber-600',
     bgColor: 'bg-amber-50',
     borderColor: 'border-amber-200',
@@ -46,7 +45,7 @@ const LEVEL_CONFIG = {
     minScore: 0,
   },
   silver: {
-    name: '白银?,
+    name: '白银级',
     color: 'text-gray-600',
     bgColor: 'bg-gray-50',
     borderColor: 'border-gray-200',
@@ -54,7 +53,7 @@ const LEVEL_CONFIG = {
     minScore: 60,
   },
   gold: {
-    name: '黄金?,
+    name: '黄金级',
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-50',
     borderColor: 'border-yellow-200',
@@ -62,7 +61,7 @@ const LEVEL_CONFIG = {
     minScore: 75,
   },
   diamond: {
-    name: '钻石?,
+    name: '钻石级',
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-200',

@@ -1,9 +1,9 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoginRedirectFixTest() {
   const router = useRouter();
@@ -54,37 +54,37 @@ export default function LoginRedirectFixTest() {
   const runRedirectTest = () => {
     setTestResults([]);
 
-    // 测试1: URL参数检测
+    // 测试 1: URL 参数检测
     const urlTest: any = {
-      feature: 'URL参数检测',
+      feature: 'URL 参数检测',
       status: window.location.search.includes('redirect=')
-         'success'
+        ? 'success'
         : 'failed',
       details: window.location.search.includes('redirect=')
-         `检测到redirect参数: ${redirect}`
-        : 'URL中未找到redirect参数',
+        ? `检测到 redirect 参数：${redirect}`
+        : 'URL 中未找到 redirect 参数',
     };
 
-    // 测试2: SearchParams Hook检测
+    // 测试 2: SearchParams Hook 检测
     const hookTest: any = {
-      feature: 'SearchParams Hook检测',
+      feature: 'SearchParams Hook 检测',
       status: redirect ? 'success' : 'failed',
       details: redirect
-         `Hook获取到参数: ${redirect}`
-        : 'Hook未能获取到redirect参数',
+        ? `Hook 获取到参数：${redirect}`
+        : 'Hook 未能获取到 redirect 参数',
     };
 
-    // 测试3: 参数解析准确性
+    // 测试 3: 参数解析准确性
     const parseTest: any = {
       feature: '参数解析准确性',
       status: redirect !== '/admin/dashboard' ? 'success' : 'pending',
       details:
         redirect !== '/admin/dashboard'
-           `参数解析正确: ${redirect}`
+          ? `参数解析正确：${redirect}`
           : '使用默认值，可能是正常情况',
     };
 
-    // 测试4: 登录页面跳转测试
+    // 测试 4: 登录页面跳转测试
     const loginTest = {
       feature: '登录页面跳转测试',
       status: 'pending' as const,
@@ -95,7 +95,7 @@ export default function LoginRedirectFixTest() {
   };
 
   const testLoginJump = () => {
-    const loginUrl = `/loginredirect=${encodeURIComponent(redirect)}`;
+    const loginUrl = `/login?redirect=${encodeURIComponent(redirect)}`;
     // TODO: 移除调试日志
     console.debug('跳转到登录页面:', loginUrl);
     router.push(loginUrl);
@@ -119,7 +119,7 @@ export default function LoginRedirectFixTest() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="font-medium text-blue-700">完整URL:</p>
+                  <p className="font-medium text-blue-700">完整 URL:</p>
                   <p className="text-blue-600 break-all">{debugInfo.url}</p>
                 </div>
                 <div>
@@ -127,14 +127,14 @@ export default function LoginRedirectFixTest() {
                   <p className="text-blue-600">{debugInfo.search || '(无)'}</p>
                 </div>
                 <div>
-                  <p className="font-medium text-blue-700">redirect值:</p>
+                  <p className="font-medium text-blue-700">redirect 值:</p>
                   <p className="text-blue-600">{debugInfo.redirectValue}</p>
                 </div>
                 <div>
                   <p className="font-medium text-blue-700">所有参数:</p>
                   <p className="text-blue-600 text-xs">
                     {Object.keys(debugInfo.params).length > 0
-                       JSON.stringify(debugInfo.params, null, 2)
+                      ? JSON.stringify(debugInfo.params, null, 2)
                       : '无参数'}
                   </p>
                 </div>
@@ -173,7 +173,7 @@ export default function LoginRedirectFixTest() {
                   variant="ghost"
                   onClick={() =>
                     router.push(
-                      '/login-redirect-fix-testredirect=/admin/dashboard'
+                      '/login-redirect-fix-test?redirect=/admin/dashboard'
                     )
                   }
                 >
@@ -183,7 +183,7 @@ export default function LoginRedirectFixTest() {
                   size="sm"
                   variant="ghost"
                   onClick={() =>
-                    router.push('/login-redirect-fix-testredirect=/profile')
+                    router.push('/login-redirect-fix-test?redirect=/profile')
                   }
                 >
                   用户页面
@@ -200,9 +200,9 @@ export default function LoginRedirectFixTest() {
                     key={index}
                     className={`p-4 rounded-lg border ${
                       result.status === 'success'
-                         'bg-green-50 border-green-200'
+                        ? 'bg-green-50 border-green-200'
                         : result.status === 'failed'
-                           'bg-red-50 border-red-200'
+                          ? 'bg-red-50 border-red-200'
                           : 'bg-yellow-50 border-yellow-200'
                     }`}
                   >
@@ -213,16 +213,16 @@ export default function LoginRedirectFixTest() {
                       <span
                         className={`px-2 py-1 rounded text-xs font-medium ${
                           result.status === 'success'
-                             'bg-green-200 text-green-800'
+                            ? 'bg-green-200 text-green-800'
                             : result.status === 'failed'
-                               'bg-red-200 text-red-800'
+                              ? 'bg-red-200 text-red-800'
                               : 'bg-yellow-200 text-yellow-800'
                         }`}
                       >
                         {result.status === 'success'
-                           '✓ 通过'
+                          ? '✓ 通过'
                           : result.status === 'failed'
-                             '✗ 失败'
+                            ? '✗ 失败'
                             : '⚠️ 待确认'}
                       </span>
                     </div>
@@ -244,15 +244,15 @@ export default function LoginRedirectFixTest() {
                   <p className="font-medium">常见问题及解决方案:</p>
                   <ul className="list-disc list-inside mt-2 space-y-1">
                     <li>
-                      <strong>URL中确实没有redirect参数:</strong>{' '}
+                      <strong>URL 中确实没有 redirect 参数:</strong>{' '}
                       这是正常情况，系统会使用默认值
                     </li>
                     <li>
-                      <strong>Hook无法获取参数:</strong>{' '}
-                      检查useSearchParams是否正确导入
+                      <strong>Hook 无法获取参数:</strong> 检查 useSearchParams
+                      是否正确导入
                     </li>
                     <li>
-                      <strong>参数解析错误:</strong> 确认URL编码是否正确
+                      <strong>参数解析错误:</strong> 确认 URL 编码是否正确
                     </li>
                     <li>
                       <strong>浏览器缓存问题:</strong> 尝试刷新页面或清除缓存
@@ -263,18 +263,18 @@ export default function LoginRedirectFixTest() {
                 <div>
                   <p className="font-medium">预期行为说明:</p>
                   <ul className="list-disc list-inside mt-2 space-y-1">
-                    <li>当URL包含redirect参数时，应该能正确检测到</li>
-                    <li>当URL不包含redirect参数时，使用默认值是正常行为</li>
-                    <li>登录成功后应该根据redirect参数进行相应跳转</li>
+                    <li>当 URL 包含 redirect 参数时，应该能正确检测到</li>
+                    <li>当 URL 不包含 redirect 参数时，使用默认值是正常行为</li>
+                    <li>登录成功后应该根据 redirect 参数进行相应跳转</li>
                   </ul>
                 </div>
 
                 <div className="pt-2 border-t border-yellow-200">
                   <p className="font-medium">调试建议:</p>
                   <ul className="list-disc list-inside mt-2 space-y-1">
-                    <li>打开浏览器开发者工具查看Console输出</li>
-                    <li>检查Network标签中的请求参数</li>
-                    <li>验证不同URL参数下的表现</li>
+                    <li>打开浏览器开发者工具查看 Console 输出</li>
+                    <li>检查 Network 标签中的请求参数</li>
+                    <li>验证不同 URL 参数下的表现</li>
                     <li>测试登录流程的完整跳转</li>
                   </ul>
                 </div>

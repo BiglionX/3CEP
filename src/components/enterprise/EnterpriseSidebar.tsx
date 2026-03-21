@@ -1,31 +1,28 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   BarChart3,
-  Headphones,
   Bot,
+  ChevronDown,
   Coins,
-  Globe,
   CreditCard,
-  ShoppingCart,
-  HelpCircle,
   DollarSign,
+  FileText,
+  Headphones,
+  HelpCircle,
+  LayoutDashboard,
+  Menu,
+  Package,
   QrCode,
   Settings,
-  LogOut,
-  ChevronDown,
-  Menu,
-  X,
-  Package,
+  ShoppingCart,
   Users,
-  FileText,
-  LayoutDashboard,
-  Building,
+  X,
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
 interface MenuItem {
   id: string;
@@ -40,7 +37,9 @@ export function EnterpriseSidebar() {
   const pathname = usePathname();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
+    {}
+  );
   const [isCompact, setIsCompact] = useState(false);
 
   // 监听侧边栏宽度变化，自动切换紧凑模式
@@ -58,7 +57,10 @@ export function EnterpriseSidebar() {
     // 使用 MutationObserver 监听 DOM 变化
     const observer = new MutationObserver(updateWidth);
     if (sidebarRef.current) {
-      observer.observe(sidebarRef.current, { attributes: true, attributeFilter: ['class'] });
+      observer.observe(sidebarRef.current, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
     }
     return () => {
       window.removeEventListener('resize', updateWidth);
@@ -304,7 +306,9 @@ export function EnterpriseSidebar() {
               </div>
               {!isCompact && (
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">企业管理员</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    企业管理员
+                  </p>
                   <p className="text-xs text-gray-500">admin@enterprise.com</p>
                 </div>
               )}

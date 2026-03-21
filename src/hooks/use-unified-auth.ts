@@ -40,7 +40,7 @@ export function useUnifiedAuth() {
 
     const initializeAuth = async () => {
       try {
-        // 只在客户端检查Supabase会话
+        // 只在客户端检查 Supabase 会话
         if (typeof window === 'undefined') {
           setAuthState(prev => ({ ...prev, isLoading: false }));
           return;
@@ -51,7 +51,24 @@ export function useUnifiedAuth() {
         } = await supabase.auth.getSession();
 
         if (session?.user) {
-          // 检查管理员权限
+          // 优先从 user_metadata 读取角色，避免重复查询数据库
+          const metadataRoles = session.user.user_metadata?.roles || [];
+          const metadataIsAdmin = session.user.user_metadata?.is_admin === true;
+
+          // 如果 user_metadata 已经有 admin 角色，直接使用
+          if (metadataRoles.includes('admin') || metadataIsAdmin) {
+            setAuthState({
+              user: session.user,
+              isAuthenticated: true,
+              is_admin: true,
+              roles: ['admin'],
+              isLoading: false,
+              error: null,
+            });
+            return;
+          }
+
+          // 否则检查数据库中的管理员权限
           const isAdmin = await (AuthService as any).isAdminUser(
             session.user.id
           );
@@ -66,7 +83,7 @@ export function useUnifiedAuth() {
           return;
         }
 
-        // 备用方案：检查localStorage
+        // 备用方案：检查 localStorage
         const storedToken = localStorage.getItem('jwt_token');
         if (storedToken) {
           try {
@@ -84,7 +101,6 @@ export function useUnifiedAuth() {
             });
             return;
           } catch (error) {
-            // TODO: 移除调试日志 - console.log('JWT token解析失败')
             localStorage.removeItem('jwt_token');
           }
         }
@@ -130,6 +146,24 @@ export function useUnifiedAuth() {
           lastAuthState = currentAuthState;
 
           if (session?.user) {
+            // 优先从 user_metadata 读取角色
+            const metadataRoles = session.user.user_metadata?.roles || [];
+            const metadataIsAdmin =
+              session.user.user_metadata?.is_admin === true;
+
+            // 如果 user_metadata 已经有 admin 角色，直接使用缓存
+            if (metadataRoles.includes('admin') || metadataIsAdmin) {
+              setAuthState({
+                user: session.user,
+                isAuthenticated: true,
+                is_admin: true,
+                roles: ['admin'],
+                isLoading: false,
+                error: null,
+              });
+              return;
+            }
+
             // 使用缓存避免重复的管理员检查
             const cachedIsAdmin: boolean | undefined =
               window.__adminCache?.[currentUserId || ''];

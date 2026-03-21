@@ -1,7 +1,5 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,13 +9,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
-  CheckCircle,
-  XCircle,
-  Clock,
-  ArrowRight,
-  Eye,
   AlertCircle,
+  ArrowRight,
+  CheckCircle,
+  Clock,
+  Eye,
+  XCircle,
 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoginOptimizationTest() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function LoginOptimizationTest() {
     setTestResults([]);
 
     try {
-      // 测试1: 重定向上下文提示
+      // 测试 1: 重定向上下文提示
       setCurrentTest('测试重定向上下文提示');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -51,12 +51,12 @@ export default function LoginOptimizationTest() {
           feature: '重定向上下文提示',
           status: hasRedirectContext ? 'success' : 'failed',
           details: hasRedirectContext
-             `检测到重定向参数: ${redirect}`
+            ? `检测到重定向参数：${redirect}`
             : '未检测到重定向参数',
         },
       ]);
 
-      // 测试2: 智能目标识别
+      // 测试 2: 智能目标识别
       setCurrentTest('测试智能目标识别');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -72,7 +72,7 @@ export default function LoginOptimizationTest() {
         redirect.startsWith(path)
       );
       const targetDescription = targetPath
-         targetDescriptions[targetPath]
+        ? targetDescriptions[targetPath]
         : '未知页面';
 
       setTestResults(prev => [
@@ -80,15 +80,15 @@ export default function LoginOptimizationTest() {
         {
           feature: '智能目标识别',
           status: targetPath ? 'success' : 'pending',
-          details: `识别为目标: ${targetDescription} (${targetPath || '通用页面'})`,
+          details: `识别为目标：${targetDescription} (${targetPath || '通用页面'})`,
         },
       ]);
 
-      // 测试3: 登录流程模拟
+      // 测试 3: 登录流程模拟
       setCurrentTest('测试登录流程');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // 模拟登录API调用
+      // 模拟登录 API 调用
       const loginResponse = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -107,12 +107,12 @@ export default function LoginOptimizationTest() {
           feature: '登录流程验证',
           status: loginSuccess ? 'success' : 'failed',
           details: loginSuccess
-             `登录成功 - 用户: ${loginData.email}, 管理员: ${loginData.is_admin}`
+            ? `登录成功 - 用户：${loginData.email}, 管理员：${loginData.is_admin}`
             : `登录失败 - ${loginData.error || '未知错误'}`,
         },
       ]);
 
-      // 测试4: 倒计时功能模拟
+      // 测试 4: 倒计时功能模拟
       setCurrentTest('测试倒计时功能');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -121,11 +121,11 @@ export default function LoginOptimizationTest() {
         {
           feature: '倒计时功能',
           status: 'success',
-          details: '3秒倒计时机制已在UnifiedLogin组件中实现',
+          details: '3 秒倒计时机制已在 UnifiedLogin 组件中实现',
         },
       ]);
 
-      // 测试5: 立即跳转功能
+      // 测试 5: 立即跳转功能
       setCurrentTest('测试立即跳转功能');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -138,7 +138,7 @@ export default function LoginOptimizationTest() {
         },
       ]);
 
-      // 测试6: 视觉反馈优化
+      // 测试 6: 视觉反馈优化
       setCurrentTest('测试视觉反馈');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -156,7 +156,7 @@ export default function LoginOptimizationTest() {
         {
           feature: '测试执行',
           status: 'failed',
-          details: `测试过程出错: ${error.message}`,
+          details: `测试过程出错：${error.message}`,
         },
       ]);
     } finally {
@@ -167,7 +167,7 @@ export default function LoginOptimizationTest() {
 
   // 快速跳转测试
   const testQuickJump = () => {
-    router.push(`/loginredirect=${redirect}`);
+    router.push(`/login?redirect=${redirect}`);
   };
 
   // 手动触发倒计时测试
@@ -175,7 +175,7 @@ export default function LoginOptimizationTest() {
     let countdown = 3;
     const interval = setInterval(() => {
       // TODO: 移除调试日志
-      console.debug(`倒计时: ${countdown}秒`);
+      console.debug(`倒计时：${countdown}秒`);
       countdown--;
       if (countdown < 0) {
         clearInterval(interval);
@@ -211,7 +211,7 @@ export default function LoginOptimizationTest() {
                 disabled={isTesting}
                 className="w-full"
               >
-                {isTesting  (
+                {isTesting ? (
                   <>
                     <Clock className="w-4 h-4 mr-2 animate-spin" />
                     {currentTest || '测试进行中...'}
@@ -245,8 +245,8 @@ export default function LoginOptimizationTest() {
 
               <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded">
                 <p className="font-medium mb-1">当前测试参数:</p>
-                <p>重定向目标: {redirect}</p>
-                <p>测试账号: 1055603323@qq.com</p>
+                <p>重定向目标：{redirect}</p>
+                <p>测试账号：1055603323@qq.com</p>
               </div>
             </CardContent>
           </Card>
@@ -267,7 +267,7 @@ export default function LoginOptimizationTest() {
                   { name: '智能目标识别', desc: '自动识别并显示目标页面类型' },
                   {
                     name: '登录成功倒计时',
-                    desc: '3秒可视化倒计时，用户可主动控制',
+                    desc: '3 秒可视化倒计时，用户可主动控制',
                   },
                   { name: '立即跳转按钮', desc: '提供即时跳转的选择' },
                   { name: '视觉反馈优化', desc: '改进了成功消息的呈现方式' },
@@ -311,9 +311,9 @@ export default function LoginOptimizationTest() {
                     key={index}
                     className={`p-4 rounded-lg border ${
                       result.status === 'success'
-                         'bg-green-50 border-green-200'
+                        ? 'bg-green-50 border-green-200'
                         : result.status === 'failed'
-                           'bg-red-50 border-red-200'
+                          ? 'bg-red-50 border-red-200'
                           : 'bg-yellow-50 border-yellow-200'
                     }`}
                   >
@@ -322,9 +322,9 @@ export default function LoginOptimizationTest() {
                         <h3
                           className={`font-medium ${
                             result.status === 'success'
-                               'text-green-800'
+                              ? 'text-green-800'
                               : result.status === 'failed'
-                                 'text-red-800'
+                                ? 'text-red-800'
                                 : 'text-yellow-800'
                           }`}
                         >
@@ -333,9 +333,9 @@ export default function LoginOptimizationTest() {
                         <p
                           className={`mt-1 text-sm ${
                             result.status === 'success'
-                               'text-green-700'
+                              ? 'text-green-700'
                               : result.status === 'failed'
-                                 'text-red-700'
+                                ? 'text-red-700'
                                 : 'text-yellow-700'
                           }`}
                         >
@@ -406,7 +406,7 @@ export default function LoginOptimizationTest() {
                 <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
                   <li>登录页面显示重定向目标提示</li>
                   <li>智能识别目标页面类型</li>
-                  <li>登录成功后显示3秒倒计时</li>
+                  <li>登录成功后显示 3 秒倒计时</li>
                   <li>提供"立即跳转"按钮选项</li>
                   <li>优化的视觉反馈和动画效果</li>
                 </ul>

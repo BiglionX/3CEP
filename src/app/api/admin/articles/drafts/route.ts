@@ -1,22 +1,22 @@
-﻿import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 鍒涘缓鑽夌鏂囩珷
+// 创建草稿文章
 export async function POST(request: Request) {
   try {
     const { linkId, title, content, summary, coverImageUrl, tags, category } =
       await request.json();
 
-    // 楠岃瘉蹇呰鍙傛暟
+    // 验证必要参数
     if (!title || !content) {
       return NextResponse.json(
-        { error: '鏍囬鍜屽唴瀹逛笉鑳戒负 },
+        { error: '标题和内容不能为空' },
         { status: 400 }
       );
     }
@@ -25,12 +25,13 @@ export async function POST(request: Request) {
     const session = cookieStore.get('supabase-auth-token');
 
     if (!session) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
+      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
-    const userId = JSON.parse(session.value).user.id;
+    const userId = JSON.parse(decodeURIComponent(session.value)).user.id;
 
-    // 鏌ユ壘瀵瑰簲鐨勫垎    let categoryId = null;
+    // 查找对应的分类
+    let categoryId: number | null = null;
     if (category) {
       const { data: categoryData } = await supabase
         .from('article_categories')
@@ -38,10 +39,10 @@ export async function POST(request: Request) {
         .eq('name', category)
         .single();
 
-      categoryId = categoryData.id || null;
+      categoryId = categoryData?.id || null;
     }
 
-    // 鍒涘缓鑽夌鏂囩珷
+    // 创建草稿文章
     const { data: articleData, error: articleError } = await supabase
       .from('articles')
       .insert({
@@ -58,14 +59,15 @@ export async function POST(request: Request) {
       .single();
 
     if (articleError) {
-      console.error('鍒涘缓鑽夌澶辫触:', articleError);
+      console.error('创建草稿失败:', articleError);
       return NextResponse.json(
-        { error: '鍒涘缓鑽夌澶辫触', details: articleError.message },
+        { error: '创建草稿失败', details: articleError.message },
         { status: 500 }
       );
     }
 
-    // 濡傛灉鏈夊叧鑱旂殑炬帴锛屾洿鏂伴摼鎺ョ姸    if (linkId) {
+    // 如果有关联的链接，更新链接状态
+    if (linkId) {
       await supabase
         .from('hot_link_pool')
         .update({
@@ -80,18 +82,18 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       articleId: articleData.id,
-      message: '鑽夌鍒涘缓鎴愬姛',
+      message: '草稿创建成功',
     }) as any;
   } catch (error) {
-    console.error('鍒涘缓鑽夌寮傚父:', error);
+    console.error('创建草稿异常:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
+      { error: `服务器内部错误：${(error as Error).message}` },
       { status: 500 }
     );
   }
 }
 
-// 鑾峰彇鏂囩珷鍒嗙被鍒楄〃
+// 获取文章分类列表
 export async function GET() {
   try {
     const { data: categories, error } = await supabase
@@ -101,9 +103,9 @@ export async function GET() {
       .order('sort_order');
 
     if (error) {
-      console.error('鑾峰彇鍒嗙被澶辫触:', error);
+      console.error('获取分类失败:', error);
       return NextResponse.json(
-        { error: '鑾峰彇鍒嗙被澶辫触', details: error.message },
+        { error: '获取分类失败', details: error.message },
         { status: 500 }
       );
     }
@@ -113,11 +115,10 @@ export async function GET() {
       data: categories || [],
     });
   } catch (error) {
-    console.error('鑾峰彇鍒嗙被寮傚父:', error);
+    console.error('获取分类异常:', error);
     return NextResponse.json(
-      { error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊, details: (error as Error).message },
+      { error: `服务器内部错误：${(error as Error).message}` },
       { status: 500 }
     );
   }
 }
-

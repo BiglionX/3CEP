@@ -46,7 +46,8 @@ export class PermissionLoader {
 
   private constructor() {
     this.configManager = PermissionConfigManager.getInstance();
-    this.startAutoUpdate();
+    // 不在构造函数中启动自动更新，改为按需启动
+    // this.startAutoUpdate();
   }
 
   static getInstance(): PermissionLoader {
@@ -292,7 +293,7 @@ export class PermissionLoader {
     const config = this.configManager.getConfig();
     const updateInterval = config.cacheSettings.updateInterval;
 
-    if (updateInterval > 0) {
+    if (updateInterval > 0 && !this.updateInterval) {
       this.updateInterval = setInterval(async () => {
         try {
           await this.loadPermissions({ forceRefresh: true });
@@ -301,6 +302,13 @@ export class PermissionLoader {
         }
       }, updateInterval);
     }
+  }
+
+  /**
+   * 启用自动更新（公开方法）
+   */
+  enableAutoUpdate(): void {
+    this.startAutoUpdate();
   }
 
   /**

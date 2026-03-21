@@ -3,22 +3,19 @@
  * 提供在React组件中使用权限检查的能力
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import {
-  PermissionManager,
-  UserInfo,
-  PermissionCheckResult,
-} from '../core/permission-manager';
-import { PermissionLoader } from '../core/permission-loader';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   PermissionConfig,
   PermissionConfigManager,
 } from '../config/permission-config';
+import { PermissionLoader } from '../core/permission-loader';
+import { PermissionManager, UserInfo } from '../core/permission-manager';
 
 export interface UsePermissionOptions {
   autoLoad?: boolean;
   fallbackStrategy?: 'default' | 'empty' | 'retry';
   retryInterval?: number;
+  enableAutoUpdate?: boolean; // 是否启用自动更新
 }
 
 export interface PermissionHookResult {
@@ -40,9 +37,10 @@ export function usePermission(
   options: UsePermissionOptions = {}
 ): PermissionHookResult {
   const {
-    autoLoad = true,
+    autoLoad = false, // 默认不自动加载
     fallbackStrategy = 'default',
     retryInterval = 30000,
+    enableAutoUpdate = false, // 默认不启用自动更新
   } = options;
 
   const [user, setUserState] = useState<UserInfo | null>(null);
@@ -164,14 +162,31 @@ export function usePermission(
     };
 
     loadPermissions();
-  }, [autoLoad, permissionLoader]);
 
+    // 如果需要自动更新，则启动
+    if (enableAutoUpdate) {
+      permissionLoader.enableAutoUpdate();
+    }
+  }, [autoLoad, permissionLoader, enableAutoUpdate]);
+
+  // 只在配置真正变化时才更新，避免循环
   useEffect(() => {
+    let isMounted = true;
+
     const unsubscribe = permissionLoader.subscribe(newConfig => {
-      setConfig(newConfig);
+      if (isMounted) {
+        setConfig(prevConfig => {
+          // 只有配置真正变化时才更新
+          if (JSON.stringify(prevConfig) !== JSON.stringify(newConfig)) {
+            return newConfig;
+          }
+          return prevConfig;
+        });
+      }
     });
 
     return () => {
+      isMounted = false;
       unsubscribe();
     };
   }, [permissionLoader]);

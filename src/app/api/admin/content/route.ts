@@ -1,76 +1,76 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-// 妯℃嫙鍐呭鏁版嵁
+// 模拟内容数据
 const mockContents = [
   {
     id: 'content_001',
-    title: '鎵嬫満缁翠慨鍩虹鐭ヨ瘑鏁欑▼',
+    title: '手机维修基础知识教程',
     type: 'tutorial',
-    author: '鎶€鏈儴',
+    author: '技术部',
     status: 'published',
-    category: '缁翠慨鏁欑▼',
-    tags: ['鎵嬫満缁翠慨', '鍩虹鐭ヨ瘑', 'DIY'],
+    category: '维修教程',
+    tags: ['手机维修', '基础知识', 'DIY'],
     views: 1250,
     likes: 89,
     created_at: '2024-01-15T10:30:00Z',
     updated_at: '2024-02-20T14:22:00Z',
-    content: '鏈暀绋嬪皢涓烘偍璇︾粏嬬粛鎵嬫満缁翠慨鐨勫熀纭€鐭ヨ瘑...',
+    content: '本教程将为您详细介绍手机维修的基础知识...',
   },
   {
     id: 'content_002',
-    title: '2024骞存暟鐮佷骇鍝佺淮淇涓氳秼鍔垮垎,
+    title: '2024 年数码产品维修行业趋势分析',
     type: 'article',
-    author: '甯傚満,
+    author: '市场部',
     status: 'published',
-    category: '琛屼笟鍒嗘瀽',
-    tags: ['琛屼笟瓒嬪娍', '甯傚満鍒嗘瀽', '2024'],
+    category: '行业分析',
+    tags: ['行业趋势', '市场分析', '2024'],
     views: 890,
     likes: 67,
     created_at: '2024-01-20T09:15:00Z',
     updated_at: '2024-02-18T16:45:00Z',
-    content: '闅忕潃绉戞妧鐨勫彂灞曪紝鏁扮爜浜у搧缁翠慨琛屼笟姝ｉ潰涓存柊鐨勬満囧拰鎸戞垬...',
+    content: '随着科技的发展，数码产品维修行业正面临新的机遇和挑战...',
   },
   {
     id: 'content_003',
-    title: '甯歌鎵嬫満鏁呴殰鎺掓煡鎸囧崡',
+    title: '常见手机故障排查指南',
     type: 'faq',
-    author: '瀹㈡湇,
+    author: '客服部',
     status: 'draft',
-    category: '鏁呴殰鎺掗櫎',
-    tags: ['鏁呴殰鎺掓煡', '鎵嬫満闂', '鑷姪缁翠慨'],
+    category: '故障排除',
+    tags: ['故障排查', '手机问题', '自助维修'],
     views: 0,
     likes: 0,
     created_at: '2024-02-01T11:20:00Z',
     updated_at: '2024-02-25T09:30:00Z',
-    content: 'Q: 鎵嬫満犳硶寮€鏈烘€庝箞鍔烇紵\nA: 璇峰厛妫€鏌ョ數姹犵數..',
+    content: 'Q: 手机无法开机怎么办？\nA: 请先检查电池电量...',
   },
   {
     id: 'content_004',
-    title: '鏈€鏂癷Phone缁翠慨鏀跨瓥瑙ｈ',
+    title: '最新 iPhone 维修政策解读',
     type: 'news',
-    author: '娉曞姟,
+    author: '法务部',
     status: 'published',
-    category: '鏀跨瓥娉曡',
-    tags: ['鑻规灉', '缁翠慨鏀跨瓥', '娉曞緥瑙ｈ'],
+    category: '政策法规',
+    tags: ['苹果', '维修政策', '法律解读'],
     views: 2100,
     likes: 156,
     created_at: '2024-01-10T08:45:00Z',
     updated_at: '2024-02-22T13:15:00Z',
-    content: '鑻规灉鍏徃杩戞湡鍙戝竷浜嗘柊鐨勭淮淇斂绛栵紝瀵规秷璐硅€呭拰缁翠慨鍟嗛兘鏈夐噸瑕佸奖..',
+    content: '苹果公司近期发布了新的维修政策，对消费者和维修商都有重要影响...',
   },
   {
     id: 'content_005',
-    title: '绗旇鏈數鑴戝睆骞曟洿鎹㈡暀,
+    title: '笔记本电脑屏幕更换教程',
     type: 'tutorial',
-    author: '鎶€鏈儴',
+    author: '技术部',
     status: 'archived',
-    category: '缁翠慨鏁欑▼',
-    tags: ['绗旇, '灞忓箷鏇存崲', '纭欢缁翠慨'],
+    category: '维修教程',
+    tags: ['笔记本', '屏幕更换', '硬件维修'],
     views: 650,
     likes: 42,
     created_at: '2024-02-10T14:30:00Z',
     updated_at: '2024-02-28T11:20:00Z',
-    content: '鏈暀绋嬪皢鎸囧鎮ㄥ浣曞畨鍏ㄥ湴鏇存崲绗旇鏈數鑴戝睆..',
+    content: '本教程将指导您如何安全地更换笔记本电脑屏幕...',
   },
 ];
 
@@ -83,10 +83,10 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get('type') || '';
     const status = searchParams.get('status') || '';
 
-    // 杩囨护鏁版嵁
+    // 过滤数据
     let filteredContents = [...mockContents];
 
-    // 鎼滅储杩囨护
+    // 搜索过滤
     if (search) {
       filteredContents = filteredContents.filter(
         content =>
@@ -96,20 +96,21 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 绫诲瀷杩囨护
+    // 类型过滤
     if (type && type !== 'all') {
       filteredContents = filteredContents.filter(
         content => content.type === type
       );
     }
 
-    // 鐘舵€佽繃    if (status && status !== 'all') {
+    // 状态过滤
+    if (status && status !== 'all') {
       filteredContents = filteredContents.filter(
         content => content.status === status
       );
     }
 
-    // 鍒嗛〉
+    // 分页
     const total = filteredContents.length;
     const totalPages = Math.ceil(total / pageSize);
     const startIndex = (page - 1) * pageSize;
@@ -127,11 +128,11 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('鑾峰彇鍐呭鍒楄〃澶辫触:', error);
+    console.error('获取内容列表失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: '鑾峰彇鍐呭鍒楄〃澶辫触',
+        error: '获取内容列表失败',
         data: [],
         pagination: {
           page: 1,
@@ -149,10 +150,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // 鐢熸垚鏂癐D
+    // 生成新 ID
     const newId = `content_${String(mockContents.length + 1).padStart(3, '0')}`;
 
-    // 鍒涘缓鏂板唴    const newContent = {
+    // 创建新内容
+    const newContent = {
       id: newId,
       ...body,
       created_at: new Date().toISOString(),
@@ -166,14 +168,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: newContent,
-      message: '鍐呭鍒涘缓鎴愬姛',
+      message: '内容创建成功',
     });
   } catch (error) {
-    console.error('鍒涘缓鍐呭澶辫触:', error);
+    console.error('创建内容失败:', error);
     return NextResponse.json(
-      { success: false, error: '鍒涘缓鍐呭澶辫触' },
+      { success: false, error: '创建内容失败' },
       { status: 500 }
     );
   }
 }
-

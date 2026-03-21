@@ -117,7 +117,9 @@ export class AuthService {
   // 检查用户是否为管理员
   static async isAdminUser(userId: string): Promise<boolean> {
     try {
-      const { data, error } = await supabaseAdmin
+      // 注意：在浏览器端只能使用 supabase（匿名密钥）
+      // 如果在服务器端，可以使用 supabaseAdmin
+      const { data, error } = await supabase
         .from('admin_users')
         .select('id')
         .eq('user_id', userId)

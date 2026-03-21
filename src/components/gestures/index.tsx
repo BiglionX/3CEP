@@ -486,6 +486,3 @@ export function GestureCanvas({
     </div>
   );
 }
-
-// 手势支持导出
-export { GestureCanvas, GestureCard, GestureImageViewer, GestureVisualizer };

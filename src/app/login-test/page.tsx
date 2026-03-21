@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoginJumpTest() {
   const router = useRouter();
@@ -57,8 +57,8 @@ export default function LoginJumpTest() {
           step: '执行登录测试',
           status: loginResponse.ok ? '✓ 登录成功' : '✗ 登录失败',
           details: loginResponse.ok
-             `用户: ${loginData.email}, 管理员: ${loginData.is_admin}`
-            : `错误: ${loginData.error}`,
+            ? `用户：${loginData.email}, 管理员：${loginData.is_admin}`
+            : `错误：${loginData.error}`,
         };
 
         // 测试3: 检查跳转行为
@@ -146,9 +146,9 @@ export default function LoginJumpTest() {
                       <span
                         className={
                           result.status.includes('✓')
-                             'text-green-600'
+                            ? 'text-green-600'
                             : result.status.includes('✗')
-                               'text-red-600'
+                              ? 'text-red-600'
                               : 'text-yellow-600'
                         }
                       >
@@ -168,13 +168,13 @@ export default function LoginJumpTest() {
             <h2 className="text-xl font-semibold mb-4">手动测试链接</h2>
             <div className="space-y-2">
               <a
-                href="/loginredirect=/admin/dashboard"
+                href="/login?redirect=/admin/dashboard"
                 className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition-colors"
               >
                 管理员登录测试 (/admin/dashboard)
               </a>
               <a
-                href="/loginredirect=/profile"
+                href="/login?redirect=/profile"
                 className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition-colors"
               >
                 普通用户登录测试 (/profile)

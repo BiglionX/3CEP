@@ -1,5 +1,5 @@
-﻿import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+﻿import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 interface MonitoringMetric {
   id: string;
@@ -12,21 +12,21 @@ interface MonitoringMetric {
   last_updated: string;
 }
 
-// 鑾峰彇绯荤粺鐩戞帶鎸囨爣
+// 获取系统监控指标
 export async function GET() {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
 
     if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
+      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
-    // 妯℃嫙鐩戞帶鎸囨爣鏁版嵁
+    // 模拟监控指标数据
     const metrics: MonitoringMetric[] = [
       {
         id: 'cpu_usage',
-        name: 'CPU浣跨敤,
+        name: 'CPU 使用率',
         value: 68.5,
         unit: '%',
         threshold: 80,
@@ -36,7 +36,7 @@ export async function GET() {
       },
       {
         id: 'memory_usage',
-        name: '鍐呭浣跨敤,
+        name: '内存使用率',
         value: 45.2,
         unit: '%',
         threshold: 85,
@@ -46,7 +46,7 @@ export async function GET() {
       },
       {
         id: 'disk_usage',
-        name: '纾佺洏浣跨敤,
+        name: '磁盘使用率',
         value: 72.8,
         unit: '%',
         threshold: 90,
@@ -56,7 +56,7 @@ export async function GET() {
       },
       {
         id: 'network_traffic',
-        name: '缃戠粶娴侀噺',
+        name: '网络流量',
         value: 1250,
         unit: 'Mbps',
         threshold: 2000,
@@ -66,9 +66,9 @@ export async function GET() {
       },
       {
         id: 'database_connections',
-        name: '鏁版嵁搴撹繛鎺ユ暟',
+        name: '数据库连接数',
         value: 156,
-        unit: ',
+        unit: '个',
         threshold: 200,
         status: 'normal',
         trend: 'stable',
@@ -76,9 +76,9 @@ export async function GET() {
       },
       {
         id: 'active_users',
-        name: '娲昏穬鐢ㄦ埛,
+        name: '活跃用户数',
         value: 892,
-        unit: ',
+        unit: '人',
         threshold: 1000,
         status: 'normal',
         trend: 'up',
@@ -86,7 +86,7 @@ export async function GET() {
       },
       {
         id: 'api_response_time',
-        name: 'API鍝嶅簲堕棿',
+        name: 'API 响应时间',
         value: 120,
         unit: 'ms',
         threshold: 500,
@@ -96,7 +96,7 @@ export async function GET() {
       },
       {
         id: 'error_rate',
-        name: '閿欒,
+        name: '错误率',
         value: 0.2,
         unit: '%',
         threshold: 1.0,
@@ -108,8 +108,7 @@ export async function GET() {
 
     return NextResponse.json(metrics);
   } catch (error) {
-    console.error('鑾峰彇鐩戞帶鎸囨爣澶辫触:', error);
-    return NextResponse.json({ error: '鑾峰彇鐩戞帶鎸囨爣澶辫触' }, { status: 500 });
+    console.error('获取监控指标失败:', error);
+    return NextResponse.json({ error: '获取监控指标失败' }, { status: 500 });
   }
 }
-

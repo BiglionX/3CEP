@@ -1,52 +1,47 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import {
+  Analytics,
+  CheckCircle,
+  Edit,
+  Error,
+  Refresh,
+  Search,
+  Settings,
+  TrendingDown,
+  TrendingUp,
+  Visibility,
+  Warning,
+} from '@mui/icons-material';
 import {
   Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
   Container,
-  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  Grid,
+  IconButton,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Button,
-  Chip,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Grid,
-  Card,
-  CardContent,
-  LinearProgress,
-  Tab,
-  Tabs,
-  Alert,
   Tooltip,
+  Typography,
 } from '@mui/material';
-import {
-  Refresh,
-  Search,
-  Visibility,
-  Edit,
-  Delete,
-  Settings,
-  Analytics,
-  CheckCircle,
-  Warning,
-  Error,
-  TrendingUp,
-  TrendingDown,
-} from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 
 // Mock 数据 - 基于真实的已上线智能体
 const mockAgents = [
@@ -196,10 +191,9 @@ const mockStats = {
 };
 
 export default function AgentsManagementPage() {
-  const [tabValue, setTabValue] = useState(0);
-  const [agents, setAgents] = useState(mockAgents);
+  const [agents] = useState(mockAgents);
   const [filteredAgents, setFilteredAgents] = useState(mockAgents);
-  const [stats, setStats] = useState(mockStats);
+  const [stats] = useState(mockStats);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -334,7 +328,7 @@ export default function AgentsManagementPage() {
 
       {/* 统计卡片 */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="总订阅数"
             value={stats.totalSubscriptions}
@@ -342,7 +336,7 @@ export default function AgentsManagementPage() {
             trend={stats.growthRate}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="运行中"
             value={stats.activeSubscriptions}
@@ -350,22 +344,22 @@ export default function AgentsManagementPage() {
             icon={CheckCircle}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="即将到期"
             value={stats.expiringSoon}
-            subtitle="7天内到期"
+            subtitle="7 天内到期"
             icon={Warning}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard title="已过期" value={stats.expired} icon={Error} />
         </Grid>
       </Grid>
 
       {/* 使用统计 */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom variant="body2">
@@ -375,12 +369,12 @@ export default function AgentsManagementPage() {
                 {stats.totalRequestsThisMonth.toLocaleString()}
               </Typography>
               <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                平均响应时间: {stats.avgResponseTime}s
+                平均响应时间：{stats.avgResponseTime}s
               </Typography>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom variant="body2">
@@ -395,7 +389,7 @@ export default function AgentsManagementPage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom variant="body2">
@@ -415,7 +409,7 @@ export default function AgentsManagementPage() {
       {/* 过滤和搜索 */}
       <Paper sx={{ p: 2, mb: 2 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               fullWidth
               size="small"
@@ -429,7 +423,7 @@ export default function AgentsManagementPage() {
               }}
             />
           </Grid>
-          <Grid item xs={6} md={2}>
+          <Grid size={{ xs: 6, md: 2 }}>
             <FormControl fullWidth size="small">
               <InputLabel>状态</InputLabel>
               <Select
@@ -445,7 +439,7 @@ export default function AgentsManagementPage() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6} md={2}>
+          <Grid size={{ xs: 6, md: 2 }}>
             <FormControl fullWidth size="small">
               <InputLabel>用户类型</InputLabel>
               <Select
@@ -460,7 +454,7 @@ export default function AgentsManagementPage() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={4} sx={{ textAlign: 'right' }}>
+          <Grid size={{ xs: 12, md: 4 }} sx={{ textAlign: 'right' }}>
             <Button
               variant="outlined"
               startIcon={<Refresh />}
@@ -581,7 +575,7 @@ export default function AgentsManagementPage() {
         <DialogContent>
           {selectedAgent && (
             <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   智能体名称
                 </Typography>
@@ -589,15 +583,15 @@ export default function AgentsManagementPage() {
                   {selectedAgent.agent_name}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
-                  智能体ID
+                  智能体 ID
                 </Typography>
                 <Typography variant="body1">
                   {selectedAgent.agent_id}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   作者
                 </Typography>
@@ -605,7 +599,7 @@ export default function AgentsManagementPage() {
                   {selectedAgent.author_name}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   订阅用户
                 </Typography>
@@ -613,7 +607,7 @@ export default function AgentsManagementPage() {
                   {selectedAgent.user_name}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   业务类型
                 </Typography>
@@ -621,7 +615,7 @@ export default function AgentsManagementPage() {
                   {getTypeLabel(selectedAgent.business_type)}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   版本
                 </Typography>
@@ -629,7 +623,7 @@ export default function AgentsManagementPage() {
                   v{selectedAgent.version}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   价格
                 </Typography>
@@ -641,7 +635,7 @@ export default function AgentsManagementPage() {
                   ¥{selectedAgent.pricing_price}/{selectedAgent.pricing_unit}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   评分
                 </Typography>
@@ -654,13 +648,13 @@ export default function AgentsManagementPage() {
                   </Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   状态
                 </Typography>
                 <Box>{getStatusChip(selectedAgent.status)}</Box>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   到期时间
                 </Typography>
@@ -668,7 +662,7 @@ export default function AgentsManagementPage() {
                   {selectedAgent.expiry_date}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   本月请求
                 </Typography>
@@ -676,15 +670,15 @@ export default function AgentsManagementPage() {
                   {selectedAgent.requests_this_month.toLocaleString()}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
-                  Token消耗
+                  Token 消耗
                 </Typography>
                 <Typography variant="body1">
                   {selectedAgent.tokens_used.toLocaleString()}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   平均响应时间
                 </Typography>
@@ -692,7 +686,7 @@ export default function AgentsManagementPage() {
                   {selectedAgent.avg_response_time}s
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   最后使用
                 </Typography>
@@ -700,7 +694,7 @@ export default function AgentsManagementPage() {
                   {selectedAgent.last_used}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   总使用量
                 </Typography>

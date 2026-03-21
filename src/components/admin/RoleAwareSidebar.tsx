@@ -5,7 +5,7 @@
 
 'use client';
 
-import { usePermission } from '@/modules/common/permissions/hooks/use-permission';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { cn } from '@/lib/utils';
 import {
   BarChart3,
@@ -52,7 +52,7 @@ export function RoleAwareSidebar() {
     {}
   );
   const pathname = usePathname();
-  const { hasAnyPermission, user } = usePermission();
+  const { user: authUser } = useUnifiedAuth();
 
   // 菜单配置
   const menuItems: MenuItem[] = [
@@ -338,10 +338,11 @@ export function RoleAwareSidebar() {
 
   // 获取当前用户可访问的菜单项
   const getAccessibleMenuItems = () => {
+    const userRoles = (authUser as any)?.user_metadata?.roles || ['user'];
     return menuItems.filter(item => {
       if (item.separator) return true;
-      // 简化处理：检查用户是否有所需的任何权限
-      return hasAnyPermission(item.roles.map(r => `role:${r}`));
+      // 检查用户角色是否在菜单项的允许角色列表中
+      return item.roles.some(role => userRoles.includes(role));
     });
   };
 
@@ -446,7 +447,6 @@ export function RoleAwareSidebar() {
               </div>
               <div className="ml-3">
                 <h1 className="text-lg font-bold text-gray-900">管理系统</h1>
-                {user && <p className="text-xs text-gray-500">{user.email}</p>}
               </div>
             </div>
             <button
@@ -462,28 +462,6 @@ export function RoleAwareSidebar() {
             <nav className="space-y-1">
               {getAccessibleMenuItems().map(item => renderMenuItem(item))}
             </nav>
-          </div>
-
-          {/* 用户信息底部 */}
-          <div className="p-4 border-t bg-gray-50">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
-                  <span className="text-sm font-medium text-gray-700">
-                    {user?.email?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user?.email || '未登录'}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {user?.roles?.map((role: string) => role).join(', ') ||
-                      '访客'}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -16,16 +16,64 @@ import {
 } from 'recharts';
 
 export default function DashboardPage() {
-  const { isAuthenticated, is_admin } = useUnifiedAuth();
+  const { isAuthenticated, is_admin, isLoading } = useUnifiedAuth();
+  const [stats, setStats] = useState({
+    todayHotLinks: 0,
+    pendingLinks: 0,
+    weekArticles: 0,
+    totalEngineers: 0,
+    totalShops: 0,
+    appointmentTrends: [] as any[],
+  });
+  const [dataLoading, setDataLoading] = useState(true);
+  const [exportLoading, setExportLoading] = useState(false);
 
-  // 保护管理员路
+  // 保护管理员路由 - 只在认证完成后检查
   useEffect(() => {
-    if (!isAuthenticated || !is_admin) {
-      window.location.href = '/loginredirect=/admin/dashboard';
+    // 如果还在加载中，不触发重定向，避免竞态条件
+    if (isLoading) {
+      return;
     }
-  }, [isAuthenticated, is_admin]);
 
-  // 如果未认证或不是管理员，显示访问受限页面
+    if (!isAuthenticated || !is_admin) {
+      window.location.href = `/login?redirect=${encodeURIComponent('/admin/dashboard')}`;
+    }
+  }, [isAuthenticated, is_admin, isLoading]);
+
+  const loadDashboardData = async () => {
+    try {
+      setDataLoading(true);
+      const response = await fetch('/api/admin/dashboard/stats');
+      const result = await response.json();
+
+      if (result.success) {
+        setStats(result.data);
+      }
+    } catch (error) {
+      console.error('加载运营数据失败:', error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
+  // 加载仪表板数据 - 只在认证成功后执行
+  useEffect(() => {
+    // 只有当认证完成且通过验证时，才加载数据
+    if (!isLoading && isAuthenticated && is_admin) {
+      loadDashboardData();
+    }
+  }, [isLoading, isAuthenticated, is_admin]);
+
+  // 认证加载中，显示加载动画
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // 未认证或不是管理员，显示访问受限页面
   if (!isAuthenticated || !is_admin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -44,7 +92,7 @@ export default function DashboardPage() {
           <p className="text-gray-600 mb-4">请先登录管理员账户</p>
           <button
             onClick={() =>
-              (window.location.href = '/loginredirect=/admin/dashboard')
+              (window.location.href = `/login?redirect=${encodeURIComponent('/admin/dashboard')}`)
             }
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
@@ -55,36 +103,14 @@ export default function DashboardPage() {
     );
   }
 
-  const [stats, setStats] = useState({
-    todayHotLinks: 0,
-    pendingLinks: 0,
-    weekArticles: 0,
-    totalEngineers: 0,
-    totalShops: 0,
-    appointmentTrends: [] as any[],
-  });
-  const [loading, setLoading] = useState(true);
-  const [exportLoading, setExportLoading] = useState(false);
-
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/admin/dashboard/stats');
-      const result = await response.json();
-
-      if (result.success) {
-        setStats(result.data);
-      }
-    } catch (error) {
-      console.error('加载运营数据失败:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // 数据加载中，显示加载动画
+  if (dataLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   const handleExport = async (type: string) => {
     try {
@@ -109,7 +135,7 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading) {
+  if (dataLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>

@@ -1,49 +1,48 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
+  AccountBalance,
+  Add,
+  History,
+  MonetizationOn,
+  Payment,
+  Refresh,
+  Remove,
+  Search,
+  TrendingUp,
+} from '@mui/icons-material';
+import {
+  Alert,
   Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
   Container,
-  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  Grid,
+  IconButton,
+  InputLabel,
+  LinearProgress,
+  MenuItem,
   Paper,
+  Select,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Button,
-  Chip,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Grid,
-  Card,
-  CardContent,
   Tooltip,
-  Alert,
-  Stack,
+  Typography,
 } from '@mui/material';
-import {
-  Refresh,
-  Search,
-  Visibility,
-  Add,
-  Remove,
-  History,
-  TrendingUp,
-  AccountBalance,
-  Payment,
-  MonetizationOn,
-  Warning,
-} from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 
 // Mock 数据
 const mockTokenBalances = [
@@ -165,13 +164,13 @@ const mockStats = {
 };
 
 export default function TokensManagementPage() {
-  const [tabValue, setTabValue] = useState(0);
-  const [balances, setBalances] = useState(mockTokenBalances);
-  const [transactions, setTransactions] = useState(mockTransactions);
-  const [stats, setStats] = useState(mockStats);
+  const [stats] = useState(mockStats);
+  const [transactions] = useState(mockTransactions);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [filteredBalances, setFilteredBalances] =
+    useState<any[]>(mockTokenBalances);
 
   // 充值对话框
   const [rechargeDialog, setRechargeDialog] = useState(false);
@@ -182,8 +181,9 @@ export default function TokensManagementPage() {
   const [historyDialog, setHistoryDialog] = useState(false);
   const [historyUser, setHistoryUser] = useState<any>(null);
 
+  // 过滤数据 - 使用 useMemo 避免在渲染期间更新状态
   useEffect(() => {
-    let filtered = balances;
+    let filtered = mockTokenBalances;
 
     if (searchTerm) {
       filtered = filtered.filter(b =>
@@ -195,7 +195,10 @@ export default function TokensManagementPage() {
       filtered = filtered.filter(b => b.business_type === filterType);
     }
 
-    setBalances(filtered);
+    // 异步更新，避免在渲染期间同步调用 setState
+    setTimeout(() => {
+      setFilteredBalances(filtered);
+    }, 0);
   }, [searchTerm, filterType]);
 
   const getTypeLabel = (type: string) => {
@@ -289,8 +292,8 @@ export default function TokensManagementPage() {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      <Box sx={{ mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 0, mb: 4 }}>
+      <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Token 统一管理
         </Typography>
@@ -301,25 +304,25 @@ export default function TokensManagementPage() {
 
       {/* 统计卡片 */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="总用户数"
             value={stats.totalUsers}
-            subtitle="平均余额: {stats.averageBalance}"
+            subtitle="平均余额：{stats.averageBalance}"
             icon={AccountBalance}
             color="primary.main"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Token 总余额"
             value={stats.totalBalance}
-            subtitle="免费: {stats.totalFreeTokens.toLocaleString()}"
+            subtitle="免费：{stats.totalFreeTokens.toLocaleString()}"
             icon={MonetizationOn}
             color="success.main"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="今日充值"
             value={stats.todayRechargeAmount}
@@ -328,11 +331,11 @@ export default function TokensManagementPage() {
             color="info.main"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="今日消费"
             value={stats.todayConsumption}
-            subtitle="余额不足: {stats.lowBalanceUsers} 人"
+            subtitle="余额不足：{stats.lowBalanceUsers} 人"
             icon={TrendingUp}
             color="warning.main"
           />
@@ -341,7 +344,7 @@ export default function TokensManagementPage() {
 
       {/* Token 分布 */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom variant="body2">
@@ -366,7 +369,7 @@ export default function TokensManagementPage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom variant="body2">
@@ -392,7 +395,7 @@ export default function TokensManagementPage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom variant="body2">
@@ -436,7 +439,7 @@ export default function TokensManagementPage() {
       {/* 过滤和搜索 */}
       <Paper sx={{ p: 2, mb: 2 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               fullWidth
               size="small"
@@ -450,7 +453,7 @@ export default function TokensManagementPage() {
               }}
             />
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid size={{ xs: 6, md: 3 }}>
             <FormControl fullWidth size="small">
               <InputLabel>用户类型</InputLabel>
               <Select
@@ -465,7 +468,7 @@ export default function TokensManagementPage() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6} md={3} sx={{ textAlign: 'right' }}>
+          <Grid size={{ xs: 6, md: 3 }} sx={{ textAlign: 'right' }}>
             <Button
               variant="outlined"
               startIcon={<Refresh />}
@@ -496,7 +499,7 @@ export default function TokensManagementPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {balances.map(balance => (
+              {filteredBalances.map(balance => (
                 <TableRow key={balance.id} hover>
                   <TableCell>
                     <Typography variant="body2" fontWeight="medium">

@@ -1,24 +1,26 @@
-﻿import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
-  // 鍒涘缓Supabase瀹㈡埛  const supabase = createClient(
+export async function GET() {
+  // 创建 Supabase 客户端
+  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // 寮€鍙戠幆澧冧复剁粫杩囪璇佹  if (process.env.NODE_ENV === 'development') {
-    console.log('寮€鍙戠幆 缁曡繃璁よ瘉妫€);
+  // 开发环境临时绕过认证检查
+  if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line no-console -- 开发环境调试用
+    console.log('开发环境：绕过认证检查');
   }
 
   try {
-    // 鑾峰彇婂ぉ鐨勫紑濮嬪拰缁撴潫堕棿
+    // 获取今天的开始和结束时间
     const today = new Date();
     const todayStart = new Date(today.setHours(0, 0, 0, 0)).toISOString();
     const todayEnd = new Date(today.setHours(23, 59, 59, 999)).toISOString();
 
-    // 鑾峰彇鏈懆鐨勫紑濮嬪拰缁撴潫堕棿
+    // 获取本周的开始和结束时间
     const weekStart = new Date(today);
     weekStart.setDate(today.getDate() - today.getDay());
     weekStart.setHours(0, 0, 0, 0);
@@ -26,46 +28,49 @@ export async function GET(request: Request) {
     weekEnd.setDate(weekStart.getDate() + 6);
     weekEnd.setHours(23, 59, 59, 999);
 
-    // 鑾峰彇澶╃殑堕棿鑼冨洿
+    // 获取 7 天的时间范围
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // 1. 婃棩鏂板鐑偣炬帴    const { count: todayHotLinks } = await supabase
+    // 1. 每日新增热点链接
+    const { count: todayHotLinks } = await supabase
       .from('unified_link_library')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', todayStart)
       .lte('created_at', todayEnd);
 
-    // 2. 寰呭鏍搁摼鎺ユ暟
+    // 2. 待审核链接数
     const { count: pendingLinks } = await supabase
       .from('unified_link_library')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'pending_review');
 
-    // 3. 鏈懆鏂板鏂囩珷    const { count: weekArticles } = await supabase
+    // 3. 本周新增文章
+    const { count: weekArticles } = await supabase
       .from('articles')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', weekStart.toISOString())
       .lte('created_at', weekEnd.toISOString());
 
-    // 4. 鎬绘敞鍐屽伐绋嬪笀    const { count: totalEngineers } = await supabase
+    // 4. 总注册工程师
+    const { count: totalEngineers } = await supabase
       .from('user_profiles_ext')
       .select('*', { count: 'exact', head: true })
       .eq('user_type', 'engineer');
 
-    // 5. 鎬诲簵烘暟
+    // 5. 总店铺数
     const { count: totalShops } = await supabase
       .from('repair_shops')
       .select('*', { count: 'exact', head: true });
 
-    // 6. 澶╅绾﹂噺瓒嬪娍鏁版嵁
+    // 6. 每日预约量趋势数据
     const { data: appointmentTrends } = await supabase
       .from('appointments')
       .select('created_at, status')
       .gte('created_at', sevenDaysAgo.toISOString())
       .order('created_at', { ascending: true });
 
-    // 澶勭悊瓒嬪娍鏁版嵁锛屾寜ユ湡鍒嗙粍缁熻
+    // 处理趋势数据，按日期分组统计
     const trendData = processTrendData(appointmentTrends || []);
 
     const stats = {
@@ -82,19 +87,19 @@ export async function GET(request: Request) {
       data: stats,
     });
   } catch (error) {
-    console.error('鑾峰彇杩愯惀鏁版嵁澶辫触:', error);
+    console.error('获取运营数据失败:', error);
     return NextResponse.json(
-      { success: false, error: '鑾峰彇杩愯惀鏁版嵁澶辫触' },
+      { success: false, error: '获取运营数据失败' },
       { status: 500 }
     );
   }
 }
 
-// 澶勭悊棰勭害瓒嬪娍鏁版嵁
+// 处理预约趋势数据
 function processTrendData(appointments: any[]) {
   const trendMap = new Map();
 
-  // 鍒濆鍖栬繎7澶╃殑鏁版嵁
+  // 初始化近 7 天的数据
   for (let i = 6; i >= 0; i--) {
     const date = new Date();
     date.setDate(date.getDate() - i);
@@ -108,7 +113,7 @@ function processTrendData(appointments: any[]) {
     });
   }
 
-  // 缁熻瀹為檯鏁版嵁
+  // 统计实际数据
   appointments.forEach(appointment => {
     const dateKey = appointment.created_at.split('T')[0];
     if (trendMap.has(dateKey)) {
@@ -128,4 +133,3 @@ function processTrendData(appointments: any[]) {
     a.date.localeCompare(b.date)
   );
 }
-

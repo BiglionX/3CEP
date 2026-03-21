@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoginJumpDebugger() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function LoginJumpDebugger() {
     const results = [];
 
     try {
-      // 测试1: 检查当前认证状态
+      // 测试 1: 检查当前认证状态
       results.push({
         step: '1. 检查当前认证状态',
         status: '进行中...',
@@ -32,10 +32,10 @@ export default function LoginJumpDebugger() {
       results[0] = {
         step: '1. 检查当前认证状态',
         status: authData.authenticated ? '✓ 已登录' : '✗ 未登录',
-        details: `用户: ${authData.email || '无'}, 管理员: ${authData.is_admin || false}`,
+        details: `用户：${authData.email || '无'}, 管理员：${authData.is_admin || false}`,
       };
 
-      // 测试2: 执行登录
+      // 测试 2: 执行登录
       if (!authData.authenticated) {
         results.push({
           step: '2. 执行登录测试',
@@ -60,16 +60,16 @@ export default function LoginJumpDebugger() {
           step: '2. 执行登录测试',
           status: loginResponse.ok ? '✓ 登录成功' : '✗ 登录失败',
           details: loginResponse.ok
-             `用户: ${loginData.email}, 管理员: ${loginData.is_admin}, 跳转目标: /admin/dashboard`
-            : `错误: ${loginData.error}`,
+            ? `用户：${loginData.email}, 管理员：${loginData.is_admin}, 跳转目标：/admin/dashboard`
+            : `错误：${loginData.error}`,
         };
 
-        // 测试3: 手动触发跳转
+        // 测试 3: 手动触发跳转
         if (loginResponse.ok && loginData.is_admin) {
           results.push({
             step: '3. 测试页面跳转',
             status: '进行中...',
-            details: '将在2秒后尝试跳转到/admin/dashboard',
+            details: '将在 2 秒后尝试跳转到/admin/dashboard',
           });
 
           // 延迟跳转以便观察
@@ -98,7 +98,7 @@ export default function LoginJumpDebugger() {
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error  error.message : String(error);
+        error instanceof Error ? error.message : String(error);
       results.push({
         step: '测试执行',
         status: '✗ 发生错误',
@@ -155,9 +155,9 @@ export default function LoginJumpDebugger() {
                       <span
                         className={
                           result.status.includes('✓')
-                             'text-green-600'
+                            ? 'text-green-600'
                             : result.status.includes('✗')
-                               'text-red-600'
+                              ? 'text-red-600'
                               : 'text-yellow-600'
                         }
                       >
@@ -178,13 +178,13 @@ export default function LoginJumpDebugger() {
               <h3 className="font-semibold text-blue-800 mb-3">手动测试链接</h3>
               <div className="space-y-3">
                 <a
-                  href="/loginredirect=/admin/dashboard"
+                  href="/login?redirect=/admin/dashboard"
                   className="block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors text-center"
                 >
                   管理员登录测试
                 </a>
                 <a
-                  href="/loginredirect=/profile"
+                  href="/login?redirect=/profile"
                   className="block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors text-center"
                 >
                   普通用户登录测试
@@ -195,10 +195,10 @@ export default function LoginJumpDebugger() {
             <div className="bg-yellow-50 p-6 rounded-lg">
               <h3 className="font-semibold text-yellow-800 mb-3">调试信息</h3>
               <div className="text-sm text-yellow-700 space-y-2">
-                <p>• 检查浏览器Console输出</p>
-                <p>• 查看Network标签中的请求</p>
-                <p>• 验证Cookie设置情况</p>
-                <p>• 确认redirect参数传递</p>
+                <p>• 检查浏览器 Console 输出</p>
+                <p>• 查看 Network 标签中的请求</p>
+                <p>• 验证 Cookie 设置情况</p>
+                <p>• 确认 redirect 参数传递</p>
               </div>
             </div>
           </div>
@@ -207,9 +207,11 @@ export default function LoginJumpDebugger() {
             <h3 className="font-semibold text-gray-800 mb-3">故障排除指南</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
               <div>
-                <h4 className="font-medium text-gray-700">如果API测试失败:</h4>
+                <h4 className="font-medium text-gray-700">
+                  如果 API 测试失败:
+                </h4>
                 <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>检查Supabase配置</li>
+                  <li>检查 Supabase 配置</li>
                   <li>验证网络连接</li>
                   <li>查看服务器日志</li>
                 </ul>
@@ -217,7 +219,7 @@ export default function LoginJumpDebugger() {
               <div>
                 <h4 className="font-medium text-gray-700">如果跳转不工作:</h4>
                 <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>检查浏览器JavaScript错误</li>
+                  <li>检查浏览器 JavaScript 错误</li>
                   <li>验证路由配置</li>
                   <li>清除浏览器缓存</li>
                 </ul>

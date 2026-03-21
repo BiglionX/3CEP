@@ -5,19 +5,6 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useUnifiedAuth } from '@/hooks/use-unified-auth';
-import {
-  Building,
-  Menu,
-  X,
-  User,
-  Settings,
-  LogOut,
-  Bell,
-  ChevronDown,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,8 +12,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { cn } from '@/lib/utils';
+import {
+  Bell,
+  Building,
+  ChevronDown,
+  LogOut,
+  Menu,
+  Settings,
+  User,
+  X,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface EnterpriseLayoutProps {
   children: React.ReactNode;
@@ -49,8 +49,7 @@ export function EnterpriseLayout({
 }: EnterpriseLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-  const { user, isAuthenticated, is_admin, roles, isLoading } =
-    useUnifiedAuth();
+  const { user, isAuthenticated, is_admin, isLoading } = useUnifiedAuth();
 
   // 导航菜单配置
   const navigation: NavigationItem[] = [
@@ -61,7 +60,7 @@ export function EnterpriseLayout({
       permission: 'enterprise_read',
     },
     {
-      name: '智能体服?,
+      name: '智能体服务',
       href: '/enterprise/agents',
       icon: Building,
       permission: 'enterprise_agents_read',
@@ -73,7 +72,7 @@ export function EnterpriseLayout({
           permission: 'enterprise_agents_read',
         },
         {
-          name: '工作?,
+          name: '工作台',
           href: '/enterprise/agents/dashboard',
           icon: Building,
           permission: 'enterprise_agents_read',
@@ -87,7 +86,7 @@ export function EnterpriseLayout({
       permission: 'enterprise_procurement_read',
       children: [
         {
-          name: '采购仪表?,
+          name: '采购仪表板',
           href: '/enterprise/procurement/dashboard',
           icon: Building,
           permission: 'enterprise_procurement_read',
@@ -108,7 +107,7 @@ export function EnterpriseLayout({
       children: [
         {
           name: '用户管理',
-          href: '/enterprise/admin/users',
+          href: '/admin/user-manager',
           icon: User,
           permission: 'users_read',
         },
@@ -122,12 +121,14 @@ export function EnterpriseLayout({
     },
   ];
 
-  // 检查用户权?  const checkPermission = (permission?: string): boolean => {
+  // 检查用户权限
+  const checkPermission = (permission?: string): boolean => {
     if (!permission) return true;
     if (is_admin) return true;
     if (!isAuthenticated) return false;
 
-    // 这里可以根据实际的权限系统进行检?    const userPermissions = [
+    // 这里可以根据实际的权限系统进行检查
+    const userPermissions = [
       'enterprise_read',
       'enterprise_agents_read',
       'enterprise_procurement_read',
@@ -143,13 +144,16 @@ export function EnterpriseLayout({
     return userPermissions.includes(permission);
   };
 
-  // 过滤有权限的导航?  const filteredNavigation = navigation
+  // 过滤有权限的导航项
+  const filteredNavigation = navigation
     .filter(item => checkPermission(item.permission))
     .map(item => ({
       ...item,
-      children: item?.filter(child => checkPermission(child.permission)),
+      children: item.children?.filter(child =>
+        checkPermission(child.permission)
+      ),
     }))
-    .filter(item => item?.length || !item.children);
+    .filter(item => item.children?.length || !item.children);
 
   // 处理登出
   const handleLogout = async () => {
@@ -160,7 +164,8 @@ export function EnterpriseLayout({
       localStorage.removeItem('is-admin');
       localStorage.removeItem('user-role');
 
-      // 重定向到登录?      router.push('/login');
+      // 重定向到登录页
+      router.push('/login');
     } catch (error) {
       console.error('登出失败:', error);
     }
@@ -179,8 +184,8 @@ export function EnterpriseLayout({
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <Building className="mx-auto h-12 w-12 text-gray-400" />
-          <h2 className="mt-2 text-lg font-semibold text-gray-900">需要登?/h2>
-          <p className="mt-1 text-gray-500">请先登录以访问企业服?/p>
+          <h2 className="mt-2 text-lg font-semibold text-gray-900">需要登录</h2>
+          <p className="mt-1 text-gray-500">请先登录以访问企业服务</p>
           <div className="mt-6">
             <Button onClick={() => router.push('/login')}>登录账户</Button>
           </div>
@@ -199,7 +204,7 @@ export function EnterpriseLayout({
         />
       )}
 
-      {/* 侧边?*/}
+      {/* 侧边栏 */}
       {showSidebar && (
         <div
           className={cn(
@@ -259,9 +264,9 @@ export function EnterpriseLayout({
         </div>
       )}
 
-      {/* 主内容区?*/}
+      {/* 主内容区 */}
       <div className={cn('flex flex-col', showSidebar && 'lg:pl-64')}>
-        {/* 顶部导航?*/}
+        {/* 顶部导航栏 */}
         <header className="bg-white shadow-sm">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center">
@@ -314,7 +319,8 @@ export function EnterpriseLayout({
                     className="text-red-600 focus:text-red-600"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    退出登?                  </DropdownMenuItem>
+                    退出登录
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

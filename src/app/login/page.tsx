@@ -1,9 +1,9 @@
 ﻿'use client';
 
-import { useEffect, useRef } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { UnifiedLogin } from '@/components/auth/UnifiedLogin';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 // 扩展 Window 接口以包含 loginRedirectProcessed 属性
 declare global {
@@ -23,7 +23,7 @@ export default function EnhancedLoginPage() {
   const { isAuthenticated, is_admin } = useUnifiedAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const redirect = searchParams.get('redirect') || undefined;
+  const redirect = searchParams.get('redirect') || '/admin/dashboard';
   const redirectProcessedRef = useRef(false);
 
   useEffect(() => {

@@ -5,6 +5,7 @@
 
 'use client';
 
+import AdminTopbar from '@/components/admin/AdminTopbar';
 import { RoleAwareSidebar } from '@/components/admin/RoleAwareSidebar';
 import { RoleAwareTopbar } from '@/components/admin/RoleAwareTopbar';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
@@ -55,17 +56,22 @@ export default function RoleAwareLayout({ children }: RoleAwareLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" data-disable-unified-layout>
-      {/* 角色感知侧边栏 */}
+    <div className="flex min-h-screen bg-gray-50" data-disable-unified-layout>
+      {/* Admin 专用模块导航 - 固定在页面最顶部，横跨整个屏幕 */}
+      <div className="fixed top-0 left-0 right-0 z-50 w-full">
+        <AdminTopbar />
+      </div>
+
+      {/* 角色感知侧边栏 - 从顶部导航条下方开始 */}
       <RoleAwareSidebar />
 
-      {/* 主内容区域 */}
-      <div className="lg:pl-64">
-        {/* 角色感知顶部栏 */}
+      {/* 主内容区域 - 使用 flex-1 让内容区域占据剩余空间 */}
+      <div className="flex-1 flex flex-col">
+        {/* 角色感知顶部栏 - 标题和用户功能 */}
         <RoleAwareTopbar />
 
         {/* 页面内容 */}
-        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );
