@@ -5,12 +5,12 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
-import { Bell, X, XCircle, AlertTriangle, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useNotifications, NotificationLevel } from './NotificationManager';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, Bell, Info, X, XCircle } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
+import { NotificationLevel, useNotifications } from './NotificationManager';
 
 interface NotificationBadgeProps {
   showCount?: boolean;
@@ -25,7 +25,7 @@ export function NotificationBadge({
   position = 'top-right',
   className = '',
 }: NotificationBadgeProps): ReactNode {
-  const { unreadCount, notifications, markAsRead, settings, updateSettings } =
+  const { unreadCount, notifications, markAsRead, updateSettings } =
     useNotifications();
 
   const [showDND, setShowDND] = useState(false);
@@ -43,7 +43,8 @@ export function NotificationBadge({
     'bottom-left': 'bottom-0 left-0 -translate-x-1/2 translate-y-1/2',
   };
 
-  // 处理免打扰模式切?  const toggleDND = () => {
+  // 处理免打扰模式切换
+  const toggleDND = () => {
     const newDND = !showDND;
     setShowDND(newDND);
     updateSettings({
@@ -68,8 +69,8 @@ export function NotificationBadge({
         {showCount && unreadCount > 0 && (
           <Badge
             className={`
-              absolute ${positionClasses[position]} 
-              min-w-[18px] h-[18px] rounded-full p-0 text-xs 
+              absolute ${positionClasses[position]}
+              min-w-[18px] h-[18px] rounded-full p-0 text-xs
               flex items-center justify-center font-normal
               ${unreadCount > 0 ? 'animate-pulse' : ''}
             `}
@@ -119,7 +120,8 @@ export function NotificationBadge({
           {showDND && (
             <div className="mt-2 text-xs text-gray-500 flex items-center">
               <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
-              免打扰模式已开?            </div>
+              免打扰模式已开{' '}
+            </div>
           )}
         </div>
 

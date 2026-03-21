@@ -1,19 +1,8 @@
 ﻿'use client';
 
-import { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import {
-  Search,
-  ChevronDown,
-  ChevronRight,
-  Star,
-  Clock,
-  Filter,
-} from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -21,12 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  moduleRegistry,
-  ModuleConfig,
-  getModulesByPermissions,
-} from '@/lib/module-registry';
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import { ModuleConfig, getModulesByPermissions } from '@/lib/module-registry';
+import { ChevronDown, Search, Star } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 interface DynamicModuleMenuProps {
   /** 显示模式：完整菜单 | 紧凑模式 | 图标模式 */
@@ -69,7 +58,7 @@ export default function DynamicModuleMenu({
     'priority'
   );
   const pathname = usePathname();
-  const { is_admin, roles } = useUnifiedAuth();
+  const { is_admin } = useUnifiedAuth();
 
   // 获取用户权限列表
   const userPermissions = useMemo(() => {
@@ -129,7 +118,7 @@ export default function DynamicModuleMenu({
   }, [accessibleModules, searchTerm, selectedCategory, sortBy, favoritesOnly]);
 
   // 获取图标组件
-  const getIconComponent = (iconName: string) => {
+  const getIconComponent = (_iconName: string) => {
     // 这里应该导入所有可能的图标组件
     // 为简化，返回一个通用的图标函数
     return ({ className }: { className?: string }) => (

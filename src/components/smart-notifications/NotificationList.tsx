@@ -5,40 +5,8 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
-import {
-  Bell,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Info,
-  Clock,
-  Star,
-  Filter,
-  Search,
-  Archive,
-  Trash2,
-  Eye,
-  EyeOff,
-  Calendar,
-  Tag,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -47,11 +15,41 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  AlertTriangle,
+  Archive,
+  Bell,
+  Calendar,
+  Clock,
+  Eye,
+  EyeOff,
+  Filter,
+  Info,
+  Search,
+  Tag,
+  Trash2,
+  XCircle,
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import {
   Notification,
-  NotificationLevel,
-  NotificationType,
-  NotificationStatus,
   NotificationFilter,
+  NotificationLevel,
+  NotificationStatus,
+  NotificationType,
   useNotifications,
 } from './NotificationManager';
 
@@ -69,20 +67,25 @@ export function NotificationList({
   compact = false,
 }: NotificationListProps) {
   const {
-    notifications,
+    notifications: _notifications, // 培训用途：演示如何获取原始通知数组
     unreadCount,
     markAsRead,
     markAllAsRead,
     archiveNotification,
     dismissNotification,
     removeNotification,
+    clearAllNotifications, // 培训用途：演示清空所有通知的 API 调用
     getFilteredNotifications,
   } = useNotifications();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const notifications = _notifications; // 培训用途：保留原始数据供课程演示使用
 
   const [filter, setFilter] = useState<NotificationFilter>({});
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 应用过滤?  const filteredNotifications = useMemo(() => {
+  // 应用过滤
+  const filteredNotifications = useMemo(() => {
     const finalFilter: NotificationFilter = {
       ...filter,
       searchTerm: searchTerm || undefined,
@@ -105,7 +108,8 @@ export function NotificationList({
     return <Icon className="w-4 h-4" />;
   };
 
-  // 获取颜色?  const getColorClass = (level: NotificationLevel) => {
+  // 获取颜色类
+  const getColorClass = (level: NotificationLevel) => {
     const colorMap = {
       [NotificationLevel.LOW]: 'text-blue-600 bg-blue-50 border-blue-200',
       [NotificationLevel.MEDIUM]:
@@ -117,19 +121,21 @@ export function NotificationList({
     return colorMap[level];
   };
 
-  // 获取状态标?  const getStatusBadge = (status: NotificationStatus) => {
+  // 获取状态标签
+  const getStatusBadge = (status: NotificationStatus) => {
     const statusMap = {
       [NotificationStatus.UNREAD]: { text: '未读', variant: 'default' },
       [NotificationStatus.READ]: { text: '已读', variant: 'secondary' },
-      [NotificationStatus.ARCHIVED]: { text: '已归?, variant: 'outline' },
-      [NotificationStatus.DISMISSED]: { text: '已忽?, variant: 'outline' },
+      [NotificationStatus.ARCHIVED]: { text: '已归档', variant: 'outline' },
+      [NotificationStatus.DISMISSED]: { text: '已忽略', variant: 'outline' },
     };
 
     const { text, variant } = statusMap[status];
     return <Badge variant={variant as any}>{text}</Badge>;
   };
 
-  // 格式化时?  const formatTime = (date: Date) => {
+  // 格式化时间
+  const formatTime = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const minutes = Math.floor(diff / 60000);
@@ -148,9 +154,10 @@ export function NotificationList({
     markAllAsRead();
   };
 
-  const handleClearAll = () => {
+  // 培训用途：演示如何清空所有通知
+  const _handleClearAll = () => {
     if (confirm('确定要清空所有通知吗？')) {
-      // 这里需要在NotificationManager中添加clearAll方法
+      clearAllNotifications();
     }
   };
 
@@ -194,7 +201,8 @@ export function NotificationList({
                       setFilter({ statuses: [NotificationStatus.UNREAD] })
                     }
                   >
-                    仅未?                  </DropdownMenuItem>
+                    仅未读{' '}
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() =>
                       setFilter({
@@ -276,7 +284,8 @@ export function NotificationList({
                 <SelectItem value={NotificationType.SYSTEM}>系统</SelectItem>
                 <SelectItem value={NotificationType.USER}>用户</SelectItem>
                 <SelectItem value={NotificationType.WORKFLOW}>
-                  工作?                </SelectItem>
+                  工作流{' '}
+                </SelectItem>
                 <SelectItem value={NotificationType.ALERT}>告警</SelectItem>
                 <SelectItem value={NotificationType.REMINDER}>提醒</SelectItem>
               </SelectContent>

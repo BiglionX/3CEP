@@ -1,25 +1,25 @@
 ﻿'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
+  BookOpen,
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
-  CheckCircle,
   Circle,
-  Play,
-  Pause,
-  RotateCcw,
-  Volume2,
-  VolumeX,
   Maximize,
   Minimize,
-  BookOpen,
-  Settings,
+  Pause,
+  Play,
+  RotateCcw,
   Save,
+  Settings,
   Share2,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface TutorialStep {
   id: string;
@@ -121,7 +121,8 @@ export function EnhancedTutorialViewer({
     }
   }, [currentStepIndex, onStepChange]);
 
-  // 标记步骤为完?  const markStepAsComplete = useCallback((index: number) => {
+  // 标记步骤为完成
+  const markStepAsComplete = useCallback((index: number) => {
     setCompletedSteps(prev => {
       const newCompleted = [...prev];
       newCompleted[index] = true;
@@ -129,24 +130,28 @@ export function EnhancedTutorialViewer({
     });
   }, []);
 
-  // 上一?  const goToPreviousStep = useCallback(() => {
+  // 上一步
+  const goToPreviousStep = useCallback(() => {
     if (currentStepIndex > 0) {
       setCurrentStepIndex(prev => prev - 1);
     }
   }, [currentStepIndex]);
 
-  // 下一?  const goToNextStep = useCallback(() => {
+  // 下一步
+  const goToNextStep = useCallback(() => {
     markStepAsComplete(currentStepIndex);
     if (currentStepIndex < totalSteps - 1) {
       setCurrentStepIndex(prev => prev + 1);
     } else {
-      // 最后一步完?      if (onComplete) {
+      // 最后一步完成
+      if (onComplete) {
         onComplete();
       }
     }
   }, [currentStepIndex, totalSteps, markStepAsComplete, onComplete]);
 
-  // 跳转到指定步?  const goToStep = useCallback(
+  // 跳转到指定步骤
+  const goToStep = useCallback(
     (index: number) => {
       if (index >= 0 && index < totalSteps) {
         setCurrentStepIndex(index);
@@ -177,7 +182,8 @@ export function EnhancedTutorialViewer({
     setIsPlaying(false);
   };
 
-  // 渲染播放控制?  const renderVideoControls = () => (
+  // 渲染播放控制条
+  const renderVideoControls = () => (
     <div className="flex items-center justify-between bg-gray-800 text-white p-3 rounded-b-lg">
       <div className="flex items-center space-x-3">
         <Button
@@ -256,7 +262,7 @@ export function EnhancedTutorialViewer({
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span>自动前进到下一?/span>
+            <span>自动前进到下一步</span>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -294,7 +300,8 @@ export function EnhancedTutorialViewer({
     </div>
   );
 
-  // 渲染进度?  const renderProgressBar = () => {
+  // 渲染进度条
+  const renderProgressBar = () => {
     const progress = ((currentStepIndex + 1) / totalSteps) * 100;
 
     return (
@@ -309,7 +316,7 @@ export function EnhancedTutorialViewer({
 
   return (
     <div className="flex flex-col h-full">
-      {/* 顶部控制?*/}
+      {/* 顶部控制条 */}
       <div className="flex items-center justify-between p-4 border-b bg-white">
         <div className="flex items-center space-x-4">
           <h1 className="text-xl font-semibold text-gray-900 truncate max-w-md">
@@ -338,7 +345,7 @@ export function EnhancedTutorialViewer({
 
       {/* 内容区域 */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* 步骤列表侧边?*/}
+        {/* 步骤列表侧边栏 */}
         <div className="w-full md:w-64 border-r bg-gray-50 overflow-y-auto">
           <div className="p-4">
             <h3 className="font-medium text-gray-900 mb-3 flex items-center">
@@ -388,7 +395,7 @@ export function EnhancedTutorialViewer({
 
         {/* 主内容区 */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* 进度?*/}
+          {/* 进度条 */}
           <div className="p-4 border-b">
             {renderProgressBar()}
             <div className="flex items-center justify-between text-sm text-gray-500">
@@ -414,7 +421,7 @@ export function EnhancedTutorialViewer({
 
               <p className="text-gray-600 mb-6">{currentStep.description}</p>
 
-              {/* 多媒体内?*/}
+              {/* 多媒体内容 */}
               <div className="space-y-6">
                 {currentStep.video_url && (
                   <div className="bg-black rounded-lg overflow-hidden">
@@ -442,7 +449,7 @@ export function EnhancedTutorialViewer({
                 )}
               </div>
 
-              {/* 提示和警?*/}
+              {/* 提示和警告 */}
               {(currentStep.tips || currentStep.warnings) && (
                 <div className="mt-8 space-y-4">
                   {currentStep.tips && currentStep.tips.length > 0 && (
@@ -490,7 +497,8 @@ export function EnhancedTutorialViewer({
                 variant="outline"
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
-                上一?              </Button>
+                上一?{' '}
+              </Button>
 
               <div className="flex items-center space-x-2">
                 {tutorial.steps.map((_, index) => (
@@ -510,7 +518,7 @@ export function EnhancedTutorialViewer({
               </div>
 
               <Button onClick={goToNextStep} variant="default">
-                {currentStepIndex === totalSteps - 1 ? '完成教程' : '下一?}
+                {currentStepIndex === totalSteps - 1 ? '完成教程' : '下一步'}
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </div>

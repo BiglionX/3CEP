@@ -1,22 +1,22 @@
-﻿"use client";
+﻿'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import type { ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// 培训用途：isPlayingVideo 和 setIsPlayingVideo 保留用于后续功能演示
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
+  AlertTriangle,
   ChevronLeft,
   ChevronRight,
-  CheckCircle,
-  Circle,
-  Play,
-  AlertTriangle,
   Lightbulb,
-  Video,
-  ShoppingCart,
+  Loader2,
   ShoppingBag,
-  Loader2
-} from "lucide-react";
+  ShoppingCart,
+  Video,
+} from 'lucide-react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 
 interface TutorialStep {
   id: string;
@@ -45,7 +45,7 @@ interface Tutorial {
   estimated_time: number;
   view_count: number;
   like_count: number;
-  status: "draft" | "published" | "archived";
+  status: 'draft' | 'published' | 'archived';
   created_at: string;
 }
 
@@ -62,13 +62,18 @@ interface StepByStepTutorialProps {
   onComplete?: () => void;
 }
 
-export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialProps): ReactNode {
+export function StepByStepTutorial({
+  tutorial,
+  onComplete,
+}: StepByStepTutorialProps): ReactNode {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<boolean[]>(
     new Array(tutorial.steps.length).fill(false)
   );
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
-  const [affiliateLinks, setAffiliateLinks] = useState<Record<string, AffiliateLink[]>>({});
+  const [affiliateLinks, setAffiliateLinks] = useState<
+    Record<string, AffiliateLink[]>
+  >({});
   const [loadingLinks, setLoadingLinks] = useState<Record<string, boolean>>({});
 
   const currentStep = tutorial.steps[currentStepIndex];
@@ -81,50 +86,53 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
     setCompletedSteps(newCompletedSteps);
   };
 
-  // 上一?
+  // 上一步
   const goToPreviousStep = () => {
     if (currentStepIndex > 0) {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
 
-  // 下一?
+  // 下一步
   const goToNextStep = () => {
     markStepAsComplete(currentStepIndex);
     if (currentStepIndex < totalSteps - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
     } else {
-      // 最后一步完?
+      // 最后一步完成
       if (onComplete) {
         onComplete();
       }
     }
   };
 
-  // 跳转到指定步?
+  // 跳转到指定步骤
   const goToStep = (index: number) => {
     if (index >= 0 && index < totalSteps) {
       setCurrentStepIndex(index);
     }
   };
 
-  // 获取视频ID（支持YouTube和B站）
+  // 获取视频 ID（支持 YouTube 和 B 站）
   const getVideoEmbedUrl = (videoUrl: string) => {
     try {
       const url = new URL(videoUrl);
-      
       // YouTube
-      if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
-        const videoId = url.searchParams.get('v') || url.pathname.split('/').pop();
+      if (
+        url.hostname.includes('youtube.com') ||
+        url.hostname.includes('youtu.be')
+      ) {
+        const videoId =
+          url.searchParams.get('v') || url.pathname.split('/').pop();
         return `https://www.youtube.com/embed/${videoId}`;
       }
-      
+
       // B站
       if (url.hostname.includes('bilibili.com')) {
         const videoId = url.pathname.split('/').pop()?.split('?')[0];
         return `https://player.bilibili.com/player.html?bvid=${videoId}&page=1`;
       }
-      
+
       return videoUrl;
     } catch {
       return videoUrl;
@@ -135,7 +143,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
   const fetchAffiliateLinks = async (partName: string, stepId: string) => {
     try {
       setLoadingLinks(prev => ({ ...prev, [stepId]: true }));
-      
+
       const response = await fetch(`/api/affiliate/links`, {
         method: 'POST',
         headers: {
@@ -146,22 +154,24 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
           partId: tutorial.id,
           utmSource: 'fixcycle',
           utmMedium: 'tutorial',
-          utmCampaign: `tutorial_${tutorial.id}_step_${stepId}`
-        })
+          utmCampaign: `tutorial_${tutorial.id}_step_${stepId}`,
+        }),
       });
 
       const result = await response.json();
-      
+
       if (response.ok && result.success) {
         setAffiliateLinks(prev => ({
           ...prev,
-          [stepId]: [{
-            id: result.data.originalLink.id,
-            part_name: partName,
-            platform: result.data.platform,
-            finalUrl: result.data.finalUrl,
-            trackingParams: result.data.trackingParams
-          }]
+          [stepId]: [
+            {
+              id: result.data.originalLink.id,
+              part_name: partName,
+              platform: result.data.platform,
+              finalUrl: result.data.finalUrl,
+              trackingParams: result.data.trackingParams,
+            },
+          ],
         }));
       }
     } catch (error) {
@@ -183,18 +193,27 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
         </h4>
         <div className="space-y-3">
           {parts.map((part, index) => (
-            <div key={index} className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+            <div
+              key={index}
+              className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm"
+            >
               <div>
                 <span className="font-medium text-gray-900">{part}</span>
-                {affiliateLinks[stepId]?.find(link => link.part_name === part) ? (
+                {affiliateLinks[stepId]?.find(
+                  link => link.part_name === part
+                ) ? (
                   <a
-                    href={affiliateLinks[stepId].find(link => link.part_name === part)?.finalUrl}
+                    href={
+                      affiliateLinks[stepId].find(
+                        link => link.part_name === part
+                      )?.finalUrl
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-1 inline-flex items-center px-3 py-1 bg-green-500 text-white text-sm rounded-md hover:bg-green-600 transition-colors"
                     onClick={() => {
                       // 可以在这里添加额外的追踪逻辑
-                      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('购买链接点击:', part)}}
+                    }}
                   >
                     <ShoppingBag className="w-4 h-4 mr-1" />
                     立即购买
@@ -210,7 +229,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                     {loadingLinks[stepId] ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                        加载?..
+                        加载中..
                       </>
                     ) : (
                       <>
@@ -223,7 +242,11 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
               </div>
               <div className="flex items-center space-x-2">
                 <Badge variant="secondary" className="text-xs">
-                  {getPlatformIcon(affiliateLinks[stepId]?.find(link => link.part_name === part)?.platform || 'unknown')}
+                  {getPlatformIcon(
+                    affiliateLinks[stepId]?.find(
+                      link => link.part_name === part
+                    )?.platform || 'unknown'
+                  )}
                 </Badge>
               </div>
             </div>
@@ -239,18 +262,23 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
   // 获取平台图标
   const getPlatformIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
-      case 'jd': return '🐶 JD';
-      case 'taobao': return '🍑 淘宝';
-      case 'tmall': return '🐱 天猫';
-      case 'amazon': return '📦 A';
-      default: return '❓';
+      case 'jd':
+        return '🐶 JD';
+      case 'taobao':
+        return '🍑 淘宝';
+      case 'tmall':
+        return '🐱 天猫';
+      case 'amazon':
+        return '📦 A';
+      default:
+        return '❓';
     }
   };
 
-  // 渲染视频播放?
+  // 渲染视频播放器
   const renderVideoPlayer = (videoUrl: string) => {
     const embedUrl = getVideoEmbedUrl(videoUrl);
-    
+
     return (
       <div className="relative pt-[56.25%] bg-black rounded-lg overflow-hidden">
         <iframe
@@ -265,7 +293,7 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
     );
   };
 
-  // 渲染进度指示?
+  // 渲染进度指示器
   const renderProgressIndicator = () => (
     <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
       <div className="flex items-center space-x-2">
@@ -278,10 +306,10 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
               key={index}
               onClick={() => goToStep(index)}
               className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentStepIndex 
-                  ? 'bg-blue-500' 
-                  : completedSteps[index] 
-                    ? 'bg-green-500' 
+                index === currentStepIndex
+                  ? 'bg-blue-500'
+                  : completedSteps[index]
+                    ? 'bg-green-500'
                     : 'bg-gray-300'
               }`}
               aria-label={`跳转到第${index + 1}步`}
@@ -290,7 +318,11 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
         </div>
       </div>
       <div className="text-sm text-gray-500">
-        预计剩余时间: {tutorial.steps.slice(currentStepIndex).reduce((acc, step) => acc + step.estimated_time, 0)}分钟
+        预计剩余时间:{' '}
+        {tutorial.steps
+          .slice(currentStepIndex)
+          .reduce((acc, step) => acc + step.estimated_time, 0)}
+        分钟
       </div>
     </div>
   );
@@ -306,9 +338,9 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
           size="sm"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
-          上一?
+          上一步
         </Button>
-        
+
         <div className="flex space-x-2">
           {tutorial.steps.map((step, index) => (
             <button
@@ -318,8 +350,8 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
                 index === currentStepIndex
                   ? 'bg-blue-500 text-white'
                   : completedSteps[index]
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
               }`}
               aria-label={`步骤 ${index + 1}： ${step.title}`}
             >
@@ -327,13 +359,9 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
             </button>
           ))}
         </div>
-        
-        <Button
-          onClick={goToNextStep}
-          variant="default"
-          size="sm"
-        >
-          {currentStepIndex === totalSteps - 1 ? '完成教程' : '下一?}
+
+        <Button onClick={goToNextStep} variant="default" size="sm">
+          {currentStepIndex === totalSteps - 1 ? '完成教程' : '下一步'}
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
@@ -343,15 +371,13 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
   // 渲染步骤内容
   const renderStepContent = () => (
     <div className="p-6">
-      {/* 步骤标题和基本信?*/}
+      {/* 步骤标题和基本信息*/}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-2xl font-bold text-gray-900">
             步骤 {currentStepIndex + 1}： {currentStep.title}
           </h2>
-          <Badge variant="secondary">
-            {currentStep.estimated_time}分钟
-          </Badge>
+          <Badge variant="secondary">{currentStep.estimated_time}分钟</Badge>
         </div>
         <p className="text-gray-600">{currentStep.description}</p>
       </div>
@@ -379,11 +405,11 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
       )}
 
       {/* 配件购买链接 */}
-      {currentStep.required_parts && currentStep.required_parts.length > 0 && (
-        renderPurchaseButtons(currentStep.required_parts, currentStep.id)
-      )}
+      {currentStep.required_parts &&
+        currentStep.required_parts.length > 0 &&
+        renderPurchaseButtons(currentStep.required_parts, currentStep.id)}
 
-      {/* 提示和警?*/}
+      {/* 提示和警告*/}
       {(currentStep.tips || currentStep.warnings) && (
         <div className="space-y-4">
           {currentStep.tips && currentStep.tips.length > 0 && (
@@ -430,14 +456,12 @@ export function StepByStepTutorial({ tutorial, onComplete }: StepByStepTutorialP
 
   return (
     <div className="flex flex-col h-full">
-      {/* 进度指示?*/}
+      {/* 进度指示器 */}
       {renderProgressIndicator()}
-      
+
       {/* 步骤内容 */}
-      <div className="flex-1 overflow-y-auto">
-        {renderStepContent()}
-      </div>
-      
+      <div className="flex-1 overflow-y-auto">{renderStepContent()}</div>
+
       {/* 导航控制 */}
       {renderStepNavigation()}
     </div>
