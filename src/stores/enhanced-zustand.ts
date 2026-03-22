@@ -6,20 +6,11 @@
 'use client';
 
 import { create } from 'zustand';
-import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { devtools, DevtoolsOptions } from 'zustand/middleware';
-import {
-  Database,
-  ShoppingCart,
-  Package,
-  TrendingUp,
-  Users,
-  Settings,
-  Bell,
-} from 'lucide-react';
 
-// 状态类型定?export interface UserState {
+// 状态类型定义
+export interface UserState {
   id: string | null;
   email: string | null;
   name: string | null;
@@ -81,20 +72,24 @@ export interface ProductState {
   selectedProducts: string[];
 }
 
-// 全局状态接?export interface GlobalState {
-  // 用户状?  user: UserState;
+// 全局状态接口
+export interface GlobalState {
+  // 用户状态
+  user: UserState;
   setUser: (user: Partial<UserState>) => void;
   clearUser: () => void;
   isAuthenticated: () => boolean;
 
-  // 购物车状?  cart: CartState;
+  // 购物车状态
+  cart: CartState;
   addToCart: (item: Omit<CartItem, 'id'>) => void;
   removeFromCart: (itemId: string) => void;
   updateCartItemQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
   calculateCartTotals: () => void;
 
-  // 通知状?  notifications: NotificationState;
+  // 通知状态
+  notifications: NotificationState;
   addNotification: (
     notification: Omit<Notification, 'id' | 'createdAt' | 'read'>
   ) => void;
@@ -103,14 +98,16 @@ export interface ProductState {
   removeNotification: (id: string) => void;
   clearAllNotifications: () => void;
 
-  // 产品状?  products: ProductState;
+  // 产品状态
+  products: ProductState;
   updateProductFilters: (filters: Partial<ProductFilter>) => void;
   setSearchQuery: (query: string) => void;
   setViewMode: (mode: 'grid' | 'list') => void;
   toggleProductSelection: (productId: string) => void;
   clearProductSelection: () => void;
 
-  // UI状?  ui: {
+  // UI 状态
+  ui: {
     sidebarCollapsed: boolean;
     theme: 'light' | 'dark' | 'system';
     language: string;
@@ -120,10 +117,12 @@ export interface ProductState {
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   setLoading: (loading: boolean) => void;
 
-  // 重置所有状?  reset: () => void;
+  // 重置所有状态
+  reset: () => void;
 }
 
-// 初始状态定?const initialState = {
+// 初始状态定义
+const initialState = {
   user: {
     id: null,
     email: null,
@@ -160,7 +159,8 @@ export interface ProductState {
   },
 };
 
-// 创建持久化配?const persistOptions = {
+// 创建持久化配置
+const persistOptions = {
   name: 'global-store',
   storage: createJSONStorage(() => localStorage),
   partialize: (state: GlobalState) => ({
@@ -196,8 +196,9 @@ export const useGlobalStore = create<GlobalState>()(
         ) => ({
           ...initialState,
 
-          // 用户状态管?          setUser: (userData: Partial<UserState>) =>
-            set((state: T) => {
+          // 用户状态管理
+          setUser: (userData: Partial<UserState>) =>
+            set(state => {
               state.user = { ...state.user, ...userData };
               if (userData.id) {
                 state.user.isAuthenticated = true;
@@ -206,14 +207,15 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           clearUser: () =>
-            set((state: T) => {
+            set(state => {
               state.user = initialState.user;
             }),
 
           isAuthenticated: () => get().user.isAuthenticated,
 
-          // 购物车管?          addToCart: (newItem: Omit<CartItem, 'id'>) =>
-            set((state: T) => {
+          // 购物车管理
+          addToCart: (newItem: Omit<CartItem, 'id'>) =>
+            set(state => {
               const existingItem = state.cart.items.find(
                 item => item.productId === newItem.productId
               );
@@ -232,7 +234,7 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           removeFromCart: (itemId: string) =>
-            set((state: T) => {
+            set(state => {
               state.cart.items = state.cart.items.filter(
                 item => item.id !== itemId
               );
@@ -241,7 +243,7 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           updateCartItemQuantity: (itemId: string, quantity: number) =>
-            set((state: T) => {
+            set(state => {
               const item = state.cart.items.find(item => item.id === itemId);
               if (item && quantity > 0) {
                 item.quantity = quantity;
@@ -260,7 +262,7 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           calculateCartTotals: () =>
-            set((state: T) => {
+            set(state => {
               state.cart.totalItems = state.cart.items.reduce(
                 (sum, item) => sum + item.quantity,
                 0
@@ -275,7 +277,7 @@ export const useGlobalStore = create<GlobalState>()(
           addNotification: (
             notificationData: Omit<Notification, 'id' | 'createdAt' | 'read'>
           ) =>
-            set((state: T) => {
+            set(state => {
               const notification: Notification = {
                 ...notificationData,
                 id: Math.random().toString(36).substr(2, 9),
@@ -295,7 +297,7 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           markNotificationAsRead: (id: string) =>
-            set((state: T) => {
+            set(state => {
               const notification = state.notifications.notifications.find(
                 n => n.id === id
               );
@@ -309,7 +311,7 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           markAllNotificationsAsRead: () =>
-            set((state: T) => {
+            set(state => {
               state.notifications.notifications.forEach(notification => {
                 notification.read = true;
               });
@@ -317,7 +319,7 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           removeNotification: (id: string) =>
-            set((state: T) => {
+            set(state => {
               const notification = state.notifications.notifications.find(
                 n => n.id === id
               );
@@ -336,8 +338,9 @@ export const useGlobalStore = create<GlobalState>()(
               state.notifications = initialState.notifications;
             }),
 
-          // 产品状态管?          updateProductFilters: (filters: Partial<ProductFilter>) =>
-            set((state: T) => {
+          // 产品状态管理
+          updateProductFilters: (filters: Partial<ProductFilter>) =>
+            set(state => {
               state.products.filters = {
                 ...state.products.filters,
                 ...filters,
@@ -345,17 +348,17 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           setSearchQuery: (query: string) =>
-            set((state: T) => {
+            set(state => {
               state.products.searchQuery = query;
             }),
 
           setViewMode: (mode: 'grid' | 'list') =>
-            set((state: T) => {
+            set(state => {
               state.products.viewMode = mode;
             }),
 
           toggleProductSelection: (productId: string) =>
-            set((state: T) => {
+            set(state => {
               const index = state.products.selectedProducts.indexOf(productId);
               if (index > -1) {
                 state.products.selectedProducts.splice(index, 1);
@@ -365,27 +368,29 @@ export const useGlobalStore = create<GlobalState>()(
             }),
 
           clearProductSelection: () =>
-            set((state: T) => {
+            set(state => {
               state.products.selectedProducts = [];
             }),
 
-          // UI状态管?          toggleSidebar: () =>
-            set((state: T) => {
+          // UI 状态管理
+          toggleSidebar: () =>
+            set(state => {
               state.ui.sidebarCollapsed = !state.ui.sidebarCollapsed;
             }),
 
           setTheme: (theme: 'light' | 'dark' | 'system') =>
-            set((state: T) => {
+            set(state => {
               state.ui.theme = theme;
             }),
 
           setLoading: (loading: boolean) =>
-            set((state: T) => {
+            set(state => {
               state.ui.loading = loading;
             }),
 
-          // 重置状?          reset: () =>
-            set((state: T) => {
+          // 重置状态
+          reset: () =>
+            set(state => {
               Object.assign(state, initialState);
             }),
         })
@@ -407,7 +412,8 @@ export const useNotifications = () =>
 export const useProducts = () => useGlobalStore(state => state.products);
 export const useUI = () => useGlobalStore(state => state.ui);
 
-// 特定功能的选择?export const useAuth = () => {
+// 特定功能的选择器
+export const useAuth = () => {
   const { user, setUser, clearUser, isAuthenticated } = useGlobalStore();
   return { user, setUser, clearUser, isAuthenticated: isAuthenticated() };
 };

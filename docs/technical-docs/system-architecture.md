@@ -18,12 +18,12 @@ FixCycle 采用**现代化全栈架构**，基于以下核心理念设计：
 
 ### 核心设计理念
 
-✅ **数据分离**：应用数据与基础数据物理分离  
-✅ **实时集成**：通过数据库直连实现实时数据访问  
-✅ **自动化协调**：通过 n8n 实现智能体间的工作流编排  
-✅ **安全优先**：最小权限原则和多重安全防护  
-✅ **性能优化**：智能缓存和连接池管理  
-✅ **可观测性**：完整的监控告警和日志体系  
+✅ **数据分离**：应用数据与基础数据物理分离
+✅ **实时集成**：通过数据库直连实现实时数据访问
+✅ **自动化协调**：通过 n8n 实现智能体间的工作流编排
+✅ **安全优先**：最小权限原则和多重安全防护
+✅ **性能优化**：智能缓存和连接池管理
+✅ **可观测性**：完整的监控告警和日志体系
 ✅ **模块清晰**：业务模块 (`src/modules/`) 与技术基建 (`src/tech/`) 完全分离
 
 ### 文件夹结构规范 (v6.2)
@@ -107,15 +107,16 @@ import { UserModel } from '@/tech/database/models/user.model';
 // 共享资源导入
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-```
+
+````
 
 ### 核心设计理念
 
-✅ **数据分离**：应用数据与基础数据物理分离  
-✅ **实时集成**：通过数据库直连实现实时数据访问  
-✅ **自动化协调**：通过 n8n 实现智能体间的工作流编排  
-✅ **安全优先**：最小权限原则和多重安全防护  
-✅ **性能优化**：智能缓存和连接池管理  
+✅ **数据分离**：应用数据与基础数据物理分离
+✅ **实时集成**：通过数据库直连实现实时数据访问
+✅ **自动化协调**：通过 n8n 实现智能体间的工作流编排
+✅ **安全优先**：最小权限原则和多重安全防护
+✅ **性能优化**：智能缓存和连接池管理
 ✅ **可观测性**：完整的监控告警和日志体系
 
 ### 当前架构状态
@@ -137,7 +138,7 @@ import { useAuth } from '@/hooks/useAuth';
 Web框架: Next.js 14 (App Router)
 编程语言: TypeScript 5.0+
 包管理: npm 9+
-```
+````
 
 #### 数据库层
 
@@ -726,13 +727,17 @@ test('user can create crowdfunding project', async ({ page }) => {
 
 ---
 
-_最后更新：2026 年 3 月 4 日_  
-_架构版本：v6.2 (文件夹结构对齐版)_  
+_最后更新：2026 年 3 月 4 日_
+_架构版本：v6.2 (文件夹结构对齐版 + 智能体 SDK 集成)_
 _文档状态：生产就绪_
+_最后更新：2026 年 3 月 22 日_
 
 ## 📚 相关文档
 
 - [文件夹结构对齐计划](../../FOLDER_STRUCTURE_ALIGNMENT_PLAN.md) - 详细规划文档
 - [文件夹结构对齐完成报告](../../reports/FOLDER_STRUCTURE_ALIGNMENT_COMPLETION_REPORT.md) - 执行报告
-- [项目说明书 v6.2](../project-overview/project-specification.md) - 项目整体说明
+- [项目说明书 v6.1](../project-overview/project-specification.md) - 项目整体说明
 - [路径映射规则](../../scripts/update-import-paths.js) - 自动化脚本
+- [智能体市场架构](./agent-marketplace-architecture.md) - FixCycle 6.0 智能体生态 ✅ 新增
+- [智能体 SDK 模块](../modules/agent-sdk/) - 开发者工具包 ✅ 新增
+- [销售智能体模块](../modules/sales-agent/README.md) - 客户管理智能体 ✅ 新增

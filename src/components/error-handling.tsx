@@ -5,23 +5,9 @@
 
 'use client';
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  AlertTriangle,
-  RefreshCw,
-  X,
-  Info,
-  CheckCircle,
-  AlertCircle,
-} from 'lucide-react';
+import { AlertCircle, AlertTriangle, Info, RefreshCw, X } from 'lucide-react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 // 错误类型枚举
 export enum ErrorType {
@@ -150,6 +136,7 @@ export class GlobalErrorBoundary extends React.Component<
     console.error('Global Error Boundary caught:', error, errorInfo);
 
     // 发送错误报告
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const errorReport = {
       error: error.toString(),
       stack: error.stack,
@@ -161,12 +148,14 @@ export class GlobalErrorBoundary extends React.Component<
     };
 
     // 在开发环境中详细输出
+    /* eslint-disable no-console */
     if (process.env.NODE_ENV === 'development') {
       console.group('🚨 Global Error Report');
       console.error('Error:', error);
       console.error('Component Stack:', errorInfo.componentStack);
       console.groupEnd();
     }
+    /* eslint-enable no-console */
 
     // 生产环境中发送到监控服务
     if (process.env.NODE_ENV === 'production') {
@@ -203,7 +192,8 @@ export class GlobalErrorBoundary extends React.Component<
   }
 }
 
-// 增强版错误显示组?function EnhancedErrorDisplay({
+// 增强版错误显示组件
+function EnhancedErrorDisplay({
   error,
   resetError,
 }: {
@@ -212,12 +202,13 @@ export class GlobalErrorBoundary extends React.Component<
 }) {
   const [showDetails, setShowDetails] = useState(false);
 
-  // 根据错误类型确定图标和消?  const getErrorDisplayInfo = () => {
+  // 根据错误类型确定图标和消息
+  const getErrorDisplayInfo = () => {
     if (!error)
       return {
         icon: AlertTriangle,
         title: '未知错误',
-        message: '发生了未知错?,
+        message: '发生了未知错误',
       };
 
     const message = error.message.toLowerCase();
@@ -230,7 +221,7 @@ export class GlobalErrorBoundary extends React.Component<
       return {
         icon: AlertTriangle,
         title: '网络连接问题',
-        message: '网络连接似乎出现了问题，请检查您的网络连接后重试?,
+        message: '网络连接似乎出现了问题，请检查您的网络连接后重试',
       };
     }
 
@@ -242,7 +233,7 @@ export class GlobalErrorBoundary extends React.Component<
       return {
         icon: AlertTriangle,
         title: '认证失败',
-        message: '您的登录状态已过期，请重新登录?,
+        message: '您的登录状态已过期，请重新登录',
       };
     }
 
@@ -250,7 +241,7 @@ export class GlobalErrorBoundary extends React.Component<
       return {
         icon: AlertCircle,
         title: '输入验证错误',
-        message: '请检查您输入的信息是否正确?,
+        message: '请检查您输入的信息是否正确',
       };
     }
 
@@ -261,15 +252,15 @@ export class GlobalErrorBoundary extends React.Component<
     ) {
       return {
         icon: AlertTriangle,
-        title: '服务器错?,
-        message: '服务器暂时出现问题，我们的技术团队已经收到通知?,
+        title: '服务器错误',
+        message: '服务器暂时出现问题，我们的技术团队已经收到通知',
       };
     }
 
     return {
       icon: AlertTriangle,
       title: '应用程序错误',
-      message: '抱歉，应用程序遇到了意外错误?,
+      message: '抱歉，应用程序遇到了意外错误',
     };
   };
 
@@ -350,14 +341,16 @@ export class GlobalErrorBoundary extends React.Component<
         {/* 联系支持 */}
         <div className="mt-8 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-500">
-            如果问题持续存在，请联系技术支?          </p>
+            如果问题持续存在，请联系技术支?{' '}
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-// Toast风格的错误提示组?export function ErrorToast({
+// Toast 风格的错误提示组件
+export function ErrorToast({
   error,
   onClose,
 }: {
@@ -429,14 +422,15 @@ export function ErrorList() {
   );
 }
 
-// 错误标准化函?function normalizeError(
+// 错误标准化函数
+function normalizeError(
   error: unknown,
   context?: Record<string, any>
 ): Omit<AppError, 'id' | 'timestamp'> {
   let errorMessage = '未知错误';
   let errorType = ErrorType.UNKNOWN;
   let severity = ErrorSeverity.MEDIUM;
-  let userMessage = '发生了一个错?;
+  let userMessage = '发生了一个错误';
 
   if (error instanceof Error) {
     errorMessage = error.message;
@@ -497,11 +491,13 @@ export function ErrorList() {
 }
 
 // 错误上报服务
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function reportErrorToService(error: AppError) {
   try {
     // 在生产环境中发送到监控服务
     if (process.env.NODE_ENV === 'production') {
-      // 这里应该发送到 Sentry、LogRocket 或其他监控服?      /*
+      // 这里应该发送到 Sentry、LogRocket 或其他监控服务
+      /*
       await fetch('/api/errors', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

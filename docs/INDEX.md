@@ -100,7 +100,7 @@ npm run dev
 - [`deployment-guide.md`](./technical-docs/deployment-guide.md) - 部署操作手册 (整合版)
 - [`smart-user-management-specification.md`](./technical-docs/smart-user-management-specification.md) - 智能用户管理系统技术规范 (FixCycle 5.0) ⭐ 新增
 - [`management-console-optimization-summary.md`](./technical-docs/management-console-optimization-summary.md) - 管理后台优化总结报告 ⭐ 新增
-- [`agent-marketplace-architecture.md`](./technical-docs/agent-marketplace-architecture.md) - 智能体市场架构设计 ⭐ 预规划
+- [`agent-marketplace-architecture.md`](./technical-docs/agent-marketplace-architecture.md) - 智能体市场架构设计 ✅ 已完成 ⭐ 更新
 
 ### 📝 版本发布 (Release Notes)
 
@@ -250,19 +250,24 @@ npm run dev
 - **国际贸易管理平台**: [技术规范](./modules/foreign-trade/specification.md) | [用户指南](./user-guides/foreign-trade-user-guide.md)
 - **采购智能体升级**: [文档索引](./modules/procurement-intelligence/index.md) | [技术规范](./modules/procurement-intelligence/upgrade-specification.md)
 
-### FixCycle 6.0 智能体生态
+### FixCycle 6.0 智能体生态 ✅ 已完成
 
-- **智能体市场平台**: [优化方案](./project-planning/agent-marketplace-optimization-plan.md) | [架构设计](./technical-docs/agent-marketplace-architecture.md)
-- **Token经济体系**: 预规划中 | [用户指南](./user-guides/agent-marketplace-user-guide.md)
+- **智能体市场平台**: [优化方案](./project-planning/agent-marketplace-optimization-plan.md) | [架构设计](./technical-docs/agent-marketplace-architecture.md) | [实施报告](../reports/agent-marketplace-implementation-report.md)
+- **销售智能体模块**: [技术规范](./modules/sales-agent/README.md) | [客户管理API](./technical-docs/api-documentation.md#销售智能体接口)
+- **采购智能体升级**: [文档索引](./modules/procurement-intelligence/index.md) | [技术规范](./modules/procurement-intelligence/upgrade-specification.md)
+- **Token经济体系**: [计费引擎](./technical-docs/agent-marketplace-architecture.md#计费引擎) | [开发者收益](./user-guides/agent-marketplace-user-guide.md#开发者收益)
 
 ### 核心文档更新
 
-- **项目说明书**: [最新版本 v5.3](./project-overview/project-specification.md) - 智能化全面升级版
+- **项目说明书**: [最新版本 v6.1](./project-overview/project-specification.md) - 智能化生态版 ⭐ 更新
+- **系统架构**: [最新版本 v6.2](./technical-docs/system-architecture.md) - 文件夹结构对齐 + 智能体 SDK 集成 ⭐ 更新
+- **版本日志**: [v3.1.0](./release-notes/changelog.md) - 智能体市场生态版 ⭐ 新增
+- **网站地图**: [完整功能导航](./SITE_MAP.md) - 包含所有新功能模块
 - **网站地图**: [完整功能导航](./SITE_MAP.md) - 包含所有新功能模块
 - **API文档**: [OpenAPI规范](../OPENAPI_SPEC.yaml) - 最新接口定义
 
 ---
 
-_最后更新：2026 年 3 月 1 日_
-_版本：v2.1 (智能体市场启动)_
-_新增：FixCycle 5.0智能用户管理、FixCycle 4.0国际贸易平台、FixCycle 6.0智能体市场_
+_最后更新：2026 年 3 月 22 日_
+_版本：v2.2 (智能体市场启动 + 企业后台优化)_
+_新增：FixCycle 6.0 智能体市场平台、销售智能体模块、采购智能体升级_
