@@ -601,7 +601,330 @@ interface SalesStatsQuery {
 
 ---
 
+## 市场运营管理模块 API ⭐ 新增
+
+### 获取市场统计数据
+
+```http
+GET /api/admin/marketplace/statistics
+```
+
+**请求参数:**
+
+```typescript
+interface MarketplaceStatsQuery {
+  timeRange?: 'today' | 'week' | 'month' | 'year' | 'all';
+  groupBy?: 'day' | 'week' | 'month';
+}
+```
+
+**响应示例:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "overview": {
+      "totalRevenue": 125680.5,
+      "totalOrders": 3456,
+      "totalAgents": 128,
+      "totalSkills": 256,
+      "activeDevelopers": 89,
+      "monthlyGrowth": 15.8
+    },
+    "revenueTrend": [
+      {
+        "month": "2026-03",
+        "revenue": 25680.5,
+        "orders": 567
+      }
+    ],
+    "topDevelopers": [
+      {
+        "id": "dev-001",
+        "name": "张三",
+        "email": "zhangsan@example.com",
+        "totalProducts": 12,
+        "totalSales": 456,
+        "revenue": 12580.0
+      }
+    ]
+  },
+  "timestamp": "2026-03-23T10:30:00Z"
+}
+```
+
+### 获取开发者统计数据
+
+```http
+GET /api/admin/marketplace/developer-stats
+```
+
+**请求参数:**
+
+```typescript
+interface DeveloperStatsQuery {
+  timeRange?: 'week' | 'month' | 'year' | 'all';
+  sortBy?: 'revenue' | 'orders' | 'rating';
+}
+```
+
+**响应示例:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "summary": {
+      "totalDevelopers": 89,
+      "totalRevenue": 125680.50,
+      "totalOrders": 3456,
+      "totalAgents": 128,
+      "totalSkills": 256
+    },
+    "developers": [
+      {
+        "id": "dev-001",
+        "email": "zhangsan@example.com",
+        "name": "张三",
+        "avatar": "https://...",
+        "role": "developer",
+        "agentsCount": 12,
+        "skillsCount": 8,
+        "totalRevenue": 12580.00,
+        "totalOrders": 456,
+        "avgRating": 4.8,
+        "agents": [...],
+        "skills": [...]
+      }
+    ],
+    "timeRange": "month",
+    "sortBy": "revenue"
+  },
+  "timestamp": "2026-03-23T10:30:00Z"
+}
+```
+
+### 获取收入统计数据
+
+```http
+GET /api/admin/marketplace/revenue-stats
+```
+
+**请求参数:**
+
+```typescript
+interface RevenueStatsQuery {
+  timeRange?: 'today' | 'week' | 'month' | 'year' | 'all';
+  groupBy?: 'day' | 'week' | 'month';
+}
+```
+
+**响应示例:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalRevenue": 125680.5,
+    "totalOrders": 3456,
+    "averageOrderValue": 36.35,
+    "revenueByCategory": [
+      {
+        "category": "sales",
+        "revenue": 45680.5,
+        "orders": 1234
+      }
+    ],
+    "revenueTrend": [
+      {
+        "period": "2026-03-01",
+        "revenue": 1250.0,
+        "orders": 45
+      }
+    ]
+  },
+  "timestamp": "2026-03-23T10:30:00Z"
+}
+```
+
+---
+
+## 智能体商店管理模块 API ⭐ 新增
+
+### 获取智能体统计数据
+
+```http
+GET /api/admin/agent-store/statistics
+```
+
+**请求参数:**
+
+```typescript
+interface AgentStoreStatsQuery {
+  status?: 'all' | 'pending' | 'approved' | 'rejected';
+  shelfStatus?: 'all' | 'on_shelf' | 'off_shelf';
+}
+```
+
+**响应示例:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalAgents": 128,
+    "pendingReview": 15,
+    "approved": 98,
+    "rejected": 15,
+    "onShelf": 85,
+    "offShelf": 13,
+    "categoryStats": [
+      {
+        "category": "sales",
+        "count": 45,
+        "percentage": 35.2
+      }
+    ],
+    "todayOrders": 56,
+    "todayRevenue": 2580.0
+  },
+  "timestamp": "2026-03-23T10:30:00Z"
+}
+```
+
+---
+
+## 开发者管理模块 API ⭐ 新增
+
+### 获取开发者列表
+
+```http
+GET /api/admin/developers/list
+```
+
+**请求参数:**
+
+```typescript
+interface DeveloperListQuery {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  status?: 'active' | 'inactive' | 'suspended';
+  sortBy?: 'joinDate' | 'revenue' | 'orders';
+  sortOrder?: 'asc' | 'desc';
+}
+```
+
+**响应示例:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "dev-001",
+      "name": "张三",
+      "email": "zhangsan@example.com",
+      "avatar": "https://...",
+      "role": "developer",
+      "status": "active",
+      "totalAgents": 12,
+      "totalSkills": 8,
+      "totalRevenue": 12580.0,
+      "totalOrders": 456,
+      "avgRating": 4.8,
+      "joinDate": "2026-01-15T08:00:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "pageSize": 20,
+    "total": 89,
+    "totalPages": 5
+  },
+  "timestamp": "2026-03-23T10:30:00Z"
+}
+```
+
+### 获取开发者统计数据
+
+```http
+GET /api/admin/developers/statistics
+```
+
+**响应示例:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalDevelopers": 89,
+    "activeDevelopers": 75,
+    "inactiveDevelopers": 10,
+    "suspendedDevelopers": 4
+  },
+  "timestamp": "2026-03-23T10:30:00Z"
+}
+```
+
+### 切换开发者状态
+
+```http
+POST /api/admin/developers/toggle-status
+```
+
+**请求体:**
+
+```typescript
+interface ToggleDeveloperStatusRequest {
+  developerId: string;
+  newStatus: 'active' | 'inactive' | 'suspended';
+  reason?: string;
+}
+```
+
+**响应示例:**
+
+```json
+{
+  "success": true,
+  "message": "开发者状态已更新",
+  "data": {
+    "developerId": "dev-001",
+    "previousStatus": "active",
+    "newStatus": "suspended",
+    "updatedAt": "2026-03-23T10:30:00Z"
+  },
+  "timestamp": "2026-03-23T10:30:00Z"
+}
+```
+
+---
+
 ## 🔐 权限控制
+
+### 管理员角色定义
+
+| 角色名称   | 标识                | 权限说明                                 |
+| ---------- | ------------------- | ---------------------------------------- |
+| 超级管理员 | `admin`             | 所有权限，可访问所有管理功能             |
+| 市场管理员 | `marketplace_admin` | 市场运营、开发者管理、智能体审核相关权限 |
+| 财务管理员 | `finance_manager`   | 财务管理、收益统计、提现审核相关权限     |
+| 普通管理员 | `manager`           | 基础管理权限，部分受限功能               |
+
+### 权限验证中间件
+
+### 管理员角色定义
+
+| 角色名称   | 标识                | 权限说明                                 |
+| ---------- | ------------------- | ---------------------------------------- |
+| 超级管理员 | `admin`             | 所有权限，可访问所有管理功能             |
+| 市场管理员 | `marketplace_admin` | 市场运营、开发者管理、智能体审核相关权限 |
+| 财务管理员 | `finance_manager`   | 财务管理、收益统计、提现审核相关权限     |
+| 普通管理员 | `manager`           | 基础管理权限，部分受限功能               |
+
+### 权限验证中间件
 
 ### 权限标识规范
 
@@ -821,7 +1144,7 @@ const userSchema = Joi.object({
 ```typescript
 // 使用参数化查询
 const query = `
-  SELECT * FROM users 
+  SELECT * FROM users
   WHERE email = $1 AND status = $2
 `;
 const result = await db.query(query, [email, 'active']);
@@ -853,6 +1176,12 @@ function escapeHtml(text: string): string {
 
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2026年2月28日  
-**API版本**: v2.0
+**文档版本**: v2.0
+**最后更新**: 2026 年 3 月 23日
+**API 版本**: v2.0
+**更新日志**:
+
+- ✅ 新增市场运营管理模块 API（开发者统计、收入统计）
+- ✅ 新增智能体商店管理模块 API
+- ✅ 新增开发者管理模块 API
+- ✅ 更新管理员角色权限定义

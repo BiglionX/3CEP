@@ -111,13 +111,15 @@ A: 检查索引配置，参考 `docs/technical-docs/database-optimization.md`
 
 ### 核心功能模块
 
-- 🛠️ **智能维修预约系统** - AI 驱动的预约匹配和调度
+- 🛠️ **智能维修预约系统** - AI驱动的预约匹配和调度
 - 🔄 **循环经济交易平台** - 废旧物品回收与再利用
 - 🤖 **B2B 采购智能体** - 智能化供应商匹配和谈判 (FixCycle 4.0)
 - 🌍 **国际贸易采购平台** - 跨境采购智能决策系统
-- 👥 **智能用户管理系统** - AI驱动的用户行为分析和个性化服务 ⭐ 新增
+- 👥 **智能用户管理系统** - AI驱动的用户行为分析和个性化服务 ⭐
 - 📊 **数据分析仪表板** - 实时业务洞察和决策支持
 - 🔧 **维修教程系统** - 结构化维修知识库
+- 🏪 **智能体市场平台** - 完整的 Agent 商业化生态系统 ⭐ 新增
+- 🎯 **市场运营管理系统** - 开发者管理、收益统计、运营数据分析 ⭐ 新增
 
 ### 技术架构
 
@@ -173,7 +175,7 @@ src/
 ├── lib/             # 工具库和配置
 ├── models/          # 数据模型定义
 ├── hooks/           # React 自定义钩子
-├── b2b-procurement-agent/  # B2B采购智能体 (FixCycle 4.0)
+├── b2b-procurement-agent/  # B2B 采购智能体 (FixCycle 4.0)
 │   ├── services/     # 智能服务模块
 │   ├── models/       # 数据模型
 │   └── types/        # 类型定义
@@ -183,6 +185,12 @@ src/
 │       ├── services/ # 扩展服务
 │       └── ui-components/ # 前端组件
 └── admin/           # 管理后台模块
+    ├── marketplace/  # 市场运营管理 ⭐ 新增
+    │   └── page.tsx  # 市场运营数据面板
+    ├── developers/   # 开发者管理 ⭐ 新增
+    │   └── page.tsx  # 开发者列表与管理
+    ├── agent-store/  # 智能体商店管理
+    │   └── page.tsx  # 智能体审核与上下架
     └── components/   # 管理组件
         ├── UserStatsDashboard.tsx    # 用户统计面板
         ├── AdvancedUserSearch.tsx    # 高级搜索组件
@@ -214,13 +222,17 @@ tests/              # 测试文件
 - [架构设计文档](./docs/technical-docs/architecture-design.md) - 系统架构详解
 - [API 接口文档](./OPENAPI_SPEC.yaml) - RESTful API 规范
 - [数据库设计](./docs/technical-docs/database-schema.md) - 数据模型和关系
-- [智能用户管理技术规范](./docs/technical-docs/user-management-optimization.md) - AI驱动的用户管理系统 ⭐ 新增
-- [智能体清单](./docs/technical-docs/agents-inventory.md) - 智能体清单与分级 ⭐ 新增
-- [采购智能体升级方案](./docs/modules/procurement-intelligence/upgrade-specification.md) - FixCycle 4.0 升级规范 ⭐ 新增
+- [智能用户管理系统技术规范](./docs/technical-docs/smart-user-management-specification.md) - AI驱动的用户管理系统 ⭐
+- [智能体清单](./docs/technical-docs/agents-inventory.md) - 智能体清单与分级 ⭐
+- [采购智能体升级方案](./docs/modules/procurement-intelligence/upgrade-specification.md) - FixCycle 4.0 升级规范 ⭐
+- [市场运营管理 API 参考](./docs/technical-docs/admin-modules-api-reference.md) - 市场运营 API 详解 ⭐ 新增
+- [智能体市场平台架构](./docs/technical-docs/agent-marketplace-architecture.md) - 市场平台技术架构 ⭐ 新增
 
 ### 🎯 使用指南
 
-- [智能用户管理快速参考](./docs/guides/user-management-quick-reference.md) - 用户管理操作指南 ⭐ 新增
+- [智能用户管理快速参考](./docs/guides/user-management-quick-reference.md) - 用户管理操作指南 ⭐
+- [市场运营管理指南](./docs/guides/marketplace-operations-guide.md) - 市场运营操作手册 ⭐ 新增
+- [开发者入驻指南](./docs/guides/developer-onboarding.md) - 开发者入驻流程 ⭐ 新增
 - [快速启动指南](./QUICK_START.md) - 5 分钟快速上手
 - [开发环境搭建](./docs/guides/development-setup.md) - 完整开发环境配置
 
@@ -234,6 +246,8 @@ tests/              # 测试文件
 
 - [测试汇总报告](./docs/reports/test-summary-report.md) - 测试执行总结
 - [部署验收报告](./docs/reports/deployment-acceptance-report.md) - 部署质量验收
+- [智能体市场平台测试报告](./reports/marketplace-full-completion-report.md) - 市场平台完整测试 ⭐ 新增
+- [管理后台功能验收报告](./reports/management-pages-completion-report.md) - 管理后台功能验收 ⭐ 新增
 
 ---
 
@@ -302,6 +316,7 @@ src/
 ```
 
 **关键成果**：
+
 - ✅ 删除重复目录 12+ 个
 - ✅ 目录精简 41% (29 → 17 个)
 - ✅ 更新导入路径 68 个文件
