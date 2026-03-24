@@ -1,0 +1,173 @@
+{
+  "name": "Portal Approval Notification",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "portal-approval",
+      "httpMethod": "POST",
+      "path": "portal-approval",
+      "responseMode": "onReceived"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"action\"]}}",
+              "operation": "equal",
+              "value2": "approve"
+            }
+          ]
+        }
+      },
+      "id": "check-action",
+      "name": "Check Action",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@example.com",
+        "toEmail": "={{$node['Webhook Trigger'].json[\"userId\"]}}",
+        "subject": "🎉 恭喜！您的门户申请已通过审核",
+        "html": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #4CAF50; color: white; padding: 20px; text-align: center; }\n    .content { padding: 20px; background: #f9f9f9; }\n    .button { display: inline-block; padding: 10px 20px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>✅ 审核通过</h1>\n    </div>\n    <div class=\"content\">\n      <h2>亲爱的 {{ $json.userName }}，</h2>\n      <p>好消息！您的门户申请已经通过审核。</p>\n      <p><strong>门户名称：</strong>{{ $json.userName }}</p>\n      <p><strong>审核时间：</strong>{{ $json.timestamp }}</p>\n      <p>您现在可以访问和管理您的门户了。</p>\n      <p style=\"text-align: center; margin-top: 30px;\">\n        <a href=\"https://your-platform.com/portal/{{ $json.portalId }}\" class=\"button\">查看我的门户</a>\n      </p>\n      <p style=\"margin-top: 30px; color: #666; font-size: 14px;\">\n        如有任何问题，请随时联系我们的客服团队。\n      </p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-approval-email",
+      "name": "Send Approval Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [650, 200],
+      "credentials": {
+        "smtp": "Your SMTP Credentials"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@example.com",
+        "toEmail": "={{$node['Webhook Trigger'].json[\"userId\"]}}",
+        "subject": "❌ 很遗憾，您的门户申请未通过审核",
+        "html": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #f44336; color: white; padding: 20px; text-align: center; }\n    .content { padding: 20px; background: #f9f9f9; }\n    .reason { background: #fff3cd; padding: 15px; border-left: 4px solid #f44336; margin: 20px 0; }\n    .button { display: inline-block; padding: 10px 20px; background: #2196F3; color: white; text-decoration: none; border-radius: 5px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>📋 审核结果通知</h1>\n    </div>\n    <div class=\"content\">\n      <h2>亲爱的 {{ $json.userName }}，</h2>\n      <p>感谢您提交门户申请。经过审核，我们很遗憾地通知您，您的申请暂未通过。</p>\n      <p><strong>门户名称：</strong>{{ $json.userName }}</p>\n      <div class=\"reason\">\n        <h3>审核意见：</h3>\n        <p>{{ $json.reason || '请参考平台规范进行修改后重新提交' }}</p>\n      </div>\n      <p>请您根据上述意见进行修改和完善后，重新提交申请。</p>\n      <p style=\"text-align: center; margin-top: 30px;\">\n        <a href=\"https://your-platform.com/portal/{{ $json.portalId }}/edit\" class=\"button\">修改我的门户</a>\n      </p>\n      <p style=\"margin-top: 30px; color: #666; font-size: 14px;\">\n        如有任何疑问，请联系我们的客服团队获取帮助。\n      </p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-rejection-email",
+      "name": "Send Rejection Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [650, 400],
+      "credentials": {
+        "smtp": "Your SMTP Credentials"
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.example.com/v1/notifications",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{$node['Webhook Trigger'].json[\"userId\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "portal_approval"
+            },
+            {
+              "name": "data",
+              "value": "={{ JSON.stringify($json) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "create-in-app-notification",
+      "name": "Create In-App Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Action": {
+      "main": [
+        [
+          {
+            "node": "Send Approval Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Rejection Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Approval Email": {
+      "main": [
+        [
+          {
+            "node": "Create In-App Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Rejection Email": {
+      "main": [
+        [
+          {
+            "node": "Create In-App Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timezone": "Asia/Shanghai",
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "production"
+  },
+  "tags": [
+    {
+      "name": "portal",
+      "createdAt": "2026-03-24T00:00:00.000Z",
+      "updatedAt": "2026-03-24T00:00:00.000Z"
+    },
+    {
+      "name": "approval",
+      "createdAt": "2026-03-24T00:00:00.000Z",
+      "updatedAt": "2026-03-24T00:00:00.000Z"
+    }
+  ]
+}

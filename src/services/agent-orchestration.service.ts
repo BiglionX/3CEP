@@ -1,19 +1,22 @@
-﻿// 智能体编排核心服?import { supabase } from '@/lib/supabase';
+﻿// 智能体编排核心服务
+import { supabase } from '@/lib/supabase';
+import { fetchWithTimeout } from '@/lib/utils/fetch-with-timeout';
 import {
   AgentOrchestration,
-  WorkflowDefinition,
-  ExecutionInstance,
   CreateOrchestrationRequest,
   ExecuteOrchestrationRequest,
-  OrchestrationStatus,
+  ExecutionInstance,
   ExecutionStatus,
+  OrchestrationStatus,
+  WorkflowDefinition,
 } from '@/types/team-management.types';
 
 export class AgentOrchestrationService {
   private supabase = supabase;
 
   /**
-   * 创建新的智能体编?   */
+   * 创建新的智能体编排
+   */
   async createOrchestration(
     data: CreateOrchestrationRequest,
     teamId: string
@@ -39,7 +42,8 @@ export class AgentOrchestrationService {
   }
 
   /**
-   * 获取团队的所有编?   */
+   * 获取团队的所有编排
+   */
   async getTeamOrchestrations(
     teamId: string,
     status?: OrchestrationStatus
@@ -72,7 +76,8 @@ export class AgentOrchestrationService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null; // 未找?      throw new Error(`获取编排详情失败: ${error.message}`);
+      if (error.code === 'PGRST116') return null; // 未找到
+      throw new Error(`获取编排详情失败：${error.message}`);
     }
     return orchestration;
   }
@@ -122,9 +127,10 @@ export class AgentOrchestrationService {
     orchestrationId: string,
     requestData: ExecuteOrchestrationRequest = {}
   ): Promise<ExecutionInstance> {
-    // 首先获取编排信息验证状?    const orchestration = await this.getOrchestrationById(orchestrationId);
+    // 首先获取编排信息验证状态
+    const orchestration = await this.getOrchestrationById(orchestrationId);
     if (!orchestration) {
-      throw new Error('编排不存?);
+      throw new Error('编排不存在');
     }
 
     if (orchestration.status !== 'active') {
@@ -146,12 +152,13 @@ export class AgentOrchestrationService {
     if (createError)
       throw new Error(`创建执行实例失败: ${createError.message}`);
 
-    // 异步执行工作?    this.processWorkflow(
+    // 异步执行工作流
+    this.processWorkflow(
       execution.id,
       orchestration.workflow,
       requestData.inputs || {}
     ).catch(error => {
-      console.error('工作流执行失?', error);
+      console.error('工作流执行失败', error);
       // 更新执行状态为失败
       this.updateExecutionStatus(execution.id, 'failed', {
         code: 'WORKFLOW_ERROR',
@@ -159,7 +166,8 @@ export class AgentOrchestrationService {
       });
     });
 
-    // 更新编排的最后执行时?    await this.updateOrchestration(orchestrationId, {
+    // 更新编排的最后执行时间
+    await this.updateOrchestration(orchestrationId, {
       lastExecutedAt: new Date().toISOString(),
       executionCount: orchestration.executionCount + 1,
     });
@@ -168,26 +176,30 @@ export class AgentOrchestrationService {
   }
 
   /**
-   * 处理工作流执?   */
+   * 处理工作流执行
+   */
   private async processWorkflow(
     executionId: string,
     workflow: WorkflowDefinition,
     inputs: Record<string, any>
   ): Promise<void> {
     try {
-      // 更新状态为运行?      await this.updateExecutionStatus(executionId, 'running');
+      // 更新状态为运行中
+      await this.updateExecutionStatus(executionId, 'running');
 
       const startTime = Date.now();
       const logs: any[] = [];
 
-      // 初始化变?      const variables: Record<string, any> = {
+      // 初始化变量
+      const variables: Record<string, any> = {
         ...inputs,
         ...Object.fromEntries(
           workflow.variables.map(v => [v.name, v.initialValue])
         ),
       };
 
-      // 按拓扑排序执行节?      const executionOrder = this.topologicalSort(workflow);
+      // 按拓扑排序执行节点
+      const executionOrder = this.topologicalSort(workflow);
       const nodeResults: Record<string, any> = {};
 
       for (const nodeId of executionOrder) {
@@ -199,7 +211,7 @@ export class AgentOrchestrationService {
             timestamp: new Date().toISOString(),
             nodeId: node.id,
             level: 'info',
-            message: `开始执行节? ${node.name}`,
+            message: `开始执行节点：${node.name}`,
           });
 
           // 执行节点逻辑
@@ -264,7 +276,8 @@ export class AgentOrchestrationService {
   }
 
   /**
-   * 执行智能体节?   */
+   * 执行智能体节点
+   */
   private async executeAgentNode(
     node: any,
     variables: Record<string, any>,
@@ -273,21 +286,31 @@ export class AgentOrchestrationService {
     const agentId = node.config.agentId;
     const inputs = this.resolveNodeInputs(node, variables, nodeResults);
 
-    // 调用智能体API执行
-    const response = await fetch(`/api/agents/${agentId}/execute`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ inputs }),
-    });
+    // 调用智能体 API 执行
+    try {
+      const response = await fetchWithTimeout(
+        `/api/agents/${agentId}/execute`,
+        {
+          timeout: 60000, // 60 秒超时（AI 执行可能需要较长时间）
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ inputs }),
+        }
+      );
 
-    if (!response.ok) {
-      throw new Error(`智能体执行失? ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(`智能体执行失败 ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      return result.data;
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.error(`智能体执行超时：${agentId}`);
+        throw new Error('智能体执行超时，请稍后重试');
+      }
+      throw error;
     }
-
-    const result = await response.json();
-    return result.data;
   }
 
   /**
@@ -311,7 +334,7 @@ export class AgentOrchestrationService {
       case 'lessThan':
         return value < condition.value;
       default:
-        throw new Error(`不支持的比较操作? ${condition.operator}`);
+        throw new Error(`不支持的比较运算符：${condition.operator}`);
     }
   }
 
@@ -376,7 +399,7 @@ export class AgentOrchestrationService {
     variables: Record<string, any>,
     nodeResults: Record<string, any>
   ): any {
-    // 处理变量引用格式: "variables.varName" �?"nodes.nodeId.outputName"
+    // 处理变量引用格式："variables.varName" 或 "nodes.nodeId.outputName"
     if (varRef.startsWith('variables.')) {
       const varName = varRef.split('.')[1];
       return variables[varName];
@@ -398,14 +421,15 @@ export class AgentOrchestrationService {
 
     const visit = (nodeId: string) => {
       if (temp.has(nodeId)) {
-        throw new Error('工作流存在循环依?);
+        throw new Error('工作流存在循环依赖');
       }
       if (visited.has(nodeId)) return;
 
       temp.add(nodeId);
       const node = workflow.nodes.find(n => n.id === nodeId);
       if (node) {
-        // 查找所有指向此节点的连?        const incomingConnections = workflow.connections.filter(
+        // 查找所有指向此节点的连接
+        const incomingConnections = workflow.connections.filter(
           conn => conn.targetNodeId === nodeId
         );
 
@@ -418,7 +442,8 @@ export class AgentOrchestrationService {
       result.push(nodeId);
     };
 
-    // 从没有输入连接的节点开?    const startNodes = workflow.nodes.filter(node => {
+    // 从没有输入连接的节点开始
+    const startNodes = workflow.nodes.filter(node => {
       return !workflow.connections.some(conn => conn.targetNodeId === node.id);
     });
 
@@ -529,7 +554,8 @@ export class AgentOrchestrationService {
   }
 
   /**
-   * 更新执行状?   */
+   * 更新执行状态
+   */
   private async updateExecutionStatus(
     executionId: string,
     status: ExecutionStatus,
@@ -553,7 +579,7 @@ export class AgentOrchestrationService {
       .eq('id', executionId);
 
     if (updateError) {
-      console.error('更新执行状态失?', updateError);
+      console.error('更新执行状态失败', updateError);
     }
   }
 
@@ -575,7 +601,8 @@ export class AgentOrchestrationService {
   }
 
   /**
-   * 获取编排的执行历?   */
+   * 获取编排的执行历史
+   */
   async getOrchestrationExecutions(
     orchestrationId: string,
     limit: number = 50

@@ -1,3 +1,5 @@
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
+
 ﻿import { NextRequest, NextResponse } from 'next/server';
 
 // 妯℃嫙鏈堝害鏁版嵁
@@ -11,6 +13,9 @@ const mockMonthlyData = [
 ];
 
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const months = parseInt(searchParams.get('months') || '6');
@@ -28,4 +33,7 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'payments_read'
+  );

@@ -3,6 +3,9 @@
  * 用于获取技能仓库的元数据（星标、下载量、更新时间等）
  * @module lib/github/api
  */
+
+import { fetchWithTimeout } from '@/lib/utils/fetch-with-timeout';
+
 export interface GitHubRepoData {
   /** 仓库名称 */
   name: string;
@@ -129,7 +132,13 @@ export async function fetchRepoData(repo: string): Promise<GitHubRepoData> {
   }
 
   try {
-    const response = await fetch(url, { headers });
+    // 使用带超时的 fetch 调用（10 秒超时）
+    const response = await fetchWithTimeout(url, {
+      headers,
+      timeout: 10000, // GitHub API 通常响应较快，设置 10 秒超时
+      retries: 2, // 失败后重试 2 次
+      retryDelay: 1000, // 重试间隔 1 秒
+    });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

@@ -1,8 +1,9 @@
-﻿/**
+/**
  * 绠＄悊鍚庡彴璁惧鍥炴敹API
  * 鎻愪緵璁惧鍥炴敹鍔熻兘鎺ュ彛
  */
 import { DeviceEventType } from '@/lib/constants/lifecycle';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { Database } from '@/lib/database.types';
 import { DeviceLifecycleService } from '@/services/device-lifecycle.service';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
@@ -18,6 +19,9 @@ interface RecycleDeviceRequest {
 }
 
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -97,10 +101,16 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'devices_read'
+  );
 
 // GET /api/admin/devices/recycle/historyqrcodeId=xxx - 鑾峰彇璁惧鍥炴敹鍘嗗彶
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const qrcodeId = searchParams.get('qrcodeId');
@@ -140,7 +150,10 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'devices_read'
+  );
 
 /**
  * 鏇存柊璁惧鐘 */

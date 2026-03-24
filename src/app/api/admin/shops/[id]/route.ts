@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 // 模拟店铺数据
 const mockShops = [
@@ -98,6 +99,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const shopId = params.id;
     const body = await request.json();
@@ -133,12 +137,18 @@ export async function PUT(
       { status: 500 }
     );
   }
-}
+
+    },
+    'shops_read'
+  );
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const shopId = params.id;
 
@@ -166,12 +176,18 @@ export async function DELETE(
       { status: 500 }
     );
   }
-}
+
+    },
+    'shops_read'
+  );
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const shopId = params.id;
 
@@ -196,4 +212,7 @@ export async function GET(
       { status: 500 }
     );
   }
-}
+
+    },
+    'shops_read'
+  );

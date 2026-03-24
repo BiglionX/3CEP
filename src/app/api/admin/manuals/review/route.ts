@@ -1,6 +1,7 @@
-﻿// 璇存槑涔﹀鏍窤PI璺敱
+// 璇存槑涔﹀鏍窤PI璺敱
 
 import { NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { ManualUploadService } from '@/services/manual-upload.service';
@@ -9,6 +10,9 @@ import { Database } from '@/lib/database.types';
 const manualService = new ManualUploadService();
 
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
     const {
@@ -52,9 +56,15 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );
 
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
     const {
@@ -124,5 +134,8 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );
 

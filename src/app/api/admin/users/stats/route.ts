@@ -1,8 +1,12 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 // 鐢ㄦ埛缁熻API - 鑾峰彇鐢ㄦ埛绠＄悊鐩稿叧缁熻鏁版嵁
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -112,7 +116,10 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'users_read'
+  );
 
 // 鑾峰彇鐢ㄦ埛澧為暱瓒嬪娍鏁版嵁
 async function getUserGrowthTrend(

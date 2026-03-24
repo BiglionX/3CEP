@@ -2,8 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "RBAC 权限配置",
   "description": "角色基础访问控制配置文件，定义系统中的角色、权限和映射关系",
-  "version": "1.0.0",
-  "last_updated": "2026-02-21",
+  "version": "1.0.1",
+  "last_updated": "2026-03-23",
 
   "type": "object",
   "additionalProperties": false,
@@ -401,10 +401,45 @@
     },
     "enterprise_procurement_manage": {
       "name": "采购服务管理",
-      "description": "管理B2B采购服务配置和流程",
+      "description": "管理 B2B 采购服务配置和流程",
       "category": "enterprise",
       "resource": "enterprise_procurement",
       "action": "manage"
+    },
+    "agents_market_read": {
+      "name": "智能体市场查看",
+      "description": "查看智能体市场列表和详情",
+      "category": "agents_market",
+      "resource": "agents_market",
+      "action": "read"
+    },
+    "agents_market_manage": {
+      "name": "智能体市场管理",
+      "description": "管理智能体市场上架、下架和审核",
+      "category": "agents_market",
+      "resource": "agents_market",
+      "action": "manage"
+    },
+    "tokens_recharge": {
+      "name": "Token 充值管理",
+      "description": "管理 Token 充值订单和发放",
+      "category": "tokens",
+      "resource": "tokens",
+      "action": "recharge"
+    },
+    "fxc_exchange": {
+      "name": "FXC 兑换管理",
+      "description": "管理 FXC 积分兑换和记录",
+      "category": "fxc",
+      "resource": "fxc",
+      "action": "exchange"
+    },
+    "portals_approve": {
+      "name": "门户审核",
+      "description": "审核企业服务门户申请",
+      "category": "portals",
+      "resource": "portals",
+      "action": "approve"
     }
   },
 
@@ -448,7 +483,12 @@
       "audit_read",
       "audit_export",
       "monitoring_read",
-      "monitoring_alerts"
+      "monitoring_alerts",
+      "agents_market_read",
+      "agents_market_manage",
+      "tokens_recharge",
+      "fxc_exchange",
+      "portals_approve"
     ],
     "manager": [
       "dashboard_read",
@@ -473,7 +513,9 @@
       "n8n_workflows_read",
       "n8n_workflows_replay",
       "audit_read",
-      "monitoring_read"
+      "monitoring_read",
+      "agents_market_read",
+      "tokens_recharge"
     ],
     "content_manager": [
       "dashboard_read",
@@ -526,7 +568,11 @@
       "enterprise_procurement_manage",
       "users_read",
       "reports_read",
-      "audit_read"
+      "audit_read",
+      "agents_market_read",
+      "agents_market_manage",
+      "tokens_recharge",
+      "portals_approve"
     ],
     "procurement_manager": [
       "dashboard_read",
@@ -536,7 +582,8 @@
       "procurement_read",
       "procurement_create",
       "procurement_approve",
-      "reports_read"
+      "reports_read",
+      "fxc_exchange"
     ],
     "enterprise_user": [
       "dashboard_read",

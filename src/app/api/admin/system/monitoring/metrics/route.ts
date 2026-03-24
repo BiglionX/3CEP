@@ -1,5 +1,6 @@
-﻿import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 interface MonitoringMetric {
   id: string;
@@ -14,6 +15,9 @@ interface MonitoringMetric {
 
 // 获取系统监控指标
 export async function GET() {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -111,4 +115,7 @@ export async function GET() {
     console.error('获取监控指标失败:', error);
     return NextResponse.json({ error: '获取监控指标失败' }, { status: 500 });
   }
-}
+
+    },
+    'settings_read'
+  );

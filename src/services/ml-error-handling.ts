@@ -63,7 +63,8 @@ export interface LogEntry {
   traceId?: string;
 }
 
-// 日志服务?export class PredictionLogger {
+// 日志服务
+export class PredictionLogger {
   private static instance: PredictionLogger;
   private logs: LogEntry[] = [];
   private readonly maxLogs = 1000;
@@ -131,9 +132,9 @@ export interface LogEntry {
 
     switch (entry.level) {
       case LogLevel.DEBUG:
-        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.debug(logMessage, entry.context)break;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.debug(logMessage, entry.context)break;
       case LogLevel.INFO:
-        // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.info(logMessage, entry.context)break;
+      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.info(logMessage, entry.context)break;
       case LogLevel.WARN:
         console.warn(logMessage, entry.context, entry.error);
         break;
@@ -146,18 +147,20 @@ export interface LogEntry {
   private async persistLog(entry: LogEntry): Promise<void> {
     try {
       // 这里应该存储到专门的日志表中
-      // 为了简化，暂时只存储关键信?      const logData = {
+      // 为了简化，暂时只存储关键信息
+      const logData = {
         timestamp: entry.timestamp.toISOString(),
         level: entry.level,
         service: entry.service,
         message: entry.message,
         trace_id: entry.traceId,
-        context: entry.context ? JSON.stringify(entry.context) : null
-        error_message: entry?.message || null
-        error_stack: entry?.stack || null
+        context: entry.context ? JSON.stringify(entry.context) : null,
+        error_message: entry.error?.message || null,
+        error_stack: entry.error?.stack || null,
       };
 
-      // 如果有Supabase连接，存储到数据?      if (
+      // 如果有 Supabase 连接，存储到数据库
+      if (
         typeof window === 'undefined' &&
         process.env.SUPABASE_SERVICE_ROLE_KEY
       ) {
@@ -171,7 +174,7 @@ export interface LogEntry {
       }
     } catch (err) {
       // 静默失败，避免日志记录影响主流程
-      console.warn('日志持久化异?', err);
+      console.warn('日志持久化异常', err);
     }
   }
 
@@ -192,7 +195,8 @@ export interface LogEntry {
     return this.logs.filter(log => log.traceId === traceId);
   }
 
-  // 清除旧日?  clearOldLogs(hours: number = 24): void {
+  // 清除旧日志
+  clearOldLogs(hours: number = 24): void {
     const cutoffTime = new Date(Date.now() - hours * 60 * 60 * 1000);
     this.logs = this.logs.filter(log => log.timestamp > cutoffTime);
   }
@@ -234,16 +238,19 @@ export async function withRetry<T>(
         delay *= Math.pow(2, attempt - 1);
       }
       if (options.jitter) {
-        delay *= 0.5 + Math.random() * 0.5; // 添加50%的抖?      }
+        delay *= 0.5 + Math.random() * 0.5; // 添加 50% 的抖动
+      }
 
-      // 等待后重?      await new Promise(resolve => setTimeout(resolve, delay));
+      // 等待后重试
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 
   throw lastError!;
 }
 
-// 性能监控装饰?export function MonitorPerformance(
+// 性能监控装饰器
+export function MonitorPerformance(
   target: any,
   propertyKey: string,
   descriptor: PropertyDescriptor
@@ -255,9 +262,10 @@ export async function withRetry<T>(
     const startTime = Date.now();
     const traceId = Math.random().toString(36).substring(2, 15);
 
-    logger.info(`开始执?${propertyKey}`, {
+    logger.info(`开始执行 ${propertyKey}`, {
       traceId,
-      args: args.slice(0, 3), // 只记录前3个参数避免日志过?    });
+      args: args.slice(0, 3), // 只记录前 3 个参数避免日志过多
+    });
 
     try {
       const result = await originalMethod.apply(this, args);
@@ -269,8 +277,9 @@ export async function withRetry<T>(
         success: true,
       });
 
-      // 记录慢查询警?      if (duration > 5000) {
-        logger.warn(`慢查询警? ${propertyKey} 执行时间 ${duration}ms`, {
+      // 记录慢查询警告
+      if (duration > 5000) {
+        logger.warn(`慢查询警告：${propertyKey} 执行时间 ${duration}ms`, {
           traceId,
         });
       }
@@ -431,7 +440,8 @@ export class MetricsCollector {
 export const logger = PredictionLogger.getInstance();
 export const metrics = MetricsCollector.getInstance();
 
-// 使用示例的类型守?export function isMLPredictionError(
+// 使用示例的类型守门
+export function isMLPredictionError(
   error: unknown
 ): error is MLPredictionError {
   return error instanceof MLPredictionError;

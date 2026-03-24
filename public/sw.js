@@ -127,45 +127,111 @@ async function handleStaticAsset(request) {
   }
 }
 
-// 处理API请求 - Network First策略
+// ========================================
+// SW-002: API 缓存策略实施
+// ========================================
+
+// API 请求处理 - Network First 智能策略
 async function handleApiRequest(request) {
+  const url = new URL(request.url);
+
   try {
-    // 首先尝试从网络获取
-    const networkResponse = await fetch(request);
+    // 网络优先策略
+    console.log('[Service Worker] Fetching API from network:', url.pathname);
+
+    // 添加超时控制
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 秒超时
+
+    const networkResponse = await fetch(request, {
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
 
     // 如果网络请求成功，缓存响应
     if (networkResponse.ok) {
       const cache = await caches.open(CACHE_NAME);
-      const cacheEntry = {
-        data: await networkResponse.clone().json(),
-        timestamp: Date.now(),
-        headers: Object.fromEntries(networkResponse.headers.entries()),
-      };
-      await cache.put(request, new Response(JSON.stringify(cacheEntry)));
+
+      // 对于 GET 请求，缓存数据以便离线使用
+      if (request.method === 'GET') {
+        const responseClone = networkResponse.clone();
+        const contentType = responseClone.headers.get('content-type');
+
+        // 如果是 JSON 响应，添加时间戳便于管理缓存过期
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            const jsonData = await responseClone.json();
+            const cacheEntry = {
+              data: jsonData,
+              timestamp: Date.now(),
+              url: request.url,
+              headers: Object.fromEntries(responseClone.headers.entries()),
+            };
+            await cache.put(request, new Response(JSON.stringify(cacheEntry)));
+            console.log('[Service Worker] Cached API response:', url.pathname);
+          } catch (error) {
+            console.warn(
+              '[Service Worker] Failed to parse JSON for caching:',
+              error
+            );
+            // 如果解析失败，直接缓存原始响应
+            cache.put(request, responseClone);
+          }
+        } else {
+          // 非 JSON 响应直接缓存
+          cache.put(request, responseClone);
+        }
+      }
     }
 
     return networkResponse;
   } catch (error) {
     console.log(
       '[Service Worker] Network failed, trying cache for:',
-      request.url
+      request.url,
+      error.message
     );
 
     // 网络失败时从缓存获取
     try {
       const cachedResponse = await caches.match(request);
       if (cachedResponse) {
-        const cacheEntry = await cachedResponse.json();
+        console.log('[Service Worker] Cache hit for:', url.pathname);
 
-        // 检查缓存是否过期
-        if (Date.now() - cacheEntry.timestamp < API_CACHE_DURATION) {
-          return new Response(JSON.stringify(cacheEntry.data), {
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Cache-Hit': 'true',
-              ...cacheEntry.headers,
-            },
-          });
+        // 检查是否是缓存的 JSON 条目（带时间戳）
+        const contentType = cachedResponse.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            const cacheEntry = await cachedResponse.json();
+
+            // 检查缓存是否过期（默认 5 分钟）
+            const cacheAge = Date.now() - cacheEntry.timestamp;
+            if (cacheAge < API_CACHE_DURATION) {
+              console.log(
+                '[Service Worker] Returning fresh cached data (age:',
+                Math.round(cacheAge / 1000),
+                's)'
+              );
+              return new Response(JSON.stringify(cacheEntry.data), {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Cache-Hit': 'true',
+                  'X-Cache-Age': cacheAge.toString(),
+                  ...cacheEntry.headers,
+                },
+              });
+            } else {
+              console.log('[Service Worker] Cache expired for:', url.pathname);
+            }
+          } catch (parseError) {
+            console.warn(
+              '[Service Worker] Failed to parse cached JSON:',
+              parseError
+            );
+          }
+        } else {
+          // 非 JSON 缓存直接返回
+          return cachedResponse;
         }
       }
     } catch (cacheError) {
@@ -177,6 +243,7 @@ async function handleApiRequest(request) {
       JSON.stringify({
         error: 'Network error and no cached data available',
         offline: true,
+        message: '当前处于离线状态，无法获取最新数据',
       }),
       {
         status: 503,
@@ -419,11 +486,56 @@ if ('periodicSync' in self.registration) {
   // 注册周期性同步
   self.registration.periodicSync
     .register('data-update', {
-      minInterval: 24 * 60 * 60 * 1000, // 24小时
+      minInterval: 24 * 60 * 60 * 1000, // 24 小时
     })
     .catch(error => {
       console.log('[Service Worker] Periodic sync registration failed:', error);
     });
 }
+
+// ========================================
+// SW-001.3: 更新检测机制增强
+// ========================================
+
+// 监听 Service Worker 更新
+self.addEventListener('updatefound', event => {
+  const newWorker = self.registration?.installing;
+
+  if (newWorker) {
+    console.log('[Service Worker] New version found, installing...');
+
+    newWorker.addEventListener('statechange', () => {
+      if (newWorker.state === 'installed') {
+        // 新版本已安装，等待激活
+        console.log(
+          '[Service Worker] New version installed, waiting to activate'
+        );
+
+        // 通知所有客户端有新版本可用
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({
+              type: 'UPDATE_AVAILABLE',
+              message: '有新版本可用，刷新页面以应用更新',
+              timestamp: Date.now(),
+            });
+          });
+        });
+      }
+
+      if (newWorker.state === 'activating') {
+        console.log('[Service Worker] Activating new version...');
+      }
+    });
+  }
+});
+
+// 支持 SKIP_WAITING 消息
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('[Service Worker] Skipping waiting and activating immediately');
+    self.skipWaiting();
+  }
+});
 
 console.log('[Service Worker] Initialized successfully');

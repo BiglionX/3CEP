@@ -1,5 +1,6 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 interface DeviceTag {
   id: string;
@@ -12,6 +13,9 @@ interface DeviceTag {
 
 // 鑾峰彇璁惧鏍囩鍒楄〃
 export async function GET() {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -61,10 +65,16 @@ export async function GET() {
     console.error('鑾峰彇璁惧鏍囩澶辫触:', error);
     return NextResponse.json({ error: '鑾峰彇璁惧鏍囩澶辫触' }, { status: 500 });
   }
-}
+
+    },
+    'devices_read'
+  );
 
 // 鍒涘缓鏂扮殑璁惧鏍囩
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -97,5 +107,8 @@ export async function POST(request: Request) {
     console.error('鍒涘缓璁惧鏍囩澶辫触:', error);
     return NextResponse.json({ error: '鍒涘缓璁惧鏍囩澶辫触' }, { status: 500 });
   }
-}
+
+    },
+    'devices_read'
+  );
 

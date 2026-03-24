@@ -1,5 +1,6 @@
-﻿import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { createClient } from '@supabase/supabase-js';
 import { AuthService } from '@/lib/auth-service';
 
@@ -52,6 +53,9 @@ interface BehaviorQueryParams {
 
 // 璁板綍鐢ㄦ埛琛屼负
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -104,10 +108,16 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'users_read'
+  );
 
 // 鏌ヨ鐢ㄦ埛琛屼负鏁版嵁
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -204,10 +214,16 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'users_read'
+  );
 
 // 鎵归噺鍒犻櫎杩囨湡琛屼负鏁版嵁
 export async function DELETE(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -264,5 +280,8 @@ export async function DELETE(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'users_read'
+  );
 

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import BatchActions from './BatchActions';
 
 // 智能体注册信息接口
 interface AgentRegistration {
@@ -56,6 +57,7 @@ export default function AgentsDashboard(): JSX.Element {
     status: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>([]);
 
   useEffect(() => {
     loadAgents();
@@ -146,6 +148,22 @@ export default function AgentsDashboard(): JSX.Element {
         return '低风险';
       default:
         return '未知';
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedAgentIds(filteredAgents.map(a => a.registration.id));
+    } else {
+      setSelectedAgentIds([]);
+    }
+  };
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedAgentIds(prev => [...prev, id]);
+    } else {
+      setSelectedAgentIds(prev => prev.filter(agentId => agentId !== id));
     }
   };
 
@@ -300,18 +318,47 @@ export default function AgentsDashboard(): JSX.Element {
         </div>
       </div>
 
+      {/* 批量操作工具栏 */}
+      {selectedAgentIds.length > 0 && (
+        <BatchActions
+          selectedIds={selectedAgentIds}
+          onActionComplete={() => {
+            setSelectedAgentIds([]);
+            loadAgents();
+          }}
+        />
+      )}
+
       {/* 智能体列表 */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold">智能体列表</h2>
-          <p className="text-gray-600 text-sm mt-1">
-            共 {filteredAgents.length} 个智能体
-          </p>
+        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-semibold">智能体列表</h2>
+            <p className="text-gray-600 text-sm mt-1">
+              共 {filteredAgents.length} 个智能体
+            </p>
+          </div>
+          {selectedAgentIds.length > 0 && (
+            <p className="text-sm text-indigo-600 font-medium">
+              已选择 {selectedAgentIds.length} 个
+            </p>
+          )}
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <input
+                    type="checkbox"
+                    checked={
+                      selectedAgentIds.length === filteredAgents.length &&
+                      filteredAgents.length > 0
+                    }
+                    onChange={e => handleSelectAll(e.target.checked)}
+                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   名称
                 </th>
@@ -344,6 +391,16 @@ export default function AgentsDashboard(): JSX.Element {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredAgents.map(agent => (
                 <tr key={agent.registration.name} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      checked={selectedAgentIds.includes(agent.registration.id)}
+                      onChange={e =>
+                        handleSelectOne(agent.registration.id, e.target.checked)
+                      }
+                      className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    />
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="font-medium text-gray-900">
                       {agent.registration.name}

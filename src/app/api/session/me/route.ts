@@ -1,21 +1,77 @@
-﻿import { createClient } from '@supabase/supabase-js';
+﻿import {
+  getAuthCookieName,
+  parseSessionCookie,
+} from '@/lib/utils/cookie-utils';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
+
+  // 获取 cookie 名称
+  const cookieName = getAuthCookieName(process.env.NEXT_PUBLIC_SUPABASE_URL);
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
   try {
-    // 获取当前会话
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    // 尝试从 cookie 获取 token
+    const sessionCookie = cookieStore.get(cookieName);
 
-    if (!session) {
+    if (!sessionCookie?.value) {
+      console.warn('[Session API] Cookie 不存在:', cookieName);
+      return NextResponse.json(
+        {
+          user: null,
+          roles: [],
+          tenantId: null,
+          isAuthenticated: false,
+        },
+        { status: 401 }
+      );
+    }
+
+    // 解析 cookie 获取 access_token
+    let accessToken: string | null = null;
+    try {
+      const sessionData = parseSessionCookie(sessionCookie.value);
+      accessToken = sessionData?.access_token || null;
+    } catch (parseError) {
+      console.warn('[Session API] Cookie 解析失败');
+      return NextResponse.json(
+        {
+          user: null,
+          roles: [],
+          tenantId: null,
+          isAuthenticated: false,
+        },
+        { status: 401 }
+      );
+    }
+
+    if (!accessToken) {
+      return NextResponse.json(
+        {
+          user: null,
+          roles: [],
+          tenantId: null,
+          isAuthenticated: false,
+        },
+        { status: 401 }
+      );
+    }
+
+    // 使用 token 获取用户信息
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser(accessToken);
+
+    if (userError || !user) {
+      console.warn('[Session API] Token 无效:', userError?.message);
       return NextResponse.json(
         {
           user: null,
@@ -31,7 +87,7 @@ export async function GET() {
     const { data: adminUser } = await supabase
       .from('admin_users')
       .select('id, user_id, role, is_active, created_at, updated_at')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('is_active', true)
       .single();
 
@@ -53,10 +109,10 @@ export async function GET() {
 
     return NextResponse.json({
       user: {
-        id: session.user.id,
-        email: session.user.email,
-        user_metadata: session.user.user_metadata,
-        created_at: session.user.created_at,
+        id: user.id,
+        email: user.email,
+        user_metadata: user.user_metadata,
+        created_at: user.created_at,
       },
       roles,
       tenantId,

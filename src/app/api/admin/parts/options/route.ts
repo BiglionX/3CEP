@@ -1,10 +1,14 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { cookies } from 'next/headers';
 import { Database } from '@/lib/database.types';
 
 // 鑾峰彇璁惧鍜屾晠闅滈€夐」鏁版嵁
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -61,5 +65,8 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'parts_read'
+  );
 

@@ -1,3 +1,5 @@
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
+
 ﻿import { NextRequest, NextResponse } from 'next/server';
 
 // 妯℃嫙渚涘簲鍟嗘暟const mockSuppliers = [
@@ -81,6 +83,9 @@
 ];
 
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || 'all';
@@ -113,9 +118,15 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'procurement_read'
+  );
 
 export async function POST(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const body = await request.json();
 
@@ -145,5 +156,8 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'procurement_read'
+  );
 

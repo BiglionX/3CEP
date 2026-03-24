@@ -1,8 +1,12 @@
 import { Database } from '@/lib/database.types';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -72,7 +76,10 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'settings_read'
+  );
 
 // 生成日报数据
 async function generateDailyReport(

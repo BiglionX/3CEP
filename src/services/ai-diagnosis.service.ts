@@ -1,4 +1,5 @@
-﻿// AI故障诊断服务核心?
+﻿// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export interface DiagnosisRequest {
   deviceId: string;
   symptoms: string;
@@ -104,7 +105,8 @@ export class AIDiagnosisService {
    */
   async diagnose(request: DiagnosisRequest): Promise<DiagnosisResult> {
     try {
-      // 1. 预处理用户输?      const processedSymptoms = this.preprocessSymptoms(request.symptoms);
+      // 1. 预处理用户输入
+      const processedSymptoms = this.preprocessSymptoms(request.symptoms);
 
       // 2. 基于知识库的初步匹配
       const knowledgeMatches = await this.searchKnowledgeBase(
@@ -120,26 +122,31 @@ export class AIDiagnosisService {
         return this.formatKnowledgeBasedResult(knowledgeMatches[0]);
       }
 
-      // 4. 调用AI大模型进行深度分?      const aiResult = await this.callAIDiagnosis(request, knowledgeMatches);
+      // 4. 调用 AI 大模型进行深度分析
+      const aiResult = await this.callAIDiagnosis(request, knowledgeMatches);
 
-      // 5. 后处理和格式化结?      return this.postProcessResult(aiResult, knowledgeMatches);
+      // 5. 后处理和格式化结果
+      return this.postProcessResult(aiResult, knowledgeMatches);
     } catch (error) {
-      console.error('AI诊断失败:', error);
-      throw new Error('诊断服务暂时不可用，请稍后重?);
+      console.error('AI 诊断失败:', error);
+      throw new Error('诊断服务暂时不可用，请稍后重试');
     }
   }
 
   /**
-   * 预处理症状描?   */
+   * 预处理症状描述
+   */
   private preprocessSymptoms(symptoms: string): string {
-    // 移除多余空格和标?    let processed = symptoms.trim().toLowerCase();
+    // 移除多余空格和标点
+    let processed = symptoms.trim().toLowerCase();
 
-    // 标准化常见术?    const termMappings: Record<string, string> = {
-      开不了? '无法开?,
-      打不开: '无法开?,
-      黑屏: '屏幕无显?,
+    // 标准化常见术语
+    const termMappings: Record<string, string> = {
+      开不了机: '无法开机',
+      打不开: '无法开机',
+      黑屏: '屏幕无显示',
       花屏: '屏幕显示异常',
-      没声? '无音频输?,
+      没声音: '无音频输出',
       充不进电: '无法充电',
       发热: '设备过热',
     };
@@ -152,9 +159,11 @@ export class AIDiagnosisService {
   }
 
   /**
-   * 搜索本地知识?   */
+   * 搜索本地知识库
+   */
   private async searchKnowledgeBase(
     symptoms: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     deviceId: string
   ): Promise<Array<{ fault: FaultKnowledge; confidence: number }>> {
     // 这里应该调用实际的知识库搜索服务
@@ -165,7 +174,7 @@ export class AIDiagnosisService {
           faultId: 'screen-crack-001',
           name: '屏幕碎裂',
           category: '屏幕故障',
-          commonSymptoms: ['屏幕有裂?, '触摸不灵?, '显示异常'],
+          commonSymptoms: ['屏幕有裂痕', '触摸不灵', '显示异常'],
           diagnosticQuestions: {
             question: '屏幕是否有明显裂痕？',
             options: [
@@ -181,7 +190,7 @@ export class AIDiagnosisService {
             },
             {
               id: 'step2',
-              description: '小心拆卸损坏的屏?,
+              description: '小心拆卸损坏的屏幕',
               estimatedDuration: 15,
             },
             {
@@ -218,7 +227,7 @@ export class AIDiagnosisService {
 请以JSON格式返回结果?{
   "faultId": "故障ID（如果有匹配的话?,
   "confidence": 0.95,
-  "diagnosis": "详细的诊断说?,
+  "diagnosis": "详细的诊断说?",
   "suggestedSolutions": [
     {
       "title": "解决方案标题",
@@ -246,8 +255,8 @@ export class AIDiagnosisService {
 
 ${
   knowledgeMatches.length > 0
-    ? `参考知识库匹配结果（置信度最高）: ${JSON.stringify(knowledgeMatches[0]?.fault, null 2)}`
-    : '无匹配的知识库结?
+    ? `参考知识库匹配结果（置信度最高）: ${JSON.stringify(knowledgeMatches[0]?.fault, null, 2)}`
+    : '无匹配的知识库结果'
 }
 
 ${
@@ -285,7 +294,8 @@ ${
       try {
         return JSON.parse(aiResponse);
       } catch {
-        // 如果不是JSON格式，构造基本响?        return {
+        // 如果不是 JSON 格式，构造基本响应
+        return {
           confidence: 0.6,
           diagnosis: aiResponse,
           suggestedSolutions: [],
@@ -293,11 +303,11 @@ ${
         };
       }
     } catch (error) {
-      console.error('AI API调用错误:', error);
+      console.error('AI API 调用错误:', error);
       // 返回默认响应
       return {
         confidence: 0.1,
-        diagnosis: '抱歉，当前无法连接到AI诊断服务。请稍后重试或联系人工客服?,
+        diagnosis: '抱歉，当前无法连接到 AI 诊断服务。请稍后重试或联系人工客服',
         suggestedSolutions: [],
         nextQuestions: [],
       };
@@ -305,12 +315,13 @@ ${
   }
 
   /**
-   * 格式化基于知识库的结?   */
+   * 格式化基于知识库的结果
+   */
   private formatKnowledgeBasedResult(match: any): DiagnosisResult {
     return {
       faultId: match.fault.faultId,
       confidence: match.confidence,
-      diagnosis: `根据您的描述，这很可能是${match.fault.name}问题。\n\n常见症状包括?{match.fault.commonSymptoms.join('�?)}`,
+      diagnosis: `根据您的描述，这很可能是${match.fault.name}问题。\n\n常见症状包括：${match.fault.commonSymptoms.join('、')}`,
       suggestedSolutions: [
         {
           id: `solution-${match.fault.faultId}`,
@@ -347,7 +358,8 @@ ${
       difficultyLevel: aiResult.difficultyLevel,
     };
 
-    // 如果AI结果置信度较低且有知识库匹配，融合两者结?    if (result.confidence < 0.6 && knowledgeMatches.length > 0) {
+    // 如果AI结果置信度较低且有知识库匹配，融合两者结果
+    if (result.confidence < 0.6 && knowledgeMatches.length > 0) {
       const knowledgeResult = this.formatKnowledgeBasedResult(
         knowledgeMatches[0]
       );
@@ -379,7 +391,9 @@ ${
    * 生成解决方案步骤
    */
   async generateSolutionSteps(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     faultId: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     deviceInfo: any
   ): Promise<Step[]> {
     // 根据故障ID和设备信息生成具体的解决方案步骤

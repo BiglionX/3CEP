@@ -13,7 +13,9 @@ const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
 // TODO: 移除此警告日志，配置好 Supabase 后删除
 if (!isSupabaseConfigured) {
-  console.warn('⚠️ [Supabase] 未配置 Supabase 环境变量！\n请在 .env.local 中设置：\n  - NEXT_PUBLIC_SUPABASE_URL\n  - NEXT_PUBLIC_SUPABASE_ANON_KEY\n  - SUPABASE_SERVICE_ROLE_KEY (可选)\n当前使用模拟数据模式。');
+  console.warn(
+    '⚠️ [Supabase] 未配置 Supabase 环境变量！\n请在 .env.local 中设置：\n  - NEXT_PUBLIC_SUPABASE_URL\n  - NEXT_PUBLIC_SUPABASE_ANON_KEY\n  - SUPABASE_SERVICE_ROLE_KEY (可选)\n当前使用模拟数据模式。'
+  );
 }
 
 // 单例模式防止多实例问题 - 使用全局变量确保跨模块共享
@@ -27,14 +29,18 @@ export const supabase = (() => {
   if (typeof window !== 'undefined') {
     // 浏览器端：使用全局单例
     if (!globalThis.__supabaseInstance) {
-      globalThis.__supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          persistSession: true,
-          detectSessionInUrl: true,
-          autoRefreshToken: true,
-          storageKey: 'sb-procyc-auth-token-singleton',
-        },
-      });
+      globalThis.__supabaseInstance = createClient(
+        supabaseUrl,
+        supabaseAnonKey,
+        {
+          auth: {
+            persistSession: true,
+            detectSessionInUrl: true,
+            autoRefreshToken: true,
+            storageKey: 'sb-procyc-auth-token-singleton',
+          },
+        }
+      );
     }
     return globalThis.__supabaseInstance;
   } else {
@@ -52,13 +58,17 @@ export const supabase = (() => {
 // 服务端客户端（Node.js环境使用）- 单例模式
 export const supabaseAdmin = (() => {
   if (!globalThis.__supabaseAdminInstance) {
-    globalThis.__supabaseAdminInstance = createClient(supabaseUrl, supabaseServiceRoleKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false,
-      },
-    });
+    globalThis.__supabaseAdminInstance = createClient(
+      supabaseUrl,
+      supabaseServiceRoleKey,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      }
+    );
   }
   return globalThis.__supabaseAdminInstance;
 })();
@@ -313,19 +323,64 @@ export class DatabaseService {
 // 导出配置状态，供其他模块检查
 export const isConfigured = isSupabaseConfigured;
 
+// 导出 createClient 函数，供服务端直接使用
+export { createClient };
+
 // 模拟数据生成器（当 Supabase 未配置时使用）
 export const mockData = {
   // 配件模拟数据
   parts: [
-    { id: '1', name: 'iPhone 14 Pro 屏幕', category: '屏幕', brand: 'Apple', description: '原装屏幕总成', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: '2', name: 'iPhone 14 电池', category: '电池', brand: 'Apple', description: '原装电池', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: '3', name: 'Samsung Galaxy S23 屏幕', category: '屏幕', brand: 'Samsung', description: '原装屏幕总成', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    {
+      id: '1',
+      name: 'iPhone 14 Pro 屏幕',
+      category: '屏幕',
+      brand: 'Apple',
+      description: '原装屏幕总成',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: '2',
+      name: 'iPhone 14 电池',
+      category: '电池',
+      brand: 'Apple',
+      description: '原装电池',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: '3',
+      name: 'Samsung Galaxy S23 屏幕',
+      category: '屏幕',
+      brand: 'Samsung',
+      description: '原装屏幕总成',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
   ] as Part[],
 
   // 预约模拟数据
   appointments: [
-    { id: '1', user_id: 'user1', start_time: new Date().toISOString(), end_time: new Date(Date.now() + 3600000).toISOString(), status: 'pending', notes: 'iPhone 14 Pro 屏幕维修', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: '2', user_id: 'user2', start_time: new Date(Date.now() + 86400000).toISOString(), end_time: new Date(Date.now() + 90000000).toISOString(), status: 'confirmed', notes: 'MacBook Air 电池更换', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    {
+      id: '1',
+      user_id: 'user1',
+      start_time: new Date().toISOString(),
+      end_time: new Date(Date.now() + 3600000).toISOString(),
+      status: 'pending',
+      notes: 'iPhone 14 Pro 屏幕维修',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: '2',
+      user_id: 'user2',
+      start_time: new Date(Date.now() + 86400000).toISOString(),
+      end_time: new Date(Date.now() + 90000000).toISOString(),
+      status: 'confirmed',
+      notes: 'MacBook Air 电池更换',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
   ] as Appointment[],
 };
 

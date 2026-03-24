@@ -1,8 +1,12 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 // 瀵煎叆鐢ㄦ埛鏁版嵁鎺ュ彛
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -50,5 +54,8 @@ export async function POST(request: Request) {
     console.error('瀵煎叆鐢ㄦ埛鏁版嵁澶辫触:', error);
     return NextResponse.json({ error: '瀵煎叆澶辫触' }, { status: 500 });
   }
-}
+
+    },
+    'users_read'
+  );
 

@@ -1,10 +1,14 @@
-﻿import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { NextResponse } from 'next/server';
 import { Database } from '@/lib/database.types';
 
 // GET - 鑾峰彇寰呭鏍哥殑搴楅摵鍒楄〃
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -60,10 +64,16 @@ export async function GET(request: Request) {
     console.error('API閿欒:', error);
     return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
-}
+
+    },
+    'shops_read'
+  );
 
 // POST - 鎵归噺瀹℃牳鎿嶄綔锛堥€氳繃鎴栭┏鍥烇級
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -150,5 +160,8 @@ export async function POST(request: Request) {
     console.error('鎵归噺瀹℃牳API閿欒:', error);
     return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
-}
+
+    },
+    'shops_read'
+  );
 

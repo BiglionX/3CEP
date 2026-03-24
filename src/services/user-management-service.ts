@@ -3,6 +3,7 @@
  */
 
 import { supabase } from '@/lib/supabase';
+import { fetchWithTimeout } from '@/lib/utils/fetch-with-timeout';
 import type {
   AnyUser,
   EnterpriseUser,
@@ -378,7 +379,13 @@ export class UserManagementService {
         ...filters,
       });
 
-      const response = await fetch(`/api/admin/users/export?${params}`);
+      const response = await fetchWithTimeout(
+        `/api/admin/users/export?${params}`,
+        {
+          timeout: 120000, // 120 秒超时（导出可能需要较长时间）
+          method: 'GET',
+        }
+      );
 
       if (!response.ok) {
         throw new Error('导出失败');

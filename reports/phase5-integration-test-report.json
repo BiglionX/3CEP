@@ -1,18 +1,18 @@
 {
   "summary": {
-    "timestamp": "2026-03-01T13:52:26.921Z",
+    "timestamp": "2026-03-23T05:49:50.678Z",
     "totalTestCases": 8,
-    "passedTestCases": 3,
-    "failedTestCases": 5,
+    "passedTestCases": 8,
+    "failedTestCases": 0,
     "totalSteps": 22,
-    "passedSteps": 14,
-    "passRate": "37.5%"
+    "passedSteps": 22,
+    "passRate": "100.0%"
   },
   "testCases": [
     {
       "testCaseId": "MON-001",
       "name": "监控指标体系验证",
-      "passed": false,
+      "passed": true,
       "steps": [
         {
           "passed": true
@@ -21,12 +21,11 @@
           "passed": true
         },
         {
-          "passed": false,
-          "error": "监控服务测试失败: Cannot find module '../../src/lib/monitoring-service'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         }
       ],
       "totalSteps": 3,
-      "passedSteps": 2
+      "passedSteps": 3
     },
     {
       "testCaseId": "MON-002",
@@ -49,61 +48,56 @@
     {
       "testCaseId": "ALERT-001",
       "name": "告警机制功能测试",
-      "passed": false,
+      "passed": true,
       "steps": [
         {
           "passed": true
         },
         {
-          "passed": false,
-          "error": "告警规则测试失败: Cannot find module '../../src/lib/alert-manager'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         },
         {
-          "passed": false,
-          "error": "告警触发测试失败: Cannot find module '../../src/lib/alert-manager'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         }
       ],
       "totalSteps": 3,
-      "passedSteps": 1
+      "passedSteps": 3
     },
     {
       "testCaseId": "LOG-001",
       "name": "日志分析系统测试",
-      "passed": false,
+      "passed": true,
       "steps": [
         {
           "passed": true
         },
         {
-          "passed": false,
-          "error": "日志记录测试失败: Cannot find module '../../src/lib/log-analyzer'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         },
         {
-          "passed": false,
-          "error": "日志搜索测试失败: Cannot find module '../../src/lib/log-analyzer'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         }
       ],
       "totalSteps": 3,
-      "passedSteps": 1
+      "passedSteps": 3
     },
     {
       "testCaseId": "MOD-001",
       "name": "内容审核流程测试",
-      "passed": false,
+      "passed": true,
       "steps": [
         {
           "passed": true
         },
         {
-          "passed": false,
-          "error": "自动审核测试失败: Cannot find module '../../src/lib/auto-moderation-service'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         },
         {
           "passed": true
         }
       ],
       "totalSteps": 3,
-      "passedSteps": 2
+      "passedSteps": 3
     },
     {
       "testCaseId": "MOD-002",
@@ -123,22 +117,20 @@
     {
       "testCaseId": "VIOLATION-001",
       "name": "违规处理机制测试",
-      "passed": false,
+      "passed": true,
       "steps": [
         {
           "passed": true
         },
         {
-          "passed": false,
-          "error": "违规记录测试失败: Cannot find module '../../src/lib/violation-management-service'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         },
         {
-          "passed": false,
-          "error": "申诉处理测试失败: Cannot find module '../../src/lib/violation-management-service'\nRequire stack:\n- D:\\BigLionX\\3cep\\tests\\integration\\phase5-integration-tests.js"
+          "passed": true
         }
       ],
       "totalSteps": 3,
-      "passedSteps": 1
+      "passedSteps": 3
     },
     {
       "testCaseId": "DATA-001",

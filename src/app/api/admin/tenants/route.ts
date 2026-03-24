@@ -1,13 +1,17 @@
-﻿/**
+/**
  * 绉熸埛绠＄悊 API 璺敱
  * 鎻愪緵绉熸埛鍒涘缓銆佺鐞嗐€佺敤鎴峰垎閰嶇瓑鍔熻兘
  */
 
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
@@ -103,9 +107,15 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'tenants_read'
+  );
 
 export async function POST(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
@@ -200,13 +210,19 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'tenants_read'
+  );
 
 // PUT /api/admin/tenants/[id] - 鏇存柊绉熸埛
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient({ cookies }) as any;
   const tenantId = params.id;
 
@@ -275,10 +291,16 @@ export async function PUT(
       { status: 500 }
     );
   }
-}
+
+    },
+    'tenants_read'
+  );
 
 // DELETE /api/admin/tenants/[id] - 鍒犻櫎绉熸埛
 export async function DELETE(request, { params }) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient({ cookies });
   const tenantId = params.id;
 
@@ -357,7 +379,10 @@ export async function DELETE(request, { params }) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'tenants_read'
+  );
 
 // 杈呭姪鍑芥暟
 async function checkAdminUser(userId, supabase) {

@@ -1,5 +1,9 @@
-﻿import { NextResponse } from 'next/server';
+﻿import {
+  getAuthCookieName,
+  serializeSessionCookie,
+} from '@/lib/utils/cookie-utils';
 import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,47 +14,50 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    // 楠岃瘉杈撳叆鍙傛暟
+    // 验证输入参数
     if (!email || !password) {
       return NextResponse.json(
-        { error: '鍜屽瘑鐮佷笉鑳戒负 },'
+        { error: '邮箱和密码不能为空' },
         { status: 400 }
       );
     }
 
-    // 浣跨敤Supabase杩涜瀵嗙爜鐧诲綍
+    // 使用 Supabase 进行邮箱密码登录
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      console.error('鐧诲綍澶辫触:', error);
+      console.error('登录失败:', error);
 
-      // 澶勭悊鍏蜂綋閿欒淇℃伅
-      let errorMessage = '鐧诲綍澶辫触';
+      // 处理具体错误信息
+      let errorMessage = '登录失败';
       if (error.code === 'invalid_credentials') {
-        errorMessage = '鎴栧瘑鐮侀敊;
+        errorMessage = '邮箱或密码错误';
       } else if (error.code === 'over_email_send_rate_limit') {
-        errorMessage = '欢鍙戦€佽繃浜庨绻侊紝璇风瓑灏忔椂鍚庨噸璇曟垨妫€鏌ュ瀮鍦鹃偖;
+        errorMessage = '邮件发送过于频繁，请稍后重试或检查垃圾邮件';
       } else if (error.code === 'email_address_invalid') {
-        errorMessage = '鏍煎紡涓嶆;
+        errorMessage = '邮箱格式不正确';
       } else if (error.code) {
-        errorMessage = `鐧诲綍澶辫触: ${error.code}`;
+        errorMessage = `登录失败：${error.code}`;
       }
 
       return NextResponse.json({ error: errorMessage }, { status: 401 });
     }
 
-    // 妫€鏌ユ槸鍚︿负绠＄悊鍛樼敤    let isAdmin = false;
+    // 检查是否为管理员用户
+    let isAdmin = false;
     if (data.user) {
-      console.log('鐢ㄦ埛鐧诲綍鎴愬姛:', data.user.email);
+      console.log('用户登录成功:', data.user.email);
 
-      // 棣栧厛妫€鏌ョ敤鎴峰厓鏁版嵁涓殑绠＄悊鍛樻爣      if (data.user.isAdmin === true) {
+      // 首先检查用户元数据中的管理员标识
+      if ((data.user as any).isAdmin === true) {
         isAdmin = true;
-        console.log('氳繃鐢ㄦ埛鍏冩暟鎹獙璇佷负绠＄悊);
+        console.log('通过用户元数据验证为管理员');
       } else {
-        // 澶囩敤鏂规锛氭鏌ユ暟鎹簱涓殑绠＄悊鍛樿        try {
+        // 备用方案：检查数据库中的管理员记录
+        try {
           const { data: adminData } = await supabase
             .from('admin_users')
             .select('id, role, is_active')
@@ -60,19 +67,20 @@ export async function POST(request: Request) {
 
           isAdmin = !!adminData;
           if (isAdmin) {
-            console.log('氳繃鏁版嵁搴撻獙璇佷负绠＄悊);
+            console.log('通过数据库验证为管理员');
           }
         } catch (dbError) {
-          // 鏁版嵁搴撹〃涓嶅鍦ㄦ垨鏌ヨ澶辫触讹紝浣跨敤鐢ㄦ埛鍏冩暟鎹綔涓哄垽鏂緷          console.log('鏁版嵁搴撶鐞嗗憳妫€鏌ュけ璐ワ紝浣跨敤鐢ㄦ埛鍏冩暟鎹垽);
+          // 数据库表不存在或查询失败，使用用户元数据作为判断依据
+          console.log('数据库管理员检查失败，使用用户元数据判断');
         }
       }
 
-      console.log('鏈€缁堢鐞嗗憳鐘', isAdmin);
+      console.log('最终管理员状态', isAdmin);
     }
 
-    // 璁剧疆璁よ瘉cookie
-    const cookieName = `sb-${process.env.split('//')[1].split('.')[0]}-auth-token`;
-    const cookieValue = JSON.stringify(data.session);
+    // 设置认证 cookie
+    const cookieName = getAuthCookieName(process.env.NEXT_PUBLIC_SUPABASE_URL);
+    const cookieValue = serializeSessionCookie(data.session);
 
     const response = NextResponse.json({
       success: true,
@@ -82,23 +90,21 @@ export async function POST(request: Request) {
         is_admin: isAdmin,
       },
       session: data.session,
-      message: '鐧诲綍鎴愬姛',
+      message: '登录成功',
     });
 
-    // 璁剧疆cookie
+    // 设置 cookie
     response.cookies.set(cookieName, cookieValue, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 3600, // 1灏忔椂
+      maxAge: 3600, // 1 小时
       path: '/',
     });
 
     return response;
   } catch (error) {
-    console.error('鐧诲綍鎺ュ彛閿欒:', error);
-    return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
+    console.error('登录接口错误:', error);
+    return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
 }
-
-

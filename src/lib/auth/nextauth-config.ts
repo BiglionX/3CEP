@@ -3,11 +3,12 @@
  * 适用于Next.js App Router
  */
 
+import { AuthErrorCode, AuthErrorHandler } from '@/lib/auth/error-handler';
+import { authStateManager } from '@/lib/auth/state-manager';
+import { fetchWithTimeout } from '@/lib/utils/fetch-with-timeout';
+import { SupabaseAdapter } from '@auth/supabase-adapter';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { SupabaseAdapter } from '@auth/supabase-adapter';
-import { AuthErrorHandler, AuthErrorCode } from '@/lib/auth/error-handler';
-import { authStateManager } from '@/lib/auth/state-manager';
 
 // 扩展NextAuth用户类型
 declare module 'next-auth' {
@@ -65,11 +66,11 @@ export const authOptions: NextAuthOptions = {
             throw new Error(AuthErrorCode.INVALID_CREDENTIALS);
           }
 
-          // 这里应该调用你的用户验证逻辑
-          // 由于项目使用Supabase，我们可以直接使用Supabase认证
-          const response = await fetch(
+          // 使用带超时控制的 fetch 调用
+          const response = await fetchWithTimeout(
             `${supabaseUrl}/auth/v1/token?grant_type=password`,
             {
+              timeout: 10000, // 10 秒超时（认证应该快速响应）
               method: 'POST',
               headers: {
                 apikey: supabaseSecret,

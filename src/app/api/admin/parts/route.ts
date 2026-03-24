@@ -1,9 +1,13 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { cookies } from 'next/headers';
 import { Database } from '@/lib/database.types';
 
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -64,9 +68,15 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'parts_read'
+  );
 
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -192,9 +202,15 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'parts_read'
+  );
 
 export async function PUT(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -279,9 +295,15 @@ export async function PUT(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'parts_read'
+  );
 
 export async function DELETE(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -317,5 +339,8 @@ export async function DELETE(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'parts_read'
+  );
 

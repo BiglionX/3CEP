@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # Hyperledger Besu 节点 1 (Validator)
+  besu-validator-1:
+    image: hyperledger/besu:latest
+    container_name: besu-validator-1
+    ports:
+      - '8545:8545' # JSON-RPC
+      - '8546:8546' # WebSocket
+      - '30303:30303' # P2P
+    volumes:
+      - ./besu-data/validator-1:/data
+      - ./besu-config.toml:/config/config.toml
+      - ./genesis.json:/config/genesis.json
+    command: >
+      --config-file=/config/config.toml
+      --data-path=/data
+      --genesis-file=/config/genesis.json
+      --rpc-http-enabled
+      --rpc-http-api=ETH,NET,WEB3,MINER,ADMIN
+      --rpc-http-cors-origins="all"
+      --host-allowlist="*"
+      --miner-enabled
+      --miner-coinbase=0x0000000000000000000000000000000000000001
+      --min-gas-price=0
+    networks:
+      - blockchain-network
+    restart: unless-stopped
+
+  # Hyperledger Besu 节点 2 (Validator)
+  besu-validator-2:
+    image: hyperledger/besu:latest
+    container_name: besu-validator-2
+    ports:
+      - '8547:8545'
+      - '8548:8546'
+      - '30304:30303'
+    volumes:
+      - ./besu-data/validator-2:/data
+      - ./besu-config.toml:/config/config.toml
+      - ./genesis.json:/config/genesis.json
+    command: >
+      --config-file=/config/config.toml
+      --data-path=/data
+      --genesis-file=/config/genesis.json
+      --rpc-http-enabled
+      --rpc-http-api=ETH,NET,WEB3,MINER,ADMIN
+      --rpc-http-cors-origins="all"
+      --host-allowlist="*"
+      --miner-enabled
+      --miner-coinbase=0x0000000000000000000000000000000000000002
+      --min-gas-price=0
+    networks:
+      - blockchain-network
+    restart: unless-stopped
+
+  # Hyperledger Besu 节点 3 (Validator)
+  besu-validator-3:
+    image: hyperledger/besu:latest
+    container_name: besu-validator-3
+    ports:
+      - '8549:8545'
+      - '8550:8546'
+      - '30305:30303'
+    volumes:
+      - ./besu-data/validator-3:/data
+      - ./besu-config.toml:/config/config.toml
+      - ./genesis.json:/config/genesis.json
+    command: >
+      --config-file=/config/config.toml
+      --data-path=/data
+      --genesis-file=/config/genesis.json
+      --rpc-http-enabled
+      --rpc-http-api=ETH,NET,WEB3,MINER,ADMIN
+      --rpc-http-cors-origins="all"
+      --host-allowlist="*"
+      --miner-enabled
+      --miner-coinbase=0x0000000000000000000000000000000000000003
+      --min-gas-price=0
+    networks:
+      - blockchain-network
+    restart: unless-stopped
+
+networks:
+  blockchain-network:
+    driver: bridge
+
+volumes:
+  besu-data:

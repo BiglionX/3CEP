@@ -1,3 +1,5 @@
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
+
 ﻿import { NextRequest, NextResponse } from 'next/server';
 
 // 妯℃嫙鍒嗙被鏁版嵁
@@ -17,6 +19,9 @@ const mockExpenseCategories = [
 ];
 
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const days = parseInt(searchParams.get('days') || '30');
@@ -35,5 +40,8 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'payments_read'
+  );
 

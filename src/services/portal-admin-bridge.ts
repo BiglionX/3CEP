@@ -1,18 +1,22 @@
 ﻿/**
- * 统一门户与管理后台桥接服? * 提供跨系统数据访问和权限同步功能
+ * 统一门户与管理后台桥接服务
+ * 提供跨系统数据访问和权限同步功能
  */
 
 import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import { fetchWithTimeout } from '@/lib/utils/fetch-with-timeout';
 
 // 管理后台API基础路径
 const ADMIN_API_BASE = '/api/admin';
 const PORTAL_API_BASE = '/api/data-center';
 
 /**
- * 跨系统数据访问服? */
+ * 跨系统数据访问服务
+ */
 export class PortalAdminBridge {
   /**
-   * 获取管理后台统计数据（供统一门户使用?   */
+   * 获取管理后台统计数据（供统一门户使用）
+   */
   static async getAdminStats() {
     try {
       const response = await fetch(`${ADMIN_API_BASE}/dashboard/stats`, {
@@ -41,11 +45,15 @@ export class PortalAdminBridge {
         include_stats: 'true',
       });
 
-      const response = await fetch(`${ADMIN_API_BASE}/users?${params}`, {
-        headers: {
-          Authorization: `Bearer ${this.getAuthToken()}`,
-        },
-      });
+      const response = await fetchWithTimeout(
+        `${ADMIN_API_BASE}/users?${params}`,
+        {
+          timeout: 15000,
+          headers: {
+            Authorization: `Bearer ${this.getAuthToken()}`,
+          },
+        }
+      );
 
       if (response.ok) {
         return await response.json();
@@ -58,7 +66,8 @@ export class PortalAdminBridge {
   }
 
   /**
-   * 同步权限状?   */
+   * 同步权限状态
+   */
   static async syncPermissionStatus() {
     try {
       const response = await fetch(`${PORTAL_API_BASE}/permissions/sync`, {
@@ -81,9 +90,10 @@ export class PortalAdminBridge {
    */
   static async getCrossSystemNotifications() {
     try {
-      const response = await fetch(
+      const response = await fetchWithTimeout(
         `${PORTAL_API_BASE}/notifications/cross-system`,
         {
+          timeout: 10000,
           headers: {
             Authorization: `Bearer ${this.getAuthToken()}`,
           },
@@ -104,7 +114,8 @@ export class PortalAdminBridge {
    * 获取认证令牌
    */
   private static getAuthToken(): string {
-    // 从localStorage或cookie中获取认证令?    if (typeof window !== 'undefined') {
+    // 从 localStorage 或 cookie 中获取认证令牌
+    if (typeof window !== 'undefined') {
       return localStorage.getItem('auth-token') || '';
     }
     return '';
@@ -112,12 +123,14 @@ export class PortalAdminBridge {
 }
 
 /**
- * React Hook - 跨系统权限检? */
+ * React Hook - 跨系统权限检查
+ */
 export function useCrossSystemPermission() {
   const { hasPermission, roles } = useRbacPermission();
 
   /**
-   * 检查是否可以在统一门户中访问管理后台功?   */
+   * 检查是否可以在统一门户中访问管理后台功能
+   */
   const canAccessAdminFeature = (feature: string): boolean => {
     // 管理后台相关权限映射
     const adminPermissionMap: Record<string, string> = {
@@ -156,14 +169,17 @@ export function useCrossSystemPermission() {
 }
 
 /**
- * 跨系统导航助? */
+ * 跨系统导航助手
+ */
 export class CrossSystemNavigator {
   /**
-   * 从统一门户跳转到管理后?   */
+   * 从统一门户跳转到管理后台
+   */
   static navigateToAdmin(feature?: string) {
     let targetPath = '/admin/dashboard';
 
-    // 根据功能需求确定具体跳转路?    const featurePaths: Record<string, string> = {
+    // 根据功能需求确定具体跳转路径
+    const featurePaths: Record<string, string> = {
       user_management: '/admin/users',
       system_monitoring: '/admin/monitoring',
       content_review: '/admin/content',
@@ -204,7 +220,8 @@ export class CrossSystemNavigator {
   }
 
   /**
-   * 打开新窗口访问管理后?   */
+   * 打开新窗口访问管理后台
+   */
   static openAdminInNewWindow(feature?: string) {
     let targetPath = '/admin/dashboard';
 

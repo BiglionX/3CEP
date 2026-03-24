@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { NextResponse } from 'next/server';
 
 // 初始化Supabase客户端（使用服务角色密钥）
@@ -12,6 +13,9 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // TODO: 添加管理员权限验证
 
@@ -46,13 +50,19 @@ export async function GET(
     console.error('管理员API错误:', error);
     return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
-}
+
+    },
+    'content_read'
+  );
 
 // PUT /api/admin/tutorials/[id] - 管理员更新教程
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // TODO: 添加管理员权限验证
 
@@ -102,13 +112,19 @@ export async function PUT(
     console.error('管理员API错误:', error);
     return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
-}
+
+    },
+    'content_read'
+  );
 
 // DELETE /api/admin/tutorials/[id] - 管理员删除教程
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // TODO: 添加管理员权限验证
 
@@ -142,13 +158,19 @@ export async function DELETE(
     console.error('管理员API错误:', error);
     return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
-}
+
+    },
+    'content_read'
+  );
 
 // PATCH /api/admin/tutorials/[id]/status - 更新教程状态
 export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // TODO: 添加管理员权限验证
 
@@ -199,4 +221,7 @@ export async function PATCH(
     console.error('管理员API错误:', error);
     return NextResponse.json({ error: '服务器内部错误' }, { status: 500 });
   }
-}
+
+    },
+    'content_read'
+  );

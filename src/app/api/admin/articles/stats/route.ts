@@ -1,5 +1,6 @@
-﻿import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -8,6 +9,9 @@ const supabase = createClient(
 );
 
 export async function GET() {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // 验证管理员权限
     const cookieStore = await cookies();
@@ -64,4 +68,7 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );

@@ -1,0 +1,45 @@
+# Hyperledger Besu 配置文件
+# IBFT2 共识机制
+
+# 网络 ID
+network-id=2024
+
+# 数据目录
+data-path=/data
+
+# 挖矿配置
+miner-enabled=true
+miner-coinbase="0x0000000000000000000000000000000000000001"
+min-gas-price=0
+
+# JSON-RPC 配置
+rpc-http-enabled=true
+rpc-http-host=0.0.0.0
+rpc-http-port=8545
+rpc-http-api=ETH,NET,WEB3,MINER,ADMIN,IBFT
+rpc-http-cors-origins=all
+
+# WebSocket 配置
+rpc-ws-enabled=true
+rpc-ws-host=0.0.0.0
+rpc-ws-port=8546
+rpc-ws-api=ETH,NET,WEB3,MINER,ADMIN,IBFT
+
+# P2P 配置
+p2p-host=0.0.0.0
+p2p-port=30303
+
+# 日志配置
+logging=INFO
+
+# 同步模式
+sync-mode=FULL
+
+# 创世块文件
+genesis-file=/config/genesis.json
+
+# 节点私钥存储
+node-private-key-file=/data/key
+
+# API 访问控制
+host-allowlist=all

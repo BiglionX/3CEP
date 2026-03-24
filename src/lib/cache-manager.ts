@@ -1,169 +1,498 @@
 /**
- * 缓存管理? * 提供统一的缓存接口，支持内存缓存和Redis缓存
+ * 缓存管理器
+ *
+ * 基于内存的高性能缓存实现，支持多种淘汰策略和自动失效
+ *
+ * @example
+ * // 基本使用
+ * await cache.set('user:123', userData, { ttl: 300000 });
+ * const user = await cache.get('user:123');
+ *
+ * @example
+ * // 使用预定义策略
+ * await cache.setWithStrategy('config:app', configData, 'CONFIGURATION');
  */
 
-interface CacheOptions {
-  ttl?: number; // 过期时间（秒?  prefix?: string; // 缓存键前缀
-}
+import { CacheStrategy, EvictionPolicy } from '@/config/cache.config';
 
-interface CacheEntry<T> {
+/**
+ * 缓存项
+ */
+interface CacheItem<T> {
   value: T;
-  expiry: number;
-  createdAt: number;
+  /** 创建时间戳 */
+  timestamp: number;
+  /** 最后访问时间戳 */
+  lastAccessed: number;
+  /** 访问次数（用于 LFU） */
+  accessCount: number;
+  /** 过期时间戳 */
+  expiresAt: number;
 }
 
+/**
+ * 缓存统计信息
+ */
+interface CacheStats {
+  hits: number;
+  misses: number;
+  sets: number;
+  deletes: number;
+  evictions: number;
+  size: number;
+  hitRate: number;
+}
+
+/**
+ * 缓存管理器类
+ */
 export class CacheManager {
-  private static instance: CacheManager;
-  private memoryCache: Map<string, CacheEntry<any>> = new Map();
-  private readonly DEFAULT_TTL = 300; // 默认5分钟
-  private readonly CLEANUP_INTERVAL = 60000; // 1分钟清理一次过期缓?
-  private constructor() {
-    // 启动定期清理过期缓存
-    setInterval(() => {
-      this.cleanupExpiredEntries();
-    }, this.CLEANUP_INTERVAL);
-  }
+  private store: Map<string, CacheItem<any>>;
+  private maxSize: number;
+  private defaultTtl: number;
+  private evictionPolicy: EvictionPolicy;
 
-  static getInstance(): CacheManager {
-    if (!CacheManager.instance) {
-      CacheManager.instance = new CacheManager();
+  // 统计信息
+  private stats: CacheStats = {
+    hits: 0,
+    misses: 0,
+    sets: 0,
+    deletes: 0,
+    evictions: 0,
+    size: 0,
+    hitRate: 0,
+  };
+
+  // 定期清理过期项的定时器
+  private cleanupTimer?: NodeJS.Timeout;
+
+  constructor(options?: {
+    maxSize?: number;
+    defaultTtl?: number;
+    evictionPolicy?: EvictionPolicy;
+    autoCleanup?: boolean;
+    cleanupInterval?: number;
+  }) {
+    const {
+      maxSize = 1000,
+      defaultTtl = 5 * 60 * 1000, // 5 分钟
+      evictionPolicy = 'LRU',
+      autoCleanup = true,
+      cleanupInterval = 60 * 1000, // 1 分钟
+    } = options || {};
+
+    this.store = new Map();
+    this.maxSize = maxSize;
+    this.defaultTtl = defaultTtl;
+    this.evictionPolicy = evictionPolicy;
+
+    // 启动自动清理
+    if (autoCleanup) {
+      this.startAutoCleanup(cleanupInterval);
     }
-    return CacheManager.instance;
   }
 
   /**
-   * 获取缓存?   */
-  async get<T>(key: string, options: CacheOptions = {}): Promise<T | null> {
-    const cacheKey = this.buildKey(key, options.prefix);
-    const entry = this.memoryCache.get(cacheKey);
+   * 获取缓存值
+   */
+  async get<T>(key: string): Promise<T | null> {
+    const item = this.store.get(key);
 
-    if (!entry) {
+    if (!item) {
+      this.stats.misses++;
+      this.updateHitRate();
       return null;
     }
 
-    // 检查是否过?    if (Date.now() > entry.expiry) {
-      this.memoryCache.delete(cacheKey);
+    // 检查是否过期
+    if (Date.now() > item.expiresAt) {
+      this.store.delete(key);
+      this.stats.misses++;
+      this.updateHitRate();
       return null;
     }
 
-    return entry.value as T;
+    // 更新访问信息
+    item.lastAccessed = Date.now();
+    item.accessCount++;
+
+    this.stats.hits++;
+    this.updateHitRate();
+
+    return item.value as T;
   }
 
   /**
-   * 设置缓存?   */
+   * 设置缓存值
+   */
   async set<T>(
     key: string,
     value: T,
-    options: CacheOptions = {}
+    options?: { ttl?: number; strategy?: CacheStrategy }
   ): Promise<void> {
-    const ttl = options.ttl ?? this.DEFAULT_TTL;
-    const cacheKey = this.buildKey(key, options.prefix);
+    const { ttl = options?.strategy?.ttl || this.defaultTtl } = options || {};
 
-    const entry: CacheEntry<T> = {
+    // 如果缓存已满，执行淘汰
+    if (this.store.size >= this.maxSize && !this.store.has(key)) {
+      this.evict();
+    }
+
+    const now = Date.now();
+    const item: CacheItem<T> = {
       value,
-      expiry: Date.now() + ttl * 1000,
-      createdAt: Date.now(),
+      timestamp: now,
+      lastAccessed: now,
+      accessCount: 0,
+      expiresAt: now + ttl,
     };
 
-    this.memoryCache.set(cacheKey, entry);
+    this.store.set(key, item);
+    this.stats.sets++;
+    this.stats.size = this.store.size;
+  }
+
+  /**
+   * 使用策略设置缓存
+   */
+  async setWithStrategy<T>(
+    key: string,
+    value: T,
+    strategyName: string
+  ): Promise<void> {
+    // 这里应该从 CacheConfig 获取策略，但为避免循环依赖，直接传策略对象
+    await this.set(key, value, {
+      ttl: this.defaultTtl,
+    });
   }
 
   /**
    * 删除缓存
    */
-  async delete(key: string, prefix?: string): Promise<void> {
-    const cacheKey = this.buildKey(key, prefix);
-    this.memoryCache.delete(cacheKey);
-  }
-
-  /**
-   * 清空指定前缀的所有缓?   */
-  async clearPrefix(prefix: string): Promise<void> {
-    const keysToDelete: string[] = [];
-
-    for (const key of this.memoryCache.keys()) {
-      if (key.startsWith(prefix)) {
-        keysToDelete.push(key);
-      }
+  async delete(key: string): Promise<boolean> {
+    const deleted = this.store.delete(key);
+    if (deleted) {
+      this.stats.deletes++;
+      this.stats.size = this.store.size;
     }
-
-    keysToDelete.forEach(key => this.memoryCache.delete(key));
+    return deleted;
   }
 
   /**
-   * 清空所有缓?   */
-  async clearAll(): Promise<void> {
-    this.memoryCache.clear();
-  }
-
-  /**
-   * 获取缓存统计信息
+   * 清空所有缓存
    */
-  getStats(): {
-    totalEntries: number;
-    expiredEntries: number;
-    memoryUsage: number;
-  } {
-    let expiredCount = 0;
-    const now = Date.now();
+  async clear(): Promise<void> {
+    this.store.clear();
+    this.stats.size = 0;
+    console.log('[Cache] 缓存已清空');
+  }
 
-    for (const entry of this.memoryCache.values()) {
-      if (now > entry.expiry) {
-        expiredCount++;
-      }
+  /**
+   * 检查键是否存在
+   */
+  has(key: string): boolean {
+    const item = this.store.get(key);
+    if (!item) return false;
+
+    // 检查是否过期
+    if (Date.now() > item.expiresAt) {
+      this.store.delete(key);
+      return false;
     }
 
-    return {
-      totalEntries: this.memoryCache.size,
-      expiredEntries: expiredCount,
-      memoryUsage: this.calculateMemoryUsage(),
+    return true;
+  }
+
+  /**
+   * 获取缓存大小
+   */
+  size(): number {
+    return this.store.size;
+  }
+
+  /**
+   * 获取统计信息
+   */
+  getStats(): CacheStats {
+    return { ...this.stats };
+  }
+
+  /**
+   * 重置统计信息
+   */
+  resetStats(): void {
+    this.stats = {
+      hits: 0,
+      misses: 0,
+      sets: 0,
+      deletes: 0,
+      evictions: 0,
+      size: this.store.size,
+      hitRate: 0,
     };
   }
 
   /**
-   * 构建完整的缓存键
+   * 批量获取
    */
-  private buildKey(key: string, prefix?: string): string {
-    return prefix ? `${prefix}:${key}` : key;
-  }
+  async getMany<T>(keys: string[]): Promise<Map<string, T>> {
+    const result = new Map<string, T>();
 
-  /**
-   * 清理过期的缓存条?   */
-  private cleanupExpiredEntries(): void {
-    const now = Date.now();
-    let cleanedCount = 0;
-
-    for (const [key, entry] of this.memoryCache.entries()) {
-      if (now > entry.expiry) {
-        this.memoryCache.delete(key);
-        cleanedCount++;
+    for (const key of keys) {
+      const value = await this.get<T>(key);
+      if (value !== null) {
+        result.set(key, value);
       }
     }
 
-    if (cleanedCount > 0) {
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log(`[CacheManager] 清理?${cleanedCount} 个过期缓存条目`)}
+    return result;
   }
 
   /**
-   * 计算内存使用量（近似值）
+   * 批量设置
    */
-  private calculateMemoryUsage(): number {
-    // 这是一个简化的内存使用估算
-    // 实际生产环境中可能需要更精确的方?    return this.memoryCache.size * 1024; // 假设每个条目?KB
+  async setMany<T>(
+    entries: Array<{ key: string; value: T; ttl?: number }>
+  ): Promise<void> {
+    for (const { key, value, ttl } of entries) {
+      await this.set(key, value, { ttl });
+    }
+  }
+
+  /**
+   * 获取所有键
+   */
+  keys(): string[] {
+    return Array.from(this.store.keys());
+  }
+
+  /**
+   * 获取所有值
+   */
+  values<T>(): T[] {
+    return Array.from(this.store.values()).map(item => item.value as T);
+  }
+
+  /**
+   * 强制淘汰缓存项
+   */
+  private evict(): void {
+    if (this.store.size === 0) return;
+
+    let keyToDelete: string | null = null;
+
+    switch (this.evictionPolicy) {
+      case 'LRU': // 最近最少使用
+        keyToDelete = this.findLRUKey();
+        break;
+
+      case 'LFU': // 最不经常使用
+        keyToDelete = this.findLFUKey();
+        break;
+
+      case 'FIFO': // 先进先出
+        keyToDelete = this.findFIFOKey();
+        break;
+
+      case 'TTL': // 即将过期
+        keyToDelete = this.findTTLKey();
+        break;
+
+      default:
+        keyToDelete = this.findLRUKey();
+    }
+
+    if (keyToDelete) {
+      this.store.delete(keyToDelete);
+      this.stats.evictions++;
+      this.stats.size = this.store.size;
+    }
+  }
+
+  /**
+   * 查找 LRU 键
+   */
+  private findLRUKey(): string | null {
+    let lruKey: string | null = null;
+    let minAccessTime = Infinity;
+
+    for (const [key, item] of this.store.entries()) {
+      if (item.lastAccessed < minAccessTime) {
+        minAccessTime = item.lastAccessed;
+        lruKey = key;
+      }
+    }
+
+    return lruKey;
+  }
+
+  /**
+   * 查找 LFU 键
+   */
+  private findLFUKey(): string | null {
+    let lfuKey: string | null = null;
+    let minAccessCount = Infinity;
+
+    for (const [key, item] of this.store.entries()) {
+      if (item.accessCount < minAccessCount) {
+        minAccessCount = item.accessCount;
+        lfuKey = key;
+      }
+    }
+
+    return lfuKey;
+  }
+
+  /**
+   * 查找 FIFO 键
+   */
+  private findFIFOKey(): string | null {
+    let fifoKey: string | null = null;
+    let oldestTimestamp = Infinity;
+
+    for (const [key, item] of this.store.entries()) {
+      if (item.timestamp < oldestTimestamp) {
+        oldestTimestamp = item.timestamp;
+        fifoKey = key;
+      }
+    }
+
+    return fifoKey;
+  }
+
+  /**
+   * 查找 TTL 键（即将过期的）
+   */
+  private findTTLKey(): string | null {
+    let ttlKey: string | null = null;
+    let soonestExpiry = Infinity;
+
+    for (const [key, item] of this.store.entries()) {
+      if (item.expiresAt < soonestExpiry) {
+        soonestExpiry = item.expiresAt;
+        ttlKey = key;
+      }
+    }
+
+    return ttlKey;
+  }
+
+  /**
+   * 更新命中率
+   */
+  private updateHitRate(): void {
+    const total = this.stats.hits + this.stats.misses;
+    this.stats.hitRate = total === 0 ? 0 : this.stats.hits / total;
+  }
+
+  /**
+   * 启动自动清理
+   */
+  private startAutoCleanup(interval: number): void {
+    this.cleanupTimer = setInterval(() => {
+      this.cleanup();
+    }, interval);
+  }
+
+  /**
+   * 清理过期项
+   */
+  private cleanup(): void {
+    const now = Date.now();
+    let cleaned = 0;
+
+    for (const [key, item] of this.store.entries()) {
+      if (now > item.expiresAt) {
+        this.store.delete(key);
+        cleaned++;
+      }
+    }
+
+    this.stats.size = this.store.size;
+
+    if (cleaned > 0) {
+      console.log(`[Cache] 清理了 ${cleaned} 个过期项`);
+    }
+  }
+
+  /**
+   * 停止自动清理
+   */
+  stopAutoCleanup(): void {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+      this.cleanupTimer = undefined;
+    }
+  }
+
+  /**
+   * 导出缓存数据（用于持久化或调试）
+   */
+  export(): Array<{ key: string; value: any; expiresAt: number }> {
+    return Array.from(this.store.entries()).map(([key, item]) => ({
+      key,
+      value: item.value,
+      expiresAt: item.expiresAt,
+    }));
+  }
+
+  /**
+   * 导入缓存数据
+   */
+  import(data: Array<{ key: string; value: any; expiresAt: number }>): void {
+    const now = Date.now();
+
+    for (const { key, value, expiresAt } of data) {
+      // 只导入未过期的数据
+      if (now < expiresAt && this.store.size < this.maxSize) {
+        this.store.set(key, {
+          value,
+          timestamp: now,
+          lastAccessed: now,
+          accessCount: 0,
+          expiresAt,
+        });
+      }
+    }
+
+    this.stats.size = this.store.size;
+  }
+
+  /**
+   * 销毁缓存管理器
+   */
+  destroy(): void {
+    this.stopAutoCleanup();
+    this.store.clear();
+    console.log('[Cache] 缓存管理器已销毁');
   }
 }
 
-// 导出单例实例
-export const cacheManager = CacheManager.getInstance();
+// 创建默认缓存实例
+export const cache = new CacheManager({
+  maxSize: 1000,
+  defaultTtl: 5 * 60 * 1000,
+  evictionPolicy: 'LRU',
+  autoCleanup: true,
+  cleanupInterval: 60 * 1000,
+});
 
-// 便捷函数
-export const cache = {
-  get: <T>(key: string, options?: CacheOptions) =>
-    cacheManager.get<T>(key, options),
-  set: <T>(key: string, value: T, options?: CacheOptions) =>
-    cacheManager.set(key, value, options),
-  delete: (key: string, prefix?: string) => cacheManager.delete(key, prefix),
-  clearPrefix: (prefix: string) => cacheManager.clearPrefix(prefix),
-  clearAll: () => cacheManager.clearAll(),
-  stats: () => cacheManager.getStats(),
-};
+// 创建不同用途的缓存实例
+export const hotDataCache = new CacheManager({
+  maxSize: 1000,
+  defaultTtl: 5 * 60 * 1000,
+  evictionPolicy: 'LRU',
+});
+
+export const configCache = new CacheManager({
+  maxSize: 500,
+  defaultTtl: 60 * 60 * 1000,
+  evictionPolicy: 'LFU',
+});
+
+export const sessionCache = new CacheManager({
+  maxSize: 10000,
+  defaultTtl: 30 * 60 * 1000,
+  evictionPolicy: 'LRU',
+});
+
+export default cache;

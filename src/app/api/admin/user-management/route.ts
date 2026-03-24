@@ -3,12 +3,16 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -54,9 +58,15 @@ export async function GET(request: NextRequest) {
     console.error('获取用户列表失败:', error);
     return NextResponse.json({ error: '获取用户列表失败' }, { status: 500 });
   }
-}
+
+    },
+    'users_read'
+  );
 
 export async function DELETE(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const body = await request.json();
@@ -81,4 +91,7 @@ export async function DELETE(request: NextRequest) {
     console.error('批量删除用户失败:', error);
     return NextResponse.json({ error: '批量删除失败' }, { status: 500 });
   }
-}
+
+    },
+    'users_read'
+  );

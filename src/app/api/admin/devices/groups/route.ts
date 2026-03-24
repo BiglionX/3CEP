@@ -1,5 +1,6 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 interface DeviceGroup {
   id: string;
@@ -13,6 +14,9 @@ interface DeviceGroup {
 
 // 鑾峰彇璁惧鍒嗙粍鍒楄〃
 export async function GET() {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -57,10 +61,16 @@ export async function GET() {
     console.error('鑾峰彇璁惧鍒嗙粍澶辫触:', error);
     return NextResponse.json({ error: '鑾峰彇璁惧鍒嗙粍澶辫触' }, { status: 500 });
   }
-}
+
+    },
+    'devices_read'
+  );
 
 // 鍒涘缓鏂扮殑璁惧鍒嗙粍
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -94,5 +104,8 @@ export async function POST(request: Request) {
     console.error('鍒涘缓璁惧鍒嗙粍澶辫触:', error);
     return NextResponse.json({ error: '鍒涘缓璁惧鍒嗙粍澶辫触' }, { status: 500 });
   }
-}
+
+    },
+    'devices_read'
+  );
 

@@ -1,5 +1,6 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { cookies } from 'next/headers';
 
 // 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
@@ -8,6 +9,9 @@ import { cookies } from 'next/headers';
 );
 
 // GET - 鑾峰彇寰呭鏍搁摼鎺ュ垪export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -88,9 +92,15 @@ import { cookies } from 'next/headers';
     console.error('API閿欒:', error);
     return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
-}
+
+    },
+    'links_read'
+  );
 
 // POST - 鎵归噺鎿嶄綔锛堝彂甯冩垨椹冲洖export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { action, ids, rejectionReason } = await request.json();
 
@@ -183,5 +193,8 @@ import { cookies } from 'next/headers';
       { status: 500 }
     );
   }
-}
+
+    },
+    'links_read'
+  );
 

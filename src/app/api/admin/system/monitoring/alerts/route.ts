@@ -1,5 +1,6 @@
-﻿import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 interface SystemAlert {
   id: string;
@@ -16,6 +17,9 @@ interface SystemAlert {
 
 // 获取系统告警
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = await cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -116,10 +120,16 @@ export async function GET(request: Request) {
     console.error('获取系统告警失败:', error);
     return NextResponse.json({ error: '获取系统告警失败' }, { status: 500 });
   }
-}
+
+    },
+    'settings_read'
+  );
 
 // 处理告警（确认/解决）
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = await cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -144,4 +154,7 @@ export async function POST(request: Request) {
     console.error('处理告警失败:', error);
     return NextResponse.json({ error: '处理告警失败' }, { status: 500 });
   }
-}
+
+    },
+    'settings_read'
+  );

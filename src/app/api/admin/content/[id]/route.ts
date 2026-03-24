@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 // 模拟内容数据
 const mockContents = [
@@ -78,6 +79,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const contentId = params.id;
     const body = await request.json();
@@ -115,12 +119,18 @@ export async function PUT(
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const contentId = params.id;
 
@@ -150,12 +160,18 @@ export async function DELETE(
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const contentId = params.id;
 
@@ -180,4 +196,7 @@ export async function GET(
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );

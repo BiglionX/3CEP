@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { VirtualList } from '@/components/VirtualList';
 import {
   Table,
   TableBody,
@@ -25,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useOperation } from '@/hooks/use-operation';
 import { useRbacPermission } from '@/hooks/use-rbac-permission';
 import {
   Building,
@@ -89,124 +91,144 @@ export default function MultiTypeUserManagementPage() {
     total: 0,
   });
 
+  // 使用统一的加载操作 Hook
+  const loadUsersOp = useOperation({
+    successMessage: undefined, // 加载数据不显示成功提示
+    errorMessage: '加载用户数据失败',
+    showToast: false,
+  });
+
+  // 使用统一的删除操作 Hook
+  const deleteUserOp = useOperation({
+    successMessage: '用户删除成功',
+    errorMessage: '删除用户失败',
+    onSuccess: () => {
+      // 删除成功后重新加载数据
+      loadUsers();
+    },
+  });
+
   // 检查权限
   const canView = hasPermission('usermgr.view');
   const canManage = hasPermission('usermgr.manage');
 
   // 加载用户数据
   const loadUsers = async () => {
-    setLoading(true);
-    try {
-      // 构建查询参数
-      const params = new URLSearchParams({
-        page: pagination.page.toString(),
-        pageSize: pagination.pageSize.toString(),
-      });
+    await loadUsersOp.execute(async () => {
+      setLoading(true);
+      try {
+        // 构建查询参数
+        const params = new URLSearchParams({
+          page: pagination.page.toString(),
+          pageSize: pagination.pageSize.toString(),
+        });
 
-      if (filters.user_type !== 'all') {
-        params.append('user_type', filters.user_type);
-      }
-      if (filters.account_type !== 'all') {
-        params.append('account_type', filters.account_type);
-      }
-      if (filters.status !== 'all') {
-        params.append('status', filters.status);
-      }
-      if (filters.verification_status !== 'all') {
-        params.append('verification_status', filters.verification_status);
-      }
-      if (filters.search) {
-        params.append('search', filters.search);
-      }
+        if (filters.user_type !== 'all') {
+          params.append('user_type', filters.user_type);
+        }
+        if (filters.account_type !== 'all') {
+          params.append('account_type', filters.account_type);
+        }
+        if (filters.status !== 'all') {
+          params.append('status', filters.status);
+        }
+        if (filters.verification_status !== 'all') {
+          params.append('verification_status', filters.verification_status);
+        }
+        if (filters.search) {
+          params.append('search', filters.search);
+        }
 
-      // TODO: 替换为实际 API 调用
-      // const response = await fetch(`/api/admin/user-management?${params}`);
-      // const data = await response.json();
+        // TODO: 替换为实际 API 调用
+        // const response = await fetch(`/api/admin/user-management?${params}`);
+        // const data = await response.json();
 
-      // 模拟数据
-      const mockData: UserAccount[] = [
-        {
-          id: '1',
-          user_id: 'user-1',
-          user_type: 'individual',
-          account_type: 'individual',
-          email: 'user1@example.com',
-          phone: '13800138001',
-          status: 'active',
-          is_verified: true,
-          verification_status: 'verified',
-          subscription_plan: 'free',
-          role: 'viewer',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: '2',
-          user_id: 'user-2',
-          user_type: 'repair_shop',
-          account_type: 'repair_shop',
-          email: 'shop1@example.com',
-          phone: '13800138002',
-          status: 'active',
-          is_verified: true,
-          verification_status: 'verified',
-          subscription_plan: 'professional',
-          role: 'shop_manager',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: '3',
-          user_id: 'user-3',
-          user_type: 'enterprise',
-          account_type: 'factory',
-          email: 'factory1@example.com',
-          phone: '13800138003',
-          status: 'pending',
-          is_verified: false,
-          verification_status: 'under_review',
-          subscription_plan: 'enterprise',
-          role: 'manager',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: '4',
-          user_id: 'user-4',
-          user_type: 'foreign_trade_company',
-          account_type: 'foreign_trade',
-          email: 'trade1@example.com',
-          phone: '13800138004',
-          status: 'active',
-          is_verified: true,
-          verification_status: 'verified',
-          subscription_plan: 'enterprise',
-          role: 'manager',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ];
+        // 模拟数据
+        const mockData: UserAccount[] = [
+          {
+            id: '1',
+            user_id: 'user-1',
+            user_type: 'individual',
+            account_type: 'individual',
+            email: 'user1@example.com',
+            phone: '13800138001',
+            status: 'active',
+            is_verified: true,
+            verification_status: 'verified',
+            subscription_plan: 'free',
+            role: 'viewer',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+          {
+            id: '2',
+            user_id: 'user-2',
+            user_type: 'repair_shop',
+            account_type: 'repair_shop',
+            email: 'shop1@example.com',
+            phone: '13800138002',
+            status: 'active',
+            is_verified: true,
+            verification_status: 'verified',
+            subscription_plan: 'professional',
+            role: 'shop_manager',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+          {
+            id: '3',
+            user_id: 'user-3',
+            user_type: 'enterprise',
+            account_type: 'factory',
+            email: 'factory1@example.com',
+            phone: '13800138003',
+            status: 'pending',
+            is_verified: false,
+            verification_status: 'under_review',
+            subscription_plan: 'enterprise',
+            role: 'manager',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+          {
+            id: '4',
+            user_id: 'user-4',
+            user_type: 'foreign_trade_company',
+            account_type: 'foreign_trade',
+            email: 'trade1@example.com',
+            phone: '13800138004',
+            status: 'active',
+            is_verified: true,
+            verification_status: 'verified',
+            subscription_plan: 'enterprise',
+            role: 'manager',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+        ];
 
-      setUsers(mockData);
-      setPagination(prev => ({ ...prev, total: mockData.length }));
+        setUsers(mockData);
+        setPagination(prev => ({ ...prev, total: mockData.length }));
 
-      // 模拟统计数据
-      setStats({
-        total_users: 4,
-        by_type: {
-          individual: 1,
-          repair_shop: 1,
-          enterprise: 1,
-          foreign_trade: 1,
-        },
-      });
-    } catch (error) {
-      console.error('加载用户数据失败:', error);
-    } finally {
-      setLoading(false);
-    }
+        // 模拟统计数据
+        setStats({
+          total_users: 4,
+          by_type: {
+            individual: 1,
+            repair_shop: 1,
+            enterprise: 1,
+            foreign_trade: 1,
+          },
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console -- 记录数据加载失败的错误信息
+        console.error('加载用户数据失败:', error);
+        throw error; // 让 useOperation 捕获错误
+      } finally {
+        setLoading(false);
+      }
+    });
   };
-
   // 加载统计数据
   const loadStats = async () => {
     try {
@@ -215,6 +237,7 @@ export default function MultiTypeUserManagementPage() {
       // const data = await response.json();
       // setStats(data);
     } catch (error) {
+      // eslint-disable-next-line no-console -- 记录统计数据加载失败的错误信息
       console.error('加载统计数据失败:', error);
     }
   };
@@ -386,7 +409,7 @@ export default function MultiTypeUserManagementPage() {
             统一管理 C 端用户、维修店、贸易公司和企业用户
           </p>
         </div>
-        <Button onClick={loadUsers} disabled={loading}>
+        <Button onClick={() => loadUsers()} disabled={loading}>
           <RefreshCw
             className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`}
           />
@@ -609,59 +632,78 @@ export default function MultiTypeUserManagementPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  users.map(user => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {getUserTypeIcon(user.user_type)}
-                          <span>{getUserTypeLabel(user.user_type)}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {getAccountTypeLabel(user.account_type)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          <div>{user.email}</div>
-                          {user.phone && (
-                            <div className="text-gray-500 text-xs">
-                              {user.phone}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{user.role}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        {getSubscriptionBadge(user.subscription_plan)}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(user.status)}</TableCell>
-                      <TableCell>
-                        {getVerificationBadge(
-                          user.is_verified,
-                          user.verification_status
-                        )}
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-500">
-                        {new Date(user.created_at).toLocaleDateString('zh-CN')}
-                      </TableCell>
-                      {canManage && (
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit2 className="w-4 h-4" />
-                            </Button>
+                  // SCROLL-002: 使用虚拟滚动优化性能
+                  <VirtualList
+                    items={users}
+                    itemSize={60} // 每行高度约 60px
+                    height={Math.min(600, users.length * 60)} // 最大 600px 高度
+                    renderItem={(user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {getUserTypeIcon(user.user_type)}
+                            <span>{getUserTypeLabel(user.user_type)}</span>
                           </div>
                         </TableCell>
-                      )}
-                    </TableRow>
-                  ))
+                        <TableCell>
+                          <Badge variant="outline">
+                            {getAccountTypeLabel(user.account_type)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            <div>{user.email}</div>
+                            {user.phone && (
+                              <div className="text-gray-500 text-xs">
+                                {user.phone}
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">{user.role}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          {getSubscriptionBadge(user.subscription_plan)}
+                        </TableCell>
+                        <TableCell>{getStatusBadge(user.status)}</TableCell>
+                        <TableCell>
+                          {getVerificationBadge(
+                            user.is_verified,
+                            user.verification_status
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-500">
+                          {new Date(user.created_at).toLocaleDateString('zh-CN')}
+                        </TableCell>
+                        {canManage && (
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button variant="ghost" size="sm">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="sm">
+                                <Edit2 className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  deleteUserOp.execute(async () => {
+                                    // eslint-disable-next-line no-console -- 临时日志：删除用户操作（待替换为实际 API 调用）
+                                    console.log('删除用户:', user.id);
+                                  })
+                                }
+                                disabled={deleteUserOp.isLoading}
+                              >
+                                <XCircle className="w-4 h-4 text-red-500" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    )}
+                  />
                 )}
               </TableBody>
             </Table>

@@ -1,16 +1,15 @@
 'use client';
 
-import React, {
+import { useAuth } from '@/hooks/use-auth';
+import { AuthService, UserRole as AuthUserRole } from '@/lib/auth-service';
+import { supabase } from '@/lib/supabase';
+import {
   createContext,
+  ReactNode,
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { AuthService } from '@/lib/auth-service';
-import { UserRole as AuthUserRole } from '@/lib/auth-service';
-import { supabase } from '@/lib/supabase';
 
 interface UserContextType {
   user: any;
@@ -40,16 +39,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 从cookie或localStorage读取mock token
+  // 从 cookie 或 localStorage 读取 mock token
   const getMockToken = () => {
-    // 检查cookie
+    // 检查 cookie
     if (typeof document !== 'undefined') {
       const cookieMatch = document.cookie.match(/mock-token=([^;]+)/);
       if (cookieMatch) {
         return cookieMatch[1];
       }
 
-      // 检查localStorage
+      // 检查 localStorage
       const localStorageToken = localStorage.getItem('mock-token');
       if (localStorageToken) {
         return localStorageToken;
@@ -59,10 +58,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return null;
   };
 
-  // 解析mock token获取用户信息
+  // 解析 mock token 获取用户信息
   const parseMockToken = (token: string) => {
     try {
-      // 简单的token解析（实际项目中应该使用JWT解析?      const parts = token.split('_');
+      // 简单的 token 解析（实际项目中应该使用 JWT 解析）
+      const parts = token.split('_');
       if (parts.length >= 3) {
         return {
           id: parts[1],
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       return null;
     } catch (error) {
-      console.error('解析mock token失败:', error);
+      console.error('解析 mock token 失败:', error);
       return null;
     }
   };
@@ -90,7 +90,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const sessionData = await sessionResponse.json();
 
         if (sessionData.isAuthenticated) {
-          // 使用 session/me 接口返回的数?          setUser(sessionData.user);
+          // 使用 session/me 接口返回的数据
+          setUser(sessionData.user);
           setRoles(sessionData.roles);
           setTenantId(sessionData.tenantId);
           return;
@@ -108,7 +109,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             ...adminUserInfo,
           });
           setRoles([adminUserInfo.role as AuthUserRole]);
-          // 从user_tenants表获取租户信?          const { data: userTenants } = await supabase
+          // 从 user_tenants 表获取租户信息
+          const { data: userTenants } = await supabase
             .from('user_tenants')
             .select('tenant_id')
             .eq('user_id', adminUserInfo.user_id)
@@ -117,12 +119,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           setTenantId(userTenants?.[0]?.tenant_id || null);
         } else {
-          // 普通用?          setUser(supabaseUser);
+          // 普通用户
+          setUser(supabaseUser);
           setRoles(['viewer']);
           setTenantId(null);
         }
       } else {
-        // 检查mock token
+        // 检查 mock token
         const mockToken = getMockToken();
         if (mockToken) {
           const mockUser = parseMockToken(mockToken);
@@ -145,12 +148,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  // 权限检查方?- �?rbac.json 保持一?  const hasPermission = (permission: string): boolean => {
+  // 权限检查方法 - 与 rbac.json 保持一致
+  const hasPermission = (permission: string): boolean => {
     if (!user) return false;
 
-    // 管理员拥有所有权?    if (roles.includes('admin')) return true;
+    // 管理员拥有所有权
+    if (roles.includes('admin')) return true;
 
-    // 使用标准?RBAC 权限映射
+    // 使用标准 RBAC 权限映射
     const rolePermissions: Record<string, string[]> = {
       admin: [
         'dashboard_read',
@@ -261,7 +266,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     await loadUserInfo();
   };
 
-  // 监听认证状态变?  useEffect(() => {
+  // 监听认证状态变化
+  useEffect(() => {
     loadUserInfo();
   }, [supabaseUser]);
 
@@ -280,7 +286,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
-// 自定义Hook
+// 自定义 Hook
 export function useUser() {
   const context = useContext(UserContext);
   if (context === undefined) {
@@ -289,7 +295,7 @@ export function useUser() {
   return context;
 }
 
-// Mock token设置工具函数
+// Mock token 设置工具函数
 export const setMockToken = (
   userId: string,
   role: AuthUserRole,
@@ -297,16 +303,16 @@ export const setMockToken = (
 ) => {
   const token = `mock_${userId}_${role}_${tenantId || 'default'}`;
 
-  // 设置cookie
+  // 设置 cookie
   if (typeof document !== 'undefined') {
     document.cookie = `mock-token=${token}; path=/; max-age=3600`;
 
-    // 设置localStorage
+    // 设置 localStorage
     localStorage.setItem('mock-token', token);
   }
 };
 
-// 清除mock token
+// 清除 mock token
 export const clearMockToken = () => {
   if (typeof document !== 'undefined') {
     document.cookie =

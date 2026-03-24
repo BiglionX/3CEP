@@ -5,6 +5,7 @@
 
 'use client';
 
+import { supabase } from '@/lib/supabase';
 import {
   AlertCircle,
   Bot,
@@ -21,7 +22,6 @@ import {
   XCircle,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
 
 interface Agent {
   id: string;
@@ -60,6 +60,13 @@ export default function AgentsPage() {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [playgroundInput, setPlaygroundInput] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    configuration: '{}',
+    status: 'draft' as 'active' | 'inactive' | 'draft',
+  });
 
   useEffect(() => {
     loadAgents();
@@ -219,6 +226,95 @@ export default function AgentsPage() {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('zh-CN');
+  };
+
+  const handleCreateAgent = async () => {
+    try {
+      setCreating(true);
+
+      // 验证必填字段
+      if (!formData.name.trim()) {
+        alert('请输入智能体名称');
+        return;
+      }
+
+      // 验证配置 JSON 格式
+      let config;
+      try {
+        config = JSON.parse(formData.configuration);
+      } catch (error) {
+        alert('配置 JSON 格式不正确，请检查');
+        return;
+      }
+
+      // 调用创建 API
+      const response = await fetch('/api/agents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          description: formData.description.trim() || null,
+          configuration: config,
+          status: formData.status,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || '创建失败');
+      }
+
+      const createdAgent = result.data;
+
+      // 创建版本记录（agent_versions 表）
+      try {
+        const versionResponse = await fetch('/api/agent-versions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            agent_id: createdAgent.id,
+            version: 'v1.0.0',
+            configuration: config,
+            changelog: '初始版本',
+            is_current: true,
+          }),
+        });
+
+        if (!versionResponse.ok) {
+          console.warn('创建版本记录失败，但智能体已创建成功');
+        }
+      } catch (versionError) {
+        console.warn('创建版本记录时出错:', versionError);
+        // 版本记录创建失败不影响整体流程
+      }
+
+      // 初始化使用计数器（usage_count 已经在创建时默认为 0，这里可以显式更新）
+      try {
+        await fetch(`/api/agents/${createdAgent.id}/initialize-usage`, {
+          method: 'POST',
+        });
+      } catch (usageError) {
+        console.warn('初始化使用计数器失败，但智能体已创建成功');
+      }
+
+      // 创建成功后刷新列表
+      alert('智能体创建成功！');
+      setShowCreateModal(false);
+      // 重置表单
+      setFormData({
+        name: '',
+        description: '',
+        configuration: '{}',
+        status: 'draft',
+      });
+      await loadAgents();
+    } catch (error: any) {
+      console.error('创建智能体失败:', error);
+      alert(`创建失败：${error.message}`);
+    } finally {
+      setCreating(false);
+    }
   };
 
   if (isLoading) {
@@ -548,8 +644,13 @@ export default function AgentsPage() {
                 </label>
                 <input
                   type="text"
+                  value={formData.name}
+                  onChange={e =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="输入智能体名称"
+                  disabled={creating}
                 />
               </div>
 
@@ -559,8 +660,13 @@ export default function AgentsPage() {
                 </label>
                 <textarea
                   rows={3}
+                  value={formData.description}
+                  onChange={e =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="描述智能体的用途和功能"
+                  disabled={creating}
                 />
               </div>
 
@@ -570,8 +676,13 @@ export default function AgentsPage() {
                 </label>
                 <textarea
                   rows={6}
+                  value={formData.configuration}
+                  onChange={e =>
+                    setFormData({ ...formData, configuration: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
                   placeholder='{ "model": "gpt-4", "temperature": 0.7, "max_tokens": 1000 }'
+                  disabled={creating}
                 />
               </div>
 
@@ -579,7 +690,17 @@ export default function AgentsPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   状
                 </label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <select
+                  value={formData.status}
+                  onChange={e =>
+                    setFormData({
+                      ...formData,
+                      status: e.target.value as 'active' | 'inactive' | 'draft',
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={creating}
+                >
                   <option value="draft">草稿</option>
                   <option value="active">激活</option>
                   <option value="inactive">未激活</option>
@@ -589,19 +710,55 @@ export default function AgentsPage() {
 
             <div className="flex justify-end space-x-3 mt-6">
               <button
-                onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                type="button"
+                onClick={() => {
+                  setShowCreateModal(false);
+                  // 重置表单
+                  setFormData({
+                    name: '',
+                    description: '',
+                    configuration: '{}',
+                    status: 'draft',
+                  });
+                }}
+                disabled={creating}
+                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
               >
                 取消
               </button>
               <button
-                onClick={() => {
-                  // 这里应该实现创建智能体的逻辑
-                  setShowCreateModal(false);
-                }}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors"
+                type="button"
+                onClick={handleCreateAgent}
+                disabled={creating}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center"
               >
-                创建新智能体
+                {creating ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0112 15c2.34 0 4.47-.881 6.08-2.32l-1.414-1.414A6 6 0 0012 17c-1.657 0-3.183-.674-4.314-1.786z"
+                      ></path>
+                    </svg>
+                    创建中...
+                  </>
+                ) : (
+                  '创建新智能体'
+                )}
               </button>
             </div>
           </div>

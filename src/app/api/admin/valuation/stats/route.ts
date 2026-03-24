@@ -1,5 +1,6 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 // 鍒濆鍖朣upabase瀹㈡埛const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,6 +11,9 @@ import { createClient } from '@supabase/supabase-js';
  * GET /api/admin/valuation/stats
  * 鑾峰彇板€肩粺璁′俊 */
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period') || '7d'; // 榛樿鏈€
@@ -166,5 +170,8 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'valuation_read'
+  );
 

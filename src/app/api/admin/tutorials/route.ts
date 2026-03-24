@@ -1,5 +1,6 @@
-﻿import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 // 鍒濆鍖朣upabase瀹㈡埛绔紙浣跨敤鏈嶅姟瑙掕壊瀵嗛挜const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,6 +9,9 @@ import { NextResponse } from 'next/server';
 
 // GET /api/admin/tutorials - 绠＄悊鍛樿幏鍙栨暀绋嬪垪琛紙鍖呭惈鎵€鏈夌姸鎬侊級
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // 楠岃瘉绠＄悊鍛樻潈    const authHeader = request.headers.get('authorization');
     if (!authHeader.startsWith('Bearer ')) {
@@ -102,9 +106,15 @@ export async function GET(request: Request) {
     console.error('绠＄悊鍛楢PI閿欒:', error);
     return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
-}
+
+    },
+    'content_read'
+  );
 
 // POST /api/admin/tutorials - 绠＄悊鍛樺垱寤烘暀export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // 楠岃瘉绠＄悊鍛樻潈    const authHeader = request.headers.get('authorization');
     if (!authHeader.startsWith('Bearer ')) {
@@ -183,5 +193,8 @@ export async function GET(request: Request) {
     console.error('绠＄悊鍛楢PI閿欒:', error);
     return NextResponse.json({ error: '鏈嶅姟鍣ㄥ唴閮ㄩ敊 }, { status: 500 });
   }
-}
+
+    },
+    'content_read'
+  );
 

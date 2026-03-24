@@ -1,10 +1,14 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { cookies } from 'next/headers';
 import { Database } from '@/lib/database.types';
 import * as XLSX from 'xlsx';
 
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -189,10 +193,16 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'parts_read'
+  );
 
 // 鎻愪緵Excel妯℃澘涓嬭浇
 export async function GET() {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     // 鍒涘缓妯℃澘鏁版嵁
     const templateData = [
@@ -236,5 +246,8 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+
+    },
+    'parts_read'
+  );
 

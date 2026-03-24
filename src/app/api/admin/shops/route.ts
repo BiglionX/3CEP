@@ -1,3 +1,5 @@
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
+
 ﻿import { NextRequest, NextResponse } from 'next/server';
 
 // 妯℃嫙搴楅摵鏁版嵁
@@ -95,6 +97,9 @@ const mockShops = [
 ];
 
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -154,5 +159,8 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'shops_read'
+  );
 

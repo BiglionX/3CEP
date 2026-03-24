@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -9,6 +10,9 @@ const supabase = createClient(
 
 // 创建草稿文章
 export async function POST(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { linkId, title, content, summary, coverImageUrl, tags, category } =
       await request.json();
@@ -91,10 +95,16 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );
 
 // 获取文章分类列表
 export async function GET() {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { data: categories, error } = await supabase
       .from('article_categories')
@@ -121,4 +131,7 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );

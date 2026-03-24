@@ -1,19 +1,8 @@
 ﻿import { createClient } from '@supabase/supabase-js';
-import {
-  MLPredictionError,
-  ModelAPIError,
-  DataCollectionError,
-  PromptGenerationError,
-  ResultParsingError,
-  StorageError,
-  withRetry,
-  MonitorPerformance,
-  ErrorHandler,
-  logger,
-  metrics,
-} from './ml-error-handling';
+import { ErrorHandler, logger, metrics, withRetry } from './ml-error-handling';
 
-// 初始化Supabase客户?const supabase = createClient(
+// 初始化 Supabase 客户端
+const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -38,7 +27,7 @@ export class MLPredictionService {
     const startTime = Date.now();
     const traceId = Math.random().toString(36).substring(2, 15);
 
-    logger.info('开始需求预?, {
+    logger.info('开始需求预测', {
       traceId,
       productId,
       warehouseId,
@@ -52,13 +41,15 @@ export class MLPredictionService {
         { traceId, step: 'collectHistoricalData' }
       );
 
-      // 2. 生成提示词模?      const promptTemplate = this.generateDemandPromptTemplate(
+      // 2. 生成提示词模板
+      const promptTemplate = this.generateDemandPromptTemplate(
         historicalData,
         horizonDays,
         options
       );
 
-      // 3. 调用大模型获取预测结?      const modelResponse = await ErrorHandler.handleAsyncError(
+      // 3. 调用大模型获取预测结果
+      const modelResponse = await ErrorHandler.handleAsyncError(
         () =>
           withRetry(() => this.callLargeModel(promptTemplate, 'demand'), {
             maxAttempts: 3,
@@ -68,7 +59,8 @@ export class MLPredictionService {
         { traceId, step: 'callLargeModel' }
       );
 
-      // 4. 解析和验证结?      const parsedResult = this.parseDemandPrediction(
+      // 4. 解析和验证结果
+      const parsedResult = this.parseDemandPrediction(
         modelResponse,
         horizonDays
       );
@@ -90,7 +82,7 @@ export class MLPredictionService {
       const duration = Date.now() - startTime;
       metrics.recordPrediction('demand', true, duration);
 
-      logger.info('需求预测完?, {
+      logger.info('需求预测完成', {
         traceId,
         durationMs: duration,
         totalPredictions: parsedResult.predictions.length,
@@ -102,7 +94,7 @@ export class MLPredictionService {
       metrics.recordPrediction('demand', false, duration);
 
       logger.error(
-        '需求预测失?,
+        '需求预测失败',
         {
           traceId,
           durationMs: duration,
@@ -118,13 +110,16 @@ export class MLPredictionService {
         warehouseId,
         horizonDays,
       });
+      throw error; // 确保返回
     }
   }
 
   /**
-   * 价格预测主入?   * @param productId 产品ID
+   * 价格预测主入口
+   * @param productId 产品 ID
    * @param platform 平台（可选）
-   * @param horizonDays 预测周期（天?   * @param options 预测选项
+   * @param horizonDays 预测周期（天）
+   * @param options 预测选项
    */
   async predictPrice(
     productId: string,
@@ -140,15 +135,18 @@ export class MLPredictionService {
         horizonDays
       );
 
-      // 2. 生成提示词模?      const promptTemplate = this.generatePricePromptTemplate(
+      // 2. 生成提示词模板
+      const promptTemplate = this.generatePricePromptTemplate(
         historicalData,
         horizonDays,
         options
       );
 
-      // 3. 调用大模型获取预测结?      const modelResponse = await this.callLargeModel(promptTemplate, 'price');
+      // 3. 调用大模型获取预测结果
+      const modelResponse = await this.callLargeModel(promptTemplate, 'price');
 
-      // 4. 解析和验证结?      const parsedResult = this.parsePricePrediction(
+      // 4. 解析和验证结果
+      const parsedResult = this.parsePricePrediction(
         modelResponse,
         horizonDays
       );
@@ -173,7 +171,8 @@ export class MLPredictionService {
   }
 
   /**
-   * 收集历史销售数?   */
+   * 收集历史销售数据
+   */
   private async collectHistoricalData(
     productId: string,
     warehouseId: string,
@@ -278,7 +277,7 @@ export class MLPredictionService {
         })) || []
       );
     } catch (error) {
-      console.warn('获取历史价格数据失败，使用模拟数?', error);
+      console.warn('获取历史价格数据失败，使用模拟数据', error);
       return this.generateMockPriceData(productId, platform, daysBack);
     }
   }
@@ -291,53 +290,55 @@ export class MLPredictionService {
     horizonDays: number,
     options: PredictionOptions
   ): string {
-    const recentData = historicalData.slice(-30); // 最?0天数?    const trendInfo = this.analyzeTrend(recentData);
+    const recentData = historicalData.slice(-30); // 最近 30 天数据
+    const trendInfo = this.analyzeTrend(recentData);
     const seasonality = this.detectSeasonality(historicalData);
 
     return `
-你是一个专业的供应链预测专家。请基于以下历史销售数据，预测未来${horizonDays}天的产品需求?
-【历史销售数据?${recentData
-  .map(
-    d =>
-      `${d.date.toISOString().split('T')[0]}: 销?{d.quantity}�? 收入¥${d.revenue.toFixed(2)}`
-  )
-  .join('\n')}
+你是一个专业的供应链预测专家。请基于以下历史销售数据，预测未来${horizonDays}天的产品需求？
+【历史销售数据】${recentData
+      .map(
+        d =>
+          `${d.date.toISOString().split('T')[0]}: 销量${d.quantity}件，收入￥${d.revenue.toFixed(2)}`
+      )
+      .join('\n')}
 
-【趋势分析?- 整体趋势: ${trendInfo.direction} (${trendInfo.slope > 0 ? '+' : ''}${(trendInfo.slope * 100).toFixed(2)}%/�?
-- 波动? ${trendInfo.volatility.toFixed(2)}
+【趋势分析】- 整体趋势：${trendInfo.direction} (${trendInfo.slope > 0 ? '+' : ''}${(trendInfo.slope * 100).toFixed(2)}%/天)
+- 波动率：${trendInfo.volatility.toFixed(2)}
 
-【季节性特征?${seasonality.patterns.map(p => `- ${p.period}: ${p.strength > 0.7 ? '�? : p.strength > 0.4 ? '中等' : '�?}季节性`).join('\n')}
+【季节性特征】${seasonality.patterns.map(p => `- ${p.period}: ${p.strength > 0.7 ? '强' : p.strength > 0.4 ? '中等' : '弱'}季节性`).join('\n')}
 
-【外部因素考虑?- 预测周期: ${horizonDays}�?- 置信水平: 95%
-${options.seasonalFactors ? `- 季节性因? ${options.seasonalFactors.join(', ')}` : ''}
-${options.externalEvents ? `- 外部事件: ${options.externalEvents.join(', ')}` : ''}
+【外部因素考虑】- 预测周期：${horizonDays}天
+- 置信水平：95%
+${options.seasonalFactors ? `- 季节性因素：${options.seasonalFactors.join(', ')}` : ''}
+${options.externalEvents ? `- 外部事件：${options.externalEvents.join(', ')}` : ''}
 
-请按照以下JSON格式返回预测结果?{
+请按照以下 JSON 格式返回预测结果：{
   "predictedDemand": {
     "daily": [
       {
         "date": "YYYY-MM-DD",
-        "quantity": 数量(int),
-        "confidence": 置信?float, 0-1),
-        "lowerBound": 下限(int),
-        "upperBound": 上限(int)
+        "quantity": 数量 (int),
+        "confidence": 置信度 (float, 0-1),
+        "lowerBound": 下限 (int),
+        "upperBound": 上限 (int)
       }
     ],
     "summary": {
-      "totalQuantity": 总预测量(int),
-      "averageDaily": 日均预测?float),
+      "totalQuantity": 总预测量 (int),
+      "averageDaily": 日均预测 (float),
       "trend": "increasing|decreasing|stable",
-      "confidence": 整体置信?float, 0-1)
+      "confidence": 整体置信度 (float, 0-1)
     }
   },
   "analysis": {
-    "trendFactors": ["影响因素1", "影响因素2"],
-    "riskFactors": ["风险因素1", "风险因素2"],
-    "recommendations": ["建议1", "建议2"]
+    "trendFactors": ["影响因素 1", "影响因素 2"],
+    "riskFactors": ["风险因素 1", "风险因素 2"],
+    "recommendations": ["建议 1", "建议 2"]
   }
 }
 
-严格按照上述格式返回，不要包含其他内容?`;
+严格按照上述格式返回，不要包含其他内容`;
   }
 
   /**
@@ -353,11 +354,11 @@ ${options.externalEvents ? `- 外部事件: ${options.externalEvents.join(', ')}
     return `
 你是一个专业的价格分析师。请基于以下历史价格数据，预测未?{horizonDays}天的产品价格走势?
 【历史价格数据?${recentData
-  .map(
-    d =>
-      `${d.date.toISOString().split('T')[0]}: ¥${d.price.toFixed(2)} (${d.platform}) - 销?{d.volume}件`
-  )
-  .join('\n')}
+      .map(
+        d =>
+          `${d.date.toISOString().split('T')[0]}: ¥${d.price.toFixed(2)} (${d.platform}) - 销?{d.volume}件`
+      )
+      .join('\n')}
 
 【价格统计?- 当前价格: ¥${priceStats.current.toFixed(2)}
 - 平均价格: ¥${priceStats.average.toFixed(2)}
@@ -426,7 +427,7 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
           messages: [
             {
               role: 'system',
-              content: `你是一个专业的${predictionType === 'demand' ? '供应链需? : '价格'}预测专家，擅长分析历史数据并给出准确的预测。`,
+              content: `你是一个专业的${predictionType === 'demand' ? '供应链需求' : '价格'}预测专家，擅长分析历史数据并给出准确的预测。`,
             },
             {
               role: 'user',
@@ -447,8 +448,9 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
       const result = await response.json();
       return result.choices[0].message.content;
     } catch (error) {
-      console.error('大模型API调用失败:', error);
-      // 降级到本地预测算?      return await this.fallbackToLocalPrediction(prompt, predictionType);
+      console.error('大模型API 调用失败:', error);
+      // 降级到本地预测算法
+      return await this.fallbackToLocalPrediction(prompt, predictionType);
     }
   }
 
@@ -491,15 +493,16 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
           },
         },
         analysis: {
-          trendFactors: ['历史趋势稳定', '季节性因?],
-          riskFactors: ['市场需求波?, '供应链中断风?],
+          trendFactors: ['历史趋势稳定', '季节性因素'],
+          riskFactors: ['市场需求波动', '供应链中断风险'],
           recommendations: ['维持当前库存水平', '关注季节性促销活动'],
         },
       });
     } else {
       const dailyPredictions = futureDates.map(date => ({
         date,
-        price: 95 + Math.random() * 10, // 95-105�?        confidence: 0.8,
+        price: 95 + Math.random() * 10, // 95-105 元
+        confidence: 0.8,
         lowerBound: 90,
         upperBound: 110,
         volumeImpact: '中等影响',
@@ -510,12 +513,12 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
         summary: {
           priceTrend: '稳定',
           expectedChange: 2.5,
-          volatilityOutlook: '�?,
+          volatilityOutlook: '中',
           confidence: 0.8,
         },
         marketInsights: {
           pricingStrategy: '跟随市场价格',
-          timingOpportunities: ['月末促销?, '节假日备?],
+          timingOpportunities: ['月末促销', '节假日备货'],
           competitiveActions: ['监控主要竞争对手价格', '适时调整促销策略'],
         },
       });
@@ -533,12 +536,13 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
 
       // 验证必要字段
       if (!result?.daily || !result?.summary) {
-        throw new Error('预测结果格式不正?);
+        throw new Error('预测结果格式不正确');
       }
 
-      // 验证数据完整?      if (result.predictedDemand.daily.length !== horizonDays) {
+      // 验证数据完整性
+      if (result.predictedDemand.daily.length !== horizonDays) {
         console.warn(
-          `预测天数不匹? 期望${horizonDays}天，实际${result.predictedDemand.daily.length}天`
+          `预测天数不匹配：期望${horizonDays}天，实际${result.predictedDemand.daily.length}天`
         );
       }
 
@@ -578,7 +582,7 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
         },
       };
     } catch (error) {
-      console.error('解析需求预测结果失?', error);
+      console.error('解析需求预测结果失败', error);
       // 返回默认结果
       return this.generateDefaultDemandPrediction(horizonDays);
     }
@@ -595,7 +599,7 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
       const result = JSON.parse(response);
 
       if (!result.predictedPrices || !result.summary) {
-        throw new Error('价格预测结果格式不正?);
+        throw new Error('价格预测结果格式不正确');
       }
 
       return {
@@ -678,8 +682,9 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
     };
   }
 
-  private detectSeasonality(data: HistoricalSalesData[]) {
-    // 简化的季节性检?    return {
+  private detectSeasonality(_data: HistoricalSalesData[]) {
+    // 简化的季节性检测
+    return {
       patterns: [
         { period: 'weekly', strength: 0.6 },
         { period: 'monthly', strength: 0.3 },
@@ -777,7 +782,7 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
       },
       analysis: {
         trendFactors: ['历史数据稳定'],
-        riskFactors: ['市场需求可能波?],
+        riskFactors: ['市场需求可能波动'],
         recommendations: ['维持正常库存水平'],
       },
     };
@@ -796,7 +801,7 @@ ${options.competitorActions ? `- 竞争对手行为: ${options.competitorActions
       summary: {
         priceTrend: '稳定',
         expectedChange: 0,
-        volatilityOutlook: '�?,
+        volatilityOutlook: '中',
         confidence: 0.8,
       },
       marketInsights: {
@@ -872,7 +877,7 @@ interface PricePrediction {
 interface PriceSummary {
   priceTrend: '上涨' | '下跌' | '稳定';
   expectedChange: number;
-  volatilityOutlook: '�? | '�? | '�?;
+  volatilityOutlook: '高' | '中' | '低';
   confidence: number;
 }
 

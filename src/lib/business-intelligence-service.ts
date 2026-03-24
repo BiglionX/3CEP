@@ -1,4 +1,4 @@
-interface KPIData {
+export interface KPIData {
   name: string;
   value: number;
   target: number;
@@ -7,7 +7,7 @@ interface KPIData {
   unit: string;
 }
 
-interface ExecutiveDashboard {
+export interface ExecutiveDashboard {
   kpis: KPIData[];
   revenueMetrics: {
     monthlyRevenue: number;
@@ -42,18 +42,18 @@ export class BusinessIntelligenceService {
           target: 1800000,
           trend: this.getRandomTrend(),
           change: this.generateChangePercentage(-10, 25),
-          unit: '�?,
+          unit: '元',
         },
         {
-          name: '活跃用户?,
+          name: '活跃用户数',
           value: this.generateRealisticValue(85000, 120000),
           target: 100000,
           trend: this.getRandomTrend(),
           change: this.generateChangePercentage(-5, 30),
-          unit: '�?,
+          unit: '人',
         },
         {
-          name: '转化?,
+          name: '转化率',
           value: this.generateRealisticValue(12, 25),
           target: 20,
           trend: this.getRandomTrend(),
@@ -61,12 +61,12 @@ export class BusinessIntelligenceService {
           unit: '%',
         },
         {
-          name: '客户满意?,
+          name: '客户满意度',
           value: this.generateRealisticValue(85, 95),
           target: 90,
           trend: this.getRandomTrend(),
           change: this.generateChangePercentage(-2, 5),
-          unit: '�?,
+          unit: '分',
         },
       ],
       revenueMetrics: {
@@ -132,16 +132,16 @@ export class BusinessIntelligenceService {
       marketPosition: competitors.find(c => c.name === '我们')!,
       competitors,
       competitiveAdvantages: [
-        '技术创新领?,
+        '技术创新领先',
         '用户体验优秀',
         '成本控制有效',
         '品牌认知度高',
       ],
       marketOpportunities: [
         '新兴市场拓展',
-        '垂直领域深?,
+        '垂直领域深耕',
         '国际化布局',
-        '生态合作机?,
+        '生态合作机会',
       ],
     };
   }
@@ -156,17 +156,17 @@ export class BusinessIntelligenceService {
         {
           category: '市场风险',
           score: this.generateRealisticValue(65, 80),
-          factors: ['竞争加剧', '需求波?, '价格压力'],
+          factors: ['竞争加剧', '需求波动', '价格压力'],
         },
         {
           category: '运营风险',
           score: this.generateRealisticValue(70, 85),
-          factors: ['供应链稳?, '技术故?, '人员流失'],
+          factors: ['供应链稳定', '技术故障', '人员流失'],
         },
         {
           category: '财务风险',
           score: this.generateRealisticValue(60, 75),
-          factors: ['现金流管?, '投资回报', '汇率波动'],
+          factors: ['现金流管理', '投资回报', '汇率波动'],
         },
         {
           category: '合规风险',
@@ -175,8 +175,8 @@ export class BusinessIntelligenceService {
         },
       ],
       mitigationStrategies: [
-        '建立多元化收入来?,
-        '加强技术研发投?,
+        '建立多元化收入来源',
+        '加强技术研发投入',
         '完善风险管理体系',
         '提升团队专业能力',
       ],
@@ -184,13 +184,15 @@ export class BusinessIntelligenceService {
   }
 
   /**
-   * 生成现实的数值（在指定范围内?   */
+   * 生成现实的数值 (在指定范围内)
+   */
   private generateRealisticValue(min: number, max: number): number {
     return Math.round(min + Math.random() * (max - min));
   }
 
   /**
-   * 生成变化百分?   */
+   * 生成变化百分比
+   */
   private generateChangePercentage(min: number, max: number): number {
     return parseFloat((min + Math.random() * (max - min)).toFixed(1));
   }

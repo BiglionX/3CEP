@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
 // 模拟内容数据
 const mockContents = [
@@ -75,6 +76,9 @@ const mockContents = [
 ];
 
 export async function GET(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -144,9 +148,15 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );
 
 export async function POST(request: NextRequest) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const body = await request.json();
 
@@ -177,4 +187,7 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );

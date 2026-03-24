@@ -1,59 +1,56 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { PortalsApprovalManager } from '@/components/portals/PortalsApprovalManager';
 import {
+  CheckCircle,
+  Close,
+  Description,
+  Image,
+  Link as LinkIcon,
+  Pending,
+  Preview,
+  Publish,
+  Refresh,
+  Search,
+  ThumbUp,
+  TrendingUp,
+  Visibility,
+} from '@mui/icons-material';
+import {
+  Alert,
+  Avatar,
   Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
   Container,
-  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  Grid,
+  IconButton,
+  InputLabel,
+  LinearProgress,
+  MenuItem,
   Paper,
+  Select,
+  Stack,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Button,
-  Chip,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Grid,
-  Card,
-  CardContent,
-  Tooltip,
-  Alert,
-  Tab,
   Tabs,
-  Avatar,
-  LinearProgress,
-  Stack,
-  Switch,
+  TextField,
+  Tooltip,
+  Typography,
 } from '@mui/material';
-import {
-  Refresh,
-  Search,
-  Visibility,
-  Edit,
-  Delete,
-  Approve,
-  Publish,
-  Preview,
-  Image,
-  Description,
-  Link as LinkIcon,
-  TrendingUp,
-  Warning,
-  CheckCircle,
-  Pending,
-  Close,
-} from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 
 // Mock 数据
 const mockPortals = [
@@ -113,7 +110,7 @@ const mockPortals = [
     user_name: '赵六',
     business_type: 'repair-shop',
     portal_name: '赵六汽修',
-    portal_description: '快速维修',质量保证',
+    portal_description: '快速维修，质量保证',
     business_links_count: 2,
     promotional_images_count: 1,
     blog_posts_count: 0,
@@ -140,7 +137,7 @@ const mockStats = {
 export default function PortalsManagementPage() {
   const [tabValue, setTabValue] = useState(0);
   const [portals, setPortals] = useState(mockPortals);
-  const [stats, setStats] = useState(mockStats);
+  const [stats] = useState(mockStats);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -298,313 +295,360 @@ export default function PortalsManagementPage() {
         </Typography>
       </Box>
 
-      {/* 统计卡片 */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="总门户数"
-            value={stats.totalPortals}
-            subtitle="本月新增: {stats.thisMonthNew}"
-            icon={Description}
-            color="primary.main"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="已发布"
-            value={stats.publishedPortals}
-            subtitle="占比 87.6%"
-            icon={Publish}
-            color="success.main"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="待审核"
-            value={stats.pendingPortals}
-            subtitle="需要处理"
-            icon={Pending}
-            color="warning.main"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="总浏览量"
-            value={stats.totalViews}
-            subtitle="分享: {stats.totalShares}"
-            icon={TrendingUp}
-            color="info.main"
-          />
-        </Grid>
-      </Grid>
+      {/* 标签页切换 */}
+      <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} sx={{ mb: 3 }}>
+        <Tab label="门户列表" />
+        <Tab label={`待审批 (${mockStats.pendingPortals})`} />
+      </Tabs>
 
-      {/* 流量统计 */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom variant="body2">
-                门户发布率
-              </Typography>
-              <Typography variant="h3" sx={{ mb: 2 }}>
-                {((stats.publishedPortals / stats.totalPortals) * 100).toFixed(
-                  1
-                )}
-                %
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={(stats.publishedPortals / stats.totalPortals) * 100}
-                sx={{ height: 10, borderRadius: 5 }}
+      {/* 门户列表标签 */}
+      {tabValue === 0 && (
+        <>
+          {/* 统计卡片 */}
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <StatCard
+                title="总门户数"
+                value={stats.totalPortals}
+                subtitle={`本月新增：${stats.thisMonthNew}`}
+                icon={Description}
+                color="primary.main"
               />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom variant="body2">
-                审核通过率
-              </Typography>
-              <Typography variant="h3" sx={{ mb: 2 }}>
-                {(
-                  (stats.publishedPortals /
-                    (stats.publishedPortals + stats.rejectedPortals)) *
-                  100
-                ).toFixed(1)}
-                %
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={
-                  (stats.publishedPortals /
-                    (stats.publishedPortals + stats.rejectedPortals)) *
-                  100
-                }
-                color="success"
-                sx={{ height: 10, borderRadius: 5 }}
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <StatCard
+                title="已发布"
+                value={stats.publishedPortals}
+                subtitle="占比 87.6%"
+                icon={Publish}
+                color="success.main"
               />
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <StatCard
+                title="待审核"
+                value={stats.pendingPortals}
+                subtitle="需要处理"
+                icon={Pending}
+                color="warning.main"
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <StatCard
+                title="总浏览量"
+                value={stats.totalViews}
+                subtitle={`分享：${stats.totalShares}`}
+                icon={TrendingUp}
+                color="info.main"
+              />
+            </Grid>
+          </Grid>
 
-      {/* 待审核警告 */}
-      {stats.pendingPortals > 0 && (
-        <Alert severity="warning" sx={{ mb: 3 }}>
-          <Typography variant="body2">
-            有 <strong>{stats.pendingPortals}</strong> 个门户待审核，请及时处理
-          </Typography>
-        </Alert>
+          {/* 流量统计 */}
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Card>
+                <CardContent>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="body2"
+                  >
+                    门户发布率
+                  </Typography>
+                  <Typography variant="h3" sx={{ mb: 2 }}>
+                    {(
+                      (stats.publishedPortals / stats.totalPortals) *
+                      100
+                    ).toFixed(1)}
+                    %
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={(stats.publishedPortals / stats.totalPortals) * 100}
+                    sx={{ height: 10, borderRadius: 5 }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Card>
+                <CardContent>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="body2"
+                  >
+                    审核通过率
+                  </Typography>
+                  <Typography variant="h3" sx={{ mb: 2 }}>
+                    {(
+                      (stats.publishedPortals /
+                        (stats.publishedPortals + stats.rejectedPortals)) *
+                      100
+                    ).toFixed(1)}
+                    %
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={
+                      (stats.publishedPortals /
+                        (stats.publishedPortals + stats.rejectedPortals)) *
+                      100
+                    }
+                    color="success"
+                    sx={{ height: 10, borderRadius: 5 }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          {/* 待审核警告 */}
+          {stats.pendingPortals > 0 && (
+            <Alert severity="warning" sx={{ mb: 3 }}>
+              <Typography variant="body2">
+                有 <strong>{stats.pendingPortals}</strong>{' '}
+                个门户待审核，请及时处理
+              </Typography>
+            </Alert>
+          )}
+
+          {/* 过滤和搜索 */}
+          <Paper sx={{ p: 2, mb: 2 }}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid size={{ xs: 12, md: 3 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  placeholder="搜索门户或用户"
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <Search sx={{ mr: 1, color: 'text.secondary' }} />
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid size={{ xs: 6, md: 2 }}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>审核状态</InputLabel>
+                  <Select
+                    value={filterStatus}
+                    onChange={e => setFilterStatus(e.target.value)}
+                    label="审核状态"
+                  >
+                    <MenuItem value="all">全部</MenuItem>
+                    <MenuItem value="approved">已通过</MenuItem>
+                    <MenuItem value="pending">待审核</MenuItem>
+                    <MenuItem value="rejected">已拒绝</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid size={{ xs: 6, md: 2 }}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>用户类型</InputLabel>
+                  <Select
+                    value={filterType}
+                    onChange={e => setFilterType(e.target.value)}
+                    label="用户类型"
+                  >
+                    <MenuItem value="all">全部</MenuItem>
+                    <MenuItem value="enterprise">企业用户</MenuItem>
+                    <MenuItem value="repair-shop">维修店</MenuItem>
+                    <MenuItem value="foreign-trade">外贸公司</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid size={{ xs: 6, md: 2 }}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>发布状态</InputLabel>
+                  <Select
+                    value={filterPublished}
+                    onChange={e => setFilterPublished(e.target.value)}
+                    label="发布状态"
+                  >
+                    <MenuItem value="all">全部</MenuItem>
+                    <MenuItem value="published">已发布</MenuItem>
+                    <MenuItem value="unpublished">未发布</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid size={{ xs: 6, md: 3 }} sx={{ textAlign: 'right' }}>
+                <Button
+                  variant="outlined"
+                  startIcon={<Refresh />}
+                  onClick={handleRefresh}
+                  disabled={loading}
+                >
+                  刷新
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {/* 门户列表 */}
+          <Paper>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>门户名称</TableCell>
+                    <TableCell>用户</TableCell>
+                    <TableCell>类型</TableCell>
+                    <TableCell>审核状态</TableCell>
+                    <TableCell>发布状态</TableCell>
+                    <TableCell>内容统计</TableCell>
+                    <TableCell>浏览量</TableCell>
+                    <TableCell>创建时间</TableCell>
+                    <TableCell align="center">操作</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {portals.map(portal => (
+                    <TableRow key={portal.id} hover>
+                      <TableCell>
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                        >
+                          <Avatar sx={{ width: 40, height: 40 }}>
+                            {portal.portal_name.charAt(0)}
+                          </Avatar>
+                          <Box>
+                            <Typography variant="body2" fontWeight="medium">
+                              {portal.portal_name}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {portal.portal_description}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>{portal.user_name}</TableCell>
+                      <TableCell>
+                        <Chip
+                          label={getTypeLabel(portal.business_type)}
+                          size="small"
+                          color={getTypeColor(portal.business_type) as any}
+                          variant="outlined"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {getStatusChip(portal.approval_status)}
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={portal.is_published ? '已发布' : '未发布'}
+                          size="small"
+                          color={portal.is_published ? 'success' : 'default'}
+                          variant="outlined"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Stack spacing={0.5}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
+                            <LinkIcon fontSize="small" sx={{ fontSize: 14 }} />
+                            <Typography variant="caption">
+                              {portal.business_links_count} 链接
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
+                            <Image fontSize="small" sx={{ fontSize: 14 }} />
+                            <Typography variant="caption">
+                              {portal.promotional_images_count} 图片
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
+                            <Description
+                              fontSize="small"
+                              sx={{ fontSize: 14 }}
+                            />
+                            <Typography variant="caption">
+                              {portal.blog_posts_count} 文章
+                            </Typography>
+                          </Box>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" fontWeight="medium">
+                          {portal.view_count.toLocaleString()}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{portal.created_at}</TableCell>
+                      <TableCell align="center">
+                        <Tooltip title="预览">
+                          <IconButton
+                            size="small"
+                            onClick={() => handlePreview(portal)}
+                          >
+                            <Preview fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="查看详情">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleViewDetail(portal)}
+                          >
+                            <Visibility fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        {portal.approval_status === 'pending' && (
+                          <>
+                            <Tooltip title="批准">
+                              <IconButton
+                                size="small"
+                                color="success"
+                                onClick={() => handleApprove(portal)}
+                              >
+                                <ThumbUp fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="拒绝">
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => handleReject(portal)}
+                              >
+                                <Close fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </>
       )}
 
-      {/* 过滤和搜索 */}
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={3}>
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="搜索门户或用户"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <Search sx={{ mr: 1, color: 'text.secondary' }} />
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={6} md={2}>
-            <FormControl fullWidth size="small">
-              <InputLabel>审核状态</InputLabel>
-              <Select
-                value={filterStatus}
-                onChange={e => setFilterStatus(e.target.value)}
-                label="审核状态"
-              >
-                <MenuItem value="all">全部</MenuItem>
-                <MenuItem value="approved">已通过</MenuItem>
-                <MenuItem value="pending">待审核</MenuItem>
-                <MenuItem value="rejected">已拒绝</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6} md={2}>
-            <FormControl fullWidth size="small">
-              <InputLabel>用户类型</InputLabel>
-              <Select
-                value={filterType}
-                onChange={e => setFilterType(e.target.value)}
-                label="用户类型"
-              >
-                <MenuItem value="all">全部</MenuItem>
-                <MenuItem value="enterprise">企业用户</MenuItem>
-                <MenuItem value="repair-shop">维修店</MenuItem>
-                <MenuItem value="foreign-trade">外贸公司</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6} md={2}>
-            <FormControl fullWidth size="small">
-              <InputLabel>发布状态</InputLabel>
-              <Select
-                value={filterPublished}
-                onChange={e => setFilterPublished(e.target.value)}
-                label="发布状态"
-              >
-                <MenuItem value="all">全部</MenuItem>
-                <MenuItem value="published">已发布</MenuItem>
-                <MenuItem value="unpublished">未发布</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6} md={3} sx={{ textAlign: 'right' }}>
-            <Button
-              variant="outlined"
-              startIcon={<Refresh />}
-              onClick={handleRefresh}
-              disabled={loading}
-            >
-              刷新
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
-
-      {/* 门户列表 */}
-      <Paper>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>门户名称</TableCell>
-                <TableCell>用户</TableCell>
-                <TableCell>类型</TableCell>
-                <TableCell>审核状态</TableCell>
-                <TableCell>发布状态</TableCell>
-                <TableCell>内容统计</TableCell>
-                <TableCell>浏览量</TableCell>
-                <TableCell>创建时间</TableCell>
-                <TableCell align="center">操作</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {portals.map(portal => (
-                <TableRow key={portal.id} hover>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ width: 40, height: 40 }}>
-                        {portal.portal_name.charAt(0)}
-                      </Avatar>
-                      <Box>
-                        <Typography variant="body2" fontWeight="medium">
-                          {portal.portal_name}
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {portal.portal_description}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{portal.user_name}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={getTypeLabel(portal.business_type)}
-                      size="small"
-                      color={getTypeColor(portal.business_type) as any}
-                      variant="outlined"
-                    />
-                  </TableCell>
-                  <TableCell>{getStatusChip(portal.approval_status)}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={portal.is_published ? '已发布' : '未发布'}
-                      size="small"
-                      color={portal.is_published ? 'success' : 'default'}
-                      variant="outlined"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Stack spacing={0.5}>
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                      >
-                        <LinkIcon fontSize="small" sx={{ fontSize: 14 }} />
-                        <Typography variant="caption">
-                          {portal.business_links_count} 链接
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                      >
-                        <Image fontSize="small" sx={{ fontSize: 14 }} />
-                        <Typography variant="caption">
-                          {portal.promotional_images_count} 图片
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                      >
-                        <Description fontSize="small" sx={{ fontSize: 14 }} />
-                        <Typography variant="caption">
-                          {portal.blog_posts_count} 文章
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" fontWeight="medium">
-                      {portal.view_count.toLocaleString()}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{portal.created_at}</TableCell>
-                  <TableCell align="center">
-                    <Tooltip title="预览">
-                      <IconButton
-                        size="small"
-                        onClick={() => handlePreview(portal)}
-                      >
-                        <Preview fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="查看详情">
-                      <IconButton
-                        size="small"
-                        onClick={() => handleViewDetail(portal)}
-                      >
-                        <Visibility fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    {portal.approval_status === 'pending' && (
-                      <>
-                        <Tooltip title="批准">
-                          <IconButton
-                            size="small"
-                            color="success"
-                            onClick={() => handleApprove(portal)}
-                          >
-                            <Approve fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="拒绝">
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => handleReject(portal)}
-                          >
-                            <Close fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+      {/* 待审批标签 */}
+      {tabValue === 1 && (
+        <Paper>
+          <PortalsApprovalManager />
+        </Paper>
+      )}
 
       {/* 详情对话框 */}
       <Dialog
@@ -617,7 +661,7 @@ export default function PortalsManagementPage() {
         <DialogContent>
           {selectedPortal && (
             <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   门户名称
                 </Typography>
@@ -625,7 +669,7 @@ export default function PortalsManagementPage() {
                   {selectedPortal.portal_name}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   用户
                 </Typography>
@@ -633,7 +677,7 @@ export default function PortalsManagementPage() {
                   {selectedPortal.user_name}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   类型
                 </Typography>
@@ -641,13 +685,13 @@ export default function PortalsManagementPage() {
                   {getTypeLabel(selectedPortal.business_type)}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   审核状态
                 </Typography>
                 <Box>{getStatusChip(selectedPortal.approval_status)}</Box>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   发布状态
                 </Typography>
@@ -657,7 +701,7 @@ export default function PortalsManagementPage() {
                   color={selectedPortal.is_published ? 'success' : 'default'}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   浏览量
                 </Typography>
@@ -665,7 +709,7 @@ export default function PortalsManagementPage() {
                   {selectedPortal.view_count.toLocaleString()}
                 </Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   描述
                 </Typography>
@@ -673,7 +717,7 @@ export default function PortalsManagementPage() {
                   {selectedPortal.portal_description}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   业务链接
                 </Typography>
@@ -681,7 +725,7 @@ export default function PortalsManagementPage() {
                   {selectedPortal.business_links_count} 个
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   宣传图片
                 </Typography>
@@ -689,7 +733,7 @@ export default function PortalsManagementPage() {
                   {selectedPortal.promotional_images_count} 张
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant="subtitle2" color="textSecondary">
                   博客文章
                 </Typography>

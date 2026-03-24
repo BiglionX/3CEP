@@ -1,10 +1,10 @@
-import { defineConfig } from 'vitest/config';
 import path from 'path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: 'node', // 临时使用 node 环境避免 ESM 问题
+    environment: 'node', // 临时使用 node 环境避免 ESM 问题避免 ESM 问题
     setupFiles: ['./tests/utils/setup.ts'],
     include: [
       'tests/unit/**/*.test.{ts,tsx}',

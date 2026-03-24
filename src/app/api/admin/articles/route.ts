@@ -1,5 +1,6 @@
-﻿import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -8,6 +9,9 @@ const supabase = createClient(
 );
 
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search') || '';
@@ -84,4 +88,7 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'content_read'
+  );

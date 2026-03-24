@@ -1,13 +1,17 @@
-﻿/**
+/**
  * 绠＄悊鍚庡彴璁惧鎼滅储API
  * 鎻愪緵璁惧鎼滅储鍔熻兘鎺ュ彛
  */
 import { Database } from '@/lib/database.types';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
@@ -45,7 +49,10 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+
+    },
+    'devices_read'
+  );
 
 /**
  * 鎼滅储璁惧鐨勪富瑕侀€昏緫

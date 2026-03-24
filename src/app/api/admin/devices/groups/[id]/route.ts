@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { cookies } from 'next/headers';
 
 // 更新设备分组
@@ -6,6 +7,9 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -39,13 +43,19 @@ export async function PUT(
     console.error('更新设备分组失败:', error);
     return NextResponse.json({ error: '更新设备分组失败' }, { status: 500 });
   }
-}
+
+    },
+    'devices_read'
+  );
 
 // 删除设备分组
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  return apiPermissionMiddleware(
+    arguments[0],
+    async () => {
   try {
     const cookieStore = cookies();
     const authCookie = cookieStore.get('auth-token');
@@ -65,4 +75,7 @@ export async function DELETE(
     console.error('删除设备分组失败:', error);
     return NextResponse.json({ error: '删除设备分组失败' }, { status: 500 });
   }
-}
+
+    },
+    'devices_read'
+  );
