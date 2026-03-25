@@ -11,12 +11,23 @@ export async function POST(request: NextRequest) {
   try {
     // 验证管理员权限
     const user = await getAuthUser(request);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: '未授权访问', code: 'UNAUTHORIZED' },
+        { status: 401 }
+      );
+    }
+
     if (
-      !user ||
+      !user?.role ||
       !['admin', 'marketplace_admin', 'content_reviewer'].includes(user.role)
     ) {
       return NextResponse.json(
-        { success: false, error: '权限不足' },
+        {
+          success: false,
+          error: '权限不足：需要管理员、市场管理员或内容审核员角色',
+          code: 'FORBIDDEN',
+        },
         { status: 403 }
       );
     }
@@ -24,16 +35,59 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { skillId, action, reason, metadata } = body;
 
-    if (!skillId || !action) {
+    // 参数验证
+    if (!skillId) {
       return NextResponse.json(
-        { success: false, error: '缺少必要参数' },
+        {
+          success: false,
+          error: '缺少必要参数：skillId',
+          code: 'MISSING_PARAMETER',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!action) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: '缺少必要参数：action',
+          code: 'MISSING_PARAMETER',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (typeof skillId !== 'string') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: '参数类型错误：skillId 必须是字符串',
+          code: 'INVALID_TYPE',
+        },
         { status: 400 }
       );
     }
 
     if (!['approve', 'reject'].includes(action)) {
       return NextResponse.json(
-        { success: false, error: '无效的操作类型' },
+        {
+          success: false,
+          error: `无效的操作类型：${action}，只能是 'approve' 或 'reject'`,
+          code: 'INVALID_ACTION',
+        },
+        { status: 400 }
+      );
+    }
+
+    // 拒绝操作时必须提供原因
+    if (action === 'reject' && !reason) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: '驳回操作必须提供原因',
+          code: 'MISSING_REASON',
+        },
         { status: 400 }
       );
     }
@@ -47,9 +101,25 @@ export async function POST(request: NextRequest) {
       .eq('id', skillId)
       .single();
 
-    if (fetchError || !skill) {
+    if (fetchError) {
+      console.error('查询 Skill 失败:', fetchError);
       return NextResponse.json(
-        { success: false, error: 'Skill 不存在' },
+        {
+          success: false,
+          error: `查询失败：${fetchError.message}`,
+          code: 'DATABASE_ERROR',
+        },
+        { status: 500 }
+      );
+    }
+
+    if (!skill) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Skill 不存在：${skillId}`,
+          code: 'NOT_FOUND',
+        },
         { status: 404 }
       );
     }
@@ -75,7 +145,11 @@ export async function POST(request: NextRequest) {
     if (updateError) {
       console.error('更新 Skill 状态失败:', updateError);
       return NextResponse.json(
-        { success: false, error: updateError.message },
+        {
+          success: false,
+          error: `更新失败：${updateError.message}`,
+          code: 'DATABASE_ERROR',
+        },
         { status: 500 }
       );
     }
@@ -94,6 +168,8 @@ export async function POST(request: NextRequest) {
     if (logError) {
       console.error('记录审核日志失败:', logError);
       // 不返回错误，因为主要操作已成功
+      // 但会添加警告信息
+      console.warn('审核日志记录失败，但审核操作已生效');
     }
 
     return NextResponse.json({
@@ -106,9 +182,38 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error('Skill 审核 API 错误:', error);
+    console.error('Skill 审核 API 错误:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+
+    // 区分不同类型的错误
+    if (error.name === 'ValidationError') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `验证错误：${error.message}`,
+          code: 'VALIDATION_ERROR',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (error.code === '23505') {
+      // PostgreSQL unique violation
+      return NextResponse.json(
+        { success: false, error: '数据冲突：记录已存在', code: 'CONFLICT' },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json(
-      { success: false, error: error.message || '服务器错误' },
+      {
+        success: false,
+        error: `服务器内部错误：${error.message}`,
+        code: 'INTERNAL_ERROR',
+      },
       { status: 500 }
     );
   }

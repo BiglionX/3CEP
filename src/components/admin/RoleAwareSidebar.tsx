@@ -9,13 +9,17 @@ import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { cn } from '@/lib/utils';
 import {
   BarChart3,
+  BookOpen,
   ChevronRight,
+  Clock,
   Coins,
   DollarSign,
   Eye,
   FileText,
+  Folder,
   Globe,
   Home,
+  Key,
   Menu,
   Package,
   Plus,
@@ -26,6 +30,8 @@ import {
   Store,
   TrendingUp,
   Users,
+  Variable,
+  Webhook,
   Workflow,
   Wrench,
   X,
@@ -73,6 +79,19 @@ export function RoleAwareSidebar() {
         'agent_operator',
         'viewer',
         'external_partner',
+      ],
+    },
+    {
+      id: 'data-center',
+      name: '数据中心',
+      href: '/data-center',
+      icon: <BarChart3 className="w-5 h-5" />,
+      roles: [
+        'admin',
+        'manager',
+        'analyst',
+        'finance_manager',
+        'procurement_specialist',
       ],
     },
     {
@@ -206,6 +225,13 @@ export function RoleAwareSidebar() {
           roles: ['admin', 'manager', 'procurement_specialist'],
         },
         {
+          id: 'order-delivery',
+          name: '订单交付',
+          href: '/admin/order-delivery',
+          icon: <ShoppingCart className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'procurement_specialist'],
+        },
+        {
           id: 'procurement-suppliers',
           name: '供应商管理',
           href: '/admin/procurement/suppliers',
@@ -245,6 +271,20 @@ export function RoleAwareSidebar() {
       roles: ['admin', 'manager', 'agent_operator'],
       children: [
         {
+          id: 'agent-templates',
+          name: '智能体模板',
+          href: '/admin/agent-templates',
+          icon: <FileText className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'agent_operator'],
+        },
+        {
+          id: 'agents-audit',
+          name: '智能体审核',
+          href: '/admin/agents-audit',
+          icon: <Shield className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'agent_operator'],
+        },
+        {
           id: 'agent-execution',
           name: '执行工作流',
           href: '/admin/agents/execute',
@@ -264,6 +304,100 @@ export function RoleAwareSidebar() {
           href: '/admin/agents/workflows',
           icon: <Workflow className="w-4 h-4" />,
           roles: ['admin', 'manager'],
+        },
+        {
+          id: 'executions',
+          name: '执行历史',
+          href: '/admin/agents/executions',
+          icon: <BarChart3 className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'agent_operator'],
+        },
+        // n8n 集成管理页面（新增）
+        {
+          id: 'credentials',
+          name: '凭证管理',
+          href: '/admin/agents/credentials',
+          icon: <Key className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+        {
+          id: 'templates',
+          name: '模板库',
+          href: '/admin/agents/templates',
+          icon: <BookOpen className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'agent_operator'],
+        },
+        {
+          id: 'schedules',
+          name: '调度管理',
+          href: '/admin/agents/schedules',
+          icon: <Clock className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'agent_operator'],
+        },
+        {
+          id: 'webhooks',
+          name: 'Webhook 管理',
+          href: '/admin/agents/webhooks',
+          icon: <Webhook className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+        {
+          id: 'environment',
+          name: '环境变量',
+          href: '/admin/agents/environment',
+          icon: <Variable className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+        {
+          id: 'team',
+          name: '团队协作',
+          href: '/admin/agents/team',
+          icon: <Users className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+        {
+          id: 'analytics',
+          name: '高级分析',
+          href: '/admin/agents/analytics',
+          icon: <BarChart3 className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'analyst'],
+        },
+      ],
+    },
+    {
+      id: 'skills-management',
+      name: 'Skills 管理',
+      icon: <Package className="w-5 h-5" />,
+      href: '',
+      roles: ['admin', 'manager', 'marketplace_admin', 'agent_operator'],
+      children: [
+        {
+          id: 'skill-create',
+          name: '创建 Skill',
+          href: '/admin/skill-store/create',
+          icon: <Plus className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
+          id: 'skill-audit',
+          name: 'Skill 审核',
+          href: '/admin/skill-audit',
+          icon: <Shield className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
+          id: 'skill-categories',
+          name: '分类管理',
+          href: '/admin/skill-categories',
+          icon: <Folder className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
+          id: 'skill-analytics',
+          name: '数据分析',
+          href: '/admin/skill-analytics',
+          icon: <BarChart3 className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin', 'analyst'],
         },
       ],
     },
@@ -358,11 +492,58 @@ export function RoleAwareSidebar() {
       separator: true,
     },
     {
+      id: 'system-monitoring',
+      name: '系统监控',
+      icon: <BarChart3 className="w-5 h-5" />,
+      href: '',
+      roles: ['admin', 'manager'],
+      children: [
+        {
+          id: 'alerts',
+          name: '告警管理',
+          href: '/admin/alerts',
+          icon: <Shield className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+        {
+          id: 'monitoring-dashboard',
+          name: '监控仪表板',
+          href: '/admin/monitoring',
+          icon: <BarChart3 className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+      ],
+    },
+    {
+      id: 'analytics',
+      name: '数据分析',
+      href: '/admin/analytics',
+      icon: <BarChart3 className="w-5 h-5" />,
+      roles: ['admin', 'manager', 'analyst'],
+    },
+    {
+      id: 'separator-settings',
+      name: '',
+      href: '',
+      icon: null,
+      roles: ['admin', 'manager'],
+      separator: true,
+    },
+    {
       id: 'system-settings',
       name: '系统设置',
       href: '/admin/settings',
       icon: <Settings className="w-5 h-5" />,
       roles: ['admin', 'manager'],
+      children: [
+        {
+          id: 'config-history',
+          name: '配置历史',
+          href: '/admin/config-history',
+          icon: <FileText className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+      ],
     },
   ];
 
@@ -377,15 +558,67 @@ export function RoleAwareSidebar() {
   // 获取当前用户可访问的菜单项
   const getAccessibleMenuItems = () => {
     const userRoles = (authUser as any)?.user_metadata?.roles || ['user'];
+
+    // 开发环境：添加调试日志
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Sidebar] 当前用户角色:', userRoles);
+      console.log('[Sidebar] 完整用户对象:', authUser);
+    }
+
     return menuItems.filter(item => {
       if (item.separator) return true;
+
       // 检查用户角色是否在菜单项的允许角色列表中
-      return item.roles.some(role => userRoles.includes(role));
+      const parentHasAccess = item.roles.some(role => userRoles.includes(role));
+
+      // 如果有子菜单，需要同时检查子菜单的可见性
+      if (item.children && item.children.length > 0) {
+        // 父菜单有访问权，且至少有一个子菜单也有访问权
+        const visibleChildren = item.children.filter(child => {
+          const hasAccess = child.roles.some(role => userRoles.includes(role));
+          // Development: Output child menu permission check
+          if (process.env.NODE_ENV === 'development') {
+            console.log(
+              `[Sidebar] Child menu "${child.name}" permission check:`,
+              {
+                userRoles,
+                allowedRoles: child.roles,
+                hasAccess,
+              }
+            );
+          }
+          return hasAccess;
+        });
+
+        if (
+          process.env.NODE_ENV === 'development' &&
+          visibleChildren.length === 0
+        ) {
+          console.warn(
+            `[Sidebar] ⚠️ Warning: All children of "${item.name}" filtered by permissions!`
+          );
+          console.log(
+            `[Sidebar] Children details:`,
+            item.children.map(c => ({
+              name: c.name,
+              allowedRoles: c.roles,
+            }))
+          );
+        }
+
+        return parentHasAccess && visibleChildren.length > 0;
+      }
+
+      return parentHasAccess;
     });
   };
 
   // 渲染菜单项
-  const renderMenuItem = (item: MenuItem, isChild = false) => {
+  const renderMenuItem = (
+    item: MenuItem,
+    isChild = false,
+    parentUserRoles?: string[]
+  ) => {
     if (item.separator) {
       return (
         <div key={item.id} className="border-t border-gray-200 my-2"></div>
@@ -395,6 +628,8 @@ export function RoleAwareSidebar() {
     const isActive = pathname === item.href;
     const isExpanded = expandedItems[item.id] || false;
     const hasChildren = item.children && item.children.length > 0;
+    const userRoles = parentUserRoles ||
+      (authUser as any)?.user_metadata?.roles || ['user'];
 
     if (hasChildren) {
       return (
@@ -426,9 +661,14 @@ export function RoleAwareSidebar() {
 
           {isExpanded && (
             <div className="ml-4">
-              {item.children?.map((child: MenuItem) =>
-                renderMenuItem(child, true)
-              )}
+              {item.children
+                ?.filter(child => {
+                  // 再次检查子菜单权限（双重保险）
+                  return child.roles.some(role => userRoles.includes(role));
+                })
+                .map((child: MenuItem) =>
+                  renderMenuItem(child, true, userRoles)
+                )}
             </div>
           )}
         </div>
@@ -498,7 +738,9 @@ export function RoleAwareSidebar() {
           {/* 菜单区域 */}
           <div className="flex-1 overflow-y-auto py-4">
             <nav className="space-y-1">
-              {getAccessibleMenuItems().map(item => renderMenuItem(item))}
+              {getAccessibleMenuItems().map(item =>
+                renderMenuItem(item, false, undefined)
+              )}
             </nav>
           </div>
         </div>

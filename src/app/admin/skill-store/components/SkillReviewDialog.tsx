@@ -1,13 +1,7 @@
 'use client';
 
+import type { Skill } from '@/types/skill';
 import { useState } from 'react';
-
-interface Skill {
-  id: string;
-  name: string;
-  description: string;
-  review_status: 'pending' | 'approved' | 'rejected';
-}
 
 interface SkillReviewDialogProps {
   open: boolean;

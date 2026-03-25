@@ -1,96 +1,86 @@
-/**
- * 审计日志查询 API
- *
- * GET /api/admin/audit-logs - 查询审计日志
- * Query params:
- *  - startDate: 开始日期
- *  - endDate: 结束日期
- *  - actionType: 操作类型
- *  - userId: 用户 ID
- *  - resourceType: 资源类型
- *  - page: 页码
- *  - limit: 每页数量
- *
- * POST /api/admin/audit-logs/export - 导出 CSV
- */
-
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 /**
- * GET 请求：查询审计日志
+ * GET /api/admin/audit-logs
+ * 获取审计日志列表
  */
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    // 验证权限
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader) {
+      return NextResponse.json(
+        { success: false, error: '未授权访问' },
+        { status: 401 }
+      );
+    }
 
-    // 获取筛选参数
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
-    const actionType = searchParams.get('actionType');
-    const userId = searchParams.get('userId');
-    const resourceType = searchParams.get('resourceType');
+    // 解析查询参数
+    const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const userId = searchParams.get('user_id');
+    const action = searchParams.get('action');
+    const startDate = searchParams.get('start_date');
+    const endDate = searchParams.get('end_date');
+
+    // 初始化 Supabase 客户端
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // 构建查询
-    let query = supabase.from('audit_logs').select('*', { count: 'exact' });
+    let query = supabase
+      .from('admin_audit_logs')
+      .select('*', { count: 'exact' });
 
     // 应用筛选条件
-    if (startDate && endDate) {
-      query = query.gte('created_at', startDate).lte('created_at', endDate);
-    } else if (startDate) {
-      query = query.gte('created_at', startDate);
-    } else if (endDate) {
-      query = query.lte('created_at', endDate);
-    }
-
-    if (actionType) {
-      query = query.eq('action_type', actionType);
-    }
-
     if (userId) {
       query = query.eq('user_id', userId);
     }
-
-    if (resourceType) {
-      query = query.eq('resource_type', resourceType);
+    if (action) {
+      query = query.eq('action', action);
+    }
+    if (startDate) {
+      query = query.gte('created_at', startDate);
+    }
+    if (endDate) {
+      query = query.lte('created_at', endDate);
     }
 
     // 分页和排序
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    const { data, error, count } = await query
-      .range(from, to)
-      .order('created_at', { ascending: false });
+    const {
+      data: logs,
+      error,
+      count,
+    } = await query.order('created_at', { ascending: false }).range(from, to);
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({
       success: true,
-      data: data || [],
-      pagination: {
-        page,
-        limit,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit),
+      data: {
+        logs,
+        pagination: {
+          page,
+          limit,
+          total: count || 0,
+          totalPages: Math.ceil((count || 0) / limit),
+        },
       },
     });
   } catch (error) {
-    console.error('查询审计日志失败:', error);
+    console.error('获取审计日志失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: {
-          code: 'QUERY_FAILED',
-          message: error instanceof Error ? error.message : '查询失败',
-        },
+        error: `系统错误：${error instanceof Error ? error.message : '未知错误'}`,
       },
       { status: 500 }
     );
@@ -98,93 +88,74 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * POST 请求：导出 CSV
+ * POST /api/admin/audit-logs
+ * 记录审计日志 (内部使用)
  */
 export async function POST(request: NextRequest) {
   try {
+    // 验证权限 (仅允许内部调用)
+    const apiKey = request.headers.get('x-api-key');
+    if (apiKey !== process.env.INTERNAL_API_KEY) {
+      return NextResponse.json(
+        { success: false, error: '未授权访问' },
+        { status: 401 }
+      );
+    }
+
+    // 解析请求体
     const body = await request.json();
-    const { startDate, endDate, actionType, userId, resourceType } = body;
+    const {
+      userId,
+      action,
+      resourceType,
+      resourceId,
+      oldValue,
+      newValue,
+      ipAddress,
+      userAgent,
+    } = body;
 
-    // 构建查询
-    let query = supabase.from('audit_logs').select('*');
-
-    // 应用筛选条件
-    if (startDate && endDate) {
-      query = query.gte('created_at', startDate).lte('created_at', endDate);
+    // 参数验证
+    if (!userId || !action) {
+      return NextResponse.json(
+        { success: false, error: '缺少必要参数' },
+        { status: 400 }
+      );
     }
 
-    if (actionType) {
-      query = query.eq('action_type', actionType);
-    }
+    // 初始化 Supabase 客户端
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-    if (userId) {
-      query = query.eq('user_id', userId);
-    }
-
-    if (resourceType) {
-      query = query.eq('resource_type', resourceType);
-    }
-
-    const { data, error } = await query.order('created_at', {
-      ascending: false,
+    // 插入审计日志
+    const { error } = await supabase.from('admin_audit_logs').insert({
+      user_id: userId,
+      action,
+      resource_type: resourceType,
+      resource_id: resourceId,
+      old_value: oldValue,
+      new_value: newValue,
+      ip_address: ipAddress,
+      user_agent: userAgent,
     });
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
-    // 转换为 CSV
-    const csv = convertToCSV(data || []);
-
-    // 返回 CSV 文件
-    return new NextResponse(csv, {
-      headers: {
-        'Content-Type': 'text/csv;charset=utf-8;',
-        'Content-Disposition': `attachment; filename="audit_logs_${new Date().toISOString().split('T')[0]}.csv"`,
-      },
+    return NextResponse.json({
+      success: true,
+      message: '审计日志已记录',
     });
   } catch (error) {
-    console.error('导出 CSV 失败:', error);
+    console.error('记录审计日志失败:', error);
     return NextResponse.json(
       {
         success: false,
-        error: {
-          code: 'EXPORT_FAILED',
-          message: error instanceof Error ? error.message : '导出失败',
-        },
+        error: `系统错误：${error instanceof Error ? error.message : '未知错误'}`,
       },
       { status: 500 }
     );
   }
-}
-
-/**
- * 转换为 CSV 格式
- */
-function convertToCSV(data: any[]): string {
-  if (data.length === 0) return '';
-
-  const headers = [
-    'ID',
-    '用户 ID',
-    '操作类型',
-    '资源类型',
-    '资源 ID',
-    '变更详情',
-    'IP 地址',
-    '用户代理',
-    '创建时间',
-  ];
-
-  const rows = data.map(log => [
-    log.id,
-    log.user_id || '',
-    log.action_type || '',
-    log.resource_type || '',
-    log.resource_id || '',
-    JSON.stringify(log.changes || {}).replace(/"/g, '""'),
-    log.ip_address || '',
-    log.user_agent || '',
-    log.created_at,
-  ]);
-
-  return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
 }

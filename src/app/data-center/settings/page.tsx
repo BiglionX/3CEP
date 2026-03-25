@@ -1,26 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import {
-  Settings,
-  Database,
-  Network,
-  Bell,
-  User,
-  Palette,
-  Shield,
-  Save,
-  RotateCcw,
-  Mail,
-  Server,
-  HardDrive,
-  Zap,
-  Cloud,
-  Key,
-  Globe,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
@@ -28,8 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -38,7 +18,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Bell,
+  Database,
+  Globe,
+  RotateCcw,
+  Save,
+  Server,
+  Settings,
+  Shield,
+} from 'lucide-react';
+import { useState } from 'react';
 
 interface SystemConfig {
   general: {
@@ -118,7 +109,8 @@ export default function SystemSettingsPage() {
     try {
       // 模拟保存配置
       await new Promise(resolve => setTimeout(resolve, 1000));
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('配置已保', config)} catch (error) {
+      console.log('配置已保存', config);
+    } catch (error) {
       console.error('保存配置失败:', error);
     } finally {
       setSaving(false);
@@ -126,7 +118,8 @@ export default function SystemSettingsPage() {
   };
 
   const handleReset = () => {
-    // 重置为默认配    setConfig({
+    // 重置为默认配置
+    setConfig({
       general: {
         siteName: '数据管理中心',
         timezone: 'Asia/Shanghai',
@@ -160,7 +153,7 @@ export default function SystemSettingsPage() {
       {/* 页面头部 */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">系统设置</h1>
-        <p className="text-gray-600 mt-1">配置数据管理中心的各项系统参/p>
+        <p className="text-gray-600 mt-1">配置数据管理中心的各项系统参数</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -171,7 +164,8 @@ export default function SystemSettingsPage() {
           </TabsTrigger>
           <TabsTrigger value="database" className="flex items-center">
             <Database className="mr-2 h-4 w-4" />
-            数据源          </TabsTrigger>
+            数据源{' '}
+          </TabsTrigger>
           <TabsTrigger value="notifications" className="flex items-center">
             <Bell className="mr-2 h-4 w-4" />
             通知
@@ -283,9 +277,9 @@ export default function SystemSettingsPage() {
                       className="capitalize"
                     >
                       {theme === 'light'
-                         '明亮'
+                        ? '明亮'
                         : theme === 'dark'
-                           '暗黑'
+                          ? '暗黑'
                           : '自动'}
                     </Button>
                   ))}
@@ -300,7 +294,8 @@ export default function SystemSettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Server className="mr-2 h-5 w-5" />
-                数据库配              </CardTitle>
+                数据库配{' '}
+              </CardTitle>
               <CardDescription>数据库连接和性能相关设置</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -371,7 +366,7 @@ export default function SystemSettingsPage() {
                   }
                   placeholder="0 2 * * *"
                 />
-                <p className="text-sm text-gray-500">每天凌晨2点执行备/p>
+                <p className="text-sm text-gray-500">每天凌晨 2 点执行备份</p>
               </div>
             </CardContent>
           </Card>
@@ -384,7 +379,7 @@ export default function SystemSettingsPage() {
                 <Bell className="mr-2 h-5 w-5" />
                 通知配置
               </CardTitle>
-              <CardDescription>系统通知和告警设/CardDescription>
+              <CardDescription>系统通知和告警设置</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -411,7 +406,8 @@ export default function SystemSettingsPage() {
                   <div className="space-y-1">
                     <Label>Slack通知</Label>
                     <p className="text-sm text-gray-500">
-                      通过Slack发送重要告                    </p>
+                      通过Slack发送重要告{' '}
+                    </p>
                   </div>
                   <Switch
                     checked={config.notifications.slackEnabled}
@@ -443,7 +439,7 @@ export default function SystemSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="alertThreshold">告警阈/Label>
+                <Label htmlFor="alertThreshold">告警阈值</Label>
                 <Input
                   id="alertThreshold"
                   type="number"
@@ -473,12 +469,12 @@ export default function SystemSettingsPage() {
                 <Shield className="mr-2 h-5 w-5" />
                 安全配置
               </CardTitle>
-              <CardDescription>用户安全和访问控制设/CardDescription>
+              <CardDescription>用户安全和访问控制设置</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="passwordMinLength">密码最小长/Label>
+                  <Label htmlFor="passwordMinLength">密码最小长度</Label>
                   <Input
                     id="passwordMinLength"
                     type="number"
@@ -516,9 +512,10 @@ export default function SystemSettingsPage() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <Label>双因素认/Label>
+                  <Label>双因素认证</Label>
                   <p className="text-sm text-gray-500">
-                    启用双因素认证增强账户安                  </p>
+                    启用双因素认证增强账户安全
+                  </p>
                 </div>
                 <Switch
                   checked={config.security.twoFactorEnabled}
@@ -529,7 +526,7 @@ export default function SystemSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>IP白名/Label>
+                <Label>IP 白名单</Label>
                 <Input
                   placeholder="输入允许访问的IP地址，多个IP用逗号分隔"
                   value={config.security.ipWhitelist.join(', ')}
@@ -555,10 +552,10 @@ export default function SystemSettingsPage() {
           重置
         </Button>
         <Button onClick={handleSave} disabled={saving}>
-          {saving  (
+          {saving ? (
             <>
               <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-              保存..
+              保存中...
             </>
           ) : (
             <>
@@ -571,4 +568,3 @@ export default function SystemSettingsPage() {
     </div>
   );
 }
-

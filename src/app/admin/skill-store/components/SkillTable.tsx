@@ -1,17 +1,6 @@
 'use client';
 
-interface Skill {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
-  review_status: 'pending' | 'approved' | 'rejected';
-  shelf_status: 'on_shelf' | 'off_shelf' | 'suspended';
-  developer_id: string;
-  created_at: string;
-  updated_at: string;
-}
+import type { Skill } from '@/types/skill';
 
 interface SkillTableProps {
   skills: Skill[];
@@ -159,12 +148,19 @@ export function SkillTable({
             {skills.map(skill => (
               <tr key={skill.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
-                    {skill.name}
-                  </div>
-                  <div className="text-sm text-gray-500 truncate max-w-xs">
-                    {skill.description}
-                  </div>
+                  <button
+                    onClick={() =>
+                      (window.location.href = `/admin/skill-store/${skill.id}`)
+                    }
+                    className="text-left hover:bg-gray-50 rounded px-2 py-1 transition-colors"
+                  >
+                    <div className="text-sm font-medium text-blue-600 hover:text-blue-800">
+                      {skill.name}
+                    </div>
+                    <div className="text-sm text-gray-500 truncate max-w-xs mt-1">
+                      {skill.description}
+                    </div>
+                  </button>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm text-gray-900">

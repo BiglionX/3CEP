@@ -5,7 +5,15 @@
 
 'use client';
 
-import { Coins, Home, Package, ShoppingCart, Wrench, Zap } from 'lucide-react';
+import {
+  Coins,
+  Home,
+  Package,
+  ShoppingCart,
+  Store,
+  Wrench,
+  Zap,
+} from 'lucide-react';
 import Link from 'next/link';
 
 /**
@@ -35,6 +43,12 @@ const MODULES = [
     href: '/admin/user-manager',
     icon: ShoppingCart,
     color: 'indigo',
+  },
+  {
+    name: 'Skill 商店',
+    href: '/admin/skill-store',
+    icon: Store,
+    color: 'pink',
   },
   {
     name: '设备管理',
@@ -107,6 +121,11 @@ export default function AdminTopbar() {
                     bg: 'bg-teal-100',
                     text: 'text-teal-700',
                     hoverBg: 'hover:bg-teal-200',
+                  },
+                  pink: {
+                    bg: 'bg-pink-100',
+                    text: 'text-pink-700',
+                    hoverBg: 'hover:bg-pink-200',
                   },
                 };
                 const color = colors[module.color] || colors.blue;

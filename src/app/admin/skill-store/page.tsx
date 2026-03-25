@@ -1,37 +1,19 @@
 'use client';
 
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import type { Skill, SkillFilters as SkillFilterType } from '@/types/skill';
 import { useEffect, useState } from 'react';
+import { SkillCharts } from './components/SkillCharts';
 import { SkillFilters } from './components/SkillFilters';
 import { SkillReviewDialog } from './components/SkillReviewDialog';
 import { SkillStatsCards } from './components/SkillStatsCards';
 import { SkillTable } from './components/SkillTable';
 
-interface Skill {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
-  review_status: 'pending' | 'approved' | 'rejected';
-  shelf_status: 'on_shelf' | 'off_shelf' | 'suspended';
-  developer_id: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Filters {
-  search: string;
-  category: string;
-  reviewStatus: string;
-  shelfStatus: string;
-  sortBy: string;
-  sortOrder: string;
-}
+// 注意：Skill 和 SkillFilters 类型已从 types/skill.ts 导入
 
 export default function SkillStorePage() {
   const { isAuthenticated, is_admin, isLoading } = useUnifiedAuth();
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<SkillFilterType>({
     search: '',
     category: '',
     reviewStatus: '',
@@ -49,11 +31,19 @@ export default function SkillStorePage() {
   });
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]); // 批量选择
+  const [batchOperationLoading, setBatchOperationLoading] = useState(false);
   const [stats, setStats] = useState({
     totalSkills: 0,
     onShelfSkills: 0,
     approvedSkills: 0,
     pendingReview: 0,
+  });
+  const [showCharts, setShowCharts] = useState(false); // 控制图表显示
+  const [chartData, setChartData] = useState({
+    categoryStats: [] as { label: string; value: number }[],
+    reviewStatusStats: [] as { label: string; value: number }[],
+    shelfStatusStats: [] as { label: string; value: number }[],
   });
 
   // 保护管理员路由
@@ -71,6 +61,20 @@ export default function SkillStorePage() {
       const result = await response.json();
       if (result.success) {
         setStats(result.data.overview);
+        // 同时加载图表数据
+        if (result.data.byCategory) {
+          setChartData({
+            categoryStats: Object.entries(result.data.byCategory).map(
+              ([label, value]) => ({ label, value: value as number })
+            ),
+            reviewStatusStats: Object.entries(result.data.byReviewStatus).map(
+              ([label, value]) => ({ label, value: value as number })
+            ),
+            shelfStatusStats: Object.entries(result.data.byShelfStatus).map(
+              ([label, value]) => ({ label, value: value as number })
+            ),
+          });
+        }
       }
     } catch (error) {
       console.error('加载统计数据失败:', error);
@@ -194,6 +198,102 @@ export default function SkillStorePage() {
     }
   };
 
+  // 处理批量审核
+  const handleBatchApprove = async (action: 'approve' | 'reject') => {
+    if (selectedSkills.length === 0) return;
+
+    if (
+      !confirm(
+        `确定要${action === 'approve' ? '通过' : '驳回'}选中的 ${selectedSkills.length} 个 Skill 吗？`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setBatchOperationLoading(true);
+      const response = await fetch('/api/admin/skill-store/batch-approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          skillIds: selectedSkills,
+          action,
+          reason: action === 'reject' ? '批量操作' : '',
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert(`批量${action === 'approve' ? '通过' : '驳回'}成功！`);
+        setSelectedSkills([]);
+        loadSkills();
+        loadStats();
+      } else {
+        alert(`操作失败：${result.error}`);
+      }
+    } catch (error: any) {
+      console.error('批量审核失败:', error);
+      alert('操作失败，请重试');
+    } finally {
+      setBatchOperationLoading(false);
+    }
+  };
+
+  // 处理批量上下架
+  const handleBatchToggleStatus = async (
+    shelfStatus: 'on_shelf' | 'off_shelf'
+  ) => {
+    if (selectedSkills.length === 0) return;
+
+    if (
+      !confirm(
+        `确定要${shelfStatus === 'on_shelf' ? '上架' : '下架'}选中的 ${selectedSkills.length} 个 Skill 吗？`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setBatchOperationLoading(true);
+      const response = await fetch(
+        '/api/admin/skill-store/batch-toggle-status',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            skillIds: selectedSkills,
+            shelfStatus,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      if (result.success) {
+        alert(`批量${shelfStatus === 'on_shelf' ? '上架' : '下架'}成功！`);
+        setSelectedSkills([]);
+        loadSkills();
+      } else {
+        alert(`操作失败：${result.error}`);
+      }
+    } catch (error: any) {
+      console.error('批量上下架失败:', error);
+      alert('操作失败，请重试');
+    } finally {
+      setBatchOperationLoading(false);
+    }
+  };
+
+  // 处理导出数据
+  const handleExport = () => {
+    const params = new URLSearchParams();
+    if (filters.search) params.set('search', filters.search);
+    if (filters.category) params.set('category', filters.category);
+    if (filters.reviewStatus) params.set('reviewStatus', filters.reviewStatus);
+    if (filters.shelfStatus) params.set('shelfStatus', filters.shelfStatus);
+
+    window.open(`/api/admin/skill-store/export?${params}`, '_blank');
+  };
+
   // 处理审核提交
   const handleReviewSubmit = async (
     action: 'approve' | 'reject',
@@ -230,10 +330,62 @@ export default function SkillStorePage() {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题 */}
+      {/* 页面标题和操作按钮 */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Skill 商店管理</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Skill 商店管理</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            管理 Skill 商店中的所有技能，包括审核、上下架和运营数据
+          </p>
+        </div>
         <div className="flex gap-2">
+          {/* 切换图表显示 */}
+          <button
+            onClick={() => setShowCharts(!showCharts)}
+            className={`inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md ${
+              showCharts
+                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            <svg
+              className="h-5 w-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+            {showCharts ? '隐藏图表' : '显示图表'}
+          </button>
+
+          {/* 导出数据 */}
+          <button
+            onClick={handleExport}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          >
+            <svg
+              className="h-5 w-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            导出 CSV
+          </button>
+
+          {/* 刷新 */}
           <button
             onClick={loadSkills}
             className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
@@ -258,6 +410,15 @@ export default function SkillStorePage() {
 
       {/* 统计卡片 */}
       <SkillStatsCards stats={stats} />
+
+      {/* 统计图表 */}
+      {showCharts && (
+        <SkillCharts
+          categoryStats={chartData.categoryStats}
+          reviewStatusStats={chartData.reviewStatusStats}
+          shelfStatusStats={chartData.shelfStatusStats}
+        />
+      )}
 
       {/* 筛选器 */}
       <SkillFilters filters={filters} onChange={setFilters} />

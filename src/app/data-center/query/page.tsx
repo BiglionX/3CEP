@@ -1,29 +1,7 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import {
-  Search,
-  Play,
-  Save,
-  History,
-  Database,
-  Table,
-  BarChart3,
-  PieChart,
-  LineChart,
-  Calendar,
-  Clock,
-  User,
-  Share,
-  Download,
-  Copy,
-  Trash2,
-  ChevronDown,
-  ChevronRight,
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
@@ -31,9 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -41,6 +17,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  BarChart3,
+  Clock,
+  Copy,
+  History,
+  LineChart,
+  PieChart,
+  Play,
+  Save,
+  Search,
+  Table,
+  Trash2,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface QueryHistory {
   id: string;
@@ -61,7 +53,6 @@ interface QueryResult {
 }
 
 export default function QueryAnalysisPage() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState('editor');
   const [query, setQuery] = useState('');
   const [dataSource, setDataSource] = useState('default');
@@ -106,7 +97,8 @@ export default function QueryAnalysisPage() {
   };
 
   const loadSavedQueries = async () => {
-    // 模拟加载保存的查    const mockSaved = [
+    // 模拟加载保存的查询
+    const mockSaved = [
       {
         id: '1',
         name: '月度设备增长统计',
@@ -144,7 +136,8 @@ export default function QueryAnalysisPage() {
 
       setResult(mockResult);
 
-      // 添加到历史记      const newHistoryItem: QueryHistory = {
+      // 添加到历史记录
+      const newHistoryItem: QueryHistory = {
         id: Date.now().toString(),
         name: queryName || '临时查询',
         query,
@@ -155,7 +148,8 @@ export default function QueryAnalysisPage() {
         status: 'success',
       };
 
-      setHistory(prev => [newHistoryItem, ...prev.slice(0, 9)]); // 保持最0条记    } catch (error) {
+      setHistory(prev => [newHistoryItem, ...prev.slice(0, 9)]); // 保持最多 10 条记录
+    } catch (error) {
       console.error('查询执行失败:', error);
     } finally {
       setExecuting(false);
@@ -185,7 +179,8 @@ export default function QueryAnalysisPage() {
   };
 
   const formatQuery = () => {
-    // 简单的SQL格式    const formatted = query
+    // 简单的 SQL 格式化
+    const formatted = query
       .replace(/\s+/g, ' ')
       .replace(/([,(])/g, '$1\n ? ')
       .replace(/([)])/, '\n$1')
@@ -238,10 +233,10 @@ export default function QueryAnalysisPage() {
       <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
         <div className="text-center">
           <BarChart3 className="mx-auto h-12 w-12 text-gray-400 mb-2" />
-          <p className="text-gray-500">可视化图表区/p>
+          <p className="text-gray-500">可视化图表区</p>
           <p className="text-sm text-gray-400">
             基于查询结果生成
-            {type === 'bar' ? '柱状 : type === 'pie' ? '饼图' : '折线}
+            {type === 'bar' ? '柱状图' : type === 'pie' ? '饼图' : '折线图'}
           </p>
         </div>
       </div>
@@ -256,14 +251,15 @@ export default function QueryAnalysisPage() {
           查询分析
         </h1>
         <p className="text-gray-600 mt-1 text-sm sm:text-base">
-          编写和执行数据分析查        </p>
+          编写和执行数据分析查询
+        </p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
           <TabsTrigger value="editor" className="text-xs sm:text-sm py-2">
             <Search className="mr-1 h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden xs:inline">查询编辑/span>
+            <span className="hidden xs:inline">查询编辑器</span>
             <span className="xs:hidden">编辑</span>
           </TabsTrigger>
           <TabsTrigger value="results" className="text-xs sm:text-sm py-2">
@@ -313,17 +309,18 @@ export default function QueryAnalysisPage() {
             <CardHeader>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <CardTitle className="text-base sm:text-lg">
-                  SQL 查询编辑                </CardTitle>
+                  SQL 查询编辑{' '}
+                </CardTitle>
                 <div className="flex flex-col xs:flex-row items-stretch xs:items-center space-y-2 xs:space-y-0 xs:space-x-2">
                   <Select value={dataSource} onValueChange={setDataSource}>
                     <SelectTrigger className="w-full xs:w-[140px] sm:w-[180px]">
-                      <SelectValue placeholder="选择数据源 />
+                      <SelectValue placeholder="选择数据源" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="default">默认数据源/SelectItem>
+                      <SelectItem value="default">默认数据源</SelectItem>
                       <SelectItem value="devices">设备管理系统</SelectItem>
                       <SelectItem value="repair">维修记录系统</SelectItem>
-                      <SelectItem value="supply">供应链系/SelectItem>
+                      <SelectItem value="supply">供应链系统</SelectItem>
                     </SelectContent>
                   </Select>
                   <Button
@@ -331,10 +328,10 @@ export default function QueryAnalysisPage() {
                     disabled={executing || !query.trim()}
                     className="flex items-center py-2 px-3 text-sm sm:py-2 sm:px-4"
                   >
-                    {executing  (
+                    {executing ? (
                       <>
                         <Clock className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4 animate-spin" />
-                        <span className="text-xs sm:text-sm">执行..</span>
+                        <span className="text-xs sm:text-sm">执行中...</span>
                       </>
                     ) : (
                       <>
@@ -368,7 +365,8 @@ export default function QueryAnalysisPage() {
                   variant="outline"
                   className="py-2 px-3 text-xs sm:text-sm"
                 >
-                  格式                </Button>
+                  格式化
+                </Button>
               </div>
 
               <Textarea
@@ -381,11 +379,11 @@ export default function QueryAnalysisPage() {
 
               <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between text-xs sm:text-sm text-gray-500 gap-1 xs:gap-0">
                 <div>
-                  字符 {query.length} | 行数: {query.split('\n').length}
+                  字符数：{query.length} | 行数：{query.split('\n').length}
                 </div>
                 <div className="flex items-center space-x-2 xs:space-x-4">
-                  <span className="hidden sm:inline">语法高亮: 已启/span>
-                  <span className="hidden sm:inline">自动补全: 已启/span>
+                  <span className="hidden sm:inline">语法高亮：已启用</span>
+                  <span className="hidden sm:inline">自动补全：已启用</span>
                 </div>
               </div>
             </CardContent>
@@ -397,19 +395,19 @@ export default function QueryAnalysisPage() {
             <CardHeader>
               <CardTitle className="text-base sm:text-lg">查询结果</CardTitle>
               <CardDescription>
-                {result  (
+                {result ? (
                   <div className="flex flex-wrap items-center gap-2 xs:gap-4 text-xs sm:text-sm">
-                    <span>执行时间: {result.executionTime}ms</span>
-                    <span>返回行数: {result.rowCount}</span>
-                    <span>列数: {result.columns.length}</span>
+                    <span>执行时间：{result.executionTime}ms</span>
+                    <span>返回行数：{result.rowCount}</span>
+                    <span>列数：{result.columns.length}</span>
                   </div>
                 ) : (
-                  '尚未执行查询'
+                  <span>尚未执行查询</span>
                 )}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {result  (
+              {result ? (
                 <Tabs defaultValue="table">
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger
@@ -435,7 +433,7 @@ export default function QueryAnalysisPage() {
                       <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="bar" className="text-xs py-2">
                           <BarChart3 className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                          <span className="hidden xs:inline">柱状/span>
+                          <span className="hidden xs:inline">柱状图</span>
                         </TabsTrigger>
                         <TabsTrigger value="pie" className="text-xs py-2">
                           <PieChart className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
@@ -443,7 +441,7 @@ export default function QueryAnalysisPage() {
                         </TabsTrigger>
                         <TabsTrigger value="line" className="text-xs py-2">
                           <LineChart className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                          <span className="hidden xs:inline">折线/span>
+                          <span className="hidden xs:inline">折线图</span>
                         </TabsTrigger>
                       </TabsList>
                       <TabsContent value="bar">
@@ -497,7 +495,7 @@ export default function QueryAnalysisPage() {
                           <Badge
                             variant={
                               item.status === 'success'
-                                 'default'
+                                ? 'default'
                                 : 'destructive'
                             }
                             className="text-xs"
@@ -540,7 +538,7 @@ export default function QueryAnalysisPage() {
         <TabsContent value="saved" className="space-y-3 sm:space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base sm:text-lg">保存的查/CardTitle>
+              <CardTitle className="text-base sm:text-lg">保存的查询</CardTitle>
               <CardDescription>您保存的常用查询模板</CardDescription>
             </CardHeader>
             <CardContent>
@@ -591,7 +589,7 @@ export default function QueryAnalysisPage() {
                 {savedQueries.length === 0 && (
                   <div className="text-center py-8">
                     <Save className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <p className="text-gray-500">暂无保存的查/p>
+                    <p className="text-gray-500">暂无保存的查询</p>
                   </div>
                 )}
               </div>
@@ -602,4 +600,3 @@ export default function QueryAnalysisPage() {
     </div>
   );
 }
-

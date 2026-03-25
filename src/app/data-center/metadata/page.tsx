@@ -1,25 +1,7 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import {
-  Database,
-  Search,
-  Filter,
-  Plus,
-  Edit,
-  Eye,
-  BarChart3,
-  Tag,
-  Shield,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Users,
-  FileText,
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
@@ -27,8 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -36,6 +17,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  AlertTriangle,
+  BarChart3,
+  Clock,
+  Database,
+  Edit,
+  Eye,
+  FileText,
+  Plus,
+  Search,
+  Share,
+  Tag,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface DataAsset {
   id: string;
@@ -72,14 +68,13 @@ interface MetadataStatistics {
 }
 
 export default function MetadataManagementPage() {
-  const router = useRouter();
   const [assets, setAssets] = useState<DataAsset[]>([]);
   const [statistics, setStatistics] = useState<MetadataStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
-  const [sensitivityFilter, setSensitivityFilter] = useState('all');
+  const [_sensitivityFilter, _setSensitivityFilter] = useState('all');
 
   useEffect(() => {
     loadData();
@@ -89,105 +84,76 @@ export default function MetadataManagementPage() {
     try {
       setLoading(true);
 
-      // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // 调用真实 API 获取数据
+      const response = await fetch('/api/data-center/metadata');
 
-      // 模拟数据
-      const mockAssets: DataAsset[] = [
-        {
-          id: 'devices_table_001',
-          name: 'devices',
-          displayName: '设备信息,
-          description: '存储所有设备的基本信息和状,
-          type: 'table',
-          category: '设备管理',
-          owner: 'device_team',
-          department: '技术部',
-          tags: ['设备', '硬件', '状],
-          businessTags: ['设备管理', '资产跟踪'],
-          technicalTags: ['postgresql', '主表'],
-          dataSize: 1024000,
-          rowCount: 1247,
-          lastModified: '2026-02-28T14:30:00Z',
-          createdDate: '2026-01-15T09:00:00Z',
-          businessOwner: '张经,
-          dataSteward: '李数据官',
-          sensitivityLevel: 'internal',
-          qualityScore: 95,
-          lastQualityCheck: '2026-02-28T10:00:00Z',
-          qualityIssues: [
-            {
-              id: 'qi_001',
-              type: 'missing_value',
-              severity: 'low',
-              resolved: false,
-            },
-          ],
-        },
-        {
-          id: 'parts_price_view_001',
-          name: 'parts_price_analysis',
-          displayName: '配件价格分析视图',
-          description: '聚合各渠道配件价格信息的分析视图',
-          type: 'view',
-          category: '价格分析',
-          owner: 'pricing_team',
-          department: '商务,
-          tags: ['价格', '配件', '分析'],
-          businessTags: ['价格监控', '市场竞争'],
-          technicalTags: ['materialized_view', '实时'],
-          dataSize: 512000,
-          rowCount: 843,
-          lastModified: '2026-02-28T12:15:00Z',
-          createdDate: '2026-02-01T10:30:00Z',
-          businessOwner: '王总监',
-          dataSteward: '赵分析师',
-          sensitivityLevel: 'internal',
-          qualityScore: 88,
-          lastQualityCheck: '2026-02-27T16:45:00Z',
-        },
-        {
-          id: 'user_behavior_api_001',
-          name: 'user_behavior_events',
-          displayName: '用户行为事件API',
-          description: '实时获取用户行为事件数据的RESTful API',
-          type: 'api',
-          category: '用户行为',
-          owner: 'analytics_team',
-          department: '数据源,
-          tags: ['用户', '行为', '实时'],
-          businessTags: ['用户画像', '行为分析'],
-          technicalTags: ['rest_api', 'websocket', '实时],
-          dataSize: 2048000,
-          rowCount: 56789,
-          lastModified: '2026-02-28T15:20:00Z',
-          createdDate: '2026-01-20T11:00:00Z',
-          businessOwner: '陈主,
-          dataSteward: '刘数据科学家',
-          sensitivityLevel: 'confidential',
-          qualityScore: 92,
-          lastQualityCheck: '2026-02-28T09:30:00Z',
-        },
-      ];
+      if (!response.ok) {
+        throw new Error('加载失败');
+      }
 
-      const mockStats: MetadataStatistics = {
-        totalAssets: 3,
-        assetsByType: { table: 1, view: 1, api: 1 },
-        assetsByCategory: { 设备管理: 1, 价格分析: 1, 用户行为: 1 },
-        averageQualityScore: 91.7,
-        assetsBySensitivity: { internal: 2, confidential: 1 },
-        recentUpdates: 3,
-        qualityIssuesCount: 1,
-      };
+      const result = await response.json();
 
-      setAssets(mockAssets);
-      setStatistics(mockStats);
+      if (result.success) {
+        setAssets(result.data.assets);
+        setStatistics(result.data.statistics);
+      } else {
+        console.error('API 返回错误:', result.error);
+        // 失败时使用模拟数据作为降级方案
+        setAssets(getMockAssets());
+        setStatistics(getMockStats());
+      }
     } catch (error) {
-      console.error('加载元数据失', error);
+      console.error('加载元数据失败:', error);
+      // 错误时使用模拟数据作为降级方案
+      setAssets(getMockAssets());
+      setStatistics(getMockStats());
     } finally {
       setLoading(false);
     }
   };
+
+  const getMockAssets = (): DataAsset[] => [
+    {
+      id: 'devices_table_001',
+      name: 'devices',
+      displayName: '设备信息',
+      description: '存储所有设备的基本信息和状态',
+      type: 'table',
+      category: '设备管理',
+      owner: 'device_team',
+      department: '技术部',
+      tags: ['设备', '硬件', '状态'],
+      businessTags: ['设备管理', '资产跟踪'],
+      technicalTags: ['postgresql', '主表'],
+      dataSize: 1024000,
+      rowCount: 1247,
+      lastModified: '2026-02-28T14:30:00Z',
+      createdDate: '2026-01-15T09:00:00Z',
+      businessOwner: '张经理',
+      dataSteward: '李数据官',
+      sensitivityLevel: 'internal',
+      qualityScore: 95,
+      lastQualityCheck: '2026-02-28T10:00:00Z',
+      qualityIssues: [
+        {
+          id: 'qi_001',
+          type: 'missing_value',
+          severity: 'low',
+          resolved: false,
+        },
+      ],
+    },
+  ];
+
+  const getMockStats = (): MetadataStatistics => ({
+    totalAssets: 1,
+    assetsByType: { table: 1 },
+    assetsByCategory: { 设备管理: 1 },
+    averageQualityScore: 95,
+    assetsBySensitivity: { internal: 1 },
+    recentUpdates: 0,
+    qualityIssuesCount: 1,
+  });
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -220,7 +186,7 @@ export default function MetadataManagementPage() {
   const filteredAssets = assets.filter(asset => {
     const matchesSearch =
       asset.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      asset.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       asset.tags.some(tag =>
         tag.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -229,8 +195,8 @@ export default function MetadataManagementPage() {
       categoryFilter === 'all' || asset.category === categoryFilter;
     const matchesType = typeFilter === 'all' || asset.type === typeFilter;
     const matchesSensitivity =
-      sensitivityFilter === 'all' ||
-      asset.sensitivityLevel === sensitivityFilter;
+      _sensitivityFilter === 'all' ||
+      asset.sensitivityLevel === _sensitivityFilter;
 
     return (
       matchesSearch && matchesCategory && matchesType && matchesSensitivity
@@ -238,11 +204,11 @@ export default function MetadataManagementPage() {
   });
 
   const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     if (bytes < 1024 * 1024 * 1024)
-      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-    return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   };
 
   if (loading) {
@@ -258,12 +224,13 @@ export default function MetadataManagementPage() {
       {/* 页面头部 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">元数据管/h1>
+          <h1 className="text-2xl font-bold text-gray-900">元数据管理</h1>
           <p className="text-gray-600 mt-1">数据资产目录和元数据管理</p>
         </div>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
-          注册新资        </Button>
+          注册新资产
+        </Button>
       </div>
 
       {/* 统计概览 */}
@@ -281,7 +248,7 @@ export default function MetadataManagementPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">平均质量/CardTitle>
+              <CardTitle className="text-sm font-medium">平均质量</CardTitle>
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -324,7 +291,7 @@ export default function MetadataManagementPage() {
         </TabsList>
 
         <TabsContent value="assets" className="space-y-4">
-          {/* 搜索和过*/}
+          {/* 搜索和过滤 */}
           <Card>
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -343,7 +310,7 @@ export default function MetadataManagementPage() {
                   onValueChange={setCategoryFilter}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="按类别筛 />
+                    <SelectValue placeholder="按类别筛选" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">全部类别</SelectItem>
@@ -355,11 +322,11 @@ export default function MetadataManagementPage() {
 
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
                   <SelectTrigger>
-                    <SelectValue placeholder="按类型筛 />
+                    <SelectValue placeholder="按类型筛选" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">全部类型</SelectItem>
-                    <SelectItem value="table">数据源/SelectItem>
+                    <SelectItem value="table">数据表</SelectItem>
                     <SelectItem value="view">视图</SelectItem>
                     <SelectItem value="api">API</SelectItem>
                   </SelectContent>
@@ -387,23 +354,23 @@ export default function MetadataManagementPage() {
                       <Badge
                         variant={
                           asset.qualityScore && asset.qualityScore >= 90
-                             'default'
+                            ? 'default'
                             : asset.qualityScore && asset.qualityScore >= 70
-                               'secondary'
+                              ? 'secondary'
                               : 'destructive'
                         }
                       >
-                        质量: {asset.qualityScore || 'N/A'}
+                        质量：{asset.qualityScore || 'N/A'}
                       </Badge>
                       <Badge
                         className={getSensitivityColor(asset.sensitivityLevel)}
                       >
                         {asset.sensitivityLevel === 'public'
-                           '公开'
+                          ? '公开'
                           : asset.sensitivityLevel === 'internal'
-                             '内部'
+                            ? '内部'
                             : asset.sensitivityLevel === 'confidential'
-                               '机密'
+                              ? '机密'
                               : '受限'}
                       </Badge>
                     </div>
@@ -421,7 +388,7 @@ export default function MetadataManagementPage() {
                       <p className="font-medium">{asset.category}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">所有/p>
+                      <p className="text-sm text-gray-500">所有者</p>
                       <p className="font-medium">{asset.owner}</p>
                     </div>
                     <div>
@@ -435,18 +402,18 @@ export default function MetadataManagementPage() {
                       <p className="text-sm text-gray-500">数据大小</p>
                       <p className="font-medium">
                         {asset.dataSize
-                           formatFileSize(asset.dataSize)
+                          ? formatFileSize(asset.dataSize)
                           : 'N/A'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">记录/p>
+                      <p className="text-sm text-gray-500">记录数</p>
                       <p className="font-medium">
-                        {asset.toLocaleString() || 'N/A'}
+                        {asset.rowCount?.toLocaleString() || 'N/A'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">业务负责/p>
+                      <p className="text-sm text-gray-500">业务负责人</p>
                       <p className="font-medium">
                         {asset.businessOwner || 'N/A'}
                       </p>
@@ -474,9 +441,9 @@ export default function MetadataManagementPage() {
 
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <span>
-                      最后更{' '}
+                      最后更新{' '}
                       {asset.lastModified
-                         new Date(asset.lastModified).toLocaleString('zh-CN')
+                        ? new Date(asset.lastModified).toLocaleString('zh-CN')
                         : 'N/A'}
                     </span>
                     <div className="flex space-x-2">
@@ -513,7 +480,7 @@ export default function MetadataManagementPage() {
         <TabsContent value="analytics">
           <Card>
             <CardHeader>
-              <CardTitle>元数据分/CardTitle>
+              <CardTitle>元数据分析</CardTitle>
               <CardDescription>数据资产的统计分析和洞察</CardDescription>
             </CardHeader>
             <CardContent>
@@ -528,4 +495,3 @@ export default function MetadataManagementPage() {
     </div>
   );
 }
-
