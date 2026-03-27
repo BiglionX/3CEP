@@ -20,6 +20,7 @@ import {
   Globe,
   Home,
   Key,
+  LayoutDashboard,
   Menu,
   Package,
   Plus,
@@ -86,13 +87,8 @@ export function RoleAwareSidebar() {
       name: '数据中心',
       href: '/data-center',
       icon: <BarChart3 className="w-5 h-5" />,
-      roles: [
-        'admin',
-        'manager',
-        'analyst',
-        'finance_manager',
-        'procurement_specialist',
-      ],
+      roles: ['admin', 'manager', 'analyst', 'finance_manager'],
+      external: true, // 标记为外部独立系统
     },
     {
       id: 'separator-1',
@@ -270,6 +266,22 @@ export function RoleAwareSidebar() {
       href: '',
       roles: ['admin', 'manager', 'agent_operator'],
       children: [
+        // 快速入口
+        {
+          id: 'agent-create',
+          name: '创建智能体',
+          href: '/admin/agents/create',
+          icon: <Plus className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'agent_operator'],
+        },
+        {
+          id: 'agent-dashboard',
+          name: '智能体概览',
+          href: '/admin/agents',
+          icon: <LayoutDashboard className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'agent_operator'],
+        },
+        // 开发与配置
         {
           id: 'agent-templates',
           name: '智能体模板',
@@ -393,11 +405,53 @@ export function RoleAwareSidebar() {
           roles: ['admin', 'manager', 'marketplace_admin'],
         },
         {
+          id: 'skill-tags',
+          name: '标签管理',
+          href: '/admin/skill-tags',
+          icon: <Variable className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
+          id: 'skill-shelf',
+          name: '上下架管理',
+          href: '/admin/skill-store/shelf-management',
+          icon: <ShoppingCart className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
+          id: 'skill-reviews',
+          name: '评论管理',
+          href: '/admin/skill-reviews',
+          icon: <FileText className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
+          id: 'skill-documents',
+          name: '文档管理',
+          href: '/admin/skill-documents',
+          icon: <BookOpen className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
           id: 'skill-analytics',
           name: '数据分析',
           href: '/admin/skill-analytics',
           icon: <BarChart3 className="w-4 h-4" />,
           roles: ['admin', 'manager', 'marketplace_admin', 'analyst'],
+        },
+        {
+          id: 'skill-recommendations',
+          name: '推荐系统',
+          href: '/admin/skill-recommendations',
+          icon: <Search className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
+        },
+        {
+          id: 'skill-sandboxes',
+          name: '测试沙箱',
+          href: '/admin/skill-sandboxes',
+          icon: <Globe className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'marketplace_admin'],
         },
       ],
     },
@@ -686,7 +740,18 @@ export function RoleAwareSidebar() {
             : 'text-gray-700 hover:bg-gray-100',
           isActive && 'bg-blue-50 text-blue-600 border-r-2 border-blue-500'
         )}
-        onClick={() => setSidebarOpen(false)}
+        onClick={() => {
+          setSidebarOpen(false);
+          // 如果是跳转到数据中心，确保携带认证信息
+          if (item.external) {
+            // 使用 window.location 确保完整页面加载和 cookie 同步
+            // window.location.href = item.href;
+            // 或者使用 Next.js router.push 但需要等待一下
+            setTimeout(() => {
+              window.location.href = item.href;
+            }, 100);
+          }
+        }}
       >
         {item.icon && <span className="mr-3">{item.icon}</span>}
         <span className="flex-1">{item.name}</span>

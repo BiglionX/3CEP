@@ -29,6 +29,11 @@ export const supabase = (() => {
   if (typeof window !== 'undefined') {
     // 浏览器端：使用全局单例
     if (!globalThis.__supabaseInstance) {
+      // 从 Supabase URL 提取项目名称
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+      const projectName = supabaseUrl.split('//')[1]?.split('.')[0] || 'procyc';
+      const defaultStorageKey = `sb-${projectName}-auth-token`;
+
       globalThis.__supabaseInstance = createClient(
         supabaseUrl,
         supabaseAnonKey,
@@ -37,7 +42,7 @@ export const supabase = (() => {
             persistSession: true,
             detectSessionInUrl: true,
             autoRefreshToken: true,
-            storageKey: 'sb-procyc-auth-token-singleton',
+            storageKey: defaultStorageKey, // 使用正确的 cookie 名称
           },
         }
       );

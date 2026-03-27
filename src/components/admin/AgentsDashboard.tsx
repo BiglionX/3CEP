@@ -1,5 +1,7 @@
 'use client';
 
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import BatchActions from './BatchActions';
 
@@ -203,25 +205,37 @@ export default function AgentsDashboard(): JSX.Element {
           <h1 className="text-3xl font-bold">智能体管理</h1>
           <p className="text-gray-600 mt-2">监控和管理平台中的所有智能体服务</p>
         </div>
-        <button
-          onClick={loadAgents}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center"
-        >
-          <svg
-            className="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex gap-2">
+          {/* 创建智能体 */}
+          <Link
+            href="/admin/agents/create"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            />
-          </svg>
-          刷新
-        </button>
+            <Plus className="h-5 w-5 mr-2" />
+            创建智能体
+          </Link>
+
+          {/* 刷新 */}
+          <button
+            onClick={loadAgents}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center"
+          >
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            刷新
+          </button>
+        </div>
       </div>
 
       {/* 统计卡片 */}

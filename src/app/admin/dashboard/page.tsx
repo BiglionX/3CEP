@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import {
   Bar,
@@ -43,14 +44,51 @@ export default function DashboardPage() {
   const loadDashboardData = async () => {
     try {
       setDataLoading(true);
-      const response = await fetch('/api/admin/dashboard/stats');
+
+      console.log('[Dashboard] 开始加载数据...');
+
+      // 从 Supabase 获取当前 session（仅在客户端）
+      let session = null;
+      if (typeof window !== 'undefined') {
+        const { data } = await supabase.auth.getSession();
+        session = data.session;
+      }
+
+      console.log('[Dashboard] Session 状态:', { hasSession: !!session });
+
+      const response = await fetch('/api/admin/dashboard/stats', {
+        credentials: 'include',
+        headers: {
+          // 如果有 session，添加 Authorization header
+          ...(session
+            ? {
+                Authorization: `Bearer ${session.access_token}`,
+              }
+            : {}),
+        },
+      });
+
+      console.log('[Dashboard] API 响应状态:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('[Dashboard] 错误响应:', errorData);
+        throw new Error(
+          errorData.error || `HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+
       const result = await response.json();
+      console.log('[Dashboard] 数据加载成功:', result);
 
       if (result.success) {
         setStats(result.data);
+      } else {
+        throw new Error(result.error || '加载失败');
       }
     } catch (error) {
-      console.error('加载运营数据失败:', error);
+      console.error('[Dashboard] 加载运营数据失败:', error);
+      throw error; // 重新抛出错误以便上层处理
     } finally {
       setDataLoading(false);
     }
@@ -145,6 +183,42 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {/* 🔴 RLS 安全警告提醒 */}
+      <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg
+              className="h-5 w-5 text-red-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-red-800">
+              ⚠️ 上线前必须启用 RLS（行级安全策略）
+            </h3>
+            <div className="mt-2 text-sm text-red-700">
+              <ul className="list-disc list-inside space-y-1">
+                <li>当前开发环境已禁用 RLS，方便调试</li>
+                <li>
+                  <strong>生产环境必须启用 RLS</strong>，否则会导致租户数据泄露
+                </li>
+                <li>
+                  涉及表：tenant_users, admin_users, external_data_sources
+                </li>
+                <li>参考文档：docs/fix-tenant-users-rls-recursion.md</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="hidden"></div>
         <div className="flex gap-2">

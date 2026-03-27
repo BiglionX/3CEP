@@ -36,16 +36,38 @@ async function handleAdminRequest(
   method: string
 ) {
   try {
-    // 验证认证状态
-    const isAuthenticated = await AuthService.isAdminAuthenticated();
-    if (!isAuthenticated) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+    console.log('[Admin API] ====== 请求开始 ======');
+    console.log('[Admin API] 路径:', request.url);
+    console.log('[Admin API] Cookie Header:', request.headers.get('cookie'));
+    console.log(
+      '[Admin API] Authorization Header:',
+      request.headers.get('authorization')
+    );
+
+    // 优先从 Authorization header 获取用户信息
+    const authHeader = request.headers.get('authorization');
+    let currentUser = await AuthService.getCurrentUserFromHeader(authHeader);
+
+    // 如果 header 中没有，再尝试从 cookie 获取
+    if (!currentUser) {
+      console.log('[Admin API] Header 中未找到用户，尝试从 cookie 获取...');
+      currentUser = await AuthService.getCurrentUser();
     }
 
-    // 验证权限
-    const currentUser = await AuthService.getCurrentUser();
+    console.log('[Admin API] 当前用户:', currentUser?.email || 'null');
+
     if (!currentUser) {
+      console.log('[Admin API] ❌ 未找到认证用户');
       return NextResponse.json({ error: '用户未登录' }, { status: 401 });
+    }
+
+    // 验证是否为管理员
+    const isAdmin = await AuthService.isAdminUser(currentUser.id);
+    console.log('[Admin API] 是否为管理员:', isAdmin);
+
+    if (!isAdmin) {
+      console.log('[Admin API] ❌ 非管理员用户');
+      return NextResponse.json({ error: '权限不足' }, { status: 403 });
     }
 
     const resolvedParams = await params;

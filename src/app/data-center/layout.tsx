@@ -3,25 +3,9 @@
 import { DataCenterSidebar } from '@/components/data-center/DataCenterSidebar';
 import DataCenterTopbar from '@/components/data-center/DataCenterTopbar';
 import { DataCenterUserMenu } from '@/components/data-center/DataCenterUserMenu';
-import { useUser } from '@/components/providers/AuthProvider';
-import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-
-// 定义 RBAC 权限返回类型
-interface RbacPermissionResult {
-  user: any;
-  roles: string[];
-  isLoading: boolean;
-  hasPermission: (permission: string) => boolean;
-  hasAnyPermission: (permissions: string[]) => boolean;
-  hasAllPermissions: (permissions: string[]) => boolean;
-  getAccessibleResources: (category?: string) => string[];
-  getPermissionInfo: (permission: string) => any;
-  getRoleInfo: (role: string) => any;
-  rbacConfig: any;
-  isConfigLoaded: boolean;
-}
 
 export default function DataCenterLayout({
   children,
@@ -29,19 +13,17 @@ export default function DataCenterLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user, isLoading: authLoading } = useUser();
-  const { hasPermission } =
-    useRbacPermission() as unknown as RbacPermissionResult;
+  const { user, isAuthenticated, isLoading } = useUnifiedAuth();
 
   // 认证检查 - 与 admin 后台保持一致
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!isLoading && !isAuthenticated) {
       router.push('/login?redirect=/data-center');
     }
-  }, [user, authLoading, router]);
+  }, [user, isAuthenticated, isLoading, router]);
 
   // 加载中
-  if (authLoading || !user) {
+  if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -55,7 +37,7 @@ export default function DataCenterLayout({
   return (
     <div className="min-h-screen bg-gray-50 flex" data-disable-unified-layout>
       {/* 侧边栏 */}
-      <DataCenterSidebar hasPermission={hasPermission} />
+      <DataCenterSidebar />
 
       {/* 主内容区 */}
       <main className="flex-1 lg:ml-0">

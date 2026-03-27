@@ -46,9 +46,16 @@ export function useUnifiedAuth() {
           return;
         }
 
+        // 1. 优先从 Supabase 获取 session（会检查 localStorage）
         const {
           data: { session },
         } = await supabase.auth.getSession();
+
+        console.log('[useUnifiedAuth] 认证初始化 - Session 状态:', {
+          hasSession: !!session,
+          userId: session?.user?.id,
+          email: session?.user?.email,
+        });
 
         if (session?.user) {
           // 优先从 user_metadata 读取角色，避免重复查询数据库
@@ -83,7 +90,67 @@ export function useUnifiedAuth() {
           return;
         }
 
-        // 备用方案：检查 localStorage
+        // 2. 备用方案：检查 Cookie 中的 session
+        if (!session) {
+          console.log('[useUnifiedAuth] Session 为空，尝试从 Cookie 读取...');
+          try {
+            // 获取正确的 cookie 名称
+            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+            const projectName =
+              supabaseUrl.split('//')[1]?.split('.')[0] || 'procyc';
+            const cookieName = `sb-${projectName}-auth-token`;
+
+            // 读取 cookie
+            const cookies = document.cookie.split(';').reduce(
+              (acc, cookie) => {
+                const [key, value] = cookie.trim().split('=');
+                acc[key] = value;
+                return acc;
+              },
+              {} as Record<string, string>
+            );
+
+            const cookieValue = cookies[cookieName];
+            if (cookieValue) {
+              console.log('[useUnifiedAuth] ✅ 从 Cookie 读取到 session');
+              // 解析 cookie 中的 session 数据
+              const sessionData = JSON.parse(decodeURIComponent(cookieValue));
+              if (sessionData?.access_token) {
+                // 使用 token 获取用户信息
+                const {
+                  data: { user },
+                } = await supabase.auth.getUser(sessionData.access_token);
+                if (user) {
+                  console.log(
+                    '[useUnifiedAuth] ✅ 从 Cookie Token 恢复用户成功:',
+                    user.id
+                  );
+                  setAuthState({
+                    user,
+                    isAuthenticated: true,
+                    is_admin:
+                      user.user_metadata?.is_admin === true ||
+                      user.user_metadata?.roles?.includes('admin') ||
+                      false,
+                    roles: user.user_metadata?.roles || ['viewer'],
+                    isLoading: false,
+                    error: null,
+                  });
+                  return;
+                }
+              }
+            } else {
+              console.log(
+                '[useUnifiedAuth] ❌ Cookie 中未找到 session:',
+                cookieName
+              );
+            }
+          } catch (cookieError) {
+            console.warn('[useUnifiedAuth] Cookie 读取失败:', cookieError);
+          }
+        }
+
+        // 3. 备用方案：检查 localStorage 中的 jwt_token
         const storedToken = localStorage.getItem('jwt_token');
         if (storedToken) {
           try {
@@ -238,6 +305,26 @@ export function useUnifiedAuth() {
       });
 
       if (error) throw error;
+
+      console.log('[useUnifiedAuth] 登录成功，用户 ID:', data.user.id);
+      console.log('[useUnifiedAuth] Session:', !!data.session);
+
+      // 登录成功后，立即刷新页面以确保 cookie 被正确设置
+      // 这样可以避免客户端和服务端 cookie 不同步的问题
+      if (data.session) {
+        console.log('[useUnifiedAuth] 登录成功，准备刷新页面...');
+        // 使用 setTimeout 确保状态更新完成
+        setTimeout(() => {
+          window.location.href = '/admin/dashboard';
+        }, 500);
+
+        // 在刷新前返回，避免重复跳转
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve({ success: true, user: data.user });
+          }, 100);
+        });
+      }
 
       const isAdmin: boolean = await (AuthService as any).isAdminUser(
         data.user.id

@@ -8,6 +8,7 @@ import {
   Clock,
   Download,
   Eye,
+  Plus,
   Shield,
   Upload,
   XCircle,
@@ -266,12 +267,24 @@ export default function SkillShelfManagementPage() {
             管理 Skill 的上架和下架状态
           </p>
         </div>
-        <Link
-          href="/admin/skill-store"
-          className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900"
-        >
-          返回列表
-        </Link>
+        <div className="flex gap-2">
+          {/* 创建 Skill */}
+          <Link
+            href="/admin/skill-store/create"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            创建 Skill
+          </Link>
+
+          {/* 返回列表 */}
+          <Link
+            href="/admin/skill-store"
+            className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900"
+          >
+            返回列表
+          </Link>
+        </div>
       </div>
 
       {/* Tab 导航 */}

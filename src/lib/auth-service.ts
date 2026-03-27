@@ -35,44 +35,100 @@ export class AuthService {
   // 获取当前用户信息
   static async getCurrentUser(): Promise<User | null> {
     try {
-      // 首先尝试从cookie获取会话
+      console.log('[AuthService] getCurrentUser 开始执行');
+
+      // 首先尝试从 cookie 获取会话
       if (typeof window === 'undefined') {
         // 服务器端
         const { cookies } = await import('next/headers');
         const cookieStore = cookies();
 
-        // 获取cookie中的会话信息
+        // 获取 cookie 中的会话信息
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
         const projectName = supabaseUrl.split('//')[1].split('.')[0];
         const cookieName = `sb-${projectName}-auth-token`;
 
+        console.log('[AuthService] Cookie 名称:', cookieName);
         const sessionCookie = cookieStore.get(cookieName);
+        console.log('[AuthService] Cookie 是否存在:', !!sessionCookie);
+        console.log(
+          '[AuthService] Cookie value:',
+          sessionCookie?.value
+            ? `${sessionCookie.value.substring(0, 50)}...`
+            : 'null'
+        );
+
         if (sessionCookie?.value) {
           try {
             const sessionData = JSON.parse(
               decodeURIComponent(sessionCookie.value)
             );
+            console.log('[AuthService] Session data:', {
+              hasToken: !!sessionData.access_token,
+            });
+
             if (sessionData.access_token) {
               const { data, error } = await supabaseAdmin.auth.getUser(
                 sessionData.access_token
               );
+              console.log('[AuthService] Supabase getUser result:', {
+                hasUser: !!data.user,
+                error: error?.message,
+              });
+
               if (!error && data.user) {
+                console.log('[AuthService] ✅ 返回用户:', data.user.email);
                 return data.user;
               }
             }
           } catch (parseError) {
-            // TODO: 移除调试日志 - console.log('Cookie解析失败:', parseError)
+            console.log('[AuthService] Cookie 解析失败:', parseError);
           }
         }
       }
 
-      // 备用方案：使用默认getSession
+      // 备用方案：使用默认 getSession
+      console.log('[AuthService] 尝试使用 getSession 作为备用方案');
       const {
         data: { session },
       } = await supabase.auth.getSession();
+      console.log('[AuthService] getSession result:', {
+        hasSession: !!session,
+      });
+
       return session?.user || null;
     } catch (error) {
-      console.error('获取当前用户失败:', error);
+      console.error('[AuthService] 获取当前用户失败:', error);
+      return null;
+    }
+  }
+
+  // 从 Authorization header 获取当前用户（供 API 路由使用）
+  static async getCurrentUserFromHeader(
+    authHeader: string | null
+  ): Promise<User | null> {
+    try {
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return null;
+      }
+
+      const token = authHeader.replace('Bearer ', '');
+      console.log('[AuthService] 从 Header 获取到 Bearer token');
+
+      const { data, error } = await supabaseAdmin.auth.getUser(token);
+      console.log('[AuthService] Header Token 验证结果:', {
+        hasUser: !!data.user,
+        error: error?.message,
+      });
+
+      if (!error && data.user) {
+        console.log('[AuthService] ✅ Header Token 验证成功:', data.user.email);
+        return data.user;
+      }
+
+      return null;
+    } catch (error) {
+      console.error('[AuthService] Header Token 验证失败:', error);
       return null;
     }
   }

@@ -27,6 +27,7 @@ interface AlertRule {
   threshold: number;
   priority: string;
   enabled: boolean;
+  notification_channels?: string[]; // 通知渠道列表（可选）
 }
 
 /**
@@ -354,7 +355,7 @@ export default function MonitoringPage() {
                                 {query.state}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-600 font-mono text-xs truncate max-w-md">
+                            <td className="px-6 py-4 text-gray-600 font-mono text-xs truncate max-w-md">
                               {query.query}
                             </td>
                           </tr>

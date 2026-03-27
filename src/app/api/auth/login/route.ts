@@ -82,6 +82,15 @@ export async function POST(request: Request) {
     const cookieName = getAuthCookieName(process.env.NEXT_PUBLIC_SUPABASE_URL);
     const cookieValue = serializeSessionCookie(data.session);
 
+    console.log('[Login API] 设置 cookie:', {
+      name: cookieName,
+      valueLength: cookieValue?.length || 0,
+      hasSession: !!data.session,
+      hasAccessToken: !!data.session?.access_token,
+      environment: process.env.NODE_ENV,
+      url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
+    });
+
     const response = NextResponse.json({
       success: true,
       user: {
@@ -93,14 +102,24 @@ export async function POST(request: Request) {
       message: '登录成功',
     });
 
-    // 设置 cookie
+    // 设置 cookie - 使用更宽松的配置
     response.cookies.set(cookieName, cookieValue, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // 开发环境使用 HTTP
       sameSite: 'lax',
       maxAge: 3600, // 1 小时
       path: '/',
+      domain: undefined, // 不指定 domain，使用当前域名
     });
+
+    console.log('[Login API] Cookie 设置完成，验证是否生效...');
+
+    // 立即读取验证
+    const verifyCookie = response.cookies.get(cookieName);
+    console.log(
+      '[Login API] Cookie 验证结果:',
+      verifyCookie ? '✅ 设置成功' : '❌ 设置失败'
+    );
 
     return response;
   } catch (error) {

@@ -83,8 +83,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setError(null);
 
     try {
+      // 尝试从 localStorage 获取 token
+      let authToken: string | null = null;
+
+      // 1. 检查 localStorage 中的 mock-token
+      const mockToken = getMockToken();
+      if (mockToken) {
+        authToken = mockToken;
+        console.log('[AuthProvider] 从 localStorage 获取到 mock-token');
+      }
+
+      // 2. 检查 Supabase session
+      if (!authToken) {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session?.access_token) {
+          authToken = session.access_token;
+          console.log('[AuthProvider] 从 Supabase session 获取到 token');
+        }
+      }
+
+      // 构建请求头
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+        console.log('[AuthProvider] 添加 Authorization header');
+      }
+
       // 优先调用新的 session/me 接口
-      const sessionResponse = await fetch('/api/session/me');
+      const sessionResponse = await fetch('/api/session/me', {
+        method: 'GET',
+        headers,
+      });
 
       if (sessionResponse.ok) {
         const sessionData = await sessionResponse.json();

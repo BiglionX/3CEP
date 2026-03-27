@@ -2,6 +2,8 @@
 
 import { useUnifiedAuth } from '@/hooks/use-unified-auth';
 import type { Skill, SkillFilters as SkillFilterType } from '@/types/skill';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { SkillCharts } from './components/SkillCharts';
 import { SkillFilters } from './components/SkillFilters';
@@ -339,6 +341,15 @@ export default function SkillStorePage() {
           </p>
         </div>
         <div className="flex gap-2">
+          {/* 创建 Skill */}
+          <Link
+            href="/admin/skill-store/create"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            创建 Skill
+          </Link>
+
           {/* 切换图表显示 */}
           <button
             onClick={() => setShowCharts(!showCharts)}

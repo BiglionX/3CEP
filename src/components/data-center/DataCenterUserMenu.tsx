@@ -1,16 +1,5 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useRbacPermission } from '@/hooks/use-rbac-permission';
-import {
-  User,
-  Settings,
-  Shield,
-  LogOut,
-  ChevronDown,
-  BarChart3,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -18,10 +7,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-interface DataCenterUserMenuProps {
-  userEmail?: string;
-}
+import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import { useUnifiedAuth } from '@/hooks/use-unified-auth';
+import {
+  BarChart3,
+  ChevronDown,
+  LogOut,
+  Settings,
+  Shield,
+  User,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 // 定义 RBAC 权限返回类型
 interface RbacPermissionResult {
@@ -38,10 +35,15 @@ interface RbacPermissionResult {
   isConfigLoaded: boolean;
 }
 
-export function DataCenterUserMenu({ userEmail }: DataCenterUserMenuProps) {
+export function DataCenterUserMenu() {
   const router = useRouter();
-  const { hasPermission, roles } = useRbacPermission() as unknown as RbacPermissionResult;
+  const { user } = useUnifiedAuth();
+  const { hasPermission, roles } =
+    useRbacPermission() as unknown as RbacPermissionResult;
   const [isOpen, setIsOpen] = useState(false);
+
+  // 使用用户的 email，如果没有则显示未登录
+  const userEmail = user?.email || undefined;
 
   const handleLogout = async () => {
     try {

@@ -21,20 +21,55 @@ interface UserInfo {
 }
 
 /**
- * 从 JWT Token 中获取当前用户信息
- *
- * @param req - Next.js 请求对象
- * @returns 用户信息，未认证则返回 null
+ * 从请求中获取当前用户信息
  */
 async function getCurrentUser(req: NextRequest): Promise<UserInfo | null> {
   try {
-    // 从 Authorization header 获取 token
+    // 方式 1: 从 Authorization header 获取 token
+    let token: string | null = null;
     const authHeader = req.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return null;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.replace('Bearer ', '');
+      console.log(
+        '[Middleware] 从 Header 获取到 token:',
+        `${token.substring(0, 20)}...`
+      );
     }
 
-    const token = authHeader.replace('Bearer ', '');
+    // 方式 2: 从 Cookie 获取 token（Supabase 的标准方式）
+    if (!token) {
+      const cookieName = getAuthCookieName();
+      const cookie = req.cookies.get(cookieName);
+      console.log('[Middleware] Cookie 名称:', cookieName);
+      console.log('[Middleware] Cookie 是否存在:', !!cookie);
+
+      if (cookie?.value) {
+        console.log('[Middleware] Cookie value 长度:', cookie.value.length);
+        // Cookie 格式可能是 JSON 字符串，需要解析
+        try {
+          const cookieData = JSON.parse(cookie.value);
+          token = cookieData.access_token || cookie.value;
+          console.log(
+            '[Middleware] 从 Cookie JSON 中提取 token:',
+            `${token.substring(0, 20)}...`
+          );
+        } catch (parseError) {
+          // 如果不是 JSON，直接使用 cookie value
+          token = cookie.value;
+          console.log(
+            '[Middleware] 直接使用 Cookie value 作为 token:',
+            `${token.substring(0, 20)}...`
+          );
+        }
+      } else {
+        console.warn('[Middleware] ❌ 未找到认证 cookie!');
+      }
+    }
+
+    if (!token) {
+      console.error('[Middleware] ❌ 未获取到 token，返回 null');
+      return null;
+    }
 
     // 使用 Supabase 验证 token
     const supabase = createClient(
@@ -48,8 +83,14 @@ async function getCurrentUser(req: NextRequest): Promise<UserInfo | null> {
     } = await supabase.auth.getUser(token);
 
     if (error || !user) {
+      console.error(
+        '[Middleware] ❌ Token 验证失败:',
+        error?.message || 'user is null'
+      );
       return null;
     }
+
+    console.log('[Middleware] ✅ Token 验证成功，用户 ID:', user.id);
 
     // 提取用户信息和角色
     const roles = user.user_metadata?.roles || ['user'];
@@ -63,9 +104,18 @@ async function getCurrentUser(req: NextRequest): Promise<UserInfo | null> {
       ...user.user_metadata,
     };
   } catch (error) {
-    console.error('获取当前用户失败:', error);
+    console.error('[Middleware] 获取当前用户失败:', error);
     return null;
   }
+}
+
+/**
+ * 获取 Supabase Auth Cookie 名称
+ */
+function getAuthCookieName(): string {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const projectName = supabaseUrl.split('//')[1].split('.')[0];
+  return `sb-${projectName}-auth-token`;
 }
 
 /**

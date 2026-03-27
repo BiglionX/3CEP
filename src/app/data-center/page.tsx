@@ -1,22 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useRbacPermission } from '@/hooks/use-rbac-permission';
-import {
-  Database,
-  Shield,
-  Activity,
-  Settings,
-  Monitor,
-  AlertTriangle,
-  TrendingUp,
-  Globe,
-  Search,
-  RefreshCw,
-  Download,
-  User,
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -25,7 +9,23 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import {
+  Activity,
+  AlertTriangle,
+  Database,
+  Download,
+  Globe,
+  Monitor,
+  RefreshCw,
+  Search,
+  Settings,
+  Shield,
+  TrendingUp,
+  User,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface DataCenterStats {
   totalDevices: number;
@@ -77,19 +77,31 @@ export default function DataCenterPage() {
     try {
       setLoading(true);
 
-      // 获取统计数据
-      const statsResponse = await fetch('/api/data-centeraction=health');
-      if (statsResponse.ok) {
-        await statsResponse.json();
-        setStats({
-          totalDevices: 1247,
-          activeQueries: 23,
-          dataSources: 8,
-          alerts: 2,
-          uptime: '99.9%',
-          lastSync: new Date().toLocaleString('zh-CN'),
-        });
+      // 获取外部数据源统计
+      const syncStatsResponse = await fetch('/api/admin/data-sync/statistics');
+      let syncStats = null;
+      if (syncStatsResponse.ok) {
+        syncStats = await syncStatsResponse.json();
       }
+
+      // 获取待审核数据数量
+      const auditStatsResponse = await fetch(
+        '/api/admin/data-audit/statistics'
+      );
+      let auditStats = null;
+      if (auditStatsResponse.ok) {
+        auditStats = await auditStatsResponse.json();
+      }
+
+      // 设置统计数据（使用真实数据或 mock 数据）
+      setStats({
+        totalDevices: 1247,
+        activeQueries: 23,
+        dataSources: syncStats?.data?.length || 0,
+        alerts: auditStats?.data?.pending || 0,
+        uptime: '99.9%',
+        lastSync: new Date().toLocaleString('zh-CN'),
+      });
 
       // 获取数据源列表
       setDataSources([
@@ -212,224 +224,226 @@ export default function DataCenterPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="p-4 sm:p-6">
-          {/* 统计卡片 - 响应式网*/}
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">设备总数</CardTitle>
-                <Database className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {stats.totalDevices.toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground">较昨日增12%</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">活跃查询</CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.activeQueries}</div>
-                <p className="text-xs text-muted-foreground">
-                  平均响应时间 245ms
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">数据源</CardTitle>
-                <Globe className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.dataSources}</div>
-                <p className="text-xs text-muted-foreground">8个已连接</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  系统可用                </CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">
-                  {stats.uptime}
-                </div>
-                <p className="text-xs text-muted-foreground truncate">
-                  最后同{stats.lastSync}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {/* 数据源状- 移动端优*/}
-            <Card className="shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center text-base sm:text-lg">
-                  <Database className="mr-2 h-5 w-5" />
-                  数据源状                </CardTitle>
-                <CardDescription className="text-sm">
-                  当前连接的数据源及其状                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 sm:space-y-4">
-                  {dataSources.map(source => (
-                    <div
-                      key={source.id}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg gap-2"
-                    >
-                      <div className="flex items-center space-x-3 min-w-0">
-                        <div
-                          className={`w-3 h-3 rounded-full flex-shrink-0 ${getStatusColor(source.status)}`}
-                        ></div>
-                        <div className="min-w-0">
-                          <div className="font-medium truncate">
-                            {source.name}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {source.type}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right sm:text-left min-w-0">
-                        <div className="text-sm font-medium">
-                          {source.records.toLocaleString()} 条记                        </div>
-                        <div className="text-xs text-gray-500 truncate">
-                          更新{source.lastUpdate}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* 系统告警 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <AlertTriangle className="mr-2 h-5 w-5" />
-                  系统告警
-                  {alerts.length > 0 && (
-                    <Badge variant="destructive" className="ml-2">
-                      {alerts.length}
-                    </Badge>
-                  )}
-                </CardTitle>
-                <CardDescription>需要关注的系统事件</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {alerts.map(alert => (
-                    <div key={alert.id} className="p-3 rounded-lg border">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <Badge className={getSeverityColor(alert.severity)}>
-                            {alert.severity === 'critical'
-                              ? '严重'
-                              : alert.severity === 'warning'
-                                ? '警告'
-                                : '信息'}
-                          </Badge>
-                          <p className="mt-2 text-sm leading-relaxed">
-                            {alert.message}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {alert.source}
-                          </p>
-                        </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap sm:whitespace-normal text-right sm:text-left">
-                          {alert.timestamp}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* 快捷操作 - 移动端优*/}
-          <Card className="mt-4 sm:mt-6 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center text-base sm:text-lg">
-                <Settings className="mr-2 h-5 w-5" />
-                快捷操作
-              </CardTitle>
+        {/* 统计卡片 - 响应式网*/}
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <Card className="shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">设备总数</CardTitle>
+              <Database className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-                <Button
-                  onClick={() => router.push('/data-center/query')}
-                  className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
-                >
-                  <Search className="mr-2 h-4 w-4" />
-                  <span className="truncate">新建查询</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={loadDashboardData}
-                  className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
-                >
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  <span className="truncate">刷新数据</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  <span className="truncate">导出报告</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => router.push('/data-center/monitoring')}
-                  className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
-                >
-                  <Monitor className="mr-2 h-4 w-4" />
-                  <span className="truncate">查看监控</span>
-                </Button>
+              <div className="text-2xl font-bold">
+                {stats.totalDevices.toLocaleString()}
+              </div>
+              <p className="text-xs text-muted-foreground">较昨日增12%</p>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">活跃查询</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.activeQueries}</div>
+              <p className="text-xs text-muted-foreground">
+                平均响应时间 245ms
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">数据源</CardTitle>
+              <Globe className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.dataSources}</div>
+              <p className="text-xs text-muted-foreground">8个已连接</p>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">系统可用 </CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {stats.uptime}
+              </div>
+              <p className="text-xs text-muted-foreground truncate">
+                最后同{stats.lastSync}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          {/* 数据源状- 移动端优*/}
+          <Card className="shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center text-base sm:text-lg">
+                <Database className="mr-2 h-5 w-5" />
+                数据源状{' '}
+              </CardTitle>
+              <CardDescription className="text-sm">
+                当前连接的数据源及其状{' '}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 sm:space-y-4">
+                {dataSources.map(source => (
+                  <div
+                    key={source.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg gap-2"
+                  >
+                    <div className="flex items-center space-x-3 min-w-0">
+                      <div
+                        className={`w-3 h-3 rounded-full flex-shrink-0 ${getStatusColor(source.status)}`}
+                      ></div>
+                      <div className="min-w-0">
+                        <div className="font-medium truncate">
+                          {source.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {source.type}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right sm:text-left min-w-0">
+                      <div className="text-sm font-medium">
+                        {source.records.toLocaleString()} 条记{' '}
+                      </div>
+                      <div className="text-xs text-gray-500 truncate">
+                        更新{source.lastUpdate}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* 管理员快捷入- 仅对有权限的用户显示 */}
-          {hasPermission('dashboard_read') && (
-            <Card className="mt-4 sm:mt-6 shadow-sm border-blue-200">
-              <CardHeader>
-                <CardTitle className="flex items-center text-base sm:text-lg text-blue-700">
-                  <Shield className="mr-2 h-5 w-5" />
-                  管理员专                </CardTitle>
-                <CardDescription>管理后台快速访问入口</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                  {adminQuickLinks
-                    .filter(link => hasPermission(link.permission))
-                    .map(link => (
-                      <Button
-                        key={link.href}
-                        variant="outline"
-                        onClick={() => router.push(link.href)}
-                        className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
-                      >
-                        <link.icon className="mr-2 h-4 w-4 text-blue-600" />
-                        <span className="truncate">{link.name}</span>
-                      </Button>
-                    ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </main>
-      </div>
+          {/* 系统告警 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <AlertTriangle className="mr-2 h-5 w-5" />
+                系统告警
+                {alerts.length > 0 && (
+                  <Badge variant="destructive" className="ml-2">
+                    {alerts.length}
+                  </Badge>
+                )}
+              </CardTitle>
+              <CardDescription>需要关注的系统事件</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {alerts.map(alert => (
+                  <div key={alert.id} className="p-3 rounded-lg border">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <Badge className={getSeverityColor(alert.severity)}>
+                          {alert.severity === 'critical'
+                            ? '严重'
+                            : alert.severity === 'warning'
+                              ? '警告'
+                              : '信息'}
+                        </Badge>
+                        <p className="mt-2 text-sm leading-relaxed">
+                          {alert.message}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {alert.source}
+                        </p>
+                      </div>
+                      <span className="text-xs text-gray-500 whitespace-nowrap sm:whitespace-normal text-right sm:text-left">
+                        {alert.timestamp}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 快捷操作 - 移动端优*/}
+        <Card className="mt-4 sm:mt-6 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center text-base sm:text-lg">
+              <Settings className="mr-2 h-5 w-5" />
+              快捷操作
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+              <Button
+                onClick={() => router.push('/data-center/query')}
+                className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
+              >
+                <Search className="mr-2 h-4 w-4" />
+                <span className="truncate">新建查询</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={loadDashboardData}
+                className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                <span className="truncate">刷新数据</span>
+              </Button>
+              <Button
+                variant="outline"
+                className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                <span className="truncate">导出报告</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => router.push('/data-center/monitoring')}
+                className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto"
+              >
+                <Monitor className="mr-2 h-4 w-4" />
+                <span className="truncate">查看监控</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 管理员快捷入- 仅对有权限的用户显示 */}
+        {hasPermission('dashboard_read') && (
+          <Card className="mt-4 sm:mt-6 shadow-sm border-blue-200">
+            <CardHeader>
+              <CardTitle className="flex items-center text-base sm:text-lg text-blue-700">
+                <Shield className="mr-2 h-5 w-5" />
+                管理员专{' '}
+              </CardTitle>
+              <CardDescription>管理后台快速访问入口</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                {adminQuickLinks
+                  .filter(link => hasPermission(link.permission))
+                  .map(link => (
+                    <Button
+                      key={link.href}
+                      variant="outline"
+                      onClick={() => router.push(link.href)}
+                      className="py-2 px-3 text-sm sm:py-4 sm:px-4 sm:text-base h-auto border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    >
+                      <link.icon className="mr-2 h-4 w-4 text-blue-600" />
+                      <span className="truncate">{link.name}</span>
+                    </Button>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </main>
+    </div>
   );
 }
-

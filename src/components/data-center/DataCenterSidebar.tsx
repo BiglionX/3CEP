@@ -1,21 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   BarChart3,
   Database,
   FileText,
+  Menu,
+  Monitor,
+  Plus,
+  RefreshCw,
   Search,
   Settings,
   Shield,
-  Monitor,
-  Plus,
-  Menu,
+  ShieldCheck,
   X,
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 interface MenuItem {
   id: string;
@@ -26,7 +28,7 @@ interface MenuItem {
 }
 
 interface DataCenterSidebarProps {
-  hasPermission: (permission: string) => boolean;
+  hasPermission?: (permission: string) => boolean;
 }
 
 export function DataCenterSidebar({ hasPermission }: DataCenterSidebarProps) {
@@ -54,6 +56,27 @@ export function DataCenterSidebar({ hasPermission }: DataCenterSidebarProps) {
       href: '/data-center/sources',
       icon: Database,
       activePaths: ['/data-center/sources'],
+    },
+    {
+      id: 'data-sources',
+      title: '外部数据源',
+      href: '/data-center/data-sources',
+      icon: Database,
+      activePaths: ['/data-center/data-sources'],
+    },
+    {
+      id: 'external-data-sync',
+      title: '数据同步监控',
+      href: '/data-center/external-data-sync',
+      icon: RefreshCw,
+      activePaths: ['/data-center/external-data-sync'],
+    },
+    {
+      id: 'data-audit',
+      title: '数据审核中心',
+      href: '/data-center/data-audit',
+      icon: ShieldCheck,
+      activePaths: ['/data-center/data-audit'],
     },
     {
       id: 'query',
