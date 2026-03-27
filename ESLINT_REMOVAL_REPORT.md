@@ -178,6 +178,6 @@ npm run build         # ✅ 构建（包含 TypeScript 类型检查）
 
 ---
 
-**完成时间**: 2026-03-27  
-**执行方式**: 完全移除 ESLint，保留 Prettier 和 TypeScript  
+**完成时间**: 2026-03-27
+**执行方式**: 完全移除 ESLint，保留 Prettier 和 TypeScript
 **影响范围**: 全局 ESLint 配置及所有子模块
