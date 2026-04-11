@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Clock,
   Coins,
+  Database,
   DollarSign,
   Eye,
   FileText,
@@ -24,6 +25,7 @@ import {
   Menu,
   Package,
   Plus,
+  QrCode,
   Search,
   Settings,
   Shield,
@@ -52,6 +54,7 @@ interface MenuItem {
   children?: MenuItem[];
   badge?: string;
   separator?: boolean;
+  external?: boolean;
 }
 
 export function RoleAwareSidebar() {
@@ -501,6 +504,114 @@ export function RoleAwareSidebar() {
       ],
     },
     {
+      id: 'separator-product-inventory',
+      name: '',
+      href: '',
+      icon: null,
+      roles: ['admin', 'manager', 'warehouse_operator'],
+      separator: true,
+    },
+    {
+      id: 'product-library',
+      name: '产品库',
+      icon: <Database className="w-5 h-5" />,
+      href: '/product-library',
+      roles: ['admin', 'manager', 'warehouse_operator'],
+      children: [
+        {
+          id: 'pl-brands',
+          name: '品牌管理',
+          href: '/product-library/brands',
+          icon: <Store className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+        {
+          id: 'pl-products',
+          name: '整机产品',
+          href: '/product-library/products',
+          icon: <Package className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'warehouse_operator'],
+        },
+        {
+          id: 'pl-accessories',
+          name: '配件管理',
+          href: '/product-library/accessories',
+          icon: <Wrench className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'warehouse_operator'],
+        },
+        {
+          id: 'pl-components',
+          name: '部件管理',
+          href: '/product-library/components',
+          icon: <Package className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'warehouse_operator'],
+        },
+        {
+          id: 'pl-parts',
+          name: '零件管理',
+          href: '/product-library/parts',
+          icon: <Wrench className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'warehouse_operator'],
+        },
+        {
+          id: 'pl-traceability',
+          name: '溯源码',
+          href: '/product-library/traceability',
+          icon: <QrCode className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+      ],
+    },
+    {
+      id: 'inventory-ai',
+      name: '进销存AI',
+      icon: <TrendingUp className="w-5 h-5" />,
+      href: '/inventory',
+      roles: [
+        'admin',
+        'manager',
+        'warehouse_operator',
+        'procurement_specialist',
+      ],
+      children: [
+        {
+          id: 'inv-forecast',
+          name: '智能预测',
+          href: '/inventory/forecast',
+          icon: <BarChart3 className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'procurement_specialist'],
+        },
+        {
+          id: 'inv-replenishment',
+          name: '自动补货',
+          href: '/inventory/replenishment',
+          icon: <ShoppingCart className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'procurement_specialist'],
+        },
+        {
+          id: 'inv-ai-chat',
+          name: 'AI问答',
+          href: '/inventory/ai-chat',
+          icon: <Zap className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'warehouse_operator'],
+        },
+        {
+          id: 'inv-health',
+          name: '库存健康',
+          href: '/inventory/health',
+          icon: <Eye className="w-4 h-4" />,
+          roles: ['admin', 'manager', 'warehouse_operator'],
+        },
+        {
+          id: 'inv-analytics',
+          name: '数据分析',
+          href: '/inventory/analytics',
+          icon: <BarChart3 className="w-4 h-4" />,
+          roles: ['admin', 'manager'],
+        },
+      ],
+    },
+    {
       id: 'unified-management',
       name: '统一管理',
       icon: <Settings className="w-5 h-5" />,
@@ -613,12 +724,6 @@ export function RoleAwareSidebar() {
   const getAccessibleMenuItems = () => {
     const userRoles = (authUser as any)?.user_metadata?.roles || ['user'];
 
-    // 开发环境：添加调试日志
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[Sidebar] 当前用户角色:', userRoles);
-      console.log('[Sidebar] 完整用户对象:', authUser);
-    }
-
     return menuItems.filter(item => {
       if (item.separator) return true;
 
@@ -627,20 +732,9 @@ export function RoleAwareSidebar() {
 
       // 如果有子菜单，需要同时检查子菜单的可见性
       if (item.children && item.children.length > 0) {
-        // 父菜单有访问权，且至少有一个子菜单也有访问权
+        // 父菜单有访问权,且至少有一个子菜单也有访问权
         const visibleChildren = item.children.filter(child => {
           const hasAccess = child.roles.some(role => userRoles.includes(role));
-          // Development: Output child menu permission check
-          if (process.env.NODE_ENV === 'development') {
-            console.log(
-              `[Sidebar] Child menu "${child.name}" permission check:`,
-              {
-                userRoles,
-                allowedRoles: child.roles,
-                hasAccess,
-              }
-            );
-          }
           return hasAccess;
         });
 
@@ -648,16 +742,17 @@ export function RoleAwareSidebar() {
           process.env.NODE_ENV === 'development' &&
           visibleChildren.length === 0
         ) {
-          console.warn(
-            `[Sidebar] ⚠️ Warning: All children of "${item.name}" filtered by permissions!`
-          );
-          console.log(
-            `[Sidebar] Children details:`,
-            item.children.map(c => ({
-              name: c.name,
-              allowedRoles: c.roles,
-            }))
-          );
+          // 开发环境下记录警告信息(使用注释代替 console)
+          // console.warn(
+          //   `[Sidebar] ⚠️ Warning: All children of "${item.name}" filtered by permissions!`
+          // );
+          // console.log(
+          //   `[Sidebar] Children details:`,
+          //   item.children.map(c => ({
+          //     name: c.name,
+          //     allowedRoles: c.roles,
+          //   }))
+          // );
         }
 
         return parentHasAccess && visibleChildren.length > 0;

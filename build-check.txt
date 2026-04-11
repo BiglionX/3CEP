@@ -1,0 +1,112 @@
+﻿
+> prodcycleai@5.0.0 build
+> next build
+
+  鈻?Next.js 14.2.25
+  - Environments: .env.local, .env.production, .env
+
+   Creating an optimized production build ...
+npm : Failed to compile.
+所在位置 行:1 字符: 22
++ cd d:\BigLionX\3cep; npm run build 2>&1 | Out
+-File -Encoding UTF8 bui ...
++                      ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (F 
+   ailed to compile.:String) [], RemoteExcept  
+  ion
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+
+./src/app/admin/finance/page.tsx
+Module not found: Can't resolve '@/components/P
+aymentConfigPanel'
+
+https://nextjs.org/docs/messages/module-not-fou
+nd
+
+./src/app/admin/users/[id]/page.tsx
+Module not found: Can't resolve '@/components/u
+i/separator'
+
+https://nextjs.org/docs/messages/module-not-fou
+nd
+
+./src/modules/supply-chain/models/inbound-forec
+ast.model.ts
+Error: 
+  [31mx[0m Expected '{', got 'enum'
+   ,-[[36;1;4mD:\BigLionX\3cep\src\modules\sup
+ply-chain\models\inbound-forecast.model.ts[0m:
+3:1]
+ [2m3[0m |  * WMS-203 鍏ュ簱棰勬姤绠＄悊鍔熻兘
+ [2m4[0m |  */
+ [2m5[0m | 
+ [2m6[0m | export enum InboundForecastStatus 
+{
+   : [31;1m       ^^^^[0m
+ [2m7[0m |   FORECAST = 'forecast', // 棰勬姤鐘? 
+ IN_TRANSIT = 'in_transit', // 鍦ㄩ€旂姸?  RECEIVED
+ = 'received', // 宸叉敹璐х姸?  CANCELLED = 'cancell
+ed', // 宸插彇?}
+ [2m8[0m | 
+ [2m9[0m | export interface InboundForecastIt
+em {
+   `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/modules/supply-chain/models/inbound-forec
+ast.model.ts
+./src/app/admin/inbound-forecast/page.tsx
+
+./src/app/admin/inventory/page.tsx
+Error: 
+  [31mx[0m Expression expected
+     ,-[[36;1;4mD:\BigLionX\3cep\src\app\admin
+\inventory\page.tsx[0m:223:1]
+ [2m223[0m |     try {
+ [2m224[0m |       const url = editingItem.id
+ [2m225[0m |          `/api/admin/inventory/i
+tems/${editingItem.id}`
+ [2m226[0m |         : '/api/admin/inventory/
+items';
+     : [31;1m        ^[0m
+ [2m227[0m | 
+ [2m228[0m |       const method = editingItem
+.id ? 'PUT' : 'POST';
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/admin/inventory/page.tsx
+
+./src/app/admin/links/library/page.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mD:\BigLionX\3cep\src\app\admin\
+links\library\page.tsx[0m:61:1]
+ [2m61[0m | 
+ [2m62[0m |   // 椤甸潰鍔犺浇鏃惰幏鍙栨暟  useEffect(() =
+> {
+ [2m63[0m |     fetchLinks();
+ [2m64[0m |   }, [filters]);
+    : [31;1m   ^[0m
+ [2m65[0m | 
+ [2m66[0m |   // 澶勭悊鍏? const handleSelectAll 
+= (checked: boolean) => {
+ [2m67[0m |     if (checked) {
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/admin/links/library/page.tsx
+
+
+> Build failed because of webpack errors

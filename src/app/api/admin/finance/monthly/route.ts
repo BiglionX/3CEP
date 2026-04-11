@@ -1,8 +1,8 @@
 import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-// 妯℃嫙鏈堝害鏁版嵁
+// 模拟月度数据
 const mockMonthlyData = [
   { month: '2023-09', income: 25000, expense: 18000, profit: 7000 },
   { month: '2023-10', income: 28500, expense: 19200, profit: 9300 },
@@ -14,26 +14,27 @@ const mockMonthlyData = [
 
 export async function GET(request: NextRequest) {
   return apiPermissionMiddleware(
-    arguments[0],
+    request,
     async () => {
-  try {
-    const { searchParams } = new URL(request.url);
-    const months = parseInt(searchParams.get('months') || '6');
+      try {
+        const { searchParams } = new URL(request.url);
+        const months = parseInt(searchParams.get('months') || '6');
 
-    // 杩斿洖鎸囧畾鏈堟暟鐨勬暟    const resultData = mockMonthlyData.slice(-months);
+        // 返回指定月数的数据
+        const resultData = mockMonthlyData.slice(-months);
 
-    return NextResponse.json({
-      success: true,
-      data: resultData,
-    });
-  } catch (error) {
-    console.error('鑾峰彇鏈堝害鏁版嵁澶辫触:', error);
-    return NextResponse.json(
-      { success: false, error: '鑾峰彇鏈堝害鏁版嵁澶辫触', data: [] },
-      { status: 500 }
-    );
-  }
-
+        return NextResponse.json({
+          success: true,
+          data: resultData,
+        });
+      } catch (error) {
+        console.error('获取月度数据失败:', error);
+        return NextResponse.json(
+          { success: false, error: '获取月度数据失败', data: [] },
+          { status: 500 }
+        );
+      }
     },
     'payments_read'
   );
+}

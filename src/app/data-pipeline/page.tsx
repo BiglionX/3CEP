@@ -1,21 +1,20 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  Database,
-  Play,
-  Pause,
-  RotateCcw,
-  Download,
-  BarChart3,
   Activity,
+  BarChart3,
+  Database,
+  Download,
+  Play,
+  RotateCcw,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface PipelineStatus {
   bufferSize: number;
@@ -50,7 +49,8 @@ export default function DataPipelinePage() {
     source: 'web',
   });
 
-  // 模拟数据管道状态更  useEffect(() => {
+  // 模拟数据管道状态更新
+  useEffect(() => {
     const interval = setInterval(() => {
       setStatus(prev => ({
         ...prev,
@@ -83,7 +83,7 @@ export default function DataPipelinePage() {
 
       if (response.ok) {
         setFormData(prev => ({ ...prev, value: '' }));
-        alert('数据收集成功);
+        alert('数据收集成功');
       }
     } catch (error) {
       console.error('收集失败:', error);
@@ -116,7 +116,7 @@ export default function DataPipelinePage() {
       });
 
       if (response.ok) {
-        alert('批量数据收集成功);
+        alert('批量数据收集成功');
       }
     } catch (error) {
       console.error('批量收集失败:', error);
@@ -132,7 +132,7 @@ export default function DataPipelinePage() {
       });
 
       if (response.ok) {
-        alert('缓冲区已刷新);
+        alert('缓冲区已刷新');
       }
     } catch (error) {
       console.error('刷新失败:', error);
@@ -200,8 +200,7 @@ export default function DataPipelinePage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    缓冲区大                  </p>
+                  <p className="text-sm font-medium text-gray-600">缓冲区大 </p>
                   <p className="text-2xl font-bold text-blue-600">
                     {status.bufferSize}
                   </p>
@@ -215,9 +214,9 @@ export default function DataPipelinePage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">运行状态/p>
+                  <p className="text-sm font-medium text-gray-600">运行状态</p>
                   <Badge variant={status.isRunning ? 'default' : 'destructive'}>
-                    {status.isRunning ? '运行 : '已停}
+                    {status.isRunning ? '运行中' : '已停止'}
                   </Badge>
                 </div>
                 <div
@@ -248,7 +247,7 @@ export default function DataPipelinePage() {
                   <p className="text-sm font-medium text-gray-600">上次刷新</p>
                   <p className="text-sm text-gray-500">
                     {status.lastFlush
-                       new Date(status.lastFlush).toLocaleTimeString()
+                      ? new Date(status.lastFlush).toLocaleTimeString()
                       : '从未'}
                   </p>
                 </div>
@@ -284,7 +283,7 @@ export default function DataPipelinePage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="value">数/Label>
+                  <Label htmlFor="value">数值</Label>
                   <Input
                     id="value"
                     type="number"
@@ -292,7 +291,7 @@ export default function DataPipelinePage() {
                     onChange={e =>
                       setFormData(prev => ({ ...prev, value: e.target.value }))
                     }
-                    placeholder="输入数
+                    placeholder="输入数值"
                   />
                 </div>
               </div>
@@ -314,7 +313,7 @@ export default function DataPipelinePage() {
               </div>
 
               <div>
-                <Label htmlFor="source">数据源/Label>
+                <Label htmlFor="source">数据源</Label>
                 <Input
                   id="source"
                   value={formData.source}
@@ -363,7 +362,7 @@ export default function DataPipelinePage() {
               </Button>
 
               <div className="pt-4 border-t">
-                <h3 className="font-medium mb-2">快速操作示/h3>
+                <h3 className="font-medium mb-2">快速操作示例</h3>
                 <div className="space-y-2 text-sm text-gray-600">
                   <p>用户活跃 metricName=user_activity, value=42</p>
                   <p>页面浏览 metricName=page_views, value=156</p>
@@ -379,7 +378,7 @@ export default function DataPipelinePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
-              聚合数据分析 (最
+              聚合数据分析 (最近7天)
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -394,17 +393,17 @@ export default function DataPipelinePage() {
               </Button>
             </div>
 
-            {metrics\.length > 0  \(
+            {metrics.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
                       <th className="text-left py-2 px-4">时间</th>
                       <th className="text-left py-2 px-4">指标名称</th>
-                      <th className="text-left py-2 px-4">平均值/th>
-                      <th className="text-left py-2 px-4">最大值/th>
-                      <th className="text-left py-2 px-4">最小值/th>
-                      <th className="text-left py-2 px-4">样本数/th>
+                      <th className="text-left py-2 px-4">平均值</th>
+                      <th className="text-left py-2 px-4">最大值</th>
+                      <th className="text-left py-2 px-4">最小值</th>
+                      <th className="text-left py-2 px-4">样本数</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -444,4 +443,3 @@ export default function DataPipelinePage() {
     </div>
   );
 }
-

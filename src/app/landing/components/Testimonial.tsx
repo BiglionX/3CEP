@@ -38,7 +38,7 @@ export function Testimonial({
 
       {/* 作者信息 */}
       <div className="flex items-center">
-        {avatar  (
+        {avatar ? (
           <img
             src={avatar}
             alt={author}

@@ -52,7 +52,7 @@ export function HeroSection({
                   key={index}
                   className={
                     word.includes('n8n') || word.includes('智能')
-                       'text-blue-600'
+                      ? 'text-blue-600'
                       : ''
                   }
                 >

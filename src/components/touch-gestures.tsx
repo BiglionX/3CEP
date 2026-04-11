@@ -3,16 +3,14 @@
 
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
 import {
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
-  ChevronDown,
   RefreshCw,
-  ZoomIn,
-  ZoomOut,
 } from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
 
 // 手势识别参数
 const SWIPE_THRESHOLD = 50;
@@ -41,7 +39,9 @@ export interface GestureHandlers {
   onTouchEnd: (e: React.TouchEvent) => void;
 }
 
-export function useGestureRecognizer(onGesture: (event: GestureEvent) => void): GestureHandlers {
+export function useGestureRecognizer(
+  onGesture: (event: GestureEvent) => void
+): GestureHandlers {
   const [touchStart, setTouchStart] = useState<{
     x: number;
     y: number;
@@ -65,7 +65,8 @@ export function useGestureRecognizer(onGesture: (event: GestureEvent) => void): 
         time: now,
       });
 
-      // 长按检?      setTimeout(() => {
+      // 长按检测
+      setTimeout(() => {
         const currentTime = Date.now();
         if (touchStartTimeRef.current === now) {
           onGesture({
@@ -80,7 +81,8 @@ export function useGestureRecognizer(onGesture: (event: GestureEvent) => void): 
   );
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    // 取消长按检?    touchStartTimeRef.current = 0;
+    // 取消长按检测
+    touchStartTimeRef.current = 0;
   }, []);
 
   const handleTouchEnd = useCallback(
@@ -94,7 +96,8 @@ export function useGestureRecognizer(onGesture: (event: GestureEvent) => void): 
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
       const velocity = distance / deltaTime;
 
-      // 双击检?      const now = Date.now();
+      // 双击检测
+      const now = Date.now();
       if (now - lastTapTime < DOUBLE_TAP_DELAY && distance < 20) {
         onGesture({
           type: 'doubletap',
@@ -106,7 +109,8 @@ export function useGestureRecognizer(onGesture: (event: GestureEvent) => void): 
         return;
       }
 
-      // 单击检?      if (distance < 10 && deltaTime < 200) {
+      // 单击检测
+      if (distance < 10 && deltaTime < 200) {
         onGesture({
           type: 'tap',
           x: touch.clientX,
@@ -117,7 +121,8 @@ export function useGestureRecognizer(onGesture: (event: GestureEvent) => void): 
         return;
       }
 
-      // 滑动检?      if (distance > SWIPE_THRESHOLD && velocity > SWIPE_VELOCITY_THRESHOLD) {
+      // 滑动检测
+      if (distance > SWIPE_THRESHOLD && velocity > SWIPE_VELOCITY_THRESHOLD) {
         let direction: SwipeDirection;
 
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -179,7 +184,8 @@ export function SwipeableContainer({
   );
 }
 
-// 触控友好的按钮组?interface TouchButtonProps {
+// 触控友好的按钮组
+interface TouchButtonProps {
   children: React.ReactNode;
   onPress: () => void;
   onLongPress?: () => void;
@@ -268,7 +274,8 @@ export function TouchButton({
   );
 }
 
-// 触控友好的滑块组?interface TouchSliderProps {
+// 触控友好的滑块组
+interface TouchSliderProps {
   value: number;
   onChange: (value: number) => void;
   min?: number;
@@ -341,7 +348,7 @@ export function TouchSlider({
         {/* 轨道 */}
         <div className="absolute w-full h-2 bg-gray-200 rounded-full"></div>
 
-        {/* 进度?*/}
+        {/* 进度条 */}
         <div
           className="absolute h-2 bg-blue-600 rounded-full"
           style={{ width: `${percentage}%` }}
@@ -361,7 +368,8 @@ export function TouchSlider({
   );
 }
 
-// 手势指示器组?interface GestureIndicatorProps {
+// 手势指示器组
+interface GestureIndicatorProps {
   gesture: GestureEvent | null;
   className?: string;
 }
@@ -428,7 +436,8 @@ export function GestureIndicator({
   );
 }
 
-// 触控友好的卡片轮播组?interface TouchCarouselProps {
+// 触控友好的卡片轮播组
+interface TouchCarouselProps {
   items: React.ReactNode[];
   currentIndex: number;
   onIndexChange: (index: number) => void;
@@ -493,7 +502,7 @@ export function TouchCarousel({
         </div>
       </div>
 
-      {/* 指示?*/}
+      {/* 指示器 */}
       {showIndicators && items.length > 1 && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {items.map((_, index) => (

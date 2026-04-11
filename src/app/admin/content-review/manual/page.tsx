@@ -96,7 +96,7 @@ const ContentPreview: React.FC<{
 
         <div className="flex items-center text-xs text-gray-500 pt-2 border-t">
           <User className="w-3 h-3 mr-1" />
-          作者 {content.authorId.substring(0, 8)}
+          作者: {content.authorId.substring(0, 8)}
           <Clock className="w-3 h-3 ml-3 mr-1" />
           {new Date(content.submittedAt).toLocaleString()}
         </div>
@@ -782,7 +782,7 @@ export default function ManualReviewTool() {
                         {(reviewer.performance.accuracy * 100).toFixed(0)}%
                       </div>
                       <div className="text-xs text-gray-600">
-                        处理 {reviewer.performance.workload} 个任务
+                        处理: {reviewer.performance.workload} 个任务
                       </div>
                     </div>
                   </div>

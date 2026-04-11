@@ -1,0 +1,125 @@
+﻿
+> prodcycleai@5.0.0 build
+> next build
+
+  鈻?Next.js 14.2.25
+  - Environments: .env.local, .env.production, .env
+
+   Creating an optimized production build ...
+npm : Failed to compile.
+所在位置 行:1 字符: 22
++ cd d:\BigLionX\3cep; npm run build 2>&1 | Out
+-File -Encoding UTF8 bui ...
++                      ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (F 
+   ailed to compile.:String) [], RemoteExcept  
+  ion
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+
+./src/app/admin/users/[id]/page.tsx
+Module not found: Can't resolve '@/components/u
+i/separator'
+
+https://nextjs.org/docs/messages/module-not-fou
+nd
+
+./src/components/mobile-responsive.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mD:\BigLionX\3cep\src\components
+\mobile-responsive.tsx[0m:41:1]
+ [2m41[0m | 
+ [2m42[0m | // 鍝嶅簲寮忓鍣ㄧ粍?interface Responsive
+ContainerProps {
+ [2m43[0m |   children: React.ReactNode;
+ [2m44[0m |   className?: string;
+    : [31;1m            ^[0m
+ [2m45[0m |   maxWidth?: 'mobile' | 'tablet' 
+| 'desktop' | 'full';
+ [2m46[0m | }
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/mobile-responsive.tsx
+./src/app/repair-shop/mobile-optimization-demo/
+page.tsx
+
+./src/components/smart-notifications/Notificati
+onManager.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mD:\BigLionX\3cep\src\components
+\smart-notifications\NotificationManager.tsx[0
+m:76:1]
+ [2m76[0m | }
+ [2m77[0m | 
+ [2m78[0m | // 閫氱煡杩囨护?export interface Notifi
+cationFilter {
+ [2m79[0m |   levels?: NotificationLevel[];
+    : [31;1m         ^[0m
+ [2m80[0m |   types?: NotificationType[];
+ [2m81[0m |   statuses?: NotificationStatus[]
+;
+ [2m82[0m |   categories?: string[];
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/smart-notifications/Notificati
+onManager.tsx
+./src/app/smart-notifications-demo/page.tsx
+
+./src/components/touch-gestures.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mD:\BigLionX\3cep\src\components
+\touch-gestures.tsx[0m:75:1]
+ [2m75[0m |           });
+ [2m76[0m |         }
+ [2m77[0m |       }, LONG_PRESS_DURATION);
+ [2m78[0m |     },
+    : [31;1m     ^[0m
+ [2m79[0m |     [onGesture]
+ [2m80[0m |   );
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/touch-gestures.tsx
+./src/app/repair-shop/touch-gestures-demo/page.
+tsx
+
+./src/components/ui/enhanced-loading.tsx
+Error: 
+  [31mx[0m Expression expected
+     ,-[[36;1;4mD:\BigLionX\3cep\src\component
+s\ui\enhanced-loading.tsx[0m:96:1]
+ [2m 96[0m |   size = 'md',
+ [2m 97[0m |   variant = 'primary',
+ [2m 98[0m |   className = '',
+ [2m 99[0m | }: Omit<EnhancedLoadingSpinnerPr
+ops, 'icon' | 'speed'>) {
+     : [31;1m^[0m
+ [2m100[0m |   const sizeClasses = {
+ [2m101[0m |     xs: 'w-3 h-3',
+ [2m102[0m |     sm: 'w-4 h-4',
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/ui/enhanced-loading.tsx
+./src/app/loading-components-demo/page.tsx
+
+
+> Build failed because of webpack errors

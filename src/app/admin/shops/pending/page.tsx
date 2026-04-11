@@ -1,18 +1,14 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -21,6 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { format } from 'date-fns';
+import { zhCN } from 'date-fns/locale';
+import { useEffect, useState } from 'react';
 
 interface Shop {
   id: string;
@@ -47,7 +46,6 @@ interface Pagination {
 }
 
 export default function PendingShopsPage() {
-  const router = useRouter();
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<Pagination>({
@@ -62,7 +60,8 @@ export default function PendingShopsPage() {
   const [rejectionReason, setRejectionReason] = useState('');
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
 
-  // 获取待审核店铺列  const fetchPendingShops = async () => {
+  // 获取待审核店铺列表
+  const fetchPendingShops = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -89,7 +88,8 @@ export default function PendingShopsPage() {
     fetchPendingShops();
   }, [pagination.page, searchTerm]);
 
-  // 处理全  const handleSelectAll = (checked: boolean) => {
+  // 处理全选
+  const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(shops.map(shop => shop.id));
     } else {
@@ -136,7 +136,8 @@ export default function PendingShopsPage() {
     }
   };
 
-  // 显示驳回对话  const handleBatchReject = () => {
+  // 显示驳回对话框
+  const handleBatchReject = () => {
     if (selectedIds.length === 0) return;
     setShowRejectDialog(true);
   };
@@ -172,21 +173,24 @@ export default function PendingShopsPage() {
     }
   };
 
-  // 切换行展开状  const toggleRowExpansion = (id: string) => {
+  // 切换行展开状态
+  const toggleRowExpansion = (id: string) => {
     setExpandedRows(prev =>
-      prev.includes(id)  prev.filter(rowId => rowId !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter(rowId => rowId !== id) : [...prev, id]
     );
   };
 
-  // 格式化日  const formatDate = (dateString: string) => {
+  // 格式化日期
+  const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'yyyy-MM-dd HH:mm', { locale: zhCN });
   };
 
-  // 获取状态标签样  const getStatusBadge = (status: string) => {
+  // 获取状态标签样式
+  const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
-      pending: { text: '待审, className: 'bg-yellow-100 text-yellow-800' },
+      pending: { text: '待审核', className: 'bg-yellow-100 text-yellow-800' },
       approved: { text: '已通过', className: 'bg-green-100 text-green-800' },
-      rejected: { text: '已驳, className: 'bg-red-100 text-red-800' },
+      rejected: { text: '已驳回', className: 'bg-red-100 text-red-800' },
     };
 
     const config = statusMap[status] || {
@@ -234,7 +238,7 @@ export default function PendingShopsPage() {
 
       {/* 店铺列表表格 */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        {loading  (
+        {loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             <span className="ml-2 text-gray-600">加载中..</span>
@@ -254,10 +258,10 @@ export default function PendingShopsPage() {
                   />
                 </TableHead>
                 <TableHead>店铺信息</TableHead>
-                <TableHead>联系/TableHead>
+                <TableHead>联系方式</TableHead>
                 <TableHead>地址</TableHead>
                 <TableHead>申请时间</TableHead>
-                <TableHead>状/TableHead>
+                <TableHead>状态</TableHead>
                 <TableHead className="text-right">操作</TableHead>
               </TableRow>
             </TableHeader>
@@ -274,7 +278,7 @@ export default function PendingShopsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center">
-                      {shop.logo_url  (
+                      {shop.logo_url ? (
                         <img
                           src={shop.logo_url}
                           alt={shop.name}
@@ -337,16 +341,18 @@ export default function PendingShopsPage() {
                               <div className="space-y-2 text-sm">
                                 <div>
                                   <span className="text-gray-500">
-                                    营业执照                                  </span>
+                                    营业执照{' '}
+                                  </span>
                                   <span className="font-medium">
-                                    {shop.business_license || '未提}
+                                    {shop.business_license || '未提供'}
                                   </span>
                                 </div>
                                 <div>
                                   <span className="text-gray-500">
-                                    资格证书                                  </span>
+                                    资格证书{' '}
+                                  </span>
                                   <span className="font-medium">
-                                    {shop.qualification_cert || '未提}
+                                    {shop.qualification_cert || '未提供'}
                                   </span>
                                 </div>
                               </div>
@@ -357,7 +363,7 @@ export default function PendingShopsPage() {
                                 服务项目
                               </h4>
                               <div className="flex flex-wrap gap-2">
-                                {shop.services  (
+                                {shop.services ? (
                                   JSON.parse(shop.services).map(
                                     (service: string, index: number) => (
                                       <span
@@ -398,10 +404,11 @@ export default function PendingShopsPage() {
                                 {shop.cover_image_url && (
                                   <div>
                                     <p className="text-sm text-gray-500 mb-1">
-                                      门头                                    </p>
+                                      门头照片
+                                    </p>
                                     <img
                                       src={shop.cover_image_url}
-                                      alt="门头
+                                      alt="门头照片"
                                       className="w-32 h-24 rounded-md object-cover border"
                                     />
                                   </div>
@@ -465,7 +472,8 @@ export default function PendingShopsPage() {
                 pagination.page * pagination.pageSize,
                 pagination.total
               )}{' '}
-              条， {pagination.total} 条记            </div>
+              条， {pagination.total} 条记{' '}
+            </div>
             <div className="flex gap-2">
               <Button
                 onClick={() =>
@@ -475,7 +483,8 @@ export default function PendingShopsPage() {
                 variant="outline"
                 size="sm"
               >
-                上一              </Button>
+                上一{' '}
+              </Button>
               <Button
                 onClick={() =>
                   setPagination({ ...pagination, page: pagination.page + 1 })
@@ -484,7 +493,8 @@ export default function PendingShopsPage() {
                 variant="outline"
                 size="sm"
               >
-                下一              </Button>
+                下一{' '}
+              </Button>
             </div>
           </div>
         )}
@@ -528,4 +538,3 @@ export default function PendingShopsPage() {
     </div>
   );
 }
-

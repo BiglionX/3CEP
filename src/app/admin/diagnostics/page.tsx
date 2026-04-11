@@ -1,6 +1,7 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,24 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -34,19 +24,25 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  RefreshCw,
-  Download,
-  Search,
-  Calendar,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-} from 'lucide-react';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import {
+  AlertCircle,
+  Download,
+  Edit,
+  Eye,
+  Plus,
+  RefreshCw,
+  Search,
+  Trash2,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface DiagnosticRecord {
   id: string;
@@ -124,6 +120,7 @@ export default function DiagnosticsManagement() {
           created_at: '2024-01-20T14:20:00Z',
           updated_at: '2024-01-20T14:20:00Z',
           cost_estimate: 280,
+          repair_time: 90,
         },
         {
           id: 'diag_003',
@@ -137,6 +134,8 @@ export default function DiagnosticsManagement() {
           status: 'failed',
           created_at: '2024-01-20T16:15:00Z',
           updated_at: '2024-01-20T17:30:00Z',
+          cost_estimate: 450,
+          repair_time: 180,
         },
       ];
 
@@ -422,7 +421,7 @@ export default function DiagnosticsManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {loading  (
+                {loading ? (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -465,9 +464,9 @@ export default function DiagnosticsManagement() {
                         <Badge
                           variant={
                             record.confidence_score > 90
-                               'default'
+                              ? 'default'
                               : record.confidence_score > 70
-                                 'secondary'
+                                ? 'secondary'
                                 : 'destructive'
                           }
                         >
@@ -646,4 +645,3 @@ export default function DiagnosticsManagement() {
     </div>
   );
 }
-

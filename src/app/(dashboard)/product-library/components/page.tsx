@@ -1,0 +1,410 @@
+'use client';
+
+import {
+  Component,
+  createComponent,
+  deleteComponent,
+  getBrands,
+  getComponents,
+  updateComponent,
+} from '@/lib/api/product-library';
+import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+
+// 部件类型选项
+const COMPONENT_TYPES = [
+  { value: 'cpu', label: 'CPU处理器' },
+  { value: 'memory', label: '内存' },
+  { value: 'storage', label: '存储设备' },
+  { value: 'motherboard', label: '主板' },
+  { value: 'gpu', label: '显卡' },
+  { value: 'power_supply', label: '电源' },
+  { value: 'case', label: '机箱' },
+  { value: 'cooling', label: '散热' },
+  { value: 'other', label: '其他' },
+];
+
+export default function ComponentsPage() {
+  // 状态管理
+  const [components, setComponents] = useState<Component[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(20);
+  const [search, setSearch] = useState('');
+  const [brandFilter, setBrandFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // 对话框状态
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingComponent, setEditingComponent] = useState<Component | null>(
+    null
+  );
+  const [formData, setFormData] = useState({
+    sku_code: '',
+    brand_id: '',
+    name: '',
+    type: '',
+    description: '',
+  });
+
+  // 加载品牌列表
+  useEffect(() => {
+    loadBrands();
+  }, []);
+
+  // 加载部件列表
+  useEffect(() => {
+    loadComponents();
+  }, [page, limit, search, brandFilter, typeFilter]);
+
+  const loadBrands = async () => {
+    try {
+      const result = await getBrands({ limit: 100 });
+      setBrands(result.data);
+    } catch (error) {
+      console.error('加载品牌失败:', error);
+    }
+  };
+
+  const loadComponents = async () => {
+    setLoading(true);
+    try {
+      const result = await getComponents({
+        page,
+        limit,
+        search,
+        brand_id: brandFilter || undefined,
+        type: typeFilter || undefined,
+      });
+      setComponents(result.data);
+      setTotalCount(result.count);
+    } catch (error) {
+      console.error('加载部件失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 打开创建/编辑对话框
+  const handleOpenDialog = (component?: Component) => {
+    if (component) {
+      setEditingComponent(component);
+      setFormData({
+        sku_code: component.sku_code,
+        brand_id: component.brand_id,
+        name: component.name,
+        type: component.type || '',
+        description: component.description || '',
+      });
+    } else {
+      setEditingComponent(null);
+      setFormData({
+        sku_code: '',
+        brand_id: '',
+        name: '',
+        type: '',
+        description: '',
+      });
+    }
+    setDialogOpen(true);
+  };
+
+  // 关闭对话框
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setEditingComponent(null);
+  };
+
+  // 保存部件
+  const handleSave = async () => {
+    try {
+      if (editingComponent) {
+        await updateComponent(editingComponent.id, formData);
+      } else {
+        await createComponent(formData as any);
+      }
+      handleCloseDialog();
+      loadComponents();
+    } catch (error: any) {
+      alert(`保存失败: ${error.message}`);
+    }
+  };
+
+  // 删除部件
+  const handleDelete = async (id: string) => {
+    if (!confirm('确定要删除这个部件吗？')) return;
+
+    try {
+      await deleteComponent(id);
+      loadComponents();
+    } catch (error: any) {
+      alert(`删除失败: ${error.message}`);
+    }
+  };
+
+  // 分页变化
+  const handleChangePage = (_: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // 获取类型标签
+  const getTypeLabel = (type: string) => {
+    const found = COMPONENT_TYPES.find(t => t.value === type);
+    return found ? found.label : type;
+  };
+
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      {/* 页面标题 */}
+      <Box
+        sx={{
+          mb: 3,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="h4" component="h1">
+          部件管理
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => handleOpenDialog()}
+        >
+          新建部件
+        </Button>
+      </Box>
+
+      {/* 筛选器 */}
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <TextField
+            label="搜索"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="部件名称或SKU"
+            size="small"
+            sx={{ minWidth: 200 }}
+          />
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>品牌</InputLabel>
+            <Select
+              value={brandFilter}
+              onChange={e => setBrandFilter(e.target.value)}
+              label="品牌"
+            >
+              <MenuItem value="">全部</MenuItem>
+              {brands.map(brand => (
+                <MenuItem key={brand.id} value={brand.id}>
+                  {brand.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>类型</InputLabel>
+            <Select
+              value={typeFilter}
+              onChange={e => setTypeFilter(e.target.value)}
+              label="类型"
+            >
+              <MenuItem value="">全部</MenuItem>
+              {COMPONENT_TYPES.map(type => (
+                <MenuItem key={type.value} value={type.value}>
+                  {type.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Paper>
+
+      {/* 部件表格 */}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>SKU</TableCell>
+              <TableCell>部件名称</TableCell>
+              <TableCell>品牌</TableCell>
+              <TableCell>类型</TableCell>
+              <TableCell>描述</TableCell>
+              <TableCell align="right">操作</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {components.map(component => (
+              <TableRow key={component.id}>
+                <TableCell>{component.sku_code}</TableCell>
+                <TableCell>{component.name}</TableCell>
+                <TableCell>{component.brand?.name || '-'}</TableCell>
+                <TableCell>
+                  {component.type ? getTypeLabel(component.type) : '-'}
+                </TableCell>
+                <TableCell>
+                  {component.description
+                    ? component.description.length > 50
+                      ? `${component.description.substring(0, 50)}...`
+                      : component.description
+                    : '-'}
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleOpenDialog(component)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={() => handleDelete(component.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+            {components.length === 0 && !loading && (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  暂无数据
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[10, 20, 50]}
+          component="div"
+          count={totalCount}
+          rowsPerPage={limit}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="每页条数"
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}-${to} / ${count !== -1 ? count : `超过 ${to}`}`
+          }
+        />
+      </TableContainer>
+
+      {/* 创建/编辑对话框 */}
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>{editingComponent ? '编辑部件' : '新建部件'}</DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="SKU编码"
+              value={formData.sku_code}
+              onChange={e =>
+                setFormData({ ...formData, sku_code: e.target.value })
+              }
+              required
+              fullWidth
+            />
+            <FormControl fullWidth required>
+              <InputLabel>品牌</InputLabel>
+              <Select
+                value={formData.brand_id}
+                onChange={e =>
+                  setFormData({ ...formData, brand_id: e.target.value })
+                }
+                label="品牌"
+              >
+                {brands.map(brand => (
+                  <MenuItem key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField
+              label="部件名称"
+              value={formData.name}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
+              required
+              fullWidth
+            />
+            <FormControl fullWidth>
+              <InputLabel>类型</InputLabel>
+              <Select
+                value={formData.type}
+                onChange={e =>
+                  setFormData({ ...formData, type: e.target.value })
+                }
+                label="类型"
+              >
+                <MenuItem value="">请选择</MenuItem>
+                {COMPONENT_TYPES.map(type => (
+                  <MenuItem key={type.value} value={type.value}>
+                    {type.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField
+              label="描述"
+              value={formData.description}
+              onChange={e =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              multiline
+              rows={3}
+              fullWidth
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>取消</Button>
+          <Button onClick={handleSave} variant="contained">
+            保存
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
+  );
+}

@@ -434,7 +434,7 @@ export default function ViolationManagementPage() {
                 onCheckedChange={setShowResolved}
               />
               <Label htmlFor="show-resolved" className="text-sm text-gray-600">
-                显示已解{' '}
+                显示已解决
               </Label>
             </div>
 
@@ -544,7 +544,7 @@ export default function ViolationManagementPage() {
                 </span>
               </CardTitle>
 
-              {/* 搜索和筛*/}
+              {/* 搜索和筛选 */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4">
                 <div className="relative md:col-span-2">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -714,7 +714,7 @@ export default function ViolationManagementPage() {
                           </div>
                           <div className="flex items-center">
                             <span className="text-sm text-gray-600 w-20">
-                              处理
+                              处理人:
                             </span>
                             <span className="text-sm">
                               {selectedViolation.resolution.resolverId}
@@ -776,7 +776,7 @@ export default function ViolationManagementPage() {
                   选择违规记录
                 </h3>
                 <p className="text-gray-600">
-                  从左侧列表中选择一条违规记录查看详{' '}
+                  从左侧列表中选择一条违规记录查看详情
                 </p>
               </CardContent>
             </Card>

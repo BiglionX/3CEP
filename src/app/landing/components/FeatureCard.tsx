@@ -19,7 +19,7 @@ export function FeatureCard({
     'p-8 rounded-xl transition-all duration-300 hover:shadow-lg';
   const variantClasses =
     variant === 'highlight'
-       'bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 hover:border-blue-300'
+      ? 'bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 hover:border-blue-300'
       : 'bg-white border border-gray-200 hover:border-gray-300';
 
   return (

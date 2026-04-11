@@ -1,6 +1,7 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,24 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -34,20 +24,28 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  RefreshCw,
-  Download,
-  Search,
-  Package,
-  ShoppingCart,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import {
   DollarSign,
+  Download,
+  Edit,
+  Eye,
+  Package,
+  Plus,
+  RefreshCw,
+  Search,
   Star,
+  Trash2,
   TrendingUp,
 } from 'lucide-react';
-import { useRbacPermission } from '@/hooks/use-rbac-permission';
+import { useEffect, useState } from 'react';
 
 interface Part {
   id: string;
@@ -79,12 +77,14 @@ export default function PartsMarketManagement() {
     'view'
   );
 
-  // 权限检  const { hasPermission } = useRbacPermission();
+  // 权限检查
+  const { hasPermission } = useRbacPermission();
   const canView = hasPermission('parts.view');
   const canManage = hasPermission('parts.manage');
   const canDelete = hasPermission('parts.delete');
 
-  // 筛选条  const [filters, setFilters] = useState({
+  // 筛选条件
+  const [filters, setFilters] = useState({
     category: '',
     status: '',
     search: '',
@@ -107,11 +107,11 @@ export default function PartsMarketManagement() {
           part_number: 'A2650',
           price: 1200,
           stock_quantity: 15,
-          unit: ',
+          unit: '个',
           status: 'active',
           image_url: null,
-          description: '原装苹果屏幕，支持原彩显,
-          supplier: '苹果官方供应,
+          description: '原装苹果屏幕，支持原彩显示',
+          supplier: '苹果官方供应商',
           created_at: '2024-01-15T10:30:00Z',
           updated_at: '2024-01-20T14:20:00Z',
           sales_count: 42,
@@ -126,10 +126,10 @@ export default function PartsMarketManagement() {
           part_number: 'EB-BG911ABE',
           price: 280,
           stock_quantity: 0,
-          unit: ',
+          unit: '个',
           status: 'out_of_stock',
           image_url: null,
-          description: '原装电池',容000mAh',
+          description: '原装电池，容量4000mAh',
           supplier: '三星电子',
           created_at: '2024-01-10T09:15:00Z',
           updated_at: '2024-01-18T16:45:00Z',
@@ -138,18 +138,18 @@ export default function PartsMarketManagement() {
         },
         {
           id: 'part_003',
-          name: '华为Mate 50 充电,
+          name: '华为Mate 50 充电器',
           category: '充电配件',
           brand: '华为',
           model: 'Mate 50',
           part_number: 'HW-100500C00',
           price: 89,
           stock_quantity: 32,
-          unit: ',
+          unit: '个',
           status: 'active',
           image_url: null,
-          description: '66W超级快充充电,
-          supplier: '华为技术有限公,
+          description: '66W超级快充充电器',
+          supplier: '华为技术有限公司',
           created_at: '2024-01-12T11:20:00Z',
           updated_at: '2024-01-19T09:30:00Z',
           sales_count: 67,
@@ -166,7 +166,8 @@ export default function PartsMarketManagement() {
     }
   };
 
-  // 应用筛  const applyFilters = () => {
+  // 应用筛选
+  const applyFilters = () => {
     let filtered = [...parts];
 
     if (filters.category) {
@@ -182,9 +183,9 @@ export default function PartsMarketManagement() {
       filtered = filtered.filter(
         part =>
           part.name.toLowerCase().includes(searchTerm) ||
-          part.toLowerCase().includes(searchTerm) ||
-          part.toLowerCase().includes(searchTerm) ||
-          part.toLowerCase().includes(searchTerm)
+          part.brand?.toLowerCase().includes(searchTerm) ||
+          part.model?.toLowerCase().includes(searchTerm) ||
+          part.category.toLowerCase().includes(searchTerm)
       );
     }
 
@@ -203,7 +204,8 @@ export default function PartsMarketManagement() {
     setFilteredParts(filtered);
   };
 
-  // 处理筛选变  const handleFilterChange = (field: string, value: string) => {
+  // 处理筛选变化
+  const handleFilterChange = (field: string, value: string) => {
     setFilters(prev => ({
       ...prev,
       [field]: value,
@@ -233,22 +235,24 @@ export default function PartsMarketManagement() {
 
   // 删除配件
   const handleDelete = (part: Part) => {
-    if (confirm(`确定要删除配"${part.name}" 吗？`)) {
+    if (confirm(`确定要删除配件"${part.name}"吗？`)) {
       // 模拟删除操作
-      // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('删除配件:', part.id)fetchParts(); // 重新加载数据
+      fetchParts(); // 重新加载数据
     }
   };
 
   // 导出数据
   const handleExport = () => {
-    // TODO: 移除调试日志 - // TODO: 移除调试日志 - console.log('导出配件数据')};
+    // TODO: 实现导出功能
+  };
 
   // 刷新数据
   const handleRefresh = () => {
     fetchParts();
   };
 
-  // 状态标签渲  const renderStatusTag = (status: string) => {
+  // 状态标签渲染
+  const renderStatusTag = (status: string) => {
     const statusConfig = {
       active: { variant: 'default' as const, text: '在售' },
       inactive: { variant: 'secondary' as const, text: '停售' },
@@ -268,23 +272,26 @@ export default function PartsMarketManagement() {
     return categories.map(category => ({ value: category, label: category }));
   };
 
-  // 表格列定  const columns = [
+  // 表格列定义
+  const columns = [
     { key: 'name', title: '配件名称', width: '200px' },
     { key: 'category', title: '分类', width: '120px' },
     { key: 'brand_model', title: '品牌型号', width: '150px' },
     { key: 'price', title: '价格', width: '100px' },
     { key: 'stock', title: '库存', width: '100px' },
-    { key: 'sales', title: '销, width: '80px' },
+    { key: 'sales', title: '销量', width: '80px' },
     { key: 'rating', title: '评分', width: '80px' },
-    { key: 'status', title: '状, width: '100px' },
+    { key: 'status', title: '状态', width: '100px' },
     { key: 'actions', title: '操作', width: '150px' },
   ];
 
-  // 初始化数  useEffect(() => {
+  // 初始化数据
+  useEffect(() => {
     fetchParts();
   }, []);
 
-  // 筛选变化时重新应用筛  useEffect(() => {
+  // 筛选变化时重新应用筛选
+  useEffect(() => {
     applyFilters();
   }, [filters, parts]);
 
@@ -293,7 +300,7 @@ export default function PartsMarketManagement() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">您没有权限查看配件市场管/p>
+          <p className="text-gray-500">您没有权限查看配件市场管理</p>
         </div>
       </div>
     );
@@ -305,7 +312,7 @@ export default function PartsMarketManagement() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">配件市场管理</h1>
-          <p className="text-gray-600 mt-1">管理配件商品信息和库存状/p>
+          <p className="text-gray-600 mt-1">管理配件商品信息和库存状态</p>
         </div>
         <div className="flex items-center space-x-3">
           <Button variant="outline" onClick={handleRefresh}>
@@ -325,10 +332,10 @@ export default function PartsMarketManagement() {
         </div>
       </div>
 
-      {/* 筛选面*/}
+      {/* 筛选面板 */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">筛选条/CardTitle>
+          <CardTitle className="text-lg">筛选条件</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -364,10 +371,10 @@ export default function PartsMarketManagement() {
               onValueChange={value => handleFilterChange('status', value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="选择状 />
+                <SelectValue placeholder="选择状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">全部状态/SelectItem>
+                <SelectItem value="">全部状态</SelectItem>
                 <SelectItem value="active">在售</SelectItem>
                 <SelectItem value="inactive">停售</SelectItem>
                 <SelectItem value="out_of_stock">缺货</SelectItem>
@@ -376,20 +383,20 @@ export default function PartsMarketManagement() {
 
             <Input
               type="number"
-              placeholder="最低价
+              placeholder="最低价"
               value={filters.minPrice}
               onChange={e => handleFilterChange('minPrice', e.target.value)}
             />
 
             <Input
               type="number"
-              placeholder="最高价
+              placeholder="最高价"
               value={filters.maxPrice}
               onChange={e => handleFilterChange('maxPrice', e.target.value)}
             />
           </div>
           <div className="mt-4">
-            <Button onClick={applyFilters}>应用筛/Button>
+            <Button onClick={applyFilters}>应用筛选</Button>
           </div>
         </CardContent>
       </Card>
@@ -453,7 +460,7 @@ export default function PartsMarketManagement() {
       <Card>
         <CardHeader>
           <CardTitle>配件商品列表</CardTitle>
-          <CardDescription>{filteredParts.length} 件商/CardDescription>
+          <CardDescription>{filteredParts.length} 件商品</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -468,7 +475,7 @@ export default function PartsMarketManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {loading  (
+                {loading ? (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
@@ -512,9 +519,9 @@ export default function PartsMarketManagement() {
                         <Badge
                           variant={
                             part.stock_quantity > 10
-                               'default'
+                              ? 'default'
                               : part.stock_quantity > 0
-                                 'secondary'
+                                ? 'secondary'
                                 : 'destructive'
                           }
                         >
@@ -578,9 +585,9 @@ export default function PartsMarketManagement() {
           <DialogHeader>
             <DialogTitle>
               {dialogMode === 'view'
-                 '配件详情'
+                ? '配件详情'
                 : dialogMode === 'edit'
-                   '编辑配件'
+                  ? '编辑配件'
                   : '新增配件'}
             </DialogTitle>
           </DialogHeader>
@@ -663,7 +670,8 @@ export default function PartsMarketManagement() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    状                  </label>
+                    状{' '}
+                  </label>
                   <Select
                     value={selectedPart.status}
                     onValueChange={() => {}}
@@ -681,7 +689,8 @@ export default function PartsMarketManagement() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    供应                  </label>
+                    供应{' '}
+                  </label>
                   <Input
                     value={selectedPart.supplier}
                     readOnly={dialogMode === 'view'}
@@ -719,4 +728,3 @@ export default function PartsMarketManagement() {
     </div>
   );
 }
-

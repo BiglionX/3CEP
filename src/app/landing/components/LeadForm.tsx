@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
 import { CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from 'react';
 
 interface FAQItem {
   question: string;
@@ -15,14 +15,14 @@ interface FAQSectionProps {
 }
 
 export function FAQSection({
-  title = "常见问题",
-  subtitle = "解答您最关心的问题",
-  faqs
+  title = '常见问题',
+  subtitle = '解答您最关心的问题',
+  faqs,
 }: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index  null : index);
+    setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
@@ -32,14 +32,15 @@ export function FAQSection({
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             {title}
           </h2>
-          <p className="text-xl text-gray-600">
-            {subtitle}
-          </p>
+          <p className="text-xl text-gray-600">{subtitle}</p>
         </div>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow-sm border border-gray-200"
+            >
               <button
                 className="w-full px-6 py-5 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
                 onClick={() => toggleFAQ(index)}
@@ -47,7 +48,7 @@ export function FAQSection({
                 <span className="font-semibold text-gray-900 text-lg">
                   {faq.question}
                 </span>
-                {openIndex === index  (
+                {openIndex === index ? (
                   <ChevronUp className="w-5 h-5 text-gray-500" />
                 ) : (
                   <ChevronDown className="w-5 h-5 text-gray-500" />
@@ -56,9 +57,7 @@ export function FAQSection({
 
               {openIndex === index && (
                 <div className="px-6 pb-5 pt-2 border-t border-gray-100">
-                  <p className="text-gray-600 leading-relaxed">
-                    {faq.answer}
-                  </p>
+                  <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
                 </div>
               )}
             </div>
@@ -71,9 +70,7 @@ export function FAQSection({
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               还有其他问题
             </h3>
-            <p className="text-gray-600 mb-6">
-              我们的专业团队随时为您解答
-            </p>
+            <p className="text-gray-600 mb-6">我们的专业团队随时为您解答</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors font-medium">
                 联系销售顾问
@@ -101,11 +98,13 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
     email: '',
     phone: '',
     useCase: '',
-    role: role || ''
+    role: role || '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error'
+  >('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,7 +120,7 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
         body: JSON.stringify({
           ...formData,
           source: 'landing_page',
-          utmSource: 'organic'
+          utmSource: 'organic',
         }),
       });
 
@@ -133,9 +132,9 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
           email: '',
           phone: '',
           useCase: '',
-          role: role || ''
+          role: role || '',
         });
-        onSubmit.(formData);
+        onSubmit(formData);
       } else {
         setSubmitStatus('error');
       }
@@ -146,19 +145,21 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          开始免费试用
-        </h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">开始免费试用</h3>
         <p className="text-gray-600">
           填写信息，我们的专家将为您提供个性化演示
         </p>
@@ -180,7 +181,10 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 姓名 *
               </label>
               <input
@@ -196,7 +200,10 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
             </div>
 
             <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="company"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 公司名称
               </label>
               <input
@@ -213,7 +220,10 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 邮箱 *
               </label>
               <input
@@ -229,7 +239,10 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 手机号码
               </label>
               <input
@@ -245,7 +258,10 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
           </div>
 
           <div>
-            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="role"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               您的角色
             </label>
             <select
@@ -265,7 +281,10 @@ export function LeadForm({ role, onSubmit }: LeadFormProps) {
           </div>
 
           <div>
-            <label htmlFor="useCase" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="useCase"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               使用场景
             </label>
             <textarea

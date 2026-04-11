@@ -4,7 +4,11 @@
  */
 
 export enum InboundForecastStatus {
-  FORECAST = 'forecast', // 预报状?  IN_TRANSIT = 'in_transit', // 在途状?  RECEIVED = 'received', // 已收货状?  CANCELLED = 'cancelled', // 已取?}
+  FORECAST = 'forecast', // 预报状态
+  IN_TRANSIT = 'in_transit', // 在途状态
+  RECEIVED = 'received', // 已收货状态
+  CANCELLED = 'cancelled', // 已取消
+}
 
 export interface InboundForecastItem {
   id: string;
@@ -126,17 +130,19 @@ export interface InboundForecastNotification {
   createdAt: Date;
 }
 
-// 状态显示映?export const INBOUND_FORECAST_STATUS_DISPLAY: Record<
+// 状态显示映射
+export const INBOUND_FORECAST_STATUS_DISPLAY: Record<
   InboundForecastStatus,
   string
 > = {
-  [InboundForecastStatus.FORECAST]: '预报?,
+  [InboundForecastStatus.FORECAST]: '预报中',
   [InboundForecastStatus.IN_TRANSIT]: '在途中',
-  [InboundForecastStatus.RECEIVED]: '已收?,
-  [InboundForecastStatus.CANCELLED]: '已取?,
+  [InboundForecastStatus.RECEIVED]: '已收货',
+  [InboundForecastStatus.CANCELLED]: '已取消',
 };
 
-// 状态颜色映?export const INBOUND_FORECAST_STATUS_COLORS: Record<
+// 状态颜色映射
+export const INBOUND_FORECAST_STATUS_COLORS: Record<
   InboundForecastStatus,
   string
 > = {
@@ -174,7 +180,8 @@ export const INBOUND_FORECAST_VALIDATION_RULES = {
   },
 };
 
-// 商品项验证规?export const INBOUND_ITEM_VALIDATION_RULES = {
+// 商品项验证规则
+export const INBOUND_ITEM_VALIDATION_RULES = {
   sku: {
     required: true,
     minLength: 1,
@@ -192,7 +199,8 @@ export const INBOUND_FORECAST_VALIDATION_RULES = {
   },
 };
 
-// 默认?export const INBOUND_FORECAST_DEFAULTS: Partial<CreateInboundForecastDTO> = {
+// 默认值
+export const INBOUND_FORECAST_DEFAULTS: Partial<CreateInboundForecastDTO> = {
   remarks: '',
   items: [],
 };

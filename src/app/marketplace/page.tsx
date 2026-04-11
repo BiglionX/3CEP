@@ -2,19 +2,19 @@
  * 智能体市场主页面 - FixCycle 6.0 智能体市场平台 */
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
-  Search,
+  Calendar,
+  Download,
   Filter,
   Grid,
   List,
-  Star,
-  Download,
-  Calendar,
-  User,
-  Tag,
+  Search,
   SlidersHorizontal,
+  Star,
+  Tag,
+  User,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface MarketplaceAgent {
   id: string;
@@ -302,7 +302,7 @@ export default function MarketplacePage() {
         <div
           className={
             viewMode === 'grid'
-               'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
               : 'space-y-4'
           }
         >
@@ -316,7 +316,7 @@ export default function MarketplacePage() {
               <div
                 className={
                   viewMode === 'grid'
-                     'h-full flex flex-col'
+                    ? 'h-full flex flex-col'
                     : 'flex items-start space-x-4'
                 }
               >

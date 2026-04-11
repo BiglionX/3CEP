@@ -54,7 +54,7 @@ export const BUSINESS_MODULES: ModuleConfig[] = [
     category: 'business',
     priority: 1,
     enabled: true,
-    description: '设备维修订单管理和技师服务平?,
+    description: '设备维修订单管理和技师服务平台',
     badge: 'hot',
   },
   {
@@ -66,7 +66,7 @@ export const BUSINESS_MODULES: ModuleConfig[] = [
     category: 'business',
     priority: 2,
     enabled: true,
-    description: '原厂配件和维修配件购买平?,
+    description: '原厂配件和维修配件购买平台',
   },
   {
     id: 'device_management',
@@ -77,7 +77,7 @@ export const BUSINESS_MODULES: ModuleConfig[] = [
     category: 'business',
     priority: 3,
     enabled: true,
-    description: '个人设备档案和生命周期管?,
+    description: '个人设备档案和生命周期管理',
   },
   {
     id: 'crowdfunding',
@@ -88,18 +88,18 @@ export const BUSINESS_MODULES: ModuleConfig[] = [
     category: 'business',
     priority: 4,
     enabled: true,
-    description: '创新项目众筹和投资平?,
+    description: '创新项目众筹和投资平台',
   },
   {
     id: 'fcx_alliance',
-    name: 'FCX联盟',
+    name: 'FCX 联盟',
     icon: 'Star',
     path: '/fcx',
     permissions: ['fcx.access', 'fcx.view'],
     category: 'business',
     priority: 5,
     enabled: true,
-    description: '循环经济联盟和权益体?,
+    description: '循环经济联盟和权益体系',
   },
   {
     id: 'valuation_service',
@@ -110,7 +110,7 @@ export const BUSINESS_MODULES: ModuleConfig[] = [
     category: 'business',
     priority: 6,
     enabled: true,
-    description: '设备回收估价和报价服?,
+    description: '设备回收估价和报价服务',
   },
 ];
 
@@ -158,7 +158,7 @@ export const MANAGEMENT_MODULES: ModuleConfig[] = [
     category: 'management',
     priority: 4,
     enabled: true,
-    description: '维修店铺入驻审核和管?,
+    description: '维修店铺入驻审核和管理',
   },
   {
     id: 'financial_management',
@@ -191,7 +191,7 @@ export const MANAGEMENT_MODULES: ModuleConfig[] = [
     category: 'management',
     priority: 7,
     enabled: true,
-    description: '库存管理、出入库操作和盘?,
+    description: '库存管理、出入库操作和盘点',
   },
   {
     id: 'agent_workflows',
@@ -213,7 +213,7 @@ export const MANAGEMENT_MODULES: ModuleConfig[] = [
     category: 'management',
     priority: 9,
     enabled: true,
-    description: '自动化工作流配置和监?,
+    description: '自动化工作流配置和监控',
   },
 ];
 
@@ -228,7 +228,7 @@ export const PERSONAL_MODULES: ModuleConfig[] = [
     category: 'personal',
     priority: 1,
     enabled: true,
-    description: '基本个人信息和账户设?,
+    description: '基本个人信息和账户设置',
   },
   {
     id: 'account_settings',
@@ -272,7 +272,7 @@ export const PERSONAL_MODULES: ModuleConfig[] = [
     category: 'personal',
     priority: 5,
     enabled: true,
-    description: '银行卡、支付宝等支付方式管?,
+    description: '银行卡、支付宝等支付方式管理',
   },
 ];
 
@@ -287,7 +287,7 @@ export const SYSTEM_MODULES: ModuleConfig[] = [
     category: 'system',
     priority: 1,
     enabled: true,
-    description: '操作日志和系统审计追?,
+    description: '操作日志和系统审计追踪',
   },
   {
     id: 'system_monitoring',
@@ -298,7 +298,7 @@ export const SYSTEM_MODULES: ModuleConfig[] = [
     category: 'system',
     priority: 2,
     enabled: true,
-    description: '服务器状态、性能指标和健康检?,
+    description: '服务器状态、性能指标和健康检查',
   },
   {
     id: 'system_settings',
@@ -309,7 +309,7 @@ export const SYSTEM_MODULES: ModuleConfig[] = [
     category: 'system',
     priority: 3,
     enabled: true,
-    description: '全局配置和系统参数设?,
+    description: '全局配置和系统参数设置',
   },
 ];
 
@@ -321,7 +321,8 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
   ...SYSTEM_MODULES,
 ];
 
-// 模块注册管理?export class ModuleRegistry {
+// 模块注册管理
+export class ModuleRegistry {
   private static instance: ModuleRegistry;
   private modules: Map<string, ModuleConfig> = new Map();
 
@@ -392,7 +393,8 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
       map.set(module.id, { ...module, children: [] });
     });
 
-    // 构建树结?    modules.forEach(module => {
+    // 构建树结构
+    modules.forEach(module => {
       if (module.parentId) {
         const parent = map.get(module.parentId);
         if (parent && parent.children) {
@@ -407,7 +409,8 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
   }
 
   /**
-   * 检查模块是否存?   */
+   * 检查模块是否存在
+   */
   hasModule(id: string): boolean {
     return this.modules.has(id);
   }

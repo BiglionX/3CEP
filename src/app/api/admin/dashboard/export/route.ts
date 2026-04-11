@@ -1,86 +1,89 @@
 import { Database } from '@/lib/database.types';
 import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
 import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   return apiPermissionMiddleware(
-    arguments[0],
+    request,
     async () => {
-  const supabase = createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+      const supabase = createClient<Database>(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
 
-  // 开发环境临时绕过认证检查
-  if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line no-console -- 开发环境调试用
-    console.log('开发环境：绕过认证检查');
-  }
+      // 开发环境临时绕过认证检查
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console -- 开发环境调试用
+        console.log('开发环境:绕过认证检查');
+      }
 
-  try {
-    // 获取查询参数
-    const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type') || 'daily_report';
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
+      try {
+        // 获取查询参数
+        const { searchParams } = new URL(request.url);
+        const type = searchParams.get('type') || 'daily_report';
+        const startDate = searchParams.get('startDate');
+        const endDate = searchParams.get('endDate');
 
-    let csvData = '';
-    let filename = '';
+        let csvData = '';
+        let filename = '';
 
-    switch (type) {
-      case 'daily_report':
-        csvData = await generateDailyReport(supabase, startDate, endDate);
-        filename = `运营日报_${new Date().toISOString().split('T')[0]}.csv`;
-        break;
+        switch (type) {
+          case 'daily_report':
+            csvData = await generateDailyReport(supabase, startDate, endDate);
+            filename = `运营日报_${new Date().toISOString().split('T')[0]}.csv`;
+            break;
 
-      case 'hot_links':
-        csvData = await generateHotLinksReport(supabase, startDate, endDate);
-        filename = `热点链接报表_${new Date().toISOString().split('T')[0]}.csv`;
-        break;
+          case 'hot_links':
+            csvData = await generateHotLinksReport(
+              supabase,
+              startDate,
+              endDate
+            );
+            filename = `热点链接报表_${new Date().toISOString().split('T')[0]}.csv`;
+            break;
 
-      case 'appointments':
-        csvData = await generateAppointmentsReport(
-          supabase,
-          startDate,
-          endDate
+          case 'appointments':
+            csvData = await generateAppointmentsReport(
+              supabase,
+              startDate,
+              endDate
+            );
+            filename = `预约报表_${new Date().toISOString().split('T')[0]}.csv`;
+            break;
+
+          default:
+            return NextResponse.json(
+              { success: false, error: '不支持的报表类型' },
+              { status: 400 }
+            );
+        }
+
+        // 设置响应头
+        const headers = new Headers();
+        headers.set('Content-Type', 'text/csv; charset=utf-8');
+        // 使用 encodeURI 处理中文文件名
+        const encodedFilename = encodeURIComponent(filename);
+        headers.set(
+          'Content-Disposition',
+          `attachment; filename*=UTF-8''${encodedFilename}`
         );
-        filename = `预约报表_${new Date().toISOString().split('T')[0]}.csv`;
-        break;
 
-      default:
+        return new NextResponse(csvData, {
+          status: 200,
+          headers: headers,
+        });
+      } catch (error) {
+        console.error('生成 CSV 报表失败:', error);
         return NextResponse.json(
-          { success: false, error: '不支持的报表类型' },
-          { status: 400 }
+          { success: false, error: '生成 CSV 报表失败' },
+          { status: 500 }
         );
-    }
-
-    // 设置响应头
-    const headers = new Headers();
-    headers.set('Content-Type', 'text/csv; charset=utf-8');
-    // 使用 encodeURI 处理中文文件名
-    const encodedFilename = encodeURIComponent(filename);
-    headers.set(
-      'Content-Disposition',
-      `attachment; filename*=UTF-8''${encodedFilename}`
-    );
-
-    return new NextResponse(csvData, {
-      status: 200,
-      headers: headers,
-    });
-  } catch (error) {
-    console.error('生成 CSV 报表失败:', error);
-    return NextResponse.json(
-      { success: false, error: '生成 CSV 报表失败' },
-      { status: 500 }
-    );
-  }
-
+      }
     },
     'settings_read'
   );
-
+}
 // 生成日报数据
 async function generateDailyReport(
   supabase: any,

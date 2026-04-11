@@ -1,24 +1,23 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { biService } from '@/lib/business-intelligence-service';
 import {
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  Users,
-  DollarSign,
-  BarChart3,
-  Target,
   AlertTriangle,
   Award,
-  Globe,
   Clock,
+  DollarSign,
+  Globe,
+  Minus,
   RefreshCw,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
-import { biService } from '@/lib/business-intelligence-service';
+import { useEffect, useState } from 'react';
 
 interface KPIData {
   name: string;
@@ -42,7 +41,6 @@ export default function BusinessIntelligenceDashboard() {
   );
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month'>('month');
 
   useEffect(() => {
     loadData();
@@ -187,7 +185,7 @@ export default function BusinessIntelligenceDashboard() {
                     <span>
                       达成 {Math.round((kpi.value / kpi.target) * 100)}%
                     </span>
-                    <span>{kpi.unit === '%' ? '百分 : '绝对}</span>
+                    <span>{kpi.unit === '%' ? '百分比' : '绝对值'}</span>
                   </div>
                 </div>
               </CardContent>
@@ -214,11 +212,11 @@ export default function BusinessIntelligenceDashboard() {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">增长/span>
+                <span className="text-gray-600">增长率</span>
                 <Badge
                   variant={
                     dashboardData.revenueMetrics.growthRate >= 0
-                       'default'
+                      ? 'default'
                       : 'destructive'
                   }
                 >
@@ -251,11 +249,11 @@ export default function BusinessIntelligenceDashboard() {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">留存/span>
+                <span className="text-gray-600">留存率</span>
                 <Badge
                   variant={
                     dashboardData.userMetrics.retentionRate >= 80
-                       'default'
+                      ? 'default'
                       : 'secondary'
                   }
                 >
@@ -281,7 +279,7 @@ export default function BusinessIntelligenceDashboard() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-                <span className="font-medium">系统可用/span>
+                <span className="font-medium">系统可用率</span>
                 <span className="text-2xl font-bold text-purple-600">
                   {dashboardData.operationalMetrics.systemUptime}%
                 </span>
@@ -293,7 +291,7 @@ export default function BusinessIntelligenceDashboard() {
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">错误/span>
+                <span className="text-gray-600">错误率</span>
                 <span className="font-medium text-red-600">
                   {dashboardData.operationalMetrics.errorRate}%
                 </span>
@@ -309,21 +307,22 @@ export default function BusinessIntelligenceDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Globe className="w-5 h-5" />
-                市场竞争力分              </CardTitle>
+                市场竞争力分析
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
                   <h3 className="font-semibold text-gray-900 mb-2">市场份额</h3>
                   <div className="text-3xl font-bold text-blue-600">35%</div>
-                  <p className="text-sm text-gray-600">行业排名/p>
+                  <p className="text-sm text-gray-600">行业排名</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 bg-gray-50 rounded">
                     <div className="text-sm text-gray-600">竞争优势</div>
                     <ul className="text-xs text-gray-700 mt-1 space-y-1">
-                      <li>技术创/li>
+                      <li>技术创新</li>
                       <li>用户体验</li>
                       <li>成本优势</li>
                     </ul>
@@ -332,8 +331,8 @@ export default function BusinessIntelligenceDashboard() {
                     <div className="text-sm text-gray-600">发展机会</div>
                     <ul className="text-xs text-gray-700 mt-1 space-y-1">
                       <li>新兴市场</li>
-                      <li>国际/li>
-                      <li>生态合/li>
+                      <li>国际化</li>
+                      <li>生态合作</li>
                     </ul>
                   </div>
                 </div>
@@ -362,7 +361,7 @@ export default function BusinessIntelligenceDashboard() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>市场风险</span>
-                      <span className="font-medium">72/span>
+                      <span className="font-medium">72%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
@@ -375,7 +374,7 @@ export default function BusinessIntelligenceDashboard() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>运营风险</span>
-                      <span className="font-medium">78/span>
+                      <span className="font-medium">78%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
@@ -388,7 +387,7 @@ export default function BusinessIntelligenceDashboard() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>财务风险</span>
-                      <span className="font-medium">68/span>
+                      <span className="font-medium">68%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
@@ -421,7 +420,7 @@ export default function BusinessIntelligenceDashboard() {
               <div className="p-4 border border-green-200 rounded-lg">
                 <h3 className="font-semibold text-green-700 mb-2">增长机会</h3>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>拓展东南亚市/li>
+                  <li>拓展东南亚市场</li>
                   <li>开发企业级产品</li>
                   <li>加强合作伙伴关系</li>
                 </ul>
@@ -430,7 +429,7 @@ export default function BusinessIntelligenceDashboard() {
               <div className="p-4 border border-blue-200 rounded-lg">
                 <h3 className="font-semibold text-blue-700 mb-2">优化重点</h3>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>提升用户留存/li>
+                  <li>提升用户留存率</li>
                   <li>降低运营成本</li>
                   <li>优化产品体验</li>
                 </ul>
@@ -451,4 +450,3 @@ export default function BusinessIntelligenceDashboard() {
     </div>
   );
 }
-
