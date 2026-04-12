@@ -11,8 +11,12 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "^/$",
       "dest": "/docs/inventory-ai-module.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/docs/$1"
     }
   ]
 }
