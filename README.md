@@ -13,6 +13,30 @@
 
 ---
 
+## 🦞 Proclaw Desktop - AI 驱动的商业操作系统 (NEW!)
+
+> **全新桌面端产品** - 统一入口、离线优先、技能扩展
+
+我们推出了 **Proclaw Desktop**，基于 Tauri + React 的桌面应用平台，为中小企业提供：
+
+- 🤖 **经营智能体**: 统一管理所有业务智能体的顶层 AI
+- 📦 **内置核心模块**: 产品库 + 进销存 AI
+- 🛍️ **技能商店**: 可扩展的功能生态（类似 VS Code 插件）
+- ⚡ **离线优先**: SQLite 本地存储 + Supabase 云端同步
+- 🔐 **企业级安全**: SQLCipher 加密 + 技能沙箱隔离
+
+**快速开始**:
+
+```bash
+# 一键初始化 Proclaw 桌面端项目
+cd d:\BigLionX\3cep
+.\scripts\init-proclaw.ps1
+```
+
+📚 **完整文档**: [Proclaw 文档中心](./docs/PROCLAW_INDEX.md) | [技术方案](./docs/PROCLAW_TECHNICAL_PLAN.md) | [开发计划](./docs/PROCLAW_DEVELOPMENT_PLAN.md)
+
+---
+
 ## 🚀 一键启动指南
 
 ### 快速开始 (3 分钟内完成)
@@ -111,6 +135,17 @@ A: 检查索引配置，参考 `docs/technical-docs/database-optimization.md`
 
 ### 核心功能模块
 
+#### 🖥️ 桌面端产品 (NEW!)
+
+- 🦞 **Proclaw Desktop** - AI 驱动的商业操作系统
+  - 🤖 经营智能体 (统一协调所有业务智能体)
+  - 📦 产品库管理 (五库设计 + BOM)
+  - 📊 进销存 AI (智能预测 + 自动补货)
+  - 🛍️ 技能商店 (可扩展生态)
+  - ⚡ 离线优先架构
+
+#### 🌐 Web 端平台
+
 - 🛠️ **智能维修预约系统** - AI驱动的预约匹配和调度
 - 🔄 **循环经济交易平台** - 废旧物品回收与再利用
 - 🤖 **B2B 采购智能体** - 智能化供应商匹配和谈判 (FixCycle 4.0)
@@ -120,8 +155,12 @@ A: 检查索引配置，参考 `docs/technical-docs/database-optimization.md`
 - 🔧 **维修教程系统** - 结构化维修知识库
 - 🏪 **智能体市场平台** - 完整的 Agent 商业化生态系统 ⭐ 新增
 - 🎯 **市场运营管理系统** - 开发者管理、收益统计、运营数据分析 ⭐ 新增
+- 📦 **产品库管理系统** - 五级产品层次化管理（品牌/整机/配件/部件/零件）⭐ 新增
+- 🤖 **进销存 AI 系统** - 智能预测、自动补货、库存健康分析 ⭐ 新增
 
 ### 技术架构
+
+#### Web 端架构
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -140,6 +179,44 @@ A: 检查索引配置，参考 `docs/technical-docs/database-optimization.md`
 │国际贸易采购平台  │    │智能用户管理系统  │
 │智能决策引擎     │    │AI推荐与自动化    │
 └─────────────────┘    └─────────────────┘
+         │                       │
+         ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐
+│  产品库管理系统  │    │  进销存 AI 系统  │
+│五级层次化管理   │    │智能预测与补货    │
+└─────────────────┘    └─────────────────┘
+```
+
+#### 桌面端架构 (Proclaw)
+
+```
+┌─────────────────────────────────────────────┐
+│        Proclaw Desktop (Tauri 2.0)          │
+├─────────────────────────────────────────────┤
+│  经营智能体 (Operating Agent)                │
+│  ├─ 自然语言指令解析                         │
+│  ├─ 跨模块数据联动                           │
+│  └─ 智能决策建议                             │
+├─────────────────────────────────────────────┤
+│  内置核心模块                                │
+│  ├─ 产品库 (五库设计 + BOM)                  │
+│  ├─ 进销存 AI (自动化盘点)                   │
+│  └─ 技能商店 (可扩展生态)                    │
+├─────────────────────────────────────────────┤
+│  Tauri Core (Rust)                          │
+│  ├─ SQLite + SQLCipher (本地加密数据库)      │
+│  ├─ 离线队列 + 增量同步                      │
+│  └─ 原生功能 (通知/文件系统/自动更新)         │
+└─────────────────────────────────────────────┘
+         ↕ WebSocket / HTTPS
+┌─────────────────────────────────────────────┐
+│        Cloud Backend (Supabase)              │
+├─────────────────────────────────────────────┤
+│  Authentication & Authorization              │
+│  Real-time Sync                              │
+│  Edge Functions (AI Orchestration)           │
+│  Vector DB (Pinecone - 智能搜索)             │
+└─────────────────────────────────────────────┘
 ```
 
 ---
@@ -191,6 +268,10 @@ src/
     │   └── page.tsx  # 开发者列表与管理
     ├── agent-store/  # 智能体商店管理
     │   └── page.tsx  # 智能体审核与上下架
+    ├── product-library/  # 产品库管理 ⭐ 新增
+    │   └── page.tsx  # 产品库管理面板
+    ├── inventory-ai/  # 进销存 AI ⭐ 新增
+    │   └── page.tsx  # 库存预测与补货面板
     └── components/   # 管理组件
         ├── UserStatsDashboard.tsx    # 用户统计面板
         ├── AdvancedUserSearch.tsx    # 高级搜索组件
@@ -219,6 +300,17 @@ tests/              # 测试文件
 
 ### 📚 技术文档
 
+#### Proclaw 桌面端 (NEW!)
+
+- [Proclaw 文档中心](./docs/PROCLAW_INDEX.md) - 一站式文档导航 ⭐ 新增
+- [Proclaw 技术方案](./docs/PROCLAW_TECHNICAL_PLAN.md) - 完整技术架构设计 ⭐ 新增
+- [Proclaw 开发计划](./docs/PROCLAW_DEVELOPMENT_PLAN.md) - 26周详细任务分解 ⭐ 新增
+- [Proclaw 快速启动](./docs/PROCLAW_QUICK_START.md) - 环境搭建 step-by-step ⭐ 新增
+- [Proclaw 路线图](./docs/PROCLAW_ROADMAP.md) - 可视化时间轴和里程碑 ⭐ 新增
+- [Proclaw 项目总结](./docs/PROCLAW_PROJECT_SUMMARY.md) - 核心价值与关键数据 ⭐ 新增
+
+#### Web 端平台
+
 - [架构设计文档](./docs/technical-docs/architecture-design.md) - 系统架构详解
 - [API 接口文档](./OPENAPI_SPEC.yaml) - RESTful API 规范
 - [数据库设计](./docs/technical-docs/database-schema.md) - 数据模型和关系
@@ -227,8 +319,17 @@ tests/              # 测试文件
 - [采购智能体升级方案](./docs/modules/procurement-intelligence/upgrade-specification.md) - FixCycle 4.0 升级规范 ⭐
 - [市场运营管理 API 参考](./docs/technical-docs/admin-modules-api-reference.md) - 市场运营 API 详解 ⭐ 新增
 - [智能体市场平台架构](./docs/technical-docs/agent-marketplace-architecture.md) - 市场平台技术架构 ⭐ 新增
+- [产品库模块文档](./docs/product-library-module.html) - 五级产品层次化管理 ⭐ 新增
+- [进销存AI模块文档](./docs/inventory-ai-module.html) - 智能库存预测与补货 ⭐ 新增
 
 ### 🎯 使用指南
+
+#### Proclaw 桌面端 (NEW!)
+
+- [Proclaw 快速启动指南](./docs/PROCLAW_QUICK_START.md) - 10分钟环境搭建 ⭐ 新增
+- [Proclaw 开发规范](./docs/PROCLAW_TECHNICAL_PLAN.md#5-模块设计规范) - 技能包开发规范 ⭐ 新增
+
+#### Web 端平台
 
 - [智能用户管理快速参考](./docs/guides/user-management-quick-reference.md) - 用户管理操作指南 ⭐
 - [市场运营管理指南](./docs/guides/marketplace-operations-guide.md) - 市场运营操作手册 ⭐ 新增
@@ -248,6 +349,8 @@ tests/              # 测试文件
 - [部署验收报告](./docs/reports/deployment-acceptance-report.md) - 部署质量验收
 - [智能体市场平台测试报告](./reports/marketplace-full-completion-report.md) - 市场平台完整测试 ⭐ 新增
 - [管理后台功能验收报告](./reports/management-pages-completion-report.md) - 管理后台功能验收 ⭐ 新增
+- [市场运营管理开发报告](./reports/2026-03-23-marketplace-admin-development-report.md) - 市场运营后台开发 ⭐ 新增
+- [每日开发进展总结](./reports/2026-03-23-daily-development-summary.md) - 最新开发进展 ⭐ 新增
 
 ---
 

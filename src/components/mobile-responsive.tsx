@@ -4,20 +4,10 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import {
-  Menu,
-  X,
-  Home,
-  Search,
-  Bell,
-  User,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 // 设备类型枚举
 export type DeviceType =
@@ -39,7 +29,8 @@ export interface ScreenInfo {
   isDesktop: boolean;
 }
 
-// 响应式容器组?interface ResponsiveContainerProps {
+// 响应式容器组
+interface ResponsiveContainerProps {
   children: React.ReactNode;
   className?: string;
   maxWidth?: 'mobile' | 'tablet' | 'desktop' | 'full';
@@ -102,7 +93,8 @@ export function MobileBottomNav({
   );
 }
 
-// 移动端侧边抽?interface MobileDrawerProps {
+// 移动端侧边抽
+interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
@@ -185,7 +177,7 @@ export function ResponsiveGrid({
   return (
     <div
       className={`
-        grid 
+        grid
         grid-cols-${columns.mobile}
         sm:grid-cols-${columns.tablet}
         lg:grid-cols-${columns.desktop}
@@ -198,7 +190,8 @@ export function ResponsiveGrid({
   );
 }
 
-// 移动端卡片组?interface MobileCardProps {
+// 移动端卡片组
+interface MobileCardProps {
   children: React.ReactNode;
   className?: string;
   elevated?: boolean;
@@ -284,7 +277,8 @@ export function MobileListItem({
   return content;
 }
 
-// 移动端头部组?interface MobileHeaderProps {
+// 移动端头部组
+interface MobileHeaderProps {
   title: string;
   onBack?: () => void;
   actions?: React.ReactNode;
@@ -443,7 +437,8 @@ export function ResponsiveHide({
 }: ResponsiveHideProps) {
   const screenInfo = useScreenInfo();
 
-  // 如果指定了showOn且当前设备不在其中，则隐?  if (showOn.length > 0 && !showOn.includes(screenInfo.deviceType)) {
+  // 如果指定了 showOn 且当前设备不在其中，则隐藏
+  if (showOn.length > 0 && !showOn.includes(screenInfo.deviceType)) {
     return null;
   }
 

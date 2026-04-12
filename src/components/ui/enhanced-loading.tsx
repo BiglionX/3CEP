@@ -1,22 +1,20 @@
 ﻿'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-  Loader2,
-  Circle,
-  Package,
-  Wrench,
-  Heart,
-  Smartphone,
   Battery,
-  Monitor,
+  Clock,
   Cpu,
   HardDrive,
+  Heart,
+  Loader2,
+  Monitor,
+  Smartphone,
   Wifi,
+  Wrench,
   Zap,
-  Clock,
 } from 'lucide-react';
+import React from 'react';
 
 // 增强的加载旋转器组件
 interface EnhancedLoadingSpinnerProps {
@@ -92,7 +90,8 @@ export function EnhancedLoadingSpinner({
   return renderIcon();
 }
 
-// 心跳脉冲加载?function HeartBeatSpinner({
+// 心跳脉冲加载器
+function HeartBeatSpinner({
   size = 'md',
   variant = 'primary',
   className = '',
@@ -126,7 +125,8 @@ export function EnhancedLoadingSpinner({
   );
 }
 
-// 波浪加载?function WaveSpinner({
+// 波浪加载器
+function WaveSpinner({
   size = 'md',
   variant = 'primary',
   className = '',
@@ -167,7 +167,8 @@ export function EnhancedLoadingSpinner({
   );
 }
 
-// 骨架屏组?interface EnhancedSkeletonProps {
+// 骨架屏组
+interface EnhancedSkeletonProps {
   className?: string;
   variant?:
     | 'text'
@@ -302,7 +303,8 @@ export function EnhancedSkeleton({
   );
 }
 
-// 页面加载?interface EnhancedPageLoaderProps {
+// 页面加载器
+interface EnhancedPageLoaderProps {
   message?: string;
   subMessage?: string;
   variant?: 'minimal' | 'standard' | 'full';
@@ -312,8 +314,8 @@ export function EnhancedSkeleton({
 }
 
 export function EnhancedPageLoader({
-  message = '加载?..',
-  subMessage = '请稍?,
+  message = '加载中..',
+  subMessage = '请稍等',
   variant = 'standard',
   theme = 'light',
   showProgress = false,
@@ -447,7 +449,8 @@ export function EnhancedPageLoader({
   }
 }
 
-// 内联加载?interface EnhancedInlineLoaderProps {
+// 内联加载器
+interface EnhancedInlineLoaderProps {
   size?: 'sm' | 'md' | 'lg';
   message?: string;
   position?: 'left' | 'right';
@@ -456,7 +459,7 @@ export function EnhancedPageLoader({
 
 export function EnhancedInlineLoader({
   size = 'sm',
-  message = '加载?..',
+  message = '加载中..',
   position = 'left',
   variant = 'spinner',
 }: EnhancedInlineLoaderProps) {
@@ -534,7 +537,8 @@ function EnhancedLoadingBars({ className = '' }: { className?: string }) {
   );
 }
 
-// 按钮加载?interface EnhancedButtonLoaderProps {
+// 按钮加载器
+interface EnhancedButtonLoaderProps {
   loading: boolean;
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg';
@@ -547,7 +551,7 @@ export function EnhancedButtonLoader({
   children,
   size = 'sm',
   variant = 'overlay',
-  message = '处理?..',
+  message = '处理中..',
 }: EnhancedButtonLoaderProps) {
   const sizeClasses = {
     sm: 'text-sm',
@@ -593,14 +597,15 @@ export function EnhancedButtonLoader({
   }
 }
 
-// 导出所有组?export {
-  Heart,
-  Smartphone,
+// 导出所有组件
+export {
   Battery,
-  Monitor,
+  Clock,
   Cpu,
   HardDrive,
+  Heart,
+  Monitor,
+  Smartphone,
   Wifi,
   Zap,
-  Clock,
 };

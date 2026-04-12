@@ -256,7 +256,7 @@ export default function SkillDetailPage() {
               {showVersions && (
                 <SkillVersionHistory
                   versions={versions}
-                  onRollback={versionId => {
+                  onRollback={_versionId => {
                     if (confirm('确定要回滚到这个版本吗？')) {
                       // TODO: 调用回滚 API
                       alert('回滚功能开发中...');

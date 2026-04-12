@@ -96,6 +96,27 @@ services:
       timeout: 10s
       retries: 3
 
+  # AI 预测微服务 (FastAPI + Prophet)
+  prediction-api:
+    build:
+      context: ./services/prediction-api
+      dockerfile: Dockerfile
+    container_name: fixcycle-prediction-api
+    restart: unless-stopped
+    ports:
+      - '8000:8000'
+    environment:
+      - PREDICTION_API_KEY=dev_prediction_key_12345
+    volumes:
+      - prediction-models:/app/models
+    networks:
+      - dev-network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # 开发用应用服务
   dev-app:
     build:
@@ -134,4 +155,6 @@ volumes:
   dev-n8n-storage:
     driver: local
   dev-logs:
+    driver: local
+  prediction-models:
     driver: local

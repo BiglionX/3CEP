@@ -67,41 +67,31 @@ export default function UserDetailPage() {
   const canManage = hasPermission('usermgr.manage');
 
   useEffect(() => {
-    if (!canView) return;
-
-    // TODO: 替换为实际 API 调用
-    // fetch(`/api/admin/user-management/${params.id}`)
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setUser(data);
-    //     setLoading(false);
-    //   });
-
-    // 模拟数据
-    setTimeout(() => {
-      setUser({
-        id: params.id as string,
-        user_id: 'user-1',
-        user_type: 'enterprise',
-        account_type: 'factory',
-        email: 'factory@example.com',
-        phone: '13800138000',
-        status: 'active',
-        is_verified: true,
-        verification_status: 'verified',
-        subscription_plan: 'enterprise',
-        role: 'manager',
-        created_at: new Date(Date.now() - 86400000 * 30).toISOString(),
-        updated_at: new Date().toISOString(),
-        company_name: '示例工厂有限公司',
-        metadata: {
-          industry: '制造业',
-          employee_count: '100-500',
-          annual_revenue: '1000 万 -5000 万',
-        },
-      });
+    if (!canView) {
       setLoading(false);
-    }, 500);
+      return;
+    }
+
+    // 获取用户详情
+    const fetchUserDetail = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/admin/user-management/${params.id}`);
+        const data = await response.json();
+
+        if (data.success) {
+          setUser(data.data);
+        } else {
+          console.error('获取用户详情失败:', data.error);
+        }
+      } catch (error) {
+        console.error('获取用户详情失败:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetail();
   }, [params.id, canView]);
 
   if (loading) {

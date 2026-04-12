@@ -1,5 +1,29 @@
 # Procyc 项目文档中心
 
+## 🦞 Proclaw Desktop - AI 驱动的商业操作系统 (NEW!)
+
+> **全新桌面端产品** - 统一入口、离线优先、技能扩展
+
+### 📚 Proclaw 文档导航
+
+- [Proclaw 文档中心](./PROCLAW_INDEX.md) - 一站式文档导航 ⭐ 新增
+- [Proclaw 技术方案](./PROCLAW_TECHNICAL_PLAN.md) - 完整技术架构设计 ⭐ 新增
+- [Proclaw 开发计划](./PROCLAW_DEVELOPMENT_PLAN.md) - 26周详细任务分解 ⭐ 新增
+- [Proclaw 快速启动](./PROCLAW_QUICK_START.md) - 环境搭建 step-by-step ⭐ 新增
+- [Proclaw 路线图](./PROCLAW_ROADMAP.md) - 可视化时间轴和里程碑 ⭐ 新增
+- [Proclaw 项目总结](./PROCLAW_PROJECT_SUMMARY.md) - 核心价值与关键数据 ⭐ 新增
+- [Proclaw 交付报告](./PROCLAW_DELIVERY_REPORT.md) - 方案交付清单 ⭐ 新增
+
+**快速开始**:
+
+```bash
+# 一键初始化 Proclaw 桌面端项目
+cd d:\BigLionX\3cep
+.\scripts\init-proclaw.ps1
+```
+
+---
+
 ## 🚀 快速入口
 
 ### 🎯 用户入口
@@ -58,7 +82,7 @@ npm run dev
 
 包含项目整体规划、商业模式和技术架构
 
-- [`project-specification.md`](./project-overview/project-specification.md) - 项目说明书 (v5.3 智能化全面升级版) ⭐ 更新
+- [`project-specification.md`](./project-overview/project-specification.md) - 项目说明书 (v6.2 智能化生态增强版) ⭐ 更新
 - [`development-roadmap.md`](./project-overview/development-roadmap.md) - 发展路线图
 - [`business-model.md`](./project-overview/business-model.md) - 商业模式
 - [`technical-architecture.md`](./project-overview/technical-architecture.md) - 技术架构
@@ -76,6 +100,8 @@ npm run dev
 - [`procurement-intelligence-index.md`](./modules/procurement-intelligence/index.md) - 采购智能体文档索引 ⭐ 新增
 - [`agent-marketplace-optimization-plan.md`](./project-planning/agent-marketplace-optimization-plan.md) - 智能体市场优化方案 (FixCycle 6.0) ✅ 已完成 ⭐ 更新
 - [`agent-marketplace-architecture.md`](./technical-docs/agent-marketplace-architecture.md) - 智能体市场技术架构 ⭐ 新增
+- [`product-library-module.html`](./product-library-module.html) - 产品库模块文档 (FixCycle 6.1) ✅ 新增
+- [`inventory-ai-module.html`](./inventory-ai-module.html) - 进销存 AI 模块文档 (FixCycle 6.1) ✅ 新增
 
 ### 👥 用户指南 (User Guides)
 
@@ -101,6 +127,7 @@ npm run dev
 - [`smart-user-management-specification.md`](./technical-docs/smart-user-management-specification.md) - 智能用户管理系统技术规范 (FixCycle 5.0) ⭐ 新增
 - [`management-console-optimization-summary.md`](./technical-docs/management-console-optimization-summary.md) - 管理后台优化总结报告 ⭐ 新增
 - [`agent-marketplace-architecture.md`](./technical-docs/agent-marketplace-architecture.md) - 智能体市场架构设计 ✅ 已完成 ⭐ 更新
+- [`admin-modules-api-reference.md`](./technical-docs/admin-modules-api-reference.md) - 市场运营管理 API 参考 ✅ 新增
 
 ### 📝 版本发布 (Release Notes)
 
@@ -250,6 +277,12 @@ npm run dev
 - **国际贸易管理平台**: [技术规范](./modules/foreign-trade/specification.md) | [用户指南](./user-guides/foreign-trade-user-guide.md)
 - **采购智能体升级**: [文档索引](./modules/procurement-intelligence/index.md) | [技术规范](./modules/procurement-intelligence/upgrade-specification.md)
 
+### FixCycle 6.1 智能化生态增强 ✅ 已完成
+
+- **产品库管理系统**: [产品库模块文档](./product-library-module.html) | 五级产品层次化管理（品牌/整机/配件/部件/零件）
+- **进销存 AI 系统**: [进销存AI模块文档](./inventory-ai-module.html) | 智能预测、自动补货、库存健康分析
+- **市场运营管理后台**: [开发报告](../reports/2026-03-23-marketplace-admin-development-report.md) | 开发者管理、收入统计、运营数据分析
+
 ### FixCycle 6.0 智能体生态 ✅ 已完成
 
 - **智能体市场平台**: [优化方案](./project-planning/agent-marketplace-optimization-plan.md) | [架构设计](./technical-docs/agent-marketplace-architecture.md) | [实施报告](../reports/agent-marketplace-implementation-report.md)
@@ -259,15 +292,14 @@ npm run dev
 
 ### 核心文档更新
 
-- **项目说明书**: [最新版本 v6.1](./project-overview/project-specification.md) - 智能化生态版 ⭐ 更新
+- **项目说明书**: [最新版本 v6.2](./project-overview/project-specification.md) - 智能化生态增强版 ⭐ 更新
 - **系统架构**: [最新版本 v6.2](./technical-docs/system-architecture.md) - 文件夹结构对齐 + 智能体 SDK 集成 ⭐ 更新
 - **版本日志**: [v3.1.0](./release-notes/changelog.md) - 智能体市场生态版 ⭐ 新增
-- **网站地图**: [完整功能导航](./SITE_MAP.md) - 包含所有新功能模块
 - **网站地图**: [完整功能导航](./SITE_MAP.md) - 包含所有新功能模块
 - **API文档**: [OpenAPI规范](../OPENAPI_SPEC.yaml) - 最新接口定义
 
 ---
 
-_最后更新：2026 年 3 月 22 日_
-_版本：v2.2 (智能体市场启动 + 企业后台优化)_
-_新增：FixCycle 6.0 智能体市场平台、销售智能体模块、采购智能体升级_
+_最后更新：2026 年 4 月 11 日_
+_版本：v2.3 (产品库 + 进销存AI + 市场运营管理)_
+_新增：FixCycle 6.1 产品库管理系统、进销存 AI 系统、市场运营管理后台_

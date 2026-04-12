@@ -1,8 +1,8 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function AdminAccessTestPage() {
   const router = useRouter();
@@ -87,15 +87,15 @@ export default function AdminAccessTestPage() {
         localStorageCheck: {
           tempAdmin:
             typeof window !== 'undefined'
-               localStorage.getItem('temp-admin-access')
+              ? localStorage.getItem('temp-admin-access')
               : 'N/A',
           isAdminFlag:
             typeof window !== 'undefined'
-               localStorage.getItem('is-admin')
+              ? localStorage.getItem('is-admin')
               : 'N/A',
           userRole:
             typeof window !== 'undefined'
-               localStorage.getItem('user-role')
+              ? localStorage.getItem('user-role')
               : 'N/A',
           result: hasLocalStorageAdmin,
         },
@@ -288,9 +288,9 @@ export default function AdminAccessTestPage() {
                 key={index}
                 className={`p-4 rounded border-l-4 ${
                   result.status === 'pass'
-                     'border-green-500 bg-green-50'
+                    ? 'border-green-500 bg-green-50'
                     : result.status === 'fail'
-                       'border-red-500 bg-red-50'
+                      ? 'border-red-500 bg-red-50'
                       : 'border-blue-500 bg-blue-50'
                 }`}
               >
@@ -299,7 +299,7 @@ export default function AdminAccessTestPage() {
                     <h3 className="font-medium">{result.testName}</h3>
                     <p className="text-sm mt-1">
                       {typeof result.details === 'string'
-                         result.details
+                        ? result.details
                         : JSON.stringify(result.details, null, 2)}
                     </p>
                   </div>
@@ -316,10 +316,10 @@ export default function AdminAccessTestPage() {
         <div className="mt-6 text-center text-sm text-gray-500">
           <p>
             页面路径:{' '}
-            {typeof window !== 'undefined'  window.location.pathname : ''}
+            {typeof window !== 'undefined' ? window.location.pathname : ''}
           </p>
           <p>
-            主机: {typeof window !== 'undefined'  window.location.host : ''}
+            主机：{typeof window !== 'undefined' ? window.location.host : ''}
           </p>
         </div>
       </div>

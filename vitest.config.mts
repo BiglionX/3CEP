@@ -9,6 +9,7 @@ export default defineConfig({
     include: [
       'tests/unit/**/*.test.{ts,tsx}',
       'tests/utils/**/*.test.{ts,tsx}',
+      'src/modules/**/*.test.{ts,tsx}',
     ],
     exclude: [
       'node_modules',

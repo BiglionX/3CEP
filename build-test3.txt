@@ -1,0 +1,136 @@
+﻿
+> prodcycleai@5.0.0 build
+> next build
+
+  鈻?Next.js 14.2.25
+  - Environments: .env.local, .env.production, .env
+
+   Creating an optimized production build ...
+npm : Failed to compile.
+所在位置 行:1 字符: 22
++ cd d:\BigLionX\3cep; npm run build 2>&1 | Out
+-File -Encoding UTF8 bui ...
++                      ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (F 
+   ailed to compile.:String) [], RemoteExcept  
+  ion
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+
+./src/app/admin/users/[id]/page.tsx
+Module not found: Can't resolve '@/components/u
+i/separator'
+
+https://nextjs.org/docs/messages/module-not-fou
+nd
+
+./src/components/touch-gestures.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mD:\BigLionX\3cep\src\components
+\touch-gestures.tsx[0m:75:1]
+ [2m75[0m |           });
+ [2m76[0m |         }
+ [2m77[0m |       }, LONG_PRESS_DURATION);
+ [2m78[0m |     },
+    : [31;1m     ^[0m
+ [2m79[0m |     [onGesture]
+ [2m80[0m |   );
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/touch-gestures.tsx
+./src/app/repair-shop/touch-gestures-demo/page.
+tsx
+
+./src/components/ui/enhanced-loading.tsx
+Error: 
+  [31mx[0m Expression expected
+     ,-[[36;1;4mD:\BigLionX\3cep\src\component
+s\ui\enhanced-loading.tsx[0m:96:1]
+ [2m 96[0m |   size = 'md',
+ [2m 97[0m |   variant = 'primary',
+ [2m 98[0m |   className = '',
+ [2m 99[0m | }: Omit<EnhancedLoadingSpinnerPr
+ops, 'icon' | 'speed'>) {
+     : [31;1m^[0m
+ [2m100[0m |   const sizeClasses = {
+ [2m101[0m |     xs: 'w-3 h-3',
+ [2m102[0m |     sm: 'w-4 h-4',
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/ui/enhanced-loading.tsx
+./src/app/loading-components-demo/page.tsx
+
+./src/lib/module-registry.ts
+Error: 
+  [31mx[0m Unterminated string constant
+    ,-[[36;1;4mD:\BigLionX\3cep\src\lib\module
+-registry.ts[0m:54:1]
+ [2m54[0m |     category: 'business',
+ [2m55[0m |     priority: 1,
+ [2m56[0m |     enabled: true,
+ [2m57[0m |     description: '璁惧缁翠慨璁㈠崟绠＄悊鍜屾妧
+甯堟湇鍔″钩?,
+    : [31;1m                 ^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m58[0m |     badge: 'hot',
+ [2m59[0m |   },
+ [2m60[0m |   {
+    `----
+
+  [31mx[0m Expected ',', got 'badge'
+    ,-[[36;1;4mD:\BigLionX\3cep\src\lib\module
+-registry.ts[0m:55:1]
+ [2m55[0m |     priority: 1,
+ [2m56[0m |     enabled: true,
+ [2m57[0m |     description: '璁惧缁翠慨璁㈠崟绠＄悊鍜屾妧
+甯堟湇鍔″钩?,
+ [2m58[0m |     badge: 'hot',
+    : [31;1m    ^^^^^[0m
+ [2m59[0m |   },
+ [2m60[0m |   {
+ [2m61[0m |     id: 'parts_market',
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/lib/module-registry.ts
+./src/app/unified-center-test/page.tsx
+
+./src/app/admin-access-test/page.tsx
+Error: 
+  [31mx[0m Expected ',', got 'localStorage'
+    ,-[[36;1;4mD:\BigLionX\3cep\src\app\admin-
+access-test\page.tsx[0m:87:1]
+ [2m87[0m |         localStorageCheck: {
+ [2m88[0m |           tempAdmin:
+ [2m89[0m |             typeof window !== 'un
+defined'
+ [2m90[0m |                localStorage.getIt
+em('temp-admin-access')
+    : [31;1m               ^^^^^^^^^^^^[0m
+ [2m91[0m |               : 'N/A',
+ [2m92[0m |           isAdminFlag:
+ [2m93[0m |             typeof window !== 'un
+defined'
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/admin-access-test/page.tsx
+
+
+> Build failed because of webpack errors

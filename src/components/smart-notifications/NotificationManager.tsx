@@ -7,23 +7,13 @@
 
 import {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   useCallback,
+  useContext,
+  useEffect,
+  useState,
   type ReactNode,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  Bell,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Info,
-  Clock,
-  Star,
-  Filter,
-} from 'lucide-react';
 
 // 通知级别枚举
 export enum NotificationLevel {
@@ -63,7 +53,8 @@ export interface Notification {
   actions?: NotificationAction[];
   metadata?: Record<string, any>;
   expiresAt?: Date; // 过期时间
-  scheduledAt?: Date; // 定时发送时?  readAt?: Date; // 阅读时间
+  scheduledAt?: Date; // 定时发送时间
+  readAt?: Date; // 阅读时间
   category?: string; // 分类标签
 }
 
@@ -75,7 +66,8 @@ export interface NotificationAction {
   style?: 'primary' | 'secondary' | 'danger';
 }
 
-// 通知过滤?export interface NotificationFilter {
+// 通知过滤
+export interface NotificationFilter {
   levels?: NotificationLevel[];
   types?: NotificationType[];
   statuses?: NotificationStatus[];
@@ -96,7 +88,8 @@ export interface NotificationSettings {
   quietHours: { start: string; end: string } | null;
 }
 
-// 上下文类?interface NotificationContextType {
+// 上下文类
+interface NotificationContextType {
   notifications: Notification[];
   unreadCount: number;
   settings: NotificationSettings;
@@ -118,7 +111,8 @@ export interface NotificationSettings {
   groupNotifications: () => Record<string, Notification[]>;
 }
 
-// 创建上下?const NotificationContext = createContext<NotificationContextType | undefined>(
+// 创建上下
+const NotificationContext = createContext<NotificationContextType | undefined>(
   undefined
 );
 
@@ -210,14 +204,16 @@ export function NotificationProvider({
           scheduledAt: new Date(),
         });
 
-        // 清理定时?        setScheduledTimers(prev => {
+        // 清理定时器
+        setScheduledTimers(prev => {
           const newTimers = { ...prev };
           delete newTimers[id];
           return newTimers;
         });
       }, delayMs);
 
-      // 存储定时器引?      setScheduledTimers(prev => ({
+      // 存储定时器引用
+      setScheduledTimers(prev => ({
         ...prev,
         [id]: timer,
       }));
@@ -227,7 +223,8 @@ export function NotificationProvider({
     [addNotification]
   );
 
-  // 标记为已?  const markAsRead = useCallback((id: string) => {
+  // 标记为已读
+  const markAsRead = useCallback((id: string) => {
     setNotifications(prev =>
       prev.map(n =>
         n.id === id
@@ -237,7 +234,8 @@ export function NotificationProvider({
     );
   }, []);
 
-  // 全部标记为已?  const markAllAsRead = useCallback(() => {
+  // 全部标记为已读
+  const markAllAsRead = useCallback(() => {
     setNotifications(prev =>
       prev.map(n =>
         n.status === NotificationStatus.UNREAD
@@ -305,7 +303,8 @@ export function NotificationProvider({
           return false;
         }
 
-        // 状态过?        if (filter.statuses && !filter.statuses.includes(notification.status)) {
+        // 状态过滤
+        if (filter.statuses && !filter.statuses.includes(notification.status)) {
           return false;
         }
 
@@ -385,7 +384,7 @@ export function NotificationProvider({
             : n
         )
       );
-    }, 60000); // 每分钟检查一?
+    }, 60000); // 每分钟检查一次
     return () => clearInterval(interval);
   }, [settings.autoArchiveDays]);
 

@@ -1,15 +1,29 @@
-﻿'use client';
+'use client';
 
-import { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -18,13 +32,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { VirtualList } from '@/components/VirtualList';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+  Download,
+  Edit2,
+  History,
+  MapPin,
+  Package,
+  Plus,
+  Search,
+  Trash2,
+  TrendingUp,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface InventoryItem {
   id: string;
@@ -98,23 +119,20 @@ export default function InventoryManagementPage() {
   >('in');
 
   // 获取库存列表
-  const fetchInventory = async () => {
+  const fetchItems = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({
-        page: pagination.page.toString(),
-        pageSize: pagination.pageSize.toString(),
-        search: searchTerm,
-        category: categoryFilter === 'all' ? '' : categoryFilter,
-        status: statusFilter === 'all' ? '' : statusFilter,
-      });
-
-      const response = await fetch(`/api/admin/inventory/items${params}`);
-      const result = await response.json();
-
-      if (result.data) {
-        setItems(result.data);
-        setPagination(result.pagination);
+      const response = await fetch(
+        `/api/admin/inventory/items?page=${pagination.page}&pageSize=${pagination.pageSize}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setItems(data.items || []);
+        setPagination(prev => ({
+          ...prev,
+          total: data.total || 0,
+          totalPages: Math.ceil((data.total || 0) / pagination.pageSize),
+        }));
       }
     } catch (error) {
       console.error('获取库存列表失败:', error);
@@ -123,18 +141,17 @@ export default function InventoryManagementPage() {
     }
   };
 
-  // 获取库存流水
+  // 获取出入库记录
   const fetchMovements = async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/admin/inventory/movements');
-      const result = await response.json();
-
-      if (result.data) {
-        setMovements(result.data);
+      if (response.ok) {
+        const data = await response.json();
+        setMovements(data.movements || []);
       }
     } catch (error) {
-      console.error('获取库存流水失败:', error);
+      console.error('获取出入库记录失败:', error);
     } finally {
       setLoading(false);
     }
@@ -145,10 +162,9 @@ export default function InventoryManagementPage() {
     try {
       setLoading(true);
       const response = await fetch('/api/admin/inventory/locations');
-      const result = await response.json();
-
-      if (result.data) {
-        setLocations(result.data);
+      if (response.ok) {
+        const data = await response.json();
+        setLocations(data.locations || []);
       }
     } catch (error) {
       console.error('获取仓库位置失败:', error);
@@ -160,7 +176,7 @@ export default function InventoryManagementPage() {
   useEffect(() => {
     switch (activeTab) {
       case 'inventory':
-        fetchInventory();
+        fetchItems();
         break;
       case 'movements':
         fetchMovements();
@@ -169,9 +185,10 @@ export default function InventoryManagementPage() {
         fetchLocations();
         break;
     }
-  }, [activeTab, pagination.page, searchTerm, categoryFilter, statusFilter]);
+  }, [activeTab, pagination.page, pagination.pageSize]);
 
-  // 处理全  const handleSelectAll = (checked: boolean) => {
+  // 处理全选
+  const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(items.map(item => item.id));
     } else {
@@ -184,814 +201,719 @@ export default function InventoryManagementPage() {
     if (checked) {
       setSelectedIds([...selectedIds, id]);
     } else {
-      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectedIds(selectedIds.filter(sid => sid !== id));
     }
   };
 
-  // 新建库存项目
-  const handleCreateItem = () => {
-    setEditingItem({
-      id: '',
-      sku: `SKU${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(Date.now()).slice(-4)}`,
-      name: '',
-      category: '',
-      brand: '',
-      current_stock: 0,
-      reserved_stock: 0,
-      available_stock: 0,
-      min_stock_level: 10,
-      max_stock_level: 100,
-      unit_price: 0,
-      total_value: 0,
-      location: '',
-      last_updated: new Date().toISOString(),
-      status: 'normal',
-    });
+  // 处理添加库存项
+  const handleAddItem = () => {
+    setEditingItem(null);
     setShowItemDialog(true);
   };
 
-  // 编辑库存项目
+  // 处理编辑库存项
   const handleEditItem = (item: InventoryItem) => {
     setEditingItem(item);
     setShowItemDialog(true);
   };
 
-  // 保存库存项目
-  const saveItem = async () => {
-    if (!editingItem) return;
-
+  // 处理保存库存项
+  const handleSaveItem = async (itemData: Partial<InventoryItem>) => {
     try {
-      const url = editingItem.id
-         `/api/admin/inventory/items/${editingItem.id}`
+      const url = editingItem
+        ? `/api/admin/inventory/items/${editingItem.id}`
         : '/api/admin/inventory/items';
 
-      const method = editingItem.id ? 'PUT' : 'POST';
+      const method = editingItem ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editingItem),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(itemData),
       });
 
-      const result = await response.json();
-      if (result.success) {
-        alert(editingItem.id ? '库存项目更新成功' : '库存项目创建成功');
+      if (response.ok) {
+        await fetchItems();
         setShowItemDialog(false);
-        setEditingItem(null);
-        fetchInventory();
-      } else {
-        alert(`操作失败: ${result.error}`);
       }
     } catch (error) {
-      console.error('保存库存项目失败:', error);
-      alert('操作失败');
+      console.error('保存库存项失败:', error);
     }
   };
 
-  // 库存出入库操  const handleStockMovement = (itemId: string) => {
-    setMovementType('in');
-    setShowMovementDialog(true);
+  // 处理删除库存项
+  const handleDeleteItem = async (id: string) => {
+    if (!confirm('确定要删除此库存项吗？')) return;
+
+    try {
+      const response = await fetch(`/api/admin/inventory/items/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await fetchItems();
+      }
+    } catch (error) {
+      console.error('删除库存项失败:', error);
+    }
   };
 
-  // 保存库存流水
-  const saveMovement = async () => {
+  // 处理批量操作
+  const handleBatchDelete = async () => {
+    if (!confirm(`确定要删除选中的 ${selectedIds.length} 项吗？`)) return;
+
+    try {
+      const promises = selectedIds.map(id =>
+        fetch(`/api/admin/inventory/items/${id}`, { method: 'DELETE' })
+      );
+
+      await Promise.all(promises);
+      setSelectedIds([]);
+      await fetchItems();
+    } catch (error) {
+      console.error('批量删除失败:', error);
+    }
+  };
+
+  // 处理创建出入库记录
+  const handleCreateMovement = async (movementData: Partial<StockMovement>) => {
     try {
       const response = await fetch('/api/admin/inventory/movements', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          item_id: editingItem.id,
-          movement_type: movementType,
-          quantity: 10, // 示例数量
-          reason: '手动调整',
-          operator: '管理员,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(movementData),
       });
 
-      const result = await response.json();
-      if (result.success) {
-        alert('库存操作成功');
+      if (response.ok) {
+        await fetchMovements();
         setShowMovementDialog(false);
-        fetchInventory();
-        fetchMovements();
-      } else {
-        alert(`操作失败: ${result.error}`);
       }
     } catch (error) {
-      console.error('库存操作失败:', error);
-      alert('操作失败');
+      console.error('创建出入库记录失败:', error);
     }
   };
 
-  // 获取状态标签样  const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, { text: string; className: string }> = {
-      normal: { text: '正常', className: 'bg-green-100 text-green-800' },
-      low_stock: {
-        text: '库存不足',
-        className: 'bg-yellow-100 text-yellow-800',
-      },
-      out_of_stock: { text: '缺货', className: 'bg-red-100 text-red-800' },
-      overstock: { text: '积压', className: 'bg-blue-100 text-blue-800' },
-    };
+  // 获取状态标签
+  const getStatusBadge = (status: string) => {
+    const variants = {
+      normal: 'default',
+      low_stock: 'destructive',
+      out_of_stock: 'destructive',
+      overstock: 'secondary',
+    } as const;
 
-    const config = statusMap[status] || {
-      text: status,
-      className: 'bg-gray-100 text-gray-800',
-    };
+    const labels = {
+      normal: '正常',
+      low_stock: '低库存',
+      out_of_stock: '缺货',
+      overstock: '积压',
+    } as const;
+
     return (
-      <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${config.className}`}
-      >
-        {config.text}
-      </span>
+      <Badge variant={variants[status as keyof typeof variants]}>
+        {labels[status as keyof typeof labels]}
+      </Badge>
     );
   };
 
-  // 格式化金  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('zh-CN', {
-      style: 'currency',
-      currency: 'CNY',
-    }).format(amount);
-  };
+  // 过滤后的数据
+  const filteredItems = items.filter(item => {
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.sku.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === 'all' || item.category === categoryFilter;
+    const matchesStatus =
+      statusFilter === 'all' || item.status === statusFilter;
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto p-6 space-y-6">
       {/* 页面标题 */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">仓储管理</h1>
-        <p className="text-gray-600 mt-1">管理库存、仓库位置和库存流水</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">仓储管理</h1>
+          <p className="text-gray-500 mt-1">管理库存、出入库记录和仓库位置</p>
+        </div>
+        <Button onClick={handleAddItem}>
+          <Plus className="w-4 h-4 mr-2" />
+          添加库存项
+        </Button>
       </div>
 
-      {/* 标签页导*/}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
-          <button
-            onClick={() => setActiveTab('inventory')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'inventory'
-                 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            库存管理
-          </button>
-          <button
-            onClick={() => setActiveTab('movements')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'movements'
-                 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            库存流水
-          </button>
-          <button
-            onClick={() => setActiveTab('locations')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'locations'
-                 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            仓库位置
-          </button>
-        </nav>
+      {/* 统计卡片 */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">总库存项</CardTitle>
+            <Package className="w-4 h-4 text-gray-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{pagination.total}</div>
+            <p className="text-xs text-gray-500 mt-1">所有 SKU 数量</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">低库存预警</CardTitle>
+            <TrendingUp className="w-4 h-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {items.filter(i => i.status === 'low_stock').length}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">需要补货的商品</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">仓库位置</CardTitle>
+            <MapPin className="w-4 h-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{locations.length}</div>
+            <p className="text-xs text-gray-500 mt-1">活跃仓库数量</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">今日出入库</CardTitle>
+            <History className="w-4 h-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {
+                movements.filter(
+                  m =>
+                    new Date(m.created_at).toDateString() ===
+                    new Date().toDateString()
+                ).length
+              }
+            </div>
+            <p className="text-xs text-gray-500 mt-1">今日操作次数</p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* 库存管理标签*/}
-      {activeTab === 'inventory' && (
-        <div className="space-y-6">
-          {/* 操作*/}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex gap-2 flex-wrap">
-              <Input
-                placeholder="搜索SKU、名称或品牌..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                className="w-64"
-              />
+      {/* 主内容区 */}
+      <Tabs
+        value={activeTab}
+        onValueChange={v => setActiveTab(v as any)}
+        className="w-full"
+      >
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="inventory">库存管理</TabsTrigger>
+          <TabsTrigger value="movements">出入库记录</TabsTrigger>
+          <TabsTrigger value="locations">仓库位置</TabsTrigger>
+        </TabsList>
 
-              <select
-                value={categoryFilter}
-                onChange={e => setCategoryFilter(e.target.value)}
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">全部分类</option>
-                <option value="手机配件">手机配件</option>
-                <option value="电池">电池</option>
-                <option value="数据源>数据源/option>
-                <option value=">充电设备</option>
-                <option value="芯片">芯片</option>
-                <option value="工具">工具</option>
-              </select>
-
-              <select
-                value={statusFilter}
-                onChange={e => setStatusFilter(e.target.value)}
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">全部状态/option>
-                <option value="normal">正常</option>
-                <option value="low_stock">库存不足</option>
-                <option value="out_of_stock">缺货</option>
-                <option value="overstock">积压</option>
-              </select>
-
-              <Button onClick={handleCreateItem}>新增商品</Button>
-
+        {/* 库存管理标签 */}
+        <TabsContent value="inventory" className="space-y-4">
+          {/* 筛选工具栏 */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                <Input
+                  placeholder="搜索 SKU 或名称..."
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="pl-8 w-64"
+                />
+              </div>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="分类" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">全部分类</SelectItem>
+                  <SelectItem value="electronics">电子产品</SelectItem>
+                  <SelectItem value="clothing">服装</SelectItem>
+                  <SelectItem value="food">食品</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="状态" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">全部状态</SelectItem>
+                  <SelectItem value="normal">正常</SelectItem>
+                  <SelectItem value="low_stock">低库存</SelectItem>
+                  <SelectItem value="out_of_stock">缺货</SelectItem>
+                  <SelectItem value="overstock">积压</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm">
+                <Download className="w-4 h-4 mr-2" />
+                导出
+              </Button>
               {selectedIds.length > 0 && (
-                <Button variant="outline">
-                  批量操作 ({selectedIds.length})
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleBatchDelete}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  删除 ({selectedIds.length})
                 </Button>
               )}
             </div>
           </div>
 
-          {/* 库存统计卡片 */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>总商品数</CardDescription>
-                <CardTitle className="text-2xl text-blue-600">
-                  {items.length}
-                </CardTitle>
-              </CardHeader>
-            </Card>
+          {/* 批量操作提示 */}
+          {selectedIds.length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center justify-between">
+              <span className="text-sm text-blue-700">
+                已选择 {selectedIds.length} 项
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedIds([])}
+              >
+                取消选择
+              </Button>
+            </div>
+          )}
 
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>库存不足</CardDescription>
-                <CardTitle className="text-2xl text-yellow-600">
-                  {items.filter(i => i.status === 'low_stock').length}
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>缺货商品</CardDescription>
-                <CardTitle className="text-2xl text-red-600">
-                  {items.filter(i => i.status === 'out_of_stock').length}
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>库存总/CardDescription>
-                <CardTitle className="text-2xl text-green-600">
-                  {formatCurrency(
-                    items.reduce((sum, item) => sum + item.total_value, 0)
-                  )}
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </div>
-
-          {/* 库存列表表格 */}
-          <div className="bg-white shadow rounded-lg overflow-hidden">
-            {loading  (
-              <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-2 text-gray-600">加载中..</span>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">
-                      <input
-                        type="checkbox"
-                        checked={
-                          selectedIds.length === items.length &&
-                          items.length > 0
-                        }
-                        onChange={e => handleSelectAll(e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                    </TableHead>
-                    <TableHead>SKU</TableHead>
-                    <TableHead>商品名称</TableHead>
-                    <TableHead>分类</TableHead>
-                    <TableHead>当前库存</TableHead>
-                    <TableHead>可用库存</TableHead>
-                    <TableHead>单价</TableHead>
-                    <TableHead>状/TableHead>
-                    <TableHead>位置</TableHead>
-                    <TableHead className="text-right">操作</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {items.map(item => (
-                    <TableRow key={item.id} className="border-b">
-                      <TableCell>
+          {/* 库存表格 */}
+          <Card>
+            <CardContent className="p-0">
+              {loading ? (
+                <div className="flex items-center justify-center h-64">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <span className="ml-2 text-gray-600">加载中...</span>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">
                         <input
                           type="checkbox"
-                          checked={selectedIds.includes(item.id)}
-                          onChange={e =>
-                            handleSelectOne(item.id, e.target.checked)
+                          checked={
+                            selectedIds.length === items.length &&
+                            items.length > 0
                           }
+                          onChange={e => handleSelectAll(e.target.checked)}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-gray-900">
-                          {item.sku}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{item.name}</div>
-                          <div className="text-sm text-gray-500">
-                            {item.brand}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm text-gray-600">
-                          {item.category}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          className={`font-medium ${item.current_stock <= item.min_stock_level ? 'text-red-600' : 'text-gray-900'}`}
-                        >
-                          {item.current_stock}
-                        </div>
-                        {item.reserved_stock > 0 && (
-                          <div className="text-xs text-gray-500">
-                            预留: {item.reserved_stock}
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-gray-900">
-                          {item.available_stock}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-gray-900">
-                          {formatCurrency(item.unit_price)}
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(item.status)}</TableCell>
-                      <TableCell>
-                        <span className="text-sm text-gray-600">
-                          {item.location}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleEditItem(item)}
-                          >
-                            编辑
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleStockMovement(item.id)}
-                          >
-                            出入                          </Button>
-                        </div>
-                      </TableCell>
+                      </TableHead>
+                      <TableHead>SKU</TableHead>
+                      <TableHead>名称</TableHead>
+                      <TableHead>分类</TableHead>
+                      <TableHead>当前库存</TableHead>
+                      <TableHead>可用库存</TableHead>
+                      <TableHead>单位价格</TableHead>
+                      <TableHead>总价值</TableHead>
+                      <TableHead>状态</TableHead>
+                      <TableHead>操作</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
+                  </TableHeader>
+                  <TableBody>
+                    <VirtualList
+                      items={filteredItems}
+                      itemSize={52} // 每行高度约 52px
+                      height={Math.min(600, filteredItems.length * 52 + 40)} // 动态高度，最多显示 600px
+                      overscan={5} // 预加载 5 个额外项
+                      renderItem={item => (
+                        <TableRow key={item.id}>
+                          <TableCell>
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.includes(item.id)}
+                              onChange={e =>
+                                handleSelectOne(item.id, e.target.checked)
+                              }
+                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            {item.sku}
+                          </TableCell>
+                          <TableCell>{item.name}</TableCell>
+                          <TableCell>{item.category}</TableCell>
+                          <TableCell>
+                            <div>
+                              <div>{item.current_stock}</div>
+                              <div className="text-xs text-gray-500">
+                                预留：{item.reserved_stock}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                item.available_stock < item.min_stock_level
+                                  ? 'destructive'
+                                  : 'default'
+                              }
+                            >
+                              {item.available_stock}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>¥{item.unit_price.toFixed(2)}</TableCell>
+                          <TableCell>¥{item.total_value.toFixed(2)}</TableCell>
+                          <TableCell>{getStatusBadge(item.status)}</TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditItem(item)}
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeleteItem(item.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      emptyContent={
+                        <div className="text-center py-12 text-gray-500">
+                          暂无库存数据
+                        </div>
+                      }
+                    />
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
 
-            {/* 分页 */}
-            {pagination.totalPages > 1 && (
-              <div className="flex items-center justify-between px-4 py-3 border-t">
-                <div className="text-sm text-gray-700">
-                  显示{(pagination.page - 1) * pagination.pageSize + 1} 到{' '}
-                  {Math.min(
-                    pagination.page * pagination.pageSize,
-                    pagination.total
-                  )}{' '}
-                  条， {pagination.total} 条记                </div>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() =>
-                      setPagination({
-                        ...pagination,
-                        page: pagination.page - 1,
-                      })
-                    }
-                    disabled={pagination.page <= 1}
-                    variant="outline"
-                    size="sm"
-                  >
-                    上一                  </Button>
-                  <Button
-                    onClick={() =>
-                      setPagination({
-                        ...pagination,
-                        page: pagination.page + 1,
-                      })
-                    }
-                    disabled={pagination.page >= pagination.totalPages}
-                    variant="outline"
-                    size="sm"
-                  >
-                    下一                  </Button>
-                </div>
-              </div>
-            )}
+          {/* 分页 */}
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-500">
+              共 {pagination.total} 条记录，{pagination.totalPages} 页
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pagination.page === 1}
+                onClick={() => setPagination(p => ({ ...p, page: p.page - 1 }))}
+              >
+                上一页
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pagination.page === pagination.totalPages}
+                onClick={() => setPagination(p => ({ ...p, page: p.page + 1 }))}
+              >
+                下一页
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        </TabsContent>
 
-      {/* 库存流水标签*/}
-      {activeTab === 'movements' && (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">库存流水记录</h2>
+        {/* 出入库记录标签 */}
+        <TabsContent value="movements" className="space-y-4">
+          <div className="flex justify-end">
             <Button onClick={() => setShowMovementDialog(true)}>
-              新增流水
+              <Plus className="w-4 h-4 mr-2" />
+              创建出入库记录
             </Button>
           </div>
 
-          <div className="bg-white shadow rounded-lg overflow-hidden">
-            {loading  (
-              <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-2 text-gray-600">加载中..</span>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>时间</TableHead>
-                    <TableHead>商品SKU</TableHead>
-                    <TableHead>操作类型</TableHead>
-                    <TableHead>数量</TableHead>
-                    <TableHead>原因</TableHead>
-                    <TableHead>操作/TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {movements.map(movement => (
-                    <TableRow key={movement.id} className="border-b">
-                      <TableCell>
-                        <div className="text-sm text-gray-500">
-                          {new Date(movement.created_at).toLocaleString()}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-gray-900">SKU001</div>
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            movement.movement_type === 'in'
-                               'bg-green-100 text-green-800'
-                              : movement.movement_type === 'out'
-                                 'bg-red-100 text-red-800'
-                                : 'bg-blue-100 text-blue-800'
-                          }`}
-                        >
-                          {movement.movement_type === 'in'
-                             '入库'
-                            : movement.movement_type === 'out'
-                               '出库'
-                              : '转移'}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          className={`font-medium ${
-                            movement.movement_type === 'in'
-                               'text-green-600'
-                              : 'text-red-600'
-                          }`}
-                        >
-                          {movement.movement_type === 'in' ? '+' : '-'}
-                          {movement.quantity}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm text-gray-600">
-                          {movement.reason}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm text-gray-600">
-                          {movement.operator}
-                        </div>
-                      </TableCell>
+          <Card>
+            <CardContent className="p-0">
+              {loading ? (
+                <div className="flex items-center justify-center h-64">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <span className="ml-2 text-gray-600">加载中...</span>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead>类型</TableHead>
+                      <TableHead>商品</TableHead>
+                      <TableHead>数量</TableHead>
+                      <TableHead>来源</TableHead>
+                      <TableHead>目标</TableHead>
+                      <TableHead>原因</TableHead>
+                      <TableHead>操作人</TableHead>
+                      <TableHead>时间</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </div>
-        </div>
-      )}
+                  </TableHeader>
+                  <TableBody>
+                    {movements.map(movement => (
+                      <TableRow key={movement.id}>
+                        <TableCell className="font-mono text-sm">
+                          {movement.id.slice(0, 8)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              movement.movement_type === 'in'
+                                ? 'default'
+                                : movement.movement_type === 'out'
+                                  ? 'destructive'
+                                  : 'secondary'
+                            }
+                          >
+                            {movement.movement_type === 'in'
+                              ? '入库'
+                              : movement.movement_type === 'out'
+                                ? '出库'
+                                : movement.movement_type === 'transfer'
+                                  ? '调拨'
+                                  : '调整'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{movement.item_id}</TableCell>
+                        <TableCell>
+                          <span
+                            className={
+                              movement.quantity > 0
+                                ? 'text-green-600'
+                                : 'text-red-600'
+                            }
+                          >
+                            {movement.quantity > 0 ? '+' : ''}
+                            {movement.quantity}
+                          </span>
+                        </TableCell>
+                        <TableCell>{movement.from_location || '-'}</TableCell>
+                        <TableCell>{movement.to_location || '-'}</TableCell>
+                        <TableCell>{movement.reason}</TableCell>
+                        <TableCell>{movement.operator}</TableCell>
+                        <TableCell>
+                          {new Date(movement.created_at).toLocaleString(
+                            'zh-CN'
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* 仓库位置标签*/}
-      {activeTab === 'locations' && (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">仓库位置管理</h2>
-            <Button>添加位置</Button>
-          </div>
-
+        {/* 仓库位置标签 */}
+        <TabsContent value="locations" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {locations.map(location => (
               <Card key={location.id}>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span>{location.name}</span>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        location.status === 'active'
-                           'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
+                    <Badge
+                      variant={
+                        location.status === 'active' ? 'default' : 'secondary'
+                      }
                     >
-                      {location.status === 'active' ? '启用' : '停用'}
-                    </span>
+                      {location.status === 'active' ? '使用中' : '停用'}
+                    </Badge>
                   </CardTitle>
-                  <CardDescription>编码: {location.code}</CardDescription>
+                  <CardDescription>代码：{location.code}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2 text-sm">
-                    <div>📦 容量: {location.capacity} /div>
-                    <div>🔄 已使 {location.current_usage} /div>
-                    <div>
-                      📊 使用{' '}
-                      {Math.round(
-                        (location.current_usage / location.capacity) * 100
-                      )}
-                      %
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">容量</span>
+                      <span>{location.capacity.toLocaleString()} m²</span>
                     </div>
-                  </div>
-                  <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{
-                        width: `${(location.current_usage / location.capacity) * 100}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <div className="mt-4 flex gap-2">
-                    <Button variant="outline" size="sm">
-                      编辑
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      查看详情
-                    </Button>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">已使用</span>
+                      <span>{location.current_usage.toLocaleString()} m²</span>
+                    </div>
+                    <div className="pt-2">
+                      <div className="text-xs text-gray-500 mb-1">使用率</div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{
+                            width: `${(location.current_usage / location.capacity) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
-      )}
+        </TabsContent>
+      </Tabs>
 
-      {/* 编辑库存项目对话*/}
+      {/* 库存项对话框 */}
       <Dialog open={showItemDialog} onOpenChange={setShowItemDialog}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingItem.id ? '编辑库存商品' : '新增库存商品'}
+              {editingItem ? '编辑库存项' : '添加库存项'}
             </DialogTitle>
           </DialogHeader>
-
-          {editingItem && (
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    SKU编号 *
-                  </label>
-                  <Input
-                    value={editingItem.sku}
-                    onChange={e =>
-                      setEditingItem({ ...editingItem, sku: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    商品名称 *
-                  </label>
-                  <Input
-                    value={editingItem.name}
-                    onChange={e =>
-                      setEditingItem({ ...editingItem, name: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    分类 *
-                  </label>
-                  <select
-                    value={editingItem.category}
-                    onChange={e =>
-                      setEditingItem({
-                        ...editingItem,
-                        category: e.target.value,
-                      })
-                    }
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">请选择分类</option>
-                    <option value="手机配件">手机配件</option>
-                    <option value="电池">电池</option>
-                    <option value="数据源>数据源/option>
-                    <option value=">充电设备</option>
-                    <option value="芯片">芯片</option>
-                    <option value="工具">工具</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    品牌
-                  </label>
-                  <Input
-                    value={editingItem.brand}
-                    onChange={e =>
-                      setEditingItem({ ...editingItem, brand: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    当前库存 *
-                  </label>
-                  <Input
-                    type="number"
-                    value={editingItem.current_stock}
-                    onChange={e => {
-                      const stock = parseInt(e.target.value) || 0;
-                      setEditingItem({
-                        ...editingItem,
-                        current_stock: stock,
-                        available_stock: stock - editingItem.reserved_stock,
-                        total_value: stock * editingItem.unit_price,
-                      });
-                    }}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    预留库存
-                  </label>
-                  <Input
-                    type="number"
-                    value={editingItem.reserved_stock}
-                    onChange={e => {
-                      const reserved = parseInt(e.target.value) || 0;
-                      setEditingItem({
-                        ...editingItem,
-                        reserved_stock: reserved,
-                        available_stock: editingItem.current_stock - reserved,
-                      });
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    最低库存预                  </label>
-                  <Input
-                    type="number"
-                    value={editingItem.min_stock_level}
-                    onChange={e =>
-                      setEditingItem({
-                        ...editingItem,
-                        min_stock_level: parseInt(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    最高库存限                  </label>
-                  <Input
-                    type="number"
-                    value={editingItem.max_stock_level}
-                    onChange={e =>
-                      setEditingItem({
-                        ...editingItem,
-                        max_stock_level: parseInt(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    单价 *
-                  </label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={editingItem.unit_price}
-                    onChange={e => {
-                      const price = parseFloat(e.target.value) || 0;
-                      setEditingItem({
-                        ...editingItem,
-                        unit_price: price,
-                        total_value: editingItem.current_stock * price,
-                      });
-                    }}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    存放位置
-                  </label>
-                  <Input
-                    value={editingItem.location}
-                    onChange={e =>
-                      setEditingItem({
-                        ...editingItem,
-                        location: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">SKU</label>
+                <Input defaultValue={editingItem?.sku} placeholder="输入 SKU" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">名称</label>
+                <Input
+                  defaultValue={editingItem?.name}
+                  placeholder="输入名称"
+                />
               </div>
             </div>
-          )}
-
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">分类</label>
+                <Select defaultValue={editingItem?.category || 'electronics'}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择分类" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="electronics">电子产品</SelectItem>
+                    <SelectItem value="clothing">服装</SelectItem>
+                    <SelectItem value="food">食品</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">品牌</label>
+                <Input
+                  defaultValue={editingItem?.brand}
+                  placeholder="输入品牌"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  当前库存
+                </label>
+                <Input
+                  type="number"
+                  defaultValue={editingItem?.current_stock || 0}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  最小库存
+                </label>
+                <Input
+                  type="number"
+                  defaultValue={editingItem?.min_stock_level || 0}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  最大库存
+                </label>
+                <Input
+                  type="number"
+                  defaultValue={editingItem?.max_stock_level || 0}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  单位价格
+                </label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  defaultValue={editingItem?.unit_price || 0}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  仓库位置
+                </label>
+                <Input
+                  defaultValue={editingItem?.location}
+                  placeholder="输入位置"
+                />
+              </div>
+            </div>
+          </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowItemDialog(false)}>
               取消
             </Button>
-            <Button onClick={saveItem}>
-              {editingItem.id ? '保存更改' : '创建商品'}
+            <Button
+              onClick={() => {
+                /* 保存逻辑 */ setShowItemDialog(false);
+              }}
+            >
+              保存
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* 库存操作对话*/}
+      {/* 出入库记录对话框 */}
       <Dialog open={showMovementDialog} onOpenChange={setShowMovementDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>库存操作</DialogTitle>
+            <DialogTitle>创建出入库记录</DialogTitle>
           </DialogHeader>
-
           <div className="space-y-4 py-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                操作类型
-              </label>
-              <select
+              <label className="block text-sm font-medium mb-2">类型</label>
+              <Select
                 value={movementType}
-                onChange={e => setMovementType(e.target.value as any)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onValueChange={v => setMovementType(v as any)}
               >
-                <option value="in">入库</option>
-                <option value="out">出库</option>
-                <option value="transfer">转移</option>
-                <option value="adjustment">调整</option>
-              </select>
+                <SelectTrigger>
+                  <SelectValue placeholder="选择类型" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="in">入库</SelectItem>
+                  <SelectItem value="out">出库</SelectItem>
+                  <SelectItem value="transfer">调拨</SelectItem>
+                  <SelectItem value="adjustment">调整</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                数量
-              </label>
-              <Input type="number" defaultValue="10" />
+              <label className="block text-sm font-medium mb-2">商品 ID</label>
+              <Input placeholder="输入商品 ID" />
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                操作原因
-              </label>
-              <textarea
-                rows={3}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="请输入操作原.."
-                defaultValue="日常补货"
-              />
+              <label className="block text-sm font-medium mb-2">数量</label>
+              <Input type="number" placeholder="正数入库，负数出库" />
+            </div>
+            {movementType === 'transfer' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    来源位置
+                  </label>
+                  <Input placeholder="输入来源仓库" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    目标位置
+                  </label>
+                  <Input placeholder="输入目标仓库" />
+                </div>
+              </>
+            )}
+            <div>
+              <label className="block text-sm font-medium mb-2">原因</label>
+              <Input placeholder="说明原因" />
             </div>
           </div>
-
           <DialogFooter>
             <Button
               variant="outline"
@@ -999,11 +921,16 @@ export default function InventoryManagementPage() {
             >
               取消
             </Button>
-            <Button onClick={saveMovement}>确认操作</Button>
+            <Button
+              onClick={() => {
+                /* 创建逻辑 */ setShowMovementDialog(false);
+              }}
+            >
+              创建
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
-

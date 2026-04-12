@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface AlertRule {
@@ -25,7 +24,6 @@ interface AlertHistory {
 }
 
 export default function AlertsManagementPage() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'rules' | 'history'>('rules');
   const [alertRules, setAlertRules] = useState<AlertRule[]>([]);
   const [alertHistory, setAlertHistory] = useState<AlertHistory[]>([]);

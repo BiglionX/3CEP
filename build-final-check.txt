@@ -1,0 +1,129 @@
+﻿
+> prodcycleai@5.0.0 build
+> next build
+
+  鈻?Next.js 14.2.25
+  - Environments: .env.local, .env.production, .env
+
+   Creating an optimized production build ...
+npm : Failed to compile.
+所在位置 行:1 字符: 22
++ cd d:\BigLionX\3cep; npm run build 2>&1 | Out
+-File -Encoding UTF8 bui ...
++                      ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (F 
+   ailed to compile.:String) [], RemoteExcept  
+  ion
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+
+./src/app/admin/finance/page.tsx
+Module not found: Can't resolve '@/components/P
+aymentConfigPanel'
+
+https://nextjs.org/docs/messages/module-not-fou
+nd
+
+./src/app/admin/users/[id]/page.tsx
+Module not found: Can't resolve '@/components/u
+i/separator'
+
+https://nextjs.org/docs/messages/module-not-fou
+nd
+
+./src/app/admin/migration-test/page.tsx
+Error: 
+  [31mx[0m Unterminated string constant
+    ,-[[36;1;4mD:\BigLionX\3cep\src\app\admin\
+migration-test\page.tsx[0m:11:1]
+ [2m11[0m | 
+ [2m12[0m |       // 娴嬭瘯1: 妫€鏌ユ槸鍚︿娇鐢ㄤ簡RoleAwa
+reLayout
+ [2m13[0m |       results.push({
+ [2m14[0m |         test: '甯冨眬绯荤粺妫€,
+    : [31;1m              ^^^^^^^^^^^^^^^^^[0
+m
+ [2m15[0m |         status: '閫氳繃',
+ [2m16[0m |         description: '宸叉垚鍔熻縼绉诲埌Ro
+leAwareLayout缁熶竴缁勪欢绯荤粺',
+ [2m17[0m |       });
+    `----
+
+  [31mx[0m Expected ',', got 'status'
+    ,-[[36;1;4mD:\BigLionX\3cep\src\app\admin\
+migration-test\page.tsx[0m:12:1]
+ [2m12[0m |       // 娴嬭瘯1: 妫€鏌ユ槸鍚︿娇鐢ㄤ簡RoleAwa
+reLayout
+ [2m13[0m |       results.push({
+ [2m14[0m |         test: '甯冨眬绯荤粺妫€,
+ [2m15[0m |         status: '閫氳繃',
+    : [31;1m        ^^^^^^[0m
+ [2m16[0m |         description: '宸叉垚鍔熻縼绉诲埌Ro
+leAwareLayout缁熶竴缁勪欢绯荤粺',
+ [2m17[0m |       });
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/admin/migration-test/page.tsx
+
+./src/app/admin/n8n-demo/page.tsx
+Error: 
+  [31mx[0m Unexpected token `RoleAwareLayout`
+. Expected jsx identifier
+    ,-[[36;1;4mD:\BigLionX\3cep\src\app\admin\
+n8n-demo\page.tsx[0m:14:1]
+ [2m14[0m | 
+ [2m15[0m | export default function N8nIntegr
+ationDemoPage() {
+ [2m16[0m |   return (
+ [2m17[0m |     <RoleAwareLayout>
+    : [31;1m     ^^^^^^^^^^^^^^^[0m
+ [2m18[0m |       <div className="container m
+x-auto py-8 px-4">
+ [2m19[0m |         <div className="mb-8">
+ [2m20[0m |           <h1 className="text-3xl
+ font-bold text-gray-900 mb-2">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/admin/n8n-demo/page.tsx
+
+./src/app/admin/parts-market/page.tsx
+Error: 
+  [31mx[0m Expected ';', '}' or <eof>
+    ,-[[36;1;4mD:\BigLionX\3cep\src\app\admin\
+parts-market\page.tsx[0m:85:1]
+ [2m85[0m |       const canDelete = hasPermis
+sion('parts.delete');
+ [2m86[0m |     
+ [2m87[0m |       // 绛涢€夋潯  const [filters, s
+etFilters] = useState({
+ [2m88[0m | [31;1m,[0m[31;1m-[0m[31;1m>
+[0m     category: '',
+ [2m89[0m | [31;1m|[0m[31;1m-[0m[31;1m>
+[0m     status: '',
+    : [31;1m`[0m[31;1m---[0m[33;1m        
+  ^[0m
+    : [31;1m`[0m[31;1m---[0m[31;1m-[0m [
+31;1mThis is the expression part of an expressi
+on statement[0m
+ [2m90[0m |         search: '',
+ [2m91[0m |         minPrice: '',
+ [2m92[0m |         maxPrice: '',
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/admin/parts-market/page.tsx
+
+
+> Build failed because of webpack errors

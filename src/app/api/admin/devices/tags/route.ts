@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { apiPermissionMiddleware } from '@/tech/middleware/api-permission.middleware';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface DeviceTag {
   id: string;
@@ -11,104 +11,112 @@ interface DeviceTag {
   updated_at: string;
 }
 
-// 鑾峰彇璁惧鏍囩鍒楄〃
+// 获取设备标签列表
 export async function GET() {
   return apiPermissionMiddleware(
-    arguments[0],
+    null as any,
     async () => {
-  try {
-    const cookieStore = cookies();
-    const authCookie = cookieStore.get('auth-token');
+      try {
+        const cookieStore = cookies();
+        const authCookie = cookieStore.get('auth-token');
 
-    if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
-    }
+        if (!authCookie) {
+          return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+        }
 
-    // 妯℃嫙鏍囩鏁版嵁
-    const tags: DeviceTag[] = [
-      {
-        id: 'tag_001',
-        name: '楂樹紭鍏堢骇',
-        color: '#ef4444',
-        device_count: 5,
-        created_at: '2024-01-01T10:00:00Z',
-        updated_at: '2024-01-20T15:30:00Z',
-      },
-      {
-        id: 'tag_002',
-        name: '闇€瑕佺淮,
-        color: '#f59e0b',
-        device_count: 12,
-        created_at: '2024-01-05T09:30:00Z',
-        updated_at: '2024-01-18T16:45:00Z',
-      },
-      {
-        id: 'tag_003',
-        name: '鏂拌,
-        color: '#10b981',
-        device_count: 8,
-        created_at: '2024-01-10T14:20:00Z',
-        updated_at: '2024-01-19T11:15:00Z',
-      },
-      {
-        id: 'tag_004',
-        name: 'VIP瀹㈡埛',
-        color: '#8b5cf6',
-        device_count: 3,
-        created_at: '2024-01-12T16:45:00Z',
-        updated_at: '2024-01-20T09:30:00Z',
-      },
-    ];
+        // 模拟标签数据
+        const tags: DeviceTag[] = [
+          {
+            id: 'tag_001',
+            name: '高优先级',
+            color: '#ef4444',
+            device_count: 5,
+            created_at: '2024-01-01T10:00:00Z',
+            updated_at: '2024-01-20T15:30:00Z',
+          },
+          {
+            id: 'tag_002',
+            name: '需要维护',
+            color: '#f59e0b',
+            device_count: 12,
+            created_at: '2024-01-05T09:30:00Z',
+            updated_at: '2024-01-18T16:45:00Z',
+          },
+          {
+            id: 'tag_003',
+            name: '新设备',
+            color: '#10b981',
+            device_count: 8,
+            created_at: '2024-01-10T14:20:00Z',
+            updated_at: '2024-01-19T11:15:00Z',
+          },
+          {
+            id: 'tag_004',
+            name: 'VIP客户',
+            color: '#8b5cf6',
+            device_count: 3,
+            created_at: '2024-01-12T16:45:00Z',
+            updated_at: '2024-01-20T09:30:00Z',
+          },
+        ];
 
-    return NextResponse.json(tags);
-  } catch (error) {
-    console.error('鑾峰彇璁惧鏍囩澶辫触:', error);
-    return NextResponse.json({ error: '鑾峰彇璁惧鏍囩澶辫触' }, { status: 500 });
-  }
-
+        return NextResponse.json(tags);
+      } catch (error) {
+        console.error('获取设备标签失败:', error);
+        return NextResponse.json(
+          { error: '获取设备标签失败' },
+          { status: 500 }
+        );
+      }
     },
     'devices_read'
   );
+}
 
-// 鍒涘缓鏂扮殑璁惧鏍囩
-export async function POST(request: Request) {
+// 创建新的设备标签
+export async function POST(request: NextRequest) {
   return apiPermissionMiddleware(
-    arguments[0],
+    request,
     async () => {
-  try {
-    const cookieStore = cookies();
-    const authCookie = cookieStore.get('auth-token');
+      try {
+        const cookieStore = cookies();
+        const authCookie = cookieStore.get('auth-token');
 
-    if (!authCookie) {
-      return NextResponse.json({ error: '鏈巿鏉冭 }, { status: 401 });
-    }
+        if (!authCookie) {
+          return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+        }
 
-    const body = await request.json();
-    const { name, color } = body;
+        const body = await request.json();
+        const { name, color } = body;
 
-    if (!name) {
-      return NextResponse.json({ error: '鏍囩鍚嶇О涓嶈兘涓虹┖' }, { status: 400 });
-    }
+        if (!name) {
+          return NextResponse.json(
+            { error: '标签名称不能为空' },
+            { status: 400 }
+          );
+        }
 
-    // 妯℃嫙鍒涘缓鏍囩
-    const newTag: DeviceTag = {
-      id: `tag_${Date.now()}`,
-      name,
-      color: color || '#3b82f6',
-      device_count: 0,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
+        // 模拟创建标签
+        const newTag: DeviceTag = {
+          id: `tag_${Date.now()}`,
+          name,
+          color: color || '#3b82f6',
+          device_count: 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
 
-    console.log('鍒涘缓璁惧鏍囩:', newTag);
+        // console.log('创建设备标签:', newTag);
 
-    return NextResponse.json(newTag, { status: 201 });
-  } catch (error) {
-    console.error('鍒涘缓璁惧鏍囩澶辫触:', error);
-    return NextResponse.json({ error: '鍒涘缓璁惧鏍囩澶辫触' }, { status: 500 });
-  }
-
+        return NextResponse.json(newTag, { status: 201 });
+      } catch (error) {
+        console.error('创建设备标签失败:', error);
+        return NextResponse.json(
+          { error: '创建设备标签失败' },
+          { status: 500 }
+        );
+      }
     },
     'devices_read'
   );
-
+}
